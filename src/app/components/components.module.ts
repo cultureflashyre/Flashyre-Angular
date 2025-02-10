@@ -62,7 +62,7 @@ import { Navbar8 } from './navbar8/navbar8.component'
 import { RecruiterFlowSmallCard } from './recruiter-flow-small-card/recruiter-flow-small-card.component'
 import { ProgressBarStep2 } from './progress-bar-step-2/progress-bar-step-2.component'
 import { Navbar4 } from './navbar4/navbar4.component'
-import { CandidateJobForYouCard1 } from './candidate-job-for-you-card1/candidate-job-for-you-card1.component'
+//import { CandidateJobForYouCard1 } from './candidate-job-for-you-card1/candidate-job-for-you-card1.component'
 import { WriteAJobPostForRecruiter } from './write-a-job-post-for-recruiter/write-a-job-post-for-recruiter.component'
 import { CTA26 } from './cta26/cta26.component'
 import { Testimonial1 } from './testimonial1/testimonial1.component'
@@ -70,7 +70,7 @@ import { ProfileEmploymentComponent } from './profile-employment-component/profi
 import { TrialComponent } from './trial-component/trial-component.component'
 import { NavbarForCandidateView860721 } from './navbar-for-candidate-view-86072-1/navbar-for-candidate-view-86072-1.component'
 import { ViewMoreCandidates } from './view-more-candidates/view-more-candidates.component'
-import { RecruiterJobPosted1 } from './recruiter-job-posted/recruiter-job-posted.component1'
+import { RecruiterJobPosted1 } from './recruiter-job-posted1/recruiter-job-posted1.component'
 import { LandingPageArticleCard } from './landing-page-article-card/landing-page-article-card.component'
 import { NavbarForRecruiterView1076721 } from './navbar-for-recruiter-view-107672-1/navbar-for-recruiter-view-107672-1.component'
 import { RecruiterCompanyJobCard } from './recruiter-company-job-card/recruiter-company-job-card.component'
@@ -156,7 +156,7 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-    CandidateJobForYouCard1,
+    //CandidateJobForYouCard1,
     WriteAJobPostForRecruiter,
     CTA26,
     Testimonial1,
@@ -179,7 +179,7 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowLargeCard,
     VerifyEmailSMSPopup,
     NavbarForCandidateView107672,
-    CandidateJobForYouCard1,
+    //CandidateJobForYouCard1,
     LandingPageArticalPreviewCard,
     BufferScreen,
     BufferName,
@@ -252,7 +252,7 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-    CandidateJobForYouCard1,
+    //CandidateJobForYouCard1,
     WriteAJobPostForRecruiter,
     CTA26,
     Testimonial1,
@@ -275,7 +275,7 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowLargeCard,
     VerifyEmailSMSPopup,
     NavbarForCandidateView107672,
-    CandidateJobForYouCard1,
+    //CandidateJobForYouCard1,
     LandingPageArticalPreviewCard,
     BufferScreen,
     BufferName,

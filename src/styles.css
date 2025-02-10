@@ -598,6 +598,37 @@
   .thq-img-scale {
     width: 100%;
   }
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between the bar and score */
+  }
+
+  .progress {
+    position: relative;
+    width: 500px; /* Width of the progress bar */
+    height: 6px; /* Height of the progress bar */
+    background-color: #ccc; /* Background color for unfilled portion */
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden; /* Clip the progress bar inside the container */
+  }
+
+  .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0; /* Initial width is 0% */
+    background-color: #0bf; /* Default color for filled portion */
+    transition: width 0.3s ease; /* Smooth width transition */
+  }
+
+  .score {
+    font-family: 'Inter', sans-serif; /* Font family */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Font weight */
+    color: #474748; /* Default text color */
+  }
 }
  
 @media(max-width: 479px) {
