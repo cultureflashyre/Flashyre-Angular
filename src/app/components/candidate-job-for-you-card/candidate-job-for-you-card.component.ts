@@ -1,11 +1,15 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, Input, AfterViewInit, ContentChild, TemplateRef } from '@angular/core'
 
 @Component({
   selector: 'candidate-job-for-you-card',
   templateUrl: 'candidate-job-for-you-card.component.html',
   styleUrls: ['candidate-job-for-you-card.component.css'],
 })
-export class CandidateJobForYouCard {
+export class CandidateJobForYouCard implements AfterViewInit {
+
+  @Input()
+  perc: number = 0;
+
   @ContentChild('text2')
   text2: TemplateRef<any>
   @ContentChild('button')
@@ -27,5 +31,51 @@ export class CandidateJobForYouCard {
   imageAlt: string = 'image'
   @ContentChild('text3')
   text3: TemplateRef<any>
+
   constructor() {}
+
+  ngAfterViewInit(): void {
+    this.animateProgressBar();
+  }
+
+  // Determine the fill color based on the percentage
+  private getFillColor(value: number): string {
+    if (value <= 40) return 'red';
+    if (value <= 60) return 'orange';
+    if (value <= 75) return '#4D91C6'; // Ampere color
+    if (value <= 84) return 'lightgreen';
+    return 'darkgreen';
+  }
+
+  // Animate the progress bar
+  private animateProgressBar(): void {
+    const progress: HTMLElement | null = document.querySelector('.progress');
+    const bar: HTMLElement | null = progress ? progress.querySelector('.bar') : null;
+    const score: HTMLElement | null = document.querySelector('.score');
+
+    if (bar && score) {
+      let start: number = 0;
+      const duration: number = 3000; // Animation duration in milliseconds
+      const startTime: number = performance.now();
+
+      const animate = (currentTime: number) => {
+        const elapsedTime: number = currentTime - startTime;
+        const progressPercentage: number = Math.min(elapsedTime / duration, 1);
+        const currentPerc: number = progressPercentage * this.perc;
+
+        // Update the width and color of the bar
+        bar.style.width = ${currentPerc}%;
+        bar.style.backgroundColor = this.getFillColor(currentPerc);
+
+        // Update the displayed score
+        score.textContent = ${Math.round(currentPerc)}%;
+
+        if (progressPercentage < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+
+      requestAnimationFrame(animate);
+    }
+  }
 }
