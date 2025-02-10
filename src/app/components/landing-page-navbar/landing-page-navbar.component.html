@@ -1,0 +1,330 @@
+<header
+  id="landing-page-navbar"
+  class="landing-page-navbar-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="landing-page-navbar-container"
+    class="landing-page-navbar-container2"
+  >
+    <header
+      data-thq="thq-navbar"
+      class="landing-page-navbar-navbar-interactive"
+    >
+      <img
+        id="flashyre-logo"
+        [attr.alt]="imageAlt1"
+        [attr.src]="imageSrc1"
+        class="landing-page-navbar-flashyre-image"
+      />
+      <div data-thq="thq-navbar-nav" class="landing-page-navbar-desktop-menu">
+        <nav class="landing-page-navbar-links">
+          <a
+            [attr.href]="link3Url"
+            id="navbar-about-link"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="landing-page-navbar-assessment-link thq-link thq-body-small button"
+          >
+            <ng-container>
+              <ng-template #defaultLink3>
+                <div class="landing-page-navbar-fragment20">
+                  <span class="landing-page-navbar-text21">About</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link3 ? link3 : defaultLink3"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <a
+            [attr.href]="link4Url"
+            id="navbar-article-link"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="landing-page-navbar-jobs-for-you-link thq-link thq-body-small button"
+          >
+            <ng-container>
+              <ng-template #defaultLink4>
+                <div class="landing-page-navbar-fragment11">
+                  <span class="landing-page-navbar-text12">Article</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link4 ? link4 : defaultLink4"
+              ></ng-container>
+            </ng-container>
+          </a>
+        </nav>
+      </div>
+      <div
+        data-thq="thq-dropdown"
+        class="landing-page-navbar-thq-dropdown list-item"
+      >
+        <div
+          data-thq="thq-dropdown-toggle"
+          class="landing-page-navbar-dropdown-toggle1"
+        >
+          <div id="sign-up-dropdown" class="landing-page-navbar-container3">
+            <span id="sign-up-dropdown-text" class="landing-page-navbar-text10">
+              <ng-container>
+                <ng-template #defaultText>
+                  <div class="landing-page-navbar-fragment15">
+                    <span class="landing-page-navbar-text16">Sign Up</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text ? text : defaultText"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <svg
+              id="dropdown-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="landing-page-navbar-icon1"
+            >
+              <path d="m12 14l-4-4h8z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+        <ul
+          data-thq="thq-dropdown-list"
+          class="landing-page-navbar-dropdown-list"
+        >
+          <li
+            data-thq="thq-dropdown"
+            class="landing-page-navbar-candidate list-item"
+          >
+            <a routerLink="/login-candidate">
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="landing-page-navbar-dropdown-toggle2"
+              >
+                <span
+                  id="candidate-signup"
+                  class="landing-page-navbar-candidate-text1"
+                >
+                  <ng-container>
+                    <ng-template #defaultText1>
+                      <div class="landing-page-navbar-fragment17">
+                        <span class="landing-page-navbar-text18">
+                          Candidate
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </a>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="landing-page-navbar-universitycollege list-item"
+          >
+            <a routerLink="/login-college">
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="landing-page-navbar-dropdown-toggle3"
+              >
+                <span
+                  id="university-college-signup"
+                  class="landing-page-navbar-universiitycollege-text"
+                >
+                  <ng-container>
+                    <ng-template #defaultText2>
+                      <div class="landing-page-navbar-fragment10">
+                        <span class="landing-page-navbar-text11">
+                          University / College
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </a>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="landing-page-navbar-corporate list-item"
+          >
+            <a routerLink="/login-corporate">
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="landing-page-navbar-dropdown-toggle4"
+              >
+                <span
+                  id="corporate-signup"
+                  class="landing-page-navbar-corporate-text1"
+                >
+                  <ng-container>
+                    <ng-template #defaultText3>
+                      <div class="landing-page-navbar-fragment12">
+                        <span class="landing-page-navbar-text13">
+                          Corporate
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div data-thq="thq-burger-menu" class="landing-page-navbar-burger-menu">
+        <svg
+          id="burger-icon"
+          viewBox="0 0 1024 1024"
+          class="landing-page-navbar-burger-icon"
+        >
+          <path
+            d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"
+          ></path>
+        </svg>
+      </div>
+      <div data-thq="thq-mobile-menu" class="landing-page-navbar-mobile-menu">
+        <div id="popup-container" class="landing-page-navbar-popup-container">
+          <div id="close-icon" class="landing-page-navbar-close-icon">
+            <div
+              data-thq="thq-close-menu"
+              class="landing-page-navbar-close-menu"
+            >
+              <svg viewBox="0 0 1024 1024" class="landing-page-navbar-icon4">
+                <path
+                  d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div id="popup-details" class="landing-page-navbar-container4">
+            <div
+              id="about-container"
+              class="landing-page-navbar-about-container"
+            >
+              <span id="about-text" class="landing-page-navbar-about-text">
+                <ng-container>
+                  <ng-template #defaultText9>
+                    <div class="landing-page-navbar-fragment13">
+                      <span class="landing-page-navbar-text14">About</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text9 ? text9 : defaultText9"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+            <div
+              id="article-container"
+              class="landing-page-navbar-article-container"
+            >
+              <span id="article-text" class="landing-page-navbar-article-text">
+                <ng-container>
+                  <ng-template #defaultText10>
+                    <div class="landing-page-navbar-fragment16">
+                      <span class="landing-page-navbar-text17">Article</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text10 ? text10 : defaultText10"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+            <div
+              id="different-signup-containers"
+              class="landing-page-navbar-different-signup-container"
+            >
+              <a
+                routerLink="/login-candidate"
+                class="landing-page-navbar-navlink4"
+              >
+                <div
+                  id="candidate-signup-mobile-view"
+                  class="landing-page-navbar-candidate-container"
+                >
+                  <span
+                    id="candidate-signup-button"
+                    class="landing-page-navbar-candidate-text2"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText11>
+                        <div class="landing-page-navbar-fragment19">
+                          <span class="landing-page-navbar-text20">
+                            Candidate
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text11 ? text11 : defaultText11"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </a>
+              <a
+                routerLink="/login-college"
+                class="landing-page-navbar-navlink5"
+              >
+                <div
+                  id="university-college-signup-mobile-view"
+                  class="landing-page-navbar-universitycollege-container"
+                >
+                  <span id="university/college-signup-Button">
+                    <ng-container>
+                      <ng-template #defaultText12>
+                        <div class="landing-page-navbar-fragment18">
+                          <span class="landing-page-navbar-text19">
+                            University / College
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </a>
+              <a
+                routerLink="/login-corporate"
+                class="landing-page-navbar-navlink6"
+              >
+                <div
+                  id="corporate-signup-mobile-view"
+                  class="landing-page-navbar-corporate-container button"
+                >
+                  <span id="corporate-signup-button">
+                    <ng-container>
+                      <ng-template #defaultText13>
+                        <div class="landing-page-navbar-fragment14">
+                          <span class="landing-page-navbar-text15">
+                            Corporate
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text13 ? text13 : defaultText13"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+</header>

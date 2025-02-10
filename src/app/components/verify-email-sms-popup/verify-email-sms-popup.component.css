@@ -1,0 +1,129 @@
+:host { 
+  display: contents; 
+}
+ 
+.verify-email-sms-popup-container1 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.verify-email-sms-popup-container2 {
+  gap: var(--dl-space-space-threeunits);
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.verify-email-sms-popup-container3 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.verify-email-sms-popup-text1 {
+  width: 320px;
+  height: 24px;
+}
+ 
+.verify-email-sms-popup-textinput1 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+}
+ 
+.verify-email-sms-popup-container4 {
+  flex: 0 0 auto;
+  width: 100%;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 100px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.verify-email-sms-popup-container5 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.verify-email-sms-popup-text2 {
+  width: 320px;
+  height: 24px;
+  margin-left: 24px;
+}
+ 
+.verify-email-sms-popup-textinput2 {
+  width: 320px;
+  height: 48px;
+  margin-left: 24px;
+  border-color: #A7A7A7;
+}
+ 
+.verify-email-sms-popup-container6 {
+  gap: var(--dl-space-space-threeunits);
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.verify-email-sms-popup-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 100%;
+  height: 56px;
+  border-width: 0px;
+  border-radius: 4px;
+  background-color: #05356C;
+}
+ 
+.verify-email-sms-popup-text3 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.verify-email-sms-popup-fragment1 {
+  display: contents;
+}
+ 
+.verify-email-sms-popup-text4 {
+  display: inline-block;
+}
+ 
+.verify-email-sms-popup-fragment2 {
+  display: contents;
+}
+ 
+.verify-email-sms-popup-text5 {
+  display: inline-block;
+}
+ 
+.verify-email-sms-popup-fragment3 {
+  display: contents;
+}
+ 
+.verify-email-sms-popup-text6 {
+  width: 320px;
+  height: 24px;
+  display: inline-block;
+}

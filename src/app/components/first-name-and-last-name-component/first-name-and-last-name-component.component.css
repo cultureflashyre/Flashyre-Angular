@@ -1,0 +1,72 @@
+:host { 
+  display: contents; 
+}
+ 
+.first-name-and-last-name-component-container1 {
+  flex: 0 0 auto;
+  width: 664px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+ 
+.first-name-and-last-name-component-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.first-name-and-last-name-component-text1 {
+  width: 320px;
+  height: 24px;
+}
+ 
+.first-name-and-last-name-component-textinput1 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+}
+ 
+.first-name-and-last-name-component-container3 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.first-name-and-last-name-component-text2 {
+  width: 320px;
+  height: 24px;
+  margin-left: 24px;
+}
+ 
+.first-name-and-last-name-component-textinput2 {
+  width: 320px;
+  height: 48px;
+  margin-left: 24px;
+  border-color: #A7A7A7;
+}
+ 
+.first-name-and-last-name-component-fragment1 {
+  display: contents;
+}
+ 
+.first-name-and-last-name-component-text3 {
+  width: 320px;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.first-name-and-last-name-component-fragment2 {
+  display: contents;
+}
+ 
+.first-name-and-last-name-component-text7 {
+  display: inline-block;
+}

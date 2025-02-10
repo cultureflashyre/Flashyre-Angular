@@ -1,0 +1,66 @@
+<div class="date-selector1-date-selector">
+  <div class="date-selector1-container1">
+    <div class="date-selector1-container2">
+      <span class="date-selector1-text1">
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="date-selector1-fragment2">
+              <span class="date-selector1-text5">Certificate Name</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <input
+        type="text"
+        [attr.placeholder]="textinputPlaceholder"
+        class="date-selector1-textinput input"
+      />
+    </div>
+  </div>
+  <div class="date-selector1-container3">
+    <div class="date-selector1-container4">
+      <span class="date-selector1-text2">
+        <ng-container>
+          <ng-template #defaultText1>
+            <div class="date-selector1-fragment3">
+              <span class="date-selector1-text6">Issuing Institute</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div class="date-selector1-container5">
+        <form class="date-selector1-form input">
+          <span class="date-selector1-text3">
+            <ng-container>
+              <ng-template #defaultText2>
+                <div class="date-selector1-fragment1">
+                  <span class="date-selector1-text4">Select</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text2 ? text2 : defaultText2"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 32 32"
+            class="date-selector1-icon1"
+          >
+            <path
+              d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

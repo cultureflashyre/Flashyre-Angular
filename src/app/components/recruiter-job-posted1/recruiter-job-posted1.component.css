@@ -1,0 +1,117 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-job-posted1-container {
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.recruiter-job-posted1-recruiter-job-posted-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 240px;
+  height: 112px;
+  display: flex;
+  padding: 24px;
+  align-self: center;
+  border-color: #E6E2E6;
+  border-width: 1px;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-job-posted1-job-posted-text {
+  width: 71px;
+  height: 24px;
+  display: flex;
+  font-size: 13px;
+  font-style: normal;
+  text-align: center;
+  align-items: center;
+  font-weight: 500;
+  justify-content: center;
+}
+ 
+.recruiter-job-posted1-number-of-job-posted-text {
+  fill: #18191C;
+  color: #18191C;
+  width: 110px;
+  height: 24px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-job-posted1-fragment1 {
+  display: contents;
+}
+ 
+.recruiter-job-posted1-fragment2 {
+  display: contents;
+}
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+@media(max-width: 991px) {
+  .recruiter-job-posted1-recruiter-job-posted-container {
+    width: 200px;
+  }
+  .recruiter-job-posted1-job-posted-text {
+    font-size: 12px;
+    justify-content: flex-start;
+  }
+  .recruiter-job-posted1-number-of-job-posted-text {
+    display: flex;
+    font-size: 14px;
+    text-align: center;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-job-posted1-recruiter-job-posted-container {
+    width: 180px;
+  }
+  .recruiter-job-posted1-job-posted-text {
+    font-size: 10px;
+  }
+  .recruiter-job-posted1-number-of-job-posted-text {
+    font-size: 12px;
+    text-align: center;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-job-posted1-container {
+    height: auto;
+    align-items: center;
+    justify-content: center;
+  }
+  .recruiter-job-posted1-recruiter-job-posted-container {
+    width: 100%;
+    align-items: center;
+  }
+  .recruiter-job-posted1-job-posted-text {
+    justify-content: center;
+  }
+  .recruiter-job-posted1-number-of-job-posted-text {
+    justify-content: center;
+  }
+}

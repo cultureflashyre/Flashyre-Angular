@@ -1,0 +1,126 @@
+<div
+  id="recruiter-view-candidate-profile"
+  class="recruiter-view-candidate-profile-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-view-candidate-profile-container"
+    class="recruiter-view-candidate-profile-recruiter-view-candidate-profile-container"
+  >
+    <div
+      id="candidate-details-container"
+      class="recruiter-view-candidate-profile-candidate-details-container"
+    >
+      <img
+        id="candidate-image"
+        [attr.alt]="imageAlt"
+        [attr.src]="imageSrc"
+        class="recruiter-view-candidate-profile-candidate-image"
+      />
+      <div id="details" class="recruiter-view-candidate-profile-container2">
+        <div
+          id="candidate-name-container"
+          class="recruiter-view-candidate-profile-candidate-name-container"
+        >
+          <span
+            id="candidate-name"
+            class="recruiter-view-candidate-profile-candidate-name"
+          >
+            <ng-container>
+              <ng-template #defaultText>
+                <div class="recruiter-view-candidate-profile-fragment2">
+                  <span class="recruiter-view-candidate-profile-text2">
+                    Kathryn Murphy
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text ? text : defaultText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="open-to-work-container"
+            class="recruiter-view-candidate-profile-open-to-work-container"
+          >
+            <span
+              id="open-to-work"
+              class="recruiter-view-candidate-profile-open-to-work"
+            >
+              <ng-container>
+                <ng-template #defaultText1>
+                  <div class="recruiter-view-candidate-profile-fragment4">
+                    <span class="recruiter-view-candidate-profile-text4">
+                      Open to Work
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+        <span
+          id="active-2days-ago"
+          class="recruiter-view-candidate-profile-active2days-ago"
+        >
+          <ng-container>
+            <ng-template #defaultText2>
+              <div class="recruiter-view-candidate-profile-fragment5">
+                <span class="recruiter-view-candidate-profile-text5">
+                  Active 2 days ago
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text2 ? text2 : defaultText2"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+    <div
+      id="job-details-container"
+      class="recruiter-view-candidate-profile-job-details-container"
+    >
+      <span
+        id="role-company"
+        class="recruiter-view-candidate-profile-role-company"
+      >
+        <ng-container>
+          <ng-template #defaultText3>
+            <div class="recruiter-view-candidate-profile-fragment3">
+              <span class="recruiter-view-candidate-profile-text3">
+                Senior Software Engineer @ Microsoft
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text3 ? text3 : defaultText3"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="location-container"
+        class="recruiter-view-candidate-profile-location-container"
+      >
+        <span id="location" class="recruiter-view-candidate-profile-location">
+          <ng-container>
+            <ng-template #defaultText4>
+              <div class="recruiter-view-candidate-profile-fragment1">
+                <span class="recruiter-view-candidate-profile-text1">
+                  6-8 Years · Bengaluru, India (On-site)
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text4 ? text4 : defaultText4"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

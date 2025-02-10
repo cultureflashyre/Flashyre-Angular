@@ -1,0 +1,109 @@
+:host { 
+  display: contents; 
+}
+ 
+.input-date-component-date-selector {
+  width: 672px;
+  height: 76px;
+  display: grid;
+  position: relative;
+  grid-template-columns: 1fr 1fr;
+}
+ 
+.input-date-component-container1 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.input-date-component-container2 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.input-date-component-text1 {
+  width: 324px;
+  height: 24px;
+}
+ 
+.input-date-component-container3 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.input-date-component-form {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.input-date-component-text2 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.input-date-component-fragment1 {
+  display: contents;
+}
+ 
+.input-date-component-text3 {
+  display: inline-block;
+}
+ 
+.input-date-component-fragment2 {
+  display: contents;
+}
+ 
+.input-date-component-text4 {
+  display: inline-block;
+}
+ 
+
+ 
+@media(max-width: 1200px) {
+  .input-date-component-date-selector {
+    width: auto;
+    display: flex;
+  }
+  .input-date-component-container1 {
+    align-items: center;
+  }
+  .input-date-component-form {
+    position: relative;
+  }
+  .input-date-component-icon1 {
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    bottom: 0px;
+    height: 20px;
+    position: absolute;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: var(--dl-space-space-unit);
+    margin-bottom: auto;
+  }
+}

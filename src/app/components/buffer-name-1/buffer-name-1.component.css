@@ -1,0 +1,56 @@
+:host { 
+  display: contents; 
+}
+ 
+.buffer-name-1-container1 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-end;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+ 
+.buffer-name-1-container2 {
+  flex: 0 0 auto;
+  width: 711px;
+  height: auto;
+  display: flex;
+  align-self: flex-end;
+  align-items: flex-end;
+  justify-content: center;
+}
+ 
+.buffer-name-1-container3 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  align-self: center;
+  margin-top: 0px;
+  align-items: center;
+  margin-left: 0px;
+  margin-bottom: 0px;
+  justify-content: center;
+}
+ 
+.buffer-name-1-container4 {
+  display: contents;
+}
+ 
+@media(max-width: 1200px) {
+  .buffer-name-1-container3 {
+    width: 100%;
+    height: 100%;
+    padding: 0%;
+    align-items: center;
+    justify-content: center;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .buffer-name-1-container3 {
+    display: block;
+  }
+}

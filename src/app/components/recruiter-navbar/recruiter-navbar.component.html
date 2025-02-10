@@ -1,0 +1,168 @@
+<div
+  id="recruiter-navbar"
+  class="recruiter-navbar-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-navbar-container"
+    class="recruiter-navbar-recruiter-navbar-container"
+  >
+    <div class="recruiter-navbar-container2">
+      <div id="details" class="recruiter-navbar-details-container">
+        <span id="applied" class="recruiter-navbar-applied button">
+          <ng-container>
+            <ng-template #defaultText3>
+              <div class="recruiter-navbar-fragment4">
+                <span class="recruiter-navbar-text4">Applied (10)</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text3 ? text3 : defaultText3"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span id="sourced" class="recruiter-navbar-sourced button">
+          <ng-container>
+            <ng-template #defaultText4>
+              <div class="recruiter-navbar-fragment2">
+                <span class="recruiter-navbar-text2">Sourced (4)</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text4 ? text4 : defaultText4"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span id="selected" class="recruiter-navbar-selected button">
+          <ng-container>
+            <ng-template #defaultText5>
+              <div class="recruiter-navbar-fragment7">
+                <span class="recruiter-navbar-text7">Selected (2)</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text5 ? text5 : defaultText5"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <div
+        data-thq="thq-dropdown"
+        class="recruiter-navbar-thq-dropdown list-item"
+      >
+        <div
+          data-thq="thq-dropdown-toggle"
+          class="recruiter-navbar-dropdown-toggle1 button"
+        >
+          <span id="take-action" class="recruiter-navbar-take-action-text">
+            <ng-container>
+              <ng-template #defaultText6>
+                <div class="recruiter-navbar-fragment5">
+                  <span class="recruiter-navbar-text5">Take Action</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text6 ? text6 : defaultText6"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            data-thq="thq-dropdown-arrow"
+            class="recruiter-navbar-dropdown-arrow"
+          >
+            <svg
+              id="dropdown"
+              viewBox="0 0 1024 1024"
+              class="recruiter-navbar-dropdown-icon"
+            >
+              <path d="M426 726v-428l214 214z"></path>
+            </svg>
+          </div>
+        </div>
+        <ul data-thq="thq-dropdown-list" class="recruiter-navbar-dropdown-list">
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-navbar-dropdown1 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-navbar-dropdown-toggle2"
+            >
+              <span
+                id="screening-call-invite"
+                class="recruiter-navbar-screening-call-invite-text"
+              >
+                <ng-container>
+                  <ng-template #defaultText7>
+                    <div class="recruiter-navbar-fragment3">
+                      <span class="recruiter-navbar-text3">
+                        Screening Call Invite
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-navbar-dropdown2 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-navbar-dropdown-toggle3"
+            >
+              <span
+                id="assessment-invite"
+                class="recruiter-navbar-assessment-invite-text"
+              >
+                <ng-container>
+                  <ng-template #defaultText8>
+                    <div class="recruiter-navbar-fragment1">
+                      <span class="recruiter-navbar-text1">
+                        Assessment Invite
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text8 ? text8 : defaultText8"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-navbar-dropdown3 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-navbar-dropdown-toggle4"
+            >
+              <span
+                id="interview-invite"
+                class="recruiter-navbar-interview-invite-text"
+              >
+                <ng-container>
+                  <ng-template #defaultText9>
+                    <div class="recruiter-navbar-fragment6">
+                      <span class="recruiter-navbar-text6">
+                        Interview Invite
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text9 ? text9 : defaultText9"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="recruiter-job-posted-container1" [ngClass]="rootClassName">
+  <div class="recruiter-job-posted-container2">
+    <span class="recruiter-job-posted-text1">
+      <ng-container>
+        <ng-template #defaultText>
+          <div class="recruiter-job-posted-fragment">
+            <span class="recruiter-job-posted-text2">Job Applied</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text ? text : defaultText"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+</div>

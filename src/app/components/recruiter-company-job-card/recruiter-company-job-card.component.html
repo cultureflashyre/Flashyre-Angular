@@ -1,0 +1,50 @@
+<div
+  id="recruiter-company-job-card"
+  class="recruiter-company-job-card-container"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-company-job-card-container"
+    class="recruiter-company-job-card-recruiter-company-job-card-container"
+  >
+    <img
+      id="company-image"
+      [attr.alt]="imageAlt"
+      [attr.src]="imageSrc"
+      class="recruiter-company-job-card-company-image"
+    />
+    <div
+      id="company-job-role-container"
+      class="recruiter-company-job-card-company-job-role-container"
+    >
+      <span id="company-name" class="recruiter-company-job-card-company-name">
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="recruiter-company-job-card-fragment1">
+              <span class="recruiter-company-job-card-text1">Google</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <span id="job-role" class="recruiter-company-job-card-job-role">
+        <ng-container>
+          <ng-template #defaultText1>
+            <div class="recruiter-company-job-card-fragment2">
+              <span class="recruiter-company-job-card-text2">
+                <span>Software Development</span>
+                <br />
+                <span>Mountain View, CA</span>
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+</div>

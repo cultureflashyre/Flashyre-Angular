@@ -1,0 +1,20 @@
+:host { 
+  display: contents; 
+}
+ 
+.component1-container {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+@media(max-width: 479px) {
+  .component1-container {
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(90deg, rgb(189, 195, 199) 0.00%,rgb(0, 0, 0) 100.00%);
+  }
+}

@@ -1,0 +1,484 @@
+:host { 
+  display: contents; 
+}
+ 
+.flashyre-assessment-rules-container1 {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-rules-header-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  z-index: 1;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-left: 100px;
+  padding-right: 100px;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-rules-logo {
+  width: 350px;
+  object-fit: cover;
+}
+ 
+.flashyre-assessment-rules-assessment-name {
+  height: 60px;
+  display: flex;
+  font-size: 32px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-rules-rules-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-rules-rules {
+  gap: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  overflow: scroll;
+  align-self: center;
+  overflow-x: hidden;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-rules-header {
+  height: auto;
+  display: flex;
+  font-size: 24px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-test-details {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text10 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-test-taking {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 898px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text13 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container3 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-rules-text14 {
+  display: flex;
+}
+ 
+.flashyre-assessment-rules-text15 {
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-text16 {
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-rules-scoring {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text17 {
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container4 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-important-notes {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-container5 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-notes-container {
+  flex: 0 0 auto;
+  width: 456px;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+ 
+.flashyre-assessment-rules-note {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-note-heading {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-first-note {
+  font-size: 22px;
+  text-align: left;
+  text-transform: uppercase;
+}
+ 
+.flashyre-assessment-rules-second-note {
+  font-size: 22px;
+  text-align: left;
+  text-transform: uppercase;
+}
+ 
+.flashyre-assessment-rules-confirmation-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-good-luck {
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-assessment-rules-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-assessment-rule-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--dl-radius-radius-radius4);
+}
+ 
+.flashyre-assessment-rules-assessment-rule-text {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button {
+  width: 100%;
+  height: 40px;
+  transition: 0.3s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-rules-fragment10 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text24 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment11 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text25 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment12 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text28 {
+  display: inline-block;
+  font-size: 32px;
+}
+ 
+.flashyre-assessment-rules-fragment13 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text29 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment14 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text30 {
+  color: rgb(241, 4, 0);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment15 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text31 {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-fragment16 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text34 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment17 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text35 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment18 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text38 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment19 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text39 {
+  color: rgb(241, 4, 0);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment20 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text40 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment21 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text41 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment22 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text44 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment23 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text45 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment24 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text46 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment25 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text47 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment26 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text48 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment27 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text49 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment28 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text50 {
+  display: inline-block;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-fragment29 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text51 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment30 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text52 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment31 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text53 {
+  color: #ffffff;
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .flashyre-assessment-rules-container1 {
+    height: 100vh;
+    box-shadow: 5px 5px 10px 0px #d4d4d4;
+  }
+  .flashyre-assessment-rules-header-container {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  .flashyre-assessment-rules-logo {
+    width: 255px;
+    height: 40px;
+  }
+  .flashyre-assessment-rules-rules-container {
+    width: 1000px;
+  }
+  .flashyre-assessment-rules-rules {
+    width: 60%;
+  }
+  .flashyre-assessment-rules-test-taking {
+    width: auto;
+  }
+  .flashyre-assessment-rules-notes-container {
+    width: 40%;
+  }
+}

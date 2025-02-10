@@ -1,0 +1,276 @@
+:host { 
+  display: contents; 
+}
+ 
+.profile-education-page-container {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-education-page-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: 704px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-education-page-fragment10 {
+  display: contents;
+}
+ 
+.profile-education-page-text10 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment11 {
+  display: contents;
+}
+ 
+.profile-education-page-text11 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment12 {
+  display: contents;
+}
+ 
+.profile-education-page-text12 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment13 {
+  display: contents;
+}
+ 
+.profile-education-page-text13 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment14 {
+  display: contents;
+}
+ 
+.profile-education-page-text14 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment15 {
+  display: contents;
+}
+ 
+.profile-education-page-text15 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment16 {
+  display: contents;
+}
+ 
+.profile-education-page-text16 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment17 {
+  display: contents;
+}
+ 
+.profile-education-page-text17 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment18 {
+  display: contents;
+}
+ 
+.profile-education-page-text18 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment19 {
+  display: contents;
+}
+ 
+.profile-education-page-text19 {
+  display: inline-block;
+}
+ 
+.profile-education-page-education-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 720px;
+  height: 600px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-education-page-fragment20 {
+  display: contents;
+}
+ 
+.profile-education-page-course-text {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment21 {
+  display: contents;
+}
+ 
+.profile-education-page-text22 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment22 {
+  display: contents;
+}
+ 
+.profile-education-page-text23 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment23 {
+  display: contents;
+}
+ 
+.profile-education-page-text24 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment24 {
+  display: contents;
+}
+ 
+.profile-education-page-text25 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment25 {
+  display: contents;
+}
+ 
+.profile-education-page-text26 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment26 {
+  display: contents;
+}
+ 
+.profile-education-page-text27 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment27 {
+  display: contents;
+}
+ 
+.profile-education-page-text28 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment28 {
+  display: contents;
+}
+ 
+.profile-education-page-university-institute-text {
+  color: rgb(24, 25, 28);
+  width: 324px;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment29 {
+  display: contents;
+}
+ 
+.profile-education-page-text31 {
+  color: #05356c;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment30 {
+  display: contents;
+}
+ 
+.profile-education-page-text34 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment31 {
+  display: contents;
+}
+ 
+.profile-education-page-text35 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .profile-education-page-main-container {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .profile-education-page-text13 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .profile-education-page-text14 {
+    font-size: 10px;
+  }
+  .profile-education-page-text15 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .profile-education-page-text16 {
+    font-size: 10px;
+  }
+  .profile-education-page-text17 {
+    font-size: 10px;
+  }
+  .profile-education-page-text18 {
+    font-size: 10px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .profile-education-page-main-container {
+    width: 100%;
+    height: auto;
+  }
+  .profile-education-page-education-container {
+    gap: 16px;
+    width: 100%;
+    height: 904px;
+    position: relative;
+    align-items: center;
+  }
+  .profile-education-page-course-text {
+    width: 100%;
+  }
+  .profile-education-page-university-institute-text {
+    width: 100%;
+  }
+  .profile-education-page-text31 {
+    color: rgb(5, 53, 108);
+  }
+  .profile-education-page-text32 {
+    font-size: 14px;
+  }
+  .profile-education-page-text34 {
+    font-size: 14px;
+  }
+  .profile-education-page-text35 {
+    font-size: 14px;
+  }
+}
