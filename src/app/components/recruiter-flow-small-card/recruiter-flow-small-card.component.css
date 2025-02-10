@@ -1,0 +1,360 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-flow-small-card-container {
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.recruiter-flow-small-card-recruiter-flow-small-card-container {
+  gap: 16px;
+  width: 100%;
+  height: 134px;
+  display: flex;
+  padding: 16px;
+  transition: 0.3s;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  background-color: #F5F7F9;
+  border-right-width: 0px;
+}
+ 
+.recruiter-flow-small-card-recruiter-flow-small-card-container:hover {
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-flow-small-card-recruiter-flow-small-card-container:active {
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-flow-small-card-job-details-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 102px;
+  display: flex;
+  transition: 0.3s;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.recruiter-flow-small-card-job-details-container:hover {
+  transform: all 0.7s;
+  transition: all 0.7s;
+}
+ 
+.recruiter-flow-small-card-job-details-container:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-flow-small-card-job-role {
+  width: 197px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-flow-small-card-experience-and-location {
+  width: 246px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-flow-small-card-number-of-candidates-applied-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 228px;
+  height: 24px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+ 
+.recruiter-flow-small-card-more-images-container {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+ 
+.recruiter-flow-small-card-image1 {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: var(--dl-radius-radius-round);
+}
+ 
+.recruiter-flow-small-card-image2 {
+  top: 0px;
+  left: 1px;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  object-fit: cover;
+  border-color: #FFFFFF;
+  border-width: 1px;
+  border-radius: var(--dl-radius-radius-round);
+}
+ 
+.recruiter-flow-small-card-candidates-applied {
+  fill: #474748;
+  color: #474748;
+  width: 192px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.recruiter-flow-small-card-expires-in2days-text {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-flow-small-card-fragment1 {
+  display: contents;
+}
+ 
+.recruiter-flow-small-card-text1 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-flow-small-card-fragment2 {
+  display: contents;
+}
+ 
+.recruiter-flow-small-card-text2 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-flow-small-card-fragment3 {
+  display: contents;
+}
+ 
+.recruiter-flow-small-card-text3 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-flow-small-card-fragment4 {
+  display: contents;
+}
+ 
+.recruiter-flow-small-card-text4 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 400;
+}
+ 
+.recruiter-flow-small-cardroot-class-name {
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name2 {
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name3 {
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name4 {
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name5 {
+  width: 100%;
+}
+ 
+.recruiter-flow-small-cardroot-class-name6 {
+  align-self: center;
+}
+ 
+.recruiter-flow-small-cardroot-class-name7 {
+  align-self: center;
+}
+ 
+.recruiter-flow-small-cardroot-class-name8 {
+  align-self: center;
+}
+ 
+.recruiter-flow-small-cardroot-class-name9 {
+  align-self: center;
+}
+ 
+.recruiter-flow-small-cardroot-class-name10 {
+  align-self: center;
+}
+ 
+.recruiter-flow-small-cardroot-class-name11 {
+  align-self: center;
+}
+ 
+@media(max-width: 991px) {
+  .recruiter-flow-small-card-container {
+    width: 100%;
+  }
+  .recruiter-flow-small-card-recruiter-flow-small-card-container {
+    width: 100%;
+    height: auto;
+  }
+  .recruiter-flow-small-card-job-details-container {
+    gap: 2px;
+    width: auto;
+    height: auto;
+    padding-left: 0px;
+  }
+  .recruiter-flow-small-card-job-role {
+    height: 22px;
+  }
+  .recruiter-flow-small-card-experience-and-location {
+    width: auto;
+    height: 22px;
+  }
+  .recruiter-flow-small-card-number-of-candidates-applied-container {
+    width: auto;
+    height: 22px;
+  }
+  .recruiter-flow-small-card-more-images-container {
+    width: 26px;
+    height: 22px;
+  }
+  .recruiter-flow-small-card-image1 {
+    width: 22px;
+    height: 22px;
+  }
+  .recruiter-flow-small-card-image2 {
+    width: 22px;
+    height: 22px;
+  }
+  .recruiter-flow-small-card-candidates-applied {
+    width: auto;
+    height: 22px;
+    justify-content: flex-start;
+  }
+  .recruiter-flow-small-card-expires-in2days-text {
+    height: 22px;
+  }
+  .recruiter-flow-small-card-text1 {
+    color: rgb(24, 25, 28);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-flow-small-card-text2 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-flow-small-card-text3 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-flow-small-card-text4 {
+    color: rgb(71, 71, 72);
+    font-size: 10px;
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-flow-small-card-recruiter-flow-small-card-container {
+    width: auto;
+  }
+  .recruiter-flow-small-card-job-details-container {
+    width: 182px;
+  }
+  .recruiter-flow-small-card-job-role {
+    width: auto;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-experience-and-location {
+    width: auto;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-number-of-candidates-applied-container {
+    width: auto;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-more-images-container {
+    width: 24px;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-image1 {
+    width: 20px;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-image2 {
+    width: 20px;
+    height: 18px;
+  }
+  .recruiter-flow-small-card-candidates-applied {
+    width: auto;
+  }
+  .recruiter-flow-small-card-expires-in2days-text {
+    height: 18px;
+  }
+  .recruiter-flow-small-card-text1 {
+    color: rgb(24, 25, 28);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-flow-small-card-text2 {
+    color: rgb(241, 4, 0);
+    font-size: 10px;
+  }
+  .recruiter-flow-small-card-text3 {
+    color: rgb(71, 71, 72);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-flow-small-card-text4 {
+    color: rgb(71, 71, 72);
+    font-size: 8px;
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-flow-small-card-number-of-candidates-applied-container {
+    align-items: center;
+  }
+  .recruiter-flow-small-card-candidates-applied {
+    height: auto;
+  }
+  .recruiter-flow-small-cardroot-class-name11 {
+    width: 100%;
+  }
+}

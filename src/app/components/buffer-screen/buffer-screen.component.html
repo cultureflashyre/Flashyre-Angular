@@ -1,0 +1,148 @@
+<div
+  id="buffer-screen"
+  class="buffer-screen-container1"
+  [ngClass]="rootClassName"
+>
+  <div id="buffer-screen-container" class="buffer-screen-container2">
+    <div class="buffer-screen-container3">
+      <div class="buffer-screen-container4">
+        <dangerous-html
+          html="<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Wave Sound Loader</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 441px;
+            height: 291px;
+        }
+
+        /* Sound Wave Loader */
+        .circle-loader {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100px;
+            height: 80px; /* Increased overall height */
+        }
+
+        .circle-loader div {
+            position: relative;
+            width: 8px;
+            height: 50%; /* Increased line length */
+            background-color: #444;
+            border-radius: 4px;
+            animation: wave 1.2s infinite ease-in-out;
+        }
+
+        /* Animate each bar with delays to create wave motion */
+        .circle-loader div:nth-child(1) { animation-delay: 0s; }
+        .circle-loader div:nth-child(2) { animation-delay: 0.2s; }
+        .circle-loader div:nth-child(3) { animation-delay: 0.4s; }
+        .circle-loader div:nth-child(4) { animation-delay: 0.6s; }
+        .circle-loader div:nth-child(5) { animation-delay: 0.8s; }
+        .circle-loader div:nth-child(6) { animation-delay: 1s; }
+
+        /* Wave Motion Animation */
+        @keyframes wave {
+            0%, 100% {
+                transform: scaleY(0.3);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media screen and (max-width: 1024px) { /* Tablets and small desktops */
+            .loading-overlay {
+                width: 90%;
+                height: auto;
+            }
+
+            .circle-loader {
+                width: 80px;
+                height: 70px; /* Adjusted height for smaller screens */
+            }
+
+            .circle-loader div {
+                width: 7px;
+                height: 60%;
+            }
+        }
+
+        @media screen and (max-width: 768px) { /* Tablets and large phones */
+            .loading-overlay {
+                width: 80%;
+                height: auto;
+            }
+
+            .circle-loader {
+                width: 70px;
+                height: 60px; /* Adjusted height for tablets */
+            }
+
+            .circle-loader div {
+                width: 6px;
+                height: 60%;
+            }
+        }
+
+        @media screen and (max-width: 480px) { /* Small phones */
+            .loading-overlay {
+                width: 100%;
+                height: auto;
+            }
+
+            .circle-loader {
+                width: 60px;
+                height: 50px; /* Adjusted height for small screens */
+            }
+
+            .circle-loader div {
+                width: 5px;
+                height: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class='loading-overlay'>
+        <div class='circle-loader'>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</body>
+</html>
+"
+        ></dangerous-html>
+      </div>
+    </div>
+  </div>
+</div>

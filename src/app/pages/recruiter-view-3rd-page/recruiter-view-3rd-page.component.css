@@ -1,0 +1,847 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-view3rd-page-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.recruiter-view3rd-page-main-container {
+  flex: 0 0 auto;
+  width: 1440px;
+  height: 1019px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: #F4F4F4;
+}
+ 
+.recruiter-view3rd-page-container2 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: 1076px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.recruiter-view3rd-page-fragment10 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text10 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment11 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text11 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.recruiter-view3rd-page-fragment12 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment13 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text13 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment14 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text14 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment15 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text15 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment16 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text16 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment17 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text17 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment18 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text18 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment19 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text19 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment20 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text20 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment21 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text21 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment22 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text22 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.recruiter-view3rd-page-fragment23 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text23 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment24 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text24 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment25 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text25 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment26 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text26 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment27 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text30 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.recruiter-view3rd-page-details-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1124px;
+  height: 980px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.recruiter-view3rd-page-profile-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 240px;
+  height: 390px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.recruiter-view3rd-page-fragment28 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text31 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment29 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text32 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment30 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text33 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment31 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text37 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment32 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text38 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-job-posting-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 860px;
+  height: 980px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.recruiter-view3rd-page-fragment33 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text39 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+}
+ 
+.recruiter-view3rd-page-fragment34 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text40 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.recruiter-view3rd-page-fragment35 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text41 {
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-fragment36 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text42 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+}
+ 
+.recruiter-view3rd-page-job-posted-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 860px;
+  height: 892px;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-view3rd-page-job-posted-text {
+  color: #18191c;
+  width: 812px;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.recruiter-view3rd-page-fragment37 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text43 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment38 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text44 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment39 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text45 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment40 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text46 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment41 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text47 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment42 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text48 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment43 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text49 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment44 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text50 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment45 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text51 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment46 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text52 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment47 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text53 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment48 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text54 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment49 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text55 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment50 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text56 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment51 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text57 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment52 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text58 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment53 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text59 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment54 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text60 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment55 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text61 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment56 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text62 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment57 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text63 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment58 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text64 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment59 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text65 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment60 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text66 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment61 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text67 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.recruiter-view3rd-page-fragment62 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text68 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.recruiter-view3rd-page-fragment63 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text69 {
+  color: #474748;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+.recruiter-view3rd-page-fragment64 {
+  display: contents;
+}
+ 
+.recruiter-view3rd-page-text70 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 14px;
+}
+ 
+@media(max-width: 1200px) {
+  .recruiter-view3rd-page-main-container {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-container2 {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-text42 {
+    color: rgb(71, 71, 72);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .recruiter-view3rd-page-main-container {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-container2 {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-text11 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-details-container {
+    width: auto;
+  }
+  .recruiter-view3rd-page-profile-container {
+    width: auto;
+  }
+  .recruiter-view3rd-page-job-posting-container {
+    width: 757px;
+  }
+  .recruiter-view3rd-page-text39 {
+    color: rgb(24, 25, 28);
+  }
+  .recruiter-view3rd-page-text42 {
+    color: rgb(71, 71, 72);
+  }
+  .recruiter-view3rd-page-job-posted-container {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-job-posted-text {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-text43 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text44 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text45 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text46 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text47 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text48 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text49 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text50 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text51 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text52 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text53 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text54 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text55 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text56 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text57 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text58 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text59 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text60 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text61 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text62 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text63 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text64 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text65 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text66 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text67 {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page-text68 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .recruiter-view3rd-page-text69 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text70 {
+    color: rgb(241, 4, 0);
+    font-size: 12px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-view3rd-page-text10 {
+    fill: var(--dl-color-theme-primary1);
+    color: var(--dl-color-theme-primary1);
+  }
+  .recruiter-view3rd-page-text15 {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .recruiter-view3rd-page-text16 {
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text17 {
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text18 {
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text19 {
+    font-size: 10px;
+  }
+  .recruiter-view3rd-page-text20 {
+    font-size: 10px;
+  }
+  .recruiter-view3rd-page-text21 {
+    font-size: 10px;
+  }
+  .recruiter-view3rd-page-text23 {
+    font-size: 16px;
+  }
+  .recruiter-view3rd-page-text26 {
+    color: rgb(24, 25, 28);
+  }
+  .recruiter-view3rd-page-details-container {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-profile-container {
+    display: none;
+  }
+  .recruiter-view3rd-page-text33 {
+    color: rgb(24, 25, 28);
+  }
+  .recruiter-view3rd-page-job-posting-container {
+    width: 100%;
+  }
+  .recruiter-view3rd-page-text39 {
+    color: rgb(24, 25, 28);
+  }
+  .recruiter-view3rd-page-text41 {
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text42 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-view3rd-page-text41 {
+    font-size: 12px;
+  }
+  .recruiter-view3rd-page-text42 {
+    color: rgb(71, 71, 72);
+  }
+}

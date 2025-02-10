@@ -1,0 +1,335 @@
+<header class="navbar5-container1">
+  <header data-thq="thq-navbar" class="navbar5-navbar-interactive">
+    <img [attr.alt]="logoAlt" [attr.src]="logoSrc" class="navbar5-image1" />
+    <div data-thq="thq-navbar-nav" class="navbar5-desktop-menu">
+      <nav class="navbar5-links1">
+        <a [attr.href]="link1Url" class="thq-link thq-body-small">
+          <ng-container>
+            <ng-template #defaultLink1>
+              <div><span>Home</span></div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="link1 ? link1 : defaultLink1"
+            ></ng-container>
+          </ng-container>
+        </a>
+        <a [attr.href]="link2Url" class="thq-link thq-body-small">
+          <ng-container>
+            <ng-template #defaultLink2>
+              <div><span>Profile</span></div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="link2 ? link2 : defaultLink2"
+            ></ng-container>
+          </ng-container>
+        </a>
+        <a [attr.href]="link3Url" class="thq-link thq-body-small">
+          <ng-container>
+            <ng-template #defaultLink3>
+              <div><span>Settings</span></div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="link3 ? link3 : defaultLink3"
+            ></ng-container>
+          </ng-container>
+        </a>
+        <div class="navbar5-container2">
+          <div
+            (click)="link5DropdownVisible = !link5DropdownVisible"
+            class="navbar5-link4-dropdown-trigger"
+          >
+            <span class="thq-link thq-body-small">
+              <ng-container>
+                <ng-template #defaultLink4>
+                  <div><span>Logout</span></div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="link4 ? link4 : defaultLink4"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="navbar5-icon-container1">
+              <div *ngIf="link5DropdownVisible" class="navbar5-container3">
+                <svg viewBox="0 0 1024 1024" class="navbar5-icon10">
+                  <path d="M298 426h428l-214 214z"></path>
+                </svg>
+              </div>
+              <div *ngIf="!link5DropdownVisible" class="navbar5-container4">
+                <svg viewBox="0 0 1024 1024" class="navbar5-icon12">
+                  <path d="M426 726v-428l214 214z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="link5DropdownVisible"
+            class="navbar5-container5 thq-box-shadow"
+          >
+            <div class="navbar5-menu-item1">
+              <div class="navbar5-content1">
+                <a
+                  [attr.href]="linkUrlPage1"
+                  class="navbar5-page11 thq-body-large"
+                >
+                  <ng-container>
+                    <ng-template #defaultPage1>
+                      <div><span>Home Page</span></div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="page1 ? page1 : defaultPage1"
+                    ></ng-container>
+                  </ng-container>
+                </a>
+              </div>
+            </div>
+            <div class="navbar5-menu-item2">
+              <div class="navbar5-content2">
+                <a
+                  [attr.href]="linkUrlPage2"
+                  class="navbar5-page21 thq-body-large"
+                >
+                  <ng-container>
+                    <ng-template #defaultPage2>
+                      <div><span>Profile Page</span></div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="page2 ? page2 : defaultPage2"
+                    ></ng-container>
+                  </ng-container>
+                </a>
+              </div>
+            </div>
+            <div class="navbar5-menu-item3">
+              <div class="navbar5-content3">
+                <a
+                  [attr.href]="linkUrlPage3"
+                  class="navbar5-page31 thq-body-large"
+                >
+                  <ng-container>
+                    <ng-template #defaultPage3>
+                      <div><span>Settings Page</span></div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="page3 ? page3 : defaultPage3"
+                    ></ng-container>
+                  </ng-container>
+                </a>
+              </div>
+            </div>
+            <div class="navbar5-menu-item4">
+              <div class="navbar5-content4">
+                <a
+                  [attr.href]="linkUrlPage4"
+                  class="navbar5-page41 thq-body-large"
+                >
+                  <ng-container>
+                    <ng-template #defaultPage4>
+                      <div><span>Certificates</span></div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="page4 ? page4 : defaultPage4"
+                    ></ng-container>
+                  </ng-container>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div data-thq="thq-burger-menu" class="navbar5-burger-menu">
+      <svg viewBox="0 0 1024 1024" class="navbar5-icon14">
+        <path
+          d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"
+        ></path>
+      </svg>
+    </div>
+    <div data-thq="thq-mobile-menu" class="navbar5-mobile-menu">
+      <div class="navbar5-nav">
+        <div class="navbar5-top">
+          <img [attr.alt]="logoAlt" [attr.src]="logoSrc" class="navbar5-logo" />
+          <div data-thq="thq-close-menu" class="navbar5-close-menu">
+            <svg viewBox="0 0 1024 1024" class="navbar5-icon16">
+              <path
+                d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <nav class="navbar5-links2">
+          <a [attr.href]="link1Url" class="thq-link thq-body-small">
+            <ng-container>
+              <ng-template #defaultLink1>
+                <div class="navbar5-fragment4">
+                  <span class="navbar5-text4">Home</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link1 ? link1 : defaultLink1"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <a [attr.href]="link2Url" class="thq-link thq-body-small">
+            <ng-container>
+              <ng-template #defaultLink2>
+                <div class="navbar5-fragment5">
+                  <span class="navbar5-text5">Profile</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link2 ? link2 : defaultLink2"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <a [attr.href]="link3Url" class="thq-link thq-body-small">
+            <ng-container>
+              <ng-template #defaultLink3>
+                <div class="navbar5-fragment7">
+                  <span class="navbar5-text7">Settings</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link3 ? link3 : defaultLink3"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <div class="navbar5-link4-accordion">
+            <div
+              (click)="link5AccordionOpen = !link5AccordionOpen"
+              class="navbar5-trigger"
+            >
+              <span class="thq-link thq-body-small">
+                <ng-container>
+                  <ng-template #defaultLink4>
+                    <div class="navbar5-fragment1">
+                      <span class="navbar5-text1">Logout</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="link4 ? link4 : defaultLink4"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <div class="navbar5-icon-container2">
+                <div *ngIf="link5AccordionOpen" class="navbar5-container6">
+                  <svg viewBox="0 0 1024 1024" class="navbar5-icon18">
+                    <path d="M298 426h428l-214 214z"></path>
+                  </svg>
+                </div>
+                <div *ngIf="!link5AccordionOpen" class="navbar5-container7">
+                  <svg viewBox="0 0 1024 1024" class="navbar5-icon20">
+                    <path d="M426 726v-428l214 214z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="link5AccordionOpen" class="navbar5-container8">
+              <div class="navbar5-menu-item5">
+                <div class="navbar5-content5">
+                  <a
+                    [attr.href]="linkUrlPage1"
+                    class="navbar5-page12 thq-body-large"
+                  >
+                    <ng-container>
+                      <ng-template #defaultPage1>
+                        <div class="navbar5-fragment3">
+                          <span class="navbar5-text3">Home Page</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="page1 ? page1 : defaultPage1"
+                      ></ng-container>
+                    </ng-container>
+                  </a>
+                </div>
+              </div>
+              <div class="navbar5-menu-item6">
+                <div class="navbar5-content6">
+                  <a
+                    [attr.href]="linkUrlPage2"
+                    class="navbar5-page22 thq-body-large"
+                  >
+                    <ng-container>
+                      <ng-template #defaultPage2>
+                        <div class="navbar5-fragment2">
+                          <span class="navbar5-text2">Profile Page</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="page2 ? page2 : defaultPage2"
+                      ></ng-container>
+                    </ng-container>
+                  </a>
+                </div>
+              </div>
+              <div class="navbar5-menu-item7">
+                <div class="navbar5-content7">
+                  <a
+                    [attr.href]="linkUrlPage3"
+                    class="navbar5-page32 thq-body-large"
+                  >
+                    <ng-container>
+                      <ng-template #defaultPage3>
+                        <div class="navbar5-fragment6">
+                          <span class="navbar5-text6">Settings Page</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="page3 ? page3 : defaultPage3"
+                      ></ng-container>
+                    </ng-container>
+                  </a>
+                </div>
+              </div>
+              <div class="navbar5-menu-item8">
+                <div class="navbar5-content8">
+                  <a
+                    [attr.href]="linkUrlPage4"
+                    class="navbar5-page42 thq-body-large"
+                  >
+                    <ng-container>
+                      <ng-template #defaultPage4>
+                        <div class="navbar5-fragment8">
+                          <span class="navbar5-text8">Certificates</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="page4 ? page4 : defaultPage4"
+                      ></ng-container>
+                    </ng-container>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="navbar5-icon-group">
+        <svg viewBox="0 0 950.8571428571428 1024" class="thq-icon-x-small">
+          <path
+            d="M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z"
+          ></path></svg
+        ><svg
+          viewBox="0 0 877.7142857142857 1024"
+          class="navbar5-icon24 thq-icon-x-small"
+        >
+          <path
+            d="M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z"
+          ></path></svg
+        ><svg
+          viewBox="0 0 602.2582857142856 1024"
+          class="navbar5-icon26 thq-icon-x-small"
+        >
+          <path
+            d="M548 6.857v150.857h-89.714c-70.286 0-83.429 33.714-83.429 82.286v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571c0-144.571 88.571-223.429 217.714-223.429 61.714 0 114.857 4.571 130.286 6.857z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+  </header>
+  <div
+    (click)="link5DropdownVisible = false"
+    *ngIf="link5DropdownVisible"
+    class="navbar5-container9"
+  ></div>
+</header>

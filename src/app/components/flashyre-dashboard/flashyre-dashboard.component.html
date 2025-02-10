@@ -1,0 +1,301 @@
+<div class="flashyre-dashboard-container">
+  <div id="dashboard-container" class="flashyre-dashboard-dashboard-container">
+    <flashyre-navbar rootClassName="flashyre-navbarroot-class-name">
+      <ng-template #text12>
+        <div class="flashyre-dashboard-fragment10">
+          <span class="flashyre-dashboard-text10">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text121>
+        <div class="flashyre-dashboard-fragment11">
+          <span class="flashyre-dashboard-text11">Job Opening</span>
+        </div>
+      </ng-template>
+      <ng-template #text122>
+        <div class="flashyre-dashboard-fragment12">
+          <span class="flashyre-dashboard-text12">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #text123>
+        <div class="flashyre-dashboard-fragment13">
+          <span class="flashyre-dashboard-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text1231>
+        <div class="flashyre-dashboard-fragment14">
+          <span class="flashyre-dashboard-text14">Assessment</span>
+        </div>
+      </ng-template>
+    </flashyre-navbar>
+    <div id="main-container" class="flashyre-dashboard-main-container">
+      <div id="profile-container" class="flashyre-dashboard-profile-container">
+        <div id="profile" class="flashyre-dashboard-profile">
+          <div
+            id="details-container"
+            class="flashyre-dashboard-details-container"
+          >
+            <img
+              id="user-image"
+              [attr.alt]="imageAlt1"
+              [attr.src]="imageSrc1"
+              class="flashyre-dashboard-user-image"
+            />
+            <div id="user-details" class="flashyre-dashboard-user-details">
+              <div id="name" class="flashyre-dashboard-name">
+                <span class="flashyre-dashboard-text15">
+                  <ng-container>
+                    <ng-template #defaultText4>
+                      <div class="flashyre-dashboard-fragment16">
+                        <span class="flashyre-dashboard-text28">
+                          <span class="flashyre-dashboard-text29">Name:</span>
+                          <span> </span>
+                          <span>Kathryn Murphy</span>
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div id="email" class="flashyre-dashboard-email">
+                <span class="flashyre-dashboard-text16">
+                  <ng-container>
+                    <ng-template #defaultText31>
+                      <div class="flashyre-dashboard-fragment26">
+                        <span class="flashyre-dashboard-text58">
+                          <span class="flashyre-dashboard-text59">Email</span>
+                          <span class="flashyre-dashboard-text60">:</span>
+                          <span class="flashyre-dashboard-text61">
+                             qwertyuiwer908@gmail.com
+                          </span>
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text31 ? text31 : defaultText31"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div id="phone-num" class="flashyre-dashboard-phone-num">
+                <span class="flashyre-dashboard-text17">
+                  <ng-container>
+                    <ng-template #defaultText21>
+                      <div class="flashyre-dashboard-fragment25">
+                        <span class="flashyre-dashboard-text54">
+                          <span class="flashyre-dashboard-text55">Phone:</span>
+                          <span class="flashyre-dashboard-text56">
+                            9876543210
+                          </span>
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text21 ? text21 : defaultText21"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="university-college"
+                class="flashyre-dashboard-university-college"
+              >
+                <span class="flashyre-dashboard-text18">
+                  <ng-container>
+                    <ng-template #defaultText12>
+                      <div class="flashyre-dashboard-fragment22">
+                        <span class="flashyre-dashboard-text41">
+                          <span class="flashyre-dashboard-text42">
+                            University/College:
+                          </span>
+                          <span class="flashyre-dashboard-text43">
+                            abc university campus
+                          </span>
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div id="skills" class="flashyre-dashboard-skills">
+                <span class="flashyre-dashboard-text19">
+                  <ng-container>
+                    <ng-template #defaultText1111>
+                      <div class="flashyre-dashboard-fragment20">
+                        <span class="flashyre-dashboard-text36">
+                          <span class="flashyre-dashboard-text37">
+                            Skills: 
+                          </span>
+                          <span class="flashyre-dashboard-text38">
+                            SQL,Java,MachineLearning, Automation.
+                          </span>
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            id="view-resume-button"
+            type="button"
+            class="flashyre-dashboard-view-resume-button button"
+          >
+            <span id="view-resume-text">
+              <ng-container>
+                <ng-template #defaultButton1>
+                  <div class="flashyre-dashboard-fragment19">
+                    <span class="flashyre-dashboard-text35">View Resume</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="button1 ? button1 : defaultButton1"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </button>
+        </div>
+        <div id="scale-container" class="flashyre-dashboard-scale-container">
+          <h1 id="scale-heading" class="flashyre-dashboard-scale-heading">
+            <ng-container>
+              <ng-template #defaultHeading21>
+                <div class="flashyre-dashboard-fragment17">
+                  <span class="flashyre-dashboard-text33">Scale:</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="heading21 ? heading21 : defaultHeading21"
+              ></ng-container>
+            </ng-container>
+          </h1>
+          <span class="flashyre-dashboard-text20">
+            <ng-container>
+              <ng-template #defaultText52>
+                <div class="flashyre-dashboard-fragment23">
+                  <span class="flashyre-dashboard-text45">
+                    <span>1. </span>
+                    <span class="flashyre-dashboard-text47">
+                      Need to Improve
+                    </span>
+                    <span class="flashyre-dashboard-text48">:</span>
+                    <span>Score ≤ 59</span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text52 ? text52 : defaultText52"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span class="flashyre-dashboard-text21">
+            <ng-container>
+              <ng-template #defaultText512>
+                <div class="flashyre-dashboard-fragment24">
+                  <span class="flashyre-dashboard-text50">
+                    <span>
+                      2.
+                      <span [innerHTML]="rawst6l"></span>
+                    </span>
+                    <span class="flashyre-dashboard-text52">Average:</span>
+                    <span>60–69 </span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text512 ? text512 : defaultText512"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span class="flashyre-dashboard-text22">
+            <ng-container>
+              <ng-template #defaultText5112>
+                <div class="flashyre-dashboard-fragment15">
+                  <span class="flashyre-dashboard-text24">
+                    <span>3. </span>
+                    <span class="flashyre-dashboard-text26">Good:</span>
+                    <span>70–84 </span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text5112 ? text5112 : defaultText5112"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span class="flashyre-dashboard-text23">
+            <ng-container>
+              <ng-template #defaultText51111>
+                <div class="flashyre-dashboard-fragment27">
+                  <span class="flashyre-dashboard-text63">
+                    <span>4. </span>
+                    <span class="flashyre-dashboard-text65">Excellent:</span>
+                    <span>≥ 85 </span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text51111 ? text51111 : defaultText51111"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+      <div id="results-container" class="flashyre-dashboard-results-container">
+        <div
+          id="corporate-assessment-result-container"
+          class="flashyre-dashboard-corporate-assessment-result-container"
+        >
+          <h1 id="car-heading" class="flashyre-dashboard-car-heading">
+            <ng-container>
+              <ng-template #defaultHeading3>
+                <div class="flashyre-dashboard-fragment18">
+                  <span class="flashyre-dashboard-text34">
+                    Corporate Assessment Results
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="heading3 ? heading3 : defaultHeading3"
+              ></ng-container>
+            </ng-container>
+          </h1>
+          <div id="car-result" class="flashyre-dashboard-car-result"></div>
+        </div>
+        <div
+          id="assessment-result-container"
+          class="flashyre-dashboard-assessment-result-container"
+        >
+          <h1 id="ar-heading" class="flashyre-dashboard-ar-heading">
+            <ng-container>
+              <ng-template #defaultHeading11>
+                <div class="flashyre-dashboard-fragment21">
+                  <span class="flashyre-dashboard-text40">
+                    Assessment Results
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="heading11 ? heading11 : defaultHeading11"
+              ></ng-container>
+            </ng-container>
+          </h1>
+          <div id="ar-result" class="flashyre-dashboard-ar-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<div
+  id="landing-page-readable-article-card-small"
+  class="landing-page-readable-articles-card-small-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="landing-page-article-container"
+    class="landing-page-readable-articles-card-small-container2"
+  >
+    <div
+      id="landing-page-icon-container"
+      class="landing-page-readable-articles-card-small-icon-container"
+    >
+      <svg
+        id="icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        class="landing-page-readable-articles-card-small-icon1"
+      >
+        <path
+          d="M15 8h2m-2 4h2m0 4H7m0-8v4h4V8zM5 20h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+    </div>
+    <div
+      id="article-topics-container"
+      class="landing-page-readable-articles-card-small-container3"
+    >
+      <span
+        id="article-topic-name"
+        class="landing-page-readable-articles-card-small-header-text"
+      >
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="landing-page-readable-articles-card-small-fragment1">
+              <span class="landing-page-readable-articles-card-small-text1">
+                Data Science
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <span
+        id="related-article-topics"
+        class="landing-page-readable-articles-card-small-num-of-topics-indication"
+      >
+        <ng-container>
+          <ng-template #defaultText1>
+            <div class="landing-page-readable-articles-card-small-fragment2">
+              <span class="landing-page-readable-articles-card-small-text2">
+                247 Related topics
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+</div>

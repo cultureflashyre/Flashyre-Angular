@@ -1,0 +1,73 @@
+<div
+  id="recruiter-profile"
+  class="recruiter-profile-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-profile-container"
+    class="recruiter-profile-recruiter-profile-container"
+  >
+    <img
+      id="recruiter-profile-picture"
+      [attr.alt]="imageAlt"
+      [attr.src]="imageSrc"
+      class="recruiter-profile-recruiter-image"
+    />
+    <div id="recruiter-details" class="recruiter-profile-details-container">
+      <span id="recruiter-name" class="recruiter-profile-recruiter-name">
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="recruiter-profile-fragment3">
+              <span class="recruiter-profile-text6">Leslie Alexander</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="recruiter-company-logo-and-name"
+        class="recruiter-profile-container2"
+      >
+        <img
+          id="recruiter-company-image"
+          [attr.alt]="imageAlt1"
+          [attr.src]="imageSrc1"
+          class="recruiter-profile-company-image"
+        />
+        <span
+          id="recruiter-company-name"
+          class="recruiter-profile-company-name"
+        >
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="recruiter-profile-fragment2">
+                <span class="recruiter-profile-text5">Google</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <span id="recruiter-role" class="recruiter-profile-job-role-of-recruiter">
+        <ng-container>
+          <ng-template #defaultText3>
+            <div class="recruiter-profile-fragment1">
+              <span class="recruiter-profile-text1">
+                <span>Software Development</span>
+                <br />
+                <span>Mountain View, CA</span>
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text3 ? text3 : defaultText3"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+</div>

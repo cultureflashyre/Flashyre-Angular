@@ -1,0 +1,99 @@
+<div
+  id="Recruiter-flow-small-card"
+  class="recruiter-flow-small-card-container"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-flow-small-card-container"
+    class="recruiter-flow-small-card-recruiter-flow-small-card-container"
+  >
+    <div
+      id="job-details"
+      class="recruiter-flow-small-card-job-details-container"
+    >
+      <span id="job-role" class="recruiter-flow-small-card-job-role">
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="recruiter-flow-small-card-fragment1">
+              <span class="recruiter-flow-small-card-text1">
+                Senior Software Engineer
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <span
+        id="experience-location"
+        class="recruiter-flow-small-card-experience-and-location"
+      >
+        <ng-container>
+          <ng-template #defaultText1>
+            <div class="recruiter-flow-small-card-fragment3">
+              <span class="recruiter-flow-small-card-text3">
+                6-8 Years · Bengaluru, India (On-site)
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="candidates-applied"
+        class="recruiter-flow-small-card-number-of-candidates-applied-container"
+      >
+        <div
+          id="more-images"
+          class="recruiter-flow-small-card-more-images-container"
+        >
+          <img
+            [attr.alt]="imageAlt5"
+            [attr.src]="imageSrc5"
+            class="recruiter-flow-small-card-image1"
+          />
+        </div>
+        <img
+          id="images"
+          [attr.alt]="imageAlt6"
+          [attr.src]="imageSrc6"
+          class="recruiter-flow-small-card-image2"
+        />
+        <span
+          id="candidates-applied"
+          class="recruiter-flow-small-card-candidates-applied"
+        >
+          <ng-container>
+            <ng-template #defaultText2>
+              <div class="recruiter-flow-small-card-fragment4">
+                <span class="recruiter-flow-small-card-text4">
+                  Over 100 Candidates applied
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text2 ? text2 : defaultText2"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <span id="Expiry" class="recruiter-flow-small-card-expires-in2days-text">
+        <ng-container>
+          <ng-template #defaultText3>
+            <div class="recruiter-flow-small-card-fragment2">
+              <span class="recruiter-flow-small-card-text2">
+                Expires in 2 days
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text3 ? text3 : defaultText3"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+</div>

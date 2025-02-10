@@ -1,0 +1,59 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-job-posted-container1 {
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.recruiter-job-posted-container2 {
+  flex: 0 0 auto;
+  width: 240px;
+  height: 72px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  border-color: #E6E2E6;
+  border-width: 1px;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-job-posted-text1 {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.recruiter-job-posted-fragment {
+  display: contents;
+}
+ 
+.recruiter-job-posted-text2 {
+  color: #18191c;
+  display: inline-block;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-job-posted-container1 {
+    width: 100%;
+    height: 100%;
+  }
+  .recruiter-job-posted-container2 {
+    width: 100%;
+    height: 100%;
+  }
+}

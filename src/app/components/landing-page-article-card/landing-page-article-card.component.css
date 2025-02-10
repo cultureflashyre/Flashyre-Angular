@@ -1,0 +1,204 @@
+:host { 
+  display: contents; 
+}
+ 
+.landing-page-article-card-container1 {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.landing-page-article-card-container2 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 804px;
+  height: 144px;
+  display: flex;
+  padding: 24px;
+  align-self: center;
+  align-items: center;
+  border-color: #F0F0F0;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+ 
+.landing-page-article-card-icon-container {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  border-radius: 11px;
+  justify-content: center;
+  background-color: #D3E8FF;
+}
+ 
+.landing-page-article-card-icon1 {
+  width: 32px;
+  height: 32px;
+}
+ 
+.landing-page-article-card-description-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 672px;
+  height: 96px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.landing-page-article-card-description-header {
+  width: 274px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.landing-page-article-card-description {
+  fill: #5E6670;
+  color: #5E6670;
+  width: 672px;
+  height: 60px;
+  font-size: 14px;
+}
+ 
+.landing-page-article-card-fragment1 {
+  display: contents;
+}
+ 
+.landing-page-article-card-text1 {
+  display: inline-block;
+}
+ 
+.landing-page-article-card-text2 {
+  color: #5e6670;
+}
+ 
+.landing-page-article-card-fragment2 {
+  display: contents;
+}
+ 
+.landing-page-article-card-text4 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+@media(max-width: 1200px) {
+  .landing-page-article-card-icon-container {
+    align-self: center;
+  }
+  .landing-page-article-card-text2 {
+    color: #5e6670;
+  }
+  .landing-page-article-card-text4 {
+    color: rgb(24, 25, 28);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .landing-page-article-card-icon-container {
+    align-self: center;
+  }
+  .landing-page-article-card-description-container {
+    gap: 4px;
+    height: auto;
+  }
+  .landing-page-article-card-text1 {
+    font-size: 12px;
+  }
+  .landing-page-article-card-text2 {
+    color: #5e6670;
+  }
+  .landing-page-article-card-text4 {
+    color: rgb(24, 25, 28);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .landing-page-article-card-container1 {
+    height: auto;
+  }
+  .landing-page-article-card-container2 {
+    width: 710px;
+    height: auto;
+    padding: var(--dl-space-space-unit);
+  }
+  .landing-page-article-card-icon-container {
+    width: 40px;
+    height: 40px;
+    align-self: center;
+  }
+  .landing-page-article-card-description-container {
+    gap: 2px;
+    width: 618px;
+    height: auto;
+  }
+  .landing-page-article-card-description {
+    width: 100%;
+    height: auto;
+    display: flex;
+  }
+  .landing-page-article-card-text1 {
+    font-size: 10px;
+  }
+  .landing-page-article-card-text4 {
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .landing-page-article-card-container1 {
+    height: auto;
+  }
+  .landing-page-article-card-container2 {
+    gap: 0;
+    width: 90%;
+    height: 102px;
+    padding: var(--dl-space-space-halfunit);
+    justify-content: space-between;
+  }
+  .landing-page-article-card-icon-container {
+    width: 40px;
+    height: 40px;
+    align-self: center;
+  }
+  .landing-page-article-card-description-container {
+    width: 90%;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-start;
+    padding-left: var(--dl-space-space-halfunit);
+    justify-content: flex-start;
+  }
+  .landing-page-article-card-description {
+    width: 90%;
+    height: auto;
+    text-align: justify;
+  }
+  .landing-page-article-card-text1 {
+    font-size: 10px;
+  }
+  .landing-page-article-card-text2 {
+    color: #5e6670;
+  }
+  .landing-page-article-card-text4 {
+    font-size: 14px;
+  }
+}

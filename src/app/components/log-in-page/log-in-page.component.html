@@ -1,0 +1,152 @@
+<div id="login-page" class="log-in-page-container1" [ngClass]="rootClassName">
+  <div id="login-page-container" class="log-in-page-container2">
+    <h1 id="flashyre-welcome-page" class="log-in-page-text10">
+      <ng-container>
+        <ng-template #defaultHeading>
+          <div class="log-in-page-fragment6">
+            <span class="log-in-page-text16">Welcome to Flashyre</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="heading ? heading : defaultHeading"
+        ></ng-container>
+      </ng-container>
+    </h1>
+    <div id="login-page-details-container" class="log-in-page-container3">
+      <div id="email-container" class="log-in-page-email-container">
+        <div id="login-email-container" class="log-in-page-container4">
+          <span id="login-email" class="log-in-page-email-text">
+            <ng-container>
+              <ng-template #defaultText1>
+                <div class="log-in-page-fragment4">
+                  <span class="log-in-page-text14">Email</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1 ? text1 : defaultText1"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="text"
+            id="login-email-input"
+            [attr.placeholder]="textinputPlaceholder"
+            class="log-in-page-email-input input"
+          />
+        </div>
+      </div>
+      <div id="password-container" class="log-in-page-password-container">
+        <div id="login-password-container" class="log-in-page-container5">
+          <span id="login-password" class="log-in-page-password-text">
+            <ng-container>
+              <ng-template #defaultText11>
+                <div class="log-in-page-fragment1">
+                  <span class="log-in-page-text11">Password</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text11 ? text11 : defaultText11"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="text"
+            id="login-password-input"
+            [attr.placeholder]="textinputPlaceholder1"
+            class="log-in-page-password-input input"
+          />
+          <span
+            id="login-password-show-button"
+            class="log-in-page-show-text button"
+          >
+            <ng-container>
+              <ng-template #defaultText2>
+                <div class="log-in-page-fragment9">
+                  <span class="log-in-page-text19">Show</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text2 ? text2 : defaultText2"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+      <button
+        id="login-button-container"
+        type="button"
+        class="log-in-page-login-button button"
+      >
+        <span id="login-text">
+          <ng-container>
+            <ng-template #defaultButton>
+              <div class="log-in-page-fragment8">
+                <span class="log-in-page-text18">Login</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="button ? button : defaultButton"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </button>
+      <div class="log-in-page-error-login-container">
+        <span id="error-message-login" class="log-in-page-error-message-login">
+          <ng-container>
+            <ng-template #defaultText71>
+              <div class="log-in-page-fragment3">
+                <span class="log-in-page-text13">
+                  invalid Email or Password
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text71 ? text71 : defaultText71"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <div id="signup-container" class="log-in-page-container6">
+        <span
+          id="don't-have-an-account-text"
+          class="log-in-page-dont-have-an-account-text"
+        >
+          <ng-container>
+            <ng-template #defaultText3>
+              <div class="log-in-page-fragment5">
+                <span class="log-in-page-text15">Don’t have an account?</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text3 ? text3 : defaultText3"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span id="login-signup-button" class="log-in-page-signup-text button">
+          <ng-container>
+            <ng-template #defaultText4>
+              <div class="log-in-page-fragment2">
+                <span class="log-in-page-text12">Sign up</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text4 ? text4 : defaultText4"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <span id="forgot-password" class="log-in-page-forgot-password button">
+        <ng-container>
+          <ng-template #defaultForgotPassword>
+            <div class="log-in-page-fragment7">
+              <span class="log-in-page-text17">Forgot Password</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="forgotPassword ? forgotPassword : defaultForgotPassword"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+</div>

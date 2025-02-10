@@ -1,0 +1,778 @@
+:host { 
+  display: contents; 
+}
+ 
+.candidate-job-for-you-card-container10 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-container11 {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: 812px;
+  height: 242px;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-for-you-card-container12 {
+  gap: 12px;
+  flex: 0 0 auto;
+  width: 764px;
+  height: 194px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--dl-radius-radius-radius4);
+}
+ 
+.candidate-job-for-you-card-details-of-the-job {
+  flex: 0 0 auto;
+  width: 528px;
+  height: 194px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+ 
+.candidate-job-for-you-card-container13 {
+  flex: 0 0 auto;
+  width: 528px;
+  height: 117px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-container14 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 134px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card-job-tile-and-company-name {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 528px;
+  height: 50px;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-job-title {
+  width: 197px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  flex-direction: column;
+}
+ 
+.candidate-job-for-you-card-company-name {
+  width: 55px;
+  height: 24px;
+}
+ 
+.candidate-job-for-you-card-container15 {
+  gap: 16px;
+  width: 528px;
+  height: 24px;
+  display: flex;
+  position: relative;
+  align-self: flex-start;
+}
+ 
+.candidate-job-for-you-card-experience-required {
+  gap: var(--dl-space-space-halfunit);
+  width: 106px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-briefcase-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  padding-bottom: 2px;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card-years-of-experience {
+  gap: var(--dl-space-space-halfunit);
+  fill: #474748;
+  color: #474748;
+  width: 106px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-job-location {
+  gap: var(--dl-space-space-halfunit);
+  width: 406px;
+  height: 24px;
+  display: flex;
+}
+ 
+.candidate-job-for-you-card-location-text {
+  width: 280px;
+  height: 32px;
+  padding-top: 2px;
+}
+ 
+.candidate-job-for-you-card-job-description {
+  fill: #474748;
+  color: #474748;
+  width: 528px;
+  height: 67px;
+  display: flex;
+  text-align: left;
+  line-height: 24px;
+}
+ 
+.candidate-job-for-you-card-progress-bar-for-mobile {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 15px;
+  display: none;
+  align-self: flex-start;
+  margin-top: -8px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card-container16 {
+  width: 122px;
+}
+ 
+.candidate-job-for-you-card-container17 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-buttons-container {
+  gap: var(--dl-space-space-halfunit);
+  height: 40px;
+  display: flex;
+  align-self: stretch;
+}
+ 
+.candidate-job-for-you-card-apply-button {
+  width: 77px;
+  height: 40px;
+  transition: 0.3s;
+  padding-top: 0px;
+  border-color: #05356C;
+  border-width: 1px;
+  padding-left: var(--dl-space-space-unit);
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: 0px;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-for-you-card-apply-button:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-for-you-card-apply-button:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.candidate-job-for-you-card-take-assessment-button {
+  width: 169px;
+  height: 40px;
+  align-self: center;
+  margin-top: 0px;
+  text-align: center;
+  transition: 0.3s;
+  margin-left: 0px;
+  padding-top: 12px;
+  border-color: var(--dl-color-theme-secondary1);
+  margin-right: 0px;
+  padding-left: var(--dl-space-space-unit);
+  margin-bottom: 0px;
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: 12px;
+  background-color: transparent;
+}
+ 
+.candidate-job-for-you-card-take-assessment-button:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-for-you-card-take-assessment-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.candidate-job-for-you-card-text11 {
+  display: flex;
+  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-progress-bar-for-desktop {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 172px;
+  height: 194px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card-container18 {
+  width: 239px;
+  height: 164px;
+  display: flex;
+  align-self: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-for-you-card-container19 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-fragment1 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-for-you-card-fragment2 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text13 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.candidate-job-for-you-card-fragment3 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text14 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+}
+ 
+.candidate-job-for-you-card-fragment4 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text15 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+}
+ 
+.candidate-job-for-you-card-fragment5 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text16 {
+  display: inline-block;
+}
+ 
+.candidate-job-for-you-card-fragment6 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text19 {
+  color: rgb(71, 71, 72);
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.candidate-job-for-you-card-fragment7 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card-text20 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+@media(max-width: 1200px) {
+  .candidate-job-for-you-card-container12 {
+    position: relative;
+  }
+  .candidate-job-for-you-card-progress-bar-for-mobile {
+    display: none;
+  }
+  .candidate-job-for-you-card-container18 {
+    width: 227px;
+    display: none;
+  }
+  .candidate-job-for-you-card-text20 {
+    color: rgb(5, 53, 108);
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .candidate-job-for-you-card-container10 {
+    height: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-container11 {
+    width: 100%;
+    height: 206px;
+    padding: var(--dl-space-space-unit);
+  }
+  .candidate-job-for-you-card-container12 {
+    width: 580px;
+    height: auto;
+  }
+  .candidate-job-for-you-card-image {
+    width: 36px;
+    height: 36px;
+  }
+  .candidate-job-for-you-card-details-of-the-job {
+    gap: var(--dl-space-space-unit);
+    height: 171px;
+    align-self: flex-start;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-container14 {
+    gap: var(--dl-space-space-unit);
+    width: 450px;
+    height: 132px;
+    position: relative;
+  }
+  .candidate-job-for-you-card-job-tile-and-company-name {
+    width: auto;
+    height: 45px;
+    display: flex;
+    position: relative;
+    align-self: center;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-job-title {
+    align-items: flex-start;
+  }
+  .candidate-job-for-you-card-company-name {
+    position: relative;
+  }
+  .candidate-job-for-you-card-briefcase-icon {
+    width: 24px;
+    height: 24px;
+    align-self: center;
+  }
+  .candidate-job-for-you-card-location-text {
+    width: auto;
+  }
+  .candidate-job-for-you-card-job-description {
+    width: 430px;
+    height: 53px;
+    text-align: left;
+  }
+  .candidate-job-for-you-card-progress-bar-for-mobile {
+    top: 0px;
+    right: 0px;
+    display: flex;
+    position: absolute;
+    align-self: flex-end;
+  }
+  .candidate-job-for-you-card-buttons-container {
+    gap: 4px;
+    width: 100%;
+    height: 35px;
+    align-self: flex-start;
+  }
+  .candidate-job-for-you-card-apply-button {
+    width: 66px;
+    height: 35px;
+    padding: 0px;
+  }
+  .candidate-job-for-you-card-take-assessment-button {
+    width: 160px;
+    height: 35px;
+    align-self: flex-start;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  .candidate-job-for-you-card-text11 {
+    width: 150px;
+  }
+  .candidate-job-for-you-card-progress-bar-for-desktop {
+    position: relative;
+  }
+  .candidate-job-for-you-card-container18 {
+    width: 231px;
+    height: 166px;
+    align-self: flex-start;
+    align-items: center;
+  }
+  .candidate-job-for-you-card-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text13 {
+    color: rgb(24, 25, 28);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .candidate-job-for-you-card-text14 {
+    color: rgb(71, 71, 72);
+  }
+  .candidate-job-for-you-card-text15 {
+    color: rgb(71, 71, 72);
+  }
+  .candidate-job-for-you-card-text16 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text19 {
+    color: rgb(71, 71, 72);
+  }
+  .candidate-job-for-you-card-text20 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .candidate-job-for-you-card-container10 {
+    width: 100%;
+    height: auto;
+    padding-bottom: 0px;
+  }
+  .candidate-job-for-you-card-container11 {
+    width: auto;
+    height: 170px;
+    padding: var(--dl-space-space-unit);
+    margin-left: 0px;
+  }
+  .candidate-job-for-you-card-container12 {
+    gap: 4px;
+    width: 560px;
+    height: 138px;
+    position: static;
+    align-self: flex-start;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card-image {
+    width: 28px;
+    height: 28px;
+  }
+  .candidate-job-for-you-card-details-of-the-job {
+    gap: 2px;
+    width: 516px;
+    height: 137px;
+    align-self: flex-start;
+    margin-right: 0px;
+    padding-left: var(--dl-space-space-halfunit);
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-container13 {
+    width: 100%;
+    height: 105px;
+    position: relative;
+  }
+  .candidate-job-for-you-card-container14 {
+    width: 400px;
+    height: 99px;
+  }
+  .candidate-job-for-you-card-job-tile-and-company-name {
+    gap: 4px;
+    width: 100%;
+    height: 35px;
+    display: flex;
+    flex-direction: column;
+  }
+  .candidate-job-for-you-card-container15 {
+    height: 20px;
+  }
+  .candidate-job-for-you-card-briefcase-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-for-you-card-years-of-experience {
+    height: 20px;
+    align-self: center;
+  }
+  .candidate-job-for-you-card-job-location {
+    height: 20px;
+  }
+  .candidate-job-for-you-card-location-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-for-you-card-location-text {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card-job-description {
+    width: 100%;
+  }
+  .candidate-job-for-you-card-progress-bar-for-mobile {
+    top: 0px;
+    right: 0px;
+    height: 61px;
+    display: flex;
+    position: absolute;
+    align-self: flex-start;
+  }
+  .candidate-job-for-you-card-container16 {
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card-buttons-container {
+    height: auto;
+  }
+  .candidate-job-for-you-card-apply-button {
+    width: 60px;
+    height: 30px;
+  }
+  .candidate-job-for-you-card-take-assessment-button {
+    width: 150px;
+    height: 30px;
+  }
+  .candidate-job-for-you-card-progress-bar-for-desktop {
+    width: 0px;
+    height: 0px;
+    position: relative;
+  }
+  .candidate-job-for-you-card-container18 {
+    top: 19px;
+    left: -57px;
+    width: 194px;
+    display: none;
+    position: absolute;
+  }
+  .candidate-job-for-you-card-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text13 {
+    color: rgb(24, 25, 28);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .candidate-job-for-you-card-text14 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+    line-height: 20px;
+  }
+  .candidate-job-for-you-card-text15 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .candidate-job-for-you-card-text16 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text17 {
+    font-size: 12px;
+  }
+  .candidate-job-for-you-card-text19 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .candidate-job-for-you-card-text20 {
+    color: rgb(5, 53, 108);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .candidate-job-for-you-card-container10 {
+    width: 100%;
+    position: static;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-container11 {
+    gap: var(--dl-space-space-unit);
+    width: 90%;
+    height: auto;
+    align-self: center;
+    padding-top: var(--dl-space-space-unit);
+    padding-left: var(--dl-space-space-halfunit);
+    padding-right: var(--dl-space-space-halfunit);
+    padding-bottom: var(--dl-space-space-unit);
+    justify-content: flex-start;
+    background-color: #FFFFFF;
+  }
+  .candidate-job-for-you-card-container12 {
+    gap: 0;
+    width: 95%;
+    height: auto;
+    justify-content: space-between;
+  }
+  .candidate-job-for-you-card-details-of-the-job {
+    gap: var(--dl-space-space-unit);
+    width: 390px;
+    height: auto;
+    position: relative;
+  }
+  .candidate-job-for-you-card-container13 {
+    height: 95px;
+  }
+  .candidate-job-for-you-card-container14 {
+    gap: var(--dl-space-space-sixunits);
+    width: 373px;
+    height: 95px;
+    align-self: center;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-job-tile-and-company-name {
+    gap: 4px;
+    width: 369px;
+    position: relative;
+    align-self: flex-end;
+    padding-left: 0px;
+    flex-direction: column;
+  }
+  .candidate-job-for-you-card-container15 {
+    width: 90%;
+    height: 42px;
+    justify-content: space-between;
+  }
+  .candidate-job-for-you-card-experience-required {
+    width: 88px;
+    align-self: center;
+  }
+  .candidate-job-for-you-card-job-location {
+    gap: 2px;
+    width: 258px;
+    height: auto;
+  }
+  .candidate-job-for-you-card-location-icon {
+    width: 20px;
+    display: flex;
+    align-self: center;
+  }
+  .candidate-job-for-you-card-location-text {
+    width: auto;
+    height: auto;
+  }
+  .candidate-job-for-you-card-job-description {
+    width: 318px;
+    height: auto;
+    align-self: stretch;
+    line-height: 1.15;
+  }
+  .candidate-job-for-you-card-progress-bar-for-mobile {
+    width: auto;
+    height: 22px;
+    display: flex;
+    position: static;
+  }
+  .candidate-job-for-you-card-container16 {
+    top: -2px;
+    left: 209px;
+    height: 22px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card-buttons-container {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card-progress-bar-for-desktop {
+    display: none;
+  }
+  .candidate-job-for-you-card-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text14 {
+    color: rgb(71, 71, 72);
+  }
+  .candidate-job-for-you-card-text15 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+  .candidate-job-for-you-card-text16 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card-text19 {
+    color: rgb(71, 71, 72);
+    font-size: 12px;
+  }
+}

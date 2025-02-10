@@ -1,0 +1,247 @@
+:host { 
+  display: contents; 
+}
+ 
+.profile-employment-page-container {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-employment-page-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-employment-page-fragment10 {
+  display: contents;
+}
+ 
+.profile-employment-page-text10 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment11 {
+  display: contents;
+}
+ 
+.profile-employment-page-text11 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment12 {
+  display: contents;
+}
+ 
+.profile-employment-page-text12 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment13 {
+  display: contents;
+}
+ 
+.profile-employment-page-text13 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment14 {
+  display: contents;
+}
+ 
+.profile-employment-page-text14 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment15 {
+  display: contents;
+}
+ 
+.profile-employment-page-text15 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment16 {
+  display: contents;
+}
+ 
+.profile-employment-page-text16 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment17 {
+  display: contents;
+}
+ 
+.profile-employment-page-text17 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment18 {
+  display: contents;
+}
+ 
+.profile-employment-page-text18 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment19 {
+  display: contents;
+}
+ 
+.profile-employment-page-text19 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-employment-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-employment-page-fragment20 {
+  display: contents;
+}
+ 
+.profile-employment-page-text20 {
+  color: var(--dl-color-theme-neutral-dark);
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.profile-employment-page-fragment21 {
+  display: contents;
+}
+ 
+.profile-employment-page-text21 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment22 {
+  display: contents;
+}
+ 
+.profile-employment-page-text22 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment23 {
+  display: contents;
+}
+ 
+.profile-employment-page-text23 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment24 {
+  display: contents;
+}
+ 
+.profile-employment-page-text24 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment25 {
+  display: contents;
+}
+ 
+.profile-employment-page-text28 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment26 {
+  display: contents;
+}
+ 
+.profile-employment-page-text29 {
+  color: #05356c;
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment27 {
+  display: contents;
+}
+ 
+.profile-employment-page-text32 {
+  display: inline-block;
+}
+ 
+.profile-employment-page-fragment28 {
+  display: contents;
+}
+ 
+.profile-employment-page-text33 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .profile-employment-page-main-container {
+    width: 100%;
+    height: auto;
+  }
+  .profile-employment-page-text20 {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .profile-employment-page-main-container {
+    height: 752px;
+  }
+  .profile-employment-page-text13 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .profile-employment-page-text14 {
+    font-size: 10px;
+  }
+  .profile-employment-page-text15 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .profile-employment-page-text16 {
+    font-size: 10px;
+  }
+  .profile-employment-page-text17 {
+    font-size: 10px;
+  }
+  .profile-employment-page-text18 {
+    font-size: 10px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .profile-employment-page-main-container {
+    width: 100%;
+    height: auto;
+    align-self: flex-start;
+  }
+  .profile-employment-page-text29 {
+    color: rgb(5, 53, 108);
+  }
+  .profile-employment-page-text30 {
+    font-size: 14px;
+  }
+  .profile-employment-page-text32 {
+    font-size: 14px;
+  }
+  .profile-employment-page-text33 {
+    font-size: 14px;
+  }
+}

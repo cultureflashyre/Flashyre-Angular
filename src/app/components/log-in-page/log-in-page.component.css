@@ -1,0 +1,360 @@
+:host { 
+  display: contents; 
+}
+ 
+.log-in-page-container1 {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.log-in-page-container2 {
+  gap: 24px;
+  width: 368px;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-self: center;
+  margin-top: var(--dl-space-space-fourunits);
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.log-in-page-text10 {
+  width: 211px;
+  height: 24px;
+  margin: auto;
+  display: flex;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.log-in-page-container3 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 368px;
+  height: auto;
+  display: flex;
+  padding: 24px;
+  align-self: flex-end;
+  align-items: flex-start;
+  border-color: #ACACAD;
+  border-width: 1px;
+  border-radius: 5px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.log-in-page-email-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.log-in-page-container4 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.log-in-page-email-text {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.log-in-page-email-input {
+  width: 320px;
+  height: 48px;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-left: var(--dl-space-space-unit);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: #FFFFFF;
+}
+ 
+.log-in-page-password-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.log-in-page-container5 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.log-in-page-password-text {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.log-in-page-password-input {
+  width: 320px;
+  height: 48px;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-left: var(--dl-space-space-unit);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: #FFFFFF;
+}
+ 
+.log-in-page-show-text {
+  right: var(--dl-space-space-halfunit);
+  width: 44px;
+  bottom: var(--dl-space-space-unit);
+  height: 24px;
+  margin: auto;
+  display: flex;
+  padding: 0px;
+  position: absolute;
+  align-self: flex-start;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+  border-width: 0px;
+  border-radius: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.log-in-page-show-text:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.log-in-page-show-text:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.log-in-page-login-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 320px;
+  height: 48px;
+  transition: 0.3s;
+  border-width: 0px;
+  border-radius: 4px;
+  background-color: #05356C;
+}
+ 
+.log-in-page-login-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.log-in-page-error-login-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: none;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.log-in-page-error-message-login {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  font-style: normal;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #F65E5C;
+}
+ 
+.log-in-page-container6 {
+  gap: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.log-in-page-dont-have-an-account-text {
+  width: 184px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.log-in-page-signup-text {
+  width: auto;
+  height: 24px;
+  display: flex;
+  padding: 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+}
+ 
+.log-in-page-signup-text:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.log-in-page-signup-text:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.log-in-page-forgot-password {
+  padding: 0px;
+  align-self: center;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 700;
+  border-width: 0px;
+  background-color: transparent;
+}
+ 
+.log-in-page-forgot-password:hover {
+  cursor: pointer;
+}
+ 
+.log-in-page-fragment1 {
+  display: contents;
+}
+ 
+.log-in-page-text11 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.log-in-page-fragment2 {
+  display: contents;
+}
+ 
+.log-in-page-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.log-in-page-fragment3 {
+  display: contents;
+}
+ 
+.log-in-page-text13 {
+  display: inline-block;
+  background-color: rgb(246, 94, 92);
+}
+ 
+.log-in-page-fragment4 {
+  display: contents;
+}
+ 
+.log-in-page-text14 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.log-in-page-fragment5 {
+  display: contents;
+}
+ 
+.log-in-page-text15 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.log-in-page-fragment6 {
+  display: contents;
+}
+ 
+.log-in-page-text16 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.log-in-page-fragment7 {
+  display: contents;
+}
+ 
+.log-in-page-text17 {
+  color: #05356c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.log-in-page-fragment8 {
+  display: contents;
+}
+ 
+.log-in-page-text18 {
+  display: inline-block;
+}
+ 
+.log-in-page-fragment9 {
+  display: contents;
+}
+ 
+.log-in-page-text19 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.log-in-pageroot-class-name {
+  height: auto;
+}
+ 
+
+ 
+
+ 
+@media(max-width: 991px) {
+  .log-in-page-text10 {
+    font-size: 18px;
+  }
+  .log-in-page-text16 {
+    font-size: 18px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .log-in-page-text10 {
+    font-size: 16px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .log-in-page-text10 {
+    font-size: 16px;
+  }
+}

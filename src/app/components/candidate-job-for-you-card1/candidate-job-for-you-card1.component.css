@@ -1,0 +1,513 @@
+:host { 
+  display: contents; 
+}
+ 
+.candidate-job-for-you-card1-container10 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card1-container11 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 812px;
+  height: 242px;
+  display: flex;
+  padding: 24px;
+  align-self: center;
+  align-items: flex-start;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-for-you-card1-container12 {
+  gap: 12px;
+  flex: 0 0 auto;
+  width: 764px;
+  height: 194px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card1-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--dl-radius-radius-round);
+}
+ 
+.candidate-job-for-you-card1-container13 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 194px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-for-you-card1-container14 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 138px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-for-you-card1-container15 {
+  gap: 2px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+}
+ 
+.candidate-job-for-you-card1-text10 {
+  width: 197px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-job-for-you-card1-container16 {
+  width: 122px;
+  display: none;
+}
+ 
+.candidate-job-for-you-card1-container17 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text11 {
+  fill: #18191C;
+  color: #18191C;
+  width: 55px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-job-for-you-card1-container18 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card1-container19 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 106px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card1-icon1 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-for-you-card1-text12 {
+  width: auto;
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 400;
+}
+ 
+.candidate-job-for-you-card1-container20 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 406px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card1-icon3 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-for-you-card1-text13 {
+  fill: #474748;
+  color: #474748;
+  width: auto;
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 400;
+}
+ 
+.candidate-job-for-you-card1-text14 {
+  width: 528px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-job-for-you-card1-container21 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 528px;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-for-you-card1-button1 {
+  width: 77px;
+  height: 40px;
+  border-color: #05356C;
+  border-radius: 3px;
+  background-color: transparent;
+}
+ 
+.candidate-job-for-you-card1-button2 {
+  width: 169px;
+  height: 40px;
+  border-width: 0px;
+  background-color: transparent;
+}
+ 
+.candidate-job-for-you-card1-progress-bar-for-mobile {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 200px;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 15px;
+  display: none;
+  align-self: flex-start;
+  margin-top: -8px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.candidate-job-for-you-card1-container22 {
+  width: 172px;
+  height: 94px;
+  display: grid;
+  position: relative;
+  align-self: center;
+  grid-template-columns: 1fr 1fr;
+}
+ 
+.candidate-job-for-you-card1-container23 {
+  top: -29px;
+  left: -46px;
+  position: absolute;
+}
+ 
+.candidate-job-for-you-card1-container24 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-fragment1 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text17 {
+  color: #474748;
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.candidate-job-for-you-card1-fragment2 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text18 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-for-you-card1-fragment3 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text19 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-for-you-card1-fragment4 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text20 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-for-you-card1-fragment5 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text21 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+.candidate-job-for-you-card1-fragment6 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text22 {
+  color: #474748;
+  display: inline-block;
+}
+ 
+.candidate-job-for-you-card1-fragment7 {
+  display: contents;
+}
+ 
+.candidate-job-for-you-card1-text23 {
+  display: inline-block;
+  font-size: 16px;
+}
+ 
+@media(max-width: 1200px) {
+  .candidate-job-for-you-card1-progress-bar-for-mobile {
+    display: none;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .candidate-job-for-you-card1-container10 {
+    width: 780px;
+    overflow: visible;
+    align-items: center;
+    padding-left: 0px;
+  }
+  .candidate-job-for-you-card1-container11 {
+    width: 689px;
+    height: 242px;
+    overflow: visible;
+    align-self: center;
+    align-items: center;
+    padding-top: var(--dl-space-space-unit);
+    border-width: 0px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: 0px;
+    padding-bottom: var(--dl-space-space-unit);
+    justify-content: space-between;
+  }
+  .candidate-job-for-you-card1-container12 {
+    width: 571px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card1-image {
+    width: 36px;
+    height: 36px;
+  }
+  .candidate-job-for-you-card1-container13 {
+    width: 536px;
+    justify-content: space-between;
+  }
+  .candidate-job-for-you-card1-container14 {
+    width: 473px;
+  }
+  .candidate-job-for-you-card1-container18 {
+    width: auto;
+  }
+  .candidate-job-for-you-card1-container19 {
+    width: auto;
+    height: 22px;
+  }
+  .candidate-job-for-you-card1-icon1 {
+    width: 22px;
+    height: 22px;
+  }
+  .candidate-job-for-you-card1-container20 {
+    width: auto;
+  }
+  .candidate-job-for-you-card1-icon3 {
+    width: 22px;
+    height: 22px;
+  }
+  .candidate-job-for-you-card1-text14 {
+    width: 470px;
+  }
+  .candidate-job-for-you-card1-container21 {
+    width: auto;
+    height: 36px;
+  }
+  .candidate-job-for-you-card1-button1 {
+    width: 70px;
+    height: 36px;
+  }
+  .candidate-job-for-you-card1-button2 {
+    width: 160px;
+    height: 36px;
+  }
+  .candidate-job-for-you-card1-progress-bar-for-mobile {
+    top: 0px;
+    right: 0px;
+    display: flex;
+    position: absolute;
+    align-self: flex-end;
+    border-color: transperant;
+    border-style: solid;
+    border-width: 0px;
+  }
+  .candidate-job-for-you-card1-container23 {
+    top: -26px;
+    left: -134px;
+    width: 201px;
+    position: absolute;
+  }
+  .candidate-job-for-you-card1-text17 {
+    color: rgb(71, 71, 72);
+    font-size: 14px;
+  }
+  .candidate-job-for-you-card1-text18 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card1-text19 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card1-text20 {
+    color: rgb(24, 25, 28);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-for-you-card1-text21 {
+    font-size: 14px;
+  }
+  .candidate-job-for-you-card1-text22 {
+    color: rgb(71, 71, 72);
+    font-size: 14px;
+  }
+  .candidate-job-for-you-card1-text23 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .candidate-job-for-you-card1-container10 {
+    width: auto;
+    align-items: center;
+  }
+  .candidate-job-for-you-card1-container11 {
+    width: 578px;
+    align-self: flex-start;
+    margin-left: 0px;
+    padding-left: var(--dl-space-space-unit);
+    justify-content: flex-start;
+  }
+  .candidate-job-for-you-card1-container15 {
+    position: relative;
+  }
+  .candidate-job-for-you-card1-container16 {
+    top: 3px;
+    right: 73px;
+    width: 154px;
+    height: 21px;
+    display: flex;
+    position: absolute;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card1-progress-bar-for-mobile {
+    top: 0px;
+    right: 0px;
+    width: auto;
+    height: auto;
+    display: flex;
+    position: absolute;
+    align-self: flex-start;
+    margin-top: -16px;
+    margin-bottom: 0px;
+  }
+  .candidate-job-for-you-card1-container23 {
+    display: none;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .candidate-job-for-you-card1-container10 {
+    width: 479px;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card1-container11 {
+    gap: 0;
+    width: 95%;
+    align-self: center;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: var(--dl-space-space-halfunit);
+    justify-content: space-between;
+  }
+  .candidate-job-for-you-card1-container12 {
+    width: 427px;
+  }
+  .candidate-job-for-you-card1-container13 {
+    width: 403px;
+  }
+  .candidate-job-for-you-card1-container14 {
+    width: 378px;
+  }
+  .candidate-job-for-you-card1-container15 {
+    width: auto;
+  }
+  .candidate-job-for-you-card1-container16 {
+    top: -2px;
+    left: 209px;
+    height: 22px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-for-you-card1-container18 {
+    width: 394px;
+  }
+  .candidate-job-for-you-card1-text14 {
+    width: auto;
+    height: 58px;
+  }
+  .candidate-job-for-you-card1-progress-bar-for-mobile {
+    width: auto;
+    height: 22px;
+    display: flex;
+    position: static;
+  }
+  .candidate-job-for-you-card1-container22 {
+    display: none;
+  }
+}

@@ -1,0 +1,47 @@
+<div class="profile-creation-navigation1-container1" [ngClass]="rootClassName">
+  <div
+    id="navigation-container"
+    class="profile-creation-navigation1-container2"
+  >
+    <button
+      id="skip-button"
+      type="button"
+      class="profile-creation-navigation1-skip-button button"
+    >
+      <span id="skip-text" class="profile-creation-navigation1-skip-text">
+        <ng-container>
+          <ng-template #defaultText>
+            <div class="profile-creation-navigation1-fragment2">
+              <span class="profile-creation-navigation1-text2">Skip</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text ? text : defaultText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <div class="profile-creation-navigation1-save-next-button1">
+      <button
+        id="save-next-button"
+        type="button"
+        class="profile-creation-navigation1-save-next-button2 button"
+      >
+        <span id="save-next-text">
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="profile-creation-navigation1-fragment1">
+                <span class="profile-creation-navigation1-text1">
+                  Save &amp; Next -&gt;
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
