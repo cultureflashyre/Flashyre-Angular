@@ -340,6 +340,56 @@
 .candidate-job-for-you-cardroot-class-name14 {
   width: auto;
 }
+
+svg {
+  display: block;
+  width: 40%;
+  margin: 0 auto;
+}
+
+.loader {
+  stroke-dasharray: 0 19; /* Start with no progress */
+  transition: stroke-dasharray 2s linear, stroke 0.5s;
+  stroke-linecap: round;
+}
+
+.progress-container {
+  position: relative;
+  text-align: center;
+  stroke-linecap: round;
+}
+
+.progress-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-icon {
+width: 24px;
+height: 24px;
+margin-bottom: 5px; /* Adds spacing between the icon and label */
+border-radius: 50%; /* Makes the icon round */
+}
+
+
+.progress-label {
+  font-family: Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-description {
+  margin-top: 4px; /* Gap between the arch and the description */
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #666;
+  text-align: center;
+}
  
 @media(max-width: 1200px) {
   .candidate-job-for-you-card-progress-bar-for-mobile {
@@ -607,6 +657,34 @@
   .candidate-job-for-you-cardroot-class-name14 {
     width: 100%;
     align-self: flex-start;
+  }
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between the bar and score */
+  }
+  .progress {
+    position: relative;
+    width: 500px; /* Width of the progress bar */
+    height: 6px; /* Height of the progress bar */
+    background-color: #ccc; /* Background color for unfilled portion */
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden; /* Clip the progress bar inside the container */
+  }
+  .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0; /* Initial width is 0% */
+    background-color: #0bf; /* Default color for filled portion */
+    transition: width 0.3s ease; /* Smooth width transition */
+  }
+  .score {
+    font-family: 'Inter', sans-serif; /* Font family */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Font weight */
+    color: #474748; /* Default text color */
   }
 }
  
