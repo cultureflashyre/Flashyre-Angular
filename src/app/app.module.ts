@@ -9,7 +9,7 @@ const routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomeModule),
+      import('./pages/index/index.module').then((m) => m.IndexModule),
   },
   {
     path: 'profile-education-page',
@@ -17,11 +17,6 @@ const routes = [
       import(
         './pages/profile-education-page/profile-education-page.module'
       ).then((m) => m.ProfileEducationPageModule),
-  },
-  {
-    path: 'index',
-    loadChildren: () =>
-      import('./pages/index/index.module').then((m) => m.IndexModule),
   },
   {
     path: 'profile-education-page-duplicate',
@@ -99,11 +94,6 @@ const routes = [
       import('./pages/candidate-home/candidate-home.module').then(
         (m) => m.CandidateHomeModule
       ),
-  },
-  {
-    path: 'page',
-    loadChildren: () =>
-      import('./pages/page/page.module').then((m) => m.PageModule),
   },
   {
     path: 'profile-certification-page',
