@@ -1,15 +1,14 @@
-import { Component, Input, AfterViewInit, ContentChild, TemplateRef } from '@angular/core'
+import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef } from '@angular/core'
 
 @Component({
   selector: 'candidate-job-for-you-card',
   templateUrl: 'candidate-job-for-you-card.component.html',
   styleUrls: ['candidate-job-for-you-card.component.css'],
 })
-export class CandidateJobForYouCard implements AfterViewInit {
+export class CandidateJobForYouCard implements OnInit {
 
-  @Input()
-  perc: number = 0;
-
+  score: number = 0; // Initialize with 0 or fetch dynamically
+  
   @ContentChild('text2')
   text2: TemplateRef<any>
   @ContentChild('button')
@@ -34,11 +33,15 @@ export class CandidateJobForYouCard implements AfterViewInit {
 
   constructor() {}
 
-  ngAfterViewInit(): void {
-    this.animateProgressBar();
+  ngOnInit(): void {
+    // Fetch the dynamic value (e.g., from an API or service)
+    this.fetchDynamicValue().then((value) => {
+      this.score = value; // Set the dynamic value
+      this.animateProgressBar(); // Start the animation
+    });
   }
-
-  // Determine the fill color based on the percentage
+ 
+  // Function to determine the fill color based on the percentage
   private getFillColor(value: number): string {
     if (value <= 40) return 'red';
     if (value <= 60) return 'orange';
@@ -47,35 +50,49 @@ export class CandidateJobForYouCard implements AfterViewInit {
     return 'darkgreen';
   }
 
-  // Animate the progress bar
+  // Function to animate the progress bar
   private animateProgressBar(): void {
-    const progress: HTMLElement | null = document.querySelector('.progress');
-    const bar: HTMLElement | null = progress ? progress.querySelector('.bar') : null;
-    const score: HTMLElement | null = document.querySelector('.score');
+    const duration = 3000; // Animation duration in milliseconds
+    const startTime = Date.now();
 
-    if (bar && score) {
-      let start: number = 0;
-      const duration: number = 3000; // Animation duration in milliseconds
-      const startTime: number = performance.now();
+    const animate = () => {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1); // Progress between 0 and 1
 
-      const animate = (currentTime: number) => {
-        const elapsedTime: number = currentTime - startTime;
-        const progressPercentage: number = Math.min(elapsedTime / duration, 1);
-        const currentPerc: number = progressPercentage * this.perc;
+      // Calculate the current percentage
+      const currentPercentage = progress * this.score;
 
-        // Update the width and color of the bar
-        bar.style.width = ${currentPerc}%;
-        bar.style.backgroundColor = this.getFillColor(currentPerc);
+      // Update the progress bar
+      this.updateProgressBar(currentPercentage);
 
-        // Update the displayed score
-        score.textContent = ${Math.round(currentPerc)}%;
+      // Continue animation until duration is complete
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
 
-        if (progressPercentage < 1) {
-          requestAnimationFrame(animate);
-        }
-      };
+    // Start the animation
+    animate();
+  }
 
-      requestAnimationFrame(animate);
-    }
-  }
+  // Function to update the progress bar width and color
+  private updateProgressBar(percentage: number): void {
+    const barElement = document.querySelector('.bar') as HTMLElement;
+    if (barElement) {
+      barElement.style.width = `${percentage}%`;
+      barElement.style.backgroundColor = this.getFillColor(percentage);
+    }
+  }
+
+  // Simulate fetching a dynamic value (e.g., from an API or service)
+  private async fetchDynamicValue(): Promise<number> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(75); // Example dynamic value (e.g., 75%)
+      }, 1000);
+    });
+  }
+
+
 }
