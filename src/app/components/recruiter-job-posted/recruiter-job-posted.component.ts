@@ -6,9 +6,11 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['recruiter-job-posted.component.css'],
 })
 export class RecruiterJobPosted {
-  @ContentChild('text')
-  text: TemplateRef<any>
+  @ContentChild('text3')
+  text3: TemplateRef<any>
   @Input()
   rootClassName: string = ''
+  @ContentChild('text')
+  text: TemplateRef<any>
   constructor() {}
 }
