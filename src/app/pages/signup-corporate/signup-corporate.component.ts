@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'signup-corporate',
@@ -7,7 +8,16 @@ import { Title, Meta } from '@angular/platform-browser'
   styleUrls: ['signup-corporate.component.css'],
 })
 export class SignupCorporate {
-  constructor(private title: Title, private meta: Meta) {
+  firstName: string = '';
+  lastName: string = '';
+  companyName: string = '';
+  phoneNumber: string = '';
+  email: string = '';
+  password: string = '';
+  confirmPassword: string = '';
+  message: string = '';
+
+  constructor(private title: Title, private meta: Meta,private http: HttpClient) {
     this.title.setTitle('Signup-Corporate - Flashyre')
     this.meta.addTags([
       {
@@ -21,4 +31,29 @@ export class SignupCorporate {
       },
     ])
   }
+  onSubmit() {
+    const data = {
+      first_name: this.firstName,
+      last_name: this.lastName,
+      company_name: this.companyName,
+      phone_number: this.phoneNumber,
+      email: this.email,
+      password: this.password
+    };
+
+    this.message = 'The data is being sent...';
+
+    this.http.post('http://localhost:8000/api/signup-corporate/', data)
+      .subscribe(
+        (response: any) => {
+          this.message = 'Signup successful!';
+          console.log(response);
+        },
+        (error) => {
+          this.message = 'Error during signup. Please try again.';
+          console.error(error);
+        }
+      );
+  }
 }
+
