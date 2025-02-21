@@ -3,7 +3,11 @@
     <login-page-navbar
       rootClassName="login-page-navbarroot-class-name"
     ></login-page-navbar>
-    <log-in-page rootClassName="log-in-pageroot-class-name">
+    <log-in-page 
+      rootClassName="log-in-pageroot-class-name" 
+      (loginSubmit)="onLoginSubmit($event)" 
+      [errorMessage]="errorMessage"
+    >
       <ng-template #text1>
         <div class="login-candidate-fragment1">
           <span class="login-candidate-text1">Email</span>

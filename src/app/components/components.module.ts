@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms';
 
 import { Navbar6 } from './navbar6/navbar6.component'
 import { NavbarForRecruiterViewOption } from './navbar-for-recruiter-view-option/navbar-for-recruiter-view-option.component'
@@ -180,7 +181,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     NavbarForCandidateView,
     EmailAndMobileNumberComponent
   ],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,FormsModule],
   exports: [
     Navbar6,
     NavbarForRecruiterViewOption,
