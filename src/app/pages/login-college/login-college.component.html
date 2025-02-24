@@ -1,9 +1,10 @@
 <div id="login-college" class="login-college-container">
   <div id="main-container" class="login-college-main-container">
-    <login-page-navbar
-      rootClassName="login-page-navbarroot-class-name1"
-    ></login-page-navbar>
-    <log-in-page rootClassName="log-in-pageroot-class-name1">
+    <login-page-navbar rootClassName="login-page-navbarroot-class-name1"></login-page-navbar>
+    <log-in-page 
+      rootClassName="log-in-pageroot-class-name1" 
+      [errorMessage]="errorMessage" 
+      (loginSubmit)="onLoginSubmit($event)">
       <ng-template #text1>
         <div class="login-college-fragment1">
           <span class="login-college-text1">Email</span>
@@ -36,7 +37,7 @@
       </ng-template>
       <ng-template #text71>
         <div class="login-college-fragment7">
-          <span class="login-college-text7">invalid Email or Password</span>
+          <span class="login-college-text7">Invalid Email or Password</span>
         </div>
       </ng-template>
       <ng-template #heading>

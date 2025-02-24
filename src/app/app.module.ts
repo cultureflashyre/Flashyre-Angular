@@ -124,12 +124,18 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
-  { path: 'university_college_dashboard', loadChildren: () => import('./pages/university-college-dashboard/university-college-dashboard.module').then(m => m.UniversityCollegeDashboardModule) },
   {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
         (m) => m.NotFoundModule
+      ),
+  },
+  {
+    path: 'university_college_dashboard', // New route
+    loadChildren: () =>
+      import('./pages/university-college-dashboard/university-college-dashboard.module').then(
+        (m) => m.UniversityCollegeDashboardModule
       ),
   },
 ]
