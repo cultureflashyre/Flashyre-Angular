@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+
 @Component({
   selector: 'signup-college',
   templateUrl: 'signup-college.component.html',

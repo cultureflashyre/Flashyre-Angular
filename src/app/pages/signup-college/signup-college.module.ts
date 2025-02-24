@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ComponentsModule } from '../../components/components.module'
 import { SignupCollege } from './signup-college.component'
@@ -14,7 +15,7 @@ const routes = [
 
 @NgModule({
   declarations: [SignupCollege],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes),ReactiveFormsModule],
   exports: [SignupCollege],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

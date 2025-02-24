@@ -124,6 +124,7 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
+  { path: 'university_college_dashboard', loadChildren: () => import('./pages/university-college-dashboard/university-college-dashboard.module').then(m => m.UniversityCollegeDashboardModule) },
   {
     path: '**',
     loadChildren: () =>

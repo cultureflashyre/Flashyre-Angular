@@ -11,7 +11,8 @@
       </ng-container>
     </h1>
     <div id="login-page-details-container" class="log-in-page-container3">
-      <form (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
         <div id="email-container" class="log-in-page-email-container">
           <div id="login-email-container" class="log-in-page-container4">
             <span id="login-email" class="log-in-page-email-text">
@@ -27,14 +28,18 @@
             <input
               type="email"
               id="login-email-input"
-              [(ngModel)]="email"
-              name="email"
-              [attr.placeholder]="textinputPlaceholder"
+              formControlName="email"
+              [placeholder]="textinputPlaceholder"
               class="log-in-page-email-input input"
-              required
             />
+            <span *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+              <ng-container *ngIf="loginForm.get('email')?.errors?.required">Email is required.</ng-container>
+              <ng-container *ngIf="loginForm.get('email')?.errors?.email">Invalid email format.</ng-container>
+            </span>
           </div>
         </div>
+
+        <!-- Password -->
         <div id="password-container" class="log-in-page-password-container">
           <div id="login-password-container" class="log-in-page-container5">
             <span id="login-password" class="log-in-page-password-text">
@@ -50,11 +55,9 @@
             <input
               [type]="showPassword ? 'text' : 'password'"
               id="login-password-input"
-              [(ngModel)]="password"
-              name="password"
-              [attr.placeholder]="textinputPlaceholder1"
+              formControlName="password"
+              [placeholder]="textinputPlaceholder1"
               class="log-in-page-password-input input"
-              required
             />
             <span
               id="login-password-show-button"
@@ -63,8 +66,13 @@
             >
               {{ showPassword ? 'Hide' : 'Show' }}
             </span>
+            <span *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+              Password is required.
+            </span>
           </div>
         </div>
+
+        <!-- Login Button -->
         <button
           id="login-button-container"
           type="submit"
@@ -82,6 +90,8 @@
           </span>
         </button>
       </form>
+
+      <!-- Error Message and Links -->
       <div class="log-in-page-error-login-container">
         <span id="error-message-login" class="log-in-page-error-message-login">
           {{ errorMessage }}
