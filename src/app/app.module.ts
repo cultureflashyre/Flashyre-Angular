@@ -124,6 +124,7 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
+  
   {
     path: '**',
     loadChildren: () =>
