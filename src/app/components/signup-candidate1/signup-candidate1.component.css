@@ -319,6 +319,7 @@
   padding-right: 16px;
   padding-bottom: 12px;
   background-color: #05356C;
+  color: white;
 }
  
 .signup-candidate1-signup-button:hover {
@@ -345,16 +346,19 @@
   flex: 0 0 auto;
   width: auto;
   height: auto;
-  display: flex; /* Updated from 'none' to 'flex' */
+  display: none;
   align-self: center;
   align-items: flex-start;
 }
  
 .signup-candidate1-error-message-signup {
-  color: red; /* Updated to red text */
+  fill: #FFFFFF;
+  color: #FFFFFF;
   font-style: normal;
   margin-top: var(--dl-space-space-halfunit);
   font-weight: 500;
+  border-width: 0px;
+  background-color: #F65E5C;
 }
  
 .signup-candidate1-signin-container {
@@ -364,6 +368,13 @@
   align-self: center;
   justify-content: flex-start;
 }
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
  
 .signup-candidate1-already-have-an-account-text {
   display: flex;
@@ -528,11 +539,4 @@
   position: relative;
   align-self: center;
   overflow-x: visible;
-}
-
-/* Added styling for field-specific error messages */
-.error-text {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
 }

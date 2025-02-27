@@ -1,11 +1,13 @@
-<div id="signup-page" class="signup-candidate1-container">
+<div id="signup-page" class="signup-candidate1-container" [ngClass]="rootClassName">
   <div id="signup-container" class="signup-candidate1-signup-container">
-    <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">Welcome to Flashyre</h2>
+    <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">
+      <span>Welcome to Flashyre</span>
+    </h2>
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div id="details" class="signup-candidate1-details-container">
         <!-- First Name -->
         <div id="first-name-container" class="signup-candidate1-first-name-container">
-          <span id="signup-first-name" class="signup-candidate1-first-name-text">First Name</span>
+          <span class="signup-candidate1-first-name-text">First Name</span>
           <input
             type="text"
             id="signup-first-name-input"
@@ -14,13 +16,14 @@
             class="signup-candidate1-first-name-input input"
           />
           <div *ngIf="signupForm.get('first_name').invalid && signupForm.get('first_name').touched" class="error-text">
-            First name is required.
+            <span *ngIf="signupForm.get('first_name').errors?.required">First name is required.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.pattern">Only letters and spaces are allowed.</span>
           </div>
         </div>
 
         <!-- Last Name -->
         <div id="last-name-container" class="signup-candidate1-last-name-container1">
-          <span id="signup-last-name" class="signup-candidate1-last-name-text1">Last Name</span>
+          <span class="signup-candidate1-last-name-text1">Last Name</span>
           <input
             type="text"
             id="signup-last-name-input"
@@ -29,28 +32,35 @@
             class="signup-candidate1-last-name-input1 input"
           />
           <div *ngIf="signupForm.get('last_name').invalid && signupForm.get('last_name').touched" class="error-text">
-            Last name is required.
+            <span *ngIf="signupForm.get('last_name').errors?.required">Last name is required.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.pattern">Only letters and spaces are allowed.</span>
           </div>
         </div>
 
         <!-- Phone Number -->
         <div id="phone-container" class="signup-candidate1-last-name-container2">
-          <span id="signup-phone-number" class="signup-candidate1-last-name-text2">Phone Number</span>
+          <span class="signup-candidate1-last-name-text2">Phone Number</span>
           <input
             type="text"
             id="signup-phone-number-input"
             placeholder="Enter Phone Number"
             formControlName="phone_number"
             class="signup-candidate1-last-name-input2 input"
+            maxlength="10"
+            (input)="sanitizePhoneNumber($event)"
           />
           <div *ngIf="signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched" class="error-text">
-            Phone number is required.
+            <span *ngIf="signupForm.get('phone_number').errors?.required">Phone number is required.</span>
+            <span *ngIf="signupForm.get('phone_number').errors?.pattern">Phone number must be exactly 10 digits.</span>
+          </div>
+          <div *ngIf="signupForm.get('phone_number').errors?.phoneExists" class="error-text">
+            Phone number already exists.
           </div>
         </div>
 
         <!-- Email -->
         <div id="email-container" class="signup-candidate1-email-container">
-          <span id="signup-email" class="signup-candidate1-email-text">Email Id</span>
+          <span class="signup-candidate1-email-text">Email Id</span>
           <input
             type="email"
             id="signup-email-input"
@@ -58,17 +68,20 @@
             formControlName="email"
             class="signup-candidate1-email-input input"
           />
-          <div *ngIf="signupForm.get('email').hasError('email') && signupForm.get('email').touched" class="error-text">
-            Please enter a valid email.
+          <div *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched" class="error-text">
+            <span *ngIf="signupForm.get('email').errors?.required">Email is required.</span>
+            <span *ngIf="signupForm.get('email').errors?.email">Please enter a valid email.</span>
+          </div>
+          <div *ngIf="signupForm.get('email').errors?.emailExists" class="error-text">
+            Email already exists.
           </div>
         </div>
 
         <!-- Password -->
         <div id="password-container" class="signup-candidate1-password-container1">
-          <div id="password" class="signup-candidate1-password1">
-            <span id="signup-password" class="signup-candidate1-password-text1">Password</span>
+          <div class="signup-candidate1-password1">
+            <span class="signup-candidate1-password-text1">Password</span>
             <span
-              id="signup-password-show-button"
               class="signup-candidate1-show-text1 button"
               (click)="togglePasswordVisibility()"
             >
@@ -81,18 +94,18 @@
               formControlName="password"
               class="signup-candidate1-password-input1 input"
             />
-            <div *ngIf="signupForm.get('password').hasError('minlength') && signupForm.get('password').touched" class="error-text">
-              Password must be at least 8 characters.
+            <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+              <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
+              <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
             </div>
           </div>
         </div>
 
         <!-- Confirm Password -->
         <div id="password-container" class="signup-candidate1-password-container2">
-          <div id="password" class="signup-candidate1-password2">
-            <span id="signup-confirm-password" class="signup-candidate1-password-text2">Confirm Password</span>
+          <div class="signup-candidate1-password2">
+            <span class="signup-candidate1-password-text2">Confirm Password</span>
             <span
-              id="signup-password-show-button"
               class="signup-candidate1-show-text2 button"
               (click)="toggleConfirmPasswordVisibility()"
             >
@@ -111,8 +124,8 @@
           </div>
         </div>
 
-        <!-- Signup Button, Error Message, and Signin Link -->
-        <div id="signup-signin-container" class="signup-candidate1-signup-and-signin-container">
+        <!-- Signup Button and Error Message -->
+        <div class="signup-candidate1-signup-and-signin-container">
           <button
             id="signup-button"
             type="submit"
@@ -122,15 +135,15 @@
             Sign Up
           </button>
           <div *ngIf="errorMessage" class="signup-candidate1-error-signup-container">
-            <span id="error-message-signup" class="signup-candidate1-error-message-signup">
-              {{ errorMessage }}
-            </span>
+            <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
           </div>
-          <div id="signin-container" class="signup-candidate1-signin-container">
-            <span id="already-have-an-account" class="signup-candidate1-already-have-an-account-text">
+
+          <!-- Sign In Link -->
+          <div class="signup-candidate1-signin-container">
+            <span class="signup-candidate1-already-have-an-account-text">
               Already have an account?
             </span>
-            <span id="signin-button" class="signup-candidate1-signin-text button" routerLink="/login">
+            <span class="signup-candidate1-signin-text button" routerLink="/login">
               Sign In
             </span>
           </div>
