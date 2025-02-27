@@ -1,7 +1,7 @@
 :host { 
   display: contents; 
 }
- 
+
 .signup-college1-container {
   width: 100%;
   height: auto;
@@ -12,7 +12,7 @@
   padding-bottom: 20px;
   justify-content: center;
 }
- 
+
 .signup-college1-signup-container {
   gap: 24px;
   flex: 0 0 auto;
@@ -24,7 +24,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-welcome-to-flashyre {
   width: 211px;
   height: 24px;
@@ -35,7 +35,7 @@
   font-weight: 600;
   justify-content: center;
 }
- 
+
 .signup-college1-details-container {
   gap: var(--dl-space-space-oneandhalfunits);
   flex: 0 0 auto;
@@ -48,7 +48,7 @@
   flex-direction: column;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-first-name-container {
   flex: 0 0 auto;
   width: 320px;
@@ -57,7 +57,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-first-name-text {
   fill: #18191C;
   color: #18191C;
@@ -69,7 +69,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-first-name-input {
   fill: #18191C;
   color: #18191C;
@@ -78,7 +78,7 @@
   border-color: #ACACAD;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-last-name-container1 {
   flex: 0 0 auto;
   width: 320px;
@@ -87,7 +87,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-last-name-text1 {
   fill: #18191C;
   color: #18191C;
@@ -99,7 +99,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-last-name-input1 {
   fill: #18191C;
   color: #18191C;
@@ -108,7 +108,7 @@
   border-color: #ACACAD;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-last-name-container2 {
   flex: 0 0 auto;
   width: 320px;
@@ -117,7 +117,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-last-name-text2 {
   fill: #18191C;
   color: #18191C;
@@ -129,7 +129,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-last-name-input2 {
   fill: #18191C;
   color: #18191C;
@@ -138,7 +138,7 @@
   border-color: #ACACAD;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-last-name-container3 {
   flex: 0 0 auto;
   width: 320px;
@@ -147,7 +147,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-last-name-text3 {
   fill: #18191C;
   color: #18191C;
@@ -159,7 +159,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-form {
   width: 100%;
   height: 48px;
@@ -174,7 +174,7 @@
   justify-content: center;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-text10 {
   fill: #69737E;
   color: #69737E;
@@ -182,7 +182,7 @@
   margin-top: var(--dl-space-space-halfunit);
   margin-bottom: var(--dl-space-space-halfunit);
 }
- 
+
 .signup-college1-icon1 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -191,7 +191,7 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
- 
+
 .signup-college1-email-container1 {
   flex: 0 0 auto;
   width: 320px;
@@ -200,7 +200,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-email-text1 {
   fill: #18191C;
   color: #18191C;
@@ -212,7 +212,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-email-input1 {
   fill: #18191C;
   color: #18191C;
@@ -221,7 +221,7 @@
   border-color: #ACACAD;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-email-container2 {
   flex: 0 0 auto;
   width: 320px;
@@ -230,7 +230,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-email-text2 {
   fill: #18191C;
   color: #18191C;
@@ -242,7 +242,7 @@
   align-items: center;
   font-family: "Inter";
 }
- 
+
 .signup-college1-email-input2 {
   fill: #18191C;
   color: #18191C;
@@ -251,7 +251,7 @@
   border-color: #ACACAD;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-password-container1 {
   flex: 0 0 auto;
   width: 324px;
@@ -260,7 +260,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-password1 {
   flex: 0 0 auto;
   width: 320px;
@@ -270,14 +270,14 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-password-text1 {
   width: 320px;
   height: 24px;
   display: flex;
   align-items: center;
 }
- 
+
 .signup-college1-show-text1 {
   right: var(--dl-space-space-halfunit);
   width: 44px;
@@ -294,27 +294,27 @@
   justify-content: center;
   background-color: transparent;
 }
- 
+
 .signup-college1-show-text1:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .signup-college1-show-text1:active {
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
- 
+
 .signup-college1-password-input1 {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-password-container2 {
   flex: 0 0 auto;
   width: 324px;
@@ -323,7 +323,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-password2 {
   flex: 0 0 auto;
   width: 320px;
@@ -333,14 +333,14 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-password-text2 {
   width: 320px;
   height: 24px;
   display: flex;
   align-items: center;
 }
- 
+
 .signup-college1-show-text2 {
   right: var(--dl-space-space-halfunit);
   width: 44px;
@@ -357,27 +357,27 @@
   justify-content: center;
   background-color: transparent;
 }
- 
+
 .signup-college1-show-text2:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .signup-college1-show-text2:active {
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
- 
+
 .signup-college1-password-input2 {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
- 
+
 .signup-college1-signup-and-signin-container {
   flex: 0 0 auto;
   width: 100%;
@@ -386,7 +386,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .signup-college1-signup-button {
   gap: 4px;
   width: 320px;
@@ -400,46 +400,91 @@
   padding-bottom: 12px;
   background-color: #05356C;
 }
- 
+
 .signup-college1-signup-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
-  background-color: 0A4992;
+  background-color: #0A4992;
 }
- 
+
 .signup-college1-signup-button:active {
   transform: scale(0.90);
   border-width: 0px;
-  background-color: 022954;
+  background-color: #022954;
 }
- 
+
 .signup-college1-signup-text {
   fill: #FFFFFF;
   color: #FFFFFF;
   width: 53px;
   height: 24px;
 }
- 
+
 .signup-college1-error-signup-container {
   flex: 0 0 auto;
-  width: auto;
+  width: 320px;
   height: auto;
-  display: none;
+  display: flex;
   align-self: center;
   align-items: flex-start;
+  flex-direction: column;
+  margin-top: 8px;
 }
- 
+
 .signup-college1-error-message-signup {
-  fill: #FFFFFF;
-  color: #FFFFFF;
+  color: #ff0000;
+  font-size: 14px;
   font-style: normal;
-  margin-top: var(--dl-space-space-halfunit);
   font-weight: 500;
-  border-width: 0px;
-  background-color: #F65E5C;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
 }
- 
+
+.signup-college1-error-message-signup:hover {
+  background-color: rgba(255, 0, 0, 0.15);
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Add or update these styles in signup-college1.component.css */
+
+/* Style for field-specific error messages */
+.error-message {
+  color: #ff0000; /* Red color */
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Existing style for signup container errors (ensure consistency) */
+.signup-college1-error-message-signup {
+  color: #ff0000; /* Red color */
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+}
+
+.signup-college1-error-message-signup:hover {
+  background-color: rgba(255, 0, 0, 0.15);
+}
+
+.error-text {
+  display: block;
+  margin: 4px 0;
+}
 .signup-college1-signin-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
@@ -447,13 +492,13 @@
   align-self: center;
   justify-content: flex-start;
 }
- 
+
 .signup-college1-already-have-an-account-text {
   display: flex;
   align-self: center;
   align-items: center;
 }
- 
+
 .signup-college1-signin-text {
   display: flex;
   transition: 0.3s;
@@ -462,163 +507,163 @@
   padding-left: 0px;
   background-color: transparent;
 }
- 
+
 .signup-college1-signin-text:hover {
-  color: FFFFFF;
+  color: #FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .signup-college1-signin-text:active {
-  color: FFFFFF;
+  color: #FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
- 
+
 .signup-college1-fragment10 {
   display: contents;
 }
- 
+
 .signup-college1-text11 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment11 {
   display: contents;
 }
- 
+
 .signup-college1-text12 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment12 {
   display: contents;
 }
- 
+
 .signup-college1-text13 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment13 {
   display: contents;
 }
- 
+
 .signup-college1-text14 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment14 {
   display: contents;
 }
- 
+
 .signup-college1-text15 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
- 
+
 .signup-college1-fragment15 {
   display: contents;
 }
- 
+
 .signup-college1-text16 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment16 {
   display: contents;
 }
- 
+
 .signup-college1-text17 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment17 {
   display: contents;
 }
- 
+
 .signup-college1-text18 {
   color: #18191c;
   display: inline-block;
 }
- 
+
 .signup-college1-fragment18 {
   display: contents;
 }
- 
+
 .signup-college1-text19 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
- 
+
 .signup-college1-fragment19 {
   display: contents;
 }
- 
+
 .signup-college1-text20 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
- 
+
 .signup-college1-fragment20 {
   display: contents;
 }
- 
+
 .signup-college1-text21 {
   color: #ffffff;
   display: inline-block;
   background-color: rgb(246, 94, 92);
 }
- 
+
 .signup-college1-fragment21 {
   display: contents;
 }
- 
+
 .signup-college1-text22 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 500;
 }
- 
+
 .signup-college1-fragment22 {
   display: contents;
 }
- 
+
 .signup-college1-text23 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment23 {
   display: contents;
 }
- 
+
 .signup-college1-text24 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
- 
+
 .signup-college1-fragment24 {
   display: contents;
 }
- 
+
 .signup-college1-text25 {
   display: inline-block;
 }
- 
+
 .signup-college1-fragment25 {
   display: contents;
 }
- 
+
 .signup-college1-text26 {
   display: inline-block;
 }
- 
+
 .signup-college1root-class-name {
   height: auto;
   margin-top: 100px;
