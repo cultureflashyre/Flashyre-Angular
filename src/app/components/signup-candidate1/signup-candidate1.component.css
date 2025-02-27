@@ -345,19 +345,16 @@
   flex: 0 0 auto;
   width: auto;
   height: auto;
-  display: none;
+  display: flex; /* Updated from 'none' to 'flex' */
   align-self: center;
   align-items: flex-start;
 }
  
 .signup-candidate1-error-message-signup {
-  fill: #FFFFFF;
-  color: #FFFFFF;
+  color: red; /* Updated to red text */
   font-style: normal;
   margin-top: var(--dl-space-space-halfunit);
   font-weight: 500;
-  border-width: 0px;
-  background-color: #F65E5C;
 }
  
 .signup-candidate1-signin-container {
@@ -531,4 +528,11 @@
   position: relative;
   align-self: center;
   overflow-x: visible;
+}
+
+/* Added styling for field-specific error messages */
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
 }
