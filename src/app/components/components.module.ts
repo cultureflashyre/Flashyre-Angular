@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms';
 
 import { Navbar6 } from './navbar6/navbar6.component'
 import { NavbarForRecruiterViewOption } from './navbar-for-recruiter-view-option/navbar-for-recruiter-view-option.component'
@@ -40,7 +41,7 @@ import { SignupCollege1 } from './signup-college1/signup-college1.component'
 import { ProfileBasicinformationComponent } from './profile-basicinformation-component/profile-basicinformation-component.component'
 import { PasswordInputContainer } from './password-input-container/password-input-container.component'
 import { InputDateComponent } from './input-date-component/input-date-component.component'
-import { Steps2 } from './steps2/steps2.component'
+
 import { CandidateJobsForYouSearchAndFilterBar } from './candidate-jobs-for-you-search-and-filter-bar/candidate-jobs-for-you-search-and-filter-bar.component'
 import { LogInPage } from './log-in-page/log-in-page.component'
 import { Features24 } from './features24/features24.component'
@@ -48,7 +49,7 @@ import { ProgressBarStep5 } from './progress-bar-step-5/progress-bar-step-5.comp
 import { CandidateProfileShort } from './candidate-profile-short/candidate-profile-short.component'
 import { NavbarForRecruiterView } from './navbar-for-recruiter-view/navbar-for-recruiter-view.component'
 import { RecruiterProfile1 } from './recruiter-profile1/recruiter-profile1.component'
-import { Pricing14 } from './pricing14/pricing14.component'
+
 import { AboutTheJob } from './about-the-job/about-the-job.component'
 import { FlashyreAssessmentRules } from './flashyre-assessment-rules/flashyre-assessment-rules.component'
 import { SignupPageNavbar } from './signup-page-navbar/signup-page-navbar.component'
@@ -62,15 +63,15 @@ import { Navbar8 } from './navbar8/navbar8.component'
 import { RecruiterFlowSmallCard } from './recruiter-flow-small-card/recruiter-flow-small-card.component'
 import { ProgressBarStep2 } from './progress-bar-step-2/progress-bar-step-2.component'
 import { Navbar4 } from './navbar4/navbar4.component'
-import { CandidateJobForYouCard1 } from './candidate-job-for-you-card1/candidate-job-for-you-card1.component'
+//import { CandidateJobForYouCard1 } from './candidate-job-for-you-card1/candidate-job-for-you-card1.component'
 import { WriteAJobPostForRecruiter } from './write-a-job-post-for-recruiter/write-a-job-post-for-recruiter.component'
 import { CTA26 } from './cta26/cta26.component'
-import { Testimonial1 } from './testimonial1/testimonial1.component'
+
 import { ProfileEmploymentComponent } from './profile-employment-component/profile-employment-component.component'
-import { TrialComponent } from './trial-component/trial-component.component'
+
 import { NavbarForCandidateView860721 } from './navbar-for-candidate-view-86072-1/navbar-for-candidate-view-86072-1.component'
 import { ViewMoreCandidates } from './view-more-candidates/view-more-candidates.component'
-import { RecruiterJobPosted1 } from './recruiter-job-posted/recruiter-job-posted.component1'
+//import { RecruiterJobPosted1 } from './recruiter-job-posted1/recruiter-job-posted1.component'
 import { LandingPageArticleCard } from './landing-page-article-card/landing-page-article-card.component'
 import { NavbarForRecruiterView1076721 } from './navbar-for-recruiter-view-107672-1/navbar-for-recruiter-view-107672-1.component'
 import { RecruiterCompanyJobCard } from './recruiter-company-job-card/recruiter-company-job-card.component'
@@ -80,7 +81,7 @@ import { RecruiterJobPosted } from './recruiter-job-posted/recruiter-job-posted.
 import { ProfileCreationNavigation1 } from './profile-creation-navigation1/profile-creation-navigation1.component'
 import { Gallery3 } from './gallery3/gallery3.component'
 import { LandinPageTestimonialCard } from './landin-page-testimonial-card/landin-page-testimonial-card.component'
-import { Testimonial17 } from './testimonial17/testimonial17.component'
+
 import { NavbarForCandidateView86072 } from './navbar-for-candidate-view-86072/navbar-for-candidate-view-86072.component'
 import { RecruiterFlowLargeCard } from './recruiter-flow-large-card/recruiter-flow-large-card.component'
 import { VerifyEmailSMSPopup } from './verify-email-sms-popup/verify-email-sms-popup.component'
@@ -92,7 +93,7 @@ import { ProgressBarStep4 } from './progress-bar-step-4/progress-bar-step-4.comp
 import { Contact10 } from './contact10/contact10.component'
 import { NavbarForCandidateView } from './navbar-for-candidate-view/navbar-for-candidate-view.component'
 import { EmailAndMobileNumberComponent } from './email-and-mobile-number-component/email-and-mobile-number-component.component'
-import { Team1 } from './team1/team1.component'
+
 
 @NgModule({
   declarations: [
@@ -134,7 +135,6 @@ import { Team1 } from './team1/team1.component'
     ProfileBasicinformationComponent,
     PasswordInputContainer,
     InputDateComponent,
-    Steps2,
     CandidateJobsForYouSearchAndFilterBar,
     LogInPage,
     Features24,
@@ -142,7 +142,6 @@ import { Team1 } from './team1/team1.component'
     CandidateProfileShort,
     NavbarForRecruiterView,
     RecruiterProfile1,
-    Pricing14,
     AboutTheJob,
     FlashyreAssessmentRules,
     SignupPageNavbar,
@@ -156,15 +155,11 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-    CandidateJobForYouCard1,
-    WriteAJobPostForRecruiter,
+   WriteAJobPostForRecruiter,
     CTA26,
-    Testimonial1,
     ProfileEmploymentComponent,
-    TrialComponent,
     NavbarForCandidateView860721,
     ViewMoreCandidates,
-    RecruiterJobPosted1,
     LandingPageArticleCard,
     NavbarForRecruiterView1076721,
     RecruiterCompanyJobCard,
@@ -174,23 +169,19 @@ import { Team1 } from './team1/team1.component'
     ProfileCreationNavigation1,
     Gallery3,
     LandinPageTestimonialCard,
-    Testimonial17,
     NavbarForCandidateView86072,
     RecruiterFlowLargeCard,
     VerifyEmailSMSPopup,
     NavbarForCandidateView107672,
-    CandidateJobForYouCard1,
     LandingPageArticalPreviewCard,
     BufferScreen,
     BufferName,
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent,
-    Team1,
-    RecruiterJobPosted1,
+    EmailAndMobileNumberComponent
   ],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,FormsModule],
   exports: [
     Navbar6,
     NavbarForRecruiterViewOption,
@@ -230,7 +221,6 @@ import { Team1 } from './team1/team1.component'
     ProfileBasicinformationComponent,
     PasswordInputContainer,
     InputDateComponent,
-    Steps2,
     CandidateJobsForYouSearchAndFilterBar,
     LogInPage,
     Features24,
@@ -238,7 +228,6 @@ import { Team1 } from './team1/team1.component'
     CandidateProfileShort,
     NavbarForRecruiterView,
     RecruiterProfile1,
-    Pricing14,
     AboutTheJob,
     FlashyreAssessmentRules,
     SignupPageNavbar,
@@ -252,15 +241,11 @@ import { Team1 } from './team1/team1.component'
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-    CandidateJobForYouCard1,
     WriteAJobPostForRecruiter,
     CTA26,
-    Testimonial1,
     ProfileEmploymentComponent,
-    TrialComponent,
     NavbarForCandidateView860721,
     ViewMoreCandidates,
-    RecruiterJobPosted1,
     LandingPageArticleCard,
     NavbarForRecruiterView1076721,
     RecruiterCompanyJobCard,
@@ -270,21 +255,17 @@ import { Team1 } from './team1/team1.component'
     ProfileCreationNavigation1,
     Gallery3,
     LandinPageTestimonialCard,
-    Testimonial17,
     NavbarForCandidateView86072,
     RecruiterFlowLargeCard,
     VerifyEmailSMSPopup,
     NavbarForCandidateView107672,
-    CandidateJobForYouCard1,
     LandingPageArticalPreviewCard,
     BufferScreen,
     BufferName,
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent,
-    Team1,
-    RecruiterJobPosted1,
+    EmailAndMobileNumberComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

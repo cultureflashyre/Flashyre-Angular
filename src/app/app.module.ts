@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { BrowserModule } from '@angular/platform-browser'
+import { HttpClientModule } from '@angular/common/http';
 
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
@@ -9,7 +10,7 @@ const routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomeModule),
+      import('./pages/index/index.module').then((m) => m.IndexModule),
   },
   {
     path: 'profile-education-page',
@@ -17,11 +18,6 @@ const routes = [
       import(
         './pages/profile-education-page/profile-education-page.module'
       ).then((m) => m.ProfileEducationPageModule),
-  },
-  {
-    path: 'index',
-    loadChildren: () =>
-      import('./pages/index/index.module').then((m) => m.IndexModule),
   },
   {
     path: 'profile-education-page-duplicate',
@@ -101,11 +97,6 @@ const routes = [
       ),
   },
   {
-    path: 'page',
-    loadChildren: () =>
-      import('./pages/page/page.module').then((m) => m.PageModule),
-  },
-  {
     path: 'profile-certification-page',
     loadChildren: () =>
       import(
@@ -144,7 +135,7 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, RouterModule.forRoot(routes), ComponentsModule],
+  imports: [BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
