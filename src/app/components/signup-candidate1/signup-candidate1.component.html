@@ -138,6 +138,11 @@
             <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
           </div>
 
+          <!-- Add this after the error message div -->
+          <div *ngIf="successMessage" class="signup-candidate1-success-signup-container">
+          <span class="signup-candidate1-success-message-signup">{{ successMessage }}</span>
+          </div>
+
           <!-- Sign In Link -->
           <div class="signup-candidate1-signin-container">
             <span class="signup-candidate1-already-have-an-account-text">

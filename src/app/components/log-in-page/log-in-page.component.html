@@ -82,7 +82,7 @@
           </span>
         </button>
       </form>
-      <div class="log-in-page-error-login-container">
+      <div class="log-in-page-error-login-container" *ngIf="errorMessage">
         <span id="error-message-login" class="log-in-page-error-message-login">
           {{ errorMessage }}
         </span>

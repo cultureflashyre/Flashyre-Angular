@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, 
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'signup-candidate1',
@@ -29,10 +31,16 @@ export class SignupCandidate1 implements OnInit {
   // Reactive form properties
   signupForm: FormGroup;
   errorMessage: string = '';
+  successMessage: string = '';
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient,
+    private router: Router,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group(
@@ -78,12 +86,22 @@ export class SignupCandidate1 implements OnInit {
             password: this.signupForm.get('password').value,
         };
 
-        this.http.post('http://localhost:8000/api/signup-candidate/', formData).subscribe(
-            (response) => {
+        this.http.post('http://localhost:8000/signup-candidate/', formData).subscribe(
+            (response: any) => {
                 console.log('Signup successful', response);
+                this.errorMessage = '';
+                this.successMessage = response.message || 'Successfully Signed up';
+                
+                this.sessionService.setUserSession(response.user_id);
+                
+                // Display success message and redirect after a short delay
+                setTimeout(() => {
+                    this.router.navigate(['/profile-basic-information']);
+                }, 1500);
             },
             (error) => {
-                console.log('Error response:', error); // Log the full error
+                console.log('Error response:', error);
+                this.successMessage = '';
                 if (error.status === 400 && error.error.email) {
                     this.errorMessage = 'Email already exists!';
                 } else if (error.status === 400 && error.error.phone_number) {
@@ -91,17 +109,17 @@ export class SignupCandidate1 implements OnInit {
                 } else {
                     this.errorMessage = 'Signup failed. Please try again.';
                 }
-                console.log('Error message set to:', this.errorMessage); // Confirm it’s set
+                console.log('Error message set to:', this.errorMessage);
             }
         );
     }
-}
+  }
 
   phoneExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`http://localhost:8000/api/check-phone/?phone=${phone}`).pipe(
+      return this.http.get(`http://localhost:8000/check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -112,7 +130,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`http://localhost:8000/api/check-email/?email=${email}`).pipe(
+      return this.http.get(`http://localhost:8000/check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );

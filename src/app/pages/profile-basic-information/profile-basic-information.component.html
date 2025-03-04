@@ -37,7 +37,7 @@
         <ng-template #text6>
           <div class="profile-basic-information-fragment15">
             <span class="profile-basic-information-text15">
-              View &amp; edit profile
+              View & edit profile
             </span>
           </div>
         </ng-template>
@@ -71,6 +71,7 @@
         ></progress-bar-step1>
         <profile-basicinformation-component
           rootClassName="profile-basicinformation-componentroot-class-name2"
+          #profileComponent
         >
           <ng-template #text>
             <div class="profile-basic-information-fragment20">
@@ -124,14 +125,12 @@
         >
           <ng-template #text>
             <div class="profile-basic-information-fragment28">
-              <span class="profile-basic-information-text28">Skip</span>
+              <span class="profile-basic-information-text28" (click)="skip()">Skip</span>
             </div>
           </ng-template>
           <ng-template #text1>
             <div class="profile-basic-information-fragment29">
-              <span class="profile-basic-information-text29">
-                Save &amp; Next -&gt;
-              </span>
+              <span class="profile-basic-information-text29" (click)="saveProfile()">Save & Next -></span>
             </div>
           </ng-template>
         </profile-creation-navigation1>
