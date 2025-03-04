@@ -27,31 +27,31 @@ export class LoggerService {
     // Optionally save to local storage or send to backend
     this.saveLogs();
   }
-
+ 
   debug(message: string, ...args: any[]): void {
     this.log('DEBUG', message, ...args);
   }
-
+ 
   info(message: string, ...args: any[]): void {
     this.log('INFO', message, ...args);
   }
-
+ 
   error(message: string, ...args: any[]): void {
     this.log('ERROR', message, ...args);
   }
-
+ 
   // Save logs to local storage (for persistence)
   private saveLogs(): void {
     localStorage.setItem('app_logs', JSON.stringify(this.logs));
   }
-
   // Retrieve logs (for debugging or sending to backend)
   getLogs(): string[] {
     return this.logs;
   }
 
+ 
   // Optionally send logs to backend (requires backend endpoint)
-  /* 
+  /*
   sendLogsToBackend(): void {
     this.http.post('http://localhost:8000/api/logs/', { logs: this.logs }).subscribe(
       () => console.log('Logs sent to backend'),
@@ -59,4 +59,6 @@ export class LoggerService {
     );
   }
   */
+
 }
+

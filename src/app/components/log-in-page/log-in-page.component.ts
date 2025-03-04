@@ -1,5 +1,5 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
-
+ 
 @Component({
   selector: 'log-in-page',
   templateUrl: 'log-in-page.component.html',
@@ -18,21 +18,21 @@ export class LogInPage {
   @Input() rootClassName: string = '';
   @ContentChild('button') button: TemplateRef<any>;
   @ContentChild('text2') text2: TemplateRef<any>;
-
+ 
   email: string = '';
   password: string = '';
   showPassword: boolean = false;
   errorMessage: string = '';
 
   @Output() loginSubmit = new EventEmitter<{ email: string, password: string }>();
-
+ 
   constructor() {}
-
+ 
   onSubmit() {
     if (this.email && this.password) {
       // Basic email validation
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      
+
       if (!emailPattern.test(this.email)) {
         this.errorMessage = 'Please enter a valid email address';
         return;
@@ -41,9 +41,9 @@ export class LogInPage {
       // Here you would typically make an API call to verify credentials
       // For demonstration, let's simulate validation
       this.loginSubmit.emit({ email: this.email, password: this.password });
-      
+     
       const isValidCredentials = this.validateCredentials();
-      
+
       if (!isValidCredentials) {
         this.errorMessage = 'Invalid email or password';
       } else {

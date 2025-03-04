@@ -1,9 +1,10 @@
 <div id="login-corporate" class="login-corporate-container">
   <div id="main-container" class="login-corporate-main-container">
-    <login-page-navbar
-      rootClassName="login-page-navbarroot-class-name2"
-    ></login-page-navbar>
-    <log-in-page rootClassName="log-in-pageroot-class-name2">
+    <login-page-navbar rootClassName="login-page-navbarroot-class-name1"></login-page-navbar>
+    <log-in-page
+      rootClassName="log-in-pageroot-class-name1"
+      [errorMessage]="errorMessage"
+      (loginSubmit)="onLoginSubmit($event)">
       <ng-template #text1>
         <div class="login-corporate-fragment1">
           <span class="login-corporate-text1">Email</span>
@@ -21,22 +22,21 @@
       </ng-template>
       <ng-template #text4>
         <div class="login-corporate-fragment4">
-          <span class="login-corporate-text4">Sign up</span>
+          <span class="login-corporate-text4" routerLink="/signup-corporate">Sign up</span>
         </div>
       </ng-template>
       <ng-template #button>
         <div class="login-corporate-fragment5">
           <span class="login-corporate-text5">Login</span>
         </div>
+        <!-- Error message display -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
       </ng-template>
       <ng-template #text11>
         <div class="login-corporate-fragment6">
           <span class="login-corporate-text6">Password</span>
-        </div>
-      </ng-template>
-      <ng-template #text71>
-        <div class="login-corporate-fragment7">
-          <span class="login-corporate-text7">invalid Email or Password</span>
         </div>
       </ng-template>
       <ng-template #heading>
@@ -52,3 +52,4 @@
     </log-in-page>
   </div>
 </div>
+ 

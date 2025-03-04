@@ -1,5 +1,5 @@
-:host { 
-  display: contents; 
+:host {
+  display: contents;
 }
  
 .signup-corporate1-container {
@@ -109,7 +109,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-corporate1-last-name-container2 {
+.signup-corporate1-company-name-container1 {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -118,7 +118,7 @@
   flex-direction: column;
 }
  
-.signup-corporate1-last-name-text2 {
+.signup-corporate1-company-name-text1 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -130,7 +130,7 @@
   font-family: "Inter";
 }
  
-.signup-corporate1-last-name-input2 {
+.signup-corporate1-company-name-input1 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -139,7 +139,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-corporate1-last-name-container3 {
+.signup-corporate1-last-name-container {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -148,7 +148,7 @@
   flex-direction: column;
 }
  
-.signup-corporate1-last-name-text3 {
+.signup-corporate1-last-name-text1 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -160,7 +160,29 @@
   font-family: "Inter";
 }
  
-.signup-corporate1-last-name-input3 {
+ 
+.signup-corporate1-phone_number-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-corporate1-phone_number-text2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: "Inter";
+}
+ 
+.signup-corporate1-phone_number-input2 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -201,7 +223,7 @@
  
 .signup-corporate1-password-container1 {
   flex: 0 0 auto;
-  width: 324px;
+  width: 320px;
   height: 76px;
   display: flex;
   align-items: flex-start;
@@ -240,6 +262,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
 }
  
 .signup-corporate1-show-text1:hover {
@@ -264,7 +288,7 @@
  
 .signup-corporate1-password-container2 {
   flex: 0 0 auto;
-  width: 324px;
+  width: 320px;
   height: 76px;
   display: flex;
   align-items: flex-start;
@@ -303,6 +327,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
 }
  
 .signup-corporate1-show-text2:hover {
@@ -346,19 +372,21 @@
   padding-right: 16px;
   padding-bottom: 12px;
   background-color: #05356C;
+  color: #FFFFFF;
+  font-weight: 600;
 }
  
 .signup-corporate1-signup-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
-  background-color: 0A4992;
+  background-color: #0A4992;
 }
  
 .signup-corporate1-signup-button:active {
   transform: scale(0.90);
   border-width: 0px;
-  background-color: 022954;
+  background-color: #022954;
 }
  
 .signup-corporate1-signup-text {
@@ -370,23 +398,68 @@
  
 .signup-corporate1-error-signup-container {
   flex: 0 0 auto;
-  width: auto;
+  width: 320px;
   height: auto;
-  display: none;
+  display: flex;
   align-self: center;
   align-items: flex-start;
+  flex-direction: column;
+  margin-top: 8px;
 }
  
 .signup-corporate1-error-message-signup {
-  fill: #FFFFFF;
-  color: #FFFFFF;
+  color: #ff0000;
+  font-size: 14px;
   font-style: normal;
-  margin-top: var(--dl-space-space-halfunit);
   font-weight: 500;
-  border-width: 0px;
-  background-color: #F65E5C;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
 }
  
+.signup-corporate1-error-message-signup:hover {
+  background-color: rgba(255, 0, 0, 0.15);
+}
+ 
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+ 
+/* Add or update these styles in signup-corporate1.component.css */
+ 
+/* Style for field-specific error messages */
+.error-message {
+  color: #ff0000; /* Red color */
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
+}
+ 
+/* Existing style for signup container errors (ensure consistency) */
+.signup-corporate1-error-message-signup {
+  color: #ff0000; /* Red color */
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+}
+ 
+.signup-corporate1-error-message-signup:hover {
+  background-color: rgba(255, 0, 0, 0.15);
+}
+ 
+.error-text {
+  display: block;
+  margin: 4px 0;
+}
 .signup-corporate1-signin-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
@@ -408,17 +481,19 @@
   border-width: 0px;
   padding-left: 0px;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
 }
  
 .signup-corporate1-signin-text:hover {
-  color: FFFFFF;
+  /* color: #FFFFFF; */
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
  
 .signup-corporate1-signin-text:active {
-  color: FFFFFF;
+  /* color: #FFFFFF; */
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
@@ -428,7 +503,7 @@
   display: contents;
 }
  
-.signup-corporate1-text10 {
+.signup-corporate1-text11 {
   display: inline-block;
 }
  
@@ -436,7 +511,7 @@
   display: contents;
 }
  
-.signup-corporate1-text11 {
+.signup-corporate1-text12 {
   display: inline-block;
 }
  
@@ -444,7 +519,7 @@
   display: contents;
 }
  
-.signup-corporate1-text12 {
+.signup-corporate1-text13 {
   display: inline-block;
 }
  
@@ -452,8 +527,7 @@
   display: contents;
 }
  
-.signup-corporate1-text13 {
-  color: rgb(24, 25, 28);
+.signup-corporate1-text14 {
   display: inline-block;
 }
  
@@ -461,7 +535,8 @@
   display: contents;
 }
  
-.signup-corporate1-text14 {
+.signup-corporate1-text15 {
+  color: rgb(24, 25, 28);
   display: inline-block;
 }
  
@@ -469,7 +544,7 @@
   display: contents;
 }
  
-.signup-corporate1-text15 {
+.signup-corporate1-text16 {
   display: inline-block;
 }
  
@@ -477,7 +552,7 @@
   display: contents;
 }
  
-.signup-corporate1-text16 {
+.signup-corporate1-text17 {
   display: inline-block;
 }
  
@@ -485,58 +560,57 @@
   display: contents;
 }
  
-.signup-corporate1-text17 {
-  color: rgb(5, 53, 108);
+.signup-corporate1-text18 {
+  color: #18191c;
   display: inline-block;
-  font-style: normal;
-  font-weight: 500;
 }
  
 .signup-corporate1-fragment18 {
   display: contents;
 }
  
-.signup-corporate1-text18 {
-  color: rgb(5, 53, 108);
+.signup-corporate1-text19 {
+  color: rgb(24, 25, 28);
   display: inline-block;
-  font-style: normal;
-  font-weight: 600;
 }
  
 .signup-corporate1-fragment19 {
   display: contents;
 }
  
-.signup-corporate1-text19 {
-  color: #18191c;
-  display: inline-block;
-}
- 
-.signup-corporate1-fragment20 {
-  display: contents;
-}
- 
 .signup-corporate1-text20 {
-  color: rgb(24, 25, 28);
-  display: inline-block;
-}
- 
-.signup-corporate1-fragment21 {
-  display: contents;
-}
- 
-.signup-corporate1-text21 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
  
-.signup-corporate1-fragment22 {
+.signup-corporate1-fragment20 {
+  display: contents;
+}
+ 
+.signup-corporate1-text21 {
+  color: #ffffff;
+  display: inline-block;
+  background-color: rgb(246, 94, 92);
+}
+ 
+.signup-corporate1-fragment21 {
   display: contents;
 }
  
 .signup-corporate1-text22 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.signup-corporate1-fragment22 {
+  display: contents;
+}
+ 
+.signup-corporate1-text23 {
   display: inline-block;
 }
  
@@ -544,13 +618,32 @@
   display: contents;
 }
  
-.signup-corporate1-text23 {
-  color: #ffffff;
+.signup-corporate1-text24 {
+  color: rgb(5, 53, 108);
   display: inline-block;
-  background-color: rgb(246, 94, 92);
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.signup-corporate1-fragment24 {
+  display: contents;
+}
+ 
+.signup-corporate1-text25 {
+  display: inline-block;
+}
+ 
+.signup-corporate1-fragment25 {
+  display: contents;
+}
+ 
+.signup-corporate1-text26 {
+  display: inline-block;
 }
  
 .signup-corporate1root-class-name {
+  height: auto;
   margin-top: 100px;
   background-color: #D9D9D9;
 }
+ 

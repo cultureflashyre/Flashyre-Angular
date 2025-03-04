@@ -1,5 +1,5 @@
-:host { 
-  display: contents; 
+:host {
+  display: contents;
 }
  
 .log-in-page-container1 {
@@ -146,8 +146,6 @@
   justify-content: center;
   background-color: transparent;
   color: #05356C;
-
-  
 }
  
 .log-in-page-show-text:hover {
@@ -195,7 +193,6 @@
   font-weight: 500;
   border-width: 0px;
   background-color: #F65E5C;
-  
 }
  
 .log-in-page-error-message-login.visible {
@@ -219,7 +216,6 @@
   display: flex;
   align-items: center;
   margin-bottom: 24px;
-
 }
  
 .log-in-page-signup-text {
@@ -233,8 +229,7 @@
   margin-bottom: 24px;
   color: #05356C;
   font-weight: 600;
-
-
+  background-color: #FFFFFF;
 }
  
 .log-in-page-signup-text:hover {

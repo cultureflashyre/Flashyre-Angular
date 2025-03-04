@@ -319,6 +319,7 @@
   padding-right: 16px;
   padding-bottom: 12px;
   background-color: #05356C;
+  color: white;
 }
  
 .signup-candidate1-signup-button:hover {
@@ -367,6 +368,13 @@
   align-self: center;
   justify-content: flex-start;
 }
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
  
 .signup-candidate1-already-have-an-account-text {
   display: flex;
