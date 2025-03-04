@@ -1,124 +1,43 @@
-import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 
 @Component({
   selector: 'profile-basicinformation-component',
-  templateUrl: './profile-basicinformation-component.component.html',
-  styleUrls: ['./profile-basicinformation-component.component.css'],
+  templateUrl: 'profile-basicinformation-component.component.html',
+  styleUrls: ['profile-basicinformation-component.component.css'],
 })
-export class ProfileBasicinformationComponent implements OnInit {
-  @Input() rootClassName: string = '';
-  @ContentChild('text') text: TemplateRef<any>;
-  @ContentChild('text1') text1: TemplateRef<any>;
-  @ContentChild('text2') text2: TemplateRef<any>;
-  @ContentChild('text5') text5: TemplateRef<any>;
-  @ContentChild('text6') text6: TemplateRef<any>;
-  @ContentChild('button') button: TemplateRef<any>;
-  @ContentChild('text51') text51: TemplateRef<any>;
-  @ContentChild('text52') text52: TemplateRef<any>;
-
-  @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
-
-  firstName: string = '';
-  lastName: string = '';
-  email: string = '';
-  phoneNumber: string = '';
-  profilePicture: File | null = null;
-  resume: File | null = null;
-  imageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
-  imageAlt: string = 'Profile Picture';
-
-  constructor(private http: HttpClient, private router: Router) {}
-
-  ngOnInit() {
-    this.fetchUserDetails();
-  }
-
-  fetchUserDetails() {
-    this.http.get('http://localhost:8000/get-user-details/').subscribe(
-      (response: any) => {
-        this.firstName = response.first_name;
-        this.lastName = response.last_name;
-        this.email = response.email;
-        this.phoneNumber = response.phone_number;
-      },
-      (error) => {
-        console.error('Error fetching user details', error);
-        alert('Failed to load user details. Please try again.');
-      }
-    );
-  }
-
-  triggerProfilePictureUpload() {
-    this.profilePictureInput.nativeElement.click();
-  }
-
-  triggerResumeUpload() {
-    this.resumeInput.nativeElement.click();
-  }
-
-  onProfilePictureSelected(event: any) {
-    const file = event.target.files[0];
-    if (file && this.validateProfilePicture(file)) {
-      this.profilePicture = file;
-      this.imageSrc = URL.createObjectURL(file);
-    } else {
-      alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
-      this.profilePictureInput.nativeElement.value = '';
-    }
-  }
-
-  onResumeSelected(event: any) {
-    const file = event.target.files[0];
-    if (file && this.validateResume(file)) {
-      this.resume = file;
-    } else {
-      alert('Invalid file. Only PDF and Word documents (.pdf, .doc, .docx) allowed. Max size: 1MB.');
-      this.resumeInput.nativeElement.value = '';
-    }
-  }
-
-  validateProfilePicture(file: File): boolean {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    return allowedTypes.includes(file.type) && file.size <= maxSize;
-  }
-
-  validateResume(file: File): boolean {
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
-    return allowedTypes.includes(file.type) && file.size <= maxSize;
-  }
-
-  saveProfile() {
-    if (!this.profilePicture || !this.resume) {
-      alert('Please upload both a profile picture and a resume before saving.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profile_picture', this.profilePicture);
-    formData.append('resume', this.resume);
-
-    this.http.post('http://localhost:8000/save-profile-basic-info/', formData).subscribe(
-      (response) => {
-        console.log('Profile saved successfully', response);
-        this.router.navigate(['/profile-employment']);
-      },
-      (error) => {
-        console.error('Error saving profile', error);
-        alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
-      }
-    );
-  }
-
-  skip() {
-    this.router.navigate(['/profile-employment']);
-  }
+export class ProfileBasicinformationComponent {
+  @Input()
+  textinputPlaceholder32: string = 'Enter your email'
+  @Input()
+  imageSrc: string =
+    'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200'
+  @Input()
+  textinputPlaceholder4: string = 'Enter First name'
+  @Input()
+  textinputPlaceholder: string = 'Upload Resume'
+  @ContentChild('text2')
+  text2: TemplateRef<any>
+  @Input()
+  textinputPlaceholder31: string = 'Enter Mobile Number'
+  @Input()
+  imageAlt: string = 'image'
+  @ContentChild('text6')
+  text6: TemplateRef<any>
+  @Input()
+  textinputPlaceholder3: string = 'Enter Last Name'
+  @Input()
+  rootClassName: string = ''
+  @ContentChild('button')
+  button: TemplateRef<any>
+  @ContentChild('text52')
+  text52: TemplateRef<any>
+  @ContentChild('text1')
+  text1: TemplateRef<any>
+  @ContentChild('text')
+  text: TemplateRef<any>
+  @ContentChild('text51')
+  text51: TemplateRef<any>
+  @ContentChild('text5')
+  text5: TemplateRef<any>
+  constructor() {}
 }
