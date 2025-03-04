@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, 
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '../../services/logger.service';
 import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 import { map, catchError } from 'rxjs/operators';
 
 @Component({
@@ -35,7 +36,7 @@ export class SignupCollege1 implements OnInit {
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private logger: LoggerService) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private logger: LoggerService, private router: Router) {}
 
   ngOnInit(): void {
     this.signupForm = this.fb.group(
@@ -96,6 +97,8 @@ export class SignupCollege1 implements OnInit {
         (response) => {
           this.logger.info('Signup successful', response);
           this.errorMessage = '';
+          this.router.navigate(['/flashre-dashboard']);
+
         },
         (error) => {
           this.logger.error('Signup failed with status:', error.status, error.error);

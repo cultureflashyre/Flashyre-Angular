@@ -75,6 +75,16 @@
               <ng-template #defaultButton>
                 <div class="log-in-page-fragment8">
                   <span class="log-in-page-text18">Login</span>
+                  <div class="log-in-page-error-login-container">
+                    <span 
+                      id="error-message-login" 
+                      class="log-in-page-error-message-login"
+                      [ngClass]="{'visible': errorMessage}"
+                    >
+                      {{ errorMessage }}
+                    </span>
+                  </div>
+                  
                 </div>
               </ng-template>
               <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
@@ -101,7 +111,6 @@
         <span
           id="login-signup-button"
           class="log-in-page-signup-text button"
-          routerLink="/signup-candidate"
         >
           <ng-container>
             <ng-template #defaultText4>

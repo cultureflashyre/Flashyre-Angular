@@ -33,22 +33,25 @@ export class LoginCollege {
 
   onLoginSubmit(data: { email: string; password: string }): void {
     this.logger.debug('Received login submission with data:', data);
+
+    // Check if email or password is empty
+    if (!data.email || !data.password) {
+      this.errorMessage = 'Enter email and password';
+      this.logger.error('Login attempt with missing credentials');
+      return; // Stop further execution
+    }
+
+    // Proceed with the HTTP request if credentials are provided
     this.http.post('http://localhost:8000/api/login/', data).subscribe(
       (response) => {
         this.logger.info('Login successful', response);
         this.errorMessage = '';
         this.router.navigate(['/university_college_dashboard']);
       },
-      (error) => {
-        this.logger.error('Login failed', error);
-        if (error.error?.email) {
-          this.errorMessage = 'User with this email does not exist.';
-        } else if (error.error?.password) {
-          this.errorMessage = 'Incorrect password.';
-        } else {
-          this.errorMessage = 'An error occurred during login.';
-        }
-      }
+      // (error) => {
+      //   this.logger.error('Login failed', error);
+      //   this.errorMessage = 'Invalid Email or Password';
+      // }
     );
   }
 }

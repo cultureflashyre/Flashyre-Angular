@@ -9,7 +9,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="heading ? heading : defaultHeading"></ng-container>
       </ng-container>
-    </h2>
+    </h2> 
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div id="details" class="signup-college1-details-container">
         <!-- First Name -->
@@ -93,8 +93,8 @@
         </div>
 
         <!-- University/College -->
-        <div id="university-container" class="signup-college1-last-name-container3">
-          <span id="signup-university" class="signup-college1-last-name-text3">
+        <div id="university-container" class="signup-college1-university-container-container3">
+          <span id="signup-university" class="signup-college1-university-container-text3">
             <ng-container>
               <ng-template #defaultText121>
                 <div class="signup-college1-fragment11">
@@ -219,9 +219,8 @@
             <span
               id="signup-password-show-button"
               class="signup-college1-show-text2 button"
-              (click)="toggleConfirmPasswordVisibility()"
-            >
-              {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
+              (click)="toggleConfirmPasswordVisibility()"           >
+              {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}     
             </span>
             <input
               [type]="confirmPasswordType"
@@ -278,7 +277,7 @@
             <span
               id="signin-button"
               class="signup-college1-signin-text button"
-              routerLink="/login"
+              routerLink="/login-college"
             >
               <ng-container>
                 <ng-template #defaultText5>

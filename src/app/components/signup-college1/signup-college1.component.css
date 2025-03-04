@@ -139,7 +139,7 @@
   background-color: #FFFFFF;
 }
 
-.signup-college1-last-name-container3 {
+.signup-college1-university-container-container3 {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -148,7 +148,7 @@
   flex-direction: column;
 }
 
-.signup-college1-last-name-text3 {
+.signup-college1-university-container-text12 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -157,6 +157,17 @@
   align-self: flex-start;
   text-align: justify;
   align-items: center;
+  font-family: "Inter";
+}
+
+.signup-college1-select {
+  width: 320px;
+  height: 48px;
+  border-radius: 5px;
+  border: 1px solid #ACACAD;
+  background-color: #FFFFFF;
+  padding: 0 10px;
+  color: #18191C;
   font-family: "Inter";
 }
 
@@ -293,6 +304,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
 }
 
 .signup-college1-show-text1:hover {
@@ -356,6 +369,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
 }
 
 .signup-college1-show-text2:hover {
@@ -385,6 +400,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  
 }
 
 .signup-college1-signup-button {
@@ -399,6 +415,7 @@
   padding-right: 16px;
   padding-bottom: 12px;
   background-color: #05356C;
+  font-weight: 600;
 }
 
 .signup-college1-signup-button:hover {
@@ -454,37 +471,13 @@
   margin-top: 4px;
 }
 
-/* Add or update these styles in signup-college1.component.css */
-
-/* Style for field-specific error messages */
 .error-message {
-  color: #ff0000; /* Red color */
+  color: #ff0000;
   font-size: 14px;
   margin-top: 4px;
   display: block;
 }
 
-/* Existing style for signup container errors (ensure consistency) */
-.signup-college1-error-message-signup {
-  color: #ff0000; /* Red color */
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: rgba(255, 0, 0, 0.1);
-  width: 100%;
-  text-align: center;
-}
-
-.signup-college1-error-message-signup:hover {
-  background-color: rgba(255, 0, 0, 0.15);
-}
-
-.error-text {
-  display: block;
-  margin: 4px 0;
-}
 .signup-college1-signin-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
@@ -506,6 +499,9 @@
   border-width: 0px;
   padding-left: 0px;
   background-color: transparent;
+  color: #05356C;
+  font-weight: 600;
+
 }
 
 .signup-college1-signin-text:hover {
