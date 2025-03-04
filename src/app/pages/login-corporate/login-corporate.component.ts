@@ -34,7 +34,7 @@ export class LoginCorporate {
   onLoginSubmit(event: { email: string; password: string }) {
     const { email, password } = event;
     this.http
-      .post('http://localhost:8000/api/login-corporate/', { email, password })
+      .post('http://localhost:8000/login-corporate/', { email, password })
       .subscribe(
         (response: any) => {
           if (response.message === 'Login successful') {
@@ -44,15 +44,13 @@ export class LoginCorporate {
             this.errorMessage = 'Login failed';
           }
         },
-        (error) => {
-          if (error.status === 401) {
-            this.errorMessage = 'Invalid email or password';
-          } else if (error.status === 400) {
-            this.errorMessage = 'Email and password are required';
-          } else {
-            this.errorMessage = 'An error occurred. Please try again.';
-          }
-        }
+        // (error) => {
+        //   if (error.status === 401) {
+        //     this.errorMessage = 'Invalid email or password';
+        //   } else if (error.status === 400) {
+        //     this.errorMessage = 'Email and password are required';
+        //   }
+        // }
       );
   }
 }
