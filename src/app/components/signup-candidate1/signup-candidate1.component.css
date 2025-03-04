@@ -14,6 +14,16 @@
   padding-bottom: 20px;
   justify-content: center;
 }
+
+.signup-candidate1-success-signup-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-candidate1-success-message-signup {
+  color: #28a745;
+  font-weight: bold;
+}
  
 .signup-candidate1-signup-container {
   gap: 24px;
