@@ -132,6 +132,13 @@ const routes = [
         (m) => m.NotFoundModule
       ),
   },
+  {
+    path: 'university_college_dashboard', // New route
+    loadChildren: () =>
+      import('./pages/university-college-dashboard/university-college-dashboard.module').then(
+        (m) => m.UniversityCollegeDashboardModule
+      ),
+  },
 ]
 
 @NgModule({

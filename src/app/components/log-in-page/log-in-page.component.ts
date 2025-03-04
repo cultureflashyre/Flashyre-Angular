@@ -23,7 +23,7 @@ export class LogInPage {
   password: string = '';
   showPassword: boolean = false;
   errorMessage: string = '';
- 
+
   @Output() loginSubmit = new EventEmitter<{ email: string, password: string }>();
  
   constructor() {}
@@ -32,18 +32,18 @@ export class LogInPage {
     if (this.email && this.password) {
       // Basic email validation
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     
+
       if (!emailPattern.test(this.email)) {
         this.errorMessage = 'Please enter a valid email address';
         return;
       }
- 
+
       // Here you would typically make an API call to verify credentials
       // For demonstration, let's simulate validation
       this.loginSubmit.emit({ email: this.email, password: this.password });
      
       const isValidCredentials = this.validateCredentials();
-     
+
       if (!isValidCredentials) {
         this.errorMessage = 'Invalid email or password';
       } else {
@@ -53,14 +53,14 @@ export class LogInPage {
       this.errorMessage = 'Please enter both email and password';
     }
   }
- 
+
   // Example validation method - replace with your actual authentication logic
   private validateCredentials(): boolean {
     // This is just a placeholder - implement your actual validation
     // For demo purposes, let's say only specific credentials are valid
     return this.email === 'test@example.com' && this.password === 'password123';
   }
- 
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }

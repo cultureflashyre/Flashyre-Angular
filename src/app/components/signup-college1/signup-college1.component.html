@@ -1,8 +1,4 @@
-<div
-  id="signup-page"
-  class="signup-college1-container"
-  [ngClass]="rootClassName"
->
+<div id="signup-page" class="signup-college1-container" [ngClass]="rootClassName">
   <div id="signup-container" class="signup-college1-signup-container">
     <h2 id="heading" class="signup-college1-welcome-to-flashyre">
       <ng-container>
@@ -11,317 +7,290 @@
             <span class="signup-college1-text18">Welcome to Flashyre</span>
           </div>
         </ng-template>
-        <ng-container
-          *ngTemplateOutlet="heading ? heading : defaultHeading"
-        ></ng-container>
+        <ng-container *ngTemplateOutlet="heading ? heading : defaultHeading"></ng-container>
       </ng-container>
-    </h2>
-    <div id="details" class="signup-college1-details-container">
-      <div
-        id="first-name-container"
-        class="signup-college1-first-name-container"
-      >
-        <span id="signup-first-name" class="signup-college1-first-name-text">
-          <ng-container>
-            <ng-template #defaultText>
-              <div class="signup-college1-fragment22">
-                <span class="signup-college1-text23">First Name</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text ? text : defaultText"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <input
-          type="text"
-          id="signup-first-name-input"
-          placeholder="Enter First Name"
-          class="signup-college1-first-name-input input"
-        />
-      </div>
-      <div
-        id="last-name-container"
-        class="signup-college1-last-name-container1"
-      >
-        <span id="signup-last-name" class="signup-college1-last-name-text1">
-          <ng-container>
-            <ng-template #defaultText1>
-              <div class="signup-college1-fragment25">
-                <span class="signup-college1-text26">Last Name</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text1 ? text1 : defaultText1"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <input
-          type="text"
-          id="signup-last-name-input"
-          placeholder="Enter Last Name"
-          class="signup-college1-last-name-input1 input"
-        />
-      </div>
-      <div
-        id="last-name-container"
-        class="signup-college1-last-name-container2"
-      >
-        <span id="signup-last-name" class="signup-college1-last-name-text2">
-          <ng-container>
-            <ng-template #defaultText12>
-              <div class="signup-college1-fragment13">
-                <span class="signup-college1-text14">Phone Number</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text12 ? text12 : defaultText12"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <input
-          type="text"
-          id="signup-phone-number-input"
-          placeholder="Enter Phone Number"
-          class="signup-college1-last-name-input2 input"
-        />
-      </div>
-      <div
-        id="last-name-container"
-        class="signup-college1-last-name-container3"
-      >
-        <span id="signup-last-name" class="signup-college1-last-name-text3">
-          <ng-container>
-            <ng-template #defaultText121>
-              <div class="signup-college1-fragment11">
-                <span class="signup-college1-text12">
-                  Select your University/College
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text121 ? text121 : defaultText121"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <form class="signup-college1-form input">
-          <span class="signup-college1-text10">
+    </h2> 
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div id="details" class="signup-college1-details-container">
+        <!-- First Name -->
+        <div id="first-name-container" class="signup-college1-first-name-container">
+          <span id="signup-first-name" class="signup-college1-first-name-text">
             <ng-container>
-              <ng-template #defaultText22>
-                <div class="signup-college1-fragment24">
-                  <span class="signup-college1-text25">Select</span>
+              <ng-template #defaultText>
+                <div class="signup-college1-fragment22">
+                  <span class="signup-college1-text23">First Name</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text22 ? text22 : defaultText22"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 32 32"
-            class="signup-college1-icon1"
-          >
-            <path
-              d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        </form>
-      </div>
-      <div id="email-container" class="signup-college1-email-container1">
-        <span id="signup-email" class="signup-college1-email-text1">
-          <ng-container>
-            <ng-template #defaultText11>
-              <div class="signup-college1-fragment12">
-                <span class="signup-college1-text13">
-                  University/College ID
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text11 ? text11 : defaultText11"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <input
-          type="email"
-          id="signup-email-input"
-          placeholder="Enter  University/College ID"
-          class="signup-college1-email-input1 input"
-        />
-      </div>
-      <div id="email-container" class="signup-college1-email-container2">
-        <span id="signup-email" class="signup-college1-email-text2">
-          <ng-container>
-            <ng-template #defaultText112>
-              <div class="signup-college1-fragment15">
-                <span class="signup-college1-text16">Email Id</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text112 ? text112 : defaultText112"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <input
-          type="email"
-          id="signup-email-input"
-          placeholder="Enter Email Id"
-          class="signup-college1-email-input2 input"
-        />
-      </div>
-      <div id="password-container" class="signup-college1-password-container1">
-        <div id="password" class="signup-college1-password1">
-          <span id="signup-Password" class="signup-college1-password-text1">
-            <ng-container>
-              <ng-template #defaultText111>
-                <div class="signup-college1-fragment18">
-                  <span class="signup-college1-text19">Password</span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text111 ? text111 : defaultText111"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span
-            id="signup-password-show-button"
-            class="signup-college1-show-text1 button"
-          >
-            <ng-container>
-              <ng-template #defaultText2>
-                <div class="signup-college1-fragment23">
-                  <span class="signup-college1-text24">Show</span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text2 ? text2 : defaultText2"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
             </ng-container>
           </span>
           <input
-            type="password"
-            id="signup-password-input"
-            placeholder="Enter Password"
-            class="signup-college1-password-input1 input"
+            type="text"
+            id="signup-first-name-input"
+            formControlName="first_name"
+            placeholder="Enter First Name"
+            class="signup-college1-first-name-input input"
           />
+          <div *ngIf="signupForm.get('first_name')?.invalid && signupForm.get('first_name')?.touched" class="error-text">
+            <span *ngIf="signupForm.get('first_name')?.errors?.required">First Name is required.</span>
+            <span *ngIf="signupForm.get('first_name')?.errors?.pattern">Only letters and spaces are allowed.</span>
+          </div>
         </div>
-      </div>
-      <div id="password-container" class="signup-college1-password-container2">
-        <div id="password" class="signup-college1-password2">
-          <span
-            id="signup-confirm-password"
-            class="signup-college1-password-text2"
-          >
+
+        <!-- Last Name -->
+        <div id="last-name-container" class="signup-college1-last-name-container1">
+          <span id="signup-last-name" class="signup-college1-last-name-text1">
             <ng-container>
-              <ng-template #defaultText1111>
-                <div class="signup-college1-fragment14">
-                  <span class="signup-college1-text15">Confirm Password</span>
+              <ng-template #defaultText1>
+                <div class="signup-college1-fragment25">
+                  <span class="signup-college1-text26">Last Name</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span
-            id="signup-password-show-button"
-            class="signup-college1-show-text2 button"
-          >
-            <ng-container>
-              <ng-template #defaultText21>
-                <div class="signup-college1-fragment19">
-                  <span class="signup-college1-text20">Show</span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text21 ? text21 : defaultText21"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
             </ng-container>
           </span>
           <input
-            type="password"
-            id="signup-confirm-password-input"
-            placeholder="Confirm Password"
-            class="signup-college1-password-input2 input"
+            type="text"
+            id="signup-last-name-input"
+            formControlName="last_name"
+            placeholder="Enter Last Name"
+            class="signup-college1-last-name-input1 input"
           />
+          <div *ngIf="signupForm.get('last_name')?.invalid && signupForm.get('last_name')?.touched" class="error-text">
+            <span *ngIf="signupForm.get('last_name')?.errors?.required">Last Name is required.</span>
+            <span *ngIf="signupForm.get('last_name')?.errors?.pattern">Only letters and spaces are allowed.</span>
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div id="phone-container" class="signup-college1-last-name-container2">
+          <span id="signup-phone-number" class="signup-college1-last-name-text2">
+            <ng-container>
+              <ng-template #defaultText12>
+                <div class="signup-college1-fragment13">
+                  <span class="signup-college1-text14">Phone Number</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text12 ? text12 : defaultText12"></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="text"
+            id="signup-phone-number-input"
+            formControlName="phone_number"
+            placeholder="Enter Phone Number"
+            class="signup-college1-last-name-input2 input"
+            maxlength="10"
+            (input)="sanitizePhoneNumber($event)"
+          />
+          <div *ngIf="signupForm.get('phone_number')?.invalid && signupForm.get('phone_number')?.touched" class="error-text">
+            <span *ngIf="signupForm.get('phone_number')?.errors?.required">Phone Number is required.</span>
+            <span *ngIf="signupForm.get('phone_number')?.errors?.pattern">Phone number must be exactly 10 digits.</span>
+          </div>
+          <div *ngIf="signupForm.get('phone_number')?.errors?.phoneExists" class="error-text">
+            Phone number already exists.
+          </div>
+        </div>
+
+        <!-- University/College -->
+        <div id="university-container" class="signup-college1-university-container-container3">
+          <span id="signup-university" class="signup-college1-university-container-text3">
+            <ng-container>
+              <ng-template #defaultText121>
+                <div class="signup-college1-fragment11">
+                  <span class="signup-college1-text12">Select your University/College</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text121 ? text121 : defaultText121"></ng-container>
+            </ng-container>
+          </span>
+          <select
+            id="university-college-select"
+            formControlName="university_college"
+            class="signup-college1-select input"
+          >
+            <option value="">Select University/College</option>
+            <option *ngFor="let uni of universities" [value]="uni">{{ uni }}</option>
+          </select>
+          <span *ngIf="signupForm.get('university_college')?.invalid && signupForm.get('university_college')?.touched" class="error-message">
+            University/College is required.
+          </span>
+        </div>
+
+        <!-- University/College ID -->
+        <div id="university-id-container" class="signup-college1-email-container1">
+          <span id="signup-university-id" class="signup-college1-email-text1">
+            <ng-container>
+              <ng-template #defaultText11>
+                <div class="signup-college1-fragment12">
+                  <span class="signup-college1-text13">University/College ID</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text11 ? text11 : defaultText11"></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="text"
+            id="signup-university-id-input"
+            formControlName="university_college_id"
+            placeholder="Enter University/College ID"
+            class="signup-college1-email-input1 input"
+          />
+          <span *ngIf="signupForm.get('university_college_id')?.invalid && signupForm.get('university_college_id')?.touched" class="error-message">
+            University/College ID is required.
+          </span>
+        </div>
+
+        <!-- Email Id -->
+        <div id="email-container" class="signup-college1-email-container2">
+          <span id="signup-email" class="signup-college1-email-text2">
+            <ng-container>
+              <ng-template #defaultText112>
+                <div class="signup-college1-fragment15">
+                  <span class="signup-college1-text16">Email Id</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text112 ? text112 : defaultText112"></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="email"
+            id="signup-email-input"
+            formControlName="email"
+            placeholder="Enter Email Id"
+            class="signup-college1-email-input2 input"
+          />
+          <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="error-text">
+            <span *ngIf="signupForm.get('email')?.errors?.required">Email is required.</span>
+            <span *ngIf="signupForm.get('email')?.errors?.email">Please enter a valid email.</span>
+          </div>
+          <div *ngIf="signupForm.get('email')?.errors?.emailExists" class="error-text">
+            Email already exists.
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div id="password-container" class="signup-college1-password-container1">
+          <div id="password" class="signup-college1-password1">
+            <span id="signup-Password" class="signup-college1-password-text1">
+              <ng-container>
+                <ng-template #defaultText111>
+                  <div class="signup-college1-fragment18">
+                    <span class="signup-college1-text19">Password</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
+              </ng-container>
+            </span>
+            <span
+              id="signup-password-show-button"
+              class="signup-college1-show-text1 button"
+              (click)="togglePasswordVisibility()"
+            >
+              {{ passwordType === 'password' ? 'Show' : 'Hide' }}
+            </span>
+            <input
+              [type]="passwordType"
+              id="signup-password-input"
+              formControlName="password"
+              placeholder="Enter Password"
+              class="signup-college1-password-input1 input"
+            />
+          </div>
+          <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error-text">
+            <span *ngIf="signupForm.get('password')?.errors?.required">Password is required.</span>
+            <span *ngIf="signupForm.get('password')?.errors?.minlength">Password must be at least 8 characters.</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div id="password-container" class="signup-college1-password-container2">
+          <div id="password" class="signup-college1-password2">
+            <span id="signup-confirm-password" class="signup-college1-password-text2">
+              <ng-container>
+                <ng-template #defaultText1111>
+                  <div class="signup-college1-fragment14">
+                    <span class="signup-college1-text15">Confirm Password</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>
+              </ng-container>
+            </span>
+            <span
+              id="signup-password-show-button"
+              class="signup-college1-show-text2 button"
+              (click)="toggleConfirmPasswordVisibility()"           >
+              {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}     
+            </span>
+            <input
+              [type]="confirmPasswordType"
+              id="signup-confirm-password-input"
+              formControlName="confirm_password"
+              placeholder="Confirm Password"
+              class="signup-college1-password-input2 input"
+            />
+          </div>
+          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password')?.touched" class="error-text">
+            Passwords do not match.
+          </div>
+        </div>
+
+        <!-- Signup Button and Error/Sign-in Section -->
+        <div id="signup-signin-container" class="signup-college1-signup-and-signin-container">
+          <button
+            id="signup-button"
+            type="submit"
+            [disabled]="signupForm.invalid"
+            class="signup-college1-signup-button button"
+          >
+            <span id="signup" class="signup-college1-signup-text">
+              <ng-container>
+                <ng-template #defaultButton>
+                  <div class="signup-college1-fragment16">
+                    <span class="signup-college1-text17">Sign Up</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
+              </ng-container>
+            </span>
+          </button>
+          <div class="signup-college1-error-signup-container">
+            <span
+              *ngIf="errorMessage"
+              id="error-message-signup"
+              class="signup-college1-error-message-signup"
+            >
+              {{ errorMessage }}
+            </span>
+          </div>
+          <div id="signin-container" class="signup-college1-signin-container">
+            <span id="already-have-an-account" class="signup-college1-already-have-an-account-text">
+              <ng-container>
+                <ng-template #defaultText6>
+                  <div class="signup-college1-fragment10">
+                    <span class="signup-college1-text11">Already have an account?</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text6 ? text6 : defaultText6"></ng-container>
+              </ng-container>
+            </span>
+            <span
+              id="signin-button"
+              class="signup-college1-signin-text button"
+              routerLink="/login-college"
+            >
+              <ng-container>
+                <ng-template #defaultText5>
+                  <div class="signup-college1-fragment21">
+                    <span class="signup-college1-text22">Sign In</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text5 ? text5 : defaultText5"></ng-container>
+              </ng-container>
+            </span>
+          </div>
         </div>
       </div>
-      <div
-        id="signup-signin-container"
-        class="signup-college1-signup-and-signin-container"
-      >
-        <button
-          id="signup-button"
-          type="button"
-          class="signup-college1-signup-button button"
-        >
-          <span id="signup" class="signup-college1-signup-text">
-            <ng-container>
-              <ng-template #defaultButton>
-                <div class="signup-college1-fragment16">
-                  <span class="signup-college1-text17">Sign Up</span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="button ? button : defaultButton"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </button>
-        <div class="signup-college1-error-signup-container">
-          <span
-            id="error-message-signup"
-            class="signup-college1-error-message-signup"
-          >
-            <ng-container>
-              <ng-template #defaultText71>
-                <div class="signup-college1-fragment20">
-                  <span class="signup-college1-text21">
-                    Email or Phone Number already exists!
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text71 ? text71 : defaultText71"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </div>
-        <div id="signin-container" class="signup-college1-signin-container">
-          <span
-            id="already-have-an-account"
-            class="signup-college1-already-have-an-account-text"
-          >
-            <ng-container>
-              <ng-template #defaultText6>
-                <div class="signup-college1-fragment10">
-                  <span class="signup-college1-text11">
-                    Already have an account?
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text6 ? text6 : defaultText6"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span id="signin-button" class="signup-college1-signin-text button">
-            <ng-container>
-              <ng-template #defaultText5>
-                <div class="signup-college1-fragment21">
-                  <span class="signup-college1-text22">Sign In</span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text5 ? text5 : defaultText5"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </div>
-      </div>
-    </div>
+    </form>
   </div>
 </div>

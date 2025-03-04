@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
- 
+
 @Injectable({
   providedIn: 'root',
 })
 export class LoggerService {
   private logs: string[] = [];
- 
+
   // Log to console and store in memory
   log(level: 'DEBUG' | 'INFO' | 'ERROR', message: string, ...args: any[]): void {
     const timestamp = new Date().toISOString();
     const formattedMessage = `${level} ${timestamp} ${message}`;
     this.logs.push(formattedMessage);
- 
+
     switch (level) {
       case 'DEBUG':
         console.debug(formattedMessage, ...args);
@@ -23,7 +23,7 @@ export class LoggerService {
         console.error(formattedMessage, ...args);
         break;
     }
- 
+
     // Optionally save to local storage or send to backend
     this.saveLogs();
   }
@@ -44,11 +44,11 @@ export class LoggerService {
   private saveLogs(): void {
     localStorage.setItem('app_logs', JSON.stringify(this.logs));
   }
- 
   // Retrieve logs (for debugging or sending to backend)
   getLogs(): string[] {
     return this.logs;
   }
+
  
   // Optionally send logs to backend (requires backend endpoint)
   /*
@@ -59,5 +59,6 @@ export class LoggerService {
     );
   }
   */
+
 }
- 
+
