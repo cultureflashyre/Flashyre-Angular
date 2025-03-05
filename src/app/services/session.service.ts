@@ -5,24 +5,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SessionService {
-  
-  constructor() { }
-  
-  setUserSession(userId: string) {
-    localStorage.setItem('user_id', userId);
-    localStorage.setItem('is_authenticated', 'true');
+  constructor() {}
+
+  // Optional: Methods for non-authentication data storage in localStorage
+  setData(key: string, value: string) {
+    localStorage.setItem(key, value);
   }
-  
-  clearUserSession() {
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('is_authenticated');
+
+  getData(key: string): string | null {
+    return localStorage.getItem(key);
   }
-  
-  getUserId(): string | null {
-    return localStorage.getItem('user_id');
+
+  removeData(key: string) {
+    localStorage.removeItem(key);
   }
-  
-  isAuthenticated(): boolean {
-    return localStorage.getItem('is_authenticated') === 'true';
+
+  clearAllData() {
+    localStorage.clear();
   }
 }

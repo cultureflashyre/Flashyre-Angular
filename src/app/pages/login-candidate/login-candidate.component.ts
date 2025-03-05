@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { AuthService } from '../../services/candidate.service'; // Adjust path as needed
+import { AuthService } from '../../services/candidate.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -36,7 +36,7 @@ export class LoginCandidate {
       (response) => {
         if (response.message === 'Login successful') {
           this.errorMessage = '';
-          this.router.navigate(['/candidate-home']); // Redirect to candidate home page
+          this.router.navigate(['/candidate-home']);
         } else {
           this.errorMessage = 'Unexpected response from server';
         }
