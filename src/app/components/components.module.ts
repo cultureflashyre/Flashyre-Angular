@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
 import { Navbar6 } from './navbar6/navbar6.component'
 import { NavbarForRecruiterViewOption } from './navbar-for-recruiter-view-option/navbar-for-recruiter-view-option.component'
 import { BufferName1 } from './buffer-name-1/buffer-name-1.component'
