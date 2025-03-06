@@ -126,7 +126,20 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
-  
+  {
+    path: 'flashyre-assessment-rules-card',
+    loadChildren: () =>
+      import(
+        './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module'
+      ).then((m) => m.FlashyreAssessmentRulesCardModule),
+  },
+  {
+    path: 'flashyre-assessments',
+    loadChildren: () =>
+      import('./pages/flashyre-assessments/flashyre-assessments.module').then(
+        (m) => m.FlashyreAssessmentsModule
+      ),
+  },  
   {
     path: '**',
     loadChildren: () =>
