@@ -139,6 +139,13 @@ const routes = [
       import('./pages/flashyre-assessments/flashyre-assessments.module').then(
         (m) => m.FlashyreAssessmentsModule
       ),
+  },
+  {
+    path: 'candidate-dashboard',
+    loadChildren: () =>
+      import('./pages/candidate-dashboard/candidate-dashboard.module').then(
+        (m) => m.CandidateDashboardModule
+      ),
   },  
   {
     path: '**',
