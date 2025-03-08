@@ -1,380 +1,147 @@
 <div class="profile-education-component-container1" [ngClass]="rootClassName">
-  <div
-    id="profile-education-container"
-    class="profile-education-component-profile-education-container"
-  >
-    <span
-      id="education-header"
-      class="profile-education-component-education-text1"
-    >
+  <div id="profile-education-container" class="profile-education-component-profile-education-container">
+    <span id="education-header" class="profile-education-component-education-text1">
       <ng-container>
         <ng-template #defaultText>
           <div class="profile-education-component-fragment19">
             <span class="profile-education-component-text23">Education</span>
           </div>
         </ng-template>
-        <ng-container
-          *ngTemplateOutlet="text ? text : defaultText"
-        ></ng-container>
+        <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
       </ng-container>
     </span>
-    <div
-      id="total-experience-container"
-      class="profile-education-component-total-experience-container1"
-    >
-      <div
-        id="total-experience"
-        class="profile-education-component-total-experience-container2"
-      >
-        <span
-          id="total-experience-text"
-          class="profile-education-component-total-experience-text"
-        >
-          <ng-container>
-            <ng-template #defaultText2>
-              <div class="profile-education-component-fragment21">
-                <span class="profile-education-component-text27">
-                  Total Experience
-                </span>
+
+    <!-- Scrollable container for dynamic education forms -->
+    <div class="forms-container">
+      <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>
+        <form [formGroup]="form">
+          <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">
+            <div id="duration-{{i}}" class="profile-education-component-duration-container2">
+              <span id="duration-text-{{i}}" class="profile-education-component-duration-text">
+                <ng-container>
+                  <ng-template #defaultText2>
+                    <div class="profile-education-component-fragment21">
+                      <span class="profile-education-component-text27">Duration</span>
+                    </div>
+                  </ng-template>
+                  <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
+                </ng-container>
+              </span>
+              <div class="profile-education-component-form1 input">
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="profile-education-component-select"
+                  [max]="todayDate"
+                  required
+                />
               </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text2 ? text2 : defaultText2"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <form
-          id="total-experience-year-dropdown"
-          enctype="text/plain"
-          class="profile-education-component-form1 input"
-        >
-          <span
-            id="select-year-text"
-            class="profile-education-component-select-year-text"
-          >
-            <ng-container>
-              <ng-template #defaultText3136>
-                <div class="profile-education-component-fragment10">
-                  <span class="profile-education-component-text10">
-                    Select Year
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text3136 ? text3136 : defaultText3136"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <svg
-            id="experience-dropdown-icon"
-            width="24"
-            height="24"
-            viewBox="0 0 32 32"
-            class="profile-education-component-drop-down-icon1"
-          >
-            <path
-              d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-              fill="currentColor"
-            ></path>
-          </svg>
+            </div>
+            <div class="profile-education-component-form2 input">
+              <input
+                type="date"
+                formControlName="endDate"
+                class="profile-education-component-select"
+                [min]="form.get('startDate')?.value"
+                [max]="todayDate"
+                required
+              />
+            </div>
+          </div>
+
+          <div id="university-institute-education-container-{{i}}" class="profile-education-component-university-institute-education-container">
+            <div id="university-input-container-{{i}}" class="profile-education-component-university-institute-container">
+              <span id="university-institute-text-{{i}}" class="profile-education-component-university-institute-text">
+                <ng-container>
+                  <ng-template #defaultText111>
+                    <div class="profile-education-component-fragment14">
+                      <span class="profile-education-component-text16">University/Institute</span>
+                    </div>
+                  </ng-template>
+                  <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
+                </ng-container>
+              </span>
+              <div class="profile-education-component-form3 input">
+                <select formControlName="university" class="profile-education-component-select">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let uni of universities" [value]="uni">{{ uni }}</option>
+                </select>
+              </div>
+            </div>
+            <div id="education-input-container-{{i}}" class="profile-education-component-education-container">
+              <span id="education-text-{{i}}" class="profile-education-component-education-text2">
+                <ng-container>
+                  <ng-template #defaultText112>
+                    <div class="profile-education-component-fragment15">
+                      <span class="profile-education-component-text19">Education</span>
+                    </div>
+                  </ng-template>
+                  <ng-container *ngTemplateOutlet="text112 ? text112 : defaultText112"></ng-container>
+                </ng-container>
+              </span>
+              <div class="profile-education-component-form4 input">
+                <select formControlName="educationLevel" class="profile-education-component-select">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let level of educationLevels" [value]="level">{{ level }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-education-component-container3">
+            <div id="education-course-container-{{i}}" class="profile-education-component-course-container">
+              <span id="education-course-{{i}}" class="profile-education-component-course-text">
+                <ng-container>
+                  <ng-template #defaultText1111>
+                    <div class="profile-education-component-fragment20">
+                      <span class="profile-education-component-text24">Course</span>
+                    </div>
+                  </ng-template>
+                  <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>
+                </ng-container>
+              </span>
+              <div class="profile-education-component-form5 input">
+                <select formControlName="course" class="profile-education-component-select">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let course of courses" [value]="course">{{ course }}</option>
+                </select>
+              </div>
+            </div>
+            <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">
+              <span id="education-specialization-dropdown-{{i}}" class="profile-education-component-specialisation-text">
+                <ng-container>
+                  <ng-template #defaultText1112>
+                    <div class="profile-education-component-fragment13">
+                      <span class="profile-education-component-text13">Specialization</span>
+                    </div>
+                  </ng-template>
+                  <ng-container *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"></ng-container>
+                </ng-container>
+              </span>
+              <div class="profile-education-component-form6 input">
+                <select formControlName="specialization" class="profile-education-component-select">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let spec of specializations" [value]="spec">{{ spec }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conditionally display Remove button only when there are multiple forms -->
+          <button *ngIf="educationForms.length > 1" class="remove-button" (click)="removeForm(i)">- Remove Education</button>
         </form>
       </div>
-      <form
-        id="total-experience-month-dropdown"
-        class="profile-education-component-form2 input"
-      >
-        <span
-          id="select-month-text"
-          class="profile-education-component-select-month-text"
-        >
-          <ng-container>
-            <ng-template #defaultText3137>
-              <div class="profile-education-component-fragment12">
-                <span class="profile-education-component-text12">
-                  Select Month
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text3137 ? text3137 : defaultText3137"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <svg
-          id="dropdown-icon"
-          width="24"
-          height="24"
-          viewBox="0 0 32 32"
-          class="profile-education-component-drop-down-icon2"
-        >
-          <path
-            d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </form>
     </div>
-    <div
-      id="university-institute-education-container"
-      class="profile-education-component-university-institute-education-container"
-    >
-      <div
-        id="university-input-container"
-        class="profile-education-component-university-institute-container"
-      >
-        <span
-          id="university-institute-text"
-          class="profile-education-component-university-institute-text"
-        >
-          <ng-container>
-            <ng-template #defaultText111>
-              <div class="profile-education-component-fragment14">
-                <span class="profile-education-component-text16">
-                  <span>University/Institute</span>
-                  <br />
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text111 ? text111 : defaultText111"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div
-          id="select-container"
-          class="profile-education-component-container2"
-        >
-          <form
-            id="education-university-dropdown"
-            class="profile-education-component-form3 input"
-          >
-            <span
-              id="select-text"
-              class="profile-education-component-select-text1"
-            >
-              <ng-container>
-                <ng-template #defaultText313>
-                  <div class="profile-education-component-fragment11">
-                    <span class="profile-education-component-text11">
-                      Select
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text313 ? text313 : defaultText313"
-                ></ng-container>
-              </ng-container>
-            </span>
-            <svg
-              id="university-dropdown"
-              width="24"
-              height="24"
-              viewBox="0 0 32 32"
-              class="profile-education-component-drop-down-icon3"
-            >
-              <path
-                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </form>
-        </div>
-      </div>
-      <div
-        id="education-input-container"
-        class="profile-education-component-education-container"
-      >
-        <span
-          id="education-text"
-          class="profile-education-component-education-text2"
-        >
-          <ng-container>
-            <ng-template #defaultText112>
-              <div class="profile-education-component-fragment15">
-                <span class="profile-education-component-text19">
-                  Education
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text112 ? text112 : defaultText112"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div
-          id="education-select-container"
-          class="profile-education-component-education-select-container"
-        >
-          <form
-            id="Education-Dropdown"
-            class="profile-education-component-form4 input"
-          >
-            <span class="profile-education-component-select-text2">
-              <ng-container>
-                <ng-template #defaultText314>
-                  <div class="profile-education-component-fragment18">
-                    <span class="profile-education-component-text22">
-                      Select
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text314 ? text314 : defaultText314"
-                ></ng-container>
-              </ng-container>
-            </span>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 32 32"
-              class="profile-education-component-drop-down-icon4"
-            >
-              <path
-                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="profile-education-component-container3">
-      <div
-        id="education-course-container"
-        class="profile-education-component-course-container"
-      >
-        <span
-          id="education-course"
-          class="profile-education-component-course-text"
-        >
-          <ng-container>
-            <ng-template #defaultText1111>
-              <div class="profile-education-component-fragment20">
-                <span class="profile-education-component-text24">
-                  <span>Course</span>
-                  <br />
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div
-          id="course-select-container"
-          class="profile-education-component-select-container1"
-        >
-          <form
-            id="education-course-dropdown"
-            class="profile-education-component-form5 input"
-          >
-            <span
-              id="course-select-text"
-              class="profile-education-component-select-text3"
-            >
-              <ng-container>
-                <ng-template #defaultText3131>
-                  <div class="profile-education-component-fragment17">
-                    <span class="profile-education-component-text21">
-                      Select
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text3131 ? text3131 : defaultText3131"
-                ></ng-container>
-              </ng-container>
-            </span>
-            <svg
-              id="course-dropdown"
-              width="24"
-              height="24"
-              viewBox="0 0 32 32"
-              class="profile-education-component-drop-down-icon5"
-            >
-              <path
-                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </form>
-        </div>
-      </div>
-      <div
-        id="education-specialisation-container"
-        class="profile-education-component-specialisation-container"
-      >
-        <span
-          id="education-specialization-dropdown"
-          class="profile-education-component-specialisation-text"
-        >
-          <ng-container>
-            <ng-template #defaultText1112>
-              <div class="profile-education-component-fragment13">
-                <span class="profile-education-component-text13">
-                  <span>Specialization</span>
-                  <br />
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div
-          id="specialization-select-container"
-          class="profile-education-component-select-container2"
-        >
-          <form
-            id="education-specialization-select-dropdown"
-            class="profile-education-component-form6 input"
-          >
-            <span class="profile-education-component-select-text4">
-              <ng-container>
-                <ng-template #defaultText3132>
-                  <div class="profile-education-component-fragment16">
-                    <span class="profile-education-component-text20">
-                      Select
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text3132 ? text3132 : defaultText3132"
-                ></ng-container>
-              </ng-container>
-            </span>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 32 32"
-              class="profile-education-component-drop-down-icon6"
-            >
-              <path
-                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </form>
-        </div>
-      </div>
-    </div>
-    <span
-      id="add-education-button"
-      class="profile-education-component-add-education-text button"
-    >
+
+    <!-- Add Education Button outside the scrollable container -->
+    <span id="add-education-button" class="profile-education-component-add-education-text button" (click)="addNewForm()">
       <ng-container>
         <ng-template #defaultText1>
           <div class="profile-education-component-fragment22">
-            <span class="profile-education-component-text28">
-              + Add Education
-            </span>
+            <span class="profile-education-component-text28">+ Add Education</span>
           </div>
         </ng-template>
-        <ng-container
-          *ngTemplateOutlet="text1 ? text1 : defaultText1"
-        ></ng-container>
+        <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
       </ng-container>
     </span>
   </div>

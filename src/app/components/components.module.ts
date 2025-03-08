@@ -2,7 +2,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { Navbar6 } from './navbar6/navbar6.component'
 import { NavbarForRecruiterViewOption } from './navbar-for-recruiter-view-option/navbar-for-recruiter-view-option.component'
 import { BufferName1 } from './buffer-name-1/buffer-name-1.component'
@@ -33,7 +32,7 @@ import { LandingPageJobSearchHero } from './landing-page-job-search-hero/landing
 import { Component2 } from './component2/component2.component'
 import { RecruiterFlowProfileCard } from './recruiter-flow-profile-card/recruiter-flow-profile-card.component'
 import { Navbar1 } from './navbar1/navbar1.component'
-import { ProfileEducationComponent } from './profile-education-component/profile-education-component.component'
+import { ProfileEducationComponent } from './profile-education-component/profile-education-component.component';
 import { ProfileHeaderComponent1 } from './profile-header-component1/profile-header-component1.component'
 import { Footer8 } from './footer8/footer8.component'
 import { Details } from './details/details.component'
@@ -127,7 +126,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     Component2,
     RecruiterFlowProfileCard,
     Navbar1,
-    ProfileEducationComponent,
+    ProfileEducationComponent, // Ensure this matches the import
     ProfileHeaderComponent1,
     Footer8,
     Details,

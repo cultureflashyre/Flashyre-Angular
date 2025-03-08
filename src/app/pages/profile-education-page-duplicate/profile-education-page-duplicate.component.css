@@ -8,6 +8,7 @@
   min-height: 100vh;
   align-items: center;
   flex-direction: column;
+  border-color: transparent;
 }
  
 .profile-education-page-duplicate-container2 {
@@ -236,6 +237,22 @@
 .profile-education-page-duplicate-fragment33 {
   display: contents;
 }
+
+.profile-education-page-duplicate-text40 {
+  font-size: 14px;
+  width: 128px;
+  align-self: stretch;
+  transition: 0.3s;
+  padding-top: 0px;
+  border-color: #CEE0F5;
+  border-width: 0px;
+  padding-left: 0px;
+  border-radius: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: transparent;
+  color: #05356c;
+}
  
 .profile-education-page-duplicate-text39 {
   color: #05356c;
@@ -248,14 +265,36 @@
  
 .profile-education-page-duplicate-text42 {
   display: inline-block;
+  color: #05356c;
+  width: 66px;
+  height: 48px;
+  transition: 0.3s;
+  padding-top: 10px;
+  border-color: transparent;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: transparent;
+
 }
  
 .profile-education-page-duplicate-fragment35 {
   display: contents;
+  border-color: transparent;
 }
  
 .profile-education-page-duplicate-text43 {
   display: inline-block;
+  color: #FFFFFF;
+  width: auto;
+  align-self: center;
+  transition: 0.3s;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: #05356C;
+  border-color: transparent;
 }
  
 @media(max-width: 1200px) {
