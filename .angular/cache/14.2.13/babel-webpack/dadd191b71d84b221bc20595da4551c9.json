@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./pow')} */\n\nmodule.exports = Math.pow;","map":null,"metadata":{},"sourceType":"script"}

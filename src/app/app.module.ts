@@ -1,10 +1,12 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { RouterModule } from '@angular/router'
-import { BrowserModule } from '@angular/platform-browser'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 
-import { ComponentsModule } from './components/components.module'
-import { AppComponent } from './app.component'
+import { ComponentsModule } from './components/components.module';
+import { AppComponent } from './app.component';
+import { EmploymentService } from './services/employment.service'; // Import EmploymentService
 
 const routes = [
   {
@@ -124,14 +126,6 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
-  
-  {
-    path: '**',
-    loadChildren: () =>
-      import('./pages/not-found/not-found.module').then(
-        (m) => m.NotFoundModule
-      ),
-  },
   {
     path: 'university_college_dashboard', // New route
     loadChildren: () =>
@@ -139,12 +133,32 @@ const routes = [
         (m) => m.UniversityCollegeDashboardModule
       ),
   },
-]
+  {
+    path: 'profile-last-page1', // New route
+    loadChildren: () =>
+      import('./pages/profile-last-page1/profile-last-page1.module').then(
+        (m) => m.ProfileLastPage1Module
+      ),
+  },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./pages/not-found/not-found.module').then(
+        (m) => m.NotFoundModule
+      ),
+  },
+];
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
-  providers: [],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes),
+    ComponentsModule,
+    HttpClientModule,
+    FormsModule, // Include FormsModule
+  ],
+  providers: [EmploymentService], // Add EmploymentService as a provider
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./reflectApply')} */\n\nmodule.exports = typeof Reflect !== 'undefined' && Reflect && Reflect.apply;","map":null,"metadata":{},"sourceType":"script"}

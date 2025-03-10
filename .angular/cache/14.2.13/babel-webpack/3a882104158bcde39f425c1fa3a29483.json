@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./gOPD')} */\n\nmodule.exports = Object.getOwnPropertyDescriptor;","map":null,"metadata":{},"sourceType":"script"}

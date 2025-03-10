@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./uri')} */\n\nmodule.exports = URIError;","map":null,"metadata":{},"sourceType":"script"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./functionCall')} */\n\nmodule.exports = Function.prototype.call;","map":null,"metadata":{},"sourceType":"script"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./max')} */\n\nmodule.exports = Math.max;","map":null,"metadata":{},"sourceType":"script"}

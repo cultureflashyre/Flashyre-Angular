@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./syntax')} */\n\nmodule.exports = SyntaxError;","map":null,"metadata":{},"sourceType":"script"}

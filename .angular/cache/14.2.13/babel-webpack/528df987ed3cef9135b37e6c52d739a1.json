@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./range')} */\n\nmodule.exports = RangeError;","map":null,"metadata":{},"sourceType":"script"}

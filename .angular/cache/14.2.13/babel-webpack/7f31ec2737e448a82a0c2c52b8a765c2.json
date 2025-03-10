@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n\nvar bind = require('function-bind');\n\nvar $apply = require('./functionApply');\n\nvar $call = require('./functionCall');\n\nvar $reflectApply = require('./reflectApply');\n/** @type {import('./actualApply')} */\n\n\nmodule.exports = $reflectApply || bind.call($call, $apply);","map":null,"metadata":{},"sourceType":"script"}

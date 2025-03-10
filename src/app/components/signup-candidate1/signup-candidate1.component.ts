@@ -78,7 +78,7 @@ export class SignupCandidate1 implements OnInit {
             password: this.signupForm.get('password').value,
         };
 
-        this.http.post('http://localhost:8000/api/signup-candidate/', formData).subscribe(
+        this.http.post('http://localhost:8000/signup-candidate/', formData).subscribe(
             (response) => {
                 console.log('Signup successful', response);
             },
@@ -101,7 +101,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`http://localhost:8000/api/check-phone/?phone=${phone}`).pipe(
+      return this.http.get(`http://localhost:8000/check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -112,7 +112,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`http://localhost:8000/api/check-email/?email=${email}`).pipe(
+      return this.http.get(`http://localhost:8000/check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );

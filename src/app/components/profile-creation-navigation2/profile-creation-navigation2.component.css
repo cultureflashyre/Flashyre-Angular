@@ -65,11 +65,11 @@
 }
  
 .profile-creation-navigation2-previous-button {
-  width: 128px;
+  width: auto;
   align-self: stretch;
   transition: 0.3s;
   padding-top: 0px;
-  border-color: #CEE0F5;
+  border-color:transparent;
   border-width: 0px;
   padding-left: 0px;
   border-radius: 0px;
@@ -89,7 +89,7 @@
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
-  background-color: 0A4992;
+  background-color: transparent;
 }
  
 .profile-creation-navigation2-previous-text {
@@ -118,6 +118,7 @@
   fill: #FFFFFF;
   color: #FFFFFF;
   width: 153px;
+  height: 48px;
   align-self: stretch;
   transition: 0.3s;
   padding-top: 0px;
@@ -125,6 +126,7 @@
   padding-right: 0px;
   padding-bottom: 0px;
   background-color: #05356C;
+  border-color: #05356C;
 }
  
 .profile-creation-navigation2-save-next-button:hover {

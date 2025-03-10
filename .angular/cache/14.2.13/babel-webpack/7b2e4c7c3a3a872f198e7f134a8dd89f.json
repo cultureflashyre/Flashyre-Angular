@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n/** @type {import('./round')} */\n\nmodule.exports = Math.round;","map":null,"metadata":{},"sourceType":"script"}
