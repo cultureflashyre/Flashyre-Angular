@@ -1,5 +1,6 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router'; // Import Router for navigation
+import { SystemRequirementService } from '../../services/system-requirement.service'; // Import SystemRequirementService
 
 @Component({
   selector: 'flashyre-dashboard',
@@ -41,9 +42,44 @@ export class FlashyreDashboard {
   rawigb0: string = ' ';
   rawst6l: string = ' ';
 
-  constructor(private router: Router) {} // Inject Router
+  constructor(private router: Router, private systemRequirementService: SystemRequirementService) {} // Inject Router
 
-  goToAssessment() { // Method to navigate to the assessment page
-    this.router.navigate(['/flashyre-assessment-rules-card']);
+
+  async checkSystemRequirements(): Promise<boolean> {
+    const isDeviceSupported = this.isDeviceSupported();
+    const isAudioVideoEnabled = await this.isAudioVideoEnabled();
+  
+    return isDeviceSupported && isAudioVideoEnabled;
+  }
+  
+  async goToAssessment(): Promise<void> {
+    if (await this.checkSystemRequirements()) {
+      this.router.navigate(['/flashyre-assessment-rules-card']);
+    } else {
+      this.router.navigate(['/error-system-requirement-failed']);
+    }
+  }
+
+  //goToAssessment(): void {
+    //if (this.systemRequirementService.checkSystemRequirements()) {
+      //this.router.navigate(['/flashyre-assessment-rules-card']);
+    //} else {
+      //this.router.navigate(['/error-system-requirement-failed']);
+    //}
+  //}
+  
+
+  isDeviceSupported(): boolean {
+    // Check if the device is a tablet, laptop, or desktop
+    // This can be approximated by checking the screen size or user agent
+    // For simplicity, assume this function is implemented correctly
+    return true; // Implement actual logic here
+  }
+
+  isAudioVideoEnabled(): boolean {
+    // Check if audio and video are enabled
+    // This can be done using the MediaDevices API
+    // For simplicity, assume this function is implemented correctly
+    return true; // Implement actual logic here
   }
 }
