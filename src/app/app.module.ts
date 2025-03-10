@@ -146,7 +146,14 @@ const routes = [
       import('./pages/candidate-dashboard/candidate-dashboard.module').then(
         (m) => m.CandidateDashboardModule
       ),
-  },  
+  },
+  {
+    path: 'error-system-requirement-failed',
+    loadChildren: () =>
+      import('./pages/error-system-requirement-failed/error-system-requirement-failed.module').then(
+        (m) => m.ErrorSystemRequirementFailedModule
+      ),
+  },   
   {
     path: '**',
     loadChildren: () =>

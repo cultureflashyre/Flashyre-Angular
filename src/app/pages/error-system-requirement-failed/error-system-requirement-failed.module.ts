@@ -4,19 +4,35 @@ import { CommonModule } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'; // 
 
 import { ComponentsModule } from '../../components/components.module'
-import { FlashyreAssessments } from './flashyre-assessments.component'
+import { ErrorSystemRequirementFailedComponent } from './error-system-requirement-failed.component';
 
 const routes = [
   {
     path: '',
-    component: FlashyreAssessments,
+    component: ErrorSystemRequirementFailedComponent,
   },
 ]
 
 @NgModule({
-  declarations: [FlashyreAssessments],
+  declarations: [ErrorSystemRequirementFailedComponent],
   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes), HttpClientModule],
-  exports: [FlashyreAssessments],
+  exports: [ErrorSystemRequirementFailedComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class FlashyreAssessmentsModule {}
+export class ErrorSystemRequirementFailedModule {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

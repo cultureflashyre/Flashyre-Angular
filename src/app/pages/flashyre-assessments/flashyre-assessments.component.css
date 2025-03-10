@@ -375,6 +375,25 @@
   justify-content: center;
   background-color: #F4F4F4;
 }
+
+.flashyre-assessments-option {
+  display: flex;
+  align-items: center;
+}
+
+.flashyre-assessments-option-checkbox {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.flashyre-assessments-option-text {
+  font-size: 20px;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
  
 .flashyre-assessments-option1 {
   gap: 16px;
@@ -530,6 +549,31 @@
   background-color: #FFFFFF;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.flashyre-assessments-question-number {
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+  cursor: pointer; /* Add cursor pointer for clickability */
+}
+
+.flashyre-assessments-question-number:hover {
+  background-color: #1F882B; /* Optional hover effect */
+}
+
+.answered {
+  background-color: #1F882B; /* Color for answered questions */
+}
+
+.unanswered {
+  background-color: #ACACAD; /* Color for unanswered questions */
 }
  
 .flashyre-assessments-text25 {
@@ -888,6 +932,13 @@
     font-style: normal;
     font-weight: 500;
   }
+
+  .flashyre-assessments-options {
+    width: 100%;
+    height: 100%;
+    padding: var(--dl-space-space-halfunit);
+  }
+
   .flashyre-assessments-options-container {
     width: 300px;
     height: 500px;
@@ -918,6 +969,10 @@
     padding: var(--dl-space-space-halfunit);
     position: absolute;
     grid-template-columns: 1fr 1fr 1fr;
+  }
+  .flashyre-assessments-question-number {
+    width: 40px;
+    height: 40px;
   }
   .flashyre-assessments-text25 {
     width: 40px;
@@ -1045,6 +1100,12 @@
   .flashyre-assessments-next-button {
     height: 40px;
   }
+
+  .flashyre-assessments-options {
+    width: 100%;
+    height: 270px;
+  }
+
   .flashyre-assessments-options-container {
     width: 100%;
     height: auto;
