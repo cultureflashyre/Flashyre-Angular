@@ -9,6 +9,7 @@
   align-items: center;
   flex-direction: column;
   border-color: transparent;
+  overflow-x: hidden;
 }
  
 .profile-education-page-duplicate-container2 {
@@ -239,7 +240,7 @@
 }
 
 .profile-education-page-duplicate-text40 {
-  font-size: 14px;
+  font-size: 16px;
   width: 128px;
   align-self: stretch;
   transition: 0.3s;
@@ -269,21 +270,21 @@
   width: 66px;
   height: 48px;
   transition: 0.3s;
-  padding-top: 10px;
+  padding-top: 12px;
   border-color: transparent;
   padding-left: 0px;
   padding-right: 0px;
   padding-bottom: 0px;
   background-color: transparent;
-
+  font-size: 16px
 }
  
 .profile-education-page-duplicate-fragment35 {
   display: contents;
-  border-color: transparent;
 }
  
 .profile-education-page-duplicate-text43 {
+  font-size: 16px;
   display: inline-block;
   color: #FFFFFF;
   width: auto;

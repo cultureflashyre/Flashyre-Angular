@@ -14,6 +14,7 @@
   flex-direction: column;
   justify-content: center;
   background-color: #FFFFFF;
+  position: auto;
 }
 
 .profile-education-component-profile-education-container {
@@ -21,7 +22,6 @@
   flex: 0 0 auto;
   width: auto;
   height: 420px; /* Original height */
-  max-height: 420px; /* Added to limit height */
   border: 0px solid transparent; /* Added transparent border */
   display: flex;
   padding: 24px;
@@ -29,17 +29,22 @@
   border-radius: 8px;
   flex-direction: column;
   position: relative; /* Added to anchor child elements */
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .profile-education-component-education-text1 {
   gap: 24px;
   width: 672px;
   height: 24px;
-  display: flex;
+  display: flex-start;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  padding-left: 10px;
+  /* padding-left: 30px;
+  margin-top: 25px; */
+  
 }
 
 .profile-education-component-duration-container1 {
@@ -392,26 +397,26 @@
 .forms-container {
   flex: 1; /* Allow it to take available space */
   max-height: 340px; /* Fixed height to leave room for the button */
-  overflow-y: auto; /* Enable vertical scrolling within this container */
+  /* overflow-y: scroll; Enable vertical scrolling within this container
+  overflow-x: hidden; */
   width: 100%; /* Ensure it spans the full width */
 }
 
 .profile-education-component-add-education-text {
   width: auto;
   height: 24px;
-  display: flex;
+  display: inline-block;
   align-self: flex-start;
   transition: 0.3s;
   align-items: center;
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
-  position: sticky; /* Keep it fixed relative to the parent */
-  bottom: 0; /* Anchor it to the bottom */
-  padding: 10px 0; /* Adjust padding for spacing */
+   margin-left: 20px;
+  margin-bottom: 10px; 
 }
 
-.profile-education-component-add-education-text:hover {
+/* .profile-education-component-add-education-text:hover {
   color: #FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
@@ -422,7 +427,7 @@
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
-}
+} */
 
 .profile-education-component-select {
   width: 100%;
@@ -439,12 +444,12 @@
   margin-right: 10px;
 }
 
-.education-form-instance {
+/* .education-form-instance {
   padding: 15px;
   margin-bottom: 15px;
   border-radius: 4px;
   background-color: #FFFFFF;
-}
+} */
 
 .remove-button {
   margin-top: 10px;
@@ -454,6 +459,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 450px;
 }
 
 .remove-button:hover {
@@ -585,7 +591,7 @@
   .profile-education-component-education-text1 {
     width: 672px;
     height: 24px;
-    padding-left: 20px;
+    /* padding-left: 20px; */
   }
   .profile-education-component-university-institute-education-container {
     width: 672px;
@@ -623,7 +629,7 @@
     padding-bottom: 0px;
     background-color: transparent;
   }
-  .profile-education-component-profile-education-container {
+   .profile-education-component-profile-education-container {
     gap: var(--dl-space-space-twounits);
     width: 95%;
     height: 100%;
@@ -632,7 +638,7 @@
     align-items: center;
     justify-content: flex-start;
     background-color: #FFFFFF;
-  }
+  } 
   .profile-education-component-education-text1 {
     width: 100%;
   }

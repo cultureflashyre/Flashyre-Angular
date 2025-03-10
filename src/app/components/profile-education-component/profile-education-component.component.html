@@ -12,8 +12,8 @@
     </span>
 
     <!-- Scrollable container for dynamic education forms -->
-    <div class="forms-container">
-      <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>
+    <div class="profile-education-container">
+    <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>
         <form [formGroup]="form">
           <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">
             <div id="duration-{{i}}" class="profile-education-component-duration-container2">
