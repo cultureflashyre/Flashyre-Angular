@@ -6,7 +6,6 @@
   width: 1600px;
   display: flex;
   position: relative;
-  align-items: center;
   justify-content: center;
 }
  
@@ -15,12 +14,11 @@
   width: 728px;
   height: 100px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
 }
  
 .progress-bar-step-3-container3 {
-  width: 90%;
+  width: 720px;
   height: 100px;
 }
  
@@ -45,6 +43,13 @@
   width: auto;
   align-self: center;
 }
+
+@media(max-width: 1200px) {
+  .progress-bar-step-3root-class-name1 {
+    align-self: center;
+  }
+}
+
  
 @media(max-width: 767px) {
   .progress-bar-step-3-container2 {
@@ -55,9 +60,11 @@
 @media(max-width: 479px) {
   .progress-bar-step-3-container1 {
     width: 100%;
+    align-items: center;
+    justify-content: center;
   }
   .progress-bar-step-3-container2 {
-    width: 100%;
+    width: 90%;
     height: 90px;
   }
   .progress-bar-step-3-container3 {

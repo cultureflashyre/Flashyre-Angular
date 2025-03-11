@@ -121,6 +121,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-items: center;
 }
  
 .profile-education-page-duplicate-fragment20 {
@@ -281,21 +282,23 @@
  
 .profile-education-page-duplicate-fragment35 {
   display: contents;
+  
 }
  
 .profile-education-page-duplicate-text43 {
   font-size: 16px;
   display: inline-block;
   color: #FFFFFF;
-  width: auto;
   align-self: center;
   transition: 0.3s;
-  padding-top: 0px;
+  padding-top: 12px;
   padding-left: 0px;
   padding-right: 0px;
   padding-bottom: 0px;
   background-color: #05356C;
   border-color: transparent;
+  width: 153px;
+  height: 48px;
 }
  
 @media(max-width: 1200px) {

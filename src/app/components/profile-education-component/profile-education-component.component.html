@@ -130,6 +130,8 @@
           <!-- Conditionally display Remove button only when there are multiple forms -->
           <button *ngIf="educationForms.length > 1" class="remove-button" (click)="removeForm(i)">- Remove Education</button>
         </form>
+        <!-- Add a horizontal line between positions, except after the last one -->
+      <hr *ngIf="i < educationForms.length - 1" class="position-divider" />   
       </div>
     </div>
 
