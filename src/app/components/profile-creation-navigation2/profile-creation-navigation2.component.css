@@ -86,7 +86,7 @@
 }
  
 .profile-creation-navigation2-previous-button:active {
-  color: FFFFFF;
+  color: FFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: transparent;
@@ -111,7 +111,6 @@
 .profile-creation-navigation2-previous-text:active {
   transform: scale(1.05);
   transition: all 0.7s;
-  background-color: #D7DFE7;
 }
  
 .profile-creation-navigation2-save-next-button {

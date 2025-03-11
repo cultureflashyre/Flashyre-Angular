@@ -6,7 +6,6 @@
   width: 100%;
   display: flex;
   position: relative;
-  align-items: center;
   justify-content: center;
 }
  
@@ -15,12 +14,11 @@
   width: 728px;
   height: 100px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
 }
  
 .progress-bar-step-4-container3 {
-  width: 90%;
+  width: 720px;
   height: 100px;
 }
  
@@ -28,22 +26,32 @@
   display: contents;
 }
  
+.progress-bar-step-4root-class-name1 {
+  align-self: center;
+}
 
- 
-
+@media(max-width: 1200px) {
+  .progress-bar-step-4root-class-name1 {
+    align-self: center;
+  }
+}
  
 @media(max-width: 767px) {
   .progress-bar-step-4root-class-name1 {
     width: 90%;
-    align-self: center;
   }
 }
  
 @media(max-width: 479px) {
   .progress-bar-step-4-container1 {
     width: 100%;
+    align-items: center;
+    justify-content: center;
   }
   .progress-bar-step-4-container2 {
+    width: 90%;
+  }
+  .progress-bar-step-4root-class-name {
     width: 100%;
   }
 }
