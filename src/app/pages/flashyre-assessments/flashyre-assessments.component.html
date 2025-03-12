@@ -48,8 +48,7 @@
                   id="question-text"
                   class="flashyre-assessments-question-text"
                 >
-                {{ questions[currentQuestionIndex].text }}
-                {{ currentQuestions[currentQuestionIndex].text }}
+                {{ currentQuestions[currentQuestionIndex].question }}
                   <br class="flashyre-assessments-text14" />
                   <br />
                   <br />
@@ -97,20 +96,18 @@
                 Options
               </h1>
               <div id="options" class="flashyre-assessments-options">
-                <div *ngFor="let option of currentQuestions[currentQuestionIndex].options; let i = index" class="flashyre-assessments-option">
-                  <input
-                    type="checkbox"
-                    id="option-{{ i }}"
-                    [attr.checked]="false"
-                    class="flashyre-assessments-option-checkbox"
-                  />
-                  <span
-                    id="option-{{ i }}-text"
-                    class="flashyre-assessments-option-text"
-                  >
-                    {{ option }}
-                  </span>
+                <div *ngIf="currentQuestions[currentQuestionIndex].option_type === '2'">
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="True"> True
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="False"> False
                 </div>
+
+                <div *ngIf="currentQuestions[currentQuestionIndex].option_type === '4'">
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="{{ currentQuestions[currentQuestionIndex].options.option1 }}"> {{ currentQuestions[currentQuestionIndex].options.option1 }}
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="{{ currentQuestions[currentQuestionIndex].options.option2 }}"> {{ currentQuestions[currentQuestionIndex].options.option2 }}
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="{{ currentQuestions[currentQuestionIndex].options.option3 }}"> {{ currentQuestions[currentQuestionIndex].options.option3 }}
+                  <input type="radio" name="question{{ currentQuestionIndex }}" value="{{ currentQuestions[currentQuestionIndex].options.option4 }}"> {{ currentQuestions[currentQuestionIndex].options.option4 }}
+                </div>
+
               </div>
             </div>
 
@@ -121,22 +118,11 @@
             id="video-container"
             class="flashyre-assessments-video-container"
           ></div>
-          <div
-          id="question-numbers"
-          class="flashyre-assessments-question-numbers"
-        >
-          <span
-          *ngFor="let question of currentQuestions; let i = index"
-            class="flashyre-assessments-question-number"
-            [ngClass]="{
-              'answered': question.answered,
-              'unanswered': !question.answered
-            }"
-            (click)="navigateToQuestion(i)"
-          >
-            {{ i + 1 }}
-          </span>
-        </div>
+            <div id="question-numbers" class="flashyre-assessments-question-numbers">
+                <span *ngFor="let question of currentQuestions; let i = index" class="flashyre-assessments-question-number" (click)="navigateToQuestion(i)">
+                  {{ i + 1 }}
+                </span>
+              </div>
         </div>
       </div>
     </div>
