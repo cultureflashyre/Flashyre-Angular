@@ -1,5 +1,8 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
+import { Router } from '@angular/router';
+import { VideoRecorderService } from '../../services/video-recorder.service';
+import { ProctoringService } from '../../services/proctoring.service';
 
 @Component({
   selector: 'flashyre-assessment-rules-card',
@@ -7,7 +10,9 @@ import { Title, Meta } from '@angular/platform-browser'
   styleUrls: ['flashyre-assessment-rules-card.component.css'],
 })
 export class FlashyreAssessmentRulesCard {
-  constructor(private title: Title, private meta: Meta) {
+  constructor(private title: Title, private meta: Meta, private router: Router,
+    private videoRecorder: VideoRecorderService,
+    private proctoringService: ProctoringService) {
     this.title.setTitle('Flashyre-Assessment-Rules-Card - Flashyre')
     this.meta.addTags([
       {
@@ -20,5 +25,15 @@ export class FlashyreAssessmentRulesCard {
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ])
+  }
+
+  async startAssessment() {
+    try {
+      await this.videoRecorder.startRecording();
+      this.proctoringService.startMonitoring();
+      this.router.navigate(['/flashyre-assessments']);
+    } catch (error) {
+      console.error('Failed to start assessment:', error);
+    }
   }
 }

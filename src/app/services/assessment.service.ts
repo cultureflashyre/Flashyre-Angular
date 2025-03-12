@@ -1,7 +1,33 @@
-// assessment.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+
+interface AssessmentResponse {
+  assessment_id: number;
+  assessment_title: string;
+  proctored: string;
+  allow_mobile: string;
+  video_recording: string;
+  total_assessment_duration: number;
+  sections: {
+    [sectionName: string]: {
+      section_id: number;
+      duration: number;
+      questions: {
+        question_id: number;
+        question: string;
+        question_image: string | null;
+        option_type: string;
+        options: {
+          option1: string;
+          option2: string;
+          option3?: string;
+          option4?: string;
+        };
+      }[];
+    };
+  };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +40,9 @@ export class AssessmentService {
 
   constructor(private http: HttpClient) { }
 
-  // Fetch assessment sections and questions
-  getAssessmentData(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/assessment`);
-  }
-
-  // Fetch countdown timer duration
-  getTimerDuration(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/timer-duration`);
+  // Fetch assessment data including sections, questions, and timer duration
+  getAssessmentData(assessmentId: number): Observable<AssessmentResponse> {
+    return this.http.get<AssessmentResponse>(`${this.apiUrl}/assessments/?assessment_id=${assessmentId}`);
   }
 
   // Update timer value

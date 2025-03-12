@@ -1,4 +1,3 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AssessmentService } from '../../services/assessment.service';
@@ -9,28 +8,21 @@ import { Subscription } from 'rxjs';
   templateUrl: 'flashyre-assessments.component.html',
   styleUrls: ['flashyre-assessments.component.css'],
 })
-export class FlashyreAssessments implements OnInit, OnDestroy  {
+export class FlashyreAssessments implements OnInit, OnDestroy {
+  assessmentData: any = {};
   sections: any[] = [];
-  questions: any[] = [];
+  currentSection: any;
+  currentQuestions: any[] = [];
   currentQuestionIndex = 0;
   timer: number;
 
-  currentSection: any;
-  currentQuestions: any[] = [];
-
   private timerSubscription: Subscription;
 
-  selectSection(section: any): void {
-    this.currentSection = section;
-    this.currentQuestions = section.questions;
-    this.currentQuestionIndex = 0;
-  }
-
   constructor(
-    private title: Title, 
+    private title: Title,
     private meta: Meta,
-    private assessmentService: AssessmentService) {
-
+    private assessmentService: AssessmentService
+  ) {
     this.title.setTitle('Flashyre-Assessments - Flashyre')
     this.meta.addTags([
       {
@@ -45,9 +37,9 @@ export class FlashyreAssessments implements OnInit, OnDestroy  {
     ])
   }
 
-  ngOnInit(): void {
-    this.fetchAssessmentData();
-    this.fetchTimerDuration();
+  async ngOnInit(): Promise<void> {
+    const assessmentId = 1; // Replace with actual assessment ID
+    this.fetchAssessmentData(assessmentId);
   }
 
   ngOnDestroy(): void {
@@ -56,17 +48,16 @@ export class FlashyreAssessments implements OnInit, OnDestroy  {
     }
   }
 
-  fetchAssessmentData(): void {
-    this.assessmentService.getAssessmentData().subscribe(data => {
-      this.sections = data.sections;
-      this.questions = data.questions;
-    });
-  }
-
-  fetchTimerDuration(): void {
-    this.assessmentService.getTimerDuration().subscribe(duration => {
-      this.timer = duration;
+  fetchAssessmentData(assessmentId: number): void {
+    this.assessmentService.getAssessmentData(assessmentId).subscribe(data => {
+      this.assessmentData = data;
+      this.sections = Object.keys(data.sections).map(sectionName => ({
+        name: sectionName,
+        ...data.sections[sectionName]
+      }));
+      this.timer = data.total_assessment_duration * 60; // Convert minutes to seconds
       this.startTimer();
+      this.selectSection(this.sections[0]);
     });
   }
 
@@ -88,6 +79,12 @@ export class FlashyreAssessments implements OnInit, OnDestroy  {
     }, 1000);
   }
 
+  selectSection(section: any): void {
+    this.currentSection = section;
+    this.currentQuestions = section.questions;
+    this.currentQuestionIndex = 0;
+  }
+
   navigateToQuestion(index: number): void {
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
@@ -95,13 +92,10 @@ export class FlashyreAssessments implements OnInit, OnDestroy  {
   }
 
   terminateTest(): void {
-    // Logic to end the test
     console.log('Test terminated');
   }
 
   submitTest(): void {
-    // Logic to submit the test
     console.log('Test submitted');
   }
-
 }
