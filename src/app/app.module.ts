@@ -124,19 +124,33 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
+  {
+    path: 'university_college_dashboard', // New route
+    loadChildren: () =>
+      import('./pages/university-college-dashboard/university-college-dashboard.module').then(
+        (m) => m.UniversityCollegeDashboardModule
+      ),
+  },
+  {
+    path: 'candidate-assessment', // New route
+    loadChildren: () =>
+      import('./pages/candidate-assessment/candidate-assessment.module').then(
+        (m) => m.CandidateAssessmentModule
+      ),
+  },
+  {
+    path: 'candidate-dashboard-main', // New route
+    loadChildren: () =>
+      import('./pages/candidate-dashboard-main/candidate-dashboard-main.module').then(
+        (m) => m.CandidateDashboardMainModule
+      ),
+  },
   
   {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
         (m) => m.NotFoundModule
-      ),
-  },
-  {
-    path: 'university_college_dashboard', // New route
-    loadChildren: () =>
-      import('./pages/university-college-dashboard/university-college-dashboard.module').then(
-        (m) => m.UniversityCollegeDashboardModule
       ),
   },
 ]
