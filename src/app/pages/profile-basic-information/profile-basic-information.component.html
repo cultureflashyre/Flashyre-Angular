@@ -70,6 +70,7 @@
           rootClassName="progress-bar-step1root-class-name3"
         ></progress-bar-step1>
         <profile-basicinformation-component
+        *ngIf="isBasicPage()"
           rootClassName="profile-basicinformation-componentroot-class-name2"
           #profileComponent
         >
@@ -120,17 +121,33 @@
             </div>
           </ng-template>
         </profile-basicinformation-component>
+        
+        <profile-employment-component
+          *ngIf="isEmploymentPage()"
+          rootClassName="profile-employment-componentroot-class-name"
+        >
+        </profile-employment-component>
+
+        <profile-certifications-component
+          *ngIf="isCertificationsPage()"
+          rootClassName="profile-certifications-componentroot-class-name"
+        >
+        </profile-certifications-component>
+        
         <profile-creation-navigation1
           rootClassName="profile-creation-navigation1root-class-name2"
+          (saveAndNextClicked)="handleSaveAndNext($event)"
+          (skipClicked)="handleSkip()"
+          (previousClicked)="handlePrevious()"
         >
           <ng-template #text>
             <div class="profile-basic-information-fragment28">
-              <span class="profile-basic-information-text28" (click)="skip()">Skip</span>
+              <span class="profile-basic-information-text28" >Skip</span>
             </div>
           </ng-template>
           <ng-template #text1>
             <div class="profile-basic-information-fragment29">
-              <span class="profile-basic-information-text29" (click)="saveProfile()">Save & Next -></span>
+              <span class="profile-basic-information-text29" >Save & Next -></span>
             </div>
           </ng-template>
         </profile-creation-navigation1>

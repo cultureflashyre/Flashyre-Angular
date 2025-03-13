@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, Input, ContentChild, TemplateRef, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { Router } from '@angular/router';
 
@@ -20,6 +20,8 @@ export class ProfileBasicinformationComponent implements OnInit {
 
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
+
+  @Output() dataSubmitted = new EventEmitter<any>();
 
   firstName: string = '';
   lastName: string = '';
@@ -130,5 +132,9 @@ export class ProfileBasicinformationComponent implements OnInit {
     if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
       URL.revokeObjectURL(this.imageSrc);
     }
+  }
+
+  onSubmit() {
+    this.dataSubmitted.emit(this.formData);
   }
 }
