@@ -1,0 +1,1085 @@
+:host { 
+  display: contents; 
+}
+ 
+.assessment-violation-message-container10 {
+  gap: 24px;
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-main-container {
+  gap: 48px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-navbar-container {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+ 
+.assessment-violation-message-container11 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-violation-message-navbar-interactive {
+  width: 1440px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-unit);
+  padding-left: var(--dl-layout-space-threeunits);
+  padding-right: var(--dl-layout-space-threeunits);
+  padding-bottom: var(--dl-layout-space-unit);
+  justify-content: space-between;
+}
+ 
+.assessment-violation-message-flashyre-image {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.assessment-violation-message-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.assessment-violation-message-links {
+  gap: var(--dl-layout-space-twounits);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-right: var(--dl-layout-space-unit);
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.assessment-violation-message-dashboard-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.assessment-violation-message-dashboard-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.assessment-violation-message-dashboard-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-upskill-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.assessment-violation-message-upskill-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-upskill-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-assessment-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.assessment-violation-message-assessment-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-assessment-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.assessment-violation-message-jobs-for-you-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.assessment-violation-message-jobs-for-you-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-jobs-for-you-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  text-decoration-line: underline;
+}
+ 
+.assessment-violation-message-thq-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-violation-message-dropdown-toggle1 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius2);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-violation-message-user-image1 {
+  width: 40px;
+  height: 40px;
+  align-self: flex-start;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.assessment-violation-message-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.assessment-violation-message-drop-down-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  transition: 0.3s;
+  justify-content: center;
+}
+ 
+.assessment-violation-message-drop-down-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-drop-down-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-violation-message-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.assessment-violation-message-profile1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-violation-message-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-violation-message-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-violation-message-profile2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-violation-message-preference1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-violation-message-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-violation-message-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-violation-message-preference2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-violation-message-settings1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-violation-message-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-violation-message-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-violation-message-settings2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-violation-message-logout1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-violation-message-dropdown-toggle5 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-violation-message-dropdown-toggle5:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-violation-message-logout2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-violation-message-burger-menu {
+  display: none;
+}
+ 
+.assessment-violation-message-burger-icon {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.assessment-violation-message-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  padding: var(--dl-layout-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.assessment-violation-message-popup-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-close-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-layout-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.assessment-violation-message-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.assessment-violation-message-icon12 {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.assessment-violation-message-container12 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-container13 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-container14 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-violation-message-user-image2 {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.assessment-violation-message-user-details-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-container15 {
+  gap: var(--dl-layout-space-oneandhalfunits);
+  width: 240px;
+  height: 99px;
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-violation-message-profile-score-board {
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.assessment-violation-message-progress-bar-container {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 158px;
+  height: 15px;
+  display: flex;
+  position: relative;
+  align-self: center;
+  margin-top: -8px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.assessment-violation-message-container16 {
+  top: NaNpx;
+  left: 0px;
+  right: 0px;
+  width: 170px;
+  position: absolute;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+ 
+.assessment-violation-message-container17 {
+  display: contents;
+}
+ 
+.assessment-violation-message-container18 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-dashboard-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-upskill-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-assessment-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-jobs-for-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-container19 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-violation-message-preference-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-settings-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-logout-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-message-container {
+  gap: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-oneandhalfunits);
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #F4F4F4;
+}
+ 
+.assessment-violation-message-message-text {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.assessment-violation-message-message-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--dl-layout-space-oneandhalfunits);
+  border-radius: 8px;
+  flex-direction: column;
+  padding-bottom: var(--dl-layout-space-oneandhalfunits);
+  justify-content: flex-start;
+}
+ 
+.assessment-violation-message-message {
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-violation-message-message-in-text {
+  font-size: 20px;
+}
+ 
+.assessment-violation-message-button-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-end;
+}
+ 
+.assessment-violation-message-close-button {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-size: 16px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: rgb(5, 53, 108);
+}
+ 
+.assessment-violation-message-close-button:hover {
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: 0A4992 ;
+}
+ 
+.assessment-violation-message-close-button:active {
+  transform: scale(0.90);
+  background-color: #5F7DA1;
+}
+ 
+@media(max-width: 1200px) {
+  .assessment-violation-message-container10 {
+    justify-content: flex-start;
+  }
+  .assessment-violation-message-main-container {
+    width: 100%;
+    align-self: center;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .assessment-violation-message-container11 {
+    width: 100%;
+  }
+  .assessment-violation-message-navbar-interactive {
+    width: 100%;
+    position: relative;
+  }
+  .assessment-violation-message-mobile-menu {
+    justify-content: space-between;
+  }
+  .assessment-violation-message-message-container {
+    width: auto;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .assessment-violation-message-main-container {
+    gap: 36px;
+  }
+  .assessment-violation-message-navbar-container {
+    justify-content: center;
+  }
+  .assessment-violation-message-container11 {
+    justify-content: center;
+  }
+  .assessment-violation-message-navbar-interactive {
+    width: 95%;
+    align-self: center;
+    justify-content: space-between;
+  }
+  .assessment-violation-message-desktop-menu {
+    display: none;
+  }
+  .assessment-violation-message-links {
+    gap: var(--dl-layout-space-halfunit);
+  }
+  .assessment-violation-message-dropdown-toggle1 {
+    display: none;
+  }
+  .assessment-violation-message-burger-menu {
+    display: flex;
+  }
+  .assessment-violation-message-container15 {
+    gap: var(--dl-layout-space-unit);
+    width: 206px;
+    padding: 20px;
+  }
+  .assessment-violation-message-profile-score-board {
+    font-size: 14px;
+  }
+  .assessment-violation-message-container16 {
+    width: 167px;
+  }
+  .assessment-violation-message-message-container {
+    width: 90%;
+  }
+  .assessment-violation-message-message-text {
+    font-size: 20px;
+  }
+  .assessment-violation-message-message-in-text {
+    font-size: 16px;
+  }
+  .assessment-violation-message-close-button {
+    color: rgb(255, 255, 255);
+    width: 90px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(5, 53, 108);
+  }
+}
+ 
+@media(max-width: 767px) {
+  .assessment-violation-message-main-container {
+    gap: 24px;
+  }
+  .assessment-violation-message-navbar-container {
+    background-color: transparent;
+  }
+  .assessment-violation-message-container11 {
+    width: 100%;
+    justify-content: center;
+  }
+  .assessment-violation-message-navbar-interactive {
+    width: 95%;
+    height: 72px;
+    align-self: flex-start;
+    padding-left: var(--dl-layout-space-twounits);
+    padding-right: var(--dl-layout-space-twounits);
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-flashyre-image {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .assessment-violation-message-dropdown-toggle1 {
+    display: none;
+  }
+  .assessment-violation-message-dropdown-list {
+    display: none;
+  }
+  .assessment-violation-message-burger-menu {
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-violation-message-burger-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .assessment-violation-message-mobile-menu {
+    right: 0px;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    display: flex;
+    max-height: auto;
+    visibility: hidden;
+    padding-top: 0px;
+    padding-left: 0px;
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: 0px;
+    flex-direction: row;
+    padding-bottom: 0px;
+    justify-content: flex-end;
+    background-color: rgba(190, 190, 190, 0.06);
+  }
+  .assessment-violation-message-popup-container {
+    gap: var(--dl-layout-space-halfunit);
+    width: 292px;
+    height: 853px;
+    heigth: 50vh;
+    opacity: 1;
+    padding: var(--dl-layout-space-unit);
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-close-icon {
+    height: 100%;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .assessment-violation-message-container12 {
+    gap: var(--dl-layout-space-twounits);
+    width: 100%;
+    height: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: var(--dl-layout-space-unit);
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: var(--dl-layout-space-unit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-container13 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+  }
+  .assessment-violation-message-container14 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+    align-self: center;
+    flex-direction: row;
+  }
+  .assessment-violation-message-user-image2 {
+    width: 60px;
+    height: 60px;
+    align-self: flex-start;
+    border-radius: var(--dl-layout-radius-round);
+  }
+  .assessment-violation-message-user-details-container {
+    gap: 16px;
+    width: auto;
+    align-self: center;
+    align-items: center;
+    border-width: 0px;
+    justify-content: center;
+  }
+  .assessment-violation-message-user-name {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .assessment-violation-message-profile-complet-indication {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .assessment-violation-message-view-edit-profile {
+    color: #05356c;
+    font-size: 14px;
+  }
+  .assessment-violation-message-container15 {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+  .assessment-violation-message-profile-score-board {
+    width: 100%;
+    font-size: 14px;
+  }
+  .assessment-violation-message-container16 {
+    width: 189px;
+  }
+  .assessment-violation-message-container18 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: 181px;
+    border-width: 0px;
+  }
+  .assessment-violation-message-dashboard-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-violation-message-dashboard-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-violation-message-dashboard-text {
+    font-size: 12px;
+  }
+  .assessment-violation-message-upskill-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-violation-message-upskill-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-violation-message-upskill-text {
+    font-size: 12px;
+  }
+  .assessment-violation-message-assessment-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-violation-message-assessment-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+  }
+  .assessment-violation-message-assessment-text {
+    font-size: 12px;
+  }
+  .assessment-violation-message-jobs-for-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-violation-message-briefcase-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-violation-message-jobs-for-you-text {
+    font-size: 12px;
+  }
+  .assessment-violation-message-container19 {
+    gap: 4px;
+    width: 50%;
+    display: flex;
+    align-self: center;
+    padding-left: var(--dl-layout-space-halfunit);
+    border-radius: 4px;
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .assessment-violation-message-preference-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .assessment-violation-message-preference-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-violation-message-preference-text {
+    font-size: 10px;
+  }
+  .assessment-violation-message-settings-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .assessment-violation-message-settings-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-violation-message-settings-text {
+    font-size: 10px;
+  }
+  .assessment-violation-message-logout-container {
+    gap: var(--dl-layout-space-unit);
+    width: 123px;
+    padding: 0px;
+    align-items: center;
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-logout-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-violation-message-logout-text {
+    font-size: 10px;
+  }
+  .assessment-violation-message-message-container {
+    width: 90%;
+  }
+  .assessment-violation-message-message-text {
+    font-size: 16px;
+  }
+  .assessment-violation-message-message-main-container {
+    gap: 12px;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .assessment-violation-message-message-in-text {
+    font-size: 12px;
+  }
+  .assessment-violation-message-button-container {
+    padding-right: var(--dl-layout-space-unit);
+  }
+  .assessment-violation-message-close-button {
+    color: rgb(255, 255, 255);
+    width: 60px;
+    height: 24px;
+    padding: 0px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(5, 53, 108);
+  }
+}
+ 
+@media(max-width: 479px) {
+  .assessment-violation-message-container10 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .assessment-violation-message-navbar-interactive {
+    padding: var(--dl-layout-space-unit);
+    padding-right: 16px;
+  }
+  .assessment-violation-message-burger-icon {
+    align-self: center;
+  }
+  .assessment-violation-message-popup-container {
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-container15 {
+    width: 100%;
+    height: auto;
+    align-items: center;
+    padding-top: var(--dl-layout-space-oneandhalfunits);
+    justify-content: center;
+  }
+  .assessment-violation-message-container18 {
+    height: 259px;
+  }
+  .assessment-violation-message-logout-container {
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .assessment-violation-message-message-container {
+    width: 90%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: 4px;
+    padding-right: 0px;
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .assessment-violation-message-message {
+    align-self: center;
+    justify-content: center;
+  }
+  .assessment-violation-message-message-in-text {
+    display: flex;
+    align-items: center;
+  }
+  .assessment-violation-message-close-button {
+    width: 50px;
+    height: 20px;
+    display: flex;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+}

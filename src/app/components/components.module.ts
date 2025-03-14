@@ -16,6 +16,7 @@ import { MoreFiltersComponent } from './more-filters-component/more-filters-comp
 import { FlashyreDashboard } from './flashyre-dashboard/flashyre-dashboard.component'
 import { RecruiterFlowJobPostedCard } from './recruiter-flow-job-posted-card/recruiter-flow-job-posted-card.component'
 import { LoginPageNavbar } from './login-page-navbar/login-page-navbar.component'
+import { HeaderContainer } from './header-container/header-container.component'
 import { Hero17 } from './hero17/hero17.component'
 import { NavbarForCandidateView1 } from './navbar-for-candidate-view1/navbar-for-candidate-view1.component'
 import { FlashyreAssessment } from './flashyre-assessment/flashyre-assessment.component'
@@ -111,6 +112,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     RecruiterFlowJobPostedCard,
     LoginPageNavbar,
     Hero17,
+    HeaderContainer,
     NavbarForCandidateView1,
     FlashyreAssessment,
     AppComponent,
@@ -197,6 +199,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     RecruiterFlowJobPostedCard,
     LoginPageNavbar,
     Hero17,
+    HeaderContainer,
     NavbarForCandidateView1,
     FlashyreAssessment,
     AppComponent,

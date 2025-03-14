@@ -1,0 +1,42 @@
+<div
+  id="header-container"
+  class="header-container-header-container"
+  [ngClass]="rootClassName"
+>
+  <img
+    id="Logo"
+    [attr.alt]="logoAlt"
+    [attr.src]="logoSrc"
+    class="header-container-logo"
+  />
+  <span id="timer" class="header-container-timer">
+    <ng-container>
+      <ng-template #defaultTimer>
+        <div class="header-container-fragment1">
+          <span class="header-container-text1">00:00</span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="timer ? timer : defaultTimer"
+      ></ng-container>
+    </ng-container>
+  </span>
+  <button
+    id="end-test-button"
+    type="button"
+    class="header-container-end-test-button button"
+  >
+    <span id="end-test-text" class="header-container-end-test-text">
+      <ng-container>
+        <ng-template #defaultEndTestText>
+          <div class="header-container-fragment2">
+            <span class="header-container-text2">End Test</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="endTestText ? endTestText : defaultEndTestText"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </button>
+</div>

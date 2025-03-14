@@ -124,14 +124,6 @@ const routes = [
         (m) => m.SignupCollegeModule
       ),
   },
-  
-  {
-    path: '**',
-    loadChildren: () =>
-      import('./pages/not-found/not-found.module').then(
-        (m) => m.NotFoundModule
-      ),
-  },
   {
     path: 'university_college_dashboard', // New route
     loadChildren: () =>
@@ -139,6 +131,42 @@ const routes = [
         (m) => m.UniversityCollegeDashboardModule
       ),
   },
+  {
+    path: 'assessment-violation-message', // New route
+    loadChildren: () =>
+      import('./pages/assessment-violation-message/assessment-violation-message.module').then(
+        (m) => m.AssessmentViolationMessageModule
+      ),
+  },
+  {
+    path: 'error-system-requirement-failed', // New route
+    loadChildren: () =>
+      import('./pages/error-system-requirement-failed/error-system-requirement-failed.module').then(
+        (m) => m.ErrorSystemRequirementFailedModule
+      ),
+  },
+  {
+    path: 'flashyre-assessment-rules-card', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module').then(
+        (m) => m.FlashyreAssessmentRulesCardModule
+      ),
+  },
+  {
+    path: 'flashyre-assessment1', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment1/flashyre-assessment1.module').then(
+        (m) => m.FlashyreAssessment1Module
+      ),
+  },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./pages/not-found/not-found.module').then(
+        (m) => m.NotFoundModule
+      ),
+  },
+  
 ]
 
 @NgModule({

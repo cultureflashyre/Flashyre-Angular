@@ -1,0 +1,1245 @@
+:host { 
+  display: contents; 
+}
+ 
+.error-system-requirement-failed-container10 {
+  gap: 24px;
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-main-container {
+  gap: 48px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-navbar-container {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-container11 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.error-system-requirement-failed-navbar-interactive {
+  width: 1440px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-unit);
+  padding-left: var(--dl-layout-space-threeunits);
+  padding-right: var(--dl-layout-space-threeunits);
+  padding-bottom: var(--dl-layout-space-unit);
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-flashyre-image {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.error-system-requirement-failed-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-links {
+  gap: var(--dl-layout-space-twounits);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-right: var(--dl-layout-space-unit);
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.error-system-requirement-failed-dashboard-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-dashboard-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.error-system-requirement-failed-dashboard-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-upskill-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-upskill-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-upskill-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-assessment-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-assessment-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-assessment-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  text-decoration-line: underline;
+}
+ 
+.error-system-requirement-failed-thq-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle1 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius2);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-user-image1 {
+  width: 40px;
+  height: 40px;
+  align-self: flex-start;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.error-system-requirement-failed-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.error-system-requirement-failed-drop-down-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  transition: 0.3s;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-drop-down-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-drop-down-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.error-system-requirement-failed-profile1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-profile2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-preference1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-preference2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-settings1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-settings2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-logout1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle5 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle5:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-logout2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-burger-menu {
+  display: none;
+}
+ 
+.error-system-requirement-failed-burger-icon {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.error-system-requirement-failed-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  padding: var(--dl-layout-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.error-system-requirement-failed-popup-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-close-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-layout-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-icon12 {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.error-system-requirement-failed-container12 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container13 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container14 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.error-system-requirement-failed-user-image2 {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.error-system-requirement-failed-user-details-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container15 {
+  gap: var(--dl-layout-space-oneandhalfunits);
+  width: 240px;
+  height: 99px;
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.error-system-requirement-failed-profile-score-board {
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-progress-bar-container {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 158px;
+  height: 15px;
+  display: flex;
+  position: relative;
+  align-self: center;
+  margin-top: -8px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-container16 {
+  top: NaNpx;
+  left: 0px;
+  right: 0px;
+  width: 170px;
+  position: absolute;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+ 
+.error-system-requirement-failed-container17 {
+  display: contents;
+}
+ 
+.error-system-requirement-failed-container18 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-dashboard-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-upskill-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-assessment-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-jobs-for-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-container19 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-preference-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-settings-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-logout-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-message-container {
+  gap: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-oneandhalfunits);
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #F4F4F4;
+}
+ 
+.error-system-requirement-failed-message-text {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.error-system-requirement-failed-message-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--dl-layout-space-oneandhalfunits);
+  border-radius: 8px;
+  flex-direction: column;
+  padding-bottom: var(--dl-layout-space-oneandhalfunits);
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-message-first-container {
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.error-system-requirement-failed-navigate-to-text {
+  font-size: 20px;
+}
+ 
+.error-system-requirement-failed-view-site-information-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-left: 4px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: #D7DFE7;
+}
+ 
+.error-system-requirement-failed-view-site-icon {
+  width: 32px;
+  height: 32px;
+}
+ 
+.error-system-requirement-failed-view-site-information-text {
+  width: auto;
+  font-size: 24px;
+}
+ 
+.error-system-requirement-failed-remaining-text {
+  font-size: 20px;
+}
+ 
+.error-system-requirement-failed-text2 {
+  color: var(--dl-color-theme-primary2);
+}
+ 
+.error-system-requirement-failed-text3 {
+  color: var(--dl-color-theme-primary2);
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.error-system-requirement-failed-text4 {
+  color: var(--dl-color-theme-primary2);
+}
+ 
+.error-system-requirement-failed-two-buttons-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-end;
+}
+ 
+.error-system-requirement-failed-go-back-button {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-size: 16px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: rgb(5, 53, 108);
+}
+ 
+.error-system-requirement-failed-go-back-button:hover {
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: 0A4992 ;
+}
+ 
+.error-system-requirement-failed-go-back-button:active {
+  transform: scale(0.90);
+  background-color: #5F7DA1;
+}
+ 
+.error-system-requirement-failed-retry-button {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #1F882B;
+}
+ 
+.error-system-requirement-failed-retry-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #30B63F;
+}
+ 
+.error-system-requirement-failed-retry-button:active {
+  transform: scale(0.90);
+  background-color: #7AD184;
+}
+ 
+@media(max-width: 1200px) {
+  .error-system-requirement-failed-container10 {
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-main-container {
+    width: 100%;
+    align-self: center;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-container11 {
+    width: 100%;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 100%;
+    position: relative;
+  }
+  .error-system-requirement-failed-mobile-menu {
+    justify-content: space-between;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .error-system-requirement-failed-navbar-container {
+    justify-content: center;
+  }
+  .error-system-requirement-failed-container11 {
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 95%;
+    align-self: center;
+    justify-content: space-between;
+  }
+  .error-system-requirement-failed-desktop-menu {
+    display: none;
+  }
+  .error-system-requirement-failed-links {
+    gap: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-dropdown-toggle1 {
+    display: none;
+  }
+  .error-system-requirement-failed-burger-menu {
+    display: flex;
+  }
+  .error-system-requirement-failed-container15 {
+    gap: var(--dl-layout-space-unit);
+    width: 206px;
+    padding: 20px;
+  }
+  .error-system-requirement-failed-profile-score-board {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container16 {
+    width: 167px;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+  .error-system-requirement-failed-message-text {
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 20px;
+    align-self: center;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-go-back-button {
+    color: rgb(255, 255, 255);
+    width: 90px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(5, 53, 108);
+  }
+  .error-system-requirement-failed-retry-button {
+    width: 90px;
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .error-system-requirement-failed-navbar-container {
+    background-color: transparent;
+  }
+  .error-system-requirement-failed-container11 {
+    width: 100%;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 95%;
+    height: 72px;
+    align-self: flex-start;
+    padding-left: var(--dl-layout-space-twounits);
+    padding-right: var(--dl-layout-space-twounits);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-flashyre-image {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-dropdown-toggle1 {
+    display: none;
+  }
+  .error-system-requirement-failed-dropdown-list {
+    display: none;
+  }
+  .error-system-requirement-failed-burger-menu {
+    align-items: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-burger-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .error-system-requirement-failed-mobile-menu {
+    right: 0px;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    display: flex;
+    max-height: auto;
+    visibility: hidden;
+    padding-top: 0px;
+    padding-left: 0px;
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: 0px;
+    flex-direction: row;
+    padding-bottom: 0px;
+    justify-content: flex-end;
+    background-color: rgba(190, 190, 190, 0.06);
+  }
+  .error-system-requirement-failed-popup-container {
+    gap: var(--dl-layout-space-halfunit);
+    width: 292px;
+    height: 853px;
+    heigth: 50vh;
+    opacity: 1;
+    padding: var(--dl-layout-space-unit);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-close-icon {
+    height: 100%;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .error-system-requirement-failed-container12 {
+    gap: var(--dl-layout-space-twounits);
+    width: 100%;
+    height: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: var(--dl-layout-space-unit);
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: var(--dl-layout-space-unit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-container13 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+  }
+  .error-system-requirement-failed-container14 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+    align-self: center;
+    flex-direction: row;
+  }
+  .error-system-requirement-failed-user-image2 {
+    width: 60px;
+    height: 60px;
+    align-self: flex-start;
+    border-radius: var(--dl-layout-radius-round);
+  }
+  .error-system-requirement-failed-user-details-container {
+    gap: 16px;
+    width: auto;
+    align-self: center;
+    align-items: center;
+    border-width: 0px;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-user-name {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .error-system-requirement-failed-profile-complet-indication {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .error-system-requirement-failed-view-edit-profile {
+    color: #05356c;
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container15 {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+  .error-system-requirement-failed-profile-score-board {
+    width: 100%;
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container16 {
+    width: 189px;
+  }
+  .error-system-requirement-failed-container18 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: 181px;
+    border-width: 0px;
+  }
+  .error-system-requirement-failed-dashboard-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-dashboard-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-dashboard-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-upskill-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-upskill-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-upskill-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-assessment-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-assessment-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+  }
+  .error-system-requirement-failed-assessment-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-jobs-for-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-briefcase-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-jobs-for-you-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-container19 {
+    gap: 4px;
+    width: 50%;
+    display: flex;
+    align-self: center;
+    padding-left: var(--dl-layout-space-halfunit);
+    border-radius: 4px;
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-preference-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .error-system-requirement-failed-preference-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-preference-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-settings-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .error-system-requirement-failed-settings-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-settings-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-logout-container {
+    gap: var(--dl-layout-space-unit);
+    width: 123px;
+    padding: 0px;
+    align-items: center;
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-logout-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-logout-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+  .error-system-requirement-failed-message-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-message-main-container {
+    gap: 12px;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-two-buttons-container {
+    padding-right: var(--dl-layout-space-unit);
+  }
+  .error-system-requirement-failed-go-back-button {
+    width: 60px;
+    height: 24px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-retry-button {
+    color: rgb(255, 255, 255);
+    width: 60px;
+    height: 24px;
+    padding: 0px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(31, 136, 43);
+  }
+}
+ 
+@media(max-width: 479px) {
+  .error-system-requirement-failed-container10 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    padding: var(--dl-layout-space-unit);
+    padding-right: 16px;
+  }
+  .error-system-requirement-failed-burger-icon {
+    align-self: center;
+  }
+  .error-system-requirement-failed-popup-container {
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-container15 {
+    width: 100%;
+    height: auto;
+    align-items: center;
+    padding-top: var(--dl-layout-space-oneandhalfunits);
+    justify-content: center;
+  }
+  .error-system-requirement-failed-container18 {
+    height: 259px;
+  }
+  .error-system-requirement-failed-logout-container {
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-message-container {
+    width: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: 4px;
+    padding-right: 0px;
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-message-first-container {
+    align-self: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    width: auto;
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-view-site-information-container {
+    align-items: center;
+    padding-left: 0px;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-remaining-text {
+    display: flex;
+    align-items: center;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-text5 {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-go-back-button {
+    width: 50px;
+    height: 20px;
+    display: flex;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-retry-button {
+    width: 50px;
+    height: 20px;
+    display: flex;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+}

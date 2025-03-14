@@ -1,0 +1,411 @@
+<div class="flashyre-assessment1-container">
+  <div id="main-container" class="flashyre-assessment1-main-container">
+    <header-container rootClassName="header-containerroot-class-name">
+      <ng-template #timer>
+        <div class="flashyre-assessment1-fragment1">
+          <span class="flashyre-assessment1-text1">00:00</span>
+        </div>
+      </ng-template>
+      <ng-template #endTestText>
+        <div class="flashyre-assessment1-fragment2">
+          <span class="flashyre-assessment1-text2">End Test</span>
+        </div>
+      </ng-template>
+    </header-container>
+    <div
+      id="assessment-questions-options-main-container"
+      class="flashyre-assessment1-assessment-questions-options-main-container"
+    >
+      <div
+        id="sections-questions-previous-next-containers"
+        class="flashyre-assessment1-sections-questions-previous-next-containers"
+      >
+        <div
+          data-thq="thq-dropdown"
+          class="flashyre-assessment1-sections-dropdown list-item"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="flashyre-assessment1-dropdown-toggle1"
+          >
+            <span id="sections-text" class="flashyre-assessment1-sections-text">
+              Sections
+            </span>
+            <div
+              data-thq="thq-dropdown-arrow"
+              class="flashyre-assessment1-dropdown-arrow"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                class="flashyre-assessment1-icon10"
+              >
+                <path
+                  d="M36 18L24 30L12 18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <ul
+            data-thq="thq-dropdown-list"
+            class="flashyre-assessment1-sections-dropdown-list"
+          >
+            <li
+              data-thq="thq-dropdown"
+              class="flashyre-assessment1-sections-dropdown-list1 list-item"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="flashyre-assessment1-dropdown-toggle2"
+              >
+                <span
+                  id="section-A-text"
+                  class="flashyre-assessment1-section-a-text"
+                >
+                  Section A
+                </span>
+              </div>
+            </li>
+            <li
+              data-thq="thq-dropdown"
+              class="flashyre-assessment1-sections-dropdown-list-b-dropdown list-item"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="flashyre-assessment1-section-b-dropdown"
+              >
+                <span
+                  id="section-b-text"
+                  class="flashyre-assessment1-section-b-text"
+                >
+                  Section B
+                </span>
+              </div>
+            </li>
+            <li
+              data-thq="thq-dropdown"
+              class="flashyre-assessment1-section-c-dropdown-list list-item"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="flashyre-assessment1-section-c-dropdown-toggle"
+              >
+                <span
+                  id="section-c-text"
+                  class="flashyre-assessment1-section-c-text"
+                >
+                  Section C
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div
+          id="question-numbers-main-container"
+          class="flashyre-assessment1-question-numbers-main-container"
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            id="backward-arrow-icon"
+            class="flashyre-assessment1-backward-arrow-icon"
+          >
+            <path
+              d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          <div
+            id="numbers-main-container"
+            class="flashyre-assessment1-numbers-main-container"
+          >
+            <button
+              type="button"
+              id="question-number1-button"
+              class="flashyre-assessment1-question-number1-button button"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              id="question-number-2-button"
+              class="flashyre-assessment1-question-number2-button button"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              id="question-number-3-button"
+              class="flashyre-assessment1-question-number3-button button"
+            >
+              3
+            </button>
+            <button
+              type="button"
+              id="question-number-4-button"
+              class="flashyre-assessment1-question-number4-button button"
+            >
+              4
+            </button>
+            <button
+              type="button"
+              id="question-number-5-button"
+              class="flashyre-assessment1-question-number5-button button"
+            >
+              5
+            </button>
+            <button type="button" class="flashyre-assessment1-button1 button">
+              6
+            </button>
+            <button type="button" class="flashyre-assessment1-button2 button">
+              7
+            </button>
+            <button type="button" class="flashyre-assessment1-button3 button">
+              8
+            </button>
+            <button type="button" class="flashyre-assessment1-button4 button">
+              9
+            </button>
+            <button type="button" class="flashyre-assessment1-button5 button">
+              10
+            </button>
+            <button type="button" class="flashyre-assessment1-button6 button">
+              11
+            </button>
+          </div>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            id="forward-arrow-icon"
+            class="flashyre-assessment1-forward-arrow-icon"
+          >
+            <path
+              d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </div>
+        <div
+          id="previous-next-button-main-container"
+          class="flashyre-assessment1-previous-next-button-main-container"
+        >
+          <button
+            type="button"
+            id="previous-button"
+            class="flashyre-assessment1-previous-button1 button"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            id="next-button"
+            class="flashyre-assessment1-next-button1 button"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <div
+        id="question-answer-container"
+        class="flashyre-assessment1-question-answer-container"
+      >
+        <div
+          id="questions-container"
+          class="flashyre-assessment1-questions-container"
+        >
+          <span
+            id="question-num-text"
+            class="flashyre-assessment1-question-num-text"
+          >
+            Question 1
+          </span>
+          <div
+            id="question-container"
+            class="flashyre-assessment1-question-container"
+          >
+            <span id="question-text" class="flashyre-assessment1-question-text">
+              A web developer is tasked with creating a responsive layout for a
+              new e-commerce website. The layout must adapt seamlessly across
+              various devices, including desktops, tablets, and smartphones. The
+              developer needs to choose a CSS technique that will allow for
+              efficient management of layout elements, ensuring that they resize
+              and reposition correctly based on screen size. Which of the
+              following CSS techniques would be most suitable for achieving this
+              goal?
+            </span>
+          </div>
+          <button
+            type="button"
+            id="previous-button"
+            class="flashyre-assessment1-previous-button2 button"
+          >
+            &lt;-
+          </button>
+        </div>
+        <div
+          id="answers-container"
+          class="flashyre-assessment1-answers-container"
+        >
+          <div
+            id="select-an-option-container"
+            class="flashyre-assessment1-select-an-option-container"
+          >
+            <span
+              id="select-an-option-text"
+              class="flashyre-assessment1-select-an-option-text"
+            >
+              Select an option
+            </span>
+            <div
+              id="clear-response-container"
+              class="flashyre-assessment1-clear-response-container"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                id="eraser-icon"
+                class="flashyre-assessment1-eraser-icon"
+              >
+                <g fill="none">
+                  <g clip-path="url(#majesticonsEraserLine0)">
+                    <path
+                      d="m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                  <defs>
+                    <clippath id="majesticonsEraserLine0">
+                      <path d="M0 0h24v24H0z" fill="#fff"></path>
+                    </clippath>
+                  </defs>
+                </g>
+              </svg>
+              <span
+                id="clear-response-text"
+                class="flashyre-assessment1-clear-response-text"
+              >
+                Clear Response
+              </span>
+            </div>
+          </div>
+          <div
+            id="options-container"
+            class="flashyre-assessment1-options-container"
+          >
+            <div
+              id="first-option-container"
+              class="flashyre-assessment1-first-option-container"
+            >
+              <input
+                type="radio"
+                name="radio"
+                id="radio1"
+                class="flashyre-assessment1-radio1"
+              />
+              <span
+                id="first-option-text"
+                class="flashyre-assessment1-first-option-text"
+              >
+                This approach involves using Flexbox for flexible layouts and
+                media queries to apply different styles based on screen sizes.
+                Flexbox allows for easy alignment and distribution of elements,
+                while media queries enable the application of specific styles
+                for different devices. This combination provides a robust method
+                for handling responsive design, allowing elements to adapt their
+                size and position dynamically.
+              </span>
+            </div>
+            <div
+              id="second-option-container"
+              class="flashyre-assessment1-second-option-container"
+            >
+              <input
+                type="radio"
+                name="radio"
+                id="radio2"
+                class="flashyre-assessment1-radio2"
+              />
+              <span
+                id="second-option-text"
+                class="flashyre-assessment1-second-option-text"
+              >
+                This approach involves using Flexbox for flexible layouts and
+                media queries to apply different styles based on screen sizes.
+                Flexbox allows for easy alignment and distribution of elements,
+                while media queries enable the application of specific styles
+                for different devices. This combination provides a robust method
+                for handling responsive design, allowing elements to adapt their
+                size and position dynamically
+              </span>
+            </div>
+            <div
+              id="third-option-container"
+              class="flashyre-assessment1-third-option-container"
+            >
+              <input
+                type="radio"
+                name="radio"
+                id="radio3"
+                class="flashyre-assessment1-radio3"
+              />
+              <span
+                id="third-option-text"
+                class="flashyre-assessment1-third-option-text"
+              >
+                This approach involves using Flexbox for flexible layouts and
+                media queries to apply different styles based on screen sizes.
+                Flexbox allows for easy alignment and distribution of elements,
+                while media queries enable the application of specific styles
+                for different devices. This combination provides a robust method
+                for handling responsive design, allowing elements to adapt their
+                size and position dynamically
+              </span>
+            </div>
+            <div
+              id="fourth-option-container"
+              class="flashyre-assessment1-fourth-option-container"
+            >
+              <input
+                type="radio"
+                name="radio"
+                id="radio4"
+                class="flashyre-assessment1-radio4"
+              />
+              <span
+                id="fourth-option-text"
+                class="flashyre-assessment1-fourth-option-text"
+              >
+                This approach involves using Flexbox for flexible layouts and
+                media queries to apply different styles based on screen sizes.
+                Flexbox allows for easy alignment and distribution of elements,
+                while media queries enable the application of specific styles
+                for different devices. This combination provides a robust method
+                for handling responsive design, allowing elements to adapt their
+                size and position dynamically
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            id="next-button1"
+            class="flashyre-assessment1-next-button2 button"
+          >
+            -&gt;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
