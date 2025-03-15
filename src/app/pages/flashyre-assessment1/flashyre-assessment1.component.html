@@ -3,12 +3,12 @@
     <header-container rootClassName="header-containerroot-class-name">
       <ng-template #timer>
         <div class="flashyre-assessment1-fragment1">
-          <span class="flashyre-assessment1-text1">00:00</span>
+          <span class="flashyre-assessment1-text10">00:00</span>
         </div>
       </ng-template>
       <ng-template #endTestText>
         <div class="flashyre-assessment1-fragment2">
-          <span class="flashyre-assessment1-text2">End Test</span>
+          <span class="flashyre-assessment1-text11">End Test</span>
         </div>
       </ng-template>
     </header-container>
@@ -111,10 +111,10 @@
           class="flashyre-assessment1-question-numbers-main-container"
         >
           <svg
+            id="backward-arrow-icon"
             width="32"
             height="32"
             viewBox="0 0 32 32"
-            id="backward-arrow-icon"
             class="flashyre-assessment1-backward-arrow-icon"
           >
             <path
@@ -127,36 +127,36 @@
             class="flashyre-assessment1-numbers-main-container"
           >
             <button
-              type="button"
               id="question-number1-button"
+              type="button"
               class="flashyre-assessment1-question-number1-button button"
             >
               1
             </button>
             <button
-              type="button"
               id="question-number-2-button"
+              type="button"
               class="flashyre-assessment1-question-number2-button button"
             >
               2
             </button>
             <button
-              type="button"
               id="question-number-3-button"
+              type="button"
               class="flashyre-assessment1-question-number3-button button"
             >
               3
             </button>
             <button
-              type="button"
               id="question-number-4-button"
+              type="button"
               class="flashyre-assessment1-question-number4-button button"
             >
               4
             </button>
             <button
-              type="button"
               id="question-number-5-button"
+              type="button"
               class="flashyre-assessment1-question-number5-button button"
             >
               5
@@ -181,10 +181,10 @@
             </button>
           </div>
           <svg
+            id="forward-arrow-icon"
             width="32"
             height="32"
             viewBox="0 0 32 32"
-            id="forward-arrow-icon"
             class="flashyre-assessment1-forward-arrow-icon"
           >
             <path
@@ -198,18 +198,32 @@
           class="flashyre-assessment1-previous-next-button-main-container"
         >
           <button
-            type="button"
             id="previous-button"
+            type="button"
             class="flashyre-assessment1-previous-button1 button"
           >
             Previous
           </button>
           <button
-            type="button"
             id="next-button"
+            type="button"
             class="flashyre-assessment1-next-button1 button"
           >
             Next
+          </button>
+          <button
+            type="button"
+            id="next-section-button"
+            class="flashyre-assessment1-next-section-button button"
+          >
+            Next Section
+          </button>
+          <button
+            type="button"
+            id="submit-button"
+            class="flashyre-assessment1-submit-button button"
+          >
+            Submit
           </button>
         </div>
       </div>
@@ -232,19 +246,44 @@
             class="flashyre-assessment1-question-container"
           >
             <span id="question-text" class="flashyre-assessment1-question-text">
-              A web developer is tasked with creating a responsive layout for a
-              new e-commerce website. The layout must adapt seamlessly across
-              various devices, including desktops, tablets, and smartphones. The
-              developer needs to choose a CSS technique that will allow for
-              efficient management of layout elements, ensuring that they resize
-              and reposition correctly based on screen size. Which of the
-              following CSS techniques would be most suitable for achieving this
-              goal?
+              <span>
+                A web developer is tasked with creating a responsive layout for
+                a new e-commerce website. The layout must adapt seamlessly
+                across various devices, including desktops, tablets, and
+                smartphones. The developer needs to choose a CSS technique that
+                will allow for efficient management of layout elements, ensuring
+                that they resize and reposition correctly based on screen size.
+                Which of the following CSS techniques would be most suitable for
+                achieving this goal?
+              </span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>&gt;</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
+              <span>.</span>
+              <br />
             </span>
           </div>
           <button
-            type="button"
             id="previous-button"
+            type="button"
             class="flashyre-assessment1-previous-button2 button"
           >
             &lt;-
@@ -269,10 +308,10 @@
               class="flashyre-assessment1-clear-response-container"
             >
               <svg
+                id="eraser-icon"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                id="eraser-icon"
                 class="flashyre-assessment1-eraser-icon"
               >
                 <g fill="none">
@@ -310,8 +349,8 @@
             >
               <input
                 type="radio"
-                name="radio"
                 id="radio1"
+                name="radio"
                 class="flashyre-assessment1-radio1"
               />
               <span
@@ -333,8 +372,8 @@
             >
               <input
                 type="radio"
-                name="radio"
                 id="radio2"
+                name="radio"
                 class="flashyre-assessment1-radio2"
               />
               <span
@@ -356,8 +395,8 @@
             >
               <input
                 type="radio"
-                name="radio"
                 id="radio3"
+                name="radio"
                 class="flashyre-assessment1-radio3"
               />
               <span
@@ -379,8 +418,8 @@
             >
               <input
                 type="radio"
-                name="radio"
                 id="radio4"
+                name="radio"
                 class="flashyre-assessment1-radio4"
               />
               <span
@@ -398,8 +437,8 @@
             </div>
           </div>
           <button
-            type="button"
             id="next-button1"
+            type="button"
             class="flashyre-assessment1-next-button2 button"
           >
             -&gt;
