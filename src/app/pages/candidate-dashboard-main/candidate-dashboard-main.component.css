@@ -1,0 +1,1153 @@
+:host { 
+    display: contents; 
+  }
+
+  .progress-container {
+    position: relative;
+    width: 100px; /* Adjust width */
+    height: 50px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  svg {
+    width: 50px; /* Adjusted width */
+    height: 50px; /* Match container height */
+  }
+
+  .loader {
+    stroke-dasharray: 0 19;
+    transition: stroke-dasharray 2s linear, stroke 0.5s;
+    stroke-linecap: round;
+  }
+
+  .progress-content {
+    position: absolute;
+    font-size: 12px; /* Smaller font to fit */
+    font-weight: bold;
+  }
+   
+  .candidate-dashboard-main-container1 {
+    gap: var(--dl-space-space-oneandhalfunits);
+    width: 100%;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-candidate-dashboard1-main-container {
+    gap: var(--dl-space-space-oneandhalfunits);
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-fragment10 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text10 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment11 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text11 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment12 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text12 {
+    color: rgb(5, 53, 108);
+    display: inline-block;
+    font-style: normal;
+    font-weight: 600;
+  }
+   
+  .candidate-dashboard-main-fragment13 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text13 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment14 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text14 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment15 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text15 {
+    color: rgb(5, 53, 108);
+    display: inline-block;
+    font-style: normal;
+    font-weight: 600;
+  }
+   
+  .candidate-dashboard-main-fragment16 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text16 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment17 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text17 {
+    color: rgb(5, 53, 108);
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment18 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text18 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment19 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text19 {
+    color: rgb(5, 53, 108);
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment20 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text20 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment21 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text21 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment22 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text22 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment23 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text23 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment24 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text24 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment25 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text25 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment26 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text26 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-fragment27 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-text27 {
+    display: inline-block;
+  }
+   
+  .candidate-dashboard-main-candidate-dashboard1-first-container {
+    gap: 36px;
+    width: 70%;
+    height: 1246px;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    z-index: 999;
+    align-self: center;
+    margin-top: 100px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-candidate-dashboard-profile-main-container {
+    gap: 16;
+    width: 100%;
+    height: auto;
+    display: flex;
+    box-shadow: 5px 5px 10px 0px #d4d4d4,5px 5px 10px 0px #d4d4d4;
+    align-items: flex-start;
+    border-radius: 8px;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-candidate-dashboard-profile-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #4169E1	;
+  }
+   
+  .candidate-dashboard-main-candidate-profile-picture-container {
+    gap: 16px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-candidate-image {
+    width: 150px;
+    height: 150px;
+    align-self: center;
+    object-fit: cover;
+    border-radius: var(--dl-radius-radius-round);
+  }
+   
+  .candidate-dashboard-main-candidate-name-text {
+    color: #ffffff;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+  }
+   
+  .candidate-dashboard-main-designation-company-main-container {
+    gap: 12px;
+    width: 100%;
+    height: 240px;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: flex-start;
+    border-color: #ACACAD;
+    border-width: 1px;
+    flex-direction: column;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+   
+  .candidate-dashboard-main-designation-main-container {
+    gap: 24px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+  }
+   
+  .candidate-dashboard-main-designation-briefcase-icon {
+    fill: #ACACAD;
+    color: #ACACAD;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-designation-role-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    height: 100px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-designation-text {
+    fill: #ACACAD;
+    color: #ACACAD;
+    font-size: 20px;
+  }
+   
+  .candidate-dashboard-main-role-text {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+  }
+   
+  .candidate-dashboard-main-container2 {
+    gap: 24px;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+  }
+   
+  .candidate-dashboard-main-company-icon {
+    fill: #ACACAD;
+    color: #ACACAD;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-self: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+   
+  .candidate-dashboard-main-container3 {
+    gap: 8px;
+    flex: 0 0 auto;
+    height: 100px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-text28 {
+    fill: #ACACAD;
+    color: rgb(172, 172, 173);
+    font-size: 20px;
+  }
+   
+  .candidate-dashboard-main-text29 {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+  }
+   
+  .candidate-dashboard-main-contact-information-main-container {
+    gap: 16px;
+    width: 100%;
+    height: 151px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: var(--dl-space-space-unit);
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-unit);
+    flex-direction: column;
+    padding-bottom: var(--dl-space-space-unit);
+  }
+   
+  .candidate-dashboard-main-contact-information-text {
+    fill: #ACACAD;
+    color: rgb(172, 172, 173);
+    width: 100%;
+    font-size: 22px;
+    padding-left: var(--dl-space-space-halfunit);
+  }
+   
+  .candidate-dashboard-main-email-mobile-number-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: var(--dl-space-space-halfunit);
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-email-text {
+    font-size: 20px;
+  }
+   
+  .candidate-dashboard-main-mobile-number-text {
+    font-size: 20px;
+  }
+   
+  .candidate-dashboard-main-recent-assessments-main-container {
+    gap: 16px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    border-radius: 8px;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-recent-assessments-container {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: flex-start;
+    border-color: rgb(172, 172, 173);
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+   
+  .candidate-dashboard-main-recent-assessment-text {
+    display: flex;
+    font-size: 32px;
+    font-style: normal;
+    align-items: center;
+    font-weight: 500;
+  }
+   
+  .candidate-dashboard-main-assessments-name-scores-main-container {
+    gap: 16px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: 0px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-assessmanet1-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: flex-start;
+    border-radius: 8px;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #F4F4F4;
+  }
+   
+  .candidate-dashboard-main-assessment1-details-container {
+    gap: 12px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-assessment-id-date-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+   
+  .candidate-dashboard-main-assessment-id-text {
+    color: rgb(94, 102, 112);
+    width: 160px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-text35 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment-date-text {
+    width: 140px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    border-radius: 16px;
+    justify-content: center;
+    background-color: rgb(218, 218, 219);
+  }
+   
+  .candidate-dashboard-main-text37 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment-concept-text {
+    width: 100%;
+    display: flex;
+    font-size: 20px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-score-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-score-text {
+    color: rgb(107, 108, 109);
+  }
+   
+  .candidate-dashboard-main-earned-score-text {
+    color: rgb(31, 136, 43);
+  }
+   
+  .candidate-dashboard-main-assessment-score-container {
+    width: 90px;
+    height: auto;
+    display: grid;
+    align-self: center;
+    grid-template-columns: 1fr 1fr;
+  }
+   
+  .candidate-dashboard-main-container4 {
+    width: 90px;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    grid-column-end: 2;
+    grid-column-start: 1;
+  }
+   
+  .candidate-dashboard-main-container5 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-assessment2-main-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: flex-start;
+    border-radius: 8px;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #F4F4F4;
+  }
+   
+  .candidate-dashboard-main-assessment2-detsils-container {
+    gap: 12px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-assessment2-id-date-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+   
+  .candidate-dashboard-main-assessment2-id-text {
+    width: 160px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-text39 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment2-date-text {
+    width: 140px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    border-radius: 16px;
+    justify-content: center;
+    background-color: rgb(218, 218, 219);
+  }
+   
+  .candidate-dashboard-main-text41 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment2-concept-text {
+    font-size: 20px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+   
+  .candidate-dashboard-main-assessment2-score-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-assessment2-score-text {
+    color: rgb(107, 108, 109);
+  }
+   
+  .candidate-dashboard-main-assessment2-earned-score-text {
+    color: rgb(31, 136, 43);
+  }
+   
+  .candidate-dashboard-main-assessment2-earned-score-container {
+    width: 90px;
+    height: auto;
+    display: grid;
+    align-self: center;
+    grid-template-columns: 1fr 1fr;
+  }
+   
+  .candidate-dashboard-main-container6 {
+    width: 90px;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    grid-column-end: 2;
+    grid-column-start: 1;
+  }
+   
+  .candidate-dashboard-main-container7 {
+    display: contents;
+  }
+   
+  .candidate-dashboard-main-assessment3-main-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: var(--dl-space-space-unit);
+    align-items: flex-start;
+    border-radius: 8px;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #F4F4F4;
+  }
+   
+  .candidate-dashboard-main-assessment3-details-container {
+    gap: 12px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+   
+  .candidate-dashboard-main-assessment3-id-date-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+   
+  .candidate-dashboard-main-assessment3-id-text {
+    width: 160px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-text43 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment3-date-text {
+    width: 140px;
+    height: 24px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    border-radius: 16px;
+    justify-content: center;
+    background-color: rgb(218, 218, 219);
+  }
+   
+  .candidate-dashboard-main-text45 {
+    color: #6b6c6d;
+  }
+   
+  .candidate-dashboard-main-assessment3-concept-text {
+    font-size: 20px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+   
+  .candidate-dashboard-main-assessment3-score-container {
+    gap: 8px;
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+   
+  .candidate-dashboard-main-assessment3-score-text {
+    color: rgb(107, 108, 109);
+  }
+   
+  .candidate-dashboard-main-assessment3-earned-score-text {
+    color: rgb(31, 136, 43);
+  }
+   
+  .candidate-dashboard-main-assessment3-earned-score-container {
+    width: 90px;
+    height: auto;
+    display: grid;
+    align-self: center;
+    grid-template-columns: 1fr 1fr;
+  }
+   
+  .candidate-dashboard-main-container8 {
+    width: 90px;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    grid-column-end: 2;
+    grid-column-start: 1;
+  }
+   
+  .candidate-dashboard-main-container9 {
+    display: contents;
+  }
+   
+  @media(max-width: 1200px) {
+    .candidate-dashboard-main-container4 {
+      width: 89px;
+    }
+    .candidate-dashboard-main-container6 {
+      width: 89px;
+    }
+    .candidate-dashboard-main-container8 {
+      width: 89px;
+    }
+  }
+   
+  @media(max-width: 991px) {
+    .candidate-dashboard-main-candidate-dashboard1-first-container {
+      gap: 26px;
+      width: 98%;
+      height: auto;
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-candidate-profile-picture-container {
+      gap: 10px;
+    }
+    .candidate-dashboard-main-candidate-image {
+      width: 125px;
+      height: 125px;
+    }
+    .candidate-dashboard-main-candidate-name-text {
+      font-size: 24px;
+    }
+    .candidate-dashboard-main-designation-company-main-container {
+      gap: 8px;
+      height: auto;
+    }
+    .candidate-dashboard-main-designation-briefcase-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .candidate-dashboard-main-designation-role-container {
+      height: 75px;
+    }
+    .candidate-dashboard-main-designation-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-role-text {
+      font-size: 18px;
+    }
+    .candidate-dashboard-main-container2 {
+      height: auto;
+    }
+    .candidate-dashboard-main-company-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .candidate-dashboard-main-container3 {
+      height: 75px;
+    }
+    .candidate-dashboard-main-text28 {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-text29 {
+      font-size: 18px;
+    }
+    .candidate-dashboard-main-contact-information-main-container {
+      gap: 10px;
+      height: auto;
+    }
+    .candidate-dashboard-main-contact-information-text {
+      font-size: 18px;
+    }
+    .candidate-dashboard-main-email-mobile-number-container {
+      gap: 4px;
+    }
+    .candidate-dashboard-main-email-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-mobile-number-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-recent-assessment-text {
+      font-size: 24px;
+    }
+    .candidate-dashboard-main-assessmanet1-container {
+      height: auto;
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-assessment1-details-container {
+      gap: 8px;
+    }
+    .candidate-dashboard-main-assessment-id-date-container {
+      width: auto;
+    }
+    .candidate-dashboard-main-assessment-id-text {
+      width: 140px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment-date-text {
+      width: 120px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment-concept-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-score-container {
+      height: auto;
+      align-self: center;
+    }
+    .candidate-dashboard-main-score-text {
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-earned-score-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-container4 {
+      width: 90px;
+    }
+    .candidate-dashboard-main-assessment2-main-container {
+      height: auto;
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-assessment2-detsils-container {
+      gap: 8px;
+    }
+    .candidate-dashboard-main-assessment2-id-text {
+      width: 140px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment2-date-text {
+      width: 120px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment2-concept-text {
+      width: 100%;
+      display: flex;
+      font-size: 16px;
+      justify-content: center;
+    }
+    .candidate-dashboard-main-assessment2-score-container {
+      height: auto;
+      align-self: center;
+    }
+    .candidate-dashboard-main-assessment2-score-text {
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment2-earned-score-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-container6 {
+      width: 90px;
+    }
+    .candidate-dashboard-main-assessment3-main-container {
+      height: auto;
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-assessment3-details-container {
+      gap: 8px;
+    }
+    .candidate-dashboard-main-assessment3-id-date-container {
+      width: 100%;
+    }
+    .candidate-dashboard-main-assessment3-id-text {
+      width: 140px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment3-date-text {
+      width: 120px;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment3-concept-text {
+      width: 100%;
+      display: flex;
+      font-size: 16px;
+      justify-content: center;
+    }
+    .candidate-dashboard-main-assessment3-score-container {
+      height: auto;
+      align-self: center;
+    }
+    .candidate-dashboard-main-assessment3-score-text {
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-assessment3-earned-score-text {
+      font-size: 16px;
+    }
+    .candidate-dashboard-main-container8 {
+      width: 90px;
+    }
+  }
+   
+  @media(max-width: 767px) {
+    .candidate-dashboard-main-text10 {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-text11 {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-text13 {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-text18 {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-text21 {
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .candidate-dashboard-main-text22 {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .candidate-dashboard-main-text23 {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-text24 {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-text25 {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-text27 {
+      color: #05356c;
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-candidate-dashboard1-first-container {
+      gap: 16px;
+      width: 98%;
+    }
+    .candidate-dashboard-main-candidate-dashboard-profile-container {
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-candidate-image {
+      width: 90px;
+      height: 90px;
+    }
+    .candidate-dashboard-main-candidate-name-text {
+      font-size: 20px;
+    }
+    .candidate-dashboard-main-designation-company-main-container {
+      gap: 2px;
+    }
+    .candidate-dashboard-main-designation-main-container {
+      gap: 16px;
+    }
+    .candidate-dashboard-main-designation-briefcase-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .candidate-dashboard-main-designation-role-container {
+      height: 50px;
+    }
+    .candidate-dashboard-main-designation-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-role-text {
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-container2 {
+      gap: 16px;
+    }
+    .candidate-dashboard-main-company-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .candidate-dashboard-main-container3 {
+      height: 50px;
+    }
+    .candidate-dashboard-main-text28 {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-text29 {
+      font-size: 14px;
+    }
+    .candidate-dashboard-main-contact-information-main-container {
+      gap: 6px;
+      padding-left: var(--dl-space-space-unit);
+    }
+    .candidate-dashboard-main-contact-information-text {
+      font-size: 14px;
+      padding-left: 0px;
+    }
+    .candidate-dashboard-main-email-mobile-number-container {
+      padding: 0px;
+    }
+    .candidate-dashboard-main-email-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-mobile-number-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-recent-assessments-container {
+      padding: var(--dl-space-space-halfunit);
+    }
+    .candidate-dashboard-main-recent-assessment-text {
+      font-size: 20px;
+    }
+    .candidate-dashboard-main-assessmanet1-container {
+      align-items: center;
+      justify-content: space-between;
+    }
+    .candidate-dashboard-main-assessment1-details-container {
+      gap: 4px;
+    }
+    .candidate-dashboard-main-assessment-id-date-container {
+      height: 24px;
+    }
+    .candidate-dashboard-main-assessment-id-text {
+      width: 120px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment-date-text {
+      width: 100px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment-concept-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-score-text {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-earned-score-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-container4 {
+      width: 89px;
+    }
+    .candidate-dashboard-main-assessment2-main-container {
+      align-items: center;
+    }
+    .candidate-dashboard-main-assessment2-detsils-container {
+      gap: 4px;
+    }
+    .candidate-dashboard-main-assessment2-id-date-container {
+      height: 24px;
+    }
+    .candidate-dashboard-main-assessment2-id-text {
+      width: 120px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment2-date-text {
+      width: 100px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment2-concept-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-assessment2-score-text {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment2-earned-score-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-container6 {
+      width: 89px;
+    }
+    .candidate-dashboard-main-assessment3-main-container {
+      align-items: center;
+    }
+    .candidate-dashboard-main-assessment3-details-container {
+      gap: 4px;
+    }
+    .candidate-dashboard-main-assessment3-id-date-container {
+      height: 24px;
+    }
+    .candidate-dashboard-main-assessment3-id-text {
+      width: 120px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment3-date-text {
+      width: 100px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment3-concept-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-assessment3-score-text {
+      font-size: 10px;
+    }
+    .candidate-dashboard-main-assessment3-earned-score-text {
+      font-size: 12px;
+    }
+    .candidate-dashboard-main-container8 {
+      width: 89px;
+    }
+  }
+   
+  @media(max-width: 479px) {
+    .candidate-dashboard-main-designation-briefcase-icon {
+      width: 18px;
+      height: 18px;
+    }
+    .candidate-dashboard-main-company-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }

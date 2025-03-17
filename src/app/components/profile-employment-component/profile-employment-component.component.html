@@ -2,9 +2,11 @@
   id="profile-employment"
   class="profile-employment-component-container"
   [ngClass]="rootClassName"
+  style="height: 424px; overflow-y: scroll; overflow-x: hidden;"
 >
   <div
     id="profile-employment-container"
+    #scrollContainer
     class="profile-employment-component-profile-employment-container"
   >
     <span
@@ -22,55 +24,61 @@
         ></ng-container>
       </ng-container>
     </span>
-    <div
-      id="job-title-company-name-container"
-      class="profile-employment-component-job-title-company-name-container"
-    >
+
+    <!-- Employment Positions List -->
+    <div *ngFor="let position of positions; let i = index" #positionBlock>
       <div
-        id="candidate-job-title"
-        class="profile-employment-component-job-title-container"
-      >
-        <span
-          id="employment-job-title-text"
-          class="profile-employment-component-job-title-text"
-        >
-          <span class="profile-employment-component-text10">Job Title</span>
-          <br />
-        </span>
-        <input
-          type="text"
-          id="employment-job-title-input"
-          placeholder="Enter Job Title"
-          class="profile-employment-component-job-title-input input"
-        />
-      </div>
-      <div
-        id="candidate-company-name-container"
-        class="profile-employment-component-company-name-container"
-      >
-        <span
-          id="employment-company-name"
-          class="profile-employment-component-company-name-text"
-        >
-          <span class="profile-employment-component-text12">Company Name</span>
-          <br />
-        </span>
-        <input
-          type="text"
-          id="employment-company-name-input"
-          placeholder="Enter Company Name"
-          class="profile-employment-component-company-name-input input"
-        />
-      </div>
-    </div>
-    <div id="date-selector" class="profile-employment-component-date-selector">
-      <div
-        id="candidate-job-start-date-container"
-        class="profile-employment-component-start-date-container"
+        id="job-title-company-name-container"
+        class="profile-employment-component-job-title-company-name-container"
       >
         <div
-          id="candidate-job-start date"
-          class="profile-employment-component-strat-date"
+          id="candidate-job-title"
+          class="profile-employment-component-job-title-container"
+        >
+          <span
+            id="employment-job-title-text"
+            class="profile-employment-component-job-title-text"
+          >
+            <span class="profile-employment-component-text10">Job Title</span>
+            <br />
+          </span>
+          <input
+            type="text"
+            id="employment-job-title-input-{{i}}"
+            placeholder="Enter Job Title"
+            class="profile-employment-component-job-title-input input"
+            [(ngModel)]="position.jobTitle"
+            name="jobTitle-{{i}}"
+            required
+          />
+        </div>
+        <div
+          id="candidate-company-name-container"
+          class="profile-employment-component-company-name-container"
+        >
+          <span
+            id="employment-company-name"
+            class="profile-employment-component-company-name-text"
+          >
+            <span class="profile-employment-component-text12">Company Name</span>
+            <br />
+          </span>
+          <input
+            type="text"
+            id="employment-company-name-input-{{i}}"
+            placeholder="Enter Company Name"
+            class="profile-employment-component-company-name-input input"
+            [(ngModel)]="position.companyName"
+            name="companyName-{{i}}"
+            required
+          />
+        </div>
+      </div>
+
+      <div id="date-selector" class="profile-employment-component-date-selector">
+        <div
+          id="candidate-job-start-date-container"
+          class="profile-employment-component-start-date-container"
         >
           <span
             id="employment-start-date-text"
@@ -91,52 +99,20 @@
               ></ng-container>
             </ng-container>
           </span>
-          <div
-            id="select-container"
-            class="profile-employment-component-select-container1"
-          >
-            <form
-              id="employment-start-date-dropdown"
-              class="profile-employment-component-form1 input"
-            >
-              <span
-                id="select-text"
-                class="profile-employment-component-select-text1"
-              >
-                <ng-container>
-                  <ng-template #defaultText311>
-                    <div class="profile-employment-component-fragment2">
-                      <span class="profile-employment-component-text15">
-                        Select
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text311 ? text311 : defaultText311"
-                  ></ng-container>
-                </ng-container>
-              </span>
-              <svg
-                id="start-date-dropdown-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 32 32"
-                class="profile-employment-component-drop-down-icon1"
-              >
-                <path
-                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </form>
-          </div>
+          <input
+            type="date"
+            id="employment-start-date-input-{{i}}"
+            class="profile-employment-component-form1 input"
+            [(ngModel)]="position.startDate"
+            name="startDate-{{i}}"
+            [max]="getTodayDate()"
+            required
+          />
         </div>
-      </div>
-      <div
-        id="candidate-job-end-date-container"
-        class="profile-employment-component-end-date-container"
-      >
-        <div id="end-date" class="profile-employment-component-end-date">
+        <div
+          id="candidate-job-end-date-container"
+          class="profile-employment-component-end-date-container"
+        >
           <span
             id="employment-end-date-text"
             class="profile-employment-component-end-date-text"
@@ -154,68 +130,58 @@
               ></ng-container>
             </ng-container>
           </span>
-          <div
-            id="select-container"
-            class="profile-employment-component-select-container2"
-          >
-            <form
-              id="employment-end-date-dropdown"
-              class="profile-employment-component-form2 input"
-            >
-              <span
-                id="select-text"
-                class="profile-employment-component-select-text2"
-              >
-                <ng-container>
-                  <ng-template #defaultText3>
-                    <div class="profile-employment-component-fragment5">
-                      <span class="profile-employment-component-text18">
-                        Select
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text3 ? text3 : defaultText3"
-                  ></ng-container>
-                </ng-container>
-              </span>
-              <svg
-                id="end-date-dropdown-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 32 32"
-                class="profile-employment-component-drop-down-icon2"
-              >
-                <path
-                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </form>
-          </div>
+          <input
+            type="date"
+            id="employment-end-date-input-{{i}}"
+            class="profile-employment-component-form2 input"
+            [(ngModel)]="position.endDate"
+            name="endDate-{{i}}"
+            [min]="position.startDate"
+            [max]="getTodayDate()"
+          />
         </div>
       </div>
-    </div>
-    <div
-      id="candidate-Job-details-container"
-      class="profile-employment-component-job-details-container"
-    >
-      <span
-        id="employment-job-details-text"
-        class="profile-employment-component-job-details-text"
+
+      <div
+        id="candidate-Job-details-container"
+        class="profile-employment-component-job-details-container"
       >
-        Job Details
-      </span>
-      <input
-        type="text"
-        id="employment-job-detail-input"
-        placeholder="Type here..."
-        class="profile-employment-component-job-details-input input"
-      />
+        <span
+          id="employment-job-details-text"
+          class="profile-employment-component-job-details-text"
+        >
+          Job Details
+        </span>
+        <input
+          type="text"
+          id="employment-job-detail-input-{{i}}"
+          placeholder="Type here..."
+          class="profile-employment-component-job-details-input input"
+          [(ngModel)]="position.jobDetails"
+          name="jobDetails-{{i}}"
+          required
+        />
+      </div>
+
+      <!-- Remove Position Button (visible only if more than one position) -->
+      <button
+        *ngIf="positions.length > 1"
+        type="button"
+        (click)="removePosition(i)"
+        class="profile-employment-component-remove-position button"
+      >
+        - Remove Position
+      </button>
+
+      <!-- Add a horizontal line between positions, except after the last one -->
+      <hr *ngIf="i < positions.length - 1" class="position-divider" />
     </div>
+
+    <!-- Add Position Button -->
     <span
       id="add-position-button"
       class="profile-employment-component-addposition-text button"
+      (click)="addPosition()"
     >
       <ng-container>
         <ng-template #defaultText7>

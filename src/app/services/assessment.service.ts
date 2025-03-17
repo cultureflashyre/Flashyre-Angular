@@ -34,7 +34,7 @@ interface AssessmentResponse {
 })
 export class AssessmentService {
 
-  private apiUrl = 'https://your-server-url.com/api'; // Replace with your server URL
+  private apiUrl = 'http://localhost:8000/assessments'; // Replace with your server URL
   private timerSource = new BehaviorSubject<number>(0);
   public timer$ = this.timerSource.asObservable();
 
@@ -42,7 +42,7 @@ export class AssessmentService {
 
   // Fetch assessment data including sections, questions, and timer duration
   getAssessmentData(assessmentId: number): Observable<AssessmentResponse> {
-    return this.http.get<AssessmentResponse>(`${this.apiUrl}/assessments/?assessment_id=${assessmentId}`);
+    return this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true });
   }
 
   // Update timer value
@@ -52,6 +52,6 @@ export class AssessmentService {
 
   // Submit assessment answers
   submitAssessment(answers: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/submit-assessment`, answers);
+    return this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true });
   }
 }

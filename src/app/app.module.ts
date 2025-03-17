@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
-
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
 
@@ -153,7 +152,35 @@ const routes = [
       import('./pages/error-system-requirement-failed/error-system-requirement-failed.module').then(
         (m) => m.ErrorSystemRequirementFailedModule
       ),
+  },
+  {
+    path: 'flashyre-assessment1', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment1/flashyre-assessment1.module').then(
+        (m) => m.FlashyreAssessment1Module
+      ),
+  },
+  {
+    path: 'profile-last-page1', // New route
+    loadChildren: () =>
+    import('./pages/profile-last-page1/profile-last-page1.module').then(
+      (m) => m.ProfileLastPage1Module
+    ),
   },   
+  {
+    path: 'candidate-assessment', // New route
+    loadChildren: () =>
+      import('./pages/candidate-assessment/candidate-assessment.module').then(
+        (m) => m.CandidateAssessmentModule
+      ),
+  },
+  {
+    path: 'candidate-dashboard-main', // New route
+    loadChildren: () =>
+      import('./pages/candidate-dashboard-main/candidate-dashboard-main.module').then(
+        (m) => m.CandidateDashboardMainModule
+      ),
+  },
   {
     path: '**',
     loadChildren: () =>

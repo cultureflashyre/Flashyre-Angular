@@ -28,12 +28,6 @@ export class FlashyreAssessmentRulesCard {
   }
 
   async startAssessment() {
-    try {
-      await this.videoRecorder.startRecording();
-      this.proctoringService.startMonitoring();
-      this.router.navigate(['/flashyre-assessments']);
-    } catch (error) {
-      console.error('Failed to start assessment:', error);
-    }
+    this.router.navigate(['/flashyre-assessment1']);
   }
 }

@@ -113,7 +113,7 @@ export class ProfileBasicinformationComponent implements OnInit {
     this.profileService.saveProfile(formData).subscribe(
       (response) => {
         console.log('Profile saved successfully', response);
-        this.router.navigate(['/profile-employment']);
+        this.router.navigate(['/profile-employment-page']);
       },
       (error) => {
         console.error('Error saving profile', error);
@@ -123,7 +123,7 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   skip() {
-    this.router.navigate(['/profile-employment']);
+    this.router.navigate(['/profile-employment-page']);
   }
 
   ngOnDestroy() {
