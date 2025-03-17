@@ -4,6 +4,7 @@
       <navbar-for-candidate-view1
         rootClassName="navbar-for-candidate-view1root-class-name6"
       >
+        <!-- Existing navbar content unchanged -->
         <ng-template #text1>
           <div class="profile-education-page-duplicate-fragment10">
             <span class="profile-education-page-duplicate-text10">Profile</span>
@@ -64,7 +65,7 @@
           </div>
         </ng-template>
         <ng-template #text31>
-          <div class="profile-education-page-duplicate-fragment19">
+        <div class="profile-education-page-duplicate-fragment19">
             <span class="profile-education-page-duplicate-text19">Logout</span>
           </div>
         </ng-template>
@@ -93,7 +94,7 @@
           <ng-template #text2>
             <div class="profile-education-page-duplicate-fragment22">
               <span class="profile-education-page-duplicate-text22">
-                Total Experience
+                   Duration
               </span>
             </div>
           </ng-template>
@@ -176,22 +177,21 @@
         >
           <ng-template #text>
             <div class="profile-education-page-duplicate-fragment33">
-              <span class="profile-education-page-duplicate-text39">
-                <span class="profile-education-page-duplicate-text40">
-                  &lt;- Previous
-                </span>
-                <br />
+              <span (click)="goToPrevious()" class="profile-education-page-duplicate-text40 button">
+                &lt;- Previous
               </span>
             </div>
           </ng-template>
           <ng-template #button>
             <div class="profile-education-page-duplicate-fragment34">
-              <span class="profile-education-page-duplicate-text42">Skip</span>
+              <span (click)="skipToNextSection()" class="profile-education-page-duplicate-text42 button">
+                Skip
+              </span>
             </div>
           </ng-template>
           <ng-template #button1>
             <div class="profile-education-page-duplicate-fragment35">
-              <span class="profile-education-page-duplicate-text43">
+              <span (click)="saveAndNext()" class="profile-education-page-duplicate-text43 button">
                 Save &amp; Next -&gt;
               </span>
             </div>

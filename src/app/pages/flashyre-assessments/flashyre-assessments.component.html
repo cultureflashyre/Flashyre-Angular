@@ -4,24 +4,48 @@
       id="assessment-container"
       class="flashyre-assessments-assessment-container"
     >
-      <div id="header-container" class="flashyre-assessments-header-container">
-        <img
-          id="Logo"
-          alt="image"
-          src="0c8f97b8-327a-4581-a7f0-ef5451eb4bc2"
-          class="flashyre-assessments-logo"
-        />
-        <span id="timer" class="flashyre-assessments-timer">{{ timer | number }}</span>
-        <button
-          id="end-test-button"
-          type="button"
-          class="flashyre-assessments-end-test-button button"
-        >
-          <span id="end-test-text" class="flashyre-assessments-end-test-text" (click)="terminateTest()">
-            End Test
-          </span>
-        </button>
-      </div>
+    <div
+    id="header-container"
+    class="header-container-header-container"
+    [ngClass]="rootClassName"
+  >
+    <img
+      id="Logo"
+      [attr.alt]="logoAlt"
+      [attr.src]="logoSrc"
+      class="header-container-logo"
+    />
+    <span id="timer" class="header-container-timer">
+      <ng-container>
+        <ng-template #defaultTimer>
+          <div class="header-container-fragment1">
+            <span class="header-container-text1">{{ timer | number }}</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="timer ? timer : defaultTimer"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <button
+      id="end-test-button"
+      type="button"
+      class="header-container-end-test-button button"
+    >
+      <span id="end-test-text" class="header-container-end-test-text">
+        <ng-container>
+          <ng-template #defaultEndTestText>
+            <div class="header-container-fragment2">
+              <span class="header-container-text2" (click)="terminateTest()">End Test</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="endTestText ? endTestText : defaultEndTestText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+  </div>
       <div
         id="question-answer-container"
         class="flashyre-assessments-question-answer-container"

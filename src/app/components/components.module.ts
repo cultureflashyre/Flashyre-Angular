@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
+import {HeaderContainer} from './header-container/header-container.component'
 import { Navbar6 } from './navbar6/navbar6.component'
 import { NavbarForRecruiterViewOption } from './navbar-for-recruiter-view-option/navbar-for-recruiter-view-option.component'
 import { BufferName1 } from './buffer-name-1/buffer-name-1.component'
@@ -98,6 +98,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
 
 @NgModule({
   declarations: [
+    HeaderContainer,
     Navbar6,
     NavbarForRecruiterViewOption,
     BufferName1,
@@ -184,6 +185,7 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
+    HeaderContainer,
     Navbar6,
     NavbarForRecruiterViewOption,
     BufferName1,
