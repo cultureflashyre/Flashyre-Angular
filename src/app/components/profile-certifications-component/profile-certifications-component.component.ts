@@ -1,6 +1,7 @@
 import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Component({
   selector: 'profile-certifications-component',
@@ -28,7 +29,9 @@ export class ProfileCertificationsComponent implements OnInit {
   certificationForm: FormGroup;
   todayDate: string;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, 
+    private http: HttpClient, private spinner: NgxSpinnerService
+  ) {
     this.certificationForm = this.fb.group({
       certifications: this.fb.array([this.createCertificationGroup()]),
     });
@@ -110,6 +113,9 @@ export class ProfileCertificationsComponent implements OnInit {
           })
       );
 
+      // Show spinner before making requests
+      this.spinner.show();
+
       try {
         await Promise.all(promises);
         this.certificationForm.reset();
@@ -117,6 +123,9 @@ export class ProfileCertificationsComponent implements OnInit {
         this.certifications.push(this.createCertificationGroup());
       } catch (error) {
         // Error already logged in catch block above
+      } finally {
+        // Hide spinner after all requests are completed
+        this.spinner.hide();
       }
     } else {
       console.log('Form is invalid');

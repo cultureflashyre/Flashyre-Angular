@@ -5,6 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
+import { BufferPageModule } from './buffer-page/buffer-page.module';
+import { BufferInterceptor } from './interceptors/buffer.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BufferService } from './services/buffer.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const routes = [
   {
@@ -182,6 +188,13 @@ const routes = [
       ),
   },
   {
+    path: 'buffer-page', // New route
+    loadChildren: () =>
+      import('./buffer-page/buffer-page.module').then(
+        (m) => m.BufferPageModule
+      ),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
@@ -192,8 +205,12 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
-  providers: [],
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
+  providers: [BufferService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: BufferInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

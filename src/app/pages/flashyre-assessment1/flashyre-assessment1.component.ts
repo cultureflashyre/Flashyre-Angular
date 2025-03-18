@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 interface SelectedAnswer {
   answer: string;
@@ -56,6 +57,7 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     private videoRecorder: VideoRecorderService,
     private proctoringService: ProctoringService,
     private router: Router,
+    private spinner: NgxSpinnerService,
   ) {
     //this.totalQuestionsInSection = 0; // Example initialization
     this.currentQuestionIndex = 0;
@@ -82,14 +84,14 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     const assessmentId = 4; // Replace with actual assessment ID
+    
     this.fetchAssessmentData(assessmentId)
     try {
       await this.videoRecorder.startRecording();
       this.proctoringService.startMonitoring();
     } catch (error) {
       console.error('Failed to start assessment:', error);
-    }
-
+    } 
    // this.checkLastQuestionAndSection();
   }
 
@@ -101,21 +103,30 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
   }
 
   fetchAssessmentData(assessmentId: number): void {
-    this.assessmentService.getAssessmentData(assessmentId).subscribe((data) => {
-      this.assessmentData = data;
-      this.sections = Object.keys(data.sections).map((sectionName) => ({
-        name: sectionName,
-        ...data.sections[sectionName],
-      }));
-      this.timer = data.total_assessment_duration * 60; // Convert minutes to seconds
-      this.assessmentService.updateTimer(this.timer);
-      console.log('timer data in seconds: ', this.timer);
-      this.startTimer();
-      this.selectSection(this.sections[0]);
-      this.startTime = new Date();
+    // Show spinner before making the HTTP request
+    this.spinner.show();
 
-      //this.totalSections = this.sections.length;
-      //console.log("Total sections: ", this.totalSections);
+    this.assessmentService.getAssessmentData(assessmentId).subscribe({
+      next: (data) => {
+        this.assessmentData = data;
+        this.sections = Object.keys(data.sections).map((sectionName) => ({
+          name: sectionName,
+          ...data.sections[sectionName],
+        }));
+        this.timer = data.total_assessment_duration * 60; // Convert minutes to seconds
+        this.assessmentService.updateTimer(this.timer);
+        console.log('timer data in seconds: ', this.timer);
+        this.startTimer();
+        this.selectSection(this.sections[0]);
+      },
+      error: (error) => {
+        console.error('Error fetching assessment data:', error);
+        // Handle error appropriately (e.g., display a message to the user)
+      },
+      complete: () => {
+        // Hide spinner after request completes
+        this.spinner.hide();
+      }
     });
   }
 

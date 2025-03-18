@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 interface AssessmentResponse {
   assessment_id: number;
@@ -38,11 +39,33 @@ export class AssessmentService {
   private timerSource = new BehaviorSubject<number>(0);
   public timer$ = this.timerSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private spinner: NgxSpinnerService
+  ) { }
 
   // Fetch assessment data including sections, questions, and timer duration
+  //getAssessmentData(assessmentId: number): Observable<AssessmentResponse> {
+    //return this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true });
+  //}
+
   getAssessmentData(assessmentId: number): Observable<AssessmentResponse> {
-    return this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true });
+    this.spinner.show(); // Show spinner before making the request
+
+    return new Observable<AssessmentResponse>((observer) => {
+      this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true })
+        .subscribe({
+          next: (response) => {
+            this.spinner.hide(); // Hide spinner on successful response
+            observer.next(response);
+            observer.complete();
+          },
+          error: (error) => {
+            this.spinner.hide(); // Hide spinner on error
+            observer.error(error);
+          }
+        });
+    });
   }
 
   // Update timer value
@@ -51,7 +74,26 @@ export class AssessmentService {
   }
 
   // Submit assessment answers
+  //submitAssessment(answers: any): Observable<any> {
+    //return this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true });
+  //}
+
   submitAssessment(answers: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true });
+    this.spinner.show(); // Show spinner before submitting
+
+    return new Observable((observer) => {
+      this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true })
+        .subscribe({
+          next: (response) => {
+            this.spinner.hide(); // Hide spinner on successful submission
+            observer.next(response);
+            observer.complete();
+          },
+          error: (error) => {
+            this.spinner.hide(); // Hide spinner on error
+            observer.error(error);
+          }
+        });
+    });
   }
 }

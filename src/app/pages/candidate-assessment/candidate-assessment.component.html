@@ -24,21 +24,21 @@
             >
               <nav id="header-links" class="candidate-assessment-links">
                 <a
-                  href="https://www.teleporthq.io"
+                  
                   id="navbar-dashboard-link"
                   class="candidate-assessment-dashboard-link thq-body-small button"
                 >
                   Dashboard
                 </a>
                 <a
-                  href="https://www.teleporthq.io"
+                  
                   id="navbar-upskill-link"
                   class="candidate-assessment-upskill-link thq-body-small button"
                 >
                   Upskill
                 </a>
                 <a
-                  href="https://www.teleporthq.io"
+                  
                   id="navbar-assessment-link"
                   target="_blank"
                   rel="noreferrer noopener"
@@ -47,7 +47,7 @@
                   Assessment
                 </a>
                 <a
-                  href="https://www.teleporthq.io"
+                  
                   id="navbar-jobs-for-you-link"
                   target="_blank"
                   rel="noreferrer noopener"
@@ -558,8 +558,8 @@
               >
                 <img
                   id="candidate-profile-picture"
-                  alt="Image of John Doe"
-                  src="https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&amp;ixlib=rb-4.0.3&amp;w=300"
+                  [src]="candidateProfilePictureUrl"
+                  alt= 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
                   class="candidate-assessment-candidate-image thq-img-ratio-1-1 thq-img-round"
                 />
                 <div
@@ -571,7 +571,7 @@
                       id="candidate-name"
                       class="candidate-assessment-name-of-the-candidate"
                     >
-                      Kathryn Murphy
+                    {{ candidateName }}
                     </span>
                     <span
                       id="candidate-job-role"

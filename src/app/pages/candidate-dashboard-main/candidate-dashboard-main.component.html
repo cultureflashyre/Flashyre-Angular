@@ -306,7 +306,7 @@
         <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
       </svg>
       <div class='progress-content'>
-        <div class='progress-label'>0%</div>
+        <div class='progress-label'>{{ assessmentScore }}%</div>
       </div>
     </div>
   
@@ -314,7 +314,7 @@
       $(document).ready(function () {
         const $loader = $('.loader');
         const $label = $('.progress-label');
-        const percentage = 95;
+        const percentage = assessmentScore;
   
         const getFillColor = (value) => {
           if (value <= 40) return 'red';
