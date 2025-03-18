@@ -20,7 +20,7 @@ export class NavbarForCandidateView {
   imageSrc4: string =
     'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
   @Input()
-  link1Url: string = 'https://www.teleporthq.io'
+  link1Url: string = ''
   @ContentChild('text8')
   text8: TemplateRef<any>
   @ContentChild('text1')
@@ -34,7 +34,7 @@ export class NavbarForCandidateView {
   @ContentChild('text13')
   text13: TemplateRef<any>
   @Input()
-  link3Url: string = 'https://www.teleporthq.io'
+  link3Url: string = ''
   @ContentChild('link3')
   link3: TemplateRef<any>
   @ContentChild('text2')
@@ -56,7 +56,7 @@ export class NavbarForCandidateView {
   @Input()
   imageAlt1: string = 'image'
   @Input()
-  link4Url: string = 'https://www.teleporthq.io'
+  link4Url: string = ''
   @ContentChild('text7')
   text7: TemplateRef<any>
   @ContentChild('text3')
@@ -66,6 +66,6 @@ export class NavbarForCandidateView {
   @ContentChild('text6')
   text6: TemplateRef<any>
   @Input()
-  link2Url: string = 'https://www.teleporthq.io'
+  link2Url: string = ''
   constructor() {}
 }

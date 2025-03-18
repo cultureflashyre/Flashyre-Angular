@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { BufferOverlayService } from '../../services/buffer-overlay.service';
+import { BufferService } from '../../services/buffer.service'; 
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Component({
   selector: 'signup-candidate1',
@@ -37,7 +40,10 @@ export class SignupCandidate1 implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private bufferService: BufferService,
+    private bufferOverlayService: BufferOverlayService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
@@ -76,6 +82,7 @@ export class SignupCandidate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
+      this.spinner.show();
       const formData = {
         first_name: this.signupForm.get('first_name').value,
         last_name: this.signupForm.get('last_name').value,
@@ -89,6 +96,8 @@ export class SignupCandidate1 implements OnInit {
           console.log('Signup successful', response);
           this.errorMessage = '';
           this.successMessage = response.message || 'Successfully Signed up';
+          // Hide overlay before navigation
+          this.spinner.hide();
           setTimeout(() => {
             this.router.navigate(['/profile-basic-information']);
           }, 1500);
@@ -96,6 +105,10 @@ export class SignupCandidate1 implements OnInit {
         (error) => {
           console.log('Error response:', error);
           this.successMessage = '';
+
+          // Hide overlay on error
+          this.spinner.hide();
+
           if (error.status === 400 && error.error.email) {
             this.errorMessage = 'Email already exists!';
           } else if (error.status === 400 && error.error.phone_number) {

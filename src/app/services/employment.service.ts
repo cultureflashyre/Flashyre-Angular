@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class EmploymentService {
   private apiUrl = 'http://localhost:8000/api/employment/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
 
   saveEmployment(positions: any[]): Observable<any> {
     const requests = positions.map((position) =>
@@ -21,6 +22,12 @@ export class EmploymentService {
       },
        { withCredentials: true })
     );
+
+    // Show spinner before making requests
+    this.spinner.show();
+
+
+
     return new Observable((observer) => {
       let completed = 0;
       requests.forEach((request, index) => {
@@ -28,11 +35,17 @@ export class EmploymentService {
           (response) => {
             completed++;
             if (completed === requests.length) {
+              this.spinner.hide();
+
               observer.next(response);
               observer.complete();
             }
           },
-          (error) => observer.error(error)
+          (error) => {
+            // Hide spinner on error
+            this.spinner.hide();
+            observer.error(error);
+          }
         );
       });
     });

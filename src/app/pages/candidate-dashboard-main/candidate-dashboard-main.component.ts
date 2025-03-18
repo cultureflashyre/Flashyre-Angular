@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { HttpClient } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Component({
   selector: 'candidate-dashboard-main',
@@ -10,7 +11,12 @@ import { HttpClient } from '@angular/common/http';
 export class CandidateDashboardMain {
   assessmentScore: string = 'N/A'; // Initialize score as 'N/A'
 
-  constructor(private title: Title, private meta: Meta, private http: HttpClient) {
+  constructor(
+    private title: Title, 
+    private meta: Meta, 
+    private http: HttpClient, 
+    private spinner: NgxSpinnerService
+  ) {
     this.title.setTitle('Candidate-Dashboard-Main - Flashyre')
     this.meta.addTags([
       {
@@ -30,13 +36,16 @@ export class CandidateDashboardMain {
   }
 
   fetchAssessmentScore(): void {
-    const assessmentId = 10;
+    const assessmentId = 4;
     const url = `http://localhost:8000/assessment/get-assessment-score/${assessmentId}/`;
+
+    // Show spinner before making the HTTP request
+    this.spinner.show();
 
     this.http.get(url, {withCredentials: true}).subscribe({
       next: (response: any) => {
         if (response.score !== null) {
-          this.assessmentScore = `${response.score}/100`;
+          this.assessmentScore = `${response.score}`;
         } else {
           this.assessmentScore = 'Not Available';
         }
@@ -45,6 +54,10 @@ export class CandidateDashboardMain {
         console.error('Error fetching assessment score:', error);
         this.assessmentScore = 'Failed to Load';
       },
+      complete: () => {
+        // Hide spinner after request completes
+        this.spinner.hide();
+      }
     });
   }
 }

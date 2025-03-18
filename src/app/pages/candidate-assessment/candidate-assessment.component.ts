@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Component({
   selector: 'candidate-assessment',
@@ -19,6 +20,7 @@ export class CandidateAssessment {
     private meta: Meta, 
     private router: Router, 
     private http: HttpClient,
+    private spinner: NgxSpinnerService
   ) {
     this.title.setTitle('Candidate-Assessment - Flashyre')
     this.meta.addTags([
@@ -35,7 +37,10 @@ export class CandidateAssessment {
   }
 
   ngOnInit(): void {
-    this.http.get('profile/get-user-profile-info/', { withCredentials: true })
+    // Show spinner before making the HTTP request
+    this.spinner.show();
+
+    this.http.get('http://localhost:8000/profile/get-user-profile-info/', { withCredentials: true })
       .subscribe({
         next: (response: any) => {
           this.candidateName = response.full_name;
@@ -44,6 +49,10 @@ export class CandidateAssessment {
         error: (error) => {
           console.error('Error fetching profile:', error);
           // Handle the error appropriately (e.g., display a message to the user)
+        },
+        complete: () => {
+          // Hide spinner after request completes
+          this.spinner.hide();
         }
       });
   }
