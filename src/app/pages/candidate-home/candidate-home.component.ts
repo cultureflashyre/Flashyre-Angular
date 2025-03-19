@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { AuthService } from '../../services/candidate.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'candidate-home',
@@ -11,9 +12,11 @@ import { AuthService } from '../../services/candidate.service';
 })
 export class CandidateHome implements OnInit {
   jobs: any[] = [];
+  appliedJobIds: number[] = [];
   private apiUrl = 'http://localhost:8000/api/jobs/';
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
+  isLoading: boolean = true;
 
   constructor(
     private title: Title,
@@ -37,7 +40,35 @@ export class CandidateHome implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchJobs();
+    this.loadJobsAndFilterApplied();
+  }
+
+  loadJobsAndFilterApplied(): void {
+    this.isLoading = true;
+    
+    // Get both jobs and applied job IDs in parallel
+    forkJoin({
+      jobs: this.http.get<any[]>(this.apiUrl),
+      appliedJobs: this.authService.getAppliedJobs()
+    }).subscribe(
+      (results) => {
+        // Store applied job IDs
+        this.appliedJobIds = results.appliedJobs.applied_job_ids || [];
+        
+        // Filter out jobs that the user has already applied for
+        this.jobs = results.jobs.filter(job => 
+          !this.appliedJobIds.includes(job.job_id)
+        );
+        
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error loading data:', error);
+        // If error occurs, still try to load jobs
+        this.fetchJobs();
+        this.isLoading = false;
+      }
+    );
   }
 
   fetchJobs(): void {
@@ -62,6 +93,9 @@ export class CandidateHome implements OnInit {
       (response) => {
         console.log('Application successful:', response);
         this.applicationSuccess[jobId] = true;
+        
+        // Add job to applied jobs list
+        this.appliedJobIds.push(jobId);
         
         // Remove the job card after a delay
         setTimeout(() => {

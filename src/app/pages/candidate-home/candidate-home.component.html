@@ -502,59 +502,70 @@
             Jobs for you
           </span>
           <div id="job-container" class="candidate-home-jobs-container2">
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="loading-container">
+                <p>Loading jobs...</p>
+            </div>
+            
+            <!-- No jobs message -->
+            <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+                <p>No new jobs available. You've applied to all open positions!</p>
+            </div>
+            
+            <!-- Job listings -->
             <candidate-job-for-you-card
-              *ngFor="let job of jobs; let i = index"
-              [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
-              [imageSrc]="job.logo"
-              [imageAlt]="job.company_name + ' logo'"
+                *ngFor="let job of jobs; let i = index"
+                [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+                [imageSrc]="job.logo"
+                [imageAlt]="job.company_name + ' logo'"
             >
-              <ng-template #text>
-                <div class="candidate-home-fragment31">
-                  <span class="candidate-home-text123">{{ job.title }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment32">
-                  <span class="candidate-home-text124">{{ job.company_name }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment33">
-                  <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment34">
-                  <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment35">
-                  <span class="candidate-home-text127">{{ job.description }}</span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment36">
-                  <button
-                    [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
-                    [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
-                    (click)="applyForJob(job.job_id, i)"
-                  >
-                    <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
-                    <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
-                    <span *ngIf="applicationSuccess[job.job_id]">
-                      <span class="tick-mark">✓</span> Applied Successfully
-                    </span>
-                  </button>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment37">
-                  <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
-                </div>
-              </ng-template>
+                <ng-template #text>
+                    <div class="candidate-home-fragment31">
+                        <span class="candidate-home-text123">{{ job.title }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text1>
+                    <div class="candidate-home-fragment32">
+                        <span class="candidate-home-text124">{{ job.company_name }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text2>
+                    <div class="candidate-home-fragment33">
+                        <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text3>
+                    <div class="candidate-home-fragment34">
+                        <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+                    </div>
+                </ng-template>
+                <ng-template #text4>
+                    <div class="candidate-home-fragment35">
+                        <span class="candidate-home-text127">{{ job.description }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #button>
+                    <div class="candidate-home-fragment36">
+                        <button
+                            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                            (click)="applyForJob(job.job_id, i)"
+                        >
+                            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                            <span *ngIf="applicationSuccess[job.job_id]">
+                                <span class="tick-mark">✓</span> Applied Successfully
+                            </span>
+                        </button>
+                    </div>
+                </ng-template>
+                <ng-template #button1>
+                    <div class="candidate-home-fragment37">
+                        <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+                    </div>
+                </ng-template>
             </candidate-job-for-you-card>
-          </div>
+        </div>
         </div>
       </div>
     </div>
