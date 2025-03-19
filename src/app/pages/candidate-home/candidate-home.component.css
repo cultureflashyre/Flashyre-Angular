@@ -11,6 +11,29 @@
   flex-direction: column;
   justify-content: flex-start;
 }
+
+
+
+.apply-button:hover:not(:disabled) {
+  background-color: #3a7aa8;
+}
+
+.apply-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+
+.apply-button.applied {
+  background-color: #5cb85c;
+  cursor: default;
+}
+
+.tick-mark {
+  font-weight: bold;
+  margin-right: 5px;
+}
  
 .candidate-home-fragment10 {
   display: contents;

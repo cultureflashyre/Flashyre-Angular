@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
+import { AuthService } from '../../services/candidate.service';
 
 @Component({
   selector: 'candidate-home',
@@ -10,13 +11,16 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateHome implements OnInit {
   jobs: any[] = [];
-  private apiUrl = 'http://localhost:8000/api/jobs/'; // Adjust to your Django server URL
+  private apiUrl = 'http://localhost:8000/api/jobs/';
+  processingApplications: { [key: number]: boolean } = {};
+  applicationSuccess: { [key: number]: boolean } = {};
 
   constructor(
     private title: Title,
     private meta: Meta,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.title.setTitle('Candidate-Home - Flashyre');
     this.meta.addTags([
@@ -49,5 +53,26 @@ export class CandidateHome implements OnInit {
 
   navigateToAssessment(jobId: number): void {
     this.router.navigate(['/flashyre-rules', jobId]);
+  }
+
+  applyForJob(jobId: number, index: number): void {
+    this.processingApplications[jobId] = true;
+    
+    this.authService.applyForJob(jobId).subscribe(
+      (response) => {
+        console.log('Application successful:', response);
+        this.applicationSuccess[jobId] = true;
+        
+        // Remove the job card after a delay
+        setTimeout(() => {
+          this.jobs = this.jobs.filter(job => job.job_id !== jobId);
+        }, 2000);
+      },
+      (error) => {
+        console.error('Application failed:', error);
+        this.processingApplications[jobId] = false;
+        alert(error.error?.error || 'Failed to apply for this job');
+      }
+    );
   }
 }
