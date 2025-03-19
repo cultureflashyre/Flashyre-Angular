@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'candidate-home',
@@ -10,7 +11,7 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateHome implements OnInit {
   jobs: any[] = [];
-  private apiUrl = 'http://localhost:8000/api/jobs/'; // Adjust to your Django server URL
+  private apiUrl = environment.apiUrl+'api/jobs/'; // Adjust to your Django server URL
 
   constructor(
     private title: Title,

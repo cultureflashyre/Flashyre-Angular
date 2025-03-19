@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmploymentService {
-  private apiUrl = 'http://localhost:8000/api/employment/';
+  private apiUrl = environment.apiUrl+'api/employment/';
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
 
