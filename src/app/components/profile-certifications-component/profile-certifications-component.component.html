@@ -5,8 +5,9 @@
 >
   <div
     id="profile-certification-container"
-    #scrollContainer
     class="profile-certifications-component-profile-certification-container"
+    *ngFor="let cert of certifications; let i = index"
+    [attr.data-index]="i"
   >
     <span
       id="candidate-certifications-"
@@ -14,8 +15,8 @@
     >
       <ng-container>
         <ng-template #defaultText>
-          <div class="profile-certifications-component-fragment19">
-            <span class="profile-certifications-component-text29">
+          <div class="profile-certifications-component-fragment20">
+            <span class="profile-certifications-component-text30">
               Certifications
             </span>
           </div>
@@ -25,284 +26,286 @@
         ></ng-container>
       </ng-container>
     </span>
-
-    <!-- Form for certifications -->
-    <form [formGroup]="certificationForm" (ngSubmit)="submitCertification()">
-      <div formArrayName="certifications">
+    <div class="profile-certifications-component-container2">
+      <div
+        id="Certificate-name-and-issuing-institute-container"
+        class="profile-certifications-component-certificate-name-and-issuing-institute-container"
+      >
         <div
-          *ngFor="let cert of certifications.controls; let i = index"
-          [formGroupName]="i"
-          class="certification-block"
-          #certificationBlock
+          id="certificate-name-container"
+          class="profile-certifications-component-certificate-name-container"
         >
-          <!-- Row container for Certificate Name and Issuing Institute -->
           <div
-            style="display: flex; flex-direction: row; gap: 20px;"
-            class="name-institute-row"
-          >
-            <!-- Certificate Name -->
-            <div
-              id="certificate-name-container"
-              class="profile-certifications-component-certificate-name-container"
-            >
-              <div
-                id="certificate-container"
-                class="profile-certifications-component-certifiacate-name-container"
-              >
-                <span
-                  id="certificate-name"
-                  class="profile-certifications-component-certificate-name-text"
-                >
-                  <ng-container>
-                    <ng-template #defaultText11>
-                      <div class="profile-certifications-component-fragment16">
-                        <span class="profile-certifications-component-text20">
-                          <span
-                            class="profile-certifications-component-text21"
-                          >
-                            Certificate Name
-                          </span>
-                          <br />
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text11 ? text11 : defaultText11"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-                <div
-                  id="select-container"
-                  class="profile-certifications-component-container2"
-                >
-                  <select
-                    id="certificateName_{{i}}"
-                    formControlName="certificate_name"
-                    class="profile-certifications-component-form1 input"
-                  >
-                    <option value="" disabled>Select</option>
-                    <option value="Python Certification">
-                      Python Certification
-                    </option>
-                    <option value="AWS Certified Developer">
-                      AWS Certified Developer
-                    </option>
-                    <option value="Java Certification">Java Certification</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <!-- Issuing Institute -->
-            <div
-              id="certification-issuing-institute-container"
-              class="profile-certifications-component-certificate-issuing-institute-container"
-            >
-              <div
-                id="issuing-institute-container"
-                class="profile-certifications-component-issuing-institute-container"
-              >
-                <span
-                  id="issuing-institute"
-                  class="profile-certifications-component-issuing-institute-text"
-                >
-                  <ng-container>
-                    <ng-template #defaultText111>
-                      <div class="profile-certifications-component-fragment18">
-                        <span class="profile-certifications-component-text26">
-                          <span>Issuing Institute</span>
-                          <br />
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text111 ? text111 : defaultText111"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-                <div
-                  id="select-container"
-                  class="profile-certifications-component-container3"
-                >
-                  <select
-                    id="issuingInstitute_{{i}}"
-                    formControlName="issuing_institute"
-                    class="profile-certifications-component-form2 input"
-                  >
-                    <option value="" disabled>Select</option>
-                    <option value="Coursera">Coursera</option>
-                    <option value="Udemy">Udemy</option>
-                    <option value="AWS">AWS</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Issued Date -->
-          <div
-            id="issued-renewal-date-container"
-            class="profile-certifications-component-issued-renewal-date-container"
-          >
-            <div
-              id="certification-issued-date-container"
-              class="profile-certifications-component-issued-date-container"
-            >
-              <div
-                id="container"
-                class="profile-certifications-component-container4"
-              >
-                <span
-                  id="certificate-issued-date"
-                  class="profile-certifications-component-issuing-date-text"
-                >
-                  <ng-container>
-                    <ng-template #defaultText112>
-                      <div
-                        class="profile-certifications-component-fragment17"
-                      >
-                        <span class="profile-certifications-component-text23">
-                          <span>Issued Date</span>
-                          <br />
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="
-                        text112 ? text112 : defaultText112
-                      "
-                    ></ng-container>
-                  </ng-container>
-                </span>
-                <div
-                  id="select-container"
-                  class="profile-certifications-component-select-container1"
-                >
-                  <input
-                    id="issuedDate_{{i}}"
-                    type="date"
-                    formControlName="issued_date"
-                    [max]="todayDate"
-                    (change)="updateRenewalDateMin(i)"
-                    class="profile-certifications-component-form3 input"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Renewal Date -->
-            <div
-              id="certification-renewal-date-input"
-              class="profile-certifications-component-renewal-date-container"
-            >
-              <div
-                id="certification-renewal-date-container"
-                class="profile-certifications-component-container5"
-              >
-                <span
-                  id="certificate-renewal-date-text"
-                  class="profile-certifications-component-renewal-date-text"
-                >
-                  <ng-container>
-                    <ng-template #defaultText1111>
-                      <div
-                        class="profile-certifications-component-fragment12"
-                      >
-                        <span class="profile-certifications-component-text12">
-                          <span>Renewal Date</span>
-                          <br />
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="
-                        text1111 ? text1111 : defaultText1111
-                      "
-                    ></ng-container>
-                  </ng-container>
-                </span>
-                <div
-                  id="select-container"
-                  class="profile-certifications-component-select-container2"
-                >
-                  <input
-                    id="renewalDate_{{i}}"
-                    type="date"
-                    formControlName="renewal_date"
-                    [max]="todayDate"
-                    [min]="cert.get('issued_date')?.value || ''"
-                    class="profile-certifications-component-form4 input"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Credentials -->
-          <div
-            id="certification-credentials-container"
-            class="profile-certifications-component-credentials-container"
+            id="certificate-container"
+            class="profile-certifications-component-certifiacate-name-container"
           >
             <span
-              id="certification-credentials-text"
-              class="profile-certifications-component-credentials-text"
+              id="certificate-name"
+              class="profile-certifications-component-certificate-name-text"
             >
               <ng-container>
-                <ng-template #defaultText1121>
-                  <div class="profile-certifications-component-fragment14">
-                    <span class="profile-certifications-component-text16">
-                      <span>Credentials</span>
+                <ng-template #defaultText11>
+                  <div class="profile-certifications-component-fragment17">
+                    <span class="profile-certifications-component-text21">
+                      <span class="profile-certifications-component-text22">
+                        Certificate Name
+                      </span>
                       <br />
                     </span>
                   </div>
                 </ng-template>
                 <ng-container
-                  *ngTemplateOutlet="
-                    text1121 ? text1121 : defaultText1121
-                  "
+                  *ngTemplateOutlet="text11 ? text11 : defaultText11"
                 ></ng-container>
               </ng-container>
             </span>
             <div
               id="select-container"
-              class="profile-certifications-component-select-container3"
+              class="profile-certifications-component-container3"
             >
-              <select
-                id="credentials_{{i}}"
-                formControlName="credentials"
-                class="profile-certifications-component-form5 input"
+              <form
+                id="certificate-name-input"
+                class="profile-certifications-component-form1 input"
               >
-                <option value="" disabled>Select</option>
-                <option value="PY12345">PY12345</option>
-                <option value="AWS98765">AWS98765</option>
-                <option value="JAVA54321">JAVA54321</option>
-              </select>
+                <select
+                  [(ngModel)]="cert.certificate_name"
+                  name="certificate_name_{{i}}"
+                  (change)="onFieldChange(i)"
+                >
+                  <option value="">Select</option>
+                  <option value="Cert1">Cert1</option>
+                  <option value="Cert2">Cert2</option>
+                </select>
+              </form>
             </div>
           </div>
-
-          <!-- Remove Certification Button (visible only if more than one certification) -->
-          <button
-            *ngIf="certifications.length > 1"
-            type="button"
-            (click)="removeCertification(i)"
-            class="profile-certifications-component-remove-certification button"
+        </div>
+        <div
+          id="certification-issuing-institute-container"
+          class="profile-certifications-component-certificate-issuing-institute-container"
+        >
+          <div
+            id="issuing-institute-container"
+            class="profile-certifications-component-issuing-institute-container"
           >
-            - Remove Certification
-          </button>
-
-          <!-- Horizontal line after each certification block except the last one -->
-          <hr *ngIf="i < certifications.length - 1" class="certification-divider" />
+            <span
+              id="issuing-institute"
+              class="profile-certifications-component-issuing-institute-text"
+            >
+              <ng-container>
+                <ng-template #defaultText111>
+                  <div class="profile-certifications-component-fragment19">
+                    <span class="profile-certifications-component-text27">
+                      <span>Issuing Institute</span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text111 ? text111 : defaultText111"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div
+              id="select-container"
+              class="profile-certifications-component-container4"
+            >
+              <form
+                id="issuing-institute-dropdown"
+                class="profile-certifications-component-form2 input"
+              >
+                <select
+                  [(ngModel)]="cert.issuing_institute"
+                  name="issuing_institute_{{i}}"
+                  (change)="onFieldChange(i)"
+                >
+                  <option value="">Select</option>
+                  <option value="Institute1">Institute1</option>
+                  <option value="Institute2">Institute2</option>
+                </select>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Add Certification Button -->
-      <button
-        type="button"
-        (click)="addCertification()"
-        class="profile-certifications-component-add-certification-text button"
+      <div
+        id="issued-renewal-date-container"
+        class="profile-certifications-component-issued-renewal-date-container"
       >
-        + Add Certification
-      </button>
-    </form>
+        <div
+          id="certification-issued-date-container"
+          class="profile-certifications-component-issued-date-container"
+        >
+          <div
+            id="container"
+            class="profile-certifications-component-container5"
+          >
+            <span
+              id="certificate-issued-date"
+              class="profile-certifications-component-issuing-date-text"
+            >
+              <ng-container>
+                <ng-template #defaultText112>
+                  <div class="profile-certifications-component-fragment18">
+                    <span class="profile-certifications-component-text24">
+                      <span>Issued Date</span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text112 ? text112 : defaultText112"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div
+              id="select-container"
+              class="profile-certifications-component-select-container1"
+            >
+              <form
+                id="certification-issued-date-dropdown"
+                class="profile-certifications-component-form3 input"
+              >
+                <input
+                  type="date"
+                  [(ngModel)]="cert.issued_date"
+                  name="issued_date_{{i}}"
+                  (change)="onIssuedDateChange(i)"
+                  [max]="getTodayDate()"
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          id="certification-renewal-date-input"
+          class="profile-certifications-component-renewal-date-container"
+        >
+          <div
+            id="certification-renewal-date-container"
+            class="profile-certifications-component-container6"
+          >
+            <span
+              id="certificate-renewal-date-text"
+              class="profile-certifications-component-renewal-date-text"
+            >
+              <ng-container>
+                <ng-template #defaultText1111>
+                  <div class="profile-certifications-component-fragment13">
+                    <span class="profile-certifications-component-text13">
+                      <span>Renewal Date</span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div
+              id="select-container"
+              class="profile-certifications-component-select-container2"
+            >
+              <form
+                id="certificate-renewal-date-dropdown"
+                class="profile-certifications-component-form4 input"
+              >
+                <input
+                  type="date"
+                  [(ngModel)]="cert.renewal_date"
+                  name="renewal_date_{{i}}"
+                  (change)="onFieldChange(i)"
+                  [min]="getMinRenewalDate(i)"
+                  [max]="getTodayDate()"
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certification-credentials-container"
+        class="profile-certifications-component-credentials-container"
+      >
+        <span
+          id="certification-credentials-text"
+          class="profile-certifications-component-credentials-text"
+        >
+          <ng-container>
+            <ng-template #defaultText1121>
+              <div class="profile-certifications-component-fragment15">
+                <span class="profile-certifications-component-text17">
+                  <span>Credentials</span>
+                  <br />
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1121 ? text1121 : defaultText1121"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          id="select-container"
+          class="profile-certifications-component-select-container3"
+        >
+          <form
+            id="certification-credentials-dropdown"
+            class="profile-certifications-component-form5 input"
+          >
+            <select
+              [(ngModel)]="cert.credentials"
+              name="credentials_{{i}}"
+              (change)="onFieldChange(i)"
+            >
+              <option value="">Select</option>
+              <option value="Cred1">Cred1</option>
+              <option value="Cred2">Cred2</option>
+            </select>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="profile-certifications-component-container7">
+      <span
+        id="add-certification-button"
+        class="profile-certifications-component-add-certification-text button"
+        (click)="addCertification()"
+        [style.visibility]="i === certifications.length - 1 ? 'visible' : 'hidden'"
+      >
+        <ng-container>
+          <ng-template #defaultText1>
+            <div class="profile-certifications-component-fragment10">
+              <span class="profile-certifications-component-text10">
+                + Add Certification
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <span
+        id="remove-certification-button"
+        class="profile-certifications-component-remove-certification-text button"
+        (click)="removeCertification(i)"
+        [style.visibility]="certifications.length > 1 ? 'visible' : 'hidden'"
+      >
+        <ng-container>
+          <ng-template #defaultText12>
+            <div class="profile-certifications-component-fragment12">
+              <span class="profile-certifications-component-text12">
+                - Remove Certification
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text12 ? text12 : defaultText12"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
   </div>
 </div>
