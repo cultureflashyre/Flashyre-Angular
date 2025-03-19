@@ -2,6 +2,7 @@ import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChi
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'profile-certifications-component',
@@ -9,6 +10,8 @@ import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
   styleUrls: ['profile-certifications-component.component.css'],
 })
 export class ProfileCertificationsComponent implements OnInit {
+  private baseUrl = environment.apiUrl;
+
   @ContentChild('text1') text1: TemplateRef<any>;
   @ContentChild('text312') text312: TemplateRef<any>;
   @ContentChild('text1111') text1111: TemplateRef<any>;
@@ -103,7 +106,7 @@ export class ProfileCertificationsComponent implements OnInit {
     if (this.certificationForm.valid) {
       const data = this.certificationForm.value.certifications;
       const promises = data.map((cert: any) =>
-        this.http.post('http://localhost:8000/api/certifications/', cert, { withCredentials: true }).toPromise()
+        this.http.post(`${this.baseUrl}api/certifications/`, cert, { withCredentials: true }).toPromise()
           .then((response) => {
             console.log('Certification saved:', response);
           })

@@ -4,12 +4,13 @@ import { CanActivate, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  private authCheckUrl = 'http://localhost:8000/check-auth/'; // New endpoint to check auth status
+  private authCheckUrl = environment.apiUrl+'check-auth/'; // New endpoint to check auth status
 
   constructor(private http: HttpClient, private router: Router) {}
 
