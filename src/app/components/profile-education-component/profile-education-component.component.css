@@ -1,53 +1,62 @@
 :host { 
   display: contents; 
 }
-
-.profile-education-component-container1 {
+ 
+.profile-education-component-container {
   gap: 24px;
   width: 720px;
-  height: 420px;
+  height: 500   px;
   display: flex;
   padding: 24px;
+  overflow-x: hidden;
+  overflow-y: scroll;
   align-items: center;
-  border: 0px solid transparent; /* Added transparent border */
   border-radius: 8px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  scrollbar-width: none;
   background-color: #FFFFFF;
-  position: auto;
 }
-
+ 
 .profile-education-component-profile-education-container {
   gap: 24px;
   flex: 0 0 auto;
   width: auto;
-  height: 420px; /* Original height */
-  border: 0px solid transparent; /* Added transparent border */
+  height: 420px;
   display: flex;
   padding: 24px;
-  align-items: flex-start;
+  align-self: center;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: center;
   border-radius: 8px;
   flex-direction: column;
-  position: relative; /* Added to anchor child elements */
+  justify-content: center;
   scroll-behavior: smooth;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  scrollbar-width: none;
 }
-
-.profile-education-component-education-text1 {
+ 
+.profile-education-component-education-container-text {
   gap: 24px;
   width: 672px;
   height: 24px;
-  display: flex-start;
+  display: flex;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  /* padding-left: 30px;
-  margin-top: 25px; */
-  
 }
-
-.profile-education-component-duration-container1 {
+ 
+.profile-education-component-details-container {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-education-component-duration-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 672px;
@@ -56,8 +65,8 @@
   position: relative;
   align-items: center;
 }
-
-.profile-education-component-duration-container2 {
+ 
+.profile-education-component-select-date-container {
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
@@ -66,48 +75,44 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
-.profile-education-component-duration-text {
+ 
+.profile-education-component-select-start-date {
   width: 324px;
   height: 24px;
   display: flex;
   align-items: center;
-  padding-left: 15px;
 }
-
-.profile-education-component-form1 {
+ 
+.profile-education-component-selecting-date-calendar {
+  width: 324px;
   height: 48px;
   display: flex;
-  align-self: stretch;
-  align-items: flex-end;
+  align-self: flex-start;
+  align-items: center;
   padding-top: 0px;
-  border: none;
+  border-color: #A7A7A7;
   padding-right: 10px;
-  flex-direction: column;
+  flex-direction: row;
   padding-bottom: 0px;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #FFFFFF;
 }
-
+ 
 .profile-education-component-select-year-text {
   fill: #69737E;
   color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  position: relative;
+  align-self: center;
 }
-
-.profile-education-component-drop-down-icon1 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
+ 
+.profile-education-component-icon1 {
   display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
+  align-self: center;
+  align-items: center;
+  justify-content: flex-start;
 }
-
-.profile-education-component-form2 {
+ 
+.profile-education-component-select-end-date {
   right: 0px;
   width: 324px;
   bottom: 4px;
@@ -115,35 +120,27 @@
   display: flex;
   position: absolute;
   align-self: center;
-  align-items: flex-end;
+  align-items: center;
   padding-top: 0px;
-  border: none;
+  border-color: #A7A7A7;
   border-radius: 4px;
   padding-right: 10px;
-  flex-direction: column;
+  flex-direction: row;
   padding-bottom: 0px;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #FFFFFF;
 }
-
+ 
 .profile-education-component-select-month-text {
   fill: #69737E;
   color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
-}
-
-.profile-education-component-drop-down-icon2 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
   display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
+  align-self: center;
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
+  justify-content: flex-end;
 }
-
+ 
 .profile-education-component-university-institute-education-container {
   flex: 0 0 auto;
   width: 672px;
@@ -152,7 +149,7 @@
   align-items: flex-start;
   justify-content: space-between;
 }
-
+ 
 .profile-education-component-university-institute-container {
   flex: 0 0 auto;
   width: 324px;
@@ -161,14 +158,13 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-education-component-university-institute-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
-
-.profile-education-component-container2 {
+ 
+.profile-education-component-university-input-container1 {
   flex: 0 0 auto;
   width: auto;
   height: 48px;
@@ -177,40 +173,14 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
-.profile-education-component-form3 {
+ 
+.profile-education-component-input {
   width: 324px;
   height: 48px;
-  display: flex;
-  align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
-  flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
+  border-color: #B5BCD3;
   background-color: #FFFFFF;
 }
-
-.profile-education-component-select-text1 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
-}
-
-.profile-education-component-drop-down-icon3 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
-  display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
-}
-
+ 
 .profile-education-component-education-container {
   flex: 0 0 auto;
   width: 324px;
@@ -219,13 +189,12 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
-.profile-education-component-education-text2 {
+ 
+.profile-education-component-education-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
-
+ 
 .profile-education-component-education-select-container {
   flex: 0 0 auto;
   width: auto;
@@ -235,31 +204,32 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
-.profile-education-component-form4 {
+ 
+.profile-education-component-form {
   width: 324px;
   height: 48px;
   display: flex;
-  align-self: center;
-  align-items: flex-end;
+  align-items: center; /* Vertically center the text */
+  justify-content: center; /* Horizontally center the text */
   padding-top: 0px;
-  border: none;
-  padding-right: 10px;
-  flex-direction: column;
   padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  padding-right: 30px; /* Increased padding to make room for the dropdown icon */
+  padding-left: 10px; /* Optional: Add left padding for balance */
+  border-color: #A7A7A7;
+  border-width: 1px; /* Assuming a border is desired; adjust if needed */
+  border-style: solid;
+  background-color: #FFFFFF
 }
-
-.profile-education-component-select-text2 {
+ 
+.profile-education-component-select-text {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
 }
-
-.profile-education-component-drop-down-icon4 {
+ 
+.profile-education-component-drop-down-icon {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
   width: auto;
@@ -268,8 +238,8 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
-
-.profile-education-component-container3 {
+ 
+.profile-education-component-course-specialization-container {
   flex: 0 0 auto;
   width: 672px;
   height: 76px;
@@ -277,7 +247,7 @@
   align-items: flex-start;
   justify-content: space-between;
 }
-
+ 
 .profile-education-component-course-container {
   flex: 0 0 auto;
   width: 324px;
@@ -286,13 +256,12 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-education-component-course-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
-
+ 
 .profile-education-component-select-container1 {
   flex: 0 0 auto;
   width: auto;
@@ -302,40 +271,14 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
-.profile-education-component-form5 {
+ 
+.profile-education-component-textinput1 {
   width: 324px;
   height: 48px;
-  display: flex;
-  align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
-  flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
+  border-color: #B5BCD3;
   background-color: #FFFFFF;
 }
-
-.profile-education-component-select-text3 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
-}
-
-.profile-education-component-drop-down-icon5 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
-  display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
-}
-
+ 
 .profile-education-component-specialisation-container {
   flex: 0 0 auto;
   width: 324px;
@@ -344,13 +287,12 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-education-component-specialisation-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
-
+ 
 .profile-education-component-select-container2 {
   flex: 0 0 auto;
   width: auto;
@@ -360,235 +302,177 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
-.profile-education-component-form6 {
+ 
+.profile-education-component-textinput2 {
   width: 324px;
   height: 48px;
-  display: flex;
-  align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
-  flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
+  border-color: #B5BCD3;
   background-color: #FFFFFF;
 }
-
-.profile-education-component-select-text4 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
-}
-
-.profile-education-component-drop-down-icon6 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
+ 
+.profile-education-component-add-remove-education-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
   display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-
-.forms-container {
-  flex: 1; /* Allow it to take available space */
-  max-height: 340px; /* Fixed height to leave room for the button */
-  /* overflow-y: scroll; Enable vertical scrolling within this container
-  overflow-x: hidden; */
-  width: 100%; /* Ensure it spans the full width */
-}
-
+ 
 .profile-education-component-add-education-text {
   width: auto;
   height: 24px;
-  display: inline-block;
+  display: flex;
   align-self: flex-start;
   transition: 0.3s;
   align-items: center;
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
-   margin-left: 20px;
-  margin-bottom: 10px; 
 }
-
-/* .profile-education-component-add-education-text:hover {
-  color: #FFFFFF;
+ 
+.profile-education-component-add-education-text:hover {
+  color: FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
-
+ 
 .profile-education-component-add-education-text:active {
   transform: scale(1.05);
   transition: all 0.7s;
-  background-color: #D7DFE7;
-} */
-
-.profile-education-component-select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
-
-.button {
-  cursor: pointer;
-  padding: 10px;
-  color: white;
-  border-radius: 4px;
-  margin-right: 10px;
-}
-
-/* .education-form-instance {
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 4px;
-  background-color: #FFFFFF;
-} */
-
-.remove-button {
-  margin-top: 10px;
-  padding: 5px 10px;
+ 
+.profile-education-component-remove-education-text {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
   background-color: transparent;
-  color: #ff4d4d;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 495px;
 }
-
-.remove-button:hover {
+ 
+.profile-education-component-remove-education-text:hover {
+  color: FFFFFF;
   cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
 }
-
+ 
+.profile-education-component-remove-education-text:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
 .profile-education-component-fragment10 {
   display: contents;
 }
-
+ 
 .profile-education-component-text10 {
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment11 {
   display: contents;
 }
-
+ 
 .profile-education-component-text11 {
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment12 {
   display: contents;
 }
-
+ 
 .profile-education-component-text12 {
+  color: rgb(24, 25, 28);
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment13 {
   display: contents;
 }
-
-.profile-education-component-text13 {
+ 
+.profile-education-component-text15 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment14 {
   display: contents;
-}
+  justify-content: space-between;
 
-.profile-education-component-text16 {
-  color: rgb(24, 25, 28);
+}
+ 
+.profile-education-component-text18 {
+  color: #18191c;
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment15 {
   display: contents;
 }
-
+ 
 .profile-education-component-text19 {
-  color: #18191c;
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment16 {
   display: contents;
 }
-
+ 
 .profile-education-component-text20 {
+  color: rgb(24, 25, 28);
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment17 {
   display: contents;
 }
-
+ 
 .profile-education-component-text21 {
+  color: #f10400;
   display: inline-block;
 }
-
+ 
 .profile-education-component-fragment18 {
   display: contents;
 }
-
+ 
 .profile-education-component-text22 {
-  display: inline-block;
-}
-
-.profile-education-component-fragment19 {
-  display: contents;
-}
-
-.profile-education-component-text23 {
-  color: rgb(24, 25, 28);
-  display: inline-block;
-}
-
-.profile-education-component-fragment20 {
-  display: contents;
-}
-
-.profile-education-component-text24 {
   color: #18191c;
   display: inline-block;
 }
-
-.profile-education-component-fragment21 {
+ 
+.profile-education-component-fragment19 {
   display: contents;
-  height: 48px;
 }
-
-.profile-education-component-text27 {
+ 
+.profile-education-component-text25 {
   color: rgb(24, 25, 28);
   display: inline-block;
+  
 }
-
-.profile-education-component-fragment22 {
+ 
+.profile-education-component-fragment20 {
   display: contents;
 }
-
-.profile-education-component-text28 {
+ 
+.profile-education-component-text26 {
   color: #05356c;
   display: inline-block;
   font-weight: 600;
 }
+ 
 
-.position-divider {
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-  width: 100%;
-  text-decoration-thickness: 5px;
-}
+ 
 
+ 
 @media(max-width: 1200px) {
-  .profile-education-component-container1 {
+  .profile-education-component-container {
     gap: 24px;
     width: 720px;
     height: 420px;
@@ -596,17 +480,16 @@
     border-radius: 8px;
     background-color: #FFFFFF;
   }
-  .profile-education-component-education-text1 {
+  .profile-education-component-education-container-text {
     width: 672px;
     height: 24px;
-    /* padding-left: 20px; */
   }
   .profile-education-component-university-institute-education-container {
     width: 672px;
     height: 76px;
     justify-content: space-between;
   }
-  .profile-education-component-container3 {
+  .profile-education-component-course-specialization-container {
     width: 672px;
     height: 76px;
     justify-content: space-between;
@@ -615,125 +498,167 @@
     width: auto;
     height: 24px;
   }
-  .profile-education-component-text23 {
+  .profile-education-component-remove-education-text {
+    width: auto;
+    height: 24px;
+  }
+  .profile-education-component-text20 {
     color: #18191c;
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
   }
-  .profile-education-component-text28 {
+  .profile-education-component-text21 {
+    color: #f10400;
+  }
+  .profile-education-component-text26 {
     color: #05356c;
     font-weight: 600;
   }
 }
-
-@media(max-width: 479px) {
-  .profile-education-component-container1 {
+ 
+@media (max-width: 479px) {
+  .profile-education-component-container {
     width: 100%;
-    height: 686px;
-    padding-top: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
+    height: auto; /* Changed from 686px to allow dynamic growth */
+    padding: 0;
     background-color: transparent;
   }
-   .profile-education-component-profile-education-container {
-    gap: var(--dl-space-space-twounits);
+
+  .profile-education-component-scrollable-container {
+    max-height: 600px; /* Set a reasonable max-height for mobile scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%;
+  }
+
+  .profile-education-component-profile-education-container {
+    gap: var(--dl-layout-space-twounits);
     width: 95%;
-    height: 100%;
-    padding: var(--dl-space-space-twounits);
+    height: auto; /* Changed from 600px to allow dynamic height */
+    padding: var(--dl-layout-space-unit);
     align-self: center;
     align-items: center;
     justify-content: flex-start;
     background-color: #FFFFFF;
-  } 
-  .profile-education-component-education-text1 {
+    margin-bottom: 10px; /* Space between education sections */
+  }
+
+  .profile-education-component-education-container-text {
     width: 100%;
   }
-  .profile-education-component-duration-container1 {
-    width: 100%;
-    justify-content: space-between;
+
+  .profile-education-component-details-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%; /* Ensure it fits within the container */
   }
-  .profile-education-component-duration-container2 {
+
+  .profile-education-component-duration-container {
+    width: 100%;
+  }
+
+  .profile-education-component-select-date-container {
     width: 47%;
   }
-  .profile-education-component-duration-text {
+
+  .profile-education-component-select-start-date {
     width: 100%;
   }
-  .profile-education-component-form1 {
-    width: auto;
-    padding-left: var(--dl-space-space-halfunit);
-    padding-right: var(--dl-space-space-halfunit);
+
+  .profile-education-component-selecting-date-calendar {
+    width: 100%;
+    justify-content: space-between;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
   }
-  .profile-education-component-form2 {
+
+  .profile-education-component-select-end-date {
     width: 48%;
     position: relative;
     align-self: flex-end;
-    padding-left: var(--dl-space-space-halfunit);
-    padding-right: var(--dl-space-space-halfunit);
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
   }
+
   .profile-education-component-university-institute-education-container {
-    gap: var(--dl-space-space-twounits);
+    gap: var(--dl-layout-space-unit);
     width: 100%;
-    height: 183px;
+    height: auto;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
   }
+
   .profile-education-component-university-institute-container {
     width: 100%;
   }
+
   .profile-education-component-university-institute-text {
     width: 100%;
   }
-  .profile-education-component-container2 {
+
+  .profile-education-component-university-input-container1 {
     width: 100%;
   }
-  .profile-education-component-form3 {
+
+  .profile-education-component-input {
     width: 100%;
   }
+
   .profile-education-component-education-container {
     width: 100%;
   }
-  .profile-education-component-education-text2 {
+
+  .profile-education-component-education-text {
     width: 100%;
   }
+
   .profile-education-component-education-select-container {
     width: 100%;
   }
-  .profile-education-component-form4 {
+
+  .profile-education-component-form {
     width: 100%;
   }
-  .profile-education-component-container3 {
-    gap: var(--dl-space-space-twounits);
+
+  .profile-education-component-course-specialization-container {
+    gap: var(--dl-layout-space-unit);
     width: 100%;
-    height: 177px;
+    height: auto;
     flex-direction: column;
     justify-content: center;
   }
+
   .profile-education-component-course-container {
     width: 100%;
   }
+
   .profile-education-component-course-text {
     width: 100%;
   }
+
   .profile-education-component-select-container1 {
     width: 100%;
   }
-  .profile-education-component-form5 {
+
+  .profile-education-component-textinput1 {
     width: 100%;
   }
+
   .profile-education-component-specialisation-container {
     width: 100%;
   }
+
   .profile-education-component-specialisation-text {
     width: 100%;
   }
+
   .profile-education-component-select-container2 {
     width: 100%;
   }
-  .profile-education-component-form6 {
+
+  .profile-education-component-textinput2 {
     width: 100%;
   }
+
   .profile-education-componentroot-class-name2 {
     overflow: visible;
     position: relative;

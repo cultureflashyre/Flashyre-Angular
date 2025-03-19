@@ -8,10 +8,8 @@
   min-height: 100vh;
   align-items: center;
   flex-direction: column;
-  border-color: transparent;
-  overflow-x: hidden;
 }
- 
+
 .profile-education-page-duplicate-container2 {
   flex: 0 0 auto;
   width: 1440px;
@@ -121,7 +119,6 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  align-items: center;
 }
  
 .profile-education-page-duplicate-fragment20 {
@@ -157,7 +154,7 @@
 }
  
 .profile-education-page-duplicate-text23 {
-  color: rgb(24, 25, 28);
+  color: #f10400;
   display: inline-block;
 }
  
@@ -165,7 +162,7 @@
   display: contents;
 }
  
-.profile-education-page-duplicate-text26 {
+.profile-education-page-duplicate-text24 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
@@ -175,6 +172,7 @@
 }
  
 .profile-education-page-duplicate-text27 {
+  color: rgb(24, 25, 28);
   display: inline-block;
 }
  
@@ -225,6 +223,7 @@
 }
  
 .profile-education-page-duplicate-text37 {
+  color: #05356c;
   display: inline-block;
 }
  
@@ -232,73 +231,16 @@
   display: contents;
 }
  
-.profile-education-page-duplicate-text38 {
+.profile-education-page-duplicate-text40 {
   display: inline-block;
 }
  
 .profile-education-page-duplicate-fragment33 {
   display: contents;
 }
-
-.profile-education-page-duplicate-text40 {
-  font-size: 16px;
-  width: 128px;
-  align-self: stretch;
-  transition: 0.3s;
-  padding-top: 0px;
-  border-color: #CEE0F5;
-  border-width: 0px;
-  padding-left: 0px;
-  border-radius: 0px;
-  padding-right: 0px;
-  padding-bottom: 0px;
-  background-color: transparent;
-  color: #05356c;
-}
  
-.profile-education-page-duplicate-text39 {
-  color: #05356c;
+.profile-education-page-duplicate-text41 {
   display: inline-block;
-}
- 
-.profile-education-page-duplicate-fragment34 {
-  display: contents;
-}
- 
-.profile-education-page-duplicate-text42 {
-  display: inline-block;
-  color: #05356c;
-  width: 66px;
-  height: 48px;
-  transition: 0.3s;
-  padding-top: 12px;
-  border-color: transparent;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-bottom: 0px;
-  background-color: transparent;
-  font-size: 16px
-}
- 
-.profile-education-page-duplicate-fragment35 {
-  display: contents;
-  
-}
- 
-.profile-education-page-duplicate-text43 {
-  font-size: 16px;
-  display: inline-block;
-  color: #FFFFFF;
-  align-self: center;
-  transition: 0.3s;
-  padding-top: 12px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-bottom: 0px;
-  background-color: #05356C;
-  border-color: transparent;
-  width: 153px;
-  height: 48px;
 }
  
 @media(max-width: 1200px) {
@@ -317,6 +259,9 @@
   .profile-education-page-duplicate-text21 {
     color: #05356c;
     font-weight: 600;
+  }
+  .profile-education-page-duplicate-text23 {
+    color: #f10400;
   }
 }
  
@@ -358,16 +303,16 @@
     position: relative;
     align-items: center;
   }
-  .profile-education-page-duplicate-text39 {
+  .profile-education-page-duplicate-text37 {
     color: rgb(5, 53, 108);
+  }
+  .profile-education-page-duplicate-text38 {
+    font-size: 14px;
   }
   .profile-education-page-duplicate-text40 {
     font-size: 14px;
   }
-  .profile-education-page-duplicate-text42 {
-    font-size: 14px;
-  }
-  .profile-education-page-duplicate-text43 {
+  .profile-education-page-duplicate-text41 {
     font-size: 14px;
   }
 }

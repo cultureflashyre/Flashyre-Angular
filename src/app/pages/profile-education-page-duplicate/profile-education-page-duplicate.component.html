@@ -4,7 +4,6 @@
       <navbar-for-candidate-view1
         rootClassName="navbar-for-candidate-view1root-class-name6"
       >
-        <!-- Existing navbar content unchanged -->
         <ng-template #text1>
           <div class="profile-education-page-duplicate-fragment10">
             <span class="profile-education-page-duplicate-text10">Profile</span>
@@ -41,7 +40,7 @@
         <ng-template #text6>
           <div class="profile-education-page-duplicate-fragment15">
             <span class="profile-education-page-duplicate-text15">
-              View &amp; edit profile
+              View & edit profile
             </span>
           </div>
         </ng-template>
@@ -65,7 +64,7 @@
           </div>
         </ng-template>
         <ng-template #text31>
-        <div class="profile-education-page-duplicate-fragment19">
+          <div class="profile-education-page-duplicate-fragment19">
             <span class="profile-education-page-duplicate-text19">Logout</span>
           </div>
         </ng-template>
@@ -75,6 +74,7 @@
           rootClassName="progress-bar-step3root-class-name3"
         ></progress-bar-step3>
         <profile-education-component
+          #educationComponent
           rootClassName="profile-education-componentroot-class-name2"
         >
           <ng-template #text>
@@ -94,29 +94,29 @@
           <ng-template #text2>
             <div class="profile-education-page-duplicate-fragment22">
               <span class="profile-education-page-duplicate-text22">
-                   Duration
+                Duration
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #text12>
+            <div class="profile-education-page-duplicate-fragment23">
+              <span class="profile-education-page-duplicate-text23">
+                - Remove Education
               </span>
             </div>
           </ng-template>
           <ng-template #text111>
-            <div class="profile-education-page-duplicate-fragment23">
-              <span class="profile-education-page-duplicate-text23">
+            <div class="profile-education-page-duplicate-fragment24">
+              <span class="profile-education-page-duplicate-text24">
                 <span>University/Institute</span>
                 <br />
               </span>
             </div>
           </ng-template>
           <ng-template #text112>
-            <div class="profile-education-page-duplicate-fragment24">
-              <span class="profile-education-page-duplicate-text26">
-                Education
-              </span>
-            </div>
-          </ng-template>
-          <ng-template #text313>
             <div class="profile-education-page-duplicate-fragment25">
               <span class="profile-education-page-duplicate-text27">
-                Select
+                Education
               </span>
             </div>
           </ng-template>
@@ -143,31 +143,17 @@
               </span>
             </div>
           </ng-template>
-          <ng-template #text3131>
+          <ng-template #text3136>
             <div class="profile-education-page-duplicate-fragment29">
               <span class="profile-education-page-duplicate-text35">
-                Select
-              </span>
-            </div>
-          </ng-template>
-          <ng-template #text3132>
-            <div class="profile-education-page-duplicate-fragment30">
-              <span class="profile-education-page-duplicate-text36">
-                Select
-              </span>
-            </div>
-          </ng-template>
-          <ng-template #text3136>
-            <div class="profile-education-page-duplicate-fragment31">
-              <span class="profile-education-page-duplicate-text37">
-                Select Year
+                dd/mm/yyyy
               </span>
             </div>
           </ng-template>
           <ng-template #text3137>
-            <div class="profile-education-page-duplicate-fragment32">
-              <span class="profile-education-page-duplicate-text38">
-                Select Month
+            <div class="profile-education-page-duplicate-fragment30">
+              <span class="profile-education-page-duplicate-text36">
+                dd/mm/yyyy
               </span>
             </div>
           </ng-template>
@@ -176,23 +162,24 @@
           rootClassName="profile-creation-navigation2root-class-name7"
         >
           <ng-template #text>
-            <div class="profile-education-page-duplicate-fragment33">
-              <span (click)="goToPrevious()" class="profile-education-page-duplicate-text40 button">
-                &lt;- Previous
+            <div class="profile-education-page-duplicate-fragment31">
+              <span (click)="goToPrevious()" class="profile-education-page-duplicate-text37">
+                <span class="profile-education-page-duplicate-text38">
+                  <- Previous
+                </span>
+                <br />
               </span>
             </div>
           </ng-template>
           <ng-template #button>
-            <div class="profile-education-page-duplicate-fragment34">
-              <span (click)="skipToNextSection()" class="profile-education-page-duplicate-text42 button">
-                Skip
-              </span>
+            <div class="profile-education-page-duplicate-fragment32">
+              <span (click)="skip()" class="profile-education-page-duplicate-text40">Skip</span>
             </div>
           </ng-template>
           <ng-template #button1>
-            <div class="profile-education-page-duplicate-fragment35">
-              <span (click)="saveAndNext()" class="profile-education-page-duplicate-text43 button">
-                Save &amp; Next -&gt;
+            <div class="profile-education-page-duplicate-fragment33">
+              <span (click)="saveAndNext()" class="profile-education-page-duplicate-text41">
+                Save & Next ->
               </span>
             </div>
           </ng-template>

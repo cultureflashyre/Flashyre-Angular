@@ -1,10 +1,12 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Added FormsModule
+
 import { ComponentsModule } from '../../components/components.module';
 import { ProfileEducationPageDuplicate } from './profile-education-page-duplicate.component';
 
-const routes: Routes = [
+const routes = [
   {
     path: '',
     component: ProfileEducationPageDuplicate,
@@ -13,7 +15,12 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [ProfileEducationPageDuplicate],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    ComponentsModule,
+    FormsModule, // Added FormsModule
+    RouterModule.forChild(routes)
+  ],
   exports: [ProfileEducationPageDuplicate],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

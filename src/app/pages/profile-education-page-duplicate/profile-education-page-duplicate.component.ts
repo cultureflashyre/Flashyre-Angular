@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ProfileEducationComponent } from '../../components/profile-education-component/profile-education-component.component';
+import { EducationService } from '../../services/education.service';
 
 @Component({
   selector: 'profile-education-page-duplicate',
@@ -9,9 +10,14 @@ import { ProfileEducationComponent } from '../../components/profile-education-co
   styleUrls: ['profile-education-page-duplicate.component.css'],
 })
 export class ProfileEducationPageDuplicate {
-  @ViewChild(ProfileEducationComponent) profileEducationComponent: ProfileEducationComponent;
+  @ViewChild('educationComponent') educationComponent: ProfileEducationComponent;
 
-  constructor(private title: Title, private meta: Meta, private router: Router) {
+  constructor(
+    private title: Title, 
+    private meta: Meta,
+    private router: Router,
+    private educationService: EducationService
+  ) {
     this.title.setTitle('Profile-Education-Page-Duplicate - Flashyre');
     this.meta.addTags([
       {
@@ -26,21 +32,42 @@ export class ProfileEducationPageDuplicate {
     ]);
   }
 
-  saveAndNext() {
-
-    if (this.profileEducationComponent) {
-      this.profileEducationComponent.saveAndNext();
-    } else {
-      console.error('ProfileEducationComponent not found');
-      this.router.navigate(['/profile-certification-page']); // Navigate anyway if component is missing
-    }
-  }
-
   goToPrevious() {
-    this.profileEducationComponent.goToPrevious();
+    this.router.navigate(['/profile-employment-page']);
   }
 
-  skipToNextSection() {
-    this.profileEducationComponent.skipToNextSection();
+  skip() {
+    this.router.navigate(['/profile-certification-page']);
+  }
+
+  saveAndNext() {
+    // Get education data from the component
+    const educationData = this.educationComponent.educations;
+    
+    // Format the data to match Django's expected format
+    // Note: We're no longer setting user here as the backend will handle it
+    const formattedData = educationData.map(education => ({
+      select_start_date: education.startDate,
+      select_end_date: education.endDate,
+      university: education.university,
+      education_level: education.level,
+      course: education.course,
+      specialization: education.specialization
+    }));
+    
+    console.log('Sending education data:', formattedData);
+    
+    // Send the data to the backend
+    this.educationService.addEducation(formattedData).subscribe(
+      response => {
+        console.log('Education saved successfully:', response);
+        this.router.navigate(['/profile-certification-page']);
+      },
+      error => {
+        console.error('Error saving education:', error);
+        // You could add an error message for the user here
+        alert('Error saving education data. Please try again.');
+      }
+    );
   }
 }

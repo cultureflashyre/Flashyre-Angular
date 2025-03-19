@@ -12,7 +12,7 @@
 }
  
 .profile-creation-navigation2-container2 {
-  gap: var(--dl-space-space-unit);
+  gap: var(--dl-layout-space-unit);
   flex: 0 0 auto;
   width: 720px;
   height: 48px;
@@ -27,6 +27,7 @@
   color: #05356c;
   width: 66px;
   height: 48px;
+  padding: var(--dl-layout-space-halfunit);
   transition: 0.3s;
   padding-top: 0px;
   border-color: #05356C;
@@ -37,7 +38,6 @@
 }
  
 .profile-creation-navigation2-skip-button:hover {
-  color: FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
@@ -55,7 +55,7 @@
 }
  
 .profile-creation-navigation2-container3 {
-  gap: var(--dl-space-space-unit);
+  gap: var(--dl-layout-space-unit);
   flex: 0 0 auto;
   width: 638px;
   height: 48px;
@@ -111,7 +111,6 @@
 .profile-creation-navigation2-previous-text:active {
   transform: scale(1.05);
   transition: all 0.7s;
-  background-color: #D7DFE7;
 }
  
 .profile-creation-navigation2-save-next-button {
@@ -121,6 +120,7 @@
   align-self: stretch;
   transition: 0.3s;
   padding-top: 0px;
+  border-width: 0px;
   padding-left: 0px;
   padding-right: 0px;
   padding-bottom: 0px;
@@ -190,9 +190,11 @@
   }
   .profile-creation-navigation2-skip-button {
     height: 40px;
+    align-self: center;
   }
   .profile-creation-navigation2-container3 {
     height: 40px;
+    align-self: center;
   }
   .profile-creation-navigation2-previous-button {
     height: 40px;
@@ -207,19 +209,28 @@
     height: 36px;
   }
   .profile-creation-navigation2-container2 {
-    height: 40px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
   }
   .profile-creation-navigation2-skip-button {
     height: 40px;
+    align-self: center;
   }
   .profile-creation-navigation2-container3 {
     height: 40px;
+    align-self: center;
   }
   .profile-creation-navigation2-previous-button {
     height: 40px;
+    align-self: center;
   }
   .profile-creation-navigation2-save-next-button {
     height: 40px;
+    align-self: center;
+  }
+  .profile-creation-navigation2root-class-name6 {
+    width: 100%;
   }
 }
  
