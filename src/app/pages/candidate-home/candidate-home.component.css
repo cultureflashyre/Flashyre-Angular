@@ -13,27 +13,6 @@
 }
 
 
-
-.apply-button:hover:not(:disabled) {
-  background-color: #3a7aa8;
-}
-
-.apply-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-
-
-.apply-button.applied {
-  background-color: #5cb85c;
-  cursor: default;
-}
-
-.tick-mark {
-  font-weight: bold;
-  margin-right: 5px;
-}
  
 .candidate-home-fragment10 {
   display: contents;
@@ -932,7 +911,52 @@
 }
  
 .candidate-home-fragment36 {
-  display: contents;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.candidate-home-fragment36 button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #4D91C6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  min-width: 120px;
+  text-align: center;
+}
+
+.candidate-home-fragment36 button:hover:not(:disabled) {
+  background-color: #3a7ca8;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-home-fragment36 button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.candidate-home-fragment36 button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.candidate-home-fragment36 button.applying {
+  background-color: #f5a623;
+}
+
+.candidate-home-fragment36 button.applied {
+  background-color: #4CAF50;
+}
+
+.candidate-home-fragment36 .tick-mark {
+  font-weight: bold;
+  margin-right: 4px;
 }
  
 .candidate-home-text128 {
