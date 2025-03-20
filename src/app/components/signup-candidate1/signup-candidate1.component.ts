@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { BufferOverlayService } from '../../services/buffer-overlay.service';
 import { BufferService } from '../../services/buffer.service'; 
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'signup-candidate1',
@@ -14,6 +15,9 @@ import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
   styleUrls: ['./signup-candidate1.component.css'],
 })
 export class SignupCandidate1 implements OnInit {
+
+  private baseUrl = environment.apiUrl;
+
   // Content projection properties
   @Input() rootClassName: string = '';
   @ContentChild('heading') heading: TemplateRef<any>;
@@ -91,16 +95,14 @@ export class SignupCandidate1 implements OnInit {
         password: this.signupForm.get('password').value,
       };
 
-      this.http.post('http://localhost:8000/signup-candidate/', formData, { withCredentials: true }).subscribe(
+      this.http.post(`${this.baseUrl}signup-candidate/`, formData, { withCredentials: true }).subscribe(
         (response: any) => {
           console.log('Signup successful', response);
           this.errorMessage = '';
           this.successMessage = response.message || 'Successfully Signed up';
           // Hide overlay before navigation
           this.spinner.hide();
-          setTimeout(() => {
-            this.router.navigate(['/profile-basic-information']);
-          }, 1500);
+          this.router.navigate(['/profile-basic-information']);
         },
         (error) => {
           console.log('Error response:', error);
@@ -126,7 +128,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`http://localhost:8000/check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -137,7 +139,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`http://localhost:8000/check-email/?email=${email}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-email/?email=${email}`, { withCredentials: true }).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );
