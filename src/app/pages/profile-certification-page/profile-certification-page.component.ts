@@ -2,7 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ProfileCertificationsComponent } from '../../components/profile-certifications-component/profile-certifications-component.component'; // Adjust the import path as needed
-
+ 
 @Component({
   selector: 'profile-certification-page',
   templateUrl: 'profile-certification-page.component.html',
@@ -10,7 +10,7 @@ import { ProfileCertificationsComponent } from '../../components/profile-certifi
 })
 export class ProfileCertificationPage implements AfterViewInit {
   @ViewChild('certificationsComponent', { static: false }) certificationsComponent!: ProfileCertificationsComponent;
-
+ 
   constructor(private title: Title, private meta: Meta, private router: Router) {
     this.title.setTitle('Profile-Certification-Page - Flashyre');
     this.meta.addTags([
@@ -25,11 +25,11 @@ export class ProfileCertificationPage implements AfterViewInit {
       },
     ]);
   }
-
+ 
   ngAfterViewInit() {
     console.log('CertificationsComponent:', this.certificationsComponent);
   }
-
+ 
   async saveAndNext() {
     if (this.certificationsComponent) {
       console.log('Calling submitCertification');
@@ -40,12 +40,12 @@ export class ProfileCertificationPage implements AfterViewInit {
       console.error('CertificationsComponent not initialized');
     }
   }
-
+ 
   goToPrevious() {
     console.log('Navigating to Previous');
     this.router.navigate(['/profile-employment-page']);
   }
-
+ 
   skipToEmployment() {
     console.log('Skipping to Employment');
     this.router.navigate(['/profile-last-page1']);
