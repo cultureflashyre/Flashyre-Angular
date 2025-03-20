@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
+
 import { AuthService } from '../../services/candidate.service';
 import { forkJoin } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'candidate-home',
@@ -12,11 +16,15 @@ import { forkJoin } from 'rxjs';
 })
 export class CandidateHome implements OnInit {
   jobs: any[] = [];
+
   appliedJobIds: number[] = [];
-  private apiUrl = 'http://localhost:8000/api/jobs/';
+
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
   isLoading: boolean = true;
+
+  private apiUrl = environment.apiUrl+'api/jobs/'; // Adjust to your Django server URL
+
 
   constructor(
     private title: Title,
