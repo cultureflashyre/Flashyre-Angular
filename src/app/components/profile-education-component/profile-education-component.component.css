@@ -86,15 +86,16 @@
 .profile-education-component-selecting-date-calendar {
   width: 324px;
   height: 48px;
-  display: flex;
+  display: block; /* Changed from flex, as input doesn’t need flex internally */
   align-self: flex-start;
-  align-items: center;
+  align-items: center; /* Kept for vertical centering in a flex parent */
   padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 10px;
-  flex-direction: row;
   padding-bottom: 0px;
-  justify-content: space-between;
+  padding-left: 10px; /* Added for balance */
+  padding-right: 10px; /* Increased to accommodate the picker icon */
+  border-color: #A7A7A7;
+  border-width: 1px; /* Added for completeness */
+  border-style: solid;
   background-color: #FFFFFF;
 }
  
@@ -117,9 +118,9 @@
   width: 324px;
   bottom: 4px;
   height: 48px;
-  display: flex;
+  display: block;
   position: absolute;
-  align-self: center;
+  align-self: flex-start;
   align-items: center;
   padding-top: 0px;
   border-color: #A7A7A7;
