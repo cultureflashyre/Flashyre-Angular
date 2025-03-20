@@ -246,7 +246,7 @@
  
 @media(max-width: 479px) {
   .profile-employment-page-main-container {
-    width: 100%;
+    width: 95%;
     height: auto;
     align-self: flex-start;
   }

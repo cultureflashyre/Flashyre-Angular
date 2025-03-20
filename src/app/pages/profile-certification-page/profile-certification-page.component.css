@@ -221,7 +221,7 @@
   display: inline-block;
   width: 128px;
   height: 48px;
-  padding-top: 10px;
+  padding-top: 8px;
   font-size: 16px;
 }
  
@@ -233,7 +233,7 @@
   display: inline-block;
   height: 48px;
   width: 66px;
-  padding-top: 13px;
+  padding-top: 10px;
   font-size: 16px;
 }
  
@@ -271,11 +271,18 @@
   .profile-certification-page-text23 {
     color: #18191c;
   }
+  .profile-certification-page-text42 {
+    color: rgb(5, 53, 108);
+    padding-top: 6px;
+  }
 }
  
 @media(max-width: 991px) {
   .profile-certification-page-certificate-container {
     height: 629px;
+  }
+  .profile-certification-page-text46 {
+    margin-bottom: 30px;
   }
 }
  
@@ -302,7 +309,7 @@
   }
   .profile-certification-page-certificate-container {
     height: 621px;
-  }
+  }   
 }
  
 @media(max-width: 479px) {
@@ -317,14 +324,19 @@
   }
   .profile-certification-page-text42 {
     color: rgb(5, 53, 108);
+    padding-top: 15px;
   }
   .profile-certification-page-text43 {
     font-size: 14px;
   }
   .profile-certification-page-text45 {
     font-size: 14px;
+    justify-self: center;
+    margin-left: -10px;
+
   }
   .profile-certification-page-text46 {
     font-size: 14px;
+    margin-left: -20px;
   }
 }
