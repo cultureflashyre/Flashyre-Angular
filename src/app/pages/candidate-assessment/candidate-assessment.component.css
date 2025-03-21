@@ -1074,7 +1074,7 @@
     }
     .candidate-assessment-assessment-description1-container {
       gap: 4px;
-      width: 587px;
+      width: 500px;
       height: auto;
     }
     .candidate-assessment-assessment1-name-container {
@@ -1419,7 +1419,7 @@
     }
     .candidate-assessment-assessment-description1-container {
       gap: 2px;
-      width: 475px;
+      width: 450px;
       height: auto;
     }
     .candidate-assessment-assessment1-name-container {
@@ -1443,6 +1443,13 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
+    }
+    .candidate-assessment-container11 {
+      width: 100%;
+      align-self: center;
+      align-items: center;
+      justify-content: flex-start;
+      justify-self: center;
     }
     .candidate-assessment-navbar-interactive {
       padding: var(--dl-space-space-unit);
@@ -1519,7 +1526,7 @@
     .candidate-assessment-assessment-article-card1-container {
       gap: 0;
       width: 100%;
-      height: 102px;
+      height: auto;
       padding: var(--dl-space-space-halfunit);
       justify-content: space-between;
     }
@@ -1541,6 +1548,7 @@
     }
     .candidate-assessment-assessment1-description {
       font-size: 10px;
+      height: auto;
     }
     .candidate-assessment-text6 {
       color: #5e6670;
