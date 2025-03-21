@@ -917,24 +917,25 @@
   margin-top: 10px;
   width: 100%;
 }
-
 .candidate-home-fragment36 button {
-  padding: 8px 16px;
+  margin: -88px -38px; /* Kept your existing margin */
   border-radius: 4px;
-  background-color: #4D91C6;
-  color: white;
+  color: #05356c;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 500;
+  font-weight: 600; /* Changed to semi-bold */
   min-width: 120px;
   text-align: center;
+  position: relative; /* Added for positioning control */
+  top: -5px; /* Moves the button up slightly; adjust as needed */
+  padding: 8px 16px; /* Added padding to ensure text isn't cut off */
 }
 
 .candidate-home-fragment36 button:hover:not(:disabled) {
-  background-color: #3a7ca8;
+  /*background-color: #3a7ca8;*/
   transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
 }
 
 .candidate-home-fragment36 button:active:not(:disabled) {
@@ -947,7 +948,7 @@
 }
 
 .candidate-home-fragment36 button.applying {
-  background-color: #f5a623;
+  /*background-color: #f5a623;*/
 }
 
 .candidate-home-fragment36 button.applied {
