@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AuthService } from '../../services/candidate.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 
 @Component({
   selector: 'login-candidate',
@@ -15,7 +16,9 @@ export class LoginCandidate {
     private title: Title,
     private meta: Meta,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService,
+
   ) {
     this.title.setTitle('Login-Candidate - Flashyre');
     this.meta.addTags([
@@ -32,6 +35,8 @@ export class LoginCandidate {
   }
 
   onLoginSubmit(event: { email: string, password: string }) {
+    this.spinner.show(); // Show spinner before making the request
+
     this.authService.login(event.email, event.password).subscribe(
       (response) => {
         if (response.message === 'Login successful') {
@@ -40,9 +45,11 @@ export class LoginCandidate {
         } else {
           this.errorMessage = 'Unexpected response from server';
         }
+        this.spinner.hide(); // Hide spinner after successful response
       },
       (error) => {
         this.errorMessage = error.error?.error || 'Login failed';
+        this.spinner.hide(); // Hide spinner after error
       }
     );
   }

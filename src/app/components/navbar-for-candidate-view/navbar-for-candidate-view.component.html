@@ -16,6 +16,7 @@
         [attr.alt]="imageAlt1"
         [attr.src]="imageSrc1"
         class="navbar-for-candidate-view-flashyre-image"
+        [routerLink]="['/candidate-home']"
       />
       <div
         data-thq="thq-navbar-nav"
@@ -30,9 +31,9 @@
             <ng-container>
               <ng-template #defaultLink1>
                 <div class="navbar-for-candidate-view-fragment12">
-                  <span class="navbar-for-candidate-view-text12">
+                  <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text12">
                     Dashboard
-                  </span>
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -66,9 +67,9 @@
             <ng-container>
               <ng-template #defaultLink3>
                 <div class="navbar-for-candidate-view-fragment19">
-                  <span class="navbar-for-candidate-view-text19">
+                  <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text19">
                     Assessment
-                  </span>
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -470,9 +471,9 @@
                   <ng-container>
                     <ng-template #defaultText7>
                       <div class="navbar-for-candidate-view-fragment25">
-                        <span class="navbar-for-candidate-view-text25">
+                        <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text25">
                           Dashboard
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container
@@ -540,9 +541,9 @@
                   <ng-container>
                     <ng-template #defaultText9>
                       <div class="navbar-for-candidate-view-fragment23">
-                        <span class="navbar-for-candidate-view-text23">
+                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text23">
                           Assessment
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container

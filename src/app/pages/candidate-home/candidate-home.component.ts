@@ -56,7 +56,7 @@ export class CandidateHome implements OnInit {
     
     // Get both jobs and applied job IDs in parallel
     forkJoin({
-      jobs: this.http.get<any[]>(this.apiUrl),
+      jobs: this.http.get<any[]>(this.apiUrl, {withCredentials: true}),
       appliedJobs: this.authService.getAppliedJobs()
     }).subscribe(
       (results) => {
@@ -80,7 +80,7 @@ export class CandidateHome implements OnInit {
   }
 
   fetchJobs(): void {
-    this.http.get<any[]>(this.apiUrl).subscribe(
+    this.http.get<any[]>(this.apiUrl, {withCredentials: true}).subscribe(
       (data) => {
         this.jobs = data;
       },

@@ -27,7 +27,8 @@ export class ProfileBasicinformationComponent implements OnInit {
   phoneNumber: string = '';
   profilePicture: File | null = null;
   resume: File | null = null;
-  imageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
+  imageSrc: string = ''; // Holds the preview URL of the selected image
+  defaultImageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
   imageAlt: string = 'Profile Picture';
 
   constructor(private profileService: ProfileService, private router: Router) {}
@@ -68,6 +69,7 @@ export class ProfileBasicinformationComponent implements OnInit {
     if (file && this.validateProfilePicture(file)) {
       this.profilePicture = file;
       this.imageSrc = URL.createObjectURL(file);
+      console.log("Picture selected: ", this.imageSrc);
     } else {
       alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
       this.profilePictureInput.nativeElement.value = '';
@@ -101,8 +103,8 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   saveProfile() {
-    if (!this.profilePicture || !this.resume) {
-      alert('Please upload both a profile picture and a resume before saving.');
+    if (!this.resume) {
+      alert('Recommended to upload a Resume before saving.');
       return;
     }
 

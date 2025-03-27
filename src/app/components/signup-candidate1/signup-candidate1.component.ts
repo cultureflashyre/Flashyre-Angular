@@ -4,8 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { BufferOverlayService } from '../../services/buffer-overlay.service';
-import { BufferService } from '../../services/buffer.service'; 
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 
@@ -45,8 +43,6 @@ export class SignupCandidate1 implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private bufferService: BufferService,
-    private bufferOverlayService: BufferOverlayService,
     private spinner: NgxSpinnerService
   ) {}
 
@@ -86,7 +82,8 @@ export class SignupCandidate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.spinner.show();
+      this.spinner.show(); // Show spinner only when request starts
+
       const formData = {
         first_name: this.signupForm.get('first_name').value,
         last_name: this.signupForm.get('last_name').value,
