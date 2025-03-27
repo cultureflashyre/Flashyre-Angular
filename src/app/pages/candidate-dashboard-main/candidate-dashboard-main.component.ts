@@ -51,15 +51,13 @@ export class CandidateDashboardMain {
         } else {
           this.assessmentScore = 'Not Available';
         }
+        this.spinner.hide(); // Hide spinner after successful response
       },
       error: (error) => {
         console.error('Error fetching assessment score:', error);
         this.assessmentScore = 'Failed to Load';
+        this.spinner.hide(); // Hide spinner after error
       },
-      complete: () => {
-        // Hide spinner after request completes
-        this.spinner.hide();
-      }
     });
   }
 }

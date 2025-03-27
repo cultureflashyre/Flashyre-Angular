@@ -41,7 +41,8 @@
           <img
             id="candidate-profile-picture"
             [attr.alt]="imageAlt"
-            [attr.src]="imageSrc"
+            [src]="imageSrc || defaultImageSrc"
+            
             class="profile-basicinformation-component-user-image"
           />
           <div class="overlay" (click)="triggerProfilePictureUpload()">

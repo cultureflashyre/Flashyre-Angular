@@ -34,6 +34,10 @@
   width: 200px;
   object-fit: cover;
 }
+
+.navbar-for-candidate-view-flashyre-image:hover {
+  cursor: pointer;
+}
  
 .navbar-for-candidate-view-desktop-menu {
   flex: 1;

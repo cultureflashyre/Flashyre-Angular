@@ -57,6 +57,10 @@
     height: 100%;
     object-fit: cover;
   }
+
+  .candidate-assessment-flashyre-image:hover {
+    cursor: pointer;
+  }
    
   .candidate-assessment-desktop-menu {
     flex: 1;

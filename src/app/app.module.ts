@@ -43,8 +43,7 @@ const routes = [
     path: 'profile-basic-information',
     loadChildren: () =>
       import('./pages/profile-basic-information/profile-basic-information.module').then(
-        (m) => m.ProfileBasicInformationModule
-      ),
+        (m) => m.ProfileBasicInformationModule),
     canActivate: [AuthGuard], // Protect this route
   },
   {
