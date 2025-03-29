@@ -26,7 +26,7 @@ export class ProfileService {
     //this.bufferService.show();
     this.spinner.show();
 
-    return this.http.get(url, { withCredentials: true }).pipe(
+    return this.http.get(url).pipe(
       // Hide buffer after the request completes
       finalize(() => this.spinner.hide())
     );
@@ -40,7 +40,7 @@ export class ProfileService {
     //this.bufferService.show();
     this.spinner.show()
 
-    return this.http.post(url, profileData, { withCredentials: true }).pipe(
+    return this.http.post(url, profileData).pipe(
       // Hide buffer after the request completes
       finalize(() => this.spinner.hide())
     );
