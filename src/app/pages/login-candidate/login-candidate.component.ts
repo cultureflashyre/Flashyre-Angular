@@ -39,11 +39,14 @@ export class LoginCandidate {
 
     this.authService.login(event.email, event.password).subscribe(
       (response) => {
-        if (response.message === 'Login successful') {
+        if (response.access) { // Check for token in response
+          console.log("Response Access Token: ", response.access);
+          localStorage.setItem('jwtToken', response.access); // Store the access token
+
           this.errorMessage = '';
           this.router.navigate(['/candidate-home']);
         } else {
-          this.errorMessage = 'Unexpected response from server';
+          this.errorMessage = response.access;
         }
         this.spinner.hide(); // Hide spinner after successful response
       },

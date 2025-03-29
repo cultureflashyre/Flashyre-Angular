@@ -53,7 +53,7 @@ export class AssessmentService {
     this.spinner.show(); // Show spinner before making the request
 
     return new Observable<AssessmentResponse>((observer) => {
-      this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true })
+      this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`)
         .subscribe({
           next: (response) => {
             this.spinner.hide(); // Hide spinner on successful response
@@ -82,7 +82,7 @@ export class AssessmentService {
     this.spinner.show(); // Show spinner before submitting
 
     return new Observable((observer) => {
-      this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true })
+      this.http.post(`${this.apiUrl}/submit-assessment/`, answers)
         .subscribe({
           next: (response) => {
             this.spinner.hide(); // Hide spinner on successful submission

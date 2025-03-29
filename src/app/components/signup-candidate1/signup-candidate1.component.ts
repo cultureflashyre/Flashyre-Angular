@@ -92,11 +92,15 @@ export class SignupCandidate1 implements OnInit {
         password: this.signupForm.get('password').value,
       };
 
-      this.http.post(`${this.baseUrl}signup-candidate/`, formData, { withCredentials: true }).subscribe(
+      this.http.post(`${this.baseUrl}signup-candidate/`, formData).subscribe(
         (response: any) => {
           console.log('Signup successful', response);
           this.errorMessage = '';
           this.successMessage = response.message || 'Successfully Signed up';
+          
+          // Store JWT token in local storage or session storage
+          localStorage.setItem('jwtToken', response.access); // Store the access token
+
           // Hide overlay before navigation
           this.spinner.hide();
           this.router.navigate(['/profile-basic-information']);
