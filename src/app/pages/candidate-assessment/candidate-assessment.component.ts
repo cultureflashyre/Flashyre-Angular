@@ -11,10 +11,13 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['candidate-assessment.component.css'],
 })
 export class CandidateAssessment {
+  userProfile: any = {}; // To store user profile data
+  defaultProfilePicture: string = 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__';
+
   private baseUrl = environment.apiUrl;
 
-  candidateName: string = ''; // Initialize to empty string
-  candidateProfilePictureUrl: string = 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'; // Default profile picture URL
+  //candidateName: string = ''; // Initialize to empty string
+  //candidateProfilePictureUrl: string = 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'; // Default profile picture URL
 
   raw6b6z: string = ' '
   constructor(
@@ -38,29 +41,34 @@ export class CandidateAssessment {
     ])
   }
 
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    }
+  }
+
+  get candidateProfilePictureUrl(): string {
+    return this.userProfile.profile_picture_url ? this.userProfile.profile_picture_url : this.defaultProfilePicture;
+  }
+
+  get candidateName(): string {
+    return `${this.userProfile.first_name || '--'} ${this.userProfile.last_name || '--'}`;
+  }
+
+  get candidateJobRole(): string {
+    if (this.userProfile.job_title) {
+      return `${this.userProfile.job_title} @ ${this.userProfile.company_name || '--'}`;
+    } else if (this.userProfile.education_level) {
+      return `${this.userProfile.education_level} from ${this.userProfile.university || '--'}`;
+    } else {
+      return '--';
+    }
+  }
+
   ngOnInit(): void {
-    // Show spinner before making the HTTP request
-    this.spinner.show();
+    this.loadUserProfile();
 
-    this.http.get(`${this.baseUrl}profile/get-user-profile-info/`)
-      .subscribe({
-        next: (response: any) => {
-          this.spinner.hide();
-
-          this.candidateName = response.full_name;
-          this.candidateProfilePictureUrl = response.profile_picture_url ? response.profile_picture_url : 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__';
-        },
-        error: (error) => {
-          this.spinner.hide();
-          console.error('Error fetching profile:', error);
-          if (error.status === 401) {
-            this.router.navigate(['/login-candidate']); // Redirect to login if unauthorized
-          } else {
-            alert('Failed to load user details. Please try again.');
-          }
-          // Handle the error appropriately (e.g., display a message to the user)
-        }
-      });
   }
 
 

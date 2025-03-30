@@ -35,6 +35,7 @@
                 <a
                   
                   id="navbar-upskill-link"
+                  [routerLink]="['/candidate-assessment']"
                   class="candidate-assessment-upskill-link thq-body-small button"
                 >
                   Upskill
@@ -54,6 +55,7 @@
                   id="navbar-jobs-for-you-link"
                   target="_blank"
                   rel="noreferrer noopener"
+                  [routerLink]="['/candidate-dashboard-main']"
                   class="candidate-assessment-jobs-for-you-link thq-body-small button"
                 >
                   Jobs for you
@@ -70,8 +72,9 @@
               >
                 <img
                   id="user-image"
-                  alt="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
-                  src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
+                  [src]="candidateProfilePictureUrl"
+                  alt="Image of {{ candidateName }}"
+
                   class="candidate-assessment-user-image1"
                 />
                 <div
@@ -212,7 +215,7 @@
                       <img
                         id="candidate-profile-picture"
                         [src]="candidateProfilePictureUrl"
-                        alt= 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
+                        alt="Image of {{ candidateName }}"
                         class="candidate-assessment-user-image2"
                       />
                       <div
@@ -229,7 +232,7 @@
                           id="navbar-candidate-profile-completion"
                           class="candidate-assessment-profile-complet-indication"
                         >
-                          ✅ 90% Profile Completion
+                        {{ userProfile.profile_completion || '90' }}% Profile Completion
                         </span>
                         <span
                           id="navbar-candidate-view-edit-profile-button"
@@ -564,7 +567,7 @@
                 <img
                   id="candidate-profile-picture"
                   [src]="candidateProfilePictureUrl"
-                  alt= 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
+                  alt="Image of {{ candidateName }}"
                   class="candidate-assessment-candidate-image thq-img-ratio-1-1 thq-img-round"
                 />
                 <div
@@ -583,7 +586,7 @@
                       class="candidate-assessment-role-of-the-candidate"
                     >
                       <span class="candidate-assessment-text1">
-                        Senior Software Engineer @Microsoft
+                        {{ candidateJobRole }}
                       </span>
                       <br />
                     </span>
@@ -610,7 +613,7 @@
                         id="candidate-profile-completion"
                         class="candidate-assessment-profile-completion"
                       >
-                        90% Profile Completion
+                      {{ userProfile.profile_completion || '90' }}% Profile Completion
                       </span>
                     </div>
                   </div>

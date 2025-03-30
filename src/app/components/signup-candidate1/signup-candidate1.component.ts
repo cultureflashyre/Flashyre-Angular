@@ -6,6 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
+import { UserProfileService } from '../../services/user-profile.service';
 
 @Component({
   selector: 'signup-candidate1',
@@ -43,7 +44,8 @@ export class SignupCandidate1 implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private userProfileService: UserProfileService,
   ) {}
 
   ngOnInit() {
@@ -101,9 +103,20 @@ export class SignupCandidate1 implements OnInit {
           // Store JWT token in local storage or session storage
           localStorage.setItem('jwtToken', response.access); // Store the access token
 
+          // Fetch user profile after successful login
+          this.userProfileService.fetchUserProfile().subscribe(
+            () => {
+              this.errorMessage = '';
+              this.router.navigate(['/profile-basic-information']);
+            },
+            (profileError) => {
+              console.error('Error fetching profile', profileError);
+              // Navigate anyway, but with a warning
+              this.router.navigate(['/profile-basic-information']);
+            }
+          );
           // Hide overlay before navigation
           this.spinner.hide();
-          this.router.navigate(['/profile-basic-information']);
         },
         (error) => {
           console.log('Error response:', error);
