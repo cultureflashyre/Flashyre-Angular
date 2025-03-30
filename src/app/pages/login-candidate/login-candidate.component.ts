@@ -39,7 +39,11 @@ export class LoginCandidate {
 
     this.authService.login(event.email, event.password).subscribe(
       (response) => {
-        if (response.message === 'Login successful') {
+
+        if (response.access) { // Check for token in response
+          console.log("Response Access Token: ", response.access);
+          localStorage.setItem('jwtToken', response.access); // Store the access token
+          
           // Fetch user profile after successful login
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
@@ -53,7 +57,7 @@ export class LoginCandidate {
             }
           );
         } else {
-          this.errorMessage = 'Unexpected response from server';
+          this.errorMessage = response.access;
         }
         this.spinner.hide();
       },

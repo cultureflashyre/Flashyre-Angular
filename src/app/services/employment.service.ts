@@ -20,8 +20,7 @@ export class EmploymentService {
         start_date: position.startDate,
         end_date: position.endDate || null,
         job_details: position.jobDetails,
-      },
-       { withCredentials: true })
+      })
     );
 
     // Show spinner before making requests

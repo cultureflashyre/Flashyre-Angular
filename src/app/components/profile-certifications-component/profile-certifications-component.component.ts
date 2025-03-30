@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
+import { CertificationService } from 'src/app/services/certification.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'profile-certifications-component',
@@ -33,7 +35,8 @@ export class ProfileCertificationsComponent implements OnInit {
   todayDate: string;
 
   constructor(private fb: FormBuilder, 
-    private http: HttpClient, private spinner: NgxSpinnerService
+    private http: HttpClient, private spinner: NgxSpinnerService,
+    private certificationService: CertificationService,
   ) {
     this.certificationForm = this.fb.group({
       certifications: this.fb.array([this.createCertificationGroup()]),
@@ -105,27 +108,22 @@ export class ProfileCertificationsComponent implements OnInit {
   async submitCertification(): Promise<void> {
     if (this.certificationForm.valid) {
       const data = this.certificationForm.value.certifications;
-      const promises = data.map((cert: any) =>
-        this.http.post(`${this.baseUrl}api/certifications/`, cert, { withCredentials: true }).toPromise()
-          .then((response) => {
-            console.log('Certification saved:', response);
-          })
-          .catch((error) => {
-            console.error('Error saving certification:', error);
-            throw error;
-          })
+      const requests = data.map((cert: any) => 
+        this.certificationService.saveCertification(cert)
       );
 
       // Show spinner before making requests
       this.spinner.show();
 
       try {
-        await Promise.all(promises);
+        await forkJoin(requests).toPromise(); // Wait for all requests to complete
         this.certificationForm.reset();
         this.certifications.clear();
         this.certifications.push(this.createCertificationGroup());
+        console.log('All certifications saved successfully');
       } catch (error) {
-        // Error already logged in catch block above
+        console.error('Error saving certifications:', error);
+        // Handle error accordingly, e.g., show a notification to the user
       } finally {
         // Hide spinner after all requests are completed
         this.spinner.hide();

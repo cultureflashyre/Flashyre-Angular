@@ -42,7 +42,7 @@ export class CandidateAssessment {
     // Show spinner before making the HTTP request
     this.spinner.show();
 
-    this.http.get(`${this.baseUrl}profile/get-user-profile-info/`, { withCredentials: true })
+    this.http.get(`${this.baseUrl}profile/get-user-profile-info/`)
       .subscribe({
         next: (response: any) => {
           this.spinner.hide();

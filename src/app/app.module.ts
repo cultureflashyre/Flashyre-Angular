@@ -11,6 +11,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BufferService } from './services/buffer.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 const routes = [
   {
@@ -44,7 +45,7 @@ const routes = [
     loadChildren: () =>
       import('./pages/profile-basic-information/profile-basic-information.module').then(
         (m) => m.ProfileBasicInformationModule),
-    canActivate: [AuthGuard], // Protect this route
+     // Protect this route
   },
   {
     path: 'recruiter-view-3rd-page',
@@ -205,11 +206,9 @@ const routes = [
 @NgModule({
   declarations: [AppComponent],
   imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
-  providers: [BufferService, {
-    provide: HTTP_INTERCEPTORS,
-    useClass: BufferInterceptor,
-    multi: true
-  }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
