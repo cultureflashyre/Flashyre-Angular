@@ -34,7 +34,7 @@ export class UserProfileService {
   }
 
   fetchUserProfile(): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.apiUrl}complete-profile/`, { withCredentials: true })
+    return this.http.get<UserProfile>(`${this.apiUrl}complete-profile/`)
       .pipe(
         tap(profile => {
           // Store in local storage
@@ -52,5 +52,9 @@ export class UserProfileService {
 
   getCurrentUserProfile(): UserProfile | null {
     return this.userProfileSubject.value;
+  }
+
+  refreshUserProfileValues() {
+    return this.fetchUserProfile();
   }
 }

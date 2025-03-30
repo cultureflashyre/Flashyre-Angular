@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
  import { Title, Meta } from '@angular/platform-browser'
  import { Router } from '@angular/router';
-
+ import { UserProfileService } from '../../services/user-profile.service'; 
 
  @Component({
    selector: 'profile-last-page1',
@@ -9,7 +9,12 @@ import { Component } from '@angular/core'
    styleUrls: ['profile-last-page1.component.css'],
  })
  export class ProfileLastPage1 {
-   constructor(private title: Title, private meta: Meta, private router: Router) {
+   constructor(
+    private title: Title, 
+    private meta: Meta, 
+    private router: Router,
+    private userProfileService: UserProfileService
+  ) {
      this.title.setTitle('Profile-Last-Page1 - Flashyre')
      this.meta.addTags([
        {
@@ -26,10 +31,24 @@ import { Component } from '@angular/core'
 
    ngAfterViewInit() {
     console.log('Displaying profile last page1, buffer-name component');
-  
-    setTimeout(() => {
-      this.router.navigate(['/candidate-assessment']);
-    }, 4000); // 3000 milliseconds = 3 seconds
+    
+    // Fetch latest data from the server and refresh local storage
+    this.userProfileService.fetchUserProfile().subscribe({
+      next: (profile) => {
+        console.log('Profile refreshed:', profile);
+        // Navigate after successful refresh
+        setTimeout(() => {
+          this.router.navigate(['/candidate-assessment']);
+        }, 4000);
+      },
+      error: (err) => {
+        console.error('Failed to refresh profile:', err);
+        // Navigate even if refresh fails (optional)
+        setTimeout(() => {
+          this.router.navigate(['/candidate-assessment']);
+        }, 4000);
+      }
+    });
   }
   
  }

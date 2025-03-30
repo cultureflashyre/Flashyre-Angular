@@ -49,7 +49,9 @@
             <ng-container>
               <ng-template #defaultLink2>
                 <div class="navbar-for-candidate-view-fragment15">
-                  <span class="navbar-for-candidate-view-text15">Upskill</span>
+                  <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text15">
+                    Upskill
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -87,9 +89,9 @@
             <ng-container>
               <ng-template #defaultLink4>
                 <div class="navbar-for-candidate-view-fragment17">
-                  <span class="navbar-for-candidate-view-text17">
+                  <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text17">
                     Jobs for you
-                  </span>
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -109,8 +111,8 @@
         >
           <img
             id="user-image"
-            [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
+            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -294,8 +296,8 @@
               >
                 <img
                   id="candidate-profile-picture"
-                  [attr.alt]="imageAlt4"
-                  [attr.src]="imageSrc4"
+                  alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   class="navbar-for-candidate-view-user-image2"
                 />
                 <div
@@ -310,7 +312,7 @@
                       <ng-template #defaultText4>
                         <div class="navbar-for-candidate-view-fragment22">
                           <span class="navbar-for-candidate-view-text22">
-                            Kathryn Murphy
+                            {{ userProfile.first_name }} {{ userProfile.last_name }}
                           </span>
                         </div>
                       </ng-template>
@@ -506,9 +508,9 @@
                   <ng-container>
                     <ng-template #defaultText8>
                       <div class="navbar-for-candidate-view-fragment13">
-                        <span class="navbar-for-candidate-view-text13">
+                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text13">
                           Upskill
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container
@@ -572,9 +574,9 @@
                   <ng-container>
                     <ng-template #defaultText10>
                       <div class="navbar-for-candidate-view-fragment24">
-                        <span class="navbar-for-candidate-view-text24">
+                        <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text24">
                           Jobs for you
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container

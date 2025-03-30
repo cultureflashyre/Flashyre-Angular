@@ -6,6 +6,10 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['navbar-for-candidate-view1.component.css'],
 })
 export class NavbarForCandidateView1 {
+
+  userProfile: any = {}; // To store user profile data
+  defaultProfilePicture: string = "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&ixlib=rb-4.0.3&w=300";
+
   @ContentChild('text5')
   text5: TemplateRef<any>
   @ContentChild('text31')
@@ -44,4 +48,18 @@ export class NavbarForCandidateView1 {
   @Input()
   imageSrc1: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png'
   constructor() {}
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log("User Profile NOT fetched");
+    }
+  }
+
 }

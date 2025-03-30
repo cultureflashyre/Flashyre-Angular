@@ -15,6 +15,9 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['candidate-home.component.css'],
 })
 export class CandidateHome implements OnInit {
+  userProfile: any = {}; // To store user profile data
+  defaultProfilePicture: string = "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&ixlib=rb-4.0.3&w=300";
+
   jobs: any[] = [];
 
   appliedJobIds: number[] = [];
@@ -22,6 +25,27 @@ export class CandidateHome implements OnInit {
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
   isLoading: boolean = true;
+
+  images = [
+    'src/assets/temp-jobs-icon/1.png',
+    'src/assets/temp-jobs-icon/2.png',
+    'src/assets/temp-jobs-icon/3.png',
+    'src/assets/temp-jobs-icon/4.png',
+    'src/assets/temp-jobs-icon/5.png',
+    'src/assets/temp-jobs-icon/6.png',
+    'src/assets/temp-jobs-icon/7.png',
+    'src/assets/temp-jobs-icon/8.png'
+  ];
+
+  getRandomImage(): string {
+    const randomIndex = Math.floor(Math.random() * this.images.length);
+    return this.images[randomIndex];
+  }
+
+  jobsWithImages = this.jobs.map(job => ({
+    ...job,
+    imageSrc: this.getRandomImage()
+  }));
 
   private apiUrl = environment.apiUrl+'api/jobs/'; // Adjust to your Django server URL
 
@@ -49,6 +73,16 @@ export class CandidateHome implements OnInit {
 
   ngOnInit(): void {
     this.loadJobsAndFilterApplied();
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log("User Profile NOT fetched");
+    }
   }
 
   loadJobsAndFilterApplied(): void {
