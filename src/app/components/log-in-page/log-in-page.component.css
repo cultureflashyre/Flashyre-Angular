@@ -143,6 +143,8 @@
   border-radius: 0px;
   justify-content: center;
   background-color: transparent;
+  color: rgb(5, 53, 108);
+  ;
 }
  
 .log-in-page-show-text:hover {
@@ -176,22 +178,25 @@
  
 .log-in-page-error-login-container {
   flex: 0 0 auto;
-  width: auto;
+  width: 100%; /* Full width for better alignment */
   height: auto;
-  display: none;
+  display: flex; /* Change from 'none' to 'flex' when error exists due to *ngIf */
   align-self: center;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px; /* Space below the login button */
 }
- 
+
 .log-in-page-error-message-login {
   fill: #FFFFFF;
-  color: #FFFFFF;
+  color: #F65E5C;
   font-style: normal;
   font-weight: 500;
   border-width: 0px;
-  background-color: #F65E5C;
-  margin-top: 10px;
+  margin-top: 0; /* Remove margin-top since container handles spacing */
   font-size: 14px;
+  padding: 5px 10px; /* Add padding for better appearance */
+  border-radius: 4px; /* Optional: Rounded corners */
 }
  
 .log-in-page-container6 {
@@ -220,6 +225,7 @@
   transition: 0.3s;
   align-items: center;
   border-width: 0px;
+  color: rgb(5, 53, 108);
 }
  
 .log-in-page-signup-text:hover {

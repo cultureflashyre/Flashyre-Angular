@@ -21,6 +21,28 @@
   justify-content: flex-start;
   background-image: linear-gradient(0deg, rgba(226, 226, 226, 0.57) 59.00%,rgba(226, 226, 226, 0.57) 59.00%);
 }
+
+/* login-candidate.component.css */
+
+/* Existing styles (if any) can remain here */
+
+.error-message {
+  color: #F65E5C;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px; /* Optional: adjust size as needed */
+}
+
+.log-in-page-error-message-login {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  font-style: normal;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #F65E5C;
+  margin-top: 10px;
+  font-size: 14px;
+}
  
 .login-candidate-fragment1 {
   display: contents;

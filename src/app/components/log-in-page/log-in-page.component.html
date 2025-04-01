@@ -28,11 +28,12 @@
               type="email"
               id="login-email-input"
               [(ngModel)]="email"
+              (ngModelChange)="onEmailChange()" 
               name="email"
               [attr.placeholder]="textinputPlaceholder"
               class="log-in-page-email-input input"
               required
-            />
+            /><!-- Added -->
           </div>
         </div>
         <div id="password-container" class="log-in-page-password-container">
@@ -51,11 +52,12 @@
               [type]="showPassword ? 'text' : 'password'"
               id="login-password-input"
               [(ngModel)]="password"
+              (ngModelChange)="onPasswordChange()" 
               name="password"
               [attr.placeholder]="textinputPlaceholder1"
               class="log-in-page-password-input input"
               required
-            />
+            /><!-- Added -->
             <span
               id="login-password-show-button"
               class="log-in-page-show-text button"
