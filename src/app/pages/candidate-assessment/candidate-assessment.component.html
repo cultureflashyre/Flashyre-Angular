@@ -669,59 +669,55 @@
               Assessments Available
             </span>
             <div
-              id="assessments-main-container"
-              class="candidate-assessment-assessments-main-container"
-            >
-              <div
-                id="assessment-article-card1-container"
-                class="candidate-assessment-assessment-article-card1-container"
-              >
-                <div
-                  id="company-icon-container"
-                  class="candidate-assessment-company-icon-container"
-                >
-                  <img
-                    src="../../../assets/assessment_logo/sap_logo1.png"
-                    alt="https://play.teleporthq.io/static/svg/default-img.svg"
-                    
-                    id="company-image"
-                    class="candidate-assessment-company-image"
-                  />
-                </div>
-                <div
-                  id="assessment-description1-container"
-                  class="candidate-assessment-assessment-description1-container"
-                >
-                  <span
-                    id="assessment1-name-container"
-                    class="candidate-assessment-assessment1-name-container"
-                  >
-                    SAP Readiness Survey
-                  </span>
-                  <span
-                    id="assessment1-description"
-                    class="candidate-assessment-assessment1-description"
-                  >
-                    <span class="candidate-assessment-text6">
-                      This survey is designed to evaluate participants&rsquo; understanding of SAP&rsquo;s ecosystem,  
-  including its core technologies, and real-world applications. Comprising 25 multiple&ndash;choice questions,  
-  it assesses advanced knowledge of SAP&rsquo;s problem-solving capabilities, ethical frameworks,  
-  and integration with emerging technologies like AI and blockchain. Results will identify participants&rsquo;  
-  proficiency levels (Advanced/Intermediate/Foundational), helping organizers tailor support for teams to leverage SAP tools effectively during the hackathon.
-                    </span>
-                    <span><span [innerHTML]="raw6b6z"></span></span>
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  id="lets-go1-button"
-                  class="candidate-assessment-lets-go1-button button"
-                  (click) = "sapSurvey()"
-                >
-                  Let&apos;s Go
-                </button>
-              </div>
-            </div>
+  id="assessments-main-container"
+  class="candidate-assessment-assessments-main-container"
+>
+  <!-- Loop through assessments dynamically -->
+  <div
+    *ngFor="let assessment of assessments"
+    id="assessment-article-card1-container"
+    class="candidate-assessment-assessment-article-card1-container"
+  >
+    <div
+      id="company-icon-container"
+      class="candidate-assessment-company-icon-container"
+    >
+      <img
+        [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
+        alt="Assessment Logo"
+        id="company-image"
+        class="candidate-assessment-company-image"
+      />
+    </div>
+    <div
+      id="assessment-description1-container"
+      class="candidate-assessment-assessment-description1-container"
+    >
+      <span
+        id="assessment1-name-container"
+        class="candidate-assessment-assessment1-name-container"
+      >
+        {{ assessment.assessment_title }}
+      </span>
+      <span
+        id="assessment1-description"
+        class="candidate-assessment-assessment1-description"
+      >
+        <span class="candidate-assessment-text6">
+          {{ assessment.assessment_description }}
+        </span>
+      </span>
+    </div>
+    <button
+      type="button"
+      id="lets-go1-button"
+      class="candidate-assessment-lets-go1-button button"
+      (click)="startAssessment(assessment.assessment_id)"
+    >
+      Let's Go
+    </button>
+  </div>
+</div>
           </div>
         </div>
       </div>
