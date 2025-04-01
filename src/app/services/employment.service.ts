@@ -7,7 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
   providedIn: 'root',
 })
 export class EmploymentService {
-  private apiUrl = 'http://localhost:8000/api/employment/';
+  private apiUrl = 'http://localhost:8000/employment/';
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
 

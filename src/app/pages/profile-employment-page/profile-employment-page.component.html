@@ -3,7 +3,6 @@
     <navbar-for-candidate-view1
       rootClassName="navbar-for-candidate-view1root-class-name"
     >
-      <!-- Existing navbar content unchanged -->
       <ng-template #text1>
         <div class="profile-employment-page-fragment10">
           <span class="profile-employment-page-text10">Profile</span>
@@ -67,8 +66,8 @@
         rootClassName="progress-bar-step2root-class-name1"
       ></progress-bar-step2>
       <profile-employment-component
-        #employmentComponent
         rootClassName="profile-employment-componentroot-class-name1"
+        #employmentComponent
       >
         <ng-template #text>
           <div class="profile-employment-page-fragment20">
@@ -90,9 +89,16 @@
             <span class="profile-employment-page-text23">End Date</span>
           </div>
         </ng-template>
-        <ng-template #text111>
+        <ng-template #text71>
           <div class="profile-employment-page-fragment24">
             <span class="profile-employment-page-text24">
+              - Remove Position
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text111>
+          <div class="profile-employment-page-fragment25">
+            <span class="profile-employment-page-text25">
               <span>Start Date</span>
               <br />
               <br />
@@ -100,8 +106,8 @@
           </div>
         </ng-template>
         <ng-template #text311>
-          <div class="profile-employment-page-fragment25">
-            <span class="profile-employment-page-text28">Select</span>
+          <div class="profile-employment-page-fragment26">
+            <span class="profile-employment-page-text29">Select</span>
           </div>
         </ng-template>
       </profile-employment-component>
@@ -109,23 +115,21 @@
         rootClassName="profile-creation-navigation2root-class-name4"
       >
         <ng-template #text>
-          <div class="profile-employment-page-fragment26">
-            <span (click)="goToPrevious()" class="profile-employment-page-text29 button">
-              <span class="profile-employment-page-text30"><- Previous</span>
+          <div class="profile-employment-page-fragment27">
+            <span class="profile-employment-page-text30" (click)="goToPrevious()">
+              <span class="profile-employment-page-text31"><- Previous</span>
               <br />
             </span>
           </div>
         </ng-template>
         <ng-template #button>
-          <div class="profile-employment-page-fragment27">
-            <span (click)="skipToEducation()" class="profile-employment-page-text32 button">
-              Skip
-            </span>
+          <div class="profile-employment-page-fragment28">
+            <span class="profile-employment-page-text33" (click)="skip()">Skip</span>
           </div>
         </ng-template>
         <ng-template #button1>
-          <div class="profile-employment-page-fragment28">
-            <span (click)="saveAndNext()" class="profile-employment-page-text33 button">
+          <div class="profile-employment-page-fragment29">
+            <span class="profile-employment-page-text34" (click)="saveAndNext()">
               Save & Next ->
             </span>
           </div>

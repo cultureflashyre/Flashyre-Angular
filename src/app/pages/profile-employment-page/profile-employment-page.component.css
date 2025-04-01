@@ -14,7 +14,7 @@
   gap: 24px;
   flex: 0 0 auto;
   width: 100%;
-  height: auto;
+  height: 900px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -101,13 +101,12 @@
 }
  
 .profile-employment-page-employment-container {
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   display: flex;
   align-self: center;
   align-items: flex-start;
   flex-direction: column;
-  gap: 24px;
-  z-index: 999;
 }
  
 .profile-employment-page-fragment20 {
@@ -137,7 +136,6 @@
 .profile-employment-page-text22 {
   color: rgb(5, 53, 108);
   display: inline-block;
-  background-color: #FFFFFF;
 }
  
 .profile-employment-page-fragment23 {
@@ -154,7 +152,7 @@
 }
  
 .profile-employment-page-text24 {
-  color: #18191c;
+  color: rgb(241, 4, 0);
   display: inline-block;
 }
  
@@ -162,36 +160,26 @@
   display: contents;
 }
  
-.profile-employment-page-text28 {
+.profile-employment-page-text25 {
+  color: #18191c;
   display: inline-block;
 }
  
 .profile-employment-page-fragment26 {
   display: contents;
-
 }
  
 .profile-employment-page-text29 {
-  color: #05356c;
   display: inline-block;
-  border-color: transparent;
-  width: 153px;
-  height: 48px;
-  font-size: 16px;
 }
  
 .profile-employment-page-fragment27 {
   display: contents;
 }
  
-.profile-employment-page-text32 {
+.profile-employment-page-text30 {
   color: #05356c;
   display: inline-block;
-  width: 66px;
-  height: 48px;
-  align-content: center;
-  border-width: 0px;
-  background-color: transparent;
 }
  
 .profile-employment-page-fragment28 {
@@ -200,10 +188,14 @@
  
 .profile-employment-page-text33 {
   display: inline-block;
-  color: #FFFFFF;
-  background-color: #05356c;
-  border-width: 0px;
-  font-size: 16px;
+}
+ 
+.profile-employment-page-fragment29 {
+  display: contents;
+}
+ 
+.profile-employment-page-text34 {
+  display: inline-block;
 }
  
 @media(max-width: 1200px) {
@@ -242,6 +234,9 @@
   .profile-employment-page-text18 {
     font-size: 10px;
   }
+  .profile-employment-page-employment-container {
+    height: 570px;
+  }
 }
  
 @media(max-width: 479px) {
@@ -250,16 +245,20 @@
     height: auto;
     align-self: flex-start;
   }
-  .profile-employment-page-text29 {
-    color: rgb(5, 53, 108);
+  .profile-employment-page-employment-container {
+    width: 100%;
+    height: 930px;
   }
   .profile-employment-page-text30 {
-    font-size: 14px;
+    color: rgb(5, 53, 108);
   }
-  .profile-employment-page-text32 {
+  .profile-employment-page-text31 {
     font-size: 14px;
   }
   .profile-employment-page-text33 {
+    font-size: 14px;
+  }
+  .profile-employment-page-text34 {
     font-size: 14px;
   }
 }

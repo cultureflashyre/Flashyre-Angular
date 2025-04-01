@@ -1,28 +1,27 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { HttpClientModule } from '@angular/common/http'  // Added for HTTP requests
+import { FormsModule } from '@angular/forms'  // Added for ngModel
 
-import { ComponentsModule } from '../../components/components.module';
-import { ProfileEmploymentPage } from './profile-employment-page.component';
-//import { ProfileEmploymentComponent } from './profile-employment-component/profile-employment-component.component';
+import { ComponentsModule } from '../../components/components.module'
+import { ProfileEmploymentPage } from './profile-employment-page.component'
 
 const routes = [
   {
     path: '',
     component: ProfileEmploymentPage,
   },
-];
+]
 
 @NgModule({
   declarations: [ProfileEmploymentPage],
   imports: [
-    CommonModule,
-    ComponentsModule,
+    CommonModule, 
+    ComponentsModule, 
     RouterModule.forChild(routes),
-    HttpClientModule, // For HTTP requests
-    FormsModule, // For form handling
+    HttpClientModule,  // Added for HTTP requests
+    FormsModule        // Added for ngModel
   ],
   exports: [ProfileEmploymentPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

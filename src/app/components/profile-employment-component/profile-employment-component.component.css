@@ -1,33 +1,45 @@
-:host {
-  display: contents;
+:host { 
+  display: contents; 
 }
-
-.profile-employment-component-container {
+ 
+.profile-employment-component-container1 {
+  gap: 24px;
   width: 720px;
-  height: 443px;
+  height: 448px;
   display: flex;
   position: relative;
   align-items: flex-start;
   flex-direction: column;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  align-self: center;
+  scrollbar-width: none;
+  padding: 24px;
+  justify-content: flex-start;
+  border-radius: 8px;
   background-color: #FFFFFF;
-  z-index: 1000;
-  overflow-y: scroll; /* Ensure the container is scrollable */
 }
-
+ 
 .profile-employment-component-profile-employment-container {
   gap: 24px;
-  width: 720px;
-  height: 443px;
+  width: auto;
+  height: 432px;
   display: flex;
-  padding: var(--dl-space-space-oneandhalfunits);
+  padding: 24px;
+  overflow: scroll;
+  align-self: center;
+  overflow-x: hidden;
+  overflow-y: scroll;
   align-items: center;
   border-radius: 8px;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
   background-color: #FFFFFF;
-  padding: 10px; /* Optional: add padding for better appearance */
 }
-
+ 
 .profile-employment-component-employment-text {
   fill: #18191C;
   color: #18191C;
@@ -40,17 +52,29 @@
   flex-direction: row;
   justify-content: flex-start;
 }
-
+ 
+.profile-employment-component-container2 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 16px;
+  height: auto;
+  width: auto;
+  align-self: center;
+  justify-content: flex-start;
+}
+ 
 .profile-employment-component-job-title-company-name-container {
   flex: 0 0 auto;
-  width: 664px;
+  width: 100%;
   height: 76px;
   display: flex;
   position: relative;
   align-items: flex-start;
   justify-content: space-between;
 }
-
+ 
 .profile-employment-component-job-title-container {
   flex: 0 0 auto;
   width: 320px;
@@ -59,7 +83,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-job-title-text {
   width: 320px;
   height: 24px;
@@ -67,18 +91,18 @@
   align-self: flex-start;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-text10 {
   color: #18191c;
 }
-
+ 
 .profile-employment-component-job-title-input {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
-
+ 
 .profile-employment-component-company-name-container {
   flex: 0 0 auto;
   width: 320px;
@@ -87,25 +111,25 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-company-name-text {
   width: 320px;
   height: 24px;
   display: flex;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-text12 {
   color: #18191c;
 }
-
+ 
 .profile-employment-component-company-name-input {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
-
+ 
 .profile-employment-component-date-selector {
   width: 672px;
   height: 76px;
@@ -113,7 +137,7 @@
   position: relative;
   grid-template-columns: 1fr 1fr;
 }
-
+ 
 .profile-employment-component-start-date-container {
   flex: 0 0 auto;
   width: 324px;
@@ -122,7 +146,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-strat-date {
   flex: 0 0 auto;
   width: 324px;
@@ -131,7 +155,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-start-date-text {
   width: 324px;
   height: 24px;
@@ -139,7 +163,7 @@
   align-self: center;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-select-container1 {
   flex: 0 0 auto;
   width: auto;
@@ -149,30 +173,31 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-form1 {
-  width: 324px;
+  width: 320px;
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: space-between;
-  padding-top: 0px;
+  align-items: flex-end;
+  padding-left: 16px;
+  padding-right: 16px;
   border-color: #A7A7A7;
-  padding-right: 10px;
   flex-direction: column;
-  padding-bottom: 0px;
   justify-content: center;
   background-color: #FFFFFF;
-}
+  border-radius: 4px;
 
+}
+ 
 .profile-employment-component-select-text1 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
 }
-
+ 
 .profile-employment-component-drop-down-icon1 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -182,32 +207,32 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
-
+ 
 .profile-employment-component-end-date-container {
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
   display: flex;
   align-items: flex-start;
-  margin-left: var(--dl-space-space-unit);
+  margin-left: var(--dl-layout-space-unit);
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-end-date {
   flex: 0 0 auto;
-  width: 324px;
+  width: 320px;
   height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
 }
-
+ 
 .profile-employment-component-end-date-text {
-  width: 324px;
+  width: 320px;
   height: 24px;
   display: flex;
 }
-
+ 
 .profile-employment-component-select-container2 {
   flex: 0 0 auto;
   width: auto;
@@ -217,31 +242,31 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-form2 {
-  width: 324px;
+  width: 320px;
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: space-between;
+  align-items: flex-end;
   padding-top: 0px;
   border-color: #A7A7A7;
-  padding-left: var(--dl-space-space-unit);
-  padding-right: var(--dl-space-space-unit);
+  padding-left: var(--dl-layout-space-unit);
+  padding-right: var(--dl-layout-space-unit);
   flex-direction: column;
   padding-bottom: 0px;
   justify-content: center;
   background-color: #FFFFFF;
 }
-
+ 
 .profile-employment-component-select-text2 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
 }
-
+ 
 .profile-employment-component-drop-down-icon2 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -250,7 +275,7 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
-
+ 
 .profile-employment-component-job-details-container {
   gap: 4px;
   flex: 0 0 auto;
@@ -261,7 +286,7 @@
   flex-direction: column;
   justify-content: flex-start;
 }
-
+ 
 .profile-employment-component-job-details-text {
   color: rgb(24, 25, 28);
   width: 672px;
@@ -269,25 +294,33 @@
   display: flex;
   align-items: center;
 }
-
+ 
 .profile-employment-component-job-details-input {
   width: 672px;
   height: 71px;
   display: flex;
   align-items: center;
-  padding-top: 0px;
   border-color: #A7A7A7;
-  padding-left: var(--dl-space-space-unit);
+  padding: 16px;
   border-radius: 5px;
-  padding-right: var(--dl-space-space-unit);
-  padding-bottom: var(--dl-space-space-oneandhalfunits);
   justify-content: flex-start;
   background-color: #FFFFFF;
+  scrollbar-width: none;
 }
-
+ 
+.profile-employment-component-container3 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+ 
 .profile-employment-component-addposition-text {
   width: auto;
-  height: auto;
+  height: 24px;
   display: flex;
   align-self: flex-start;
   font-style: normal;
@@ -295,34 +328,52 @@
   align-items: center;
   font-weight: 600;
   border-width: 0px;
+  align-self: flex-end;
   background-color: transparent;
-  padding: 8px 16px;
-  background-color: #FFFFFF; /* Blue background for add */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: inline-block; /* Ensure it behaves like a button */
 }
-
+ 
 .profile-employment-component-addposition-text:hover {
-  color: #FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
-  background-color: transparent; /* Darker blue on hover */
 }
-
+ 
 .profile-employment-component-addposition-text:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.profile-employment-component-removeposition {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: flex-end;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+  border-width: 0px;
+  justify-content: flex-start;
+  background-color: transparent;
+}
+ 
+.profile-employment-component-removeposition:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.profile-employment-component-removeposition:active {
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
-
+ 
 .profile-employment-component-fragment1 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text14 {
   color: var(--dl-color-theme-neutral-dark);
   display: inline-block;
@@ -330,95 +381,76 @@
   font-style: normal;
   font-weight: 600;
 }
-
+ 
 .profile-employment-component-fragment2 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text15 {
   display: inline-block;
 }
-
+ 
 .profile-employment-component-fragment3 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text16 {
   color: rgb(5, 53, 108);
   display: inline-block;
-  background-color: #FFFFFF;
-
 }
-
+ 
 .profile-employment-component-fragment4 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text17 {
   color: #18191c;
   display: inline-block;
 }
-
+ 
 .profile-employment-component-fragment5 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text18 {
+  color: rgb(241, 4, 0);
   display: inline-block;
 }
-
+ 
 .profile-employment-component-fragment6 {
   display: contents;
 }
-
+ 
 .profile-employment-component-text19 {
+  display: inline-block;
+}
+ 
+.profile-employment-component-fragment7 {
+  display: contents;
+}
+ 
+.profile-employment-component-text20 {
   color: #18191c;
   display: inline-block;
 }
+ 
 
-.profile-employment-component-remove-position {
-  padding: 8px 8px;
-  background-color: transparent; 
-  color: #dc3545;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px; /* Space above the button */
-  align-self: flex-end;
-  margin-left: 520px;
-}
-
-.profile-employment-component-remove-position:hover {
-  background-color: transparent; 
-  transform: scale(0.90);
-  transition: all 0.8s;
-  transform: scale(1.05);
-}
-
+ 
 .profile-employment-componentroot-class-name1 {
   align-self: center;
 }
-
-.position-divider {
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-  width: 100%;
-  text-decoration-thickness: 5px;
-}
-
-@media (max-width: 1200px) {
-  .profile-employment-component-container {
+ 
+@media(max-width: 1200px) {
+  .profile-employment-component-container1 {
     width: 100%;
     align-items: center;
   }
-
   .profile-employment-component-profile-employment-container {
     width: 720px;
     height: 444px;
     background-color: #FFFFFF;
+    gap: 24px;
   }
-
   .profile-employment-component-employment-text {
     fill: #18191C;
     color: #18191C;
@@ -426,28 +458,22 @@
     font-style: normal;
     font-weight: 600;
   }
-
   .profile-employment-component-job-title-company-name-container {
     width: 100%;
     justify-content: space-between;
   }
-
   .profile-employment-component-job-title-container {
     width: 324px;
   }
-
   .profile-employment-component-job-title-input {
     width: 324px;
   }
-
   .profile-employment-component-company-name-container {
     width: 324px;
   }
-
   .profile-employment-component-company-name-input {
     width: 324px;
   }
-
   .profile-employment-component-job-details-container {
     gap: 4px;
     width: 100%;
@@ -456,18 +482,18 @@
     flex-direction: column;
     justify-content: flex-start;
   }
-
   .profile-employment-component-job-details-text {
     width: 100%;
     height: 24px;
   }
-
   .profile-employment-component-job-details-input {
     width: 100%;
     height: 69px;
     border-color: #A7A7A7;
   }
-
+  .profile-employment-component-container3 {
+    padding: 5px;
+  }
   .profile-employment-component-addposition-text {
     fill: #05356C;
     color: #05356C;
@@ -481,117 +507,113 @@
     padding-left: 0px;
     padding-right: 0px;
   }
-
+  .profile-employment-component-removeposition {
+    fill: #05356C;
+    color: #05356C;
+    width: auto;
+    height: 24px;
+    align-self: flex-start;
+    font-style: normal;
+    text-align: justify;
+    font-family: Inter;
+    font-weight: 600;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
   .profile-employment-component-text14 {
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
   }
 }
-
-@media (max-width: 479px) {
-  .profile-employment-component-container {
-    height: 740px;
+ 
+@media(max-width: 479px) {
+  .profile-employment-component-container1 {
+    height: auto;
     align-items: center;
     justify-content: center;
   }
-
   .profile-employment-component-profile-employment-container {
-    gap: var(--dl-space-space-twounits);
+    gap: var(--dl-layout-space-twounits);
     width: 95%;
     height: auto;
+    padding: var(--dl-layout-space-unit);
     align-self: center;
-    padding-top: var(--dl-space-space-twounits);
-    padding-left: var(--dl-space-space-twounits);
-    padding-right: var(--dl-space-space-twounits);
-    padding-bottom: var(--dl-space-space-twounits);
+    padding-top: var(--dl-layout-space-twounits);
+    padding-left: var(--dl-layout-space-twounits);
+    padding-right: var(--dl-layout-space-twounits);
+    padding-bottom: var(--dl-layout-space-twounits);
   }
-
   .profile-employment-component-employment-text {
     width: 100%;
   }
-
-  .profile-employment-component-job-title-company-name-container {
-    gap: var(--dl-space-space-twounits);
+  .profile-employment-component-container2 {
+    gap: var(--dl-layout-space-unit);
     width: 100%;
-    height: 184px;
+  }
+  .profile-employment-component-job-title-company-name-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
     flex-direction: column;
     justify-content: center;
   }
-
   .profile-employment-component-job-title-container {
     width: 100%;
   }
-
   .profile-employment-component-job-title-text {
     width: 100%;
   }
-
   .profile-employment-component-job-title-input {
     width: 100%;
   }
-
   .profile-employment-component-company-name-container {
     width: 100%;
   }
-
   .profile-employment-component-company-name-text {
     width: 100%;
   }
-
   .profile-employment-component-company-name-input {
     width: 100%;
   }
-
   .profile-employment-component-date-selector {
-    gap: var(--dl-space-space-twounits);
+    gap: var(--dl-layout-space-unit);
     width: 100%;
-    height: 184px;
+    height: auto;
     display: flex;
     flex-direction: column;
   }
-
   .profile-employment-component-start-date-container {
     width: 100%;
   }
-
   .profile-employment-component-strat-date {
     width: 100%;
   }
-
   .profile-employment-component-start-date-text {
     width: 100%;
   }
-
   .profile-employment-component-select-container1 {
     width: 100%;
   }
-
   .profile-employment-component-form1 {
     width: 100%;
   }
-
   .profile-employment-component-end-date-container {
     width: 100%;
     margin-left: 0px;
   }
-
   .profile-employment-component-end-date {
     width: 100%;
   }
-
   .profile-employment-component-select-container2 {
     width: 100%;
   }
-
   .profile-employment-component-form2 {
     width: 100%;
   }
-
   .profile-employment-component-job-details-container {
     height: auto;
   }
-
   .profile-employment-component-job-details-input {
     height: 114px;
     padding-bottom: 54px;
