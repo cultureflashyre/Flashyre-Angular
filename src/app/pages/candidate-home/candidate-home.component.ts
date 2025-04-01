@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CandidateHome implements OnInit {
   userProfile: any = {}; // To store user profile data
-  defaultProfilePicture: string = "https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&ixlib=rb-4.0.3&w=300";
+  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
 
   jobs: any[] = [];
 
