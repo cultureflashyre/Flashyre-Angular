@@ -639,6 +639,14 @@
   transform: scale(0.8);
   background-color: #EBEBEB;
 }
+
+.d-block {
+  display: block !important;
+}
+
+.d-none {
+  display: none !important;
+}
  
 .flashyre-assessment1-next-button1 {
   fill: #05356C;

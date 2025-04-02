@@ -164,8 +164,15 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     this.currentSection = section;
     this.currentQuestions = section.questions;
     this.currentQuestionIndex = 0;
+    
+    // Set total questions in this section
+    this.totalQuestionsInSection = section.questions.length;
+    
+    // Determine if this is the last section
+    this.currentSectionIndex = this.sections.findIndex(s => s.section_id === section.section_id);
+    this.totalSections = this.sections.length;
+    this.isLastSection = this.currentSectionIndex === this.totalSections - 1;
   }
-
   getOptions(question: any): any[] {
     const options = Object.keys(question.options).map(key => ({ key, value: question.options[key] }));
     return question.option_type === 2 ? options.slice(0, 2) : options.slice(0, 4);

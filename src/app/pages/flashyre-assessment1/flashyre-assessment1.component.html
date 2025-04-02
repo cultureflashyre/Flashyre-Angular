@@ -143,22 +143,23 @@
             Previous
           </button>
           <button
-            id="next-button"
-            type="button"
-            class="flashyre-assessment1-next-button1 button"
-            (click)="nextQuestion()"
-          >
-            Next
-          </button>
-          <button
-            id="next-section-button"
-            type="button"
-            class="flashyre-assessment1-next-section-button1 button"
-            [ngClass]="{ 'd-block': currentQuestionIndex === totalQuestionsInSection - 1 && !isLastSection }"
-
-          >
-            Next Section
-          </button>
+  id="next-button"
+  type="button"
+  class="flashyre-assessment1-next-button1 button"
+  [ngClass]="{ 'd-none': currentQuestionIndex === totalQuestionsInSection - 1 }"
+  (click)="nextQuestion()"
+>
+  Next
+</button>
+<button
+id="next-section-button"
+type="button"
+class="flashyre-assessment1-next-section-button1 button"
+[ngClass]="{ 'd-block': currentQuestionIndex === totalQuestionsInSection - 1 && !isLastSection }"
+(click)="selectSection(sections[currentSectionIndex + 1])"
+>
+Next Section
+</button>
           <button
             id="submit-button"
             type="button"
