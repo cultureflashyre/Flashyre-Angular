@@ -6,6 +6,50 @@
   display: block
 }
 
+/* Add these styles to flashyre-assessment1.component.css */
+
+/* Common button base style */
+.flashyre-assessment1-question-number1-button10 {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Current/Active Question */
+.flashyre-assessment1-question-number1-button10.active {
+  background-color: #5F7DA1;
+  color: #FFFFFF;
+  border: 1px solid #5F7DA1;
+}
+
+/* Skipped/Incomplete Question (visited but not answered) */
+.flashyre-assessment1-question-number1-button10.skipped {
+  background-color: #FFFFFF;
+  color: #F65E5C;
+  border: 1px solid #F65E5C;
+}
+
+/* Unattended Question (not yet visited) */
+.flashyre-assessment1-question-number1-button10.unattended {
+  background-color: #FFFFFF;
+  color: #474748;
+  border: 1px solid #CCCCCC;
+}
+
+/* Completed/Answered Question */
+.flashyre-assessment1-question-number1-button10.answered {
+  background-color: #E0F2E9;
+  color: #2A8D60;
+  border: 1px solid #2A8D60;
+}
+
 .flashyre-assessment1-container1 {
   width: 100%;
   display: flex;

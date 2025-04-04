@@ -1,10 +1,11 @@
 import { ContentChild, Input, TemplateRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AssessmentService } from '../../services/assessment.service';
+import { AssessmentStateService, QuestionState } from '../../services/assessment-state.service';
 import { Subscription } from 'rxjs';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
-import { Router, ActivatedRoute } from '@angular/router'; // Add ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 interface SelectedAnswer {
@@ -48,16 +49,19 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
 
   private timerSubscription: Subscription;
+  private stateSubscription: Subscription;
+  private timerInterval: any;
 
   constructor(
     private title: Title,
     private meta: Meta,
     private assessmentService: AssessmentService,
+    private assessmentStateService: AssessmentStateService,
     private videoRecorder: VideoRecorderService,
     private proctoringService: ProctoringService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private route: ActivatedRoute // Inject ActivatedRoute
+    private route: ActivatedRoute
   ) {
     this.currentQuestionIndex = 0;
 
@@ -75,8 +79,6 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     ]);
   }
 
-  private timerInterval: any;
-
   async ngOnInit(): Promise<void> {
     // Extract assessmentId from query parameters
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
@@ -90,6 +92,12 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
       } catch (error) {
         console.error('Failed to start assessment:', error);
       }
+
+      // Subscribe to question state changes
+      this.stateSubscription = this.assessmentStateService.questionStates$.subscribe(states => {
+        // You can react to state changes here if needed
+        console.log('Question states updated:', states);
+      });
     } else {
       console.error('No assessment ID provided in route');
       this.router.navigate(['/assessment-error']); // Redirect if no ID
@@ -100,7 +108,13 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+    if (this.stateSubscription) {
+      this.stateSubscription.unsubscribe();
+    }
     clearInterval(this.timerInterval);
+    
+    // Reset states when component is destroyed
+    this.assessmentStateService.resetStates();
   }
 
   fetchAssessmentData(assessmentId: number): void {
@@ -112,6 +126,13 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
           name: sectionName,
           ...data.sections[sectionName],
         }));
+        
+        // Initialize all question states
+        const allQuestionIds = [].concat(...this.sections.map(section => 
+          section.questions.map(q => q.question_id)
+        ));
+        this.assessmentStateService.initializeStates(allQuestionIds);
+        
         this.timer = data.total_assessment_duration * 60;
         this.assessmentService.updateTimer(this.timer);
         console.log('timer data in seconds: ', this.timer);
@@ -153,9 +174,11 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     this.assessmentService.submitAssessment(responses).subscribe({
       next: (response) => {
         console.log('Assessment submitted successfully:', response);
+        this.router.navigate(['/candidate-dashboard-main']);
       },
       error: (error) => {
         console.error('Assessment submission failed:', error);
+        this.router.navigate(['/assessment-error']);
       },
     });
   }
@@ -172,28 +195,37 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     this.currentSectionIndex = this.sections.findIndex(s => s.section_id === section.section_id);
     this.totalSections = this.sections.length;
     this.isLastSection = this.currentSectionIndex === this.totalSections - 1;
+    
+    // Mark first question as visited when entering a section
+    if (section.questions.length > 0) {
+      this.assessmentStateService.markAsVisited(section.questions[0].question_id);
+    }
   }
+
   getOptions(question: any): any[] {
     const options = Object.keys(question.options).map(key => ({ key, value: question.options[key] }));
     return question.option_type === 2 ? options.slice(0, 2) : options.slice(0, 4);
   }
 
   markQuestionAsVisited(index: number): void {
-    if (!this.questionStates[index]) {
-      this.questionStates[index] = 'visited';
+    const questionId = this.currentQuestions[index]?.question_id;
+    if (questionId) {
+      this.assessmentStateService.markAsVisited(questionId);
     }
   }
 
   markQuestionAsAnswered(index: number): void {
-    if (this.questionStates[index] === 'visited') {
-      this.questionStates[index] = 'answered';
+    const questionId = this.currentQuestions[index]?.question_id;
+    if (questionId) {
+      this.assessmentStateService.markAsAnswered(questionId);
     }
   }
 
   navigateToQuestion(index: number): void {
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
-      this.markQuestionAsVisited(index);
+      const questionId = this.currentQuestions[index].question_id;
+      this.assessmentStateService.markAsVisited(questionId);
     }
   }
 
@@ -202,11 +234,25 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
       answer: answer,
       section_id: sectionId,
     };
-    this.markQuestionAsAnswered(this.currentQuestionIndex);
+    this.assessmentStateService.markAsAnswered(questionId);
   }
 
   clearResponse(questionId: number): void {
     delete this.selectedAnswers[questionId];
+    // Mark as visited but not answered when response is cleared
+    this.assessmentStateService.markAsVisited(questionId);
+  }
+
+  getQuestionStatusClass(questionId: number): { [key: string]: boolean } {
+    const state = this.assessmentStateService.getQuestionState(questionId);
+    const isActive = this.assessmentStateService.isActiveQuestion(questionId);
+    
+    return {
+      'active': isActive,
+      'answered': state === 'answered',
+      'skipped': state === 'visited' && !this.selectedAnswers[questionId],
+      'unattended': state === 'unvisited'
+    };
   }
 
   async terminateTest(): Promise<void> {
@@ -251,12 +297,22 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
+      const questionId = this.currentQuestions[this.currentQuestionIndex].question_id;
+      this.assessmentStateService.markAsVisited(questionId);
     }
   }
 
   nextQuestion(): void {
     if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
+      // Check if current question is unanswered, mark as skipped if moving to next
+      const currentQuestionId = this.currentQuestions[this.currentQuestionIndex].question_id;
+      if (!this.selectedAnswers[currentQuestionId]) {
+        this.assessmentStateService.markAsSkipped(currentQuestionId);
+      }
+      
       this.currentQuestionIndex++;
+      const nextQuestionId = this.currentQuestions[this.currentQuestionIndex].question_id;
+      this.assessmentStateService.markAsVisited(nextQuestionId);
     }
   }
 }

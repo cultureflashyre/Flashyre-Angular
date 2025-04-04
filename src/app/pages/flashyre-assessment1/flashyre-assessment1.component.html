@@ -101,21 +101,17 @@
               fill="currentColor"
             ></path>
           </svg>
-          <div
-            id="numbers-main-container"
-            class="flashyre-assessment1-numbers-main-container"
-          >
-            <button
-              *ngFor="let question of currentQuestions; let i = index"
-              id="question-number-{{i}}-button"
-              type="button"
-              class="flashyre-assessment1-question-number1-button10 button"
-              [ngClass]="{ 'active': i === currentQuestionIndex }"
-              (click)="navigateToQuestion(i)"
-            >
-            {{ i + 1 }}
-            </button>
-          </div>
+          <!-- Update the question button in numbers-main-container -->
+<button
+*ngFor="let question of currentQuestions; let i = index"
+id="question-number-{{i}}-button"
+type="button"
+class="flashyre-assessment1-question-number1-button10 button"
+[ngClass]="getQuestionStatusClass(question.question_id)"
+(click)="navigateToQuestion(i)"
+>
+{{ i + 1 }}
+</button>
           <svg
             id="forward-arrow-icon"
             width="32"
