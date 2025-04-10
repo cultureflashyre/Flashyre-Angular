@@ -10,6 +10,7 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  background-color: transparent;
 }
  
 .buffer-name-container2 {
@@ -19,7 +20,7 @@
   position: relative;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
+  background-color: transparent;
 }
  
 .buffer-name-container3 {

@@ -5,23 +5,23 @@
 .profile-certification-page-container {
   width: 100%;
   display: flex;
-  min-height: 100vh;
+  min-height: auto;
   align-items: center;
   flex-direction: column;
+  background-color: #F4F4F4;
 }
  
 .profile-certification-page-main-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 1440px;
-  height: 1024px;
+  height: 100vh;
   display: flex;
   align-self: center;
   align-items: flex-start;
   padding-top: 0px;
   flex-direction: column;
   justify-content: flex-start;
-  background-color: #F4F4F4;
 }
  
 .profile-certification-page-fragment10 {
@@ -223,6 +223,12 @@
   height: 48px;
   padding-top: 10px;
   font-size: 16px;
+  border-radius: 3px;
+  gap: 4px;
+  padding-top: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 12px;
 }
  
 .profile-certification-page-fragment33 {

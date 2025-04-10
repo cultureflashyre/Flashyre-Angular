@@ -61,15 +61,23 @@ export class LogInPage implements OnChanges {
 
   // Handle email input change
   onEmailChange() {
-    if (!this.email || !this.password) {
-      this.errorMessage = this.email || this.password ? 'Please enter both email and password' : '';
+    if (this.email && this.password) {
+      this.errorMessage = ''; // Clear message when both fields are filled
+    } else if (!this.email && !this.password) {
+      this.errorMessage = ''; // Clear message when both fields are empty
+    } else {
+      this.errorMessage = 'Please enter both email and password'; // Show message when only one field is filled
     }
   }
 
   // Handle password input change
   onPasswordChange() {
-    if (!this.email || !this.password) {
-      this.errorMessage = this.email || this.password ? 'Please enter both email and password' : '';
+    if (this.email && this.password) {
+      this.errorMessage = ''; // Clear message when both fields are filled
+    } else if (!this.email && !this.password) {
+      this.errorMessage = ''; // Clear message when both fields are empty
+    } else {
+      this.errorMessage = 'Please enter both email and password'; // Show message when only one field is filled
     }
   }
 

@@ -10,6 +10,7 @@
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
+  background-color: #F4F4F4;
 }
  
 .log-in-page-container2 {
@@ -54,6 +55,7 @@
  
 .log-in-page-email-container {
   flex: 0 0 auto;
+  margin-bottom: 16px;
   width: 324px;
   height: 76px;
   display: flex;
@@ -92,6 +94,7 @@
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -143,7 +146,7 @@
   border-radius: 0px;
   justify-content: center;
   background-color: transparent;
-  color: rgb(5, 53, 108);
+  color: #05356C;
   ;
 }
  
@@ -167,6 +170,7 @@
   border-width: 0px;
   border-radius: 4px;
   background-color: #05356C;
+  font-weight: 600;
 }
  
 .log-in-page-login-button:hover {
@@ -226,6 +230,7 @@
   align-items: center;
   border-width: 0px;
   color: rgb(5, 53, 108);
+  font-weight: 600;
 }
  
 .log-in-page-signup-text:hover {
@@ -341,10 +346,6 @@
 .log-in-pageroot-class-name {
   height: auto;
 }
- 
-
- 
-
  
 @media(max-width: 991px) {
   .log-in-page-text10 {

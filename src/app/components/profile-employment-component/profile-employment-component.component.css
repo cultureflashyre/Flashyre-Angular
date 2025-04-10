@@ -12,6 +12,7 @@
   background-color: #FFFFFF;
   z-index: 1000;
   overflow-y: scroll; /* Ensure the container is scrollable */
+  scrollbar-width: none;
 }
 
 .profile-employment-component-profile-employment-container {
@@ -49,6 +50,7 @@
   position: relative;
   align-items: flex-start;
   justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .profile-employment-component-job-title-container {
@@ -112,6 +114,7 @@
   display: grid;
   position: relative;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 24px;
 }
 
 .profile-employment-component-start-date-container {
@@ -341,6 +344,7 @@
 
 .profile-employment-component-fragment3 {
   display: contents;
+  margin-bottom: -40px;
 }
 
 .profile-employment-component-text16 {

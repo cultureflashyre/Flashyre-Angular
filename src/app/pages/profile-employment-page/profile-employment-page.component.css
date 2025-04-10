@@ -8,6 +8,7 @@
   min-height: 100vh;
   align-items: center;
   flex-direction: column;
+  background-color: #F4F4F4;
 }
  
 .profile-employment-page-main-container {
@@ -175,7 +176,7 @@
   color: #05356c;
   display: inline-block;
   border-color: transparent;
-  width: 153px;
+  width: 128px;
   height: 48px;
   font-size: 16px;
 }
@@ -192,6 +193,7 @@
   align-content: center;
   border-width: 0px;
   background-color: transparent;
+  border-color: #05356C;
 }
  
 .profile-employment-page-fragment28 {
@@ -252,6 +254,7 @@
   }
   .profile-employment-page-text29 {
     color: rgb(5, 53, 108);
+    background-color: transparent;
   }
   .profile-employment-page-text30 {
     font-size: 14px;

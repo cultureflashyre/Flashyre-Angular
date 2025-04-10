@@ -13,6 +13,7 @@
   flex-direction: column;
   padding-bottom: 20px;
   justify-content: center;
+  background-color: red; /* Change this to your desired color */
 }
 
 .signup-candidate1-success-signup-container {
@@ -223,6 +224,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  color: rgb(5, 53, 108);
+  font-weight: 600;
 }
  
 .signup-candidate1-show-text1:hover {
@@ -286,6 +289,8 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  font-weight: 600;
+  color: rgb(5, 53, 108);
 }
  
 .signup-candidate1-show-text2:hover {
@@ -315,6 +320,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  font-weight: 600;
 }
  
 .signup-candidate1-signup-button {
@@ -330,6 +336,7 @@
   padding-bottom: 12px;
   background-color: #05356C;
   color: white;
+  font-weight: 600;
 }
  
 .signup-candidate1-signup-button:hover {
@@ -399,6 +406,7 @@
   border-width: 0px;
   padding-left: 0px;
   background-color: transparent;
+  color: #05356C;
 }
  
 .signup-candidate1-signin-text:hover {
@@ -538,7 +546,7 @@
   position: static;
   align-self: center;
   margin-top: 100px;
-  background-color: #D9D9D9;
+  background-color: #F4F4F4;
 }
  
 .signup-candidate1root-class-name1 {

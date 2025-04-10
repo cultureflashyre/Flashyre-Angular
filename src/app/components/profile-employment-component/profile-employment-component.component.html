@@ -162,7 +162,7 @@
           required
         />
       </div>
-
+      
       <!-- Remove Position Button (visible only if more than one position) -->
       <button
         *ngIf="positions.length > 1"
@@ -176,7 +176,7 @@
       <!-- Add a horizontal line between positions, except after the last one -->
       <hr *ngIf="i < positions.length - 1" class="position-divider" />
     </div>
-
+     
     <!-- Add Position Button -->
     <span
       id="add-position-button"

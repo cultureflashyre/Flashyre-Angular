@@ -19,6 +19,7 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
+    background-color: #F4F4F4;
   }
    
   .candidate-assessment-container12 {

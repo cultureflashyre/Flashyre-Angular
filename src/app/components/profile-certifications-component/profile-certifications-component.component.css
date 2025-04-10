@@ -10,13 +10,14 @@
   position: relative;
   align-items: flex-start;
   flex-direction: column;
+  background-color: transparent;
 }
 
 .profile-certifications-component-profile-certification-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 720px;
-  height: 380px;
+  height: auto;
   display: flex;
   padding: 24px;
   align-self: center;
@@ -27,6 +28,7 @@
   scroll-behavior: smooth;
   overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-width: none;
 }
 
 .profile-certifications-component-certification-text {
@@ -52,6 +54,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  margin-bottom: 24px;
 }
 
 .certification-divider {
@@ -192,6 +195,7 @@
   height: 76px;
   display: flex;
   align-items: flex-start;
+  margin-bottom: 24px;
 }
 
 .profile-certifications-component-issued-date-container {
@@ -602,6 +606,9 @@
   }
   .profile-certifications-component-certificate-name-container {
     width: 100%;
+    height: 179px;
+    gap: var(--dl-space-space-twounits);
+    flex-direction: column;
   }
   .profile-certifications-component-certifiacate-name-container {
     width: 100%;
