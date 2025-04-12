@@ -1,0 +1,361 @@
+<div class="flashyre-assessment11-container">
+  <div id="main-container" class="flashyre-assessment11-main-container">
+    <div id="header-container" class="flashyre-assessment11-header-container">
+      <img
+        id="Logo"
+        alt="image"
+        src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
+        class="flashyre-assessment11-logo"
+      />
+      <span id="timer" class="flashyre-assessment11-timer">{{ formatTime(sectionTimer) }}</span>
+      <button
+        id="end-test-button"
+        type="button"
+        (click)="endTest()"
+        class="flashyre-assessment11-end-test-button button"
+      >
+        <span id="end-test-text" class="flashyre-assessment11-end-test-text">
+          End Test
+        </span>
+      </button>
+    </div>
+    <div
+      id="assessment-questions-options-main-container"
+      class="flashyre-assessment11-assessment-questions-options-main-container"
+    >
+      <div
+        id="sections-questions-previous-next-containers"
+        class="flashyre-assessment11-sections-questions-previous-next-containers"
+      >
+        <div
+          data-thq="thq-dropdown"
+          class="flashyre-assessment11-sections-dropdown list-item"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="flashyre-assessment11-dropdown-toggle1"
+          >
+            <span
+              id="sections-text"
+              class="flashyre-assessment11-sections-text"
+            >
+              {{ currentSection.section_title || 'Sections' }}
+            </span>
+            <div
+              data-thq="thq-dropdown-arrow"
+              class="flashyre-assessment11-dropdown-arrow"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                class="flashyre-assessment11-icon10"
+              >
+                <path
+                  d="M36 18L24 30L12 18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <ul
+            data-thq="thq-dropdown-list"
+            class="flashyre-assessment11-sections-dropdown-list"
+          >
+            <li
+              *ngFor="let section of sections; let i = index"
+              data-thq="thq-dropdown"
+              class="flashyre-assessment11-sections-dropdown-list1 list-item"
+              (click)="selectSection(i)"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="flashyre-assessment11-dropdown-toggle2"
+              >
+                <span
+                  id="section-A-text"
+                  class="flashyre-assessment11-section-a-text"
+                >
+                  {{ section.section_title }}
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>  
+        <div
+          id="question-numbers-main-container"
+          class="flashyre-assessment11-question-numbers-main-container"
+        >
+          <svg
+            id="backward-arrow-icon"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            class="flashyre-assessment11-backward-arrow-icon"
+            (click)="previousQuestion()"
+          >
+            <path
+              d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          <div
+            id="numbers-main-container"
+            class="flashyre-assessment11-numbers-main-container"
+          >
+            <button
+              *ngFor="let question of currentSection.questions; let i = index"
+              [id]="'question-number' + (i + 1) + '-button'"
+              type="button"
+              [class.active]="i === currentQuestionIndex"
+              (click)="goToQuestion(i)"
+              class="flashyre-assessment11-question-number1-button10 button"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+          <svg
+            id="forward-arrow-icon"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            class="flashyre-assessment11-forward-arrow-icon"
+            (click)="nextQuestion()"
+          >
+            <path
+              d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </div>
+        <div
+          id="previous-next-button-main-container"
+          class="flashyre-assessment11-previous-next-button-main-container1"
+        >
+          <button
+            id="previous-button1"
+            type="button"
+            (click)="previousQuestion()"
+            class="flashyre-assessment11-previous-button1 button"
+          >
+            Previous
+          </button>
+          <button
+            id="next-button"
+            type="button"
+            (click)="nextQuestion()"
+            class="flashyre-assessment11-next-button1 button"
+          >
+            Next
+          </button>
+          <button
+            id="next-section-button"
+            type="button"
+            (click)="nextSection()"
+            class="flashyre-assessment11-next-section-button1 button"
+          >
+            Next Section
+          </button>
+          <button
+            id="submit-button"
+            type="button"
+            (click)="submitAssessment()"
+            class="flashyre-assessment11-submit-button1 button"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <div
+        id="question-answer-container"
+        class="flashyre-assessment11-question-answer-container"
+      >
+        <div
+          id="questions-container"
+          class="flashyre-assessment11-questions-container"
+        >
+          <span
+            id="question-num-text"
+            class="flashyre-assessment11-question-num-text"
+          >
+            Question {{ currentQuestionIndex + 1 }}
+          </span>
+          <div
+            id="question-container"
+            class="flashyre-assessment11-question-container"
+          >
+            <span
+              id="question-text"
+              class="flashyre-assessment11-question-text"
+            >
+              {{ currentQuestion.question || 'No question available' }}
+            </span>
+            <img
+              *ngIf="currentQuestion.question_image"
+              [src]="currentQuestion.question_image"
+              alt="question image"
+              class="flashyre-assessment11-image"
+            />
+          </div>
+          <button
+            id="previous-button"
+            type="button"
+            (click)="previousQuestion()"
+            class="flashyre-assessment11-previous-button2 button"
+          >
+            <-
+          </button>
+        </div>
+        <button
+          id="next-button1"
+          type="button"
+          (click)="nextQuestion()"
+          class="flashyre-assessment11-next-button2 button"
+        >
+          ->
+        </button>
+        <div
+          id="answers-container"
+          class="flashyre-assessment11-answers-container"
+        >
+          <div
+            id="select-an-option-container"
+            class="flashyre-assessment11-select-an-option-container"
+          >
+            <span
+              id="select-an-option-text"
+              class="flashyre-assessment11-select-an-option-text"
+            >
+              Select an option
+            </span>
+            <div
+              id="clear-response-container"
+              class="flashyre-assessment11-clear-response-container"
+              (click)="clearResponse()"
+            >
+              <svg
+                id="eraser-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="flashyre-assessment11-eraser-icon"
+              >
+                <g fill="none">
+                  <g clip-path="url(#majesticonsEraserLine0)">
+                    <path
+                      d="m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                  <defs>
+                    <clippath id="majesticonsEraserLine0">
+                      <path d="M0 0h24v24H0z" fill="#fff"></path>
+                    </clippath>
+                  </defs>
+                </g>
+              </svg>
+              <span
+                id="clear-response-text"
+                class="flashyre-assessment11-clear-response-text"
+              >
+                Clear Response
+              </span>
+            </div>
+          </div>
+          <div
+            id="options-container"
+            class="flashyre-assessment11-options-container"
+          >
+            <div
+              *ngFor="let option of currentOptions; let i = index"
+              [id]="['first', 'second', 'third', 'fourth'][i] + '-option-container'"
+              class="flashyre-assessment11-first-option-container"
+            >
+              <input
+                type="radio"
+                [id]="'radio' + (i + 1)"
+                name="radio"
+                [value]="option.key"
+                [(ngModel)]="userResponses[currentQuestion.question_id]"
+                class="flashyre-assessment11-radio1"
+              />
+              <label
+                [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text-image-container'"
+                [for]="'radio' + (i + 1)"
+                class="flashyre-assessment11-first-option-text-image-container"
+              >
+                <label
+                  [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text'"
+                  [for]="'radio' + (i + 1)"
+                  class="flashyre-assessment11-first-option-text"
+                >
+                  {{ option.text || 'No option text' }}
+                </label>
+                <img
+                  *ngIf="option.image"
+                  [id]="['first', 'second', 'third', 'fourth'][i] + '-option-image'"
+                  [src]="option.image"
+                  alt="option image"
+                  class="flashyre-assessment11-first-option-image"
+                />
+              </label>
+            </div>
+            <!-- Descriptive answer placeholder (not used unless question type changes) -->
+            <div class="flashyre-assessment11-text-input-container" *ngIf="currentQuestion.question_type === 'descriptive'">
+              <textarea
+                id="descriptive-answer"
+                class="flashyre-assessment11-description-type-answer textarea"
+                [(ngModel)]="userResponses[currentQuestion.question_id]"
+                placeholder="Enter your answer here"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="previous-next-button-main-container"
+        class="flashyre-assessment11-previous-next-button-main-container2"
+      >
+        <button
+          id="previous-button2"
+          type="button"
+          (click)="previousQuestion()"
+          class="flashyre-assessment11-previous-button3 button"
+        >
+          Previous
+        </button>
+        <button
+          id="next-button2"
+          type="button"
+          (click)="nextQuestion()"
+          class="flashyre-assessment11-next-button3 button"
+        >
+          Next
+        </button>
+        <button
+          id="next-section-button"
+          type="button"
+          (click)="nextSection()"
+          class="flashyre-assessment11-next-section-button2 button"
+        >
+          Next Section
+        </button>
+        <button
+          id="submit-button"
+          type="button"
+          (click)="submitAssessment()"
+          class="flashyre-assessment11-submit-button2 button"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

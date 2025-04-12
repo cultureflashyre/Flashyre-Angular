@@ -167,6 +167,13 @@ const routes = [
       ),
   },
   {
+    path: 'flashyre-assessment11', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment11/flashyre-assessment11.module').then(
+        (m) => m.FlashyreAssessment11Module
+      ),
+  },
+  {
     path: 'profile-last-page1', // New route
     loadChildren: () =>
     import('./pages/profile-last-page1/profile-last-page1.module').then(
