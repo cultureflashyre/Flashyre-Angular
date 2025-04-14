@@ -4,8 +4,8 @@ import { AssessmentService } from '../../services/assessment.service';
 import { Subscription } from 'rxjs';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
-import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { Router, ActivatedRoute } from '@angular/router'; // Add ActivatedRoute
+import { NgxSpinnerService } from 'ngx-spinner';
 
 interface SelectedAnswer {
   answer: string;
@@ -18,14 +18,14 @@ interface SelectedAnswer {
   styleUrls: ['flashyre-assessment1.component.css'],
 })
 export class FlashyreAssessment1 implements OnInit, OnDestroy {
-    @ContentChild('endTestText')
-    endTestText: TemplateRef<any>
-    @Input()
-    logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png'
-    @Input()
-    rootClassName: string = ''
-    @Input()
-    logoAlt: string = 'image'
+  @ContentChild('endTestText')
+  endTestText: TemplateRef<any>;
+  @Input()
+  logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
+  @Input()
+  rootClassName: string = '';
+  @Input()
+  logoAlt: string = 'image';
 
   totalQuestionsInSection: number;
   isLastSection: boolean;
@@ -45,28 +45,23 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
   isLastQuestionInSection = false;
 
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
-
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
 
   private timerSubscription: Subscription;
 
   constructor(
-    private title: Title, 
+    private title: Title,
     private meta: Meta,
     private assessmentService: AssessmentService,
     private videoRecorder: VideoRecorderService,
     private proctoringService: ProctoringService,
     private router: Router,
     private spinner: NgxSpinnerService,
+    private route: ActivatedRoute // Inject ActivatedRoute
   ) {
-    //this.totalQuestionsInSection = 0; // Example initialization
     this.currentQuestionIndex = 0;
-    //this.isLastSection = false;
-    //this.currentSectionIndex = 0;
-    // = this.sections.length;
-    
 
-    this.title.setTitle('Flashyre-Assessment1 - Flashyre')
+    this.title.setTitle('Flashyre-Assessment1 - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
@@ -77,35 +72,39 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
         content:
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
-    ])
+    ]);
   }
 
   private timerInterval: any;
 
   async ngOnInit(): Promise<void> {
-    const assessmentId = 4; // Replace with actual assessment ID
+    // Extract assessmentId from query parameters
+    const assessmentId = this.route.snapshot.queryParamMap.get('id');
     
-    this.fetchAssessmentData(assessmentId)
-    try {
-      await this.videoRecorder.startRecording();
-      this.proctoringService.startMonitoring();
-    } catch (error) {
-      console.error('Failed to start assessment:', error);
-    } 
-   // this.checkLastQuestionAndSection();
+    if (assessmentId) {
+      this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
+      this.startTime = new Date(); // Record start time when assessment begins
+      try {
+        await this.videoRecorder.startRecording();
+        this.proctoringService.startMonitoring();
+      } catch (error) {
+        console.error('Failed to start assessment:', error);
+      }
+    } else {
+      console.error('No assessment ID provided in route');
+      this.router.navigate(['/assessment-error']); // Redirect if no ID
+    }
   }
 
   ngOnDestroy(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    clearInterval(this.timerInterval); // <-- Clear interval on destroy
+    clearInterval(this.timerInterval);
   }
 
   fetchAssessmentData(assessmentId: number): void {
-    // Show spinner before making the HTTP request
     this.spinner.show();
-
     this.assessmentService.getAssessmentData(assessmentId).subscribe({
       next: (data) => {
         this.assessmentData = data;
@@ -113,7 +112,7 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
           name: sectionName,
           ...data.sections[sectionName],
         }));
-        this.timer = data.total_assessment_duration * 60; // Convert minutes to seconds
+        this.timer = data.total_assessment_duration * 60;
         this.assessmentService.updateTimer(this.timer);
         console.log('timer data in seconds: ', this.timer);
         this.startTimer();
@@ -121,10 +120,8 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error fetching assessment data:', error);
-        // Handle error appropriately (e.g., display a message to the user)
       },
       complete: () => {
-        // Hide spinner after request completes
         this.spinner.hide();
       }
     });
@@ -143,11 +140,10 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
 
   decrementTimer(): void {
     this.timerInterval = setInterval(() => {
-      // <-- Use a class property
       if (this.timer > 0) {
         this.assessmentService.updateTimer(this.timer - 1);
       } else {
-        clearInterval(this.timerInterval); // <-- Clean up when done
+        clearInterval(this.timerInterval);
       }
     }, 1000);
   }
@@ -157,11 +153,9 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     this.assessmentService.submitAssessment(responses).subscribe({
       next: (response) => {
         console.log('Assessment submitted successfully:', response);
-        // Navigate to completion page
       },
       error: (error) => {
         console.error('Assessment submission failed:', error);
-        // Handle error
       },
     });
   }
@@ -176,7 +170,6 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     const options = Object.keys(question.options).map(key => ({ key, value: question.options[key] }));
     return question.option_type === 2 ? options.slice(0, 2) : options.slice(0, 4);
   }
-  
 
   markQuestionAsVisited(index: number): void {
     if (!this.questionStates[index]) {
@@ -205,22 +198,16 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
     this.markQuestionAsAnswered(this.currentQuestionIndex);
   }
 
-  // New method to clear the selected answer
   clearResponse(questionId: number): void {
     delete this.selectedAnswers[questionId];
   }
 
   async terminateTest(): Promise<void> {
     try {
-      // 1. Stop recording
       this.videoRecorder.stopRecording();
-
-      // 2. Stop proctoring
       this.proctoringService.stopMonitoring();
-
       this.videoPath = await this.videoRecorder.getVideoPath();
 
-      // 3. Submit responses
       const responses = this.prepareSubmissionData();
       this.assessmentService.submitAssessment(responses).subscribe({
         next: (response) => {
@@ -241,16 +228,16 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
   prepareSubmissionData(): any {
     return {
       assessmentId: this.assessmentData.assessment_id,
-      userId: this.userId, // Assuming you have the user ID available
+      userId: this.userId,
       responses: Object.keys(this.selectedAnswers).map((questionId) => ({
         questionId: +questionId,
-        sectionId: this.selectedAnswers[+questionId].section_id, // Add sectionId
+        sectionId: this.selectedAnswers[+questionId].section_id,
         answer: this.selectedAnswers[+questionId].answer,
       })),
-      startTime: this.startTime, // Start time of the assessment
-      endTime: new Date().toISOString(), // End time of the assessment
-      submissionType: 'manual', // or 'auto' based on submission type
-      videoPath: this.videoPath, // Path to the recorded video
+      startTime: this.startTime,
+      endTime: new Date().toISOString(),
+      submissionType: 'manual',
+      videoPath: this.videoPath,
     };
   }
 
@@ -265,5 +252,4 @@ export class FlashyreAssessment1 implements OnInit, OnDestroy {
       this.currentQuestionIndex++;
     }
   }
-
 }
