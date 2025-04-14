@@ -40,7 +40,7 @@ export class FlashyreAssessment11 implements OnInit {
 
   ngOnInit() {
     this.startTime = new Date().toISOString();
-    const assessmentId = this.route.snapshot.paramMap.get('id');
+    const assessmentId = this.route.snapshot.paramMap.get('assessmentId');
     if (assessmentId) {
       this.assessmentService.getAssessmentDetails(+assessmentId).subscribe(data => {
         this.assessment = data;
