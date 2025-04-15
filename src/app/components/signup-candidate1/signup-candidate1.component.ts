@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { BufferOverlayService } from '../../services/buffer-overlay.service';
-import { BufferService } from '../../services/buffer.service'; 
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
+import { UserProfileService } from '../../services/user-profile.service';
 
 @Component({
   selector: 'signup-candidate1',
@@ -14,6 +14,9 @@ import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
   styleUrls: ['./signup-candidate1.component.css'],
 })
 export class SignupCandidate1 implements OnInit {
+
+  private baseUrl = environment.apiUrl;
+
   // Content projection properties
   @Input() rootClassName: string = '';
   @ContentChild('heading') heading: TemplateRef<any>;
@@ -41,9 +44,8 @@ export class SignupCandidate1 implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private bufferService: BufferService,
-    private bufferOverlayService: BufferOverlayService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private userProfileService: UserProfileService,
   ) {}
 
   ngOnInit() {
@@ -82,7 +84,8 @@ export class SignupCandidate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.spinner.show();
+      this.spinner.show(); // Show spinner only when request starts
+
       const formData = {
         first_name: this.signupForm.get('first_name').value,
         last_name: this.signupForm.get('last_name').value,
@@ -91,16 +94,29 @@ export class SignupCandidate1 implements OnInit {
         password: this.signupForm.get('password').value,
       };
 
-      this.http.post('http://localhost:8000/signup-candidate/', formData, { withCredentials: true }).subscribe(
+      this.http.post(`${this.baseUrl}signup-candidate/`, formData).subscribe(
         (response: any) => {
           console.log('Signup successful', response);
           this.errorMessage = '';
           this.successMessage = response.message || 'Successfully Signed up';
+          
+          // Store JWT token in local storage or session storage
+          localStorage.setItem('jwtToken', response.access); // Store the access token
+
+          // Fetch user profile after successful login
+          this.userProfileService.fetchUserProfile().subscribe(
+            () => {
+              this.errorMessage = '';
+              this.router.navigate(['/profile-basic-information']);
+            },
+            (profileError) => {
+              console.error('Error fetching profile', profileError);
+              // Navigate anyway, but with a warning
+              this.router.navigate(['/profile-basic-information']);
+            }
+          );
           // Hide overlay before navigation
           this.spinner.hide();
-          setTimeout(() => {
-            this.router.navigate(['/profile-basic-information']);
-          }, 1500);
         },
         (error) => {
           console.log('Error response:', error);
@@ -126,7 +142,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`http://localhost:8000/check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -137,7 +153,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`http://localhost:8000/check-email/?email=${email}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-email/?email=${email}`, { withCredentials: true }).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );

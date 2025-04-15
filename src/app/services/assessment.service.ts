@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
-
+import { environment } from '../../environments/environment';
 interface AssessmentResponse {
   assessment_id: number;
   assessment_title: string;
@@ -35,7 +35,7 @@ interface AssessmentResponse {
 })
 export class AssessmentService {
 
-  private apiUrl = 'http://localhost:8000/assessments'; // Replace with your server URL
+  private apiUrl = environment.apiUrl+'assessments'; // Replace with your server URL
   private timerSource = new BehaviorSubject<number>(0);
   public timer$ = this.timerSource.asObservable();
 
@@ -53,7 +53,7 @@ export class AssessmentService {
     this.spinner.show(); // Show spinner before making the request
 
     return new Observable<AssessmentResponse>((observer) => {
-      this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`, { withCredentials: true })
+      this.http.get<AssessmentResponse>(`${this.apiUrl}/?assessment_id=${assessmentId}`)
         .subscribe({
           next: (response) => {
             this.spinner.hide(); // Hide spinner on successful response
@@ -82,7 +82,7 @@ export class AssessmentService {
     this.spinner.show(); // Show spinner before submitting
 
     return new Observable((observer) => {
-      this.http.post(`${this.apiUrl}/submit-assessment/`, answers, { withCredentials: true })
+      this.http.post(`${this.apiUrl}/submit-assessment/`, answers)
         .subscribe({
           next: (response) => {
             this.spinner.hide(); // Hide spinner on successful submission

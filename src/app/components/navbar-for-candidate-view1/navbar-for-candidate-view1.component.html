@@ -27,8 +27,8 @@
         >
           <img
             id="recruiter-profile-picture"
-            [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
+            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             class="navbar-for-candidate-view1-user-image1"
           />
           <div
@@ -201,8 +201,8 @@
             <div class="navbar-for-candidate-view1-container4">
               <img
                 id="Candidate-Profile-Picture"
-                [attr.alt]="imageAlt4"
-                [attr.src]="imageSrc4"
+                alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+                [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                 class="navbar-for-candidate-view1-user-image2"
               />
               <div class="navbar-for-candidate-view1-user-details-container">
@@ -214,7 +214,7 @@
                     <ng-template #defaultText4>
                       <div class="navbar-for-candidate-view1-fragment15">
                         <span class="navbar-for-candidate-view1-text15">
-                          Kathryn Murphy
+                          {{ userProfile.first_name }} {{ userProfile.last_name }}
                         </span>
                       </div>
                     </ng-template>

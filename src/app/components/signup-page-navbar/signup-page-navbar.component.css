@@ -30,6 +30,10 @@
   align-self: center;
   object-fit: cover;
 }
+
+.signup-page-navbar-flashyre-image:hover {
+  cursor: pointer;
+}
  
 .signup-page-navbarroot-class-name {
   height: auto;

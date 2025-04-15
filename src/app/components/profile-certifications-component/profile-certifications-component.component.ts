@@ -1,20 +1,22 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-interface Certification {
-  certificate_name: string;
-  issuing_institute: string;
-  issued_date: string;
-  renewal_date: string;
-  credentials: string;
-}
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
+import { CertificationService } from 'src/app/services/certification.service';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'profile-certifications-component',
   templateUrl: './profile-certifications-component.component.html',
   styleUrls: ['./profile-certifications-component.component.css'],
 })
-export class ProfileCertificationsComponent {
+
+export class ProfileCertificationsComponent implements OnInit {
+  private baseUrl = environment.apiUrl;
+
+
   @ContentChild('text1') text1: TemplateRef<any>;
   @ContentChild('text312') text312: TemplateRef<any>;
   @ContentChild('text12') text12: TemplateRef<any>;
@@ -29,8 +31,22 @@ export class ProfileCertificationsComponent {
   @ContentChild('text31') text31: TemplateRef<any>;
   @ContentChild('text3111') text3111: TemplateRef<any>;
 
-  @Input() rootClassName: string = '';
-  @Output() certificationData = new EventEmitter<Certification[]>();
+
+  @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
+  @ViewChildren('certificationBlock') certificationBlocks!: QueryList<ElementRef>;
+
+  certificationForm: FormGroup;
+  todayDate: string;
+
+  constructor(private fb: FormBuilder, 
+    private http: HttpClient, private spinner: NgxSpinnerService,
+    private certificationService: CertificationService,
+  ) {
+    this.certificationForm = this.fb.group({
+      certifications: this.fb.array([this.createCertificationGroup()]),
+    });
+  }
+
 
   certifications: Certification[] = [
     {
@@ -83,9 +99,12 @@ export class ProfileCertificationsComponent {
     this.emitData();
   }
 
-  getTodayDate(): string {
-    return new Date().toISOString().split('T')[0];
-  }
+  async submitCertification(): Promise<void> {
+    if (this.certificationForm.valid) {
+      const data = this.certificationForm.value.certifications;
+      const requests = data.map((cert: any) => 
+        this.certificationService.saveCertification(cert)
+      );
 
   getMinRenewalDate(index: number): string {
     const cert = this.certifications[index];
@@ -101,13 +120,18 @@ export class ProfileCertificationsComponent {
     this.certificationData.emit(this.certifications);
   }
 
-  saveCertifications() {
-    this.certifications.forEach(cert => {
-      if (cert.certificate_name && cert.issuing_institute && cert.issued_date && cert.credentials) {
-        this.http.post(this.apiUrl, cert).subscribe(
-          response => console.log('Certification saved:', response),
-          error => console.error('Error saving certification:', error)
-        );
+      try {
+        await forkJoin(requests).toPromise(); // Wait for all requests to complete
+        this.certificationForm.reset();
+        this.certifications.clear();
+        this.certifications.push(this.createCertificationGroup());
+        console.log('All certifications saved successfully');
+      } catch (error) {
+        console.error('Error saving certifications:', error);
+        // Handle error accordingly, e.g., show a notification to the user
+      } finally {
+        // Hide spinner after all requests are completed
+        this.spinner.hide();
       }
     });
   }
