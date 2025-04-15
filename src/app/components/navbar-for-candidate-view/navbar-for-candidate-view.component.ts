@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'navbar-for-candidate-view',
@@ -6,6 +6,7 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['navbar-for-candidate-view.component.css'],
 })
 export class NavbarForCandidateView {
+
   userProfile: any = {}; // To store user profile data
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
 
