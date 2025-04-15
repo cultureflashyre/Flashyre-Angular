@@ -2,24 +2,24 @@
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
-    <ng-template #link1>
+    <ng-template >
       <div class="candidate-home-fragment10">
-        <span class="candidate-home-text100">Dashboard</span>
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
       </div>
     </ng-template>
-    <ng-template #link2>
+    <ng-template >
       <div class="candidate-home-fragment11">
-        <span class="candidate-home-text101">Upskill</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
       </div>
     </ng-template>
-    <ng-template #link3>
+    <ng-template >
       <div class="candidate-home-fragment12">
-        <span class="candidate-home-text102">Assessment</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
       </div>
     </ng-template>
-    <ng-template #link4>
+    <ng-template >
       <div class="candidate-home-fragment13">
-        <span class="candidate-home-text103">Jobs for you</span>
+        <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
       </div>
     </ng-template>
     <ng-template #text1>
@@ -39,7 +39,9 @@
     </ng-template>
     <ng-template #text4>
       <div class="candidate-home-fragment17">
-        <span class="candidate-home-text107">Kathryn Murphy</span>
+        <span class="candidate-home-text107">
+          {{ userProfile.first_name }} {{ userProfile.last_name }}
+        </span>
       </div>
     </ng-template>
     <ng-template #text5>
@@ -54,7 +56,7 @@
     </ng-template>
     <ng-template #text7>
       <div class="candidate-home-fragment20">
-        <span class="candidate-home-text110">Dashboard</span>
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
       </div>
     </ng-template>
     <ng-template #text8>
@@ -64,7 +66,7 @@
     </ng-template>
     <ng-template #text9>
       <div class="candidate-home-fragment22">
-        <span class="candidate-home-text112">Assessment</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
       </div>
     </ng-template>
     <ng-template #text10>
@@ -100,8 +102,8 @@
           <div id="candidate-profile-card" class="candidate-home-container3">
             <img
               id="candidate-profile-picture"
-              alt="Image of John Doe"
-              src="https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&ixlib=rb-4.0.3&w=300"
+              alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+              [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
               class="candidate-home-candidate-image thq-img-ratio-1-1 thq-img-round"
             />
             <div
@@ -113,14 +115,18 @@
                   id="candidate-name"
                   class="candidate-home-name-of-the-candidate"
                 >
-                  Kathryn Murphy
+                {{ userProfile.first_name }} {{ userProfile.last_name }}
                 </span>
                 <span
                   id="candidate-job-role"
                   class="candidate-home-role-of-the-candidate"
                 >
                   <span class="candidate-home-text118">
-                    Senior Software Engineer @Microsoft
+                    {{
+                      userProfile.job_title 
+                        ? userProfile.job_title + ' @ ' + userProfile.company_name 
+                        : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
+                    }}
                   </span>
                   <br />
                 </span>
@@ -502,49 +508,70 @@
             Jobs for you
           </span>
           <div id="job-container" class="candidate-home-jobs-container2">
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="loading-container">
+                <p>Loading jobs...</p>
+            </div>
+            
+            <!-- No jobs message -->
+            <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+                <p>No new jobs available. You've applied to all open positions!</p>
+            </div>
+            
+            <!-- Job listings -->
             <candidate-job-for-you-card
-              *ngFor="let job of jobs; let i = index"
-              [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
-              [imageSrc]="job.logo"
-              [imageAlt]="job.company_name + ' logo'"
+                *ngFor="let job of jobs; let i = index"
+                [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+                [imageSrc]="job.logo"
+                [imageAlt]="job.company_name + ' logo'"
             >
-              <ng-template #text>
-                <div class="candidate-home-fragment31">
-                  <span class="candidate-home-text123">{{ job.title }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment32">
-                  <span class="candidate-home-text124">{{ job.company_name }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment33">
-                  <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment34">
-                  <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment35">
-                  <span class="candidate-home-text127">{{ job.description }}</span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment36">
-                  <span class="candidate-home-text128">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment37">
-                  <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
-                </div>
-              </ng-template>
+                <ng-template #text>
+                    <div class="candidate-home-fragment31">
+                        <span class="candidate-home-text123">{{ job.title }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text1>
+                    <div class="candidate-home-fragment32">
+                        <span class="candidate-home-text124">{{ job.company_name }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text2>
+                    <div class="candidate-home-fragment33">
+                        <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text3>
+                    <div class="candidate-home-fragment34">
+                        <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+                    </div>
+                </ng-template>
+                <ng-template #text4>
+                    <div class="candidate-home-fragment35">
+                        <span class="candidate-home-text127">{{ job.description }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #button>
+                    <div class="candidate-home-fragment36">
+                        <button
+                            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                            (click)="applyForJob(job.job_id, i)"
+                        >
+                            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                            <span *ngIf="applicationSuccess[job.job_id]">
+                                <span class="tick-mark">✓</span> Applied Successfully
+                            </span>
+                        </button>
+                    </div>
+                </ng-template>
+                <ng-template #button1>
+                    <div class="candidate-home-fragment37">
+                        <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+                    </div>
+                </ng-template>
             </candidate-job-for-you-card>
-          </div>
+        </div>
         </div>
       </div>
     </div>

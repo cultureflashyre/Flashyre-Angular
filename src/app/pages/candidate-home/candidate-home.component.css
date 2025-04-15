@@ -11,6 +11,8 @@
   flex-direction: column;
   justify-content: flex-start;
 }
+
+
  
 .candidate-home-fragment10 {
   display: contents;
@@ -282,7 +284,7 @@
   text-align: center;
   align-items: center;
   margin-left: 0px;
-  justify-content: flex-end;
+  justify-content: center;
 }
  
 .candidate-home-text118 {
@@ -906,7 +908,53 @@
 }
  
 .candidate-home-fragment36 {
-  display: contents;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+}
+.candidate-home-fragment36 button {
+  margin: -88px -38px; /* Kept your existing margin */
+  border-radius: 4px;
+  color: #05356c;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600; /* Changed to semi-bold */
+  min-width: 120px;
+  text-align: center;
+  position: relative; /* Added for positioning control */
+  top: -5px; /* Moves the button up slightly; adjust as needed */
+  padding: 8px 16px; /* Added padding to ensure text isn't cut off */
+}
+
+.candidate-home-fragment36 button:hover:not(:disabled) {
+  /*background-color: #3a7ca8;*/
+  transform: translateY(-2px);
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+}
+
+.candidate-home-fragment36 button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.candidate-home-fragment36 button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.candidate-home-fragment36 button.applying {
+  background-color: #F19000;
+}
+
+.candidate-home-fragment36 button.applied {
+  background-color: #1F882B;
+}
+
+.candidate-home-fragment36 .tick-mark {
+  font-weight: bold;
+  margin-right: 4px;
 }
  
 .candidate-home-text128 {

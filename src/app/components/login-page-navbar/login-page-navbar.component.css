@@ -28,6 +28,10 @@
   align-self: center;
   object-fit: cover;
 }
+
+.login-page-navbar-flashyre-image:hover{
+  cursor: pointer;
+} 
  
 
  

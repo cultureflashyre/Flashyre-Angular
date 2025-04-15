@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmploymentService {
-  private apiUrl = 'http://localhost:8000/api/employment/';
+  private apiUrl = environment.apiUrl+'api/employment/';
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
 
@@ -19,8 +20,7 @@ export class EmploymentService {
         start_date: position.startDate,
         end_date: position.endDate || null,
         job_details: position.jobDetails,
-      },
-       { withCredentials: true })
+      })
     );
 
     // Show spinner before making requests

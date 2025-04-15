@@ -2,13 +2,15 @@ import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
-
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'candidate-dashboard-main',
   templateUrl: 'candidate-dashboard-main.component.html',
   styleUrls: ['candidate-dashboard-main.component.css'],
 })
 export class CandidateDashboardMain {
+  private baseUrl = environment.apiUrl;
+
   assessmentScore: string = 'N/A'; // Initialize score as 'N/A'
 
   constructor(
@@ -37,7 +39,7 @@ export class CandidateDashboardMain {
 
   fetchAssessmentScore(): void {
     const assessmentId = 4;
-    const url = `http://localhost:8000/assessment/get-assessment-score/${assessmentId}/`;
+    const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
 
     // Show spinner before making the HTTP request
     this.spinner.show();
@@ -49,15 +51,13 @@ export class CandidateDashboardMain {
         } else {
           this.assessmentScore = 'Not Available';
         }
+        this.spinner.hide(); // Hide spinner after successful response
       },
       error: (error) => {
         console.error('Error fetching assessment score:', error);
         this.assessmentScore = 'Failed to Load';
+        this.spinner.hide(); // Hide spinner after error
       },
-      complete: () => {
-        // Hide spinner after request completes
-        this.spinner.hide();
-      }
     });
   }
 }

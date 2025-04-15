@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators'; // Import finalize operator
 import { BufferService } from './buffer.service'; // Import BufferService
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
-  private baseUrl = 'http://localhost:8000';
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient, 
@@ -19,13 +20,13 @@ export class ProfileService {
 
   // Fetch user details
   getUserDetails(): Observable<any> {
-    const url = `${this.baseUrl}/get-user-details/`;
+    const url = `${this.baseUrl}get-user-details/`;
 
     // Show buffer before making the request
     //this.bufferService.show();
     this.spinner.show();
 
-    return this.http.get(url, { withCredentials: true }).pipe(
+    return this.http.get(url).pipe(
       // Hide buffer after the request completes
       finalize(() => this.spinner.hide())
     );
@@ -39,7 +40,7 @@ export class ProfileService {
     //this.bufferService.show();
     this.spinner.show()
 
-    return this.http.post(url, profileData, { withCredentials: true }).pipe(
+    return this.http.post(url, profileData).pipe(
       // Hide buffer after the request completes
       finalize(() => this.spinner.hide())
     );
