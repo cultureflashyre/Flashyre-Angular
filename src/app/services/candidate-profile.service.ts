@@ -11,12 +11,12 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getUserDetails(): Observable<any> {
-    const url = `${this.baseUrl}/get-user-details/`;
+    const url = `${this.baseUrl}get-user-details/`;
     return this.http.get(url);
   }
 
   saveProfile(profileData: FormData): Observable<any> {
-    const url = `${this.baseUrl}/save-profile-basic-info/`;
+    const url = `${this.baseUrl}save-profile-basic-info/`;
     return this.http.post(url, profileData);
   }
 }

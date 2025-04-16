@@ -1,0 +1,1087 @@
+:host { 
+  display: contents; 
+}
+ 
+.profile-overview-page-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-overview-page-container2 {
+  gap: 24px;
+  width: 1500px;
+  height: 100%;
+  display: flex;
+  padding: 0px;
+  padding-top: 0px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #F4F4F4;
+}
+ 
+.profile-overview-page-fragment100 {
+  display: contents;
+}
+ 
+.profile-overview-page-text100 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment101 {
+  display: contents;
+}
+ 
+.profile-overview-page-text101 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment102 {
+  display: contents;
+}
+ 
+.profile-overview-page-text102 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment103 {
+  display: contents;
+}
+ 
+.profile-overview-page-text103 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment104 {
+  display: contents;
+}
+ 
+.profile-overview-page-text104 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment105 {
+  display: contents;
+}
+ 
+.profile-overview-page-text105 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment106 {
+  display: contents;
+}
+ 
+.profile-overview-page-text106 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment107 {
+  display: contents;
+}
+ 
+.profile-overview-page-text107 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment108 {
+  display: contents;
+}
+ 
+.profile-overview-page-text108 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment109 {
+  display: contents;
+}
+ 
+.profile-overview-page-text109 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment110 {
+  display: contents;
+}
+ 
+.profile-overview-page-text110 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment111 {
+  display: contents;
+}
+ 
+.profile-overview-page-text111 {
+  color: rgb(25, 24, 24);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment112 {
+  display: contents;
+}
+ 
+.profile-overview-page-text112 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment113 {
+  display: contents;
+}
+ 
+.profile-overview-page-text113 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment114 {
+  display: contents;
+}
+ 
+.profile-overview-page-text114 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.profile-overview-page-fragment115 {
+  display: contents;
+}
+ 
+.profile-overview-page-text115 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment116 {
+  display: contents;
+}
+ 
+.profile-overview-page-text116 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment117 {
+  display: contents;
+}
+ 
+.profile-overview-page-text117 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment118 {
+  display: contents;
+}
+ 
+.profile-overview-page-text118 {
+  color: var(--dl-color-theme-neutral-dark);
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.profile-overview-page-fragment119 {
+  display: contents;
+}
+ 
+.profile-overview-page-text119 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment120 {
+  display: contents;
+}
+ 
+.profile-overview-page-text120 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment121 {
+  display: contents;
+}
+ 
+.profile-overview-page-text121 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment122 {
+  display: contents;
+}
+ 
+.profile-overview-page-text122 {
+  color: rgb(241, 4, 0);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment123 {
+  display: contents;
+}
+ 
+.profile-overview-page-text123 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment124 {
+  display: contents;
+}
+ 
+.profile-overview-page-text124 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment125 {
+  display: contents;
+}
+ 
+.profile-overview-page-text128 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment126 {
+  display: contents;
+}
+ 
+.profile-overview-page-text131 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment127 {
+  display: contents;
+}
+ 
+.profile-overview-page-text132 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment128 {
+  display: contents;
+}
+ 
+.profile-overview-page-text133 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment129 {
+  display: contents;
+}
+ 
+.profile-overview-page-text134 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment130 {
+  display: contents;
+}
+ 
+.profile-overview-page-text137 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment131 {
+  display: contents;
+}
+ 
+.profile-overview-page-text140 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment132 {
+  display: contents;
+}
+ 
+.profile-overview-page-text141 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment133 {
+  display: contents;
+}
+ 
+.profile-overview-page-text142 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment134 {
+  display: contents;
+}
+ 
+.profile-overview-page-text143 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment135 {
+  display: contents;
+}
+ 
+.profile-overview-page-text144 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment136 {
+  display: contents;
+}
+ 
+.profile-overview-page-text145 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment137 {
+  display: contents;
+}
+ 
+.profile-overview-page-text146 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment138 {
+  display: contents;
+}
+ 
+.profile-overview-page-text147 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment139 {
+  display: contents;
+}
+ 
+.profile-overview-page-text148 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment140 {
+  display: contents;
+}
+ 
+.profile-overview-page-text151 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment141 {
+  display: contents;
+}
+ 
+.profile-overview-page-text152 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment142 {
+  display: contents;
+}
+ 
+.profile-overview-page-text155 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment143 {
+  display: contents;
+}
+ 
+.profile-overview-page-text156 {
+  color: #f10400;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment144 {
+  display: contents;
+}
+ 
+.profile-overview-page-text157 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment145 {
+  display: contents;
+}
+ 
+.profile-overview-page-text158 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment146 {
+  display: contents;
+}
+ 
+.profile-overview-page-text159 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment147 {
+  display: contents;
+}
+ 
+.profile-overview-page-text160 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment148 {
+  display: contents;
+}
+ 
+.profile-overview-page-text163 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment149 {
+  display: contents;
+}
+ 
+.profile-overview-page-text166 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment150 {
+  display: contents;
+}
+ 
+.profile-overview-page-text167 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment151 {
+  display: contents;
+}
+ 
+.profile-overview-page-text168 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment152 {
+  display: contents;
+}
+ 
+.profile-overview-page-text171 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment153 {
+  display: contents;
+}
+ 
+.profile-overview-page-text172 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment154 {
+  display: contents;
+}
+ 
+.profile-overview-page-text173 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment155 {
+  display: contents;
+}
+ 
+.profile-overview-page-text176 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment156 {
+  display: contents;
+}
+ 
+.profile-overview-page-text177 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment157 {
+  display: contents;
+}
+ 
+.profile-overview-page-text180 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment158 {
+  display: contents;
+}
+ 
+.profile-overview-page-text183 {
+  color: #05356c;
+  display: inline-block;
+  font-weight: 600;
+}
+ 
+.profile-overview-page-fragment159 {
+  display: contents;
+}
+ 
+.profile-overview-page-text184 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment160 {
+  display: contents;
+}
+ 
+.profile-overview-page-text187 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment161 {
+  display: contents;
+}
+ 
+.profile-overview-page-text190 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment162 {
+  display: contents;
+}
+ 
+.profile-overview-page-text191 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment163 {
+  display: contents;
+}
+ 
+.profile-overview-page-text192 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment164 {
+  display: contents;
+}
+ 
+.profile-overview-page-text193 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment165 {
+  display: contents;
+}
+ 
+.profile-overview-page-text196 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment166 {
+  display: contents;
+}
+ 
+.profile-overview-page-text199 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment167 {
+  display: contents;
+}
+ 
+.profile-overview-page-text200 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment168 {
+  display: contents;
+}
+ 
+.profile-overview-page-text201 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment169 {
+  display: contents;
+}
+ 
+.profile-overview-page-text202 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment170 {
+  display: contents;
+}
+ 
+.profile-overview-page-text203 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment171 {
+  display: contents;
+}
+ 
+.profile-overview-page-text204 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment172 {
+  display: contents;
+}
+ 
+.profile-overview-page-text205 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment173 {
+  display: contents;
+}
+ 
+.profile-overview-page-text206 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment174 {
+  display: contents;
+}
+ 
+.profile-overview-page-text207 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment175 {
+  display: contents;
+}
+ 
+.profile-overview-page-text210 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment176 {
+  display: contents;
+}
+ 
+.profile-overview-page-text211 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment177 {
+  display: contents;
+}
+ 
+.profile-overview-page-text214 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment178 {
+  display: contents;
+}
+ 
+.profile-overview-page-text215 {
+  color: #f10400;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment179 {
+  display: contents;
+}
+ 
+.profile-overview-page-text216 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment180 {
+  display: contents;
+}
+ 
+.profile-overview-page-text217 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment181 {
+  display: contents;
+}
+ 
+.profile-overview-page-text218 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment182 {
+  display: contents;
+}
+ 
+.profile-overview-page-text219 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment183 {
+  display: contents;
+}
+ 
+.profile-overview-page-text222 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment184 {
+  display: contents;
+}
+ 
+.profile-overview-page-text225 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment185 {
+  display: contents;
+}
+ 
+.profile-overview-page-text226 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment186 {
+  display: contents;
+}
+ 
+.profile-overview-page-text227 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment187 {
+  display: contents;
+}
+ 
+.profile-overview-page-text230 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment188 {
+  display: contents;
+}
+ 
+.profile-overview-page-text231 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment189 {
+  display: contents;
+}
+ 
+.profile-overview-page-text232 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment190 {
+  display: contents;
+}
+ 
+.profile-overview-page-text235 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment191 {
+  display: contents;
+}
+ 
+.profile-overview-page-text236 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment192 {
+  display: contents;
+}
+ 
+.profile-overview-page-text239 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment193 {
+  display: contents;
+}
+ 
+.profile-overview-page-text242 {
+  color: #05356c;
+  display: inline-block;
+  font-weight: 600;
+}
+ 
+.profile-overview-page-fragment194 {
+  display: contents;
+}
+ 
+.profile-overview-page-text243 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment195 {
+  display: contents;
+}
+ 
+.profile-overview-page-text246 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment196 {
+  display: contents;
+}
+ 
+.profile-overview-page-text247 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment197 {
+  display: contents;
+}
+ 
+.profile-overview-page-text248 {
+  color: #f10400;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment198 {
+  display: contents;
+}
+ 
+.profile-overview-page-text249 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment199 {
+  display: contents;
+}
+ 
+.profile-overview-page-text252 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment200 {
+  display: contents;
+}
+ 
+.profile-overview-page-text253 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment201 {
+  display: contents;
+}
+ 
+.profile-overview-page-text256 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment202 {
+  display: contents;
+}
+ 
+.profile-overview-page-text257 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment203 {
+  display: contents;
+}
+ 
+.profile-overview-page-text260 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment204 {
+  display: contents;
+}
+ 
+.profile-overview-page-text263 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment205 {
+  display: contents;
+}
+ 
+.profile-overview-page-text266 {
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.profile-overview-page-fragment206 {
+  display: contents;
+}
+ 
+.profile-overview-page-text267 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment207 {
+  display: contents;
+}
+ 
+.profile-overview-page-text268 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment208 {
+  display: contents;
+}
+ 
+.profile-overview-page-text269 {
+  color: #05356c;
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment209 {
+  display: contents;
+}
+ 
+.profile-overview-page-text272 {
+  display: inline-block;
+}
+ 
+.profile-overview-page-fragment210 {
+  display: contents;
+}
+ 
+.profile-overview-page-text273 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .profile-overview-page-text114 {
+    color: rgb(24, 25, 28);
+    font-size: 20px;
+  }
+  .profile-overview-page-text118 {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-overview-page-text151 {
+    color: #18191c;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-overview-page-text156 {
+    color: #f10400;
+  }
+  .profile-overview-page-text183 {
+    color: #05356c;
+    font-weight: 600;
+  }
+  .profile-overview-page-text210 {
+    color: #18191c;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-overview-page-text215 {
+    color: #f10400;
+  }
+  .profile-overview-page-text242 {
+    color: #05356c;
+    font-weight: 600;
+  }
+  .profile-overview-page-text246 {
+    color: #05356c;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-overview-page-text248 {
+    fill: #F10400;
+    color: #F10400;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-overview-page-text258 {
+    color: #18191c;
+  }
+  .profile-overview-page-text266 {
+    color: rgb(24, 25, 28);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .profile-overview-page-text100 {
+    font-size: 10px;
+  }
+  .profile-overview-page-text102 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .profile-overview-page-text105 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .profile-overview-page-text106 {
+    font-size: 10px;
+  }
+  .profile-overview-page-text107 {
+    font-size: 10px;
+  }
+  .profile-overview-page-text109 {
+    font-size: 10px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .profile-overview-page-text114 {
+    color: rgb(24, 25, 28);
+  }
+  .profile-overview-page-text248 {
+    width: auto;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .profile-overview-page-text269 {
+    color: rgb(5, 53, 108);
+  }
+  .profile-overview-page-text270 {
+    font-size: 14px;
+  }
+  .profile-overview-page-text272 {
+    font-size: 14px;
+  }
+  .profile-overview-page-text273 {
+    font-size: 14px;
+  }
+}

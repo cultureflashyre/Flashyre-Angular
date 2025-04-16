@@ -6,12 +6,11 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'profile-education-component', // Standardized selector from the first snippet
+  selector: 'profile-education-component',
   templateUrl: './profile-education-component.component.html',
   styleUrls: ['./profile-education-component.component.css'],
 })
 export class ProfileEducationComponent {
-  /** Content projection references */
   @ContentChild('text3136') text3136: TemplateRef<any>;
   @ContentChild('text313') text313: TemplateRef<any>;
   @ContentChild('text3137') text3137: TemplateRef<any>;
@@ -26,66 +25,49 @@ export class ProfileEducationComponent {
   @ContentChild('text2') text2: TemplateRef<any>;
   @ContentChild('text1') text1: TemplateRef<any>;
 
-  /** Input and Output decorators */
   @Input() rootClassName: string = '';
   @Output() formsUpdated = new EventEmitter<FormGroup[]>();
 
-  /** Form and data properties */
   educationForms: FormGroup[] = [];
   years: number[] = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
-  months: string[] = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
+  months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   universities: string[] = ['Example University', 'Tech Institute', 'Global College'];
   educationLevels: string[] = ["Bachelor's", "Master's", 'PhD', 'Diploma'];
   courses: string[] = ['Computer Science', 'Engineering', 'Business Administration'];
   specializations: string[] = ['AI', 'Machine Learning', 'Data Science'];
   todayDate: string;
-
-  /** Reference to form elements for scrolling */
-  @ViewChildren('educationFormInstance') educationFormInstances: QueryList<ElementRef>;
+  educationFormInstances: any;
 
   constructor(
     private fb: FormBuilder, 
     private educationService: EducationService,
     private router: Router
   ) {
-  
     this.todayDate = new Date().toISOString().split('T')[0];
-    this.addNewForm(); // Initialize with one form
+    this.addNewForm();
   }
 
-  /**
-   * Creates a new education form with validation
-   */
-  private createEducationForm(): FormGroup {
+  // Public method to create a form group
+  public createEducationForm(data: any = {}): FormGroup {
     return this.fb.group({
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      university: ['', Validators.required],
-      educationLevel: ['', Validators.required],
-      course: ['', Validators.required],
-      specialization: ['', Validators.required],
+      startDate: [data.select_start_date || '', Validators.required],
+      endDate: [data.select_end_date || '', Validators.required],
+      university: [data.university || '', Validators.required],
+      educationLevel: [data.education_level || '', Validators.required],
+      course: [data.course || '', Validators.required],
+      specialization: [data.specialization || '', Validators.required],
     }, { validators: this.dateRangeValidator });
   }
 
-  /**
-   * Custom validator to ensure end date is not before start date
-   */
   private dateRangeValidator(form: FormGroup): { [key: string]: any } | null {
     const startDate = form.get('startDate')?.value;
     const endDate = form.get('endDate')?.value;
-
     if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
       return { dateRangeInvalid: true };
     }
     return null;
   }
 
-  /**
-   * Adds a new form, emits the updated forms, and scrolls to it
-   */
   addNewForm() {
     this.educationForms.push(this.createEducationForm());
     this.formsUpdated.emit(this.educationForms);
@@ -94,20 +76,14 @@ export class ProfileEducationComponent {
       if (lastForm) {
         lastForm.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 0); // Delay to ensure DOM updates
+    }, 0);
   }
 
-  /**
-   * Removes a form by index and emits the updated forms
-   */
   removeForm(index: number) {
     this.educationForms.splice(index, 1);
     this.formsUpdated.emit(this.educationForms);
   }
 
-  /**
-   * Saves all valid forms to the backend
-   */
   saveAll(): Observable<any> {
     const validForms = this.educationForms.filter(form => form.valid);
     if (validForms.length === 0) {
@@ -133,16 +109,15 @@ export class ProfileEducationComponent {
   }
 
   saveAndNext() {
-      this.saveAll().subscribe({
-        next: () => {
-          console.log('All educations saved successfully');
-          this.router.navigate(['/profile-certification-page']);
-        },
-        error: (error) => {
-          console.error('Error saving educations:', error);
-          // Optionally, display an error message to the user (e.g., using a toast service)
-        }
-      });
+    this.saveAll().subscribe({
+      next: () => {
+        console.log('All educations saved successfully');
+        this.router.navigate(['/profile-certification-page']);
+      },
+      error: (error) => {
+        console.error('Error saving educations:', error);
+      }
+    });
   }
 
   goToPrevious() {
