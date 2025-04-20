@@ -34,10 +34,6 @@
   width: 200px;
   object-fit: cover;
 }
-
-.navbar-for-candidate-view-flashyre-image:hover {
-  cursor: pointer;
-}
  
 .navbar-for-candidate-view-desktop-menu {
   flex: 1;
@@ -1036,6 +1032,7 @@
   .navbar-for-candidate-view-popup-container {
     gap: var(--dl-layout-space-halfunit);
     width: 293px;
+    height: 845px;
     height: 50vh;
     opacity: 1;
     padding: var(--dl-layout-space-unit);
