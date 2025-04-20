@@ -1,5 +1,5 @@
-:host { 
-  display: contents; 
+:host {
+  display: contents;
 }
  
 .profile-certifications-component-container1 {
@@ -95,24 +95,24 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
+  align-items: flex-start;
   padding-top: 0px;
   border-color: #A7A7A7;
   padding-right: 10px;
-  flex-direction: column;
+  flex-direction: row;
   padding-bottom: 0px;
   justify-content: center;
 }
  
-.profile-certifications-component-select-text1 {
+/* .profile-certifications-component-select-text1 {
   fill: #69737E;
   color: #69737E;
-  align-self: flex-start;
+  align-self: center;
   margin-top: var(--dl-layout-space-halfunit);
   margin-bottom: var(--dl-layout-space-halfunit);
-}
+} */
  
-.profile-certifications-component-drop-down-icon1 {
+/* .profile-certifications-component-drop-down-icon1 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
   width: auto;
@@ -120,7 +120,7 @@
   margin-top: -28px;
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
-}
+} */
  
 .profile-certifications-component-certificate-issuing-institute-container {
   flex: 0 0 auto;
@@ -155,6 +155,7 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
+  align-self: center;
 }
  
 .profile-certifications-component-form2 {
@@ -162,7 +163,7 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
+  align-items: flex-start;
   padding-top: 0px;
   border-color: #A7A7A7;
   padding-right: 10px;
@@ -195,12 +196,12 @@
   width: 672px;
   height: 76px;
   display: flex;
-  align-items: flex-start;
 }
  
 .profile-certifications-component-issued-date-container {
   flex: 0 0 auto;
   width: 324px;
+  gap: 24px;
   height: 76px;
   display: flex;
   align-items: flex-start;
@@ -231,6 +232,7 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
+  margin-top: 5.5px;
 }
  
 .profile-certifications-component-form3 {
@@ -238,13 +240,13 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
+  align-items: space-between;
+  padding-top: 13px;
   border-color: #A7A7A7;
   padding-right: 10px;
   flex-direction: column;
   padding-bottom: 0px;
-  justify-content: center;
+  justify-content: space-between;
 }
  
 .profile-certifications-component-select-text3 {
@@ -305,13 +307,13 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
+  align-items: space-between;
+  padding-top: 13px;
   border-color: #A7A7A7;
   padding-right: 10px;
   flex-direction: column;
   padding-bottom: 0px;
-  justify-content: center;
+  justify-content: space-between;
 }
  
 .profile-certifications-component-select-text4 {
@@ -341,7 +343,7 @@
 }
  
 .profile-certifications-component-credentials-text {
-  fill: #18191C;
+  /* fill: #18191C; */
   color: #18191C;
   width: 324px;
   height: 24px;
@@ -362,11 +364,11 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
+  align-items: flex-start;
   padding-top: 0px;
   border-color: #A7A7A7;
   padding-right: 10px;
-  flex-direction: column;
+  flex-direction: row;
   padding-bottom: 0px;
   justify-content: center;
 }
@@ -411,9 +413,11 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
+  margin-top: 20px;
 }
  
 .profile-certifications-component-add-certification-text:hover {
+  color: #05356c;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
@@ -422,32 +426,44 @@
 .profile-certifications-component-add-certification-text:active {
   transform: scale(1.05);
   transition: all 0.7s;
+  background-color: #D7DFE7;
 }
  
-.profile-certifications-component-remove-certification-text {
-  fill: #05356C;
-  color: #05356C;
+.profile-certifications-component-remove-certification--text {
+  color: #F10400;
   width: auto;
   height: 24px;
   display: flex;
   font-style: normal;
-  transition: 0.3s;
-  align-items: center;
   font-weight: 600;
-  border-width: 0px;
+  border: 0;
+  align-items: center;
   justify-content: center;
+  justify-self: flex-end;
   background-color: transparent;
+  transition: all 0.3s;
+  padding-top: 20px; /* Reset default button padding if needed */
+  margin: 0; /* Reset default button margin if needed */
 }
- 
-.profile-certifications-component-remove-certification-text:hover {
+
+.profile-certifications-component-remove-certification--text:hover {
+  color: #F10400;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
-.profile-certifications-component-remove-certification-text:active {
+
+.profile-certifications-component-remove-certification--text:active {
   transform: scale(1.05);
   transition: all 0.7s;
+  background-color: #FFFFFF;
+}
+
+/* If the above doesn't work, try adding these */
+button.profile-certifications-component-remove-certification--text {
+  color: #F10400;
+  background: none;
+  border: none;
 }
  
 .profile-certifications-component-fragment10 {
@@ -558,12 +574,21 @@
   display: inline-block;
 }
  
-
+ 
  
 .profile-certifications-componentroot-class-name1 {
   width: auto;
   align-self: center;
 }
+
+.certification-divider {
+  border: 0;                /* Removes default border */
+  height: 2px;             /* Sets the thickness of the line */
+  background-color: #E0E0E0;  /* Sets the color of the line (black in this case) */
+  margin: 10px 0;          /* Adds spacing above and below the line */
+}
+
+
  
 @media(max-width: 1200px) {
   .profile-certifications-component-profile-certification-container {
@@ -592,15 +617,17 @@
     width: auto;
     height: 24px;
   }
-  .profile-certifications-component-remove-certification-text {
-    width: auto;
-    height: 24px;
-  }
   .profile-certifications-component-text10 {
     color: #05356c;
     font-style: normal;
     font-weight: 600;
   }
+  .profile-certifications-component-remove-certification--text {
+    width: auto;
+    height: 24px;
+    justify-self: flex-end;
+  }
+  
   .profile-certifications-component-text12 {
     fill: #F10400;
     color: #F10400;
@@ -619,40 +646,41 @@
 }
  
 @media(max-width: 479px) {
+  .profile-certifications-component-container {
+    width: 100%;
+    height: auto;
+  }
   .profile-certifications-component-container1 {
     width: 100%;
     height: auto;
   }
   .profile-certifications-component-profile-certification-container {
-    gap: var(--dl-layout-space-unit);
+    gap: 16px;
     width: 95%;
     height: 595px;
-    padding: var(--dl-layout-space-unit);
     align-items: center;
-    padding-top: var(--dl-layout-space-twounits);
-    padding-left: var(--dl-layout-space-twounits);
-    padding-right: var(--dl-layout-space-twounits);
-    flex-direction: column;
-    padding-bottom: var(--dl-layout-space-twounits);
+    padding: 24px;
     justify-content: flex-start;
     background-color: #FFFFFF;
   }
   .profile-certifications-component-certification-text {
     width: 100%;
   }
+  .profile-certifications-component-container2 {
+    width: 324px;
+    gap: 16px;
+  }
   .profile-certifications-component-certificate-name-and-issuing-institute-container {
-    gap: var(--dl-layout-space-unit);
+    gap: 16px;
     width: 100%;
-    height: auto;
+    height: 180px;
     flex-direction: column;
     padding-bottom: 0px;
   }
   .profile-certifications-component-certificate-name-container {
     width: 100%;
   }
-  .profile-certifications-component-certifiacate-name-container {
-    width: 100%;
-  }
+ 
   .profile-certifications-component-certificate-name-text {
     width: 100%;
   }
@@ -680,7 +708,7 @@
   .profile-certifications-component-issued-renewal-date-container {
     gap: var(--dl-layout-space-unit);
     width: 100%;
-    height: auto;
+    height: 180px;
     flex-direction: column;
   }
   .profile-certifications-component-issued-date-container {
@@ -707,6 +735,9 @@
   .profile-certifications-component-renewal-date-text {
     width: 100%;
   }
+  .profile-certifications-component-select-container2 {
+    width: 100%;
+  }
   .profile-certifications-component-form4 {
     width: 100%;
   }
@@ -724,7 +755,7 @@
     display: flex;
     padding: 0px;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     background-color: #FFFFFF;
   }
   .profile-certifications-component-remove-certification-text {
@@ -744,3 +775,5 @@
     height: auto;
   }
 }
+ 
+ 

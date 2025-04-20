@@ -16,7 +16,6 @@
         [attr.alt]="imageAlt12"
         [attr.src]="imageSrc12"
         class="navbar-for-candidate-view-flashyre-image"
-        [routerLink]="['/candidate-home']"
       />
       <div
         data-thq="thq-navbar-nav"
@@ -32,12 +31,11 @@
             class="navbar-for-candidate-view-dashboard-link1 thq-body-small button"
           >
             <ng-container>
-
-              <ng-template #defaultLink1>
-                <div class="navbar-for-candidate-view-fragment12">
-                  <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text12">
+              <ng-template #defaultLink11>
+                <div class="navbar-for-candidate-view-fragment20">
+                  <span class="navbar-for-candidate-view-text26">
                     Dashboard
-                  </a>
+                  </span>
                 </div>
               </ng-template>
               <ng-container
@@ -51,11 +49,9 @@
             class="navbar-for-candidate-view-dashboard-link2 thq-body-small button"
           >
             <ng-container>
-              <ng-template #defaultLink2>
-                <div class="navbar-for-candidate-view-fragment15">
-                  <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text15">
-                    Upskill
-                  </a>
+              <ng-template #defaultLink12>
+                <div class="navbar-for-candidate-view-fragment21">
+                  <span class="navbar-for-candidate-view-text27">Upskill</span>
                 </div>
               </ng-template>
               <ng-container
@@ -69,11 +65,11 @@
             class="navbar-for-candidate-view-dashboard-link3 thq-body-small button"
           >
             <ng-container>
-              <ng-template #defaultLink3>
-                <div class="navbar-for-candidate-view-fragment19">
-                  <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text19">
+              <ng-template #defaultLink111>
+                <div class="navbar-for-candidate-view-fragment22">
+                  <span class="navbar-for-candidate-view-text28">
                     Assessment
-                  </a>
+                  </span>
                 </div>
               </ng-template>
               <ng-container
@@ -89,11 +85,11 @@
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
           >
             <ng-container>
-              <ng-template #defaultLink4>
-                <div class="navbar-for-candidate-view-fragment17">
-                  <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text17">
+              <ng-template #defaultLink41>
+                <div class="navbar-for-candidate-view-fragment23">
+                  <span class="navbar-for-candidate-view-text29">
                     Jobs for you
-                  </a>
+                  </span>
                 </div>
               </ng-template>
               <ng-container
@@ -112,9 +108,9 @@
           class="navbar-for-candidate-view-dropdown-toggle1"
         >
           <img
-            id="user-image"
-            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+            id="recruiter-profile-picture"
+            [attr.alt]="imageAlt31"
+            [attr.src]="imageSrc31"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -344,12 +340,23 @@
                 id="recruiter-details"
                 class="navbar-for-candidate-view-details-container"
               >
-                <img
-                  id="candidate-profile-picture"
-                  alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
-                  class="navbar-for-candidate-view-user-image2"
-                />
+                <span
+                  id="recruiter-name"
+                  class="navbar-for-candidate-view-recruiter-name"
+                >
+                  <ng-container>
+                    <ng-template #defaultText154>
+                      <div class="navbar-for-candidate-view-fragment28">
+                        <span class="navbar-for-candidate-view-text34">
+                          Leslie Alexander
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text154 ? text154 : defaultText154"
+                    ></ng-container>
+                  </ng-container>
+                </span>
                 <div
                   id="recruiter-company-logo-and-name"
                   class="navbar-for-candidate-view-container6"
@@ -361,39 +368,8 @@
                     class="navbar-for-candidate-view-company-image"
                   />
                   <span
-                    id="navbar-candidate-name"
-                    class="navbar-for-candidate-view-user-name"
-                  >
-                    <ng-container>
-                      <ng-template #defaultText4>
-                        <div class="navbar-for-candidate-view-fragment22">
-                          <span class="navbar-for-candidate-view-text22">
-                            {{ userProfile.first_name }} {{ userProfile.last_name }}
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text4 ? text4 : defaultText4"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                  <span id="navbar-candidate-profile-completion">
-                    <ng-container>
-                      <ng-template #defaultText5>
-                        <div class="navbar-for-candidate-view-fragment21">
-                          <span class="navbar-for-candidate-view-text21">
-                            ✅ 90% Profile Completion
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text5 ? text5 : defaultText5"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                  <span
-                    id="navbar-candidate-view-edit-profile-button"
-                    class="button navbar-for-candidate-view-view-edit-profile"
+                    id="recruiter-company-name"
+                    class="navbar-for-candidate-view-company-name"
                   >
                     <ng-container>
                       <ng-template #defaultText163>
@@ -452,11 +428,11 @@
                 </svg>
                 <span id="dashboard-button">
                   <ng-container>
-                    <ng-template #defaultText7>
-                      <div class="navbar-for-candidate-view-fragment25">
-                        <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text25">
+                    <ng-template #defaultText74>
+                      <div class="navbar-for-candidate-view-fragment30">
+                        <span class="navbar-for-candidate-view-text39">
                           Dashboard
-                        </a>
+                        </span>
                       </div>
                     </ng-template>
                     <ng-container
@@ -482,11 +458,11 @@
                 </svg>
                 <span id="jobs-posted-button">
                   <ng-container>
-                    <ng-template #defaultText8>
-                      <div class="navbar-for-candidate-view-fragment13">
-                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text13">
+                    <ng-template #defaultText104>
+                      <div class="navbar-for-candidate-view-fragment31">
+                        <span class="navbar-for-candidate-view-text40">
                           Upskill
-                        </a>
+                        </span>
                       </div>
                     </ng-template>
                     <ng-container
@@ -516,11 +492,11 @@
                 </svg>
                 <span id="jobs-posted-button">
                   <ng-container>
-                    <ng-template #defaultText9>
-                      <div class="navbar-for-candidate-view-fragment23">
-                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text23">
+                    <ng-template #defaultText1011>
+                      <div class="navbar-for-candidate-view-fragment32">
+                        <span class="navbar-for-candidate-view-text41">
                           Assessment
-                        </a>
+                        </span>
                       </div>
                     </ng-template>
                     <ng-container
@@ -547,11 +523,11 @@
                 </svg>
                 <span id="jobs-posted-button">
                   <ng-container>
-                    <ng-template #defaultText10>
-                      <div class="navbar-for-candidate-view-fragment24">
-                        <a [routerLink]="['/candidate-dashboard-main']" class="navbar-for-candidate-view-text24">
+                    <ng-template #defaultText10111>
+                      <div class="navbar-for-candidate-view-fragment33">
+                        <span class="navbar-for-candidate-view-text42">
                           Jobs for you
-                        </a>
+                        </span>
                       </div>
                     </ng-template>
                     <ng-container
