@@ -108,19 +108,25 @@ export class ProfileEmploymentComponent {
     return `${year}-${month}-${day}`;
   }
 
-  saveAndNext() {
-    const positions = this.getPositions();
-    this.employmentService.saveEmployment(positions).subscribe(
-      (response) => {
-        console.log('Employment saved successfully:', response);
-        this.resetForm(); // Reset form after saving
-        this.router.navigate(['/profile-certification-page']); // Redirect to profile-education-page-duplicate
-      },
-      (error) => {
-        console.error('Error saving employment:', error);
-      }
-    );
+  saveEmployment(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const positions = this.getPositions();
+      this.employmentService.saveEmployment(positions).subscribe(
+        (response) => {
+          console.log('Employment saved successfully:', response);
+          this.resetForm(); // Reset form after saving
+          // Do NOT navigate here; let parent handle navigation
+          resolve(true);
+        },
+        (error) => {
+          console.error('Error saving employment:', error);
+          alert('Error saving employment: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
+        }
+      );
+    });
   }
+  
 
   goToPrevious() {
     this.router.navigate(['/profile-basic-information']);

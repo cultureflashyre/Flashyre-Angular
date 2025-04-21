@@ -102,27 +102,32 @@ export class ProfileBasicinformationComponent implements OnInit {
     return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
-  saveProfile() {
-    if (!this.resume) {
-      alert('Recommended to upload a Resume before saving.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profile_picture', this.profilePicture);
-    formData.append('resume', this.resume);
-
-    this.profileService.saveProfile(formData).subscribe(
-      (response) => {
-        console.log('Profile saved successfully', response);
-        this.router.navigate(['/profile-employment-page']);
-      },
-      (error) => {
-        console.error('Error saving profile', error);
-        alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+  saveProfile(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.resume) {
+        alert('Recommended to upload a Resume before saving.');
+        resolve(false);
+        return;
       }
-    );
+  
+      const formData = new FormData();
+      formData.append('profile_picture', this.profilePicture);
+      formData.append('resume', this.resume);
+  
+      this.profileService.saveProfile(formData).subscribe(
+        (response) => {
+          console.log('Profile saved successfully', response);
+          resolve(true);
+        },
+        (error) => {
+          console.error('Error saving profile', error);
+          alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
+        }
+      );
+    });
   }
+  
 
   skip() {
     this.router.navigate(['/profile-employment-page']);
@@ -134,3 +139,4 @@ export class ProfileBasicinformationComponent implements OnInit {
     }
   }
 }
+

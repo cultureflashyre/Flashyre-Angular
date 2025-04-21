@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmploymentService {
-  private apiUrl = environment.apiUrl+'api/employment/';
+  private apiUrl = environment.apiUrl + 'api/employment/';
 
   constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
 
   saveEmployment(positions: any[]): Observable<any> {
+    if (!positions || positions.length === 0) {
+      return throwError(() => new Error('No valid employment data to save'));
+    }
+
+    this.spinner.show();
     const requests = positions.map((position) =>
       this.http.post(this.apiUrl, {
         job_title: position.jobTitle,
@@ -20,34 +26,16 @@ export class EmploymentService {
         start_date: position.startDate,
         end_date: position.endDate || null,
         job_details: position.jobDetails,
-      })
+      }).pipe(
+        catchError((error) => {
+          console.error('Error saving employment:', error);
+          return throwError(() => new Error(error.error?.detail || 'Failed to save employment'));
+        })
+      )
     );
 
-    // Show spinner before making requests
-    this.spinner.show();
-
-
-
-    return new Observable((observer) => {
-      let completed = 0;
-      requests.forEach((request, index) => {
-        request.subscribe(
-          (response) => {
-            completed++;
-            if (completed === requests.length) {
-              this.spinner.hide();
-
-              observer.next(response);
-              observer.complete();
-            }
-          },
-          (error) => {
-            // Hide spinner on error
-            this.spinner.hide();
-            observer.error(error);
-          }
-        );
-      });
-    });
+    return forkJoin(requests).pipe(
+      finalize(() => this.spinner.hide())
+    );
   }
 }

@@ -1,7 +1,18 @@
 :host { 
   display: contents; 
 }
- 
+ /* Before */
+.some-class {
+    color: blue;
+  }
+  @import 'another-style.css';
+  
+  /* After */
+  @import 'another-style.css';
+  .some-class {
+    color: blue;
+  }
+  
 .buffer-name-1-container1 {
   width: 100%;
   height: auto;

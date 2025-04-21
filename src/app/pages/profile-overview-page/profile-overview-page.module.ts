@@ -1,8 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+
 import { ComponentsModule } from '../../components/components.module';
 import { ProfileOverviewPage } from './profile-overview-page.component';
 
@@ -14,15 +13,8 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [ProfileOverviewPage, ],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    RouterModule.forChild(routes),
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-  ],
+  declarations: [ProfileOverviewPage, ], // Add components to declarations
+  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
   exports: [ProfileOverviewPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

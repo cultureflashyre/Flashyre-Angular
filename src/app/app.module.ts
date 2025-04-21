@@ -26,13 +26,13 @@ const routes = [
         './pages/profile-education-page/profile-education-page.module'
       ).then((m) => m.ProfileEducationPageModule),
   },
-  {
-    path: 'profile-education-page-duplicate',
-    loadChildren: () =>
-      import(
-        './pages/profile-education-page-duplicate/profile-education-page-duplicate.module'
-      ).then((m) => m.ProfileEducationPageDuplicateModule),
-  },
+  // {
+  //   path: 'profile-education-page-duplicate',
+  //   loadChildren: () =>
+  //     import(
+  //       './pages/profile-education-page-duplicate/profile-education-page-duplicate.module'
+  //     ).then((m) => m.ProfileEducationPageDuplicateModule),
+  // },
   {
     path: 'login-college',
     loadChildren: () =>
@@ -40,13 +40,13 @@ const routes = [
         (m) => m.LoginCollegeModule
       ),
   },
-  {
-    path: 'profile-basic-information',
-    loadChildren: () =>
-      import('./pages/profile-basic-information/profile-basic-information.module').then(
-        (m) => m.ProfileBasicInformationModule),
-     // Protect this route
-  },
+  // {
+  //   path: 'profile-basic-information',
+  //   loadChildren: () =>
+  //     import('./pages/profile-basic-information/profile-basic-information.module').then(
+  //       (m) => m.ProfileBasicInformationModule),
+  //    // Protect this route
+  // },
   {
     path: 'recruiter-view-3rd-page',
     loadChildren: () =>
@@ -68,13 +68,13 @@ const routes = [
         (m) => m.SignupCorporateModule
       ),
   },
-  {
-    path: 'profile-employment-page',
-    loadChildren: () =>
-      import(
-        './pages/profile-employment-page/profile-employment-page.module'
-      ).then((m) => m.ProfileEmploymentPageModule),
-  },
+  // {
+  //   path: 'profile-employment-page',
+  //   loadChildren: () =>
+  //     import(
+  //       './pages/profile-employment-page/profile-employment-page.module'
+  //     ).then((m) => m.ProfileEmploymentPageModule),
+  // },
   {
     path: 'candidate-job-detail-view',
     loadChildren: () =>
@@ -103,13 +103,13 @@ const routes = [
         (m) => m.CandidateHomeModule
       ),
   },
-  {
-    path: 'profile-certification-page',
-    loadChildren: () =>
-      import(
-        './pages/profile-certification-page/profile-certification-page.module'
-      ).then((m) => m.ProfileCertificationPageModule),
-  },
+  // {
+  //   path: 'profile-certification-page',
+  //   loadChildren: () =>
+  //     import(
+  //       './pages/profile-certification-page/profile-certification-page.module'
+  //     ).then((m) => m.ProfileCertificationPageModule),
+  // },
   {
     path: 'recruiter-view-4th-page',
     loadChildren: () =>

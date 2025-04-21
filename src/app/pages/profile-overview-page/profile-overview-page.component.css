@@ -15,14 +15,57 @@
   width: 1500px;
   height: 100%;
   display: flex;
-  padding: 0px;
+  padding: 24px;
   padding-top: 0px;
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
   background-color: #F4F4F4;
 }
- 
+
+/* The alert message box */
+.alert {
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.success {
+  background-color: #4CAF50; /* Green */
+}
+
+.error {
+  background-color: #f44336; /* Red */
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+
+/* Green tick for success */
+.tick {
+  margin-right: 10px;
+  font-size: 20px;
+} 
 .profile-overview-page-fragment100 {
   display: contents;
 }
