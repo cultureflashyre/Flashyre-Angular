@@ -105,4 +105,9 @@ export class ProfileCertificationPage implements OnInit {
     // Add navigation to next page without saving
     this.router.navigate(['/next-profile-step']);
   }
+
+  skipToEmployment() {
+    console.log('Skipping to Employment');
+    this.router.navigate(['/profile-last-page1']);
+  }
 }
