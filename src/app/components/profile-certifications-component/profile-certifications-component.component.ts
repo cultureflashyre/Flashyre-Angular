@@ -8,8 +8,8 @@ import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'profile-certifications-component',
-  templateUrl: 'profile-certifications-component.component.html',
-  styleUrls: ['profile-certifications-component.component.css'],
+  templateUrl: './profile-certifications-component.component.html',
+  styleUrls: ['./profile-certifications-component.component.css']
 })
 export class ProfileCertificationsComponent implements OnInit {
   private baseUrl = environment.apiUrl;
@@ -105,31 +105,42 @@ export class ProfileCertificationsComponent implements OnInit {
     }
   }
 
-  async submitCertification(): Promise<void> {
-    if (this.certificationForm.valid) {
-      const data = this.certificationForm.value.certifications;
-      const requests = data.map((cert: any) => 
-        this.certificationService.saveCertification(cert)
-      );
-
-      // Show spinner before making requests
-      this.spinner.show();
-
-      try {
-        await forkJoin(requests).toPromise(); // Wait for all requests to complete
-        this.certificationForm.reset();
-        this.certifications.clear();
-        this.certifications.push(this.createCertificationGroup());
-        console.log('All certifications saved successfully');
-      } catch (error) {
-        console.error('Error saving certifications:', error);
-        // Handle error accordingly, e.g., show a notification to the user
-      } finally {
-        // Hide spinner after all requests are completed
-        this.spinner.hide();
-      }
-    } else {
-      console.log('Form is invalid');
-    }
+  // Method to handle form submission
+  submitCertification(): void {
+    console.log('Certification form submitted:', this.certificationForm.value);
   }
+
+  saveCertifications(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      if (this.certificationForm.valid) {
+        const data = this.certificationForm.value.certifications;
+        const requests = data.map((cert: any) => 
+          this.certificationService.saveCertification(cert)
+        );
+  
+        this.spinner.show();
+  
+        try {
+          await forkJoin(requests).toPromise();
+          this.certificationForm.reset();
+          this.certifications.clear();
+          this.certifications.push(this.createCertificationGroup());
+          console.log('All certifications saved successfully');
+          resolve(true);
+        } catch (error) {
+          console.error('Error saving certifications:', error);
+          alert('Error saving certifications: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
+        } finally {
+          this.spinner.hide();
+        }
+      } else {
+        console.log('Certification form is invalid');
+        alert('Please fill out all required certification fields correctly.');
+        resolve(false);
+      }
+    });
+  }
+  
+
 }
