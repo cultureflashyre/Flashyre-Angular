@@ -1,0 +1,373 @@
+<div class="profile-overview-page-container1">
+    <div class="profile-overview-page-container2">
+      <navbar-for-candidate-view1
+        rootClassName="navbar-for-candidate-view1root-class-name8"
+      >
+        <!-- Existing navbar templates (Profile Completion, Logout, etc.) remain unchanged -->
+        <ng-template #text5>
+          <div class="profile-overview-page-fragment100">
+            <span class="profile-overview-page-text100">
+              ✅ 90% Profile Completion
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text31>
+          <div class="profile-overview-page-fragment101">
+            <span class="profile-overview-page-text101">Logout</span>
+          </div>
+        </ng-template>
+        <ng-template #text6>
+          <div class="profile-overview-page-fragment102">
+            <span class="profile-overview-page-text102">
+              View & edit profile
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text3>
+          <div class="profile-overview-page-fragment103">
+            <span class="profile-overview-page-text103">Settings</span>
+          </div>
+        </ng-template>
+        <ng-template #text1>
+          <div class="profile-overview-page-fragment104">
+            <span class="profile-overview-page-text104">Profile</span>
+          </div>
+        </ng-template>
+        <ng-template #text4>
+          <div class="profile-overview-page-fragment105">
+            <span class="profile-overview-page-text105">Kathryn Murphy</span>
+          </div>
+        </ng-template>
+        <ng-template #text12>
+          <div class="profile-overview-page-fragment106">
+            <span class="profile-overview-page-text106">Settings</span>
+          </div>
+        </ng-template>
+        <ng-template #text11>
+          <div class="profile-overview-page-fragment107">
+            <span class="profile-overview-page-text107">Preference</span>
+          </div>
+        </ng-template>
+        <ng-template #text2>
+          <div class="profile-overview-page-fragment108">
+            <span class="profile-overview-page-text108">Preference</span>
+          </div>
+        </ng-template>
+        <ng-template #text13>
+          <div class="profile-overview-page-fragment109">
+            <span class="profile-overview-page-text109">Logout</span>
+          </div>
+        </ng-template>
+      </navbar-for-candidate-view1>
+  
+      <!-- Popup Message -->
+      <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+        <span class="closebtn" (click)="closePopup()">×</span>
+        <span *ngIf="popupType === 'success'" class="tick">✔</span>
+        {{ popupMessage }}
+      </div>
+  
+      <!-- Progress bars for steps 1, 2, 3, 4, 5 -->
+      <progress-bar-step1
+        *ngIf="isStepVisible(1)"
+        rootClassName="progress-bar-step1root-class-name4"
+      ></progress-bar-step1>
+      <progress-bar-step2
+        *ngIf="isStepVisible(2)"
+        rootClassName="progress-bar-step2root-class-name2"
+      ></progress-bar-step2>
+      <progress-bar-step3
+        *ngIf="isStepVisible(3)"
+        rootClassName="progress-bar-step3root-class-name4"
+      ></progress-bar-step3>
+      <progress-bar-step4
+        *ngIf="isStepVisible(5)"
+        rootClassName="progress-bar-step4root-class-name2"
+      ></progress-bar-step4>
+      <progress-bar-step5
+        *ngIf="isStepVisible(6)"
+        rootClassName="progress-bar-step5root-class-name"
+      ></progress-bar-step5>
+  
+      <!-- Step 1: Basic Information -->
+      <profile-basicinformation-component
+        *ngIf="isStepVisible(1)"
+        rootClassName="profile-basicinformation-componentroot-class-name3"
+        #profileComponent
+      >
+        <ng-template #text2>
+          <div class="profile-overview-page-fragment110">
+            <span class="profile-overview-page-text110">Profile Picture</span>
+          </div>
+        </ng-template>
+        <ng-template #text6>
+          <div class="profile-overview-page-fragment111">
+            <span class="profile-overview-page-text111">First Name</span>
+          </div>
+        </ng-template>
+        <ng-template #button>
+          <div class="profile-overview-page-fragment112">
+            <span class="profile-overview-page-text112">Upload</span>
+          </div>
+        </ng-template>
+        <ng-template #text52>
+          <div class="profile-overview-page-fragment113">
+            <span class="profile-overview-page-text113">Email</span>
+          </div>
+        </ng-template>
+        <ng-template #text1>
+          <div class="profile-overview-page-fragment114">
+            <span class="profile-overview-page-text114">Basic Information</span>
+          </div>
+        </ng-template>
+        <ng-template #text>
+          <div class="profile-overview-page-fragment115">
+            <span class="profile-overview-page-text115">Resume</span>
+          </div>
+        </ng-template>
+        <ng-template #text51>
+          <div class="profile-overview-page-fragment116">
+            <span class="profile-overview-page-text116">Mobile Number</span>
+          </div>
+        </ng-template>
+        <ng-template #text5>
+          <div class="profile-overview-page-fragment117">
+            <span class="profile-overview-page-text117">Last Name</span>
+          </div>
+        </ng-template>
+      </profile-basicinformation-component>
+  
+      <!-- Step 2: Employment -->
+      <profile-employment-component
+        *ngIf="isStepVisible(2)"
+        rootClassName="profile-employment-componentroot-class-name2"
+        #employmentComponent
+      >
+        <ng-template #text>
+          <div class="profile-overview-page-fragment118">
+            <span class="profile-overview-page-text118">Employment</span>
+          </div>
+        </ng-template>
+        <ng-template #text311>
+          <div class="profile-overview-page-fragment119">
+            <span class="profile-overview-page-text119">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text7>
+          <div class="profile-overview-page-fragment120">
+            <span class="profile-overview-page-text120">+ Add Position</span>
+          </div>
+        </ng-template>
+        <ng-template #text12>
+          <div class="profile-overview-page-fragment121">
+            <span class="profile-overview-page-text121">End Date</span>
+          </div>
+        </ng-template>
+        <ng-template #text71>
+          <div class="profile-overview-page-fragment122">
+            <span class="profile-overview-page-text122">- Remove Position</span>
+          </div>
+        </ng-template>
+        <ng-template #text3>
+          <div class="profile-overview-page-fragment123">
+            <span class="profile-overview-page-text123">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text111>
+          <div class="profile-overview-page-fragment124">
+            <span class="profile-overview-page-text124">
+              <span>Start Date</span>
+              <br />
+              <br />
+            </span>
+          </div>
+        </ng-template>
+      </profile-employment-component>
+  
+      <!-- Step 3: Education -->
+      <profile-education-component
+        *ngIf="isStepVisible(3)"
+        rootClassName="profile-education-componentroot-class-name1"
+        #educationComponent
+      >
+        <ng-template #text11123>
+          <div class="profile-overview-page-fragment125">
+            <span class="profile-overview-page-text128">
+              <span>Specialization</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text3136>
+          <div class="profile-overview-page-fragment126">
+            <span class="profile-overview-page-text131">dd/mm/yyyy</span>
+          </div>
+        </ng-template>
+        <ng-template #text1123>
+          <div class="profile-overview-page-fragment127">
+            <span class="profile-overview-page-text132">Education</span>
+          </div>
+        </ng-template>
+        <ng-template #text111>
+          <div class="profile-overview-page-fragment130">
+            <span class="profile-overview-page-text137">
+              <span>University/Institute</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text23>
+          <div class="profile-overview-page-fragment135">
+            <span class="profile-overview-page-text144">Duration</span>
+          </div>
+        </ng-template>
+        <ng-template #text314>
+          <div class="profile-overview-page-fragment138">
+            <span class="profile-overview-page-text147">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text11111>
+          <div class="profile-overview-page-fragment147">
+            <span class="profile-overview-page-text160">
+              <span>Course</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text12>
+          <div class="profile-overview-page-fragment143">
+            <span class="profile-overview-page-text156">- Remove Education</span>
+          </div>
+        </ng-template>
+        <ng-template #text1>
+          <div class="profile-overview-page-fragment158">
+            <span class="profile-overview-page-text183">+ Add Education</span>
+          </div>
+        </ng-template>
+      </profile-education-component>
+  
+      <!-- Step 5: Certifications -->
+      <profile-certifications-component
+        *ngIf="isStepVisible(5)"
+        rootClassName="profile-certifications-componentroot-class-name2"
+        #certificationComponent
+      >
+        <ng-template #text1>
+          <div class="profile-overview-page-fragment195">
+            <span class="profile-overview-page-text246">+ Add Certification</span>
+          </div>
+        </ng-template>
+        <ng-template #text312>
+          <div class="profile-overview-page-fragment196">
+            <span class="profile-overview-page-text247">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text12>
+          <div class="profile-overview-page-fragment197">
+            <span class="profile-overview-page-text248">
+              - Remove Certification
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text1111>
+          <div class="profile-overview-page-fragment198">
+            <span class="profile-overview-page-text249">
+              <span>Renewal Date</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text311>
+          <div class="profile-overview-page-fragment199">
+            <span class="profile-overview-page-text252">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text1121>
+          <div class="profile-overview-page-fragment200">
+            <span class="profile-overview-page-text253">
+              <span>Credentials</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text3121>
+          <div class="profile-overview-page-fragment201">
+            <span class="profile-overview-page-text256">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text11>
+          <div class="profile-overview-page-fragment202">
+            <span class="profile-overview-page-text257">
+              <span class="profile-overview-page-text258">Certificate Name</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text112>
+          <div class="profile-overview-page-fragment203">
+            <span class="profile-overview-page-text260">
+              <span>Issued Date</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text111>
+          <div class="profile-overview-page-fragment204">
+            <span class="profile-overview-page-text263">
+              <span>Issuing Institute</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text>
+          <div class="profile-overview-page-fragment205">
+            <span class="profile-overview-page-text266">Certifications</span>
+          </div>
+        </ng-template>
+        <ng-template #text31>
+          <div class="profile-overview-page-fragment206">
+            <span class="profile-overview-page-text267">Select</span>
+          </div>
+        </ng-template>
+        <ng-template #text3111>
+          <div class="profile-overview-page-fragment207">
+            <span class="profile-overview-page-text268">Select</span>
+          </div>
+        </ng-template>
+      </profile-certifications-component>
+  
+      <!-- Step 6: Completion -->
+      <div *ngIf="isStepVisible(6)">
+        <buffer-name1
+          rootClassName="buffer-name1root-class-name"
+        ></buffer-name1>
+      </div>
+  
+      <!-- Navigation -->
+      <profile-creation-navigation2
+        *ngIf="currentStep < 6"
+        rootClassName="profile-creation-navigation2root-class-name8"
+      >
+        <ng-template #text>
+          <div class="profile-overview-page-fragment208" *ngIf="currentStep > 1">
+            <span class="profile-overview-page-text269" (click)="onPrevious()">
+              <span class="profile-overview-page-text270"><- Previous</span>
+              <br />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #button>
+          <div class="profile-overview-page-fragment209">
+            <span class="profile-overview-page-text272" (click)="onSkip()">Skip</span>
+          </div>
+        </ng-template>
+        <ng-template #button1>
+          <div class="profile-overview-page-fragment210">
+            <span class="profile-overview-page-text273" (click)="onSaveAndNext()">
+              Save & Next ->
+            </span>
+          </div>
+        </ng-template>
+      </profile-creation-navigation2>
+    </div>
+  </div>

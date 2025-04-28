@@ -214,7 +214,7 @@
 }
  
 .candidate-home-container3 {
-  gap: var(--dl-space-space-oneandhalfunits);
+  gap: var(--dl-layout-space-oneandhalfunits);
   flex: 0 0 auto;
   width: 240px;
   height: 322px;
@@ -224,7 +224,7 @@
   border-color: #E6E2E6;
   border-width: 1px;
   padding-left: 24px;
-  border-radius: var(--dl-radius-radius-imageradius);
+  border-radius: var(--dl-layout-radius-imageradius);
   padding-right: 24px;
   flex-direction: column;
   padding-bottom: 16px;
@@ -270,7 +270,7 @@
   text-align: center;
   align-items: center;
   font-weight: 600;
-  border-radius: var(--dl-radius-radius-radius2);
+  border-radius: var(--dl-layout-radius-radius2);
   justify-content: center;
 }
  
@@ -324,8 +324,8 @@
   transition: 0.3s;
   padding-top: 12px;
   border-width: 0px;
-  padding-left: var(--dl-space-space-unit);
-  padding-right: var(--dl-space-space-unit);
+  padding-left: var(--dl-layout-space-unit);
+  padding-right: var(--dl-layout-space-unit);
   padding-bottom: 12px;
   background-color: transparent;
 }
@@ -423,7 +423,7 @@
 }
  
 .candidate-home-links1 {
-  gap: var(--dl-space-space-twounits);
+  gap: var(--dl-layout-space-twounits);
   flex: 1;
   width: 546px;
   display: flex;
@@ -433,7 +433,7 @@
 }
  
 .candidate-home-container7 {
-  gap: var(--dl-space-space-unit);
+  gap: var(--dl-layout-space-unit);
   width: 564px;
   height: 56px;
   display: flex;
@@ -442,7 +442,7 @@
 }
  
 .candidate-home-job-title-container1 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 192px;
   height: 56px;
@@ -474,7 +474,7 @@
 }
  
 .candidate-home-location-container1 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 192px;
   height: 56px;
@@ -505,7 +505,7 @@
 }
  
 .candidate-home-experience-container1 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 118px;
   height: 56px;
@@ -538,7 +538,7 @@
 }
  
 .candidate-home-buttons1 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   width: 232px;
   display: flex;
   align-items: center;
@@ -623,7 +623,7 @@
   width: 100%;
   height: 100vh;
   display: none;
-  padding: var(--dl-space-space-twounits);
+  padding: var(--dl-layout-space-twounits);
   z-index: 100;
   position: absolute;
   flex-direction: column;
@@ -641,7 +641,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  margin-bottom: var(--dl-space-space-threeunits);
+  margin-bottom: var(--dl-layout-space-threeunits);
   justify-content: space-between;
 }
  
@@ -652,12 +652,12 @@
 }
  
 .candidate-home-close-icon {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
 }
  
 .candidate-home-links2 {
-  gap: var(--dl-space-space-unit);
+  gap: var(--dl-layout-space-unit);
   flex: 0 0 auto;
   display: flex;
   align-self: flex-start;
@@ -666,7 +666,7 @@
 }
  
 .candidate-home-job-title-container2 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 188px;
   height: 56px;
@@ -698,7 +698,7 @@
 }
  
 .candidate-home-experience-container2 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 118px;
   height: 56px;
@@ -717,7 +717,7 @@
 }
  
 .candidate-home-location-container2 {
-  gap: var(--dl-space-space-halfunit);
+  gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
   width: 188px;
   height: 56px;
@@ -748,9 +748,9 @@
 }
  
 .candidate-home-buttons2 {
-  gap: var(--dl-space-space-twounits);
+  gap: var(--dl-layout-space-twounits);
   display: flex;
-  margin-top: var(--dl-space-space-twounits);
+  margin-top: var(--dl-layout-space-twounits);
   align-items: center;
   flex-direction: row;
 }
@@ -872,14 +872,11 @@
  
 .candidate-home-fragment32 {
   display: contents;
-  
-  
 }
  
 .candidate-home-text124 {
   display: inline-block;
   font-size: 16px;
-  
 }
  
 .candidate-home-fragment33 {
@@ -1820,7 +1817,7 @@
     display: flex;
     position: relative;
     align-items: center;
-    padding-left: var(--dl-space-space-unit);
+    padding-left: var(--dl-layout-space-unit);
     border-radius: 8px;
   }
   .candidate-home-job-title-text2 {
@@ -1831,7 +1828,7 @@
     align-items: center;
     border-color: #E4E5E8;
     border-width: 1px;
-    padding-left: var(--dl-space-space-unit);
+    padding-left: var(--dl-layout-space-unit);
     border-radius: 8px;
     justify-content: flex-start;
     background-color: #FFFFFF;
@@ -1845,11 +1842,11 @@
   }
   .candidate-home-mobile-menu {
     height: auto;
-    padding-top: var(--dl-space-space-unit);
+    padding-top: var(--dl-layout-space-unit);
     background-color: null;
   }
   .candidate-home-nav {
-    gap: var(--dl-space-space-unit);
+    gap: var(--dl-layout-space-unit);
     padding: 0px;
     position: relative;
   }
@@ -1888,7 +1885,7 @@
     justify-content: flex-end;
   }
   .candidate-home-filter-icon2 {
-    gap: var(--dl-space-space-halfunit);
+    gap: var(--dl-layout-space-halfunit);
     align-self: center;
     padding-bottom: 1px;
   }
@@ -1902,7 +1899,7 @@
   }
   .candidate-home-jobs-for-you-container {
     width: 100%;
-    padding: var(--dl-space-space-halfunit);
+    padding: var(--dl-layout-space-halfunit);
   }
   .candidate-home-jobs-for-you-text {
     color: rgb(24, 25, 28);
@@ -1911,7 +1908,7 @@
     align-self: flex-start;
     font-style: normal;
     font-weight: 600;
-    padding-left: var(--dl-space-space-threeunits);
+    padding-left: var(--dl-layout-space-threeunits);
     justify-content: flex-start;
   }
   .candidate-home-jobs-container2 {
@@ -2391,7 +2388,7 @@
     width: auto;
   }
   .candidate-home-container7 {
-    gap: var(--dl-space-space-halfunit);
+    gap: var(--dl-layout-space-halfunit);
     width: 517px;
   }
   .candidate-home-search-button1 {
@@ -2425,10 +2422,10 @@
     margin: auto;
   }
   .candidate-home-mobile-menu {
-    padding-top: var(--dl-space-space-unit);
+    padding-top: var(--dl-layout-space-unit);
   }
   .candidate-home-nav {
-    gap: var(--dl-space-space-halfunit);
+    gap: var(--dl-layout-space-halfunit);
     padding: 0px;
     padding-top: 0px;
     padding-left: 0px;
@@ -2570,7 +2567,7 @@
     font-size: 12px;
   }
   .candidate-home-jobs-container1 {
-    gap: var(--dl-space-space-halfunit);
+    gap: var(--dl-layout-space-halfunit);
     width: 100%;
     height: auto;
   }
@@ -2586,7 +2583,7 @@
     position: relative;
   }
   .candidate-home-container7 {
-    gap: var(--dl-space-space-halfunit);
+    gap: var(--dl-layout-space-halfunit);
     width: 202px;
     height: 81px;
     flex-direction: column;
@@ -2608,11 +2605,11 @@
     border-width: 0px;
   }
   .candidate-home-filter-icon1 {
-    width: var(--dl-size-size-small);
+    width: var(--dl-layout-size-small);
   }
   .candidate-home-burger-menu {
     width: 100%;
-    padding-left: var(--dl-space-space-unit);
+    padding-left: var(--dl-layout-space-unit);
   }
   .candidate-home-job-title-text2 {
     color: rgb(116, 116, 116);
@@ -2628,7 +2625,7 @@
     left: -5px;
     width: 100%;
     height: auto;
-    padding: var(--dl-space-space-unit);
+    padding: var(--dl-layout-space-unit);
     position: absolute;
   }
   .candidate-home-links2 {
