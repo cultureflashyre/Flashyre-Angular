@@ -108,43 +108,42 @@ export class ProfileEducationComponent {
   /**
    * Saves all valid forms to the backend
    */
-  saveAll(): Observable<any> {
-    const validForms = this.educationForms.filter(form => form.valid);
-    if (validForms.length === 0) {
-      console.log('No valid forms to save');
-      return of(null);
-    }
-
-    const saveObservables = validForms.map(form => {
-      const data = {
-        select_start_date: form.value.startDate,
-        select_end_date: form.value.endDate,
-        university: form.value.university,
-        education_level: form.value.educationLevel,
-        course: form.value.course,
-        specialization: form.value.specialization,
-      };
-      return this.educationService.addEducation(data);
-    });
-
-    return forkJoin(saveObservables).pipe(
-      tap(() => this.formsUpdated.emit(this.educationForms))
-    );
-  }
-
-  saveAndNext() {
-      this.saveAll().subscribe({
+  saveEducation(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const validForms = this.educationForms.filter(form => form.valid);
+      if (validForms.length === 0) {
+        console.log('No valid forms to save');
+        resolve(true); // Nothing to save, treat as success
+        return;
+      }
+  
+      const saveObservables = validForms.map(form => {
+        const data = {
+          select_start_date: form.value.startDate,
+          select_end_date: form.value.endDate,
+          university: form.value.university,
+          education_level: form.value.educationLevel,
+          course: form.value.course,
+          specialization: form.value.specialization,
+        };
+        return this.educationService.addEducation(data);
+      });
+  
+      forkJoin(saveObservables).subscribe({
         next: () => {
+          this.formsUpdated.emit(this.educationForms);
           console.log('All educations saved successfully');
-          this.router.navigate(['/profile-certification-page']);
+          resolve(true);
         },
         error: (error) => {
           console.error('Error saving educations:', error);
-          // Optionally, display an error message to the user (e.g., using a toast service)
+          alert('Error saving education data: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
         }
       });
+    });
   }
-
+  
   goToPrevious() {
     this.router.navigate(['/profile-employment-page']);
   }

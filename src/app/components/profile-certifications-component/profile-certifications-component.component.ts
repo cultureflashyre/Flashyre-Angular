@@ -2,13 +2,18 @@ import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChi
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
+import { CertificationService } from 'src/app/services/certification.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'profile-certifications-component',
-  templateUrl: 'profile-certifications-component.component.html',
-  styleUrls: ['profile-certifications-component.component.css'],
+  templateUrl: './profile-certifications-component.component.html',
+  styleUrls: ['./profile-certifications-component.component.css']
 })
 export class ProfileCertificationsComponent implements OnInit {
+  private baseUrl = environment.apiUrl;
+
   @ContentChild('text1') text1: TemplateRef<any>;
   @ContentChild('text312') text312: TemplateRef<any>;
   @ContentChild('text1111') text1111: TemplateRef<any>;
@@ -30,7 +35,8 @@ export class ProfileCertificationsComponent implements OnInit {
   todayDate: string;
 
   constructor(private fb: FormBuilder, 
-    private http: HttpClient, private spinner: NgxSpinnerService
+    private http: HttpClient, private spinner: NgxSpinnerService,
+    private certificationService: CertificationService,
   ) {
     this.certificationForm = this.fb.group({
       certifications: this.fb.array([this.createCertificationGroup()]),
@@ -99,36 +105,42 @@ export class ProfileCertificationsComponent implements OnInit {
     }
   }
 
-  async submitCertification(): Promise<void> {
-    if (this.certificationForm.valid) {
-      const data = this.certificationForm.value.certifications;
-      const promises = data.map((cert: any) =>
-        this.http.post('http://localhost:8000/api/certifications/', cert, { withCredentials: true }).toPromise()
-          .then((response) => {
-            console.log('Certification saved:', response);
-          })
-          .catch((error) => {
-            console.error('Error saving certification:', error);
-            throw error;
-          })
-      );
-
-      // Show spinner before making requests
-      this.spinner.show();
-
-      try {
-        await Promise.all(promises);
-        this.certificationForm.reset();
-        this.certifications.clear();
-        this.certifications.push(this.createCertificationGroup());
-      } catch (error) {
-        // Error already logged in catch block above
-      } finally {
-        // Hide spinner after all requests are completed
-        this.spinner.hide();
-      }
-    } else {
-      console.log('Form is invalid');
-    }
+  // Method to handle form submission
+  submitCertification(): void {
+    console.log('Certification form submitted:', this.certificationForm.value);
   }
+
+  saveCertifications(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      if (this.certificationForm.valid) {
+        const data = this.certificationForm.value.certifications;
+        const requests = data.map((cert: any) => 
+          this.certificationService.saveCertification(cert)
+        );
+  
+        this.spinner.show();
+  
+        try {
+          await forkJoin(requests).toPromise();
+          this.certificationForm.reset();
+          this.certifications.clear();
+          this.certifications.push(this.createCertificationGroup());
+          console.log('All certifications saved successfully');
+          resolve(true);
+        } catch (error) {
+          console.error('Error saving certifications:', error);
+          alert('Error saving certifications: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
+        } finally {
+          this.spinner.hide();
+        }
+      } else {
+        console.log('Certification form is invalid');
+        alert('Please fill out all required certification fields correctly.');
+        resolve(false);
+      }
+    });
+  }
+  
+
 }
