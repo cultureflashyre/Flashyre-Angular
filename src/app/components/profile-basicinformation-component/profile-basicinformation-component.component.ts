@@ -28,14 +28,13 @@ export class ProfileBasicinformationComponent implements OnInit {
   profilePicture: File | null = null;
   resume: File | null = null;
   imageSrc: string = ''; // Holds the preview URL of the selected image
-  defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
+  defaultImageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
   imageAlt: string = 'Profile Picture';
 
   constructor(private profileService: ProfileService, private router: Router) {}
 
   ngOnInit() {
-    //this.fetchUserDetails();
-    this.loadUserProfile(); // Load user profile data from local storage
+    this.fetchUserDetails();
   }
 
   fetchUserDetails() {
@@ -55,21 +54,6 @@ export class ProfileBasicinformationComponent implements OnInit {
         }
       }
     );
-  }
-
-  loadUserProfile() {
-    const profileData = localStorage.getItem('userProfile');
-    if (profileData) {
-      const userProfile = JSON.parse(profileData);
-      this.firstName = userProfile.first_name || '';
-      this.lastName = userProfile.last_name || '';
-      this.email = userProfile.email || '';
-      this.phoneNumber = userProfile.phone_number || '';
-      // Set imageSrc to user's profile picture URL if it exists
-      this.imageSrc = userProfile.profile_picture_url || ''; // Set to empty if no picture
-    } else {
-      console.log("User Profile NOT fetched");
-    }
   }
 
   triggerProfilePictureUpload() {
@@ -118,27 +102,32 @@ export class ProfileBasicinformationComponent implements OnInit {
     return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
-  saveProfile() {
-    if (!this.resume) {
-      alert('Recommended to upload a Resume before saving.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profile_picture', this.profilePicture);
-    formData.append('resume', this.resume);
-
-    this.profileService.saveProfile(formData).subscribe(
-      (response) => {
-        console.log('Profile saved successfully', response);
-        this.router.navigate(['/profile-employment-page']);
-      },
-      (error) => {
-        console.error('Error saving profile', error);
-        alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+  saveProfile(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.resume) {
+        alert('Recommended to upload a Resume before saving.');
+        resolve(false);
+        return;
       }
-    );
+  
+      const formData = new FormData();
+      formData.append('profile_picture', this.profilePicture);
+      formData.append('resume', this.resume);
+  
+      this.profileService.saveProfile(formData).subscribe(
+        (response) => {
+          console.log('Profile saved successfully', response);
+          resolve(true);
+        },
+        (error) => {
+          console.error('Error saving profile', error);
+          alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+          resolve(false);
+        }
+      );
+    });
   }
+  
 
   skip() {
     this.router.navigate(['/profile-employment-page']);

@@ -195,6 +195,12 @@ const routes = [
       ),
   },
   {
+    path: 'profile-overview-page',
+    loadChildren: () =>
+      import( './pages/profile-overview-page/profile-overview-page.module'
+      ).then((m) => m.ProfileOverviewPageModule),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(

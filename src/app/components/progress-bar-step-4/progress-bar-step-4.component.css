@@ -1,7 +1,7 @@
 :host { 
   display: contents; 
 }
- 
+
 .progress-bar-step-4-container1 {
   width: 100%;
   display: flex;
@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
 }
- 
+
 .progress-bar-step-4-container2 {
   flex: 0 0 auto;
   width: 728px;
@@ -18,27 +18,128 @@
   align-items: center;
   justify-content: center;
 }
- 
+
 .progress-bar-step-4-container3 {
   width: 90%;
   height: 100px;
 }
- 
+
 .progress-bar-step-4-container4 {
   display: contents;
 }
- 
 
- 
+body {
+  background-color: transparent; 
+}
 
- 
+/* Container for the progress bar */
+.progress-bar {
+  display: flex;
+  overflow: visible;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: Inter, sans-serif;
+}
+
+/* Style for each step */
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  flex: 1;
+}
+
+/* Line between steps */
+.step:before {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: calc(-40% + 15px);
+  width: calc(80% - 30px);
+  height: 2px;
+  background-color: #ccc;
+  z-index: 0;
+}
+
+/* Remove line before the first step */
+.step:first-child:before {
+  display: none;
+}
+
+/* Circle for each step */
+.step-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #3AC14A;
+  color: white;
+  font-size: 1rem;
+  z-index: 1;
+}
+
+/* Change background color for the last step circle */
+.step:last-child .step-circle {
+  background-color: #747474;
+  color: white;
+  border: none;
+}
+
+/* Label under each circle */
+.step span {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #18191C;
+  white-space: nowrap; /* Prevents text wrapping */
+  max-width: 100%; /* Ensures it fits within the step’s flex container */
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+  .progress-bar {
+    width: 90%;
+  }
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+  .step span {
+    font-size: 0.8rem;
+    white-space: nowrap; /* Ensures "Basic Information" stays on one line */
+  }
+}
+
+@media (max-width: 478px) {
+  .progress-bar {
+    width: 90%;
+  }
+  .step-circle {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+  .step span {
+    font-size: 0.7rem;
+    white-space: nowrap; /* Keeps text on one line even at small sizes */
+  }
+}
+
 @media(max-width: 767px) {
   .progress-bar-step-4root-class-name1 {
     width: 90%;
     align-self: center;
   }
 }
- 
+
 @media(max-width: 479px) {
   .progress-bar-step-4-container1 {
     width: 100%;
