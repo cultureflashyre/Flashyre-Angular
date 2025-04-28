@@ -108,9 +108,10 @@
           class="navbar-for-candidate-view-dropdown-toggle1"
         >
           <img
-            id="recruiter-profile-picture"
-            [attr.alt]="imageAlt31"
-            [attr.src]="imageSrc31"
+
+            id="user-image"
+            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+            [src]="defaultProfilePicture"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -340,23 +341,13 @@
                 id="recruiter-details"
                 class="navbar-for-candidate-view-details-container"
               >
-                <span
-                  id="recruiter-name"
-                  class="navbar-for-candidate-view-recruiter-name"
-                >
-                  <ng-container>
-                    <ng-template #defaultText154>
-                      <div class="navbar-for-candidate-view-fragment28">
-                        <span class="navbar-for-candidate-view-text34">
-                          Leslie Alexander
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text154 ? text154 : defaultText154"
-                    ></ng-container>
-                  </ng-container>
-                </span>
+
+                <img
+                  id="candidate-profile-picture"
+                  alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+                  [src]="defaultProfilePicture"
+                  class="navbar-for-candidate-view-user-image2"
+                />
                 <div
                   id="recruiter-company-logo-and-name"
                   class="navbar-for-candidate-view-container6"

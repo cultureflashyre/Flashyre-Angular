@@ -6,6 +6,10 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
   styleUrls: ['navbar-for-candidate-view.component.css'],
 })
 export class NavbarForCandidateView {
+
+  userProfile: any = {}; // To store user profile data
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+
   @Input() rootClassName: string = '';
   @Input() imageSrc12: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
   @Input() imageAlt12: string = 'image';

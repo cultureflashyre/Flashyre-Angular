@@ -1,8 +1,8 @@
-import { Component } from '@angular/core'
-import { Title, Meta } from '@angular/platform-browser'
+import { Component } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -11,23 +11,22 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['candidate-assessment.component.css'],
 })
 export class CandidateAssessment {
-  userProfile: any = {}; // To store user profile data
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  userProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  assessments: any[] = []; // Array to store fetched assessments
 
   private baseUrl = environment.apiUrl;
 
-  //candidateName: string = ''; // Initialize to empty string
-  //candidateProfilePictureUrl: string = 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'; // Default profile picture URL
+  raw6b6z: string = ' ';
 
-  raw6b6z: string = ' '
   constructor(
-    private title: Title, 
-    private meta: Meta, 
-    private router: Router, 
+    private title: Title,
+    private meta: Meta,
+    private router: Router,
     private http: HttpClient,
     private spinner: NgxSpinnerService
   ) {
-    this.title.setTitle('Candidate-Assessment - Flashyre')
+    this.title.setTitle('Candidate-Assessment - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
@@ -38,7 +37,7 @@ export class CandidateAssessment {
         content:
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
-    ])
+    ]);
   }
 
   loadUserProfile(): void {
@@ -68,13 +67,34 @@ export class CandidateAssessment {
     }
   }
 
+  // Fetch assessments from the API
+  loadAssessments(): void {
+    this.spinner.show(); // Show spinner while loading
+    this.http.get<any[]>(`${this.baseUrl}api/assessments/assessment-list/`)
+      .subscribe({
+        next: (data) => {
+          this.assessments = data; // Store fetched assessments
+          this.spinner.hide(); // Hide spinner on success
+        },
+        error: (error) => {
+          console.error('Error fetching assessments:', error);
+          this.spinner.hide(); // Hide spinner on error
+        }
+      });
+  }
+
+  // Navigate to assessment page (dynamic based on assessment ID)
+  startAssessment(assessmentId: number): void {
+    this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: assessmentId } });
+  }
+
   ngOnInit(): void {
     this.loadUserProfile();
-
+    this.loadAssessments(); // Fetch assessments on component initialization
   }
 
-
-  async sapSurvey() {
+  // Kept for compatibility with static SAP Survey button (optional)
+  /*async sapSurvey() {
     this.router.navigate(['/flashyre-assessment1']);
-  }
+  }*/
 }
