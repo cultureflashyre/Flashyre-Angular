@@ -187,7 +187,7 @@
   display: flex;
   z-index: 999;
   align-self: center;
-  margin-top: 80px;
+  margin-top: 90px;
   align-items: flex-start;
   flex-direction: row;
   justify-content: center;
@@ -385,7 +385,7 @@
 }
  
 .candidate-home-search-container {
-  width: auto;
+  width: 860px;
   height: auto;
   display: flex;
   position: relative;
@@ -435,8 +435,8 @@
  
 .candidate-home-container7 {
   gap: var(--dl-space-space-unit);
-  width: 564px;
-  height: 56px;
+  width: 100%;
+  height: auto;
   display: flex;
   align-self: center;
   align-items: flex-start;
@@ -445,7 +445,7 @@
 .candidate-home-job-title-container1 {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
-  width: 192px;
+  width: auto;
   height: 56px;
   display: flex;
   align-items: center;
@@ -467,7 +467,7 @@
  
 .candidate-home-job-title-text1 {
   color: rgb(116, 116, 116);
-  width: 149px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: center;
@@ -477,7 +477,7 @@
 .candidate-home-location-container1 {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
-  width: 192px;
+  width: auto;
   height: 56px;
   display: flex;
   align-items: center;

@@ -107,12 +107,12 @@ export class SignupCandidate1 implements OnInit {
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
               this.errorMessage = '';
-              this.router.navigate(['/profile-basic-information']);
+              this.router.navigate(['/profile-overview-page']);
             },
             (profileError) => {
               console.error('Error fetching profile', profileError);
               // Navigate anyway, but with a warning
-              this.router.navigate(['/profile-basic-information']);
+              this.router.navigate(['/profile-overview-page'], );
             }
           );
           // Hide overlay before navigation

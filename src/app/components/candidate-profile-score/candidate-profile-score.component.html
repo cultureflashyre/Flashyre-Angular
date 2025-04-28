@@ -30,72 +30,78 @@
     >
       <div class="candidate-profile-score-container3">
         <div class="candidate-profile-score-container4">
-          <dangerous-html
-            html="  <style>
-    .progress-bar-wrapper {
-      width: 100%;
-      padding: 10px;
-    }
+          <style>
+            .progress-bar-wrapper {
+              width: 100%;
+              padding: 10px;
+            }
 
-    .progress-bar-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      max-width: 90%; /* Adjust to fit within 90% of parent width */
-      height: 4px;
-      position: relative;
-      margin: 0 auto; /* Center the container */
-    }
+            .progress-bar-container {
+              display: flex;
+              align-items: center;
+              width: 100%;
+              max-width: 90%;
+              margin: 0 auto;
+              gap: 10px; /* Space between progress bar and text */
+            }
 
-    .progress-bar {
-      width: 80%;
-      height: 4px;
-      background-color: #E4E5E8;
-      border-radius: 2px;
-      position: absolute;
-    }
+            .progress-bar {
+              flex: 1; /* Take available space */
+              height: 4px;
+              background-color: #E4E5E8;
+              border-radius: 2px;
+              position: relative;
+              overflow: hidden;
+            }
 
-    .progress-bar::before {
-      content: '';
-      width: 80%; /* Progress fill percentage */
-      height: 4px;
-      background-color: #3AC14A;
-      border-radius: 2px;
-      position: absolute;
-      z-index: 1;
-    }
+            .progress-bar-fill {
+              height: 4px;
+              border-radius: 2px;
+              position: absolute;
+              animation: progressAnimation 2s ease-in-out forwards;
+            }
 
-    .progress-text {
-      font-family: 'Inter', sans-serif;
-      font-weight: 700;
-      font-size: 12px;
-      color: #000;
-      margin-left: 6px;
-      position: absolute;
-      right: 10px;
-    }
+            @keyframes progressAnimation {
+              0% {
+                width: 0%;
+                background-color: #A7E8B0; /* Lighter shade of green */
+              }
+              100% {
+                width: var(--progress-width, 0%);
+                background-color: #3AC14A; /* Final green color */
+              }
+            }
 
-    @media (max-width: 1000px) {
-      .progress-bar-container {
-        max-width: 100%; /* Full width for smaller screens */
-      }
+            .progress-text {
+              font-family: 'Inter', sans-serif;
+              font-weight: 700;
+              font-size: 12px;
+              color: #000;
+              white-space: nowrap; /* Prevent text wrapping */
+            }
 
-      .progress-text {
-        font-size: 10px;
-        right: 5px;
-      }
-    }
-  </style>
-<body>
-  <div class='progress-bar-wrapper'>
-    <div class='progress-bar-container'>
-      <div class='progress-bar'></div>
-      <span class='progress-text'>80%</span>
-    </div>
-  </div>
-</body>
-"
-          ></dangerous-html>
+            @media (max-width: 1000px) {
+              .progress-bar-container {
+                max-width: 100%;
+                gap: 6px; /* Smaller gap for smaller screens */
+              }
+
+              .progress-text {
+                font-size: 10px;
+              }
+            }
+          </style>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-container">
+              <div class="progress-bar">
+                <div
+                  class="progress-bar-fill"
+                  [style.--progress-width]="profileScore + '%'"
+                ></div>
+              </div>
+              <span class="progress-text">{{ profileScore }}%</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

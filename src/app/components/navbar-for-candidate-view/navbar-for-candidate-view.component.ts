@@ -7,7 +7,7 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 })
 export class NavbarForCandidateView {
   userProfile: any = {}; // To store user profile data
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  defaultProfilePicture: string = "src/assets/placeholders/profile-placeholder.jpg";
 
 
   @Input()
@@ -70,7 +70,7 @@ export class NavbarForCandidateView {
   @ContentChild('text6')
   text6: TemplateRef<any>
   @Input()
-  link2Url: string = ''
+  link2Url: string = '/candidate-assessment'
   constructor() {}
 
   ngOnInit(): void {

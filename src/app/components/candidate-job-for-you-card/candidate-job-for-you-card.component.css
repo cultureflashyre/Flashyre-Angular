@@ -381,6 +381,7 @@ svg {
 .progress-container.desktop svg {
   width: 80px;
   height: 80px;
+  
 }
 
 .progress-content {
@@ -408,10 +409,12 @@ svg {
 .progress-description {
   margin-top: 4px;
   font-family: Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 12px;
   font-weight: normal;
-  color: #666;
-  text-align: center;
+  color: #474748;
+  text-align: flex-start;
+  width: auto;
+  height: 16px;
 }
 
 .progress-container.mobile {
@@ -432,7 +435,7 @@ svg {
   height: 100%;
   width: 0;
   background-color: #4D91C6;
-  transition: width 0.3s ease;
+  transition: width 0.2s ease;
 }
 
 .score {
