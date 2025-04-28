@@ -7,11 +7,10 @@
         src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
         class="flashyre-assessment11-logo"
       />
-      <span id="timer" class="flashyre-assessment11-timer">{{ formatTime(sectionTimer) }}</span>
-      <button
+      <span id="timer" class="flashyre-assessment11-timer">{{ sectionTimer | timerFormat }}</span>      <button
         id="end-test-button"
         type="button"
-        (click)="endTest()"
+        (click)="terminateTest()"
         class="flashyre-assessment11-end-test-button button"
       >
         <span id="end-test-text" class="flashyre-assessment11-end-test-text">
@@ -39,7 +38,7 @@
               id="sections-text"
               class="flashyre-assessment11-sections-text"
             >
-              {{ currentSection.section_title || 'Sections' }}
+              {{ currentSection?.name || 'Sections' }}
             </span>
             <div
               data-thq="thq-dropdown-arrow"
@@ -62,25 +61,11 @@
               </svg>
             </div>
           </div>
-          <ul
-            data-thq="thq-dropdown-list"
-            class="flashyre-assessment11-sections-dropdown-list"
-          >
-            <li
-              *ngFor="let section of sections; let i = index"
-              data-thq="thq-dropdown"
-              class="flashyre-assessment11-sections-dropdown-list1 list-item"
-              (click)="selectSection(i)"
-            >
-              <div
-                data-thq="thq-dropdown-toggle"
-                class="flashyre-assessment11-dropdown-toggle2"
-              >
-                <span
-                  id="section-A-text"
-                  class="flashyre-assessment11-section-a-text"
-                >
-                  {{ section.section_title }}
+          <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
+            <li *ngFor="let section of sections" (click)="selectSection(section)">
+              <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
+                <span id="section-A-text" class="flashyre-assessment11-section-a-text">
+                  {{ section.name }}
                 </span>
               </div>
             </li>
@@ -108,11 +93,11 @@
             class="flashyre-assessment11-numbers-main-container"
           >
             <button
-              *ngFor="let question of currentSection.questions; let i = index"
+              *ngFor="let question of currentSection?.questions; let i = index"
               [id]="'question-number' + (i + 1) + '-button'"
               type="button"
               [class.active]="i === currentQuestionIndex"
-              (click)="goToQuestion(i)"
+              (click)="navigateToQuestion(i)"
               class="flashyre-assessment11-question-number1-button10 button"
             >
               {{ i + 1 }}
@@ -156,6 +141,7 @@
             id="next-section-button"
             type="button"
             (click)="nextSection()"
+            [style.opacity]="(currentQuestionIndex === totalQuestionsInSection - 1 && currentSectionIndex < totalSections - 1) ? '1' : '0'"
             class="flashyre-assessment11-next-section-button1 button"
           >
             Next Section
@@ -164,6 +150,7 @@
             id="submit-button"
             type="button"
             (click)="submitAssessment()"
+            [style.opacity]="(currentQuestionIndex === totalQuestionsInSection - 1 && currentSectionIndex === totalSections - 1) ? '1' : '0'"
             class="flashyre-assessment11-submit-button1 button"
           >
             Submit
@@ -235,7 +222,7 @@
             <div
               id="clear-response-container"
               class="flashyre-assessment11-clear-response-container"
-              (click)="clearResponse()"
+              (click)="clearResponse(currentQuestion.question_id)"
             >
               <svg
                 id="eraser-icon"
@@ -284,6 +271,7 @@
                 name="radio"
                 [value]="option.key"
                 [(ngModel)]="userResponses[currentQuestion.question_id]"
+                (change)="onOptionSelected(currentQuestion.question_id, currentSection.section_id, option.key)"
                 class="flashyre-assessment11-radio1"
               />
               <label

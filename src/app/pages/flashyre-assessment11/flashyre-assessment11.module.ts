@@ -1,30 +1,31 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // For ngModel
-import { HttpClientModule } from '@angular/common/http'; // For HttpClient
-
-import { ComponentsModule } from '../../components/components.module';
-import { FlashyreAssessment11 } from './flashyre-assessment11.component';
-import { AssessmentService } from '../../services/assessment.service'; // Adjust path as needed
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { ComponentsModule } from '../../components/components.module'
+import { FlashyreAssessment11 } from './flashyre-assessment11.component'
+import { HttpClientModule } from '@angular/common/http'
+import { NgxSpinnerModule } from 'ngx-spinner'
+import { SharedPipesModule } from '../../shared/shared-pipes.module' // Import the shared module
+import { FormsModule } from '@angular/forms'
 
 const routes = [
   {
-    path: '', // Updated to accept assessment ID as a route parameter
+    path: '',
     component: FlashyreAssessment11,
   },
-];
+]
 
 @NgModule({
-  declarations: [FlashyreAssessment11],
+  declarations: [FlashyreAssessment11], // Remove TimerFormatPipe from here
   imports: [
-    CommonModule,
-    ComponentsModule,
-    RouterModule.forChild(routes),
-    FormsModule,
+    CommonModule, 
+    ComponentsModule, 
+    RouterModule.forChild(routes), 
     HttpClientModule,
+    NgxSpinnerModule,
+    SharedPipesModule, // Add the shared module here
+    FormsModule
   ],
-  providers: [AssessmentService], // Add the service here
   exports: [FlashyreAssessment11],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

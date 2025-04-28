@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CandidateAssessment {
   userProfile: any = {};
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
   assessments: any[] = []; // Array to store fetched assessments
 
   private baseUrl = environment.apiUrl;
@@ -70,7 +70,7 @@ export class CandidateAssessment {
   // Fetch assessments from the API
   loadAssessments(): void {
     this.spinner.show(); // Show spinner while loading
-    this.http.get<any[]>(`${this.baseUrl}/api/assessments/assessment-list/`)
+    this.http.get<any[]>(`${this.baseUrl}api/assessments/assessment-list/`)
       .subscribe({
         next: (data) => {
           this.assessments = data; // Store fetched assessments
@@ -85,7 +85,7 @@ export class CandidateAssessment {
 
   // Navigate to assessment page (dynamic based on assessment ID)
   startAssessment(assessmentId: number): void {
-    this.router.navigate(['/flashyre-assessment1'], { queryParams: { id: assessmentId } });
+    this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: assessmentId } });
   }
 
   ngOnInit(): void {

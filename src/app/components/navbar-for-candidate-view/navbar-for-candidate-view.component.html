@@ -112,7 +112,7 @@
           <img
             id="user-image"
             alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+            [src]="defaultProfilePicture"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -297,7 +297,7 @@
                 <img
                   id="candidate-profile-picture"
                   alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+                  [src]="defaultProfilePicture"
                   class="navbar-for-candidate-view-user-image2"
                 />
                 <div
