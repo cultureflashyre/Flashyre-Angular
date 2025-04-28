@@ -1,29 +1,72 @@
-import { Component, OnInit } from '@angular/core';
+import { ContentChild, Input, TemplateRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { TrialAssessmentService } from '../../services/trial-assessment.service';
+import { Subscription } from 'rxjs';
+import { VideoRecorderService } from '../../services/video-recorder.service';
+import { ProctoringService } from '../../services/proctoring.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SharedPipesModule } from '../../shared/shared-pipes.module';
+
+interface SelectedAnswer {
+  answer: string;
+  section_id: number;
+}
 
 @Component({
   selector: 'flashyre-assessment11',
-  templateUrl: './flashyre-assessment11.component.html',
-  styleUrls: ['./flashyre-assessment11.component.css'],
+  templateUrl: 'flashyre-assessment11.component.html',
+  styleUrls: ['flashyre-assessment11.component.css'],
 })
-export class FlashyreAssessment11 implements OnInit {
-  assessment: any;
-  sections: any[] = [];
-  currentSectionIndex: number = 0;
+export class FlashyreAssessment11 implements OnInit, OnDestroy {
+  @ContentChild('endTestText')
+  endTestText: TemplateRef<any>;
+  @Input()
+  logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
+  @Input()
+  rootClassName: string = '';
+  @Input()
+  logoAlt: string = 'image';
+
+  totalQuestionsInSection: number;
+  isLastSection: boolean;
   currentQuestionIndex: number = 0;
-  userResponses: { [questionId: number]: string } = {};
-  startTime: string;
-  sectionTimer: number = 0; // Timer in seconds
-  timerInterval: any;
+  currentSectionIndex: number = 0;
+  totalSections: number;
+
+  assessmentData: any = {};
+  sections: any[];
+  currentSection: any;
+  currentQuestions: any[] = [];
+  timer: number;
+  userId = 1;
+  startTime: Date;
+  videoPath: string | null;
+  sectionTimer: number = 0;
+  currentQuestion: any = {};
+  userResponses: {[key: string]: any} = {};
+  currentOptions: any[] = [];
+
+  isLastQuestionInSection = false;
+
+  selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
+  questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
+
+  private timerSubscription: Subscription;
+  private sectionTimerInterval: any;
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private route: ActivatedRoute,
-    private assessmentService: TrialAssessmentService
+    private trialassessmentService: TrialAssessmentService,
+    private videoRecorder: VideoRecorderService,
+    private proctoringService: ProctoringService,
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private route: ActivatedRoute
   ) {
+    this.currentQuestionIndex = 0;
+
     this.title.setTitle('Flashyre-Assessment11 - Flashyre');
     this.meta.addTags([
       {
@@ -38,135 +81,313 @@ export class FlashyreAssessment11 implements OnInit {
     ]);
   }
 
-  ngOnInit() {
-    this.startTime = new Date().toISOString();
-    const assessmentId = this.route.snapshot.paramMap.get('assessmentId');
+  private timerInterval: any;
+
+  async ngOnInit(): Promise<void> {
+    // Extract assessmentId from query parameters
+    const assessmentId = this.route.snapshot.queryParamMap.get('id');
+    
     if (assessmentId) {
-      this.assessmentService.getAssessmentDetails(+assessmentId).subscribe(data => {
-        this.assessment = data;
-        this.sections = Object.values(data.sections);
-        this.startSectionTimer(); // Start timer for the first section
-      });
-    }
-  }
-
-  // Getters for current section, question, and options
-  get currentSection() {
-    return this.sections[this.currentSectionIndex] || { questions: [] };
-  }
-
-  get currentQuestion() {
-    return this.currentSection.questions[this.currentQuestionIndex] || {};
-  }
-
-  get currentOptions() {
-    const question = this.currentQuestion;
-    const optionCount = question.option_type === '2' ? 2 : 4;
-    const options = [];
-    for (let i = 1; i <= optionCount; i++) {
-      const textKey = `option${i}`;
-      const imageKey = `option${i}_image`;
-      options.push({
-        key: textKey,
-        text: question.options?.[textKey] || '',
-        image: question.options?.[imageKey] || ''
-      });
-    }
-    return options;
-  }
-
-  // Navigation methods
-  goToQuestion(index: number) {
-    this.currentQuestionIndex = index;
-  }
-
-  nextQuestion() {
-    if (this.currentQuestionIndex < this.currentSection.questions.length - 1) {
-      this.currentQuestionIndex++;
-    } else if (this.currentSectionIndex < this.sections.length - 1) {
-      this.currentSectionIndex++;
-      this.currentQuestionIndex = 0;
-      this.startSectionTimer();
-    }
-  }
-
-  previousQuestion() {
-    if (this.currentQuestionIndex > 0) {
-      this.currentQuestionIndex--;
-    } else if (this.currentSectionIndex > 0) {
-      this.currentSectionIndex--;
-      this.currentQuestionIndex = this.currentSection.questions.length - 1;
-      this.startSectionTimer();
-    }
-  }
-
-  nextSection() {
-    if (this.currentSectionIndex < this.sections.length - 1) {
-      this.currentSectionIndex++;
-      this.currentQuestionIndex = 0;
-      this.startSectionTimer();
-    }
-  }
-
-  selectSection(index: number) {
-    this.currentSectionIndex = index;
-    this.currentQuestionIndex = 0;
-    this.startSectionTimer();
-  }
-
-  // Response handling
-  clearResponse() {
-    delete this.userResponses[this.currentQuestion.question_id];
-  }
-
-  endTest() {
-    this.submitAssessment();
-  }
-
-  submitAssessment() {
-    clearInterval(this.timerInterval);
-    const endTime = new Date().toISOString();
-    const responses = [];
-    for (const section of this.sections) {
-      for (const question of section.questions) {
-        const answer = this.userResponses[question.question_id] || null;
-        responses.push({
-          questionId: question.question_id,
-          answer: answer,
-          sectionId: section.section_id
-        });
+      this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
+      this.startTime = new Date(); // Record start time when assessment begins
+      try {
+        await this.videoRecorder.startRecording();
+        this.proctoringService.startMonitoring();
+      } catch (error) {
+        console.error('Failed to start assessment:', error);
       }
+    } else {
+      console.error('No assessment ID provided in route');
+      this.router.navigate(['/assessment-error']); // Redirect if no ID
     }
-    const data = {
-      assessmentId: this.assessment.assessment_id,
-      responses: responses,
-      startTime: this.startTime,
-      endTime: endTime,
-      submissionType: 'manual',
-      videoPath: '' // Add video path if implemented
-    };
-    this.assessmentService.submitAssessment(data).subscribe(response => {
-      console.log('Assessment submitted:', response);
-      // Optionally navigate to a results page
+  }
+
+  ngOnDestroy(): void {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    clearInterval(this.timerInterval);
+    clearInterval(this.sectionTimerInterval);
+  }
+
+  fetchAssessmentData(assessmentId: number): void {
+    this.spinner.show();
+    this.trialassessmentService.getAssessmentDetails(assessmentId).subscribe({
+      next: (data) => {
+        this.assessmentData = data;
+        this.sections = Object.keys(data.sections).map((sectionName) => ({
+          name: sectionName,
+          ...data.sections[sectionName],
+        }));
+        this.totalSections = this.sections.length;
+        this.timer = data.total_assessment_duration * 60;
+        this.trialassessmentService.updateTimer(this.timer);
+        this.startTimer();
+        this.selectSection(this.sections[0]); // Pass first section object
+      },
+      error: (error) => {
+        console.error('Error fetching assessment data:', error);
+      },
+      complete: () => {
+        this.spinner.hide();
+      }
     });
   }
 
-  // Timer management
-  startSectionTimer() {
-    clearInterval(this.timerInterval);
-    this.sectionTimer = (this.currentSection.duration || 0) * 60; // Convert minutes to seconds
+  startTimer(): void {
+    this.timerSubscription = this.trialassessmentService.timer$.subscribe((time) => {
+      this.timer = time;
+      console.log('timer data in startTimer(): ', this.timer);
+      if (this.timer <= 0) {
+        this.terminateTest();
+      }
+    });
+    this.decrementTimer();
+  }
+
+  decrementTimer(): void {
     this.timerInterval = setInterval(() => {
-      this.sectionTimer--;
-      if (this.sectionTimer <= 0) {
+      if (this.timer > 0) {
+        this.trialassessmentService.updateTimer(this.timer - 1 );
+      } else {
         clearInterval(this.timerInterval);
-        this.nextSection(); // Auto-move to next section when time’s up
       }
     }, 1000);
   }
 
-  formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  startSectionTimer(): void {
+    if (this.sectionTimerInterval) {
+      clearInterval(this.sectionTimerInterval);
+    }
+    this.sectionTimerInterval = setInterval(() => {
+      if (this.sectionTimer > 0) {
+        this.sectionTimer--;
+      } else {
+        clearInterval(this.sectionTimerInterval);
+        this.sectionTimerInterval = null;
+        // Optional: Auto-move to next section or end test
+      }
+    }, 1000);
   }
+
+  submitAssessment(): void {
+    const responses = this.prepareSubmissionData();
+    this.trialassessmentService.submitAssessment(responses).subscribe({
+      next: (response) => {
+        console.log('Assessment submitted successfully:', response);
+      },
+      error: (error) => {
+        console.error('Assessment submission failed:', error);
+      },
+    });
+  }
+
+  selectSection(section: any): void {
+    this.currentSection = section;
+    this.currentSectionIndex = this.sections.indexOf(section);
+    this.currentQuestions = section.questions;
+    this.currentQuestionIndex = 0;
+    this.updateCurrentQuestion();
+    this.totalQuestionsInSection = this.currentQuestions.length;
+    this.sectionTimer = section.duration * 60;
+    clearInterval(this.sectionTimerInterval);
+    this.startSectionTimer();
+    if (section >= 0 && section < this.sections.length) {
+      this.currentSection = this.sections[section];
+      this.currentQuestions = this.currentSection.questions;
+      this.currentQuestionIndex = 0;
+      this.updateCurrentQuestion();
+      this.totalQuestionsInSection = this.currentQuestions.length;
+      clearInterval(this.sectionTimerInterval);
+      this.startSectionTimer();
+    }
+  }
+
+  updateCurrentQuestion(): void {
+    if (this.currentQuestions && this.currentQuestions.length > 0) {
+      this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
+      this.updateCurrentOptions();
+      this.checkIfLastQuestionInSection();
+    } else {
+      this.currentQuestion = { question: 'No questions available' };
+      this.currentOptions = [];
+    }
+  }
+
+  updateCurrentOptions(): void {
+    if (this.currentQuestion && this.currentQuestion.options) {
+      this.currentOptions = this.getOptions(this.currentQuestion);
+    } else {
+      this.currentOptions = [];
+    }
+  }
+
+  updateCurrentSection(): void {
+    // Update section data, reset totalQuestionsInSection, etc.
+    this.totalQuestionsInSection = this.currentQuestions.length;
+  }
+
+  checkIfLastQuestionInSection(): void {
+    this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
+  }
+
+  getOptions(question: any): any[] {
+    if (!question || !question.options) return [];
+    const options = [];
+    for (let i = 1; i <= 4; i++) {
+      const key = `option${i}`;
+      const imageKey = `option${i}_image`;
+      if (question.options[key]) {
+        options.push({
+          key: key,
+          text: question.options[key],
+          image: question.options[imageKey] || null
+        });
+      }
+    }
+    return options;
+  }
+
+  markQuestionAsVisited(index: number): void {
+    if (!this.questionStates[index]) {
+      this.questionStates[index] = 'visited';
+    }
+  }
+
+  markQuestionAsAnswered(index: number): void {
+    if (this.questionStates[index] === 'visited') {
+      this.questionStates[index] = 'answered';
+    }
+  }
+
+  navigateToQuestion(index: number): void {
+    if (index >= 0 && index < this.currentQuestions.length) {
+      this.currentQuestionIndex = index;
+      this.markQuestionAsVisited(index);
+      this.updateCurrentQuestion();
+    }
+  }
+  
+  // Method referenced in template
+  goToQuestion(index: number): void {
+    this.navigateToQuestion(index);
+  }
+
+  selectOption(questionId: number, sectionId: number, answer: string): void {
+    this.selectedAnswers[questionId] = {
+      answer: answer,
+      section_id: sectionId,
+    };
+    this.markQuestionAsAnswered(this.currentQuestionIndex);
+  }
+
+  onOptionSelected(questionId: number, sectionId: number, answer: string): void {
+    this.selectedAnswers[questionId] = {
+      answer: answer,
+      section_id: sectionId,
+    };
+    this.markQuestionAsAnswered(this.currentQuestionIndex);
+  }
+
+  clearResponse(questionId: number): void {
+    // Clear the response from userResponses (bound to UI via ngModel)
+    if (this.userResponses.hasOwnProperty(questionId)) {
+      delete this.userResponses[questionId];
+    }
+  
+    // Clear the response from selectedAnswers (used for submission)
+    if (this.selectedAnswers.hasOwnProperty(questionId)) {
+      delete this.selectedAnswers[questionId];
+    }
+  
+    // Optional: Update question state (e.g., from 'answered' to 'visited')
+    const questionIndex = this.currentQuestions.findIndex(q => q.question_id === questionId);
+    if (questionIndex !== -1 && this.questionStates[questionIndex] === 'answered') {
+      this.questionStates[questionIndex] = 'visited';
+    }
+  }
+
+  async terminateTest(): Promise<void> {
+    try {
+      this.videoRecorder.stopRecording();
+      this.proctoringService.stopMonitoring();
+      this.videoPath = await this.videoRecorder.getVideoPath();
+
+      const responses = this.prepareSubmissionData();
+      this.trialassessmentService.submitAssessment(responses).subscribe({
+        next: (response) => {
+          console.log('Assessment submitted successfully:', response);
+          this.router.navigate(['/candidate-dashboard-main']);
+        },
+        error: (error) => {
+          console.error('Assessment submission failed:', error);
+          this.router.navigate(['/assessment-error']);
+        },
+      });
+    } catch (error) {
+      console.error('Termination failed:', error);
+      this.router.navigate(['/assessment-error']);
+    }
+  }
+  
+  // Method referenced in template
+  endTest(): void {
+    this.terminateTest();
+  }
+
+  prepareSubmissionData(): any {
+    return {
+      assessmentId: this.assessmentData.assessment_id,
+      userId: this.userId,
+      responses: Object.keys(this.selectedAnswers).map((questionId) => ({
+        questionId: +questionId,
+        sectionId: this.selectedAnswers[+questionId].section_id,
+        answer: this.selectedAnswers[+questionId].answer,
+      })),
+      startTime: this.startTime,
+      endTime: new Date().toISOString(),
+      submissionType: 'manual',
+      videoPath: this.videoPath,
+    };
+  }
+
+  previousQuestion(): void {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+      this.updateCurrentQuestion();
+    }
+  }
+
+  nextQuestion(): void {
+    if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
+      this.currentQuestionIndex++;
+      this.updateCurrentQuestion();
+    }
+  }
+  
+  nextSection(): void {
+    if (this.currentSectionIndex < this.totalSections - 1) {
+      this.currentSectionIndex++;
+      this.selectSection(this.sections[this.currentSectionIndex]);
+    }
+  }
+  
+  // Helper method to check if question has an image
+  hasQuestionImage(question: any): boolean {
+    return question && question.question_image && question.question_image.trim() !== '';
+  }
+  
+  // Helper method to check if option has an image
+  hasOptionImage(option: any): boolean {
+    return option && option.image && option.image.trim() !== '';
+  }
+
+  isValidImage(url: string): boolean {
+    return url && (url.startsWith('http://') || url.startsWith('https://'));
+}
+
+handleImageError(event: Event): void {
+    console.warn('Image failed to load:', (event.target as HTMLImageElement).src);
+    (event.target as HTMLImageElement).style.display = 'none'; // Hide broken image
+}
 }

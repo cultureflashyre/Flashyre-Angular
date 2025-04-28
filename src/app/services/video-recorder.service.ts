@@ -8,7 +8,7 @@ export class VideoRecorderService {
 
   constructor(private http: HttpClient) { }
 
-  private apiUrl = 'http://localhost:8000/assessments';
+  private apiUrl = 'http://localhost:8000/trial_assessments';
 
   private mediaRecorder!: MediaRecorder;
   private stream!: MediaStream;
