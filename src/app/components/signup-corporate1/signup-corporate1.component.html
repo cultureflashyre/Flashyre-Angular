@@ -4,7 +4,7 @@
       <ng-container>
         <ng-template #defaultHeading>
           <div class="signup-corporate1-fragment19">
-            <span class="signup-corporate1-text19">Welcome to Flashyre</span>
+            <span class="signup-corporate муз1-text19">Welcome to Flashyre</span>
           </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="heading ? heading : defaultHeading"></ng-container>
@@ -131,14 +131,7 @@
               id="signup-password-show-button"
               class="signup-corporate1-show-text1 button"
             >
-              <ng-container>
-                <ng-template #defaultText2>
-                  <div class="signup-corporate1-fragment21">
-                    <span class="signup-corporate1-text21">Show</span>
-                  </div>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
-              </ng-container>
+              {{ passwordType === 'password' ? 'Show' : 'Hide' }}
             </span>
           </div>
         </div>
@@ -166,14 +159,7 @@
               id="signup-password-show-button"
               class="signup-corporate1-show-text2 button"
             >
-              <ng-container>
-                <ng-template #defaultText21>
-                  <div class="signup-corporate1-fragment18">
-                    <span class="signup-corporate1-text18">Show</span>
-                  </div>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="text21 ? text21 : defaultText21"></ng-container>
-              </ng-container>
+              {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
             </span>
           </div>
         </div>
