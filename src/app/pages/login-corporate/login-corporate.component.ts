@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +13,6 @@ export class LoginCorporate {
   constructor(
     private title: Title,
     private meta: Meta,
-    private http: HttpClient,
     private router: Router
   ) {
     this.title.setTitle('Login-Corporate - Flashyre');
@@ -32,27 +30,11 @@ export class LoginCorporate {
   }
 
   onLoginSubmit(event: { email: string; password: string }) {
-    const { email, password } = event;
-    this.http
-      .post('http://localhost:8000/api/login-corporate/', { email, password })
-      .subscribe(
-        (response: any) => {
-          if (response.message === 'Login successful') {
-            this.errorMessage = ''; // Clear error on success
-            this.router.navigate(['/recruiter-view-3rd-page']); // Redirect
-          } else {
-            this.errorMessage = 'Login failed';
-          }
-        },
-        (error) => {
-          if (error.status === 401) {
-            this.errorMessage = 'Invalid email or password';
-          } else if (error.status === 400) {
-            this.errorMessage = 'Email and password are required';
-          } else {
-            this.errorMessage = 'An error occurred. Please try again.';
-          }
-        }
-      );
+    this.errorMessage = ''; // Clear error on new submission
+    // Navigate only if login is successful
+    this.router.navigate(['/recruiter-view-3rd-page']).catch((err) => {
+      console.error('Navigation error:', err);
+      this.errorMessage = 'Navigation failed. Please try again.';
+    });
   }
 }

@@ -1,5 +1,6 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { AuthService } from '../../services/candidate.service'; // Adjust path if needed
+import { AuthService } from '../../services/candidate.service'; // Candidate service
+import { CorporateService } from '../../services/corporate.service'; // Corporate service
 
 @Component({
   selector: 'log-in-page',
@@ -21,6 +22,8 @@ export class LogInPage implements OnChanges {
   @Input() textinputPlaceholder: string = 'Enter your email';
   @Input() rootClassName: string = '';
   @Input() errorMessage: string = '';
+  @Input() signupLink: string = '/signup-candidate'; // Dynamic signup link
+  @Input() loginType: string = 'candidate'; // Specify login type
 
   @Output() loginSubmit = new EventEmitter<{ email: string, password: string }>();
 
@@ -28,56 +31,69 @@ export class LogInPage implements OnChanges {
   password: string = '';
   showPassword: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private corporateService: CorporateService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['errorMessage']) {
       console.log('Error Message Updated:', this.errorMessage);
     }
+    if (changes['signupLink']) {
+      console.log('Signup Link Updated:', this.signupLink);
+    }
+ 
   }
 
   onSubmit() {
     if (this.email && this.password) {
       const loginData = { email: this.email, password: this.password };
+      const service = this.loginType === 'corporate' ? this.corporateService : this.authService;
+      console.log('Using service for loginType:', this.loginType); // Debug log
 
-      this.authService.login(this.email, this.password).subscribe({
+      service.login(this.email, this.password).subscribe({
         next: (response: any) => {
           if (response.message === 'Login successful') {
-            this.errorMessage = ''; // Clear error message on success
+            this.errorMessage = ''; // Clear error message
             localStorage.setItem('jwtToken', response.access);
             this.loginSubmit.emit(loginData);
             console.log('Login successful:', response);
           }
         },
         error: (err) => {
-          this.errorMessage = err.error.error || 'Invalid Email or Password'; // Set to backend error or default
+          // Handle Django error response: {"error": {...}}
+          let errorMsg = 'Invalid Email or Password';
+          if (err.error && err.error.error) {
+            // Handle nested error object
+            errorMsg = typeof err.error.error === 'string' ? err.error.error : JSON.stringify(err.error.error);
+          }
+          this.errorMessage = errorMsg;
           console.error('Login failed:', err);
         }
       });
     } else {
-      this.errorMessage = 'Please enter both email and password'; // Set when fields are empty
+      this.errorMessage = 'Please enter both email and password';
     }
   }
 
-  // Handle email input change
   onEmailChange() {
     if (this.email && this.password) {
       this.errorMessage = ''; // Clear message when both fields are filled
     } else if (!this.email && !this.password) {
       this.errorMessage = ''; // Clear message when both fields are empty
     } else {
-      this.errorMessage = 'Please enter both email and password'; // Show message when only one field is filled
+      this.errorMessage = 'Please enter both email and password';
     }
   }
 
-  // Handle password input change
   onPasswordChange() {
     if (this.email && this.password) {
       this.errorMessage = ''; // Clear message when both fields are filled
     } else if (!this.email && !this.password) {
       this.errorMessage = ''; // Clear message when both fields are empty
     } else {
-      this.errorMessage = 'Please enter both email and password'; // Show message when only one field is filled
+      this.errorMessage = 'Please enter both email and password';
     }
   }
 
