@@ -1,12 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { CorporateAuthService } from '../../services/corporate-auth.service';
 
 @Component({
   selector: 'signup-corporate1',
-  templateUrl: 'signup-corporate1.component.html',
-  styleUrls: ['signup-corporate1.component.css'],
+  templateUrl: './signup-corporate1.component.html',
+  styleUrls: ['./signup-corporate1.component.css']
 })
 export class SignupCorporate1 {
   @ContentChild('button') button: TemplateRef<any>;
@@ -33,17 +33,17 @@ export class SignupCorporate1 {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private corporateAuthService: CorporateAuthService,
     private router: Router
   ) {
     this.signupForm = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       company_name: ['', Validators.required],
-      phone_number: ['', Validators.required],
+      phone_number: ['', [Validators.required, Validators.pattern(/^\d{10,15}$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirm_password: ['', Validators.required],
+      confirm_password: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
   }
 
@@ -56,22 +56,23 @@ export class SignupCorporate1 {
   onSubmit() {
     if (this.signupForm.valid) {
       const formData = { ...this.signupForm.value };
-      delete formData.confirm_password; // Exclude confirm_password from backend data
-      this.http.post('http://localhost:8000/api/signup-corporate/', formData).subscribe({
+      delete formData.confirm_password;
+      this.corporateAuthService.signupCorporate(formData).subscribe({
         next: (response) => {
-          console.log('Signup successful', response);
           this.successMessage = 'Signup successful! Redirecting to login...';
+          this.errorMessage = '';
           setTimeout(() => {
             this.router.navigate(['/login-corporate']);
           }, 2000);
         },
         error: (error) => {
-          console.error('Signup error', error);
-          this.errorMessage = error.error?.message || 'An error occurred during signup.';
-        },
+          this.errorMessage = error.error?.error || 'An error occurred during signup.';
+          this.successMessage = '';
+        }
       });
     } else {
       this.errorMessage = 'Please fill in all required fields correctly.';
+      this.successMessage = '';
     }
   }
 

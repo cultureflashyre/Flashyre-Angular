@@ -4,7 +4,7 @@
       rootClassName="login-page-navbarroot-class-name2"
     ></login-page-navbar>
     <log-in-page
-      [signupLink]="'/signup-corporate'"
+      userType="corporate"
       [errorMessage]="errorMessage"
       (loginSubmit)="onLoginSubmit($event)"
       rootClassName="log-in-pageroot-class-name2"
@@ -12,11 +12,6 @@
       <ng-template #text1>
         <div class="login-corporate-fragment1">
           <span class="login-corporate-text1">Email</span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="login-corporate-fragment2">
-          <span class="login-corporate-text2">Show</span>
         </div>
       </ng-template>
       <ng-template #text3>
@@ -37,11 +32,6 @@
       <ng-template #text11>
         <div class="login-corporate-fragment6">
           <span class="login-corporate-text6">Password</span>
-        </div>
-      </ng-template>
-      <ng-template #text71>
-        <div class="login-corporate-fragment7">
-          <span class="login-corporate-text7">invalid Email or Password</span>
         </div>
       </ng-template>
       <ng-template #heading>

@@ -1,63 +1,56 @@
 <div id="login-page" class="log-in-page-container1" [ngClass]="rootClassName">
   <div id="login-page-container" class="log-in-page-container2">
     <h1 id="flashyre-welcome-page" class="log-in-page-text10">
-      <ng-container>
-        <ng-template #defaultHeading>
-          <div class="log-in-page-fragment6">
-            <span class="log-in-page-text16">Welcome to Flashyre</span>
-          </div>
-        </ng-template>
-        <ng-container *ngTemplateOutlet="heading ? heading : defaultHeading"></ng-container>
-      </ng-container>
+      <ng-container *ngTemplateOutlet="heading ? heading : defaultHeading"></ng-container>
+      <ng-template #defaultHeading>
+        <div class="log-in-page-fragment6">
+          <span class="log-in-page-text16">Welcome to Flashyre</span>
+        </div>
+      </ng-template>
     </h1>
     <div id="login-page-details-container" class="log-in-page-container3">
-      <form (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div id="email-container" class="log-in-page-email-container">
           <div id="login-email-container" class="log-in-page-container4">
             <span id="login-email" class="log-in-page-email-text">
-              <ng-container>
-                <ng-template #defaultText1>
-                  <div class="log-in-page-fragment4">
-                    <span class="log-in-page-text14">Email</span>
-                  </div>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
-              </ng-container>
+              <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+              <ng-template #defaultText1>
+                <div class="log-in-page-fragment4">
+                  <span class="log-in-page-text14">Email</span>
+                </div>
+              </ng-template>
             </span>
             <input
               type="email"
               id="login-email-input"
-              [(ngModel)]="email"
-              (ngModelChange)="onEmailChange()" 
-              name="email"
+              formControlName="email"
               [attr.placeholder]="textinputPlaceholder"
               class="log-in-page-email-input input"
               required
-            /><!-- Added -->
+            />
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-text">
+              Please enter a valid email
+            </div>
           </div>
         </div>
         <div id="password-container" class="log-in-page-password-container">
           <div id="login-password-container" class="log-in-page-container5">
             <span id="login-password" class="log-in-page-password-text">
-              <ng-container>
-                <ng-template #defaultText11>
-                  <div class="log-in-page-fragment1">
-                    <span class="log-in-page-text11">Password</span>
-                  </div>
-                </ng-template>
-                <ng-container *ngTemplateOutlet="text11 ? text11 : defaultText11"></ng-container>
-              </ng-container>
+              <ng-container *ngTemplateOutlet="text11 ? text11 : defaultText11"></ng-container>
+              <ng-template #defaultText11>
+                <div class="log-in-page-fragment1">
+                  <span class="log-in-page-text11">Password</span>
+                </div>
+              </ng-template>
             </span>
             <input
               [type]="showPassword ? 'text' : 'password'"
               id="login-password-input"
-              [(ngModel)]="password"
-              (ngModelChange)="onPasswordChange()" 
-              name="password"
+              formControlName="password"
               [attr.placeholder]="textinputPlaceholder1"
               class="log-in-page-password-input input"
               required
-            /><!-- Added -->
+            />
             <span
               id="login-password-show-button"
               class="log-in-page-show-text button"
@@ -65,22 +58,24 @@
             >
               {{ showPassword ? 'Hide' : 'Show' }}
             </span>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-text">
+              Password must be at least 6 characters
+            </div>
           </div>
         </div>
         <button
           id="login-button-container"
           type="submit"
           class="log-in-page-login-button button"
+          [disabled]="loginForm.invalid"
         >
           <span id="login-text">
-            <ng-container>
-              <ng-template #defaultButton>
-                <div class="log-in-page-fragment8">
-                  <span class="log-in-page-text18">Login</span>
-                </div>
-              </ng-template>
-              <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
-            </ng-container>
+            <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
+            <ng-template #defaultButton>
+              <div class="log-in-page-fragment8">
+                <span class="log-in-page-text18">Login</span>
+              </div>
+            </ng-template>
           </span>
         </button>
       </form>
@@ -91,28 +86,24 @@
       </div>
       <div id="signup-container" class="log-in-page-container6">
         <span id="don't-have-an-account-text" class="log-in-page-dont-have-an-account-text">
-          <ng-container>
-            <ng-template #defaultText3>
-              <div class="log-in-page-fragment5">
-                <span class="log-in-page-text15">Don’t have an account?</span>
-              </div>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
-          </ng-container>
+          <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
+          <ng-template #defaultText3>
+            <div class="log-in-page-fragment5">
+              <span class="log-in-page-text15">Don’t have an account?</span>
+            </div>
+          </ng-template>
         </span>
         <span
           id="login-signup-button"
           class="log-in-page-signup-text button"
-          routerLink="/signup-candidate"
+          [routerLink]="userType === 'corporate' ? '/signup-corporate' : '/signup-candidate'"
         >
-          <ng-container>
-            <ng-template #defaultText4>
-              <div class="log-in-page-fragment2">
-                <span class="log-in-page-text12">Sign up</span>
-              </div>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
-          </ng-container>
+          <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
+          <ng-template #defaultText4>
+            <div class="log-in-page-fragment2">
+              <span class="log-in-page-text12">Sign up</span>
+            </div>
+          </ng-template>
         </span>
       </div>
       <span
@@ -120,14 +111,12 @@
         class="log-in-page-forgot-password button"
         routerLink="/forgot-password"
       >
-        <ng-container>
-          <ng-template #defaultForgotPassword>
-            <div class="log-in-page-fragment7">
-              <span class="log-in-page-text17">Forgot Password</span>
-            </div>
-          </ng-template>
-          <ng-container *ngTemplateOutlet="forgotPassword ? forgotPassword : defaultForgotPassword"></ng-container>
-        </ng-container>
+        <ng-container *ngTemplateOutlet="forgotPassword ? forgotPassword : defaultForgotPassword"></ng-container>
+        <ng-template #defaultForgotPassword>
+          <div class="log-in-page-fragment7">
+            <span class="log-in-page-text17">Forgot Password</span>
+          </div>
+        </ng-template>
       </span>
     </div>
   </div>
