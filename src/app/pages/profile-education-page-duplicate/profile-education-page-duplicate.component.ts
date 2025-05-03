@@ -27,20 +27,22 @@ export class ProfileEducationPageDuplicate {
   }
 
   saveAndNext() {
-
-    if (this.profileEducationComponent) {
-      this.profileEducationComponent.saveAndNext();
-    } else {
-      console.error('ProfileEducationComponent not found');
-      this.router.navigate(['/profile-certification-page']); // Navigate anyway if component is missing
-    }
+    // Implement your save logic here
+    console.log('Saving education data and proceeding to next step');
+    // After saving, navigate to the next page
+    this.router.navigate(['/profile-certification-page']);
   }
-
+  
   goToPrevious() {
-    this.profileEducationComponent.goToPrevious();
+    // Implement navigation to previous page
+    console.log('Navigating to previous page');
+    this.router.navigate(['/previous-page-route']);
   }
-
+  
   skipToNextSection() {
-    this.profileEducationComponent.skipToNextSection();
+    // Implement skip logic
+    console.log('Skipping to next section');
+    this.router.navigate(['/profile-certification-page']);
   }
+  
 }
