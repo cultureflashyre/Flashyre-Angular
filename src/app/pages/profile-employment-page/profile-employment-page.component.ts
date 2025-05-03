@@ -1,6 +1,7 @@
+// Updated profile-employment-page.component.ts
 import { Component, ViewChild } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router'; // Import Router
+import { Router } from '@angular/router';
 import { EmploymentService } from '../../services/employment.service';
 import { ProfileEmploymentComponent } from '../../components/profile-employment-component/profile-employment-component.component';
 
@@ -16,7 +17,7 @@ export class ProfileEmploymentPage {
     private title: Title,
     private meta: Meta,
     private employmentService: EmploymentService,
-    private router: Router // Inject Router
+    private router: Router
   ) {
     this.title.setTitle('Profile-Employment-Page - Flashyre');
     this.meta.addTags([
@@ -33,16 +34,27 @@ export class ProfileEmploymentPage {
   }
 
   saveAndNext() {
-    this.employmentComponent.saveAndNext();
+    if (this.employmentComponent) {
+      this.employmentComponent.saveAndNext();
+    } else {
+      console.error('Employment component not found');
+      this.router.navigate(['/profile-education-page-duplicate']); // Navigate anyway if component is missing
+    }
   }
 
   goToPrevious() {
-    this.employmentComponent.goToPrevious();
+    if (this.employmentComponent) {
+      this.employmentComponent.goToPrevious();
+    } else {
+      console.error('Employment component not found');
+      // Navigate to previous page
+      this.router.navigate(['/previous-page-route']);
+    }
   }
 
   skipToEducation() {
-    this.employmentComponent.skipToEducation();
+    // Direct implementation in the page component
+    console.log('Skipping to education section');
+    this.router.navigate(['/profile-education-page-duplicate']);
   }
-
-
 }

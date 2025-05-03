@@ -9,6 +9,9 @@ import { EmploymentService } from '../../services/employment.service';
   styleUrls: ['profile-employment-component.component.css'],
 })
 export class ProfileEmploymentComponent {
+  saveAndNext() {
+    throw new Error('Method not implemented.');
+  }
   @ContentChild('text') text: TemplateRef<any>;
   @ContentChild('text311') text311: TemplateRef<any>;
   @ContentChild('text7') text7: TemplateRef<any>;
