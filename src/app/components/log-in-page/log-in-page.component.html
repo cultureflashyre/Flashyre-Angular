@@ -9,7 +9,7 @@
       </ng-template>
     </h1>
     <div id="login-page-details-container" class="log-in-page-container3">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" action="javascript:void(0)">
         <div id="email-container" class="log-in-page-email-container">
           <div id="login-email-container" class="log-in-page-container4">
             <span id="login-email" class="log-in-page-email-text">
@@ -28,9 +28,6 @@
               class="log-in-page-email-input input"
               required
             />
-            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-text">
-              Please enter a valid email
-            </div>
           </div>
         </div>
         <div id="password-container" class="log-in-page-password-container">
@@ -58,16 +55,12 @@
             >
               {{ showPassword ? 'Hide' : 'Show' }}
             </span>
-            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-text">
-              Password must be at least 6 characters
-            </div>
           </div>
         </div>
         <button
           id="login-button-container"
           type="submit"
           class="log-in-page-login-button button"
-          [disabled]="loginForm.invalid"
         >
           <span id="login-text">
             <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
@@ -79,6 +72,7 @@
           </span>
         </button>
       </form>
+      <!-- Error message display -->
       <div class="log-in-page-error-login-container" *ngIf="errorMessage">
         <span id="error-message-login" class="log-in-page-error-message-login">
           {{ errorMessage }}

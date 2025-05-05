@@ -32,7 +32,7 @@ export class LoginCorporate {
   onLoginSubmit(response: any) {
     if (response.message === 'Login successful') {
       this.errorMessage = '';
-      this.router.navigate(['/recruiter-view-3rd-page']);
+      this.router.navigate(['/recruiter-view-3rd-page1']);
     } else {
       this.errorMessage = response.error || 'Login failed';
     }

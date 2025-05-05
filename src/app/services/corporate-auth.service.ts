@@ -31,11 +31,19 @@ export class CorporateAuthService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An error occurred';
+    let errorMessage = 'An unknown error occurred';
     if (error.error instanceof ErrorEvent) {
+      // Client-side error
       errorMessage = `Client-side error: ${error.error.message}`;
     } else {
-      errorMessage = error.error?.error || `Server error: ${error.status}`;
+      // Server-side error
+      if (error.status === 401) {
+        errorMessage = error.error?.error || 'Invalid credentials';
+      } else if (error.status === 400) {
+        errorMessage = error.error?.error || 'Invalid request data';
+      } else {
+        errorMessage = error.error?.error || `Server error: ${error.status}`;
+      }
     }
     return throwError(() => new Error(errorMessage));
   }

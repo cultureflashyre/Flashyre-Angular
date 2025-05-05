@@ -34,37 +34,27 @@ export class LoginCandidate {
     ]);
   }
 
-  onLoginSubmit(event: { email: string, password: string }) {
+  onLoginSubmit(response: any) {
     this.spinner.show();
 
-    this.authService.login(event.email, event.password).subscribe(
-      (response) => {
-
-        if (response.access) { // Check for token in response
-          console.log("Response Access Token: ", response.access);
-          localStorage.setItem('jwtToken', response.access); // Store the access token
-          
-          // Fetch user profile after successful login
-          this.userProfileService.fetchUserProfile().subscribe(
-            () => {
-              this.errorMessage = '';
-              this.router.navigate(['/candidate-home']);
-            },
-            (profileError) => {
-              console.error('Error fetching profile', profileError);
-              // Navigate anyway, but with a warning
-              this.router.navigate(['/candidate-home']);
-            }
-          );
-        } else {
-          this.errorMessage = response.access;
+    if (response.message === 'Login successful' && response.access) {
+      console.log("Login response: ", response);
+      localStorage.setItem('jwtToken', response.access); // Ensure token is stored
+      this.userProfileService.fetchUserProfile().subscribe({
+        next: () => {
+          this.errorMessage = '';
+          this.router.navigate(['/candidate-home']);
+        },
+        error: (profileError) => {
+          console.error('Error fetching profile', profileError);
+          // Navigate anyway, but with a warning
+          this.router.navigate(['/candidate-home']);
         }
-        this.spinner.hide();
-      },
-      (error) => {
-        this.errorMessage = error.error?.error || 'Login failed';
-        this.spinner.hide();
-      }
-    );
+      });
+    } else {
+      this.errorMessage = response.error || 'Login failed';
+      console.error('Login failed:', response);
+    }
+    this.spinner.hide();
   }
 }
