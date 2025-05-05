@@ -114,16 +114,19 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     this.spinner.show();
     this.trialassessmentService.getAssessmentDetails(assessmentId).subscribe({
       next: (data) => {
+        console.log('Raw API response:', data);
         this.assessmentData = data;
         this.sections = Object.keys(data.sections).map((sectionName) => ({
           name: sectionName,
           ...data.sections[sectionName],
         }));
+        console.log('Processed sections:', this.sections);
+        console.log('First section questions:', this.sections[0]?.questions);
         this.totalSections = this.sections.length;
         this.timer = data.total_assessment_duration * 60;
         this.trialassessmentService.updateTimer(this.timer);
         this.startTimer();
-        this.selectSection(this.sections[0]); // Pass first section object
+        this.selectSection(this.sections[0]);
       },
       error: (error) => {
         console.error('Error fetching assessment data:', error);
