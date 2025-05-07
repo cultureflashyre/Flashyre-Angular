@@ -260,14 +260,17 @@
           class="create-job-post1st-page-upload-file-container"
         >
           <input
-            type="text"
+            type="file"
             placeholder="Select file"
             id="upload-file-input"
             class="create-job-post1st-page-upload-file-input input"
+            (change)="onFileSelected($event)"
+            accept=".pdf,.docx,.doc"
           />
           <div
             id="upload-file-button-container"
             class="create-job-post1st-page-upload-file-button-container"
+            (click)="uploadFile()"
           >
             <svg
               width="48"
@@ -375,104 +378,6 @@
       width: 100%;
     }
     
-    .location-form {
-      position: relative;
-    }
-
-    .container {
-      width: 100%;
-      height: 48px;
-    }
-    
-    .input-wrapper {
-      position: relative;
-    }
-    
-    .location-input {
-      width: 100%;
-      padding-left: 14px;
-      border: 1px solid;
-      border-color: #A7A7A7;
-      border-radius: 4px;
-      font-size: 18px;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
-      height: 100%;
-    }
-    
-    .location-input:focus {
-      outline: none;
-      border-color: #4299e1;
-    }
-    
-    .location-icon {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #A7A7A7;
-    }
-    
-    .suggestions {
-      position: absolute;
-      width: 100%;
-      max-height: 250px;
-      overflow: visible;
-      background: white;
-      border: 1px solid #A7A7A7;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-top: 4px;
-      z-index: 10;
-      display: none;
-    }
-    
-    .suggestion-item {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #f0f4f8;
-    }
-    
-    .suggestion-item:last-child {
-      border-bottom: none;
-    }
-    
-    .suggestion-item:hover {
-      background-color: #f0f4f8;
-    }
-    
-    .no-suggestions {
-      padding: 12px 16px;
-      color: #718096;
-      font-style: italic;
-    }
-    
-    .loading {
-      position: absolute;
-      right: 40px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      border: 2px solid #e2e8f0;
-      border-top: 2px solid #4299e1;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-    
-    @keyframes spin {
-      0% { transform: translateY(-50%) rotate(0deg); }
-      100% { transform: translateY(-50%) rotate(360deg); }
-    }
-
-    /* Media query for max-width 991px */
-    @media (max-width: 991px) {
-      .container {
-        height: 44px;
-      }
-      
-    }
   </style>
 
   <div class='container'>
@@ -495,183 +400,6 @@
     </form>
   </div>
 
-  <script>
-    // DOM Elements
-    const locationInput = document.getElementById('location');
-    const suggestionsContainer = document.getElementById('suggestions');
-    const loadingIndicator = document.getElementById('loading');
-    const locationForm = document.querySelector('.location-form');
-    
-    // Variables
-    let debounceTimer;
-    const DEBOUNCE_DELAY = 300; // ms
-    
-    // Replace this with your actual API endpoint
-    const LOCATION_API_URL = 'https://api.example.com/locations/autocomplete';
-
-    // Event Listeners
-    locationInput.addEventListener('input', handleInput);
-    locationForm.addEventListener('submit', handleSubmit);
-    document.addEventListener('click', handleOutsideClick);
-
-    /**
-     * Handle input with debounce
-     */
-    function handleInput() {
-      const query = locationInput.value.trim();
-      
-      // Clear previous timer
-      clearTimeout(debounceTimer);
-      
-      // Hide suggestions if input is empty
-      if (query.length === 0) {
-        hideSuggestions();
-        return;
-      }
-      
-      // Set loading state
-      loadingIndicator.style.display = 'block';
-      
-      // Debounce API calls
-      debounceTimer = setTimeout(() => {
-        fetchLocationSuggestions(query);
-      }, DEBOUNCE_DELAY);
-    }
-
-    /**
-     * Fetch location suggestions from API
-     * @param {string} query - User input
-     */
-    async function fetchLocationSuggestions(query) {
-      try {
-        // In a real implementation, you would use fetch with your API
-        // This is a simulation with mock data for demonstration
-        
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Mock data - replace with actual API call
-        const mockResponse = getMockSuggestions(query);
-        
-        // Display suggestions
-        displaySuggestions(mockResponse);
-      } catch (error) {
-        console.error('Error fetching location suggestions:', error);
-        suggestionsContainer.innerHTML = `
-          <div class='no-suggestions'>Unable to fetch suggestions. Please try again.</div>
-        `;
-        suggestionsContainer.style.display = 'block';
-      } finally {
-        loadingIndicator.style.display = 'none';
-      }
-    }
-
-    /**
-     * Mock function to simulate API responses
-     * Replace with actual API call in production
-     */
-    function getMockSuggestions(query) {
-      query = query.toLowerCase();
-      const cities = ['Multiple',
-        'New York, NY, USA',
-        'Los Angeles, CA, USA',
-        'Chicago, IL, USA',
-        'Houston, TX, USA',
-        'Phoenix, AZ, USA',
-        'Philadelphia, PA, USA',
-        'San Antonio, TX, USA',
-        'San Diego, CA, USA',
-        'Dallas, TX, USA',
-        'San Jose, CA, USA',
-        'London, UK',
-        'Paris, France',
-        'Tokyo, Japan',
-        'Sydney, Australia',
-        'Toronto, Canada'
-      ];
-      
-      return cities.filter(city => city.toLowerCase().includes(query));
-    }
-
-    /**
-     * Display suggestions in the dropdown
-     * @param {Array} suggestions - List of location suggestions
-     */
-    function displaySuggestions(suggestions) {
-      if (suggestions.length === 0) {
-        suggestionsContainer.innerHTML = `
-          <div class='no-suggestions'>No locations found</div>
-        `;
-      } else {
-        suggestionsContainer.innerHTML = suggestions
-          .map(location => `
-            <div class='suggestion-item' data-location='${location}'>${location}</div>
-          `)
-          .join('');
-          
-        // Add click event to suggestions
-        const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
-        suggestionItems.forEach(item => {
-          item.addEventListener('click', () => {
-            locationInput.value = item.dataset.location;
-            hideSuggestions();
-          });
-        });
-      }
-      
-      suggestionsContainer.style.display = 'block';
-    }
-
-    /**
-     * Hide suggestions dropdown
-     */
-    function hideSuggestions() {
-      suggestionsContainer.style.display = 'none';
-    }
-
-    /**
-     * Handle clicks outside the suggestions dropdown
-     */
-    function handleOutsideClick(event) {
-      if (!suggestionsContainer.contains(event.target) && event.target !== locationInput) {
-        hideSuggestions();
-      }
-    }
-
-    /**
-     * Handle form submission
-     */
-    function handleSubmit(event) {
-      event.preventDefault();
-      const location = locationInput.value.trim();
-      
-      if (location) {
-        alert(`Location selected: ${location}`);
-        // Here you would typically send this data to your backend
-      } else {
-        alert('Please select a location');
-      }
-    }
-
-    // In a real implementation, replace the mock data with actual API calls:
-    // 
-    // async function fetchLocationSuggestions(query) {
-    //   try {
-    //     const response = await fetch(`${LOCATION_API_URL}?query=${encodeURIComponent(query)}`);
-    //     if (!response.ok) throw new Error('Network response was not ok');
-    //     const data = await response.json();
-    //     displaySuggestions(data.suggestions);
-    //   } catch (error) {
-    //     console.error('Error fetching location suggestions:', error);
-    //     suggestionsContainer.innerHTML = `
-    //       <div class='no-suggestions'>Unable to fetch suggestions. Please try again.</div>
-    //     `;
-    //     suggestionsContainer.style.display = 'block';
-    //   } finally {
-    //     loadingIndicator.style.display = 'none';
-    //   }
-    // }
-  </script>
                 
               </div>
             </div>
