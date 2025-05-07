@@ -62,9 +62,6 @@ export class JobDescriptionService {
       'Content-Type': 'application/json'
     });
 
-    // Store job details in localStorage before sending to server
-    this.storeJobDetails(jobPost);
-
     return this.http.post(this.jobPostUrl, jobPost, { headers });
   }
 
@@ -75,37 +72,5 @@ export class JobDescriptionService {
   getStoredMCQs(): { [skill: string]: string } | null {
     const mcqs = localStorage.getItem('job_mcqs');
     return mcqs ? JSON.parse(mcqs) : null;
-  }
-
-  storeJobDetails(jobPost: JobPost): void {
-    localStorage.setItem('job_details', JSON.stringify(jobPost));
-    console.log('Service: Job details stored in localStorage', jobPost);
-    
-    // Dispatch a storage event to notify other parts of the application
-    const storageEvent = new StorageEvent('storage', {
-      key: 'job_details',
-      newValue: JSON.stringify(jobPost),
-      storageArea: localStorage
-    });
-    window.dispatchEvent(storageEvent);
-  }
-
-  getStoredJobDetails(): JobPost | null {
-    const jobDetails = localStorage.getItem('job_details');
-    if (jobDetails) {
-      try {
-        const parsedDetails = JSON.parse(jobDetails);
-        console.log('Service: Retrieved job details from localStorage', parsedDetails);
-        return parsedDetails;
-      } catch (error) {
-        console.error('Service: Error parsing job details from localStorage', error);
-        return null;
-      }
-    }
-    return null;
-  }
-
-  clearStoredJobDetails(): void {
-    localStorage.removeItem('job_details');
   }
 }

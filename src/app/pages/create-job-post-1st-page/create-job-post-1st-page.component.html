@@ -260,14 +260,17 @@
           class="create-job-post1st-page-upload-file-container"
         >
           <input
-            type="text"
+            type="file"
             placeholder="Select file"
             id="upload-file-input"
             class="create-job-post1st-page-upload-file-input input"
+            (change)="onFileSelected($event)"
+            accept=".pdf,.docx,.doc"
           />
           <div
             id="upload-file-button-container"
             class="create-job-post1st-page-upload-file-button-container"
+            (click)="uploadFile()"
           >
             <svg
               width="48"
