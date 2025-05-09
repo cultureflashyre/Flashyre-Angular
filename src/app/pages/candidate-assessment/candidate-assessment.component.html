@@ -55,7 +55,7 @@
                   id="navbar-jobs-for-you-link"
                   target="_blank"
                   rel="noreferrer noopener"
-                  [routerLink]="['/candidate-dashboard-main']"
+                  [routerLink]="['/candidate-home']"
                   class="candidate-assessment-jobs-for-you-link thq-body-small button"
                 >
                   Jobs for you
@@ -158,6 +158,7 @@
                     <span
                       id="navbar-logout-button"
                       class="candidate-assessment-logout2"
+                      (click)="onLogoutClick()"
                     >
                       Logout
                     </span>
@@ -423,6 +424,7 @@
                     <div
                       id="jobs-for-you-container"
                       class="candidate-assessment-jobs-for-container"
+                      [routerLink]="['/candidate-home']"
                     >
                       <svg
                         id="briefcase-icon"
@@ -517,6 +519,7 @@
                       <div
                         id="logout-container"
                         class="candidate-assessment-logout-container button"
+                        (click)="onLogoutClick()"
                       >
                         <svg
                           id="logout-icon"

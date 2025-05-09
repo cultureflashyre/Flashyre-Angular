@@ -1,4 +1,5 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { AuthService } from '../../services/candidate.service'; // Import AuthService
 
 @Component({
   selector: 'navbar-for-candidate-view',
@@ -6,6 +7,10 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['navbar-for-candidate-view.component.css'],
 })
 export class NavbarForCandidateView {
+
+  userProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  
   @Input()
   rootClassName: string = ''
   @ContentChild('text11')
@@ -67,5 +72,13 @@ export class NavbarForCandidateView {
   text6: TemplateRef<any>
   @Input()
   link2Url: string = ''
-  constructor() {}
+  
+  constructor(
+    private authService: AuthService,
+  ) {}
+
+  onLogoutClick() {
+    this.authService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
+  }
 }
