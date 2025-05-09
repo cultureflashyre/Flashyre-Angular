@@ -156,6 +156,7 @@
                     <span
                       id="navbar-logout-button"
                       class="candidate-assessment-logout2"
+                      (click)="onLogoutClick()"
                     >
                       Logout
                     </span>
@@ -422,6 +423,7 @@
                     <div
                       id="jobs-for-you-container"
                       class="candidate-assessment-jobs-for-container"
+                      [routerLink]="['/candidate-home']"
                     >
                       <svg
                         id="briefcase-icon"
@@ -516,6 +518,7 @@
                       <div
                         id="logout-container"
                         class="candidate-assessment-logout-container button"
+                        (click)="onLogoutClick()"
                       >
                         <svg
                           id="logout-icon"

@@ -102,17 +102,18 @@ export class SignupCandidate1 implements OnInit {
           
           // Store JWT token in local storage or session storage
           localStorage.setItem('jwtToken', response.access); // Store the access token
+          localStorage.setItem('refreshToken', response.refresh);
 
           // Fetch user profile after successful login
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
               this.errorMessage = '';
-              this.router.navigate(['/profile-basic-information']);
+              this.router.navigate(['/profile-overview-page']);
             },
             (profileError) => {
               console.error('Error fetching profile', profileError);
               // Navigate anyway, but with a warning
-              this.router.navigate(['/profile-basic-information']);
+              this.router.navigate(['/profile-overview-page']);
             }
           );
           // Hide overlay before navigation

@@ -80,7 +80,8 @@ const routes = [
     loadChildren: () =>
       import(
         './pages/candidate-job-detail-view/candidate-job-detail-view.module'
-      ).then((m) => m.CandidateJobDetailViewModule),
+      ).then((m) => m.CandidateJobDetailViewModule
+    ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'login-candidate',
@@ -101,7 +102,7 @@ const routes = [
     loadChildren: () =>
       import('./pages/candidate-home/candidate-home.module').then(
         (m) => m.CandidateHomeModule
-      ),
+      ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'profile-certification-page',
@@ -136,7 +137,8 @@ const routes = [
     loadChildren: () =>
       import(
         './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module'
-      ).then((m) => m.FlashyreAssessmentRulesCardModule),
+      ).then((m) => m.FlashyreAssessmentRulesCardModule
+    ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'flashyre-assessments',
@@ -150,7 +152,7 @@ const routes = [
     loadChildren: () =>
       import('./pages/candidate-dashboard/candidate-dashboard.module').then(
         (m) => m.CandidateDashboardModule
-      ),
+      ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'error-system-requirement-failed',
@@ -172,6 +174,7 @@ const routes = [
       import('./pages/flashyre-assessment11/flashyre-assessment11.module').then(
         (m) => m.FlashyreAssessment11Module
       ),
+      canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'profile-last-page1', // New route
@@ -186,6 +189,7 @@ const routes = [
       import('./pages/candidate-assessment/candidate-assessment.module').then(
         (m) => m.CandidateAssessmentModule
       ),
+      canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'candidate-dashboard-main', // New route
@@ -193,6 +197,7 @@ const routes = [
       import('./pages/candidate-dashboard-main/candidate-dashboard-main.module').then(
         (m) => m.CandidateDashboardMainModule
       ),
+      canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'assessment-taken-page', // New route

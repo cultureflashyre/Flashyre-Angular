@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/candidate.service'; // Import AuthService
+
 
 @Component({
   selector: 'candidate-assessment',
@@ -24,7 +26,9 @@ export class CandidateAssessment {
     private meta: Meta,
     private router: Router,
     private http: HttpClient,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService,
+    
   ) {
     this.title.setTitle('Candidate-Assessment - Flashyre');
     this.meta.addTags([
@@ -85,12 +89,17 @@ export class CandidateAssessment {
 
   // Navigate to assessment page (dynamic based on assessment ID)
   startAssessment(assessmentId: number): void {
-    this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: assessmentId } });
+    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessmentId } });
   }
 
   ngOnInit(): void {
     this.loadUserProfile();
     this.loadAssessments(); // Fetch assessments on component initialization
+  }
+
+  onLogoutClick() {
+    this.authService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
 
   // Kept for compatibility with static SAP Survey button (optional)

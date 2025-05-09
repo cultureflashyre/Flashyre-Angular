@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: true,\n  apiUrl: 'https://backend-dot-flashyre-dev-458109.el.r.appspot.com/'\n};","map":null,"metadata":{},"sourceType":"module"}
