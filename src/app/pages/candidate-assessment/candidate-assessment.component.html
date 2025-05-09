@@ -27,7 +27,7 @@
                 <a
                   
                   id="navbar-dashboard-link"
-                  [routerLink]="['/candidate-dashboard-main']"
+                  [routerLink]="['/assessment-taken-page']"
                   class="candidate-assessment-dashboard-link thq-body-small button"
                 >
                   Dashboard
@@ -43,7 +43,6 @@
                 <a
                   
                   id="navbar-assessment-link"
-                  target="_blank"
                   rel="noreferrer noopener"
                   [routerLink]="['/candidate-assessment']"
                   class="candidate-assessment-assessment-link thq-body-small button"
@@ -53,9 +52,8 @@
                 <a
                   
                   id="navbar-jobs-for-you-link"
-                  target="_blank"
                   rel="noreferrer noopener"
-                  [routerLink]="['/candidate-dashboard-main']"
+                  [routerLink]="['/candidate-home']"
                   class="candidate-assessment-jobs-for-you-link thq-body-small button"
                 >
                   Jobs for you
@@ -344,6 +342,7 @@
                     <div
                       id="dashboard-container"
                       class="candidate-assessment-dashboard-container"
+                      [routerLink]="['/assessment-taken-page']"
                     >
                       <svg
                         id="dashboard-icon"
@@ -360,7 +359,7 @@
                       <span
                         id="dashboard-button"
                         class="candidate-assessment-dashboard-text"
-                        [routerLink]="['/candidate-dashboard-main']"
+                        
                       >
                         Dashboard
                       </span>

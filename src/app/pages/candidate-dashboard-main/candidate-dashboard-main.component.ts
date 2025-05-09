@@ -1,8 +1,9 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { HttpClient } from '@angular/common/http';
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'candidate-dashboard-main',
   templateUrl: 'candidate-dashboard-main.component.html',
@@ -10,8 +11,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CandidateDashboardMain {
   private baseUrl = environment.apiUrl;
-
-  assessmentScore: string = 'N/A'; // Initialize score as 'N/A'
+  assessments: any[] = [];
 
   constructor(
     private title: Title, 
@@ -34,29 +34,26 @@ export class CandidateDashboardMain {
   }
 
   ngOnInit(): void {
-    this.fetchAssessmentScore();
+    this.fetchAllAssessmentScores();
   }
 
-  fetchAssessmentScore(): void {
-    const assessmentId = 4;
-    const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
-
-    // Show spinner before making the HTTP request
+  fetchAllAssessmentScores(): void {
+    const url = `${this.baseUrl}assessment/get-all-assessment-scores/`;
     this.spinner.show();
-
     this.http.get(url, {withCredentials: true}).subscribe({
       next: (response: any) => {
-        if (response.score !== null) {
-          this.assessmentScore = `${response.score}`;
-        } else {
-          this.assessmentScore = 'Not Available';
-        }
-        this.spinner.hide(); // Hide spinner after successful response
+        this.assessments = response.map((item: any) => ({
+          assessment_id: item.assessment_id,
+          assessment_name: item.assessment_name,
+          score: item.score !== null ? `${item.score}` : 'Not Available',
+          end_time: item.end_time
+        }));
+        this.spinner.hide();
       },
       error: (error) => {
-        console.error('Error fetching assessment score:', error);
-        this.assessmentScore = 'Failed to Load';
-        this.spinner.hide(); // Hide spinner after error
+        console.error('Error fetching assessment scores:', error);
+        this.assessments = [];
+        this.spinner.hide();
       },
     });
   }
