@@ -1,4 +1,5 @@
 <div class="candidate-dashboard-main-container1">
+
     <div
       id="candidate-dashboard-1-main-container"
       class="candidate-dashboard-main-candidate-dashboard1-main-container"
@@ -169,388 +170,71 @@
                 </span>
                 <span id="role-text" class="candidate-dashboard-main-role-text">
                   Senior Frontend Developer
+
+                </span>
+                <span class="candidate-dashboard-main-assessment-date-text">
+                  {{ assessment.end_time | date:'dd/MM/yy' }}
                 </span>
               </div>
-            </div>
-            <div class="candidate-dashboard-main-container2">
-              <svg
-                id="company-icon"
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                class="candidate-dashboard-main-company-icon"
-              >
-                <path
-                  d="m23 2l1.593 3L28 5.414l-2.5 2.253L26 11l-3-1.875L20 11l.5-3.333L18 5.414L21.5 5z"
-                  fill="currentColor"
-                ></path>
-                <path
-                  d="m22.717 13.249l-1.938-.498a6.994 6.994 0 1 1-5.028-8.531l.499-1.937A8.99 8.99 0 0 0 8 17.69V30l6-4l6 4V17.708a8.96 8.96 0 0 0 2.717-4.459M18 26.263l-4-2.667l-4 2.667V19.05a8.92 8.92 0 0 0 8 .006Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-              <div class="candidate-dashboard-main-container3">
-                <span class="candidate-dashboard-main-text28">Company</span>
-                <span class="candidate-dashboard-main-text29">
-                  TechInnovate Solutions
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            id="contact-information-main-container"
-            class="candidate-dashboard-main-contact-information-main-container"
-          >
-            <span
-              id="contact-information-text"
-              class="candidate-dashboard-main-contact-information-text"
-            >
-              Contact Information
-            </span>
-            <div
-              id="email-mobile-number-container"
-              class="candidate-dashboard-main-email-mobile-number-container"
-            >
-              <span id="email-text" class="candidate-dashboard-main-email-text">
-                <span>alex.martinez@example.com</span>
-                <br />
-              </span>
-              <span
-                id="mobile-number-text"
-                class="candidate-dashboard-main-mobile-number-text"
-              >
-                +1 (555) 123-4567
+              <span class="candidate-dashboard-main-assessment-concept-text">
+                {{ assessment.assessment_name }}
               </span>
             </div>
-          </div>
-        </div> -->
-        <div
-          id="recent-assessments-main-container"
-          class="candidate-dashboard-main-recent-assessments-main-container"
-        >
-          <div
-            id="recent-assessments-container"
-            class="candidate-dashboard-main-recent-assessments-container"
-          >
-            <span class="candidate-dashboard-main-recent-assessment-text">
-              <span>Recent Assessments</span>
-              <br />
-              <br />
-            </span>
-          </div>
-          <div
-            id="assessments-name-scores-main-container"
-            class="candidate-dashboard-main-assessments-name-scores-main-container"
-          >
-            <div
-              id="assessmanet-1-container"
-              class="candidate-dashboard-main-assessmanet1-container"
-            >
-              <div
-                id="assessment-1-details-container"
-                class="candidate-dashboard-main-assessment1-details-container"
-              >
-                <div
-                  id="assessment-id-date-container"
-                  class="candidate-dashboard-main-assessment-id-date-container"
-                >
-                  <span
-                    id="assessment-id-text"
-                    class="candidate-dashboard-main-assessment-id-text"
-                  >
-                    <span class="candidate-dashboard-main-text35">
-                      ASM-2025-1042
-                    </span>
-                    <br />
-                  </span>
-                  <span
-                    id="assessment-date-text"
-                    class="candidate-dashboard-main-assessment-date-text"
-                  >
-                    <span class="candidate-dashboard-main-text37">
-                      Mar 2025
-                    </span>
-                    <br />
-                  </span>
-                </div>
-                <span
-                  id="assessment-concept-text"
-                  class="candidate-dashboard-main-assessment-concept-text"
-                >
-                  SAP Generic Survey
-                </span>
-              </div>
-              <div
-                id="score-container"
-                class="candidate-dashboard-main-score-container"
-              >
-                <span class="candidate-dashboard-main-score-text">Score</span>
-                <span
-                  id="earned-score-text"
-                  class="candidate-dashboard-main-earned-score-text"
-                >
-                {{ assessmentScore }}
-                </span>
-              </div>
-              <div
-                id="assessment-score-container"
-                class="candidate-dashboard-main-assessment-score-container"
-              >
-                <div class="candidate-dashboard-main-container4">
-                  <div class="candidate-dashboard-main-container5">
-                    
-
-    <div class='progress-container'>
-      <svg viewBox='0 0.5 10 8'>
-        <path d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' stroke='#E8F6FD' />
-        <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
-      </svg>
-      <div class='progress-content'>
-        <div class='progress-label'>{{ assessmentScore }}%</div>
-      </div>
-    </div>
-  
-    <script>
-      $(document).ready(function () {
-        const $loader = $('.loader');
-        const $label = $('.progress-label');
-        const percentage = assessmentScore;
-  
-        const getFillColor = (value) => {
-          if (value <= 40) return 'red';
-          if (value <= 60) return 'orange';
-          if (value <= 75) return '#4D91C6';
-          if (value <= 84) return 'lightgreen';
-          return 'darkgreen';
-        };
-  
-        $({ p: 0 }).animate({ p: percentage }, {
-          duration: 3000,
-          easing: 'swing',
-          step: function (p) {
-            const strokeValue = (p / 100) * 19;
-            $loader.css({
-              'stroke-dasharray': `${strokeValue} 19`,
-              'stroke': getFillColor(p)
-            });
-            $label.text(`${Math.round(p)}%`);
-          }
-        });
-      });
-    </script>
-
+            <div class="candidate-dashboard-main-score-container">
+              <span class="candidate-dashboard-main-score-text">Score</span>
+              <span class="candidate-dashboard-main-earned-score-text">
+                {{ assessment.score }}
+              </span>
+            </div>
+            <div class="candidate-dashboard-main-assessment-score-container">
+              <div class="candidate-dashboard-main-container4">
+                <div class="candidate-dashboard-main-container5">
+                  <div class='progress-container'>
+                    <svg viewBox='0 0.5 10 8'>
+                      <path d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' stroke='#E8F6FD' />
+                      <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
+                    </svg>
+                    <div class='progress-content'>
+                      <div class='progress-label'>{{ assessment.score }}%</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- <div
-              id="assessment-2-main-container"
-              class="candidate-dashboard-main-assessment2-main-container"
-            >
-              <div
-                id="assessment-2-detsils-container"
-                class="candidate-dashboard-main-assessment2-detsils-container"
-              >
-                <div
-                  id="assessment-2-id-date-container"
-                  class="candidate-dashboard-main-assessment2-id-date-container"
-                >
-                  <span
-                    id="assessment-2-id-text"
-                    class="candidate-dashboard-main-assessment2-id-text"
-                  >
-                    <span class="candidate-dashboard-main-text39">
-                      ASM-2025-1042
-                    </span>
-                    <br />
-                  </span>
-                  <span
-                    id="assessment-2-date-text"
-                    class="candidate-dashboard-main-assessment2-date-text"
-                  >
-                    <span class="candidate-dashboard-main-text41">
-                      Mar 08, 2025
-                    </span>
-                    <br />
-                  </span>
-                </div>
-                <span
-                  id="assessment-2-concept-text"
-                  class="candidate-dashboard-main-assessment2-concept-text"
-                >
-                  JavaScript Advanced Concepts
-                </span>
-              </div>
-              <div
-                id="assessment-2-score-container"
-                class="candidate-dashboard-main-assessment2-score-container"
-              >
-                <span
-                  id="assessment-2-score-text"
-                  class="candidate-dashboard-main-assessment2-score-text"
-                >
-                  Score
-                </span>
-                <span
-                  id="assessment-2-earned-score-text"
-                  class="candidate-dashboard-main-assessment2-earned-score-text"
-                >
-                  92/100
-                </span>
-              </div>
-              <div
-                id="assessment-2-earned-score-container"
-                class="candidate-dashboard-main-assessment2-earned-score-container"
-              >
-                <div class="candidate-dashboard-main-container6">
-                  <div class="candidate-dashboard-main-container7">
-                    
-    <div class='progress-container'>
-      <svg viewBox='0 0.5 10 8'>
-        <path d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' stroke='#E8F6FD' />
-        <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
-      </svg>
-      <div class='progress-content'>
-        <div class='progress-label'>0%</div>
-      </div>
-    </div>
-  
-    <script>
-      $(document).ready(function () {
-        const $loader = $('.loader');
-        const $label = $('.progress-label');
-        const percentage = 95;
-  
-        const getFillColor = (value) => {
-          if (value <= 40) return 'red';
-          if (value <= 60) return 'orange';
-          if (value <= 75) return '#4D91C6';
-          if (value <= 84) return 'lightgreen';
-          return 'darkgreen';
-        };
-  
-        $({ p: 0 }).animate({ p: percentage }, {
-          duration: 3000,
-          easing: 'swing',
-          step: function (p) {
-            const strokeValue = (p / 100) * 19;
-            $loader.css({
-              'stroke-dasharray': `${strokeValue} 19`,
-              'stroke': getFillColor(p)
-            });
-            $label.text(`${Math.round(p)}%`);
-          }
-        });
-      });
-    </script>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="assessment-3-main-container"
-              class="candidate-dashboard-main-assessment3-main-container"
-            >
-              <div
-                id="assessment-3-details-container"
-                class="candidate-dashboard-main-assessment3-details-container"
-              >
-                <div
-                  id="assessment-3-id-date-container"
-                  class="candidate-dashboard-main-assessment3-id-date-container"
-                >
-                  <span
-                    id="assessment-3-id-text"
-                    class="candidate-dashboard-main-assessment3-id-text"
-                  >
-                    <span class="candidate-dashboard-main-text43">
-                      ASM-2025-1042
-                    </span>
-                    <br />
-                  </span>
-                  <span class="candidate-dashboard-main-assessment3-date-text">
-                    <span class="candidate-dashboard-main-text45">
-                      Mar 08, 2025
-                    </span>
-                    <br />
-                  </span>
-                </div>
-                <span
-                  id="assessment-3-concept-text"
-                  class="candidate-dashboard-main-assessment3-concept-text"
-                >
-                  JavaScript Advanced Concepts
-                </span>
-              </div>
-              <div
-                id="assessment-3-score-container"
-                class="candidate-dashboard-main-assessment3-score-container"
-              >
-                <span
-                  id="assessment-3-score-text"
-                  class="candidate-dashboard-main-assessment3-score-text"
-                >
-                  Score
-                </span>
-                <span
-                  id="assessment-3-earned-score-text"
-                  class="candidate-dashboard-main-assessment3-earned-score-text"
-                >
-                  92/100
-                </span>
-              </div>
-              <div
-                id="assessment-3-earned-score-container"
-                class="candidate-dashboard-main-assessment3-earned-score-container"
-              >
-                <div class="candidate-dashboard-main-container8">
-                  <div class="candidate-dashboard-main-container9">
-                    
-    <div class='progress-container'>
-      <svg viewBox='0 0.5 10 8'>
-        <path d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' stroke='#E8F6FD' />
-        <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
-      </svg>
-      <div class='progress-content'>
-        <div class='progress-label'>0%</div>
-      </div>
-    </div>
-  
-    <script>
-      $(document).ready(function () {
-        const $loader = $('.loader');
-        const $label = $('.progress-label');
-        const percentage = 95;
-  
-        const getFillColor = (value) => {
-          if (value <= 40) return 'red';
-          if (value <= 60) return 'orange';
-          if (value <= 75) return '#4D91C6';
-          if (value <= 84) return 'lightgreen';
-          return 'darkgreen';
-        };
-  
-        $({ p: 0 }).animate({ p: percentage }, {
-          duration: 3000,
-          easing: 'swing',
-          step: function (p) {
-            const strokeValue = (p / 100) * 19;
-            $loader.css({
-              'stroke-dasharray': `${strokeValue} 19`,
-              'stroke': getFillColor(p)
-            });
-            $label.text(`${Math.round(p)}%`);
-          }
-        });
-      });
-    </script>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $('.progress-container').each(function() {
+      const $container = $(this);
+      const $loader = $container.find('.loader');
+      const $label = $container.find('.progress-label');
+      const percentage = parseFloat($label.text().replace('%', '')) || 0;
+
+      const getFillColor = (value) => {
+        if (value <= 40) return 'red';
+        if (value <= 60) return 'orange';
+        if (value <= 75) return '#4D91C6';
+        if (value <= 84) return 'lightgreen';
+        return 'darkgreen';
+      };
+
+      $({ p: 0 }).animate({ p: percentage }, {
+        duration: 3000,
+        easing: 'swing',
+        step: function (p) {
+          const strokeValue = (p / 100) * 19;
+          $loader.css({
+            'stroke-dasharray': `${strokeValue} 19`,
+            'stroke': getFillColor(p)
+          });
+          $label.text(`${Math.round(p)}%`);
+        }
+      });
+    });
+  });
+</script>

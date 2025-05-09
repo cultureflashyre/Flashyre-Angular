@@ -7,7 +7,8 @@
         src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
         class="flashyre-assessment11-logo"
       />
-      <span id="timer" class="flashyre-assessment11-timer">{{ sectionTimer | timerFormat }}</span>      <button
+      <span id="timer" class="flashyre-assessment11-timer">{{ sectionTimer | timerFormat }}</span>      
+      <button
         id="end-test-button"
         type="button"
         (click)="terminateTest()"
@@ -117,45 +118,57 @@
             ></path>
           </svg>
         </div>
-        <div
-          id="previous-next-button-main-container"
-          class="flashyre-assessment11-previous-next-button-main-container1"
-        >
-          <button
-            id="previous-button1"
-            type="button"
-            (click)="previousQuestion()"
-            class="flashyre-assessment11-previous-button1 button"
-          >
-            Previous
-          </button>
-          <button
-            id="next-button"
-            type="button"
-            (click)="nextQuestion()"
-            class="flashyre-assessment11-next-button1 button"
-          >
-            Next
-          </button>
-          <button
-            id="next-section-button"
-            type="button"
-            (click)="nextSection()"
-            [style.opacity]="(currentQuestionIndex === totalQuestionsInSection - 1 && currentSectionIndex < totalSections - 1) ? '1' : '0'"
-            class="flashyre-assessment11-next-section-button1 button"
-          >
-            Next Section
-          </button>
-          <button
-            id="submit-button"
-            type="button"
-            (click)="submitAssessment()"
-            [style.opacity]="(currentQuestionIndex === totalQuestionsInSection - 1 && currentSectionIndex === totalSections - 1) ? '1' : '0'"
-            class="flashyre-assessment11-submit-button1 button"
-          >
-            Submit
-          </button>
-        </div>
+        <!-- Replace your previous-next-button-main-container div with this improved version -->
+<div
+id="previous-next-button-main-container"
+class="flashyre-assessment11-previous-next-button-main-container1"
+>
+<!-- Previous button - always visible -->
+<button
+  id="previous-button1"
+  type="button"
+  (click)="previousQuestion()"
+  class="flashyre-assessment11-previous-button1 button"
+>
+  Previous
+</button>
+
+<!-- Next button - only visible when NOT on last question of section -->
+<ng-container *ngIf="!isLastQuestionInSection">
+  <button
+    id="next-button"
+    type="button"
+    (click)="nextQuestion()"
+    class="flashyre-assessment11-next-button1 button"
+  >
+    Next
+  </button>
+</ng-container>
+
+<!-- Next Section button - only visible on last question of non-last section -->
+<ng-container *ngIf="isLastQuestionInSection && currentSectionIndex < totalSections - 1">
+  <button
+    id="next-section-button"
+    type="button"
+    (click)="nextSection()"
+    class="flashyre-assessment11-next-section-button1 button"
+  >
+    Next Section
+  </button>
+</ng-container>
+
+<!-- Submit button - only visible on last question of last section -->
+<ng-container *ngIf="isLastQuestionInSection && currentSectionIndex === totalSections - 1">
+  <button
+    id="submit-button"
+    type="button"
+    (click)="terminateTest()"
+    class="flashyre-assessment11-submit-button1 button"
+  >
+    Submit
+  </button>
+</ng-container>
+</div>
       </div>
       <div
         id="question-answer-container"
@@ -336,13 +349,13 @@
           Next Section
         </button>
         <button
-          id="submit-button"
-          type="button"
-          (click)="submitAssessment()"
-          class="flashyre-assessment11-submit-button2 button"
-        >
-          Submit
-        </button>
+        id="submit-button"
+        type="button"
+        (click)="terminateTest()"
+        class="flashyre-assessment11-submit-button1 button"
+      >
+        Submit
+      </button>
       </div>
     </div>
   </div>

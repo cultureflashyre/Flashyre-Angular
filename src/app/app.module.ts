@@ -200,6 +200,13 @@ const routes = [
       canActivate: [AuthGuard],  // Protect this route
   },
   {
+    path: 'assessment-taken-page', // New route
+    loadChildren: () =>
+      import('./pages/assessment-taken-page/assessment-taken-page.module').then(
+        (m) => m.AssessmentTakenPageModule
+      ),
+  },
+  {
     path: 'buffer-page', // New route
     loadChildren: () =>
       import('./buffer-page/buffer-page.module').then(

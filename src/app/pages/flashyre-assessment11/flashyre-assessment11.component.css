@@ -1,6 +1,54 @@
 :host { 
   display: contents; 
 }
+
+.flashyre-assessment11-previous-next-button-main-container1 button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Specific styling for the Next Section button */
+.flashyre-assessment11-next-section-button1 {
+  background-color: #4a90e2; /* Use your app's color scheme */
+  color: white;
+  border: none;
+  font-weight: 500;
+}
+
+.flashyre-assessment11-next-section-button1:hover {
+  background-color: #3a7bc8;
+}
+
+/* Specific styling for the Submit button */
+.flashyre-assessment11-submit-button1 {
+  background-color: #27ae60; /* Green color for submit */
+  color: white;
+  border: none;
+  font-weight: 500;
+}
+
+.flashyre-assessment11-submit-button1:hover {
+  background-color: #219653;
+}
+
+/* Remove any opacity-based hiding that might be in your existing CSS */
+.flashyre-assessment11-next-section-button1,
+.flashyre-assessment11-submit-button1 {
+  opacity: 1 !important;
+}
+
+/* If you're using ngIf, make sure any transition doesn't interfere with showing/hiding */
+.flashyre-assessment11-previous-next-button-main-container1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
  
 .flashyre-assessment11-container {
   width: 100%;
