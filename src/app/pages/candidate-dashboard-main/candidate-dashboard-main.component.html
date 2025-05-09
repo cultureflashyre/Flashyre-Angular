@@ -1,112 +1,176 @@
 <div class="candidate-dashboard-main-container1">
-  <div id="candidate-dashboard-1-main-container" class="candidate-dashboard-main-candidate-dashboard1-main-container">
-    <navbar-for-candidate-view rootClassName="navbar-for-candidate-viewroot-class-name5">
-      <ng-template #text11>
-        <div class="candidate-dashboard-main-fragment10">
-          <span class="candidate-dashboard-main-text10">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text12>
-        <div class="candidate-dashboard-main-fragment11">
-          <span class="candidate-dashboard-main-text11">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #link1>
-        <div class="candidate-dashboard-main-fragment12">
-          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text12">Dashboard</a>
-        </div>
-      </ng-template>
-      <ng-template #text8>
-        <div class="candidate-dashboard-main-fragment13">
-          <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text13">Upskill</a>
-        </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="candidate-dashboard-main-fragment14">
-          <span class="candidate-dashboard-main-text14">Profile</span>
-        </div>
-      </ng-template>
-      <ng-template #link2>
-        <div class="candidate-dashboard-main-fragment15">
-          <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text15">Upskill</a>
-        </div>
-      </ng-template>
-      <ng-template #text31>
-        <div class="candidate-dashboard-main-fragment16">
-          <span class="candidate-dashboard-main-text16">Logout</span>
-        </div>
-      </ng-template>
-      <ng-template #link4>
-        <div class="candidate-dashboard-main-fragment17">
-          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text17">Jobs for you</a>
-        </div>
-      </ng-template>
-      <ng-template #text13>
-        <div class="candidate-dashboard-main-fragment18">
-          <span class="candidate-dashboard-main-text18">Logout</span>
-        </div>
-      </ng-template>
-      <ng-template #link3>
-        <div class="candidate-dashboard-main-fragment19">
-          <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text19">Assessment</a>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="candidate-dashboard-main-fragment20">
-          <span class="candidate-dashboard-main-text20">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text5>
-        <div class="candidate-dashboard-main-fragment21">
-          <span class="candidate-dashboard-main-text21">✅ 90% Profile Completion</span>
-        </div>
-      </ng-template>
-      <ng-template #text4>
-        <div class="candidate-dashboard-main-fragment22">
-          <span class="candidate-dashboard-main-text22">Kathryn Murphy</span>
-        </div>
-      </ng-template>
-      <ng-template #text9>
-        <div class="candidate-dashboard-main-fragment23">
-          <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text23">Assessment</a>
-        </div>
-      </ng-template>
-      <ng-template #text10>
-        <div class="candidate-dashboard-main-fragment24">
-          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text24">Jobs for you</a>
-        </div>
-      </ng-template>
-      <ng-template #text7>
-        <div class="candidate-dashboard-main-fragment25">
-          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text25">Dashboard</a>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="candidate-dashboard-main-fragment26">
-          <span class="candidate-dashboard-main-text26">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #text6>
-        <div class="candidate-dashboard-main-fragment27">
-          <span class="candidate-dashboard-main-text27">View & edit profile</span>
-        </div>
-      </ng-template>
-    </navbar-for-candidate-view>
-    <div id="candidate-dashboard-1-first-container" class="candidate-dashboard-main-candidate-dashboard1-first-container">
-      <div id="recent-assessments-main-container" class="candidate-dashboard-main-recent-assessments-main-container">
-        <div id="recent-assessments-container" class="candidate-dashboard-main-recent-assessments-container">
-          <span class="candidate-dashboard-main-recent-assessment-text">
-            <span>Recent Assessments</span>
-            <br />
-            <br />
-          </span>
-        </div>
-        <div id="assessments-name-scores-main-container" class="candidate-dashboard-main-assessments-name-scores-main-container">
-          <div *ngFor="let assessment of assessments" class="candidate-dashboard-main-assessmanet1-container">
-            <div class="candidate-dashboard-main-assessment1-details-container">
-              <div class="candidate-dashboard-main-assessment-id-date-container">
-                <span class="candidate-dashboard-main-assessment-id-text">
-                  {{ assessment.assessment_id }}
+
+    <div
+      id="candidate-dashboard-1-main-container"
+      class="candidate-dashboard-main-candidate-dashboard1-main-container"
+    >
+      <navbar-for-candidate-view
+        rootClassName="navbar-for-candidate-viewroot-class-name5"
+      >
+        <ng-template #text11>
+          <div class="candidate-dashboard-main-fragment10">
+            <span class="candidate-dashboard-main-text10">Preference</span>
+          </div>
+        </ng-template>
+        <ng-template #text12>
+          <div class="candidate-dashboard-main-fragment11">
+            <span class="candidate-dashboard-main-text11">Settings</span>
+          </div>
+        </ng-template>
+        <ng-template #link1>
+          <div class="candidate-dashboard-main-fragment12">
+            <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text12">Dashboard</a>
+          </div>
+        </ng-template>
+        <ng-template #text8>
+          <div class="candidate-dashboard-main-fragment13">
+            <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text13">Upskill</a>
+          </div>
+        </ng-template>
+        <ng-template #text1>
+          <div class="candidate-dashboard-main-fragment14">
+            <span class="candidate-dashboard-main-text14">Profile</span>
+          </div>
+        </ng-template>
+        <ng-template #link2>
+          <div class="candidate-dashboard-main-fragment15">
+            <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text15">Upskill</a>
+          </div>
+        </ng-template>
+        <ng-template #text31>
+          <div class="candidate-dashboard-main-fragment16">
+            <span class="candidate-dashboard-main-text16">Logout</span>
+          </div>
+        </ng-template>
+        <ng-template #link4>
+          <div class="candidate-dashboard-main-fragment17">
+            <a [routerLink]="['/candidate-home']" class="candidate-dashboard-main-text17">Jobs for you</a>
+          </div>
+        </ng-template>
+        <ng-template #text13>
+          <div class="candidate-dashboard-main-fragment18">
+            <span class="candidate-dashboard-main-text18">Logout</span>
+          </div>
+        </ng-template>
+        <ng-template #link3>
+          <div class="candidate-dashboard-main-fragment19">
+            <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text19">Assessment</a>
+          </div>
+        </ng-template>
+        <ng-template #text2>
+          <div class="candidate-dashboard-main-fragment20">
+            <span class="candidate-dashboard-main-text20">Preference</span>
+          </div>
+        </ng-template>
+        <ng-template #text5>
+          <div class="candidate-dashboard-main-fragment21">
+            <span class="candidate-dashboard-main-text21">
+              ✅ 90% Profile Completion
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #text4>
+          <div class="candidate-dashboard-main-fragment22">
+            <span class="candidate-dashboard-main-text22">Kathryn Murphy</span>
+          </div>
+        </ng-template>
+        <ng-template #text9>
+          <div class="candidate-dashboard-main-fragment23">
+            <a [routerLink]="['/candidate-assessment']" class="candidate-dashboard-main-text23">Assessment</a>
+          </div>
+        </ng-template>
+        <ng-template #text10>
+          <div class="candidate-dashboard-main-fragment24">
+            <a [routerLink]="['/candidate-home']" class="candidate-dashboard-main-text24">Jobs for you</a>
+          </div>
+        </ng-template>
+        <ng-template #text7>
+          <div class="candidate-dashboard-main-fragment25">
+            <a [routerLink]="['/candidate-dashboard-main']" class="candidate-dashboard-main-text25">Dashboard</a>
+          </div>
+        </ng-template>
+        <ng-template #text3>
+          <div class="candidate-dashboard-main-fragment26">
+            <span class="candidate-dashboard-main-text26">Settings</span>
+          </div>
+        </ng-template>
+        <ng-template #text6>
+          <div class="candidate-dashboard-main-fragment27">
+            <span class="candidate-dashboard-main-text27">
+              View &amp; edit profile
+            </span>
+          </div>
+        </ng-template>
+      </navbar-for-candidate-view>
+      <div
+        id="candidate-dashboard-1-first-container"
+        class="candidate-dashboard-main-candidate-dashboard1-first-container"
+      >
+        <!--<div
+          id="candidate-dashboard-profile-mainn-container"
+          class="candidate-dashboard-main-candidate-dashboard-profile-main-container"
+        >
+          <div
+            id="candidate-dashboard-profile-container"
+            class="candidate-dashboard-main-candidate-dashboard-profile-container"
+          >
+            <div
+              id="candidate-profile-picture-container"
+              class="candidate-dashboard-main-candidate-profile-picture-container"
+            >
+              <img
+                src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1742774400&amp;Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&amp;Signature=pM6JGlKBOkDiuX62xeg92rxGeRllSEdrizWYd0SWi32FvMQ8~Yv-47MqssNSxckURyOs9SirgW0hhDvJoCtASMyqVLzhWVN6tJuSWZakL6I2s4g5vNk86bmXmFGgF2D6mkQxzc~xhspkrmuLzibALPipXm0kThBxD6emxruETsG~MJdfMpjlx0h2KtNQ2XsxIdB-3URWk4GTSPvwwvirPOMQlKRePQsuGNofGIAkbQYSafQWJoagbi~HffMJAYNC51Xfaz9PwAEGu06dI3lCbjGzUFSnZdyp2kZ10fzI~h~BZJZGYGNmTg~iz8SdBRaYR6X5cZy36D61Vqej~6~Gmw__"
+                alt="image"
+                id="candidate-image"
+                class="candidate-dashboard-main-candidate-image"
+              />
+              <span
+                id="candidate-name-text"
+                class="candidate-dashboard-main-candidate-name-text"
+              >
+                Kathryn Murphy
+              </span>
+            </div>
+          </div>
+          <div
+            id="designation-company-main-container"
+            class="candidate-dashboard-main-designation-company-main-container"
+          >
+            <div
+              id="designation-main-container"
+              class="candidate-dashboard-main-designation-main-container"
+            >
+              <svg
+                id="designation-briefcase-icon"
+                width="30px"
+                height="30px"
+                viewBox="0 0 24 24"
+                class="candidate-dashboard-main-designation-briefcase-icon"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="7" rx="2" ry="2" width="20" height="14"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </g>
+              </svg>
+              <div
+                id="designation-role-container"
+                class="candidate-dashboard-main-designation-role-container"
+              >
+                <span
+                  id="designation-text"
+                  class="candidate-dashboard-main-designation-text"
+                >
+                  Designation
+                </span>
+                <span id="role-text" class="candidate-dashboard-main-role-text">
+                  Senior Frontend Developer
+
                 </span>
                 <span class="candidate-dashboard-main-assessment-date-text">
                   {{ assessment.end_time | date:'dd/MM/yy' }}

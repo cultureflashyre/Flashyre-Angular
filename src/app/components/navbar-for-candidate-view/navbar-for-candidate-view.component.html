@@ -81,6 +81,7 @@
             id="navbar-jobs-for-you-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
+            [routerLink]="['/candidate-home']"
           >
             <ng-container>
               <ng-template #defaultLink4>
@@ -107,6 +108,7 @@
         >
           <img
             id="user-image"
+            [src]="defaultProfilePicture"
             [attr.alt]="imageAlt3"
             [attr.src]="imageSrc3"
             class="navbar-for-candidate-view-user-image1"
@@ -225,6 +227,7 @@
               <span
                 id="navbar-logout-button"
                 class="navbar-for-candidate-view-logout2"
+                (click)="onLogoutClick()"
               >
                 <ng-container>
                   <ng-template #defaultText31>
@@ -292,6 +295,7 @@
               >
                 <img
                   id="candidate-profile-picture"
+                  [src]="defaultProfilePicture"
                   [attr.alt]="imageAlt4"
                   [attr.src]="imageSrc4"
                   class="navbar-for-candidate-view-user-image2"
@@ -553,6 +557,7 @@
               <div
                 id="jobs-for-you-container"
                 class="navbar-for-candidate-view-jobs-for-container"
+                [routerLink]="['/candidate-home']"
               >
                 <svg
                   id="briefcase-icon"
@@ -671,6 +676,7 @@
                 <div
                   id="logout-container"
                   class="navbar-for-candidate-view-logout-container button"
+                  (click)="onLogoutClick()"
                 >
                   <svg
                     id="logout-icon"

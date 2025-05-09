@@ -1,6 +1,6 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
 
@@ -9,10 +9,17 @@ import { ProctoringService } from '../../services/proctoring.service';
   templateUrl: 'flashyre-assessment-rules-card.component.html',
   styleUrls: ['flashyre-assessment-rules-card.component.css'],
 })
-export class FlashyreAssessmentRulesCard {
-  constructor(private title: Title, private meta: Meta, private router: Router,
+export class FlashyreAssessmentRulesCard implements OnInit {
+  assessmentId: number | null = null;
+
+  constructor(
+    private title: Title, 
+    private meta: Meta, 
+    private router: Router,
+    private route: ActivatedRoute,
     private videoRecorder: VideoRecorderService,
-    private proctoringService: ProctoringService) {
+    private proctoringService: ProctoringService
+  ) {
     this.title.setTitle('Flashyre-Assessment-Rules-Card - Flashyre')
     this.meta.addTags([
       {
@@ -27,7 +34,21 @@ export class FlashyreAssessmentRulesCard {
     ])
   }
 
-  async startAssessment() {
-    this.router.navigate(['/flashyre-assessment1']);
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.assessmentId = +id;
+      }
+    });
   }
+
+  async startAssessment() {
+    if (this.assessmentId) {
+      this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: this.assessmentId } });
+    } else {
+      alert('Assessment ID is missing!');
+    }
+  }
+
 }
