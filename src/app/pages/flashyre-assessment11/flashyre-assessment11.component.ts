@@ -11,6 +11,7 @@ import { SharedPipesModule } from '../../shared/shared-pipes.module';
 interface SelectedAnswer {
   answer: string;
   section_id: number;
+  answerValue?: any; // Add this optional property
 }
 
 @Component({
@@ -190,27 +191,18 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     this.currentSectionIndex = this.sections.indexOf(section);
     this.currentQuestions = section.questions;
     this.currentQuestionIndex = 0;
-    this.updateCurrentQuestion();
+    this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
     this.totalQuestionsInSection = this.currentQuestions.length;
     this.sectionTimer = section.duration * 60;
     clearInterval(this.sectionTimerInterval);
     this.startSectionTimer();
-    if (section >= 0 && section < this.sections.length) {
-      this.currentSection = this.sections[section];
-      this.currentQuestions = this.currentSection.questions;
-      this.currentQuestionIndex = 0;
-      this.updateCurrentQuestion();
-      this.totalQuestionsInSection = this.currentQuestions.length;
-      clearInterval(this.sectionTimerInterval);
-      this.startSectionTimer();
-    }
   }
 
   updateCurrentQuestion(): void {
     if (this.currentQuestions && this.currentQuestions.length > 0) {
       this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
       this.updateCurrentOptions();
-      this.checkIfLastQuestionInSection();
+      this.checkIfLastQuestionInSection(); // Add this line
     } else {
       this.currentQuestion = { question: 'No questions available' };
       this.currentOptions = [];
@@ -231,7 +223,14 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   }
 
   checkIfLastQuestionInSection(): void {
-    this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
+    if (this.currentQuestions && this.currentQuestionIndex !== undefined) {
+      this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
+      console.log('Is last question in section:', this.isLastQuestionInSection);
+      console.log('Current index:', this.currentQuestionIndex);
+      console.log('Total questions:', this.currentQuestions.length);
+    } else {
+      this.isLastQuestionInSection = false;
+    }
   }
 
   getOptions(question: any): any[] {
@@ -267,7 +266,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
       this.markQuestionAsVisited(index);
-      this.updateCurrentQuestion();
+      this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
     }
   }
   
@@ -285,10 +284,35 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   }
 
   onOptionSelected(questionId: number, sectionId: number, answer: string): void {
-    this.selectedAnswers[questionId] = {
-      answer: answer,
-      section_id: sectionId,
-    };
+    console.log("Question ID:", questionId);
+    console.log("Section ID:", sectionId);
+    console.log("Selected answer (key):", answer);
+    
+    // Find the full option object to get its value
+    const currentQuestion = this.currentQuestions.find(q => q.question_id === questionId);
+    if (currentQuestion) {
+    // The answer is in the format "option1", "option2", etc.
+    // Get the actual text value from the question options
+    const optionText = currentQuestion.options[answer];
+    
+    console.log("Selected option in object format:", answer);
+    console.log("Option text value:", optionText);
+      
+  // Store both key and text value
+  this.selectedAnswers[questionId] = {
+    answer: answer,
+    answerValue: optionText, // Store the text value
+    section_id: sectionId,
+  };
+  } else {
+  console.log("Question not found!");
+  this.selectedAnswers[questionId] = {
+    answer: answer,
+    section_id: sectionId,
+  };
+  }
+    
+    console.log("Updated selectedAnswers object:", this.selectedAnswers);
     this.markQuestionAsAnswered(this.currentQuestionIndex);
   }
 
@@ -357,16 +381,16 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
-      this.updateCurrentQuestion();
+      this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
     }
   }
 
   nextQuestion(): void {
-    if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
-      this.currentQuestionIndex++;
-      this.updateCurrentQuestion();
-    }
+  if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
+    this.currentQuestionIndex++;
+    this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
   }
+}
   
   nextSection(): void {
     if (this.currentSectionIndex < this.totalSections - 1) {
