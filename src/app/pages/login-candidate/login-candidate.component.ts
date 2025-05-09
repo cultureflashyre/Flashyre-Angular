@@ -43,6 +43,7 @@ export class LoginCandidate {
         if (response.access) { // Check for token in response
           console.log("Response Access Token: ", response.access);
           localStorage.setItem('jwtToken', response.access); // Store the access token
+          localStorage.setItem('refreshToken', response.refresh);
           
           // Fetch user profile after successful login
           this.userProfileService.fetchUserProfile().subscribe(
