@@ -192,14 +192,6 @@ const routes = [
       canActivate: [AuthGuard],  // Protect this route
   },
   {
-    path: 'candidate-dashboard-main', // New route
-    loadChildren: () =>
-      import('./pages/candidate-dashboard-main/candidate-dashboard-main.module').then(
-        (m) => m.CandidateDashboardMainModule
-      ),
-      canActivate: [AuthGuard],  // Protect this route
-  },
-  {
     path: 'assessment-taken-page', // New route
     loadChildren: () =>
       import('./pages/assessment-taken-page/assessment-taken-page.module').then(

@@ -344,7 +344,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
       this.trialassessmentService.submitAssessment(responses).subscribe({
         next: (response) => {
           console.log('Assessment submitted successfully:', response);
-          this.router.navigate(['/candidate-dashboard-main']);
+          this.router.navigate(['/assessment-taken-page']);
         },
         error: (error) => {
           console.error('Assessment submission failed:', error);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser'
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
+import { AuthService } from '../../services/candidate.service'; // Import AuthService
 
 @Component({
   selector: 'assessment-taken-page',
@@ -13,7 +14,8 @@ export class AssessmentTakenPage implements OnInit {
   constructor(
     private title: Title,
     private meta: Meta,
-    private assessmentTakenService: AssessmentTakenService
+    private assessmentTakenService: AssessmentTakenService,
+    private authService: AuthService,
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
@@ -46,5 +48,10 @@ export class AssessmentTakenPage implements OnInit {
     if (score <= 75) return '#4D91C6';
     if (score <= 84) return 'lightgreen';
     return 'darkgreen';
+  }
+
+  onLogoutClick() {
+    this.authService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
 }
