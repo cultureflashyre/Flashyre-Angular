@@ -12,6 +12,8 @@ import { BufferService } from './services/buffer.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { LoginForgotPasswordModule } from './pages/login-forgot-password/login-forgot-password.module';
+import { LoginResetPasswordModule } from './pages/login-reset-password/login-reset-password.module';
 
 const routes = [
   {
@@ -201,6 +203,18 @@ const routes = [
       ).then((m) => m.ProfileOverviewPageModule),
   },
   {
+    path: 'login-forgot-password',
+loadChildren: () =>
+      import( './pages/login-forgot-password/login-forgot-password.module'
+      ).then((m) => m.LoginForgotPasswordModule), 
+ },
+  {
+    path: 'login-reset-password',
+loadChildren: () =>
+      import( './pages/login-reset-password/login-reset-password.module'
+      ).then((m) => m.LoginResetPasswordModule),  
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
@@ -211,7 +225,7 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, LoginForgotPasswordModule,LoginResetPasswordModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
   ],

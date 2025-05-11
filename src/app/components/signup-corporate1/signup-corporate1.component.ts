@@ -27,9 +27,11 @@ export class SignupCorporate1 {
 
   signupForm: FormGroup;
   errorMessage: string = '';
-  successMessage: string = '';
+  showSuccessPopup: boolean = false;
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
+  passwordButtonText: string = 'Show';
+  confirmPasswordButtonText: string = 'Show';
 
   constructor(
     private fb: FormBuilder,
@@ -59,32 +61,36 @@ export class SignupCorporate1 {
       delete formData.confirm_password;
       this.corporateAuthService.signupCorporate(formData).subscribe({
         next: (response) => {
-          this.successMessage = 'Signup successful! Redirecting to login...';
+          this.showSuccessPopup = true;
           this.errorMessage = '';
-          setTimeout(() => {
-            this.router.navigate(['/login-corporate']);
-          }, 2000);
         },
         error: (error) => {
           this.errorMessage = error.error?.error || 'An error occurred during signup.';
-          this.successMessage = '';
         }
       });
     } else {
       this.errorMessage = 'Please fill in all required fields correctly.';
-      this.successMessage = '';
+      // Mark all fields as touched to show error messages
+      this.signupForm.markAllAsTouched();
     }
   }
 
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordButtonText = this.passwordType === 'password' ? 'Show' : 'Hide';
   }
 
   toggleConfirmPasswordVisibility() {
     this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
+    this.confirmPasswordButtonText = this.confirmPasswordType === 'password' ? 'Show' : 'Hide';
   }
 
   navigateToLogin() {
+    this.router.navigate(['/login-corporate']);
+  }
+
+  closePopup() {
+    this.showSuccessPopup = false;
     this.router.navigate(['/login-corporate']);
   }
 }
