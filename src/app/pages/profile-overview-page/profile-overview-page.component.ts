@@ -160,6 +160,17 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
             console.log('Saving certifications information...');
             success = await this.certificationComponent.saveCertifications();
             console.log('Certifications save result:', success);
+
+            if (success) {
+              this.showSuccessPopup();
+            } else {
+              this.showErrorPopup();
+            }
+
+            // Redirect to 'candidate-home' after 5 seconds regardless of success or failure
+            setTimeout(() => {
+              this.router.navigate(['candidate-home']);
+            }, 3000);
             break;
           default:
             console.warn('Invalid step encountered:', previousStep);
@@ -207,6 +218,14 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     console.log('onSkip called, currentStep:', this.currentStep);
+
+    // If user has reached or passed the last step, navigate to candidate-home
+    if (this.currentStep >= 6) {
+      console.log('All steps skipped or completed, navigating to candidate-home');
+      setTimeout(() => {
+        this.router.navigate(['candidate-home']);
+      }, 3000);
+    }
   }
 
   isStepVisible(step: number): boolean {

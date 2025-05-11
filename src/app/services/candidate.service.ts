@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CanActivate, Router } from '@angular/router';
 import { tap } from 'rxjs/operators'; // Import tap for side effects
@@ -25,6 +25,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    
     this.router.navigate(['/login-candidate']);
   }
 
@@ -38,6 +41,23 @@ export class AuthService {
 
   getJWTToken(): string | null {
     return localStorage.getItem('jwtToken');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
+  saveTokens(access: string, refresh: string) {
+    localStorage.setItem('jwtToken', access);
+    localStorage.setItem('refreshToken', refresh);
+  }
+
+  refreshToken() {
+    const refresh = this.getRefreshToken();
+    if (!refresh) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+    return this.http.post<any>(`${this.apiUrl}api/token/refresh/`, { refresh });
   }
 
   isLoggedIn(): boolean {
