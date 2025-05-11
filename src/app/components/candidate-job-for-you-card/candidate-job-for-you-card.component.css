@@ -84,6 +84,10 @@
   color: #18191C;
 }
 
+.candidate-job-for-you-card-text10:hover {
+  cursor: default;
+}
+
 .candidate-job-for-you-card-container16 {
   width: auto; /* Changed from 122px */
   display: none; /* Hidden by default, shown on mobile */
@@ -101,6 +105,9 @@
   display: flex;
   align-items: center;
   font-size: 16px; /* Consistent font size */
+}
+.candidate-job-for-you-card-text11:hover {
+  cursor: default;
 }
 
 .candidate-job-for-you-card-container18 {
@@ -120,6 +127,10 @@
   height: 24px;
   display: flex;
   align-items: center; /* Improved alignment */
+}
+
+.candidate-job-for-you-card-container19:hover {
+  cursor: default;
 }
 
 .candidate-job-for-you-card-icon1 {
@@ -168,6 +179,9 @@
   text-overflow: ellipsis;
   max-width: 250px; /* Limit width for long location + job_type */
 }
+.candidate-job-for-you-card-text13:hover {
+  cursor: default;
+}
 
 .candidate-job-for-you-card-text14 {
   width: 100%; /* Changed from 528px */
@@ -180,6 +194,9 @@
   max-height: 40px; /* Limit to 2 lines */
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.candidate-job-for-you-card-text14:hover {
+  cursor: default;
 }
 
 .candidate-job-for-you-card-container21 {
@@ -203,6 +220,19 @@
   cursor: pointer;
 }
 
+.candidate-job-for-you-card-button1:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.candidate-job-for-you-card-button1:active {
+  transform: scale(0.90);
+  border-width: 0px;
+  background-color: 022954;
+}
+
 .candidate-job-for-you-card-button2 {
   width: 169px;
   height: 40px;
@@ -212,6 +242,19 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.candidate-job-for-you-card-button2:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.candidate-job-for-you-card-button2:active {
+  transform: scale(0.90);
+  border-width: 0px;
+  background-color: 022954;
 }
 
 .candidate-job-for-you-card-progress-bar-for-mobile {
