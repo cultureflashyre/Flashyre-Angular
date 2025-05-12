@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser'
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 import { AuthService } from '../../services/candidate.service'; // Import AuthService
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'assessment-taken-page',
@@ -16,6 +17,7 @@ export class AssessmentTakenPage implements OnInit {
     private meta: Meta,
     private assessmentTakenService: AssessmentTakenService,
     private authService: AuthService,
+    private router: Router,
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
@@ -54,4 +56,23 @@ export class AssessmentTakenPage implements OnInit {
     this.authService.logout(); // Call the logout method in AuthService
     //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
+
+  goToAssessmentDetails(assessment: any) {
+    console.log(assessment)
+  this.router.navigate(
+    ['/assessment-taken-page-2', assessment.assessment_id],
+    {
+      state: {
+        assessment_title: assessment.assessment_title,
+        assessment_logo_url: assessment.assessment_logo_url,
+        created_by: assessment.created_by,
+        assessment_id: assessment.assessment_id,
+        attempts_remaining: assessment.attempts_remaining,
+        attempts: assessment.attempts
+      }
+    }
+  );
+  // If you want to pass more data, use query params:
+    // this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id], { queryParams: { title: assessment.assessment_title } });
+}
 }

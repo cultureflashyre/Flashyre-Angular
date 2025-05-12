@@ -2,17 +2,22 @@ import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
 @Component({
-  selector: 'error-system-requirement-failed',
-  templateUrl: 'error-system-requirement-failed.component.html',
-  styleUrls: ['error-system-requirement-failed.component.css'],
+  selector: 'assessment-taken-page3',
+  templateUrl: 'assessment-taken-page-3.component.html',
+  styleUrls: ['assessment-taken-page-3.component.css'],
 })
-export class ErrorSystemRequirementFailed {
+export class AssessmentTakenPage3 {
+  rawhg86: string = ' '
+  rawdt3n: string = ' '
+  rawrm7v: string = ' '
+  rawvn2j: string = ' '
+  rawvdwg: string = ' '
   constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Error-System-Requirement-Failed - Flashyre')
+    this.title.setTitle('Assessment-Taken-Page-3 - Flashyre')
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Error-System-Requirement-Failed - Flashyre',
+        content: 'Assessment-Taken-Page-3 - Flashyre',
       },
       {
         property: 'og:image',

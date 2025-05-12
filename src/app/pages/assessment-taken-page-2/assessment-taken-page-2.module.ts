@@ -2,21 +2,20 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 
-
 import { ComponentsModule } from '../../components/components.module'
-import { ErrorSystemRequirementFailed } from './error-system-requirement-failed.component'
+import { AssessmentTakenPage2 } from './assessment-taken-page-2.component'
 
 const routes = [
   {
     path: '',
-    component: ErrorSystemRequirementFailed,
+    component: AssessmentTakenPage2,
   },
 ]
 
 @NgModule({
-  declarations: [ErrorSystemRequirementFailed],
+  declarations: [AssessmentTakenPage2],
   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
-  exports: [ErrorSystemRequirementFailed],
+  exports: [AssessmentTakenPage2],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ErrorSystemRequirementFailedModule {}
+export class AssessmentTakenPage2Module {}

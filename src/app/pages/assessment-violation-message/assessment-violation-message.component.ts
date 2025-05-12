@@ -2,17 +2,17 @@ import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
 @Component({
-  selector: 'error-system-requirement-failed',
-  templateUrl: 'error-system-requirement-failed.component.html',
-  styleUrls: ['error-system-requirement-failed.component.css'],
+  selector: 'assessment-violation-message',
+  templateUrl: 'assessment-violation-message.component.html',
+  styleUrls: ['assessment-violation-message.component.css'],
 })
-export class ErrorSystemRequirementFailed {
+export class AssessmentViolationMessage {
   constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Error-System-Requirement-Failed - Flashyre')
+    this.title.setTitle('Assessment-violation-message - Flashyre')
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Error-System-Requirement-Failed - Flashyre',
+        content: 'Assessment-violation-message - Flashyre',
       },
       {
         property: 'og:image',

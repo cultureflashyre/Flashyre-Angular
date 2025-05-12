@@ -4,19 +4,19 @@ import { CommonModule } from '@angular/common'
 
 
 import { ComponentsModule } from '../../components/components.module'
-import { ErrorSystemRequirementFailed } from './error-system-requirement-failed.component'
+import { AssessmentViolationMessage } from './assessment-violation-message.component'
 
 const routes = [
   {
     path: '',
-    component: ErrorSystemRequirementFailed,
+    component: AssessmentViolationMessage,
   },
 ]
 
 @NgModule({
-  declarations: [ErrorSystemRequirementFailed],
+  declarations: [AssessmentViolationMessage],
   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
-  exports: [ErrorSystemRequirementFailed],
+  exports: [AssessmentViolationMessage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ErrorSystemRequirementFailedModule {}
+export class AssessmentViolationMessageModule {}
