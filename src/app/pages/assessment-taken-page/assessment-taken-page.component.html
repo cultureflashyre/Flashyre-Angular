@@ -558,7 +558,7 @@
           id="total-assessments-taken-text"
           class="assessment-taken-page-total-assessments-taken-text"
         >
-          Total Assessment Taken
+          All Assessment Taken
         </span>
         <div
           id="job-title-container"
@@ -707,7 +707,7 @@
                   >
                     Attempt(s) Remaining
                   </span>
-                  <span>{{assessment.attempts_remaining}}</span>
+                  <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
                 </div>
                 <svg
                   id="right-icon"
@@ -715,6 +715,8 @@
                   height="24"
                   viewBox="0 0 24 24"
                   class="assessment-taken-page-right-icon1"
+                  (click)="goToAssessmentDetails(assessment)"
+                  style="cursor: pointer;"
                 >
                   <path
                     d="m10 16l4-4l-4-4"

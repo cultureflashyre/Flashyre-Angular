@@ -24,7 +24,9 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
+        if (error instanceof HttpErrorResponse && 
+          error.status === 401 &&
+          !authReq.url.includes('refresh-token')) {
           // Access token might have expired
           return this.handle401Error(authReq, next);
         }

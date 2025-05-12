@@ -211,6 +211,24 @@ const routes = [
       import( './pages/profile-overview-page/profile-overview-page.module'
       ).then((m) => m.ProfileOverviewPageModule),
   },
+    {
+    path: 'assessment-taken-page-2/:assessmentId',
+    loadChildren: () =>
+      import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
+      ).then((m) => m.AssessmentTakenPage2Module),
+  },
+      {
+    path: 'assessment-taken-page-3',
+    loadChildren: () =>
+      import( './pages/assessment-taken-page-3/assessment-taken-page-3.module'
+      ).then((m) => m.AssessmentTakenPage3Module),
+  },
+        {
+    path: 'assessment-violation-message',
+    loadChildren: () =>
+      import( './pages/assessment-violation-message/assessment-violation-message.module'
+      ).then((m) => m.AssessmentViolationMessageModule),
+  },
   {
     path: '**',
     loadChildren: () =>
