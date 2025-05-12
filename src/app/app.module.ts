@@ -1,19 +1,18 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { RouterModule } from '@angular/router'
-import { BrowserModule } from '@angular/platform-browser'
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
-import { ComponentsModule } from './components/components.module'
-import { AppComponent } from './app.component'
+import { ComponentsModule } from './components/components.module';
+import { AppComponent } from './app.component';
+import { ToastrModule } from 'ngx-toastr';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BufferPageModule } from './buffer-page/buffer-page.module';
 import { BufferInterceptor } from './interceptors/buffer.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BufferService } from './services/buffer.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
-import { LoginForgotPasswordModule } from './pages/login-forgot-password/login-forgot-password.module';
-import { LoginResetPasswordModule } from './pages/login-reset-password/login-reset-password.module';
 
 const routes = [
   {
@@ -22,19 +21,26 @@ const routes = [
       import('./pages/index/index.module').then((m) => m.IndexModule),
   },
   {
+    path: 'login-forgot-password',
+    loadChildren: () =>
+      import('./pages/login-forgot-password/login-forgot-password.module').then(
+        (m) => m.LoginForgotPasswordModule
+      ),
+  },
+  {
+    path: 'login-reset-password',
+    loadChildren: () =>
+      import('./pages/login-reset-password/login-reset-password.module').then(
+        (m) => m.LoginResetPasswordModule
+      ),
+  },
+  {
     path: 'profile-education-page',
     loadChildren: () =>
-      import(
-        './pages/profile-education-page/profile-education-page.module'
-      ).then((m) => m.ProfileEducationPageModule),
+      import('./pages/profile-education-page/profile-education-page.module').then(
+        (m) => m.ProfileEducationPageModule
+      ),
   },
-  // {
-  //   path: 'profile-education-page-duplicate',
-  //   loadChildren: () =>
-  //     import(
-  //       './pages/profile-education-page-duplicate/profile-education-page-duplicate.module'
-  //     ).then((m) => m.ProfileEducationPageDuplicateModule),
-  // },
   {
     path: 'login-college',
     loadChildren: () =>
@@ -42,19 +48,12 @@ const routes = [
         (m) => m.LoginCollegeModule
       ),
   },
-  // {
-  //   path: 'profile-basic-information',
-  //   loadChildren: () =>
-  //     import('./pages/profile-basic-information/profile-basic-information.module').then(
-  //       (m) => m.ProfileBasicInformationModule),
-  //    // Protect this route
-  // },
   {
     path: 'recruiter-view-3rd-page',
     loadChildren: () =>
-      import(
-        './pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module'
-      ).then((m) => m.RecruiterView3rdPageModule),
+      import('./pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module').then(
+        (m) => m.RecruiterView3rdPageModule
+      ),
   },
   {
     path: 'signup-candidate',
@@ -70,19 +69,12 @@ const routes = [
         (m) => m.SignupCorporateModule
       ),
   },
-  // {
-  //   path: 'profile-employment-page',
-  //   loadChildren: () =>
-  //     import(
-  //       './pages/profile-employment-page/profile-employment-page.module'
-  //     ).then((m) => m.ProfileEmploymentPageModule),
-  // },
   {
     path: 'candidate-job-detail-view',
     loadChildren: () =>
-      import(
-        './pages/candidate-job-detail-view/candidate-job-detail-view.module'
-      ).then((m) => m.CandidateJobDetailViewModule),
+      import('./pages/candidate-job-detail-view/candidate-job-detail-view.module').then(
+        (m) => m.CandidateJobDetailViewModule
+      ),
   },
   {
     path: 'login-candidate',
@@ -94,9 +86,9 @@ const routes = [
   {
     path: 'recruiter-view-5th-page',
     loadChildren: () =>
-      import(
-        './pages/recruiter-view-5th-page/recruiter-view-5th-page.module'
-      ).then((m) => m.RecruiterView5thPageModule),
+      import('./pages/recruiter-view-5th-page/recruiter-view-5th-page.module').then(
+        (m) => m.RecruiterView5thPageModule
+      ),
   },
   {
     path: 'candidate-home',
@@ -105,19 +97,12 @@ const routes = [
         (m) => m.CandidateHomeModule
       ),
   },
-  // {
-  //   path: 'profile-certification-page',
-  //   loadChildren: () =>
-  //     import(
-  //       './pages/profile-certification-page/profile-certification-page.module'
-  //     ).then((m) => m.ProfileCertificationPageModule),
-  // },
   {
     path: 'recruiter-view-4th-page',
     loadChildren: () =>
-      import(
-        './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
-      ).then((m) => m.RecruiterView4thPageModule),
+      import('./pages/recruiter-view-4th-page/recruiter-view-4th-page.module').then(
+        (m) => m.RecruiterView4thPageModule
+      ),
   },
   {
     path: 'login-corporate',
@@ -136,9 +121,9 @@ const routes = [
   {
     path: 'flashyre-assessment-rules-card',
     loadChildren: () =>
-      import(
-        './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module'
-      ).then((m) => m.FlashyreAssessmentRulesCardModule),
+      import('./pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module').then(
+        (m) => m.FlashyreAssessmentRulesCardModule
+      ),
   },
   {
     path: 'flashyre-assessments',
@@ -162,35 +147,35 @@ const routes = [
       ),
   },
   {
-    path: 'flashyre-assessment1', // New route
+    path: 'flashyre-assessment1',
     loadChildren: () =>
       import('./pages/flashyre-assessment1/flashyre-assessment1.module').then(
         (m) => m.FlashyreAssessment1Module
       ),
   },
   {
-    path: 'profile-last-page1', // New route
+    path: 'profile-last-page1',
     loadChildren: () =>
-    import('./pages/profile-last-page1/profile-last-page1.module').then(
-      (m) => m.ProfileLastPage1Module
-    ),
-  },   
+      import('./pages/profile-last-page1/profile-last-page1.module').then(
+        (m) => m.ProfileLastPage1Module
+      ),
+  },
   {
-    path: 'candidate-assessment', // New route
+    path: 'candidate-assessment',
     loadChildren: () =>
       import('./pages/candidate-assessment/candidate-assessment.module').then(
         (m) => m.CandidateAssessmentModule
       ),
   },
   {
-    path: 'candidate-dashboard-main', // New route
+    path: 'candidate-dashboard-main',
     loadChildren: () =>
       import('./pages/candidate-dashboard-main/candidate-dashboard-main.module').then(
         (m) => m.CandidateDashboardMainModule
       ),
   },
   {
-    path: 'buffer-page', // New route
+    path: 'buffer-page',
     loadChildren: () =>
       import('./buffer-page/buffer-page.module').then(
         (m) => m.BufferPageModule
@@ -199,20 +184,9 @@ const routes = [
   {
     path: 'profile-overview-page',
     loadChildren: () =>
-      import( './pages/profile-overview-page/profile-overview-page.module'
-      ).then((m) => m.ProfileOverviewPageModule),
-  },
-  {
-    path: 'login-forgot-password',
-loadChildren: () =>
-      import( './pages/login-forgot-password/login-forgot-password.module'
-      ).then((m) => m.LoginForgotPasswordModule), 
- },
-  {
-    path: 'login-reset-password',
-loadChildren: () =>
-      import( './pages/login-reset-password/login-reset-password.module'
-      ).then((m) => m.LoginResetPasswordModule),  
+      import('./pages/profile-overview-page/profile-overview-page.module').then(
+        (m) => m.ProfileOverviewPageModule
+      ),
   },
   {
     path: '**',
@@ -221,13 +195,30 @@ loadChildren: () =>
         (m) => m.NotFoundModule
       ),
   },
-]
+];
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, LoginForgotPasswordModule,LoginResetPasswordModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
+  imports: [
+    NgxSpinnerModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }),
+    ComponentsModule,
+    HttpClientModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      closeButton: true
+    }),
+    NgbModule
+  ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: BufferInterceptor, multi: true },
+    BufferService,
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

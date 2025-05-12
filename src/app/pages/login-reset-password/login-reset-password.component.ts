@@ -26,7 +26,7 @@ export class LoginResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Try to retrieve email from navigation state
+    // Retrieve email from navigation state
     this.email = history.state.email || null;
     console.log('Retrieved email from state:', this.email);
 
@@ -46,14 +46,13 @@ export class LoginResetPasswordComponent implements OnInit {
       // Handle missing email
       if (!this.email) {
         console.log('No email found in state, query params, or local storage');
-        this.error = 'Email is missing. Please request a new OTP from the forgot password page.';
+        this.error = 'Email is missing. Redirecting to Forgot Password page...';
         setTimeout(() => {
-          this.router.navigate(['/login-forgot-password']);
-        }, 5000); // Increased to 5 seconds for user visibility
+          window.location.href = '/login-forgot-password'; // Fallback navigation
+        }, 3000);
       } else {
-        // Store email in local storage for persistence
         localStorage.setItem('resetEmail', this.email);
-        console.log('Email retrieved successfully, rendering OTP form');
+        console.log('Email retrieved successfully, rendering form');
       }
     });
   }
@@ -113,10 +112,9 @@ export class LoginResetPasswordComponent implements OnInit {
         console.log('Reset password response:', response);
         this.message = response.message || 'Password reset successfully. You can now log in.';
         this.loading = false;
-        // Clear local storage
         localStorage.removeItem('resetEmail');
         setTimeout(() => {
-          this.router.navigate(['/login-candidate']);
+          window.location.href = '/login-candidate'; // Adjusted to candidate login
         }, 2000);
       },
       error: (err) => {

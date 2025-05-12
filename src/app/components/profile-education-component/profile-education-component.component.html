@@ -11,6 +11,16 @@
       </ng-container>
     </span>
 
+    <!-- Error message display -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading-spinner">
+      Loading education data...
+    </div>
+
     <!-- Scrollable container for dynamic education forms -->
     <div class="profile-education-container">
       <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>
@@ -63,9 +73,9 @@
               </span>
               <div class="profile-education-component-form3 input">
                 <select formControlName="university" class="profile-education-component-select">
-  <option value="" disabled>Select</option>
-  <option *ngFor="let uni of universities" [value]="uni.name">{{ uni.name }}</option>
-</select>
+                  <option value="" disabled selected>Select</option>
+                  <option *ngFor="let uni of universities" [value]="uni.id">{{ uni.name }}</option>
+                </select>
               </div>
             </div>
             <div id="education-input-container-{{i}}" class="profile-education-component-education-container">
@@ -80,10 +90,10 @@
                 </ng-container>
               </span>
               <div class="profile-education-component-form4 input">
-               <select formControlName="educationLevel" class="profile-education-component-select">
-  <option value="" disabled>Select</option>
-  <option *ngFor="let level of educationLevels" [value]="level.name">{{ level.name }}</option>
-</select>
+                <select formControlName="educationLevel" class="profile-education-component-select">
+                  <option value="" disabled selected>Select</option>
+                  <option *ngFor="let level of educationLevels" [value]="level.id">{{ level.name }}</option>
+                </select>
               </div>
             </div>
           </div>
@@ -102,9 +112,9 @@
               </span>
               <div class="profile-education-component-form5 input">
                 <select formControlName="course" class="profile-education-component-select">
-  <option value="" disabled>Select</option>
-  <option *ngFor="let course of courses" [value]="course.name">{{ course.name }}</option>
-</select>
+                  <option value="" disabled selected>Select</option>
+                  <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
+                </select>
               </div>
             </div>
             <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">
@@ -120,9 +130,9 @@
               </span>
               <div class="profile-education-component-form6 input">
                 <select formControlName="specialization" class="profile-education-component-select">
-  <option value="" disabled>Select</option>
-  <option *ngFor="let spec of specializations" [value]="spec.name">{{ spec.name }}</option>
-</select>
+                  <option value="" disabled selected>Select</option>
+                  <option *ngFor="let spec of specializations" [value]="spec.id">{{ spec.name }}</option>
+                </select>
               </div>
             </div>
           </div>
