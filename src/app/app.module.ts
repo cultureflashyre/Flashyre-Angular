@@ -69,6 +69,20 @@ const routes = [
       ),
   },
   {
+    path: 'login-forgot-password',
+    loadChildren: () =>
+      import('./pages/login-forgot-password/login-forgot-password.module').then(
+        (m) => m.LoginForgotPasswordModule
+      ),
+  },
+  {
+    path: 'login-reset-password',
+    loadChildren: () =>
+      import('./pages/login-reset-password/login-reset-password.module').then(
+        (m) => m.LoginResetPasswordModule
+      ),
+  },
+  {
     path: 'profile-employment-page',
     loadChildren: () =>
       import(

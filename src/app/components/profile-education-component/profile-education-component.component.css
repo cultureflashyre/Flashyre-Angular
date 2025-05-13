@@ -32,6 +32,7 @@
   scroll-behavior: smooth;
   overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-width: none;
 }
 
 .profile-education-component-education-text1 {
@@ -55,6 +56,7 @@
   display: flex;
   position: relative;
   align-items: center;
+  margin-bottom: 24px;
 }
 
 .profile-education-component-duration-container2 {
@@ -151,6 +153,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .profile-education-component-university-institute-container {
