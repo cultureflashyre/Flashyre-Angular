@@ -1,57 +1,95 @@
-import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/candidate.service';
+import { CorporateAuthService } from '../../services/corporate-auth.service';
 
 @Component({
   selector: 'log-in-page',
-  templateUrl: 'log-in-page.component.html',
-  styleUrls: ['log-in-page.component.css'],
+  templateUrl: './log-in-page.component.html',
+  styleUrls: ['./log-in-page.component.css']
 })
-export class LogInPage implements OnChanges {
-  // ContentChild templates passed from the parent component
-  @ContentChild('text11') text11: TemplateRef<any>; // Password label
-  @ContentChild('text4') text4: TemplateRef<any>;   // Sign up link text
-  @ContentChild('text71') text71: TemplateRef<any>; // Unused error message template (optional use)
-  @ContentChild('text1') text1: TemplateRef<any>;   // Email label
-  @ContentChild('text3') text3: TemplateRef<any>;   // "Don’t have an account?" text
-  @ContentChild('heading') heading: TemplateRef<any>; // Welcome heading
-  @ContentChild('forgotPassword') forgotPassword: TemplateRef<any>; // Forgot Password link
-  @ContentChild('button') button: TemplateRef<any>; // Login button text
-  @ContentChild('text2') text2: TemplateRef<any>;   // Show/Hide password text
+export class LogInPage implements OnInit {
+  @ContentChild('text11') text11: TemplateRef<any>;
+  @ContentChild('text4') text4: TemplateRef<any>;
+  @ContentChild('text1') text1: TemplateRef<any>;
+  @ContentChild('text3') text3: TemplateRef<any>;
+  @ContentChild('heading') heading: TemplateRef<any>;
+  @ContentChild('forgotPassword') forgotPassword: TemplateRef<any>;
+  @ContentChild('button') button: TemplateRef<any>;
 
-  // Input properties for placeholders and root class
   @Input() textinputPlaceholder1: string = 'Enter Password';
   @Input() textinputPlaceholder: string = 'Enter your email';
   @Input() rootClassName: string = '';
-  @Input() errorMessage: string = ''; // Error message from parent (e.g., "Invalid Email or Password")
+  @Input() userType: string = 'candidate';
 
-  // Output event to emit login data to parent
-  @Output() loginSubmit = new EventEmitter<{ email: string, password: string }>();
+  @Output() loginSubmit = new EventEmitter<any>();
 
-  // Component properties
-  email: string = '';
-  password: string = '';
+  loginForm: FormGroup;
   showPassword: boolean = false;
+  errorMessage: string = '';
 
-  constructor() {}
-
-  // Optional: Debugging to verify errorMessage updates
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['errorMessage']) {
-      console.log('Error Message Updated:', this.errorMessage);
-    }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private corporateAuthService: CorporateAuthService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
-  // Handle form submission
+  ngOnInit() {
+    console.log('LogInPage component initialized');
+    // Clear error message when user types in the form
+    this.loginForm.valueChanges.subscribe(() => {
+      if (this.errorMessage) {
+        console.log('Clearing error message due to form input');
+        this.errorMessage = '';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   onSubmit() {
-    if (this.email && this.password) {
-      this.loginSubmit.emit({ email: this.email, password: this.password });
-    } else {
-      // Optional: Set a local error if fields are empty
+    console.log('onSubmit called', {
+      formValues: this.loginForm.value,
+      isValid: this.loginForm.valid,
+      isInvalid: this.loginForm.invalid
+    });
+
+    if (this.loginForm.invalid) {
       this.errorMessage = 'Please enter both email and password';
+      console.log('Setting errorMessage:', this.errorMessage);
+      this.cdr.detectChanges();
+      return;
     }
+
+    const { email, password } = this.loginForm.value;
+    const loginObservable = this.userType === 'corporate'
+      ? this.corporateAuthService.loginCorporate(email, password)
+      : this.authService.login(email, password);
+
+    loginObservable.subscribe({
+      next: (response: any) => {
+        console.log(`${this.userType} login successful:`, response);
+        this.errorMessage = '';
+        localStorage.setItem('jwtToken', response.access);
+        this.loginSubmit.emit(response);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(`${this.userType} login failed:`, err);
+        this.errorMessage = 'Invalid Email or Password';
+        console.log('Setting errorMessage:', this.errorMessage);
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  // Toggle password visibility
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+    this.cdr.detectChanges();
   }
 }
