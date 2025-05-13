@@ -81,10 +81,10 @@ export class ProfileEducationComponent implements OnInit {
     return this.fb.group({
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      university: ['', Validators.required],
-      educationLevel: ['', Validators.required],
-      course: ['', Validators.required],
-      specialization: ['', Validators.required]
+      university: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      educationLevel: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      course: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      specialization: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
     }, { validators: this.dateRangeValidator });
   }
 
@@ -111,43 +111,72 @@ export class ProfileEducationComponent implements OnInit {
   }
 
   saveEducation(): Promise<boolean> {
-  return new Promise((resolve) => {
-    const validForms = this.educationForms.filter(form => form.valid);
-    if (!validForms.length) {
-      console.log('No valid forms to save');
-      resolve(true);
-      return;
-    }
-
-    const saveObservables = validForms.map(form => {
-      console.log('Raw form values:', form.value);
-      
-      // Get the names corresponding to the selected IDs
-      const university = this.universities.find(u => u.id === form.value.university)?.name || '';
-      const educationLevel = this.educationLevels.find(e => e.id === form.value.educationLevel)?.name || '';
-      const course = this.courses.find(c => c.id === form.value.course)?.name || '';
-      const specialization = this.specializations.find(s => s.id === form.value.specialization)?.name || '';
-
-      const data = {
-        select_start_date: form.value.startDate,
-        select_end_date: form.value.endDate,
-        university: university,  // Send name as string
-        education_level: educationLevel,
-        course: course,
-        specialization: specialization
-      };
-
-      // Validate that all fields are non-empty strings
-      if (!data.university || !data.education_level || !data.course || !data.specialization) {
-        console.error('Invalid text values:', data);
-        this.errorMessage = 'Please select valid options for all dropdowns';
-        return [];
+    return new Promise((resolve) => {
+      const validForms = this.educationForms.filter(form => form.valid);
+      if (!validForms.length) {
+        console.log('No valid forms to save');
+        this.errorMessage = 'Please fill out all required fields correctly.';
+        resolve(false);
+        return;
       }
 
-      console.log('Sending data to backend:', data);
-      return this.educationService.addEducation(data).pipe(
-        catchError(error => {
-          console.error('Error saving form:', error);
+      const saveObservables = validForms.map(form => {
+        console.log('Raw form values:', form.value);
+
+        // Validate that all dropdown fields have valid IDs
+        if (!form.value.university || !form.value.educationLevel || !form.value.course || !form.value.specialization) {
+          console.error('Invalid or missing dropdown selections:', form.value);
+          this.errorMessage = 'Please select valid options for all dropdowns.';
+          return [];
+        }
+
+        // Map IDs to names
+        const university = this.universities.find(u => u.id === +form.value.university)?.name;
+        const educationLevel = this.educationLevels.find(e => e.id === +form.value.educationLevel)?.name;
+        const course = this.courses.find(c => c.id === +form.value.course)?.name;
+        const specialization = this.specializations.find(s => s.id === +form.value.specialization)?.name;
+
+        // Check if any mapped value is undefined
+        if (!university || !educationLevel || !course || !specialization) {
+          console.error('Invalid mapped values:', { university, educationLevel, course, specialization });
+          this.errorMessage = 'One or more selected options are invalid.';
+          return [];
+        }
+
+        const data = {
+          select_start_date: form.value.startDate,
+          select_end_date: form.value.endDate,
+          university: university,
+          education_level: educationLevel,
+          course: course,
+          specialization: specialization
+        };
+
+        console.log('Sending data to backend:', JSON.stringify(data, null, 2));
+        return this.educationService.addEducation(data).pipe(
+          catchError(error => {
+            console.error('Error saving form:', error);
+            let errorMessage = 'Failed to save education data';
+            try {
+              const parsedError = JSON.parse(error.message);
+              errorMessage = typeof parsedError === 'object' ? Object.values(parsedError).join('; ') : parsedError;
+            } catch (e) {
+              errorMessage = error.message || 'Unknown error occurred';
+            }
+            this.errorMessage = errorMessage;
+            return [];
+          })
+        );
+      });
+
+      forkJoin(saveObservables).subscribe({
+        next: () => {
+          console.log('All educations saved successfully');
+          this.errorMessage = null;
+          resolve(true);
+        },
+        error: (error) => {
+          console.error('Error saving educations:', error);
           let errorMessage = 'Failed to save education data';
           try {
             const parsedError = JSON.parse(error.message);
@@ -156,32 +185,11 @@ export class ProfileEducationComponent implements OnInit {
             errorMessage = error.message || 'Unknown error occurred';
           }
           this.errorMessage = errorMessage;
-          return [];
-        })
-      );
-    });
-
-    forkJoin(saveObservables).subscribe({
-      next: () => {
-        console.log('All educations saved successfully');
-        resolve(true);
-      },
-      error: (error) => {
-        console.error('Error saving educations:', error);
-        let errorMessage = 'Failed to save education data';
-        try {
-          const parsedError = JSON.parse(error.message);
-          errorMessage = typeof parsedError === 'object' ? Object.values(parsedError).join('; ') : parsedError;
-        } catch (e) {
-          errorMessage = error.message || 'Unknown error occurred';
+          resolve(false);
         }
-        this.errorMessage = errorMessage;
-        resolve(false);
-      }
+      });
     });
-  });
-}
-
+  }
 
   goToPrevious(): void {
     this.router.navigate(['/profile-employment-page']);
