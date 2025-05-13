@@ -31,4 +31,11 @@ export class AssessmentTakenService {
 
     return this.http.get(`${this.baseUrl}assessment/get_all_assessment_scores/`, {withCredentials: true});
   }
+
+fetchAssessmentScore(assessmentId: string): Observable<any> {
+  const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
+  return this.http.get(url, { withCredentials: true });
+}
+
+
 }

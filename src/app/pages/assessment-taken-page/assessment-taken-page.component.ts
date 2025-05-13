@@ -57,22 +57,26 @@ export class AssessmentTakenPage implements OnInit {
     //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
 
-  goToAssessmentDetails(assessment: any) {
-    console.log(assessment)
-  this.router.navigate(
-    ['/assessment-taken-page-2', assessment.assessment_id],
-    {
-      state: {
-        assessment_title: assessment.assessment_title,
-        assessment_logo_url: assessment.assessment_logo_url,
-        created_by: assessment.created_by,
-        assessment_id: assessment.assessment_id,
-        attempts_remaining: assessment.attempts_remaining,
-        attempts: assessment.attempts
-      }
-    }
-  );
-  // If you want to pass more data, use query params:
-    // this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id], { queryParams: { title: assessment.assessment_title } });
+// goToAssessmentDetails(assessment: any) {
+//   console.log(assessment)
+//   this.router.navigate(
+//     ['/assessment-taken-page-2', assessment.assessment_id],
+//     {
+//       state: {
+//         assessment_title: assessment.assessment_title,
+//         assessment_logo_url: assessment.assessment_logo_url,
+//         created_by: assessment.created_by,
+//         assessment_id: assessment.assessment_id,
+//         attempts_remaining: assessment.attempts_remaining,
+//         attempts: assessment.attempts
+//       }
+//     }
+//   );
+// }
+
+goToAssessmentDetails(assessment: any) {
+  this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id]);
 }
+
+
 }

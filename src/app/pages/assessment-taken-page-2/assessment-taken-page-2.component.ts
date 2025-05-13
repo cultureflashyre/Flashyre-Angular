@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { ActivatedRoute, Router } from '@angular/router';
+import { AssessmentTakenService } from '../../services/assessment-taken.service'; // adjust path accordingly
 
 @Component({
   selector: 'assessment-taken-page2',
@@ -8,6 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['assessment-taken-page-2.component.css'],
 })
 export class AssessmentTakenPage2 implements OnInit {
+  assessmentId!: string;
+  assessmentData: any; // define proper interface as needed
+  loading = false;
+  errorMessage = '';
+
   @Input() percentage: number = 75;
 
   @ViewChild('bar', { static: true }) bar!: ElementRef<HTMLDivElement>;
@@ -25,6 +31,7 @@ export class AssessmentTakenPage2 implements OnInit {
     private meta: Meta, 
     private route: ActivatedRoute, 
     private router: Router,
+    private assessmentTakenService: AssessmentTakenService,
     
   ) {
     console.log('AssessmentTakenPage2 constructor called');
@@ -78,6 +85,13 @@ export class AssessmentTakenPage2 implements OnInit {
   }
 
   ngOnInit() {
+
+    this.assessmentId = this.route.snapshot.paramMap.get('assessmentId')!;
+    if (this.assessmentId) {
+      this.fetchAssessmentScore(this.assessmentId);
+    } else {
+      this.errorMessage = 'No assessment ID provided.';
+    }
     
     this.animateProgress(0, this.percentage, 3000);
   }
@@ -123,6 +137,29 @@ export class AssessmentTakenPage2 implements OnInit {
       case 3:  return 'rd';
       default: return 'th';
     }
+  }
+
+  fetchAssessmentScore(assessmentId: string) {
+    this.loading = true;
+    this.assessmentTakenService.fetchAssessmentScore(assessmentId).subscribe({
+      next: (data) => {
+        this.assessmentData = data;
+
+        // Extract individual variables safely with fallback defaults
+        this.assessment_title = data.assessment_title ?? '';
+        this.assessment_logo_url = data.assessment_logo_url ?? '';
+        this.created_by = data.created_by ?? '';
+        this.assessment_id = data.assessment_id ?? '';
+        this.attempts_remaining = data.attempts_remaining ?? 0;
+        this.attempts = Array.isArray(data.attempts) ? data.attempts : [];
+        
+        this.loading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Failed to load assessment data.';
+        this.loading = false;
+      }
+    });
   }
 
   onReattempt() {
