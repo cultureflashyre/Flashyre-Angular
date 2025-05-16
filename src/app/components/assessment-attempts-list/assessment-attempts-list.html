@@ -1,0 +1,202 @@
+    <div
+      id="cloud-architecture-details-container"
+      class="assessment-taken-page2-cloud-architecture-details-container"
+      *ngIf="!showDetailView"
+    >
+      <div
+        id="text-id-attempts-container"
+        class="assessment-taken-page2-text-id-attempts-container"
+      >
+        <div class="assessment-taken-page2-container2">
+          <div
+            id="cloud-architecture-text-container"
+            class="assessment-taken-page2-cloud-architecture-text-container"
+          >
+            <svg
+              id="back-icon"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              class="assessment-taken-page2-back-icon"
+            >
+              <path
+                d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+                fill="currentColor"
+              ></path>
+            </svg>
+            <span
+              id="cloud-architecture-text"
+              class="assessment-taken-page2-cloud-architecture-text"
+            >
+              {{ assessment_title }}
+            </span>
+          </div>
+          <div
+            id="assessment-by-container"
+            class="assessment-taken-page2-assessment-by-container"
+          >
+            <img
+              id="assessment-company-logo"
+              alt="image"
+              [src]="assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+              class="assessment-taken-page2-assessment-company-logo"
+            />
+            <span
+              id="assessment-by-text"
+              class="assessment-taken-page2-assessment-by-text"
+            >
+              Assessment by {{ created_by }}
+            </span>
+          </div>
+        </div>
+        <div
+          id="id-attempts-container"
+          class="assessment-taken-page2-id-attempts-container"
+        >
+          <span id="id-text" class="assessment-taken-page2-id-text">
+            Assessment ID : {{ assessmentId }}
+          </span>
+          <span
+            id="attempts-remaining-text"
+            class="assessment-taken-page2-attempts-remaining-text"
+          >
+            <span class="assessment-taken-page2-text31">{{ attempts_remaining < 0 ? 0 : attempts_remaining }}</span>
+            <span> Attempt(s) Remaining</span>
+          </span>
+        </div>
+      </div>
+      <div class="assessment-taken-page2-container3">
+        <div class="assessment-taken-page2-container4">
+          <div
+            *ngFor="let attempt of attempts; let i = index"
+            id="attempt-container"
+            class="assessment-taken-page2-attempt-container"
+          >
+            <div
+              id="attempt-date-container"
+              class="assessment-taken-page2-attempt-date-container"
+            >
+              <div
+                id="date-attempt-container"
+                class="assessment-taken-page2-date-attempt-container"
+              >
+                <span
+                  id="attempt-text"
+                  class="assessment-taken-page2-attempt-text"
+                >
+                  {{ (attempts.length - i) }}{{ getOrdinal(attempts.length - i) }} Attempt
+                </span>
+                <span id="date-text" class="assessment-taken-page2-date-text">
+                  Completed {{ attempt.end_time | date:'medium' }}
+                </span>
+              </div>
+            </div>
+            <div
+              id="score-container"
+              class="assessment-taken-page2-score-container"
+            >
+              <div
+                id="score-board-container"
+                class="assessment-taken-page2-score-board-container"
+              >
+                <span
+                  id="score-board-text"
+                  class="assessment-taken-page2-score-board-text"
+                >
+                  🏆 Score Board
+                </span>
+                <div
+                  id="score-board-code-container"
+                  class="assessment-taken-page2-score-board-code-container"
+                >
+                  <div class="assessment-taken-page2-container5">
+                    <div class="assessment-taken-page2-container6">
+                      <body>
+                      <div class='progress-container'>
+                        <div class='progress'>
+                          <div class='bar'
+                          [style.width.%]="attempt.score"
+                          [style.backgroundColor]="getFillColor(attempt.score)"></div>
+                        </div>
+                        <span class="score">{{ attempt.score }}%</span>
+                      </div>
+                        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+  <script>
+    $(document).ready(function () {
+      const $progress = $('.progress');
+      const $bar = $progress.find('.bar');
+      const $score = $('.score');
+      const perc = 56.5; // Percentage value
+
+      // Determine the fill color based on the percentage
+      const getFillColor = (value) => {
+        if (value <= 40) return 'red';
+        if (value <= 60) return 'orange';
+        if (value <= 75) return '#4D91C6'; // Ampere color
+        if (value <= 84) return 'lightgreen';
+        return 'darkgreen';
+      };
+
+      $({ p: 0 }).animate({ p: perc }, {
+        duration: 3000,
+        easing: 'swing',
+        step: function (p) {
+          // Update the width and color of the bar
+          $bar.css({
+            width: p + '%',
+            backgroundColor: getFillColor(p)
+          });
+
+          // Update the displayed score
+          $score.text(Math.round(p) + '%');
+        }
+      });
+    });
+  </script>
+</body>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg
+                id="right-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="assessment-taken-page2-right-icon"
+                (click)="openDetailView(attempt)"
+              >
+                <path
+                  d="m10 16l4-4l-4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="re-attempt-button-container"
+        class="assessment-taken-page2-re-attempt-button-container"
+      >
+        <button
+          id="re-attempt-container"
+          type="button"
+          class="assessment-taken-page2-re-attempt-container button"
+          [disabled]="attempts_remaining <= 0"
+          (click)="onReattempt()"
+        >
+          Re-attempt
+        </button>
+      </div>
+    </div>
+    <assessment-detailed-results 
+    *ngIf="showDetailView"
+    [assessmentData]="selectedAttempt"
+    (back)="closeDetailView()">
+  </assessment-detailed-results>

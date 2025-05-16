@@ -590,6 +590,7 @@
         <div
           id="assessments-taken-container"
           class="assessment-taken-page-assessments-taken-container2"
+          *ngIf="!showAttempts[assessment.assessment_id]"
         >
           <div class="assessment-taken-page-container19" *ngFor="let assessment of assessments">
             <div
@@ -737,108 +738,12 @@
             See More
           </span>
         </div>
-        <!-- <div class="assessment-taken-page-assessments-available-container">
-          <span
-            id="assessments-available-text"
-            class="assessment-taken-page-assessments-available-text"
-          >
-            New Assessment Available (2)
-          </span>
-          <div class="assessment-taken-page-container22">
-            <div
-              id="available-assessments-card-container"
-              class="assessment-taken-page-available-assessmnets-card-container"
-            >
-              <div
-                id="card-details-container"
-                class="assessment-taken-page-card-details-container"
-              >
-                <div
-                  id="details-container"
-                  class="assessment-taken-page-details-container2"
-                >
-                  <img
-                    alt="image"
-                    src="https://play.teleporthq.io/static/svg/default-img.svg"
-                    class="assessment-taken-page-assessment-image2"
-                  />
-                  <div
-                    id="detail-container"
-                    class="assessment-taken-page-detail-container"
-                  >
-                    <span
-                      id="heading-text"
-                      class="assessment-taken-page-heading-text2"
-                    >
-                      Generative AI for Leaders
-                    </span>
-                    <div
-                      id="date-id-container"
-                      class="assessment-taken-page-date-id-container"
-                    >
-                      <span
-                        id="date-id-text"
-                        class="assessment-taken-page-date-id-text"
-                      >
-                        Completed 7/03/2025 | Assessment ID : 109987
-                      </span>
-                    </div>
-                    <div
-                      id="assessment-by-container"
-                      class="assessment-taken-page-assessment-by-container2"
-                    >
-                      <img
-                        id="assessment-image"
-                        alt="image"
-                        src="https://play.teleporthq.io/static/svg/default-img.svg"
-                        class="assessment-taken-page-assessment-image3"
-                      />
-                      <span
-                        id="Assessment-by-text"
-                        class="assessment-taken-page-assessment-by-text2"
-                      >
-                        Assessment by Flashyre
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="remaining-attempts-container"
-                class="assessment-taken-page-remaining-attempts-container"
-              >
-                <div
-                  id="remaining-attempts"
-                  class="assessment-taken-page-remaining-attempts"
-                >
-                  <span class="assessment-taken-page-text29">
-                    Attempt(s) Remaining
-                  </span>
-                  <span>2</span>
-                </div>
-                <svg
-                  id="right-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="assessment-taken-page-right-icon2"
-                >
-                  <path
-                    d="m10 16l4-4l-4-4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <span id="num-text" class="assessment-taken-page-num-text2">
-            See More
-          </span>
-        </div> -->
+
+                    <assessment-attempts-list 
+                    *ngIf="showAttempts[assessment.assessment_id]" 
+                    [assessmentId]="assessment.assessment_id">
+                  </assessment-attempts-list>
+
       </div>
     </div>
   </div>
