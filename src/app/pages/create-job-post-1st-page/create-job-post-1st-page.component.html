@@ -1,0 +1,1878 @@
+<div class="create-job-post1st-page-container10">
+  <div
+    id="create-job-post-main-container"
+    class="create-job-post1st-page-create-job-post-main-container"
+  >
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name3"
+    >
+      <ng-template #text>
+        <div class="create-job-post1st-page-fragment10">
+          <span class="create-job-post1st-page-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="create-job-post1st-page-fragment11">
+          <span class="create-job-post1st-page-text11">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="create-job-post1st-page-fragment12">
+          <span class="create-job-post1st-page-text12">Job Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="create-job-post1st-page-fragment13">
+          <span class="create-job-post1st-page-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="create-job-post1st-page-fragment14">
+          <span class="create-job-post1st-page-text14">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="create-job-post1st-page-fragment15">
+          <span class="create-job-post1st-page-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="create-job-post1st-page-fragment16">
+          <span class="create-job-post1st-page-text16">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="create-job-post1st-page-fragment17">
+          <span class="create-job-post1st-page-text17">Notifications</span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="create-job-post1st-page-fragment18">
+          <span class="create-job-post1st-page-text18">Jobs Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="create-job-post1st-page-fragment19">
+          <span class="create-job-post1st-page-text19">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="create-job-post1st-page-fragment20">
+          <span class="create-job-post1st-page-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="create-job-post1st-page-fragment21">
+          <span class="create-job-post1st-page-text21">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="create-job-post1st-page-fragment22">
+          <span class="create-job-post1st-page-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text15>
+        <div class="create-job-post1st-page-fragment23">
+          <span class="create-job-post1st-page-text23">Leslie Alexander</span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="create-job-post1st-page-fragment24">
+          <span class="create-job-post1st-page-text24">Google</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="create-job-post1st-page-fragment25">
+          <span class="create-job-post1st-page-text25">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text32>
+        <div class="create-job-post1st-page-fragment26">
+          <span class="create-job-post1st-page-text26">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="create-job-post1st-page-fragment27">
+          <span class="create-job-post1st-page-text30">2</span>
+        </div>
+      </ng-template>
+    </navbar-for-recruiter-view>
+    <div
+      id="create-job-post-container"
+      class="create-job-post1st-page-create-job-post-container"
+    >
+      <div
+        id="progress-bar-1-container"
+        class="create-job-post1st-page-progress-bar1-container"
+      >
+        <div class="create-job-post1st-page-container11">
+          <div class="create-job-post1st-page-container12">
+            <dangerous-html
+              html="<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Responsive Progress Bar</title>
+  <style>
+    /* Container for the progress bar */
+    .progress-bar {
+      display: flex;
+      overflow: visible;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      font-family: Inter, sans-serif;
+    }
+
+    /* Style for each step */
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      flex: 1;
+    }
+
+    /* Line between steps */
+    .step:before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: calc(-40% + 15px); /* Adjust position to align the line between circles */
+      width: calc(80% - 30px); /* Width adjusted to match circle diameter */
+      height: 2px;
+      background-color: #ccc;
+      z-index: 0;
+    }
+
+    /* Remove line before the first step */
+    .step:first-child:before {
+      display: none;
+    }
+
+    /* Circle for each step */
+    .step-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #3AC14A;
+      color: white;
+      font-size: 1rem;
+      z-index: 1;
+    }
+
+    /* Change background color for the last three step circles */
+    .step:nth-last-child(-n+3) .step-circle {
+      background-color: #747474;
+      color: white;
+      border: none;
+    }
+
+    /* Label under each circle */
+    .step span {
+      margin-top: 8px;
+      font-size: 1rem;
+      color: #18191C;
+    }
+
+
+     /* Media query for responsiveness */
+    @media (max-width: 728px) {
+      .progress-bar {
+        width: 90%;
+      }
+
+      .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        font-weig: 400;
+      }
+
+      .step span {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 478px) {
+
+      .step-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 0.6rem;
+      }
+
+      .step span {
+        font-size: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='progress-bar'>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Create Job Post</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Assessment for Job</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Interview process</span>
+    </div>
+  </div>
+</body>
+</html>
+"
+            ></dangerous-html>
+          </div>
+        </div>
+      </div>
+      <span
+        id="create-job-post-text"
+        class="create-job-post1st-page-create-job-post-text"
+      >
+        Create Job Post
+      </span>
+      <div
+        id="jd-main-container"
+        class="create-job-post1st-page-jd-main-container"
+      >
+        <span
+          id="upload-attachment-text"
+          class="create-job-post1st-page-upload-attachment-text"
+        >
+          Upload the attachment from this device
+        </span>
+        <div
+          id="upload-file-container"
+          class="create-job-post1st-page-upload-file-container"
+        >
+          <input
+            type="text"
+            id="upload-file-input"
+            placeholder="Select file"
+            class="create-job-post1st-page-upload-file-input input"
+          />
+          <div
+            id="upload-file-button-container"
+            class="create-job-post1st-page-upload-file-button-container"
+          >
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              class="create-job-post1st-page-icon1"
+            >
+              <path
+                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span class="create-job-post1st-page-text31">Upload File</span>
+          </div>
+        </div>
+        <span id="note-for-file" class="create-job-post1st-page-note-for-file">
+          Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
+        </span>
+      </div>
+      <div
+        id="enter-manually-text-container"
+        class="create-job-post1st-page-enter-manually-text-container"
+      >
+        <span
+          id="enter-manually-text"
+          class="create-job-post1st-page-enter-manually-text"
+        >
+          Enter Manually
+        </span>
+      </div>
+      <div
+        id="Role-Location-Container"
+        class="create-job-post1st-page-role-location-container"
+      >
+        <div id="role-container" class="create-job-post1st-page-role-container">
+          <div
+            id="role-text-container"
+            class="create-job-post1st-page-role-text-container"
+          >
+            <span id="role-text" class="create-job-post1st-page-role-text">
+              Role
+            </span>
+            <span
+              id="role-star-text"
+              class="create-job-post1st-page-role-star-text"
+            >
+              *
+            </span>
+          </div>
+          <div
+            id="role-input-container"
+            class="create-job-post1st-page-role-input-container"
+          >
+            <input
+              type="text"
+              id="Role-Input-Field"
+              placeholder="Enter Role"
+              class="create-job-post1st-page-role-input-field input"
+            />
+          </div>
+        </div>
+        <div
+          id="location-container"
+          class="create-job-post1st-page-location-container"
+        >
+          <div
+            id="location-text-container"
+            class="create-job-post1st-page-location-text-container"
+          >
+            <span
+              id="location-text"
+              class="create-job-post1st-page-location-text"
+            >
+              Location
+            </span>
+            <span
+              id="location-star-text"
+              class="create-job-post1st-page-location-star-text"
+            >
+              *
+            </span>
+          </div>
+          <div
+            id="location-input-container"
+            class="create-job-post1st-page-location-input-container"
+          >
+            <div class="create-job-post1st-page-container13">
+              <div class="create-job-post1st-page-container14">
+                <dangerous-html
+                  html="
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      flex: 0 0 auto;
+      align-items: flex-start;
+      align-self: flex-start;
+      height: 100vh;
+      background-color: #FFFFFF;
+      width: 100%;
+    }
+    
+    .location-form {
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      height: 48px;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .location-input {
+      width: 100%;
+      padding-left: 14px;
+      border: 1px solid;
+      border-color: #A7A7A7;
+      border-radius: 4px;
+      font-size: 18px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+      height: 100%;
+    }
+    
+    .location-input:focus {
+      outline: none;
+      border-color: #4299e1;
+    }
+    
+    .location-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #A7A7A7;
+    }
+    
+    .suggestions {
+      position: absolute;
+      width: 100%;
+      max-height: 250px;
+      overflow: visible;
+      background: white;
+      border: 1px solid #A7A7A7;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 4px;
+      z-index: 10;
+      display: none;
+    }
+    
+    .suggestion-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f4f8;
+    }
+    
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    
+    .suggestion-item:hover {
+      background-color: #f0f4f8;
+    }
+    
+    .no-suggestions {
+      padding: 12px 16px;
+      color: #718096;
+      font-style: italic;
+    }
+    
+    .loading {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e2e8f0;
+      border-top: 2px solid #4299e1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* Media query for max-width 991px */
+    @media (max-width: 991px) {
+      .container {
+        height: 44px;
+      }
+      
+    }
+  </style>
+
+  <div class='container'>
+    <form class='location-form'>
+      <div class='input-wrapper'>
+        <input
+          type='text'
+          id='location'
+          class='location-input'
+          placeholder='Enter your location'
+          autocomplete='off'
+        />
+        <div class='loading' id='loading'></div>
+        <svg class='location-icon' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+          <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'></path>
+          <circle cx='12' cy='10' r='3'></circle>
+        </svg>
+      </div>
+      <div class='suggestions' id='suggestions'></div>
+    </form>
+  </div>
+
+  <script>
+    // DOM Elements
+    const locationInput = document.getElementById('location');
+    const suggestionsContainer = document.getElementById('suggestions');
+    const loadingIndicator = document.getElementById('loading');
+    const locationForm = document.querySelector('.location-form');
+    
+    // Variables
+    let debounceTimer;
+    const DEBOUNCE_DELAY = 300; // ms
+    
+    // Replace this with your actual API endpoint
+    const LOCATION_API_URL = 'https://api.example.com/locations/autocomplete';
+
+    // Event Listeners
+    locationInput.addEventListener('input', handleInput);
+    locationForm.addEventListener('submit', handleSubmit);
+    document.addEventListener('click', handleOutsideClick);
+
+    /**
+     * Handle input with debounce
+     */
+    function handleInput() {
+      const query = locationInput.value.trim();
+      
+      // Clear previous timer
+      clearTimeout(debounceTimer);
+      
+      // Hide suggestions if input is empty
+      if (query.length === 0) {
+        hideSuggestions();
+        return;
+      }
+      
+      // Set loading state
+      loadingIndicator.style.display = 'block';
+      
+      // Debounce API calls
+      debounceTimer = setTimeout(() => {
+        fetchLocationSuggestions(query);
+      }, DEBOUNCE_DELAY);
+    }
+
+    /**
+     * Fetch location suggestions from API
+     * @param {string} query - User input
+     */
+    async function fetchLocationSuggestions(query) {
+      try {
+        // In a real implementation, you would use fetch with your API
+        // This is a simulation with mock data for demonstration
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Mock data - replace with actual API call
+        const mockResponse = getMockSuggestions(query);
+        
+        // Display suggestions
+        displaySuggestions(mockResponse);
+      } catch (error) {
+        console.error('Error fetching location suggestions:', error);
+        suggestionsContainer.innerHTML = `
+          <div class='no-suggestions'>Unable to fetch suggestions. Please try again.</div>
+        `;
+        suggestionsContainer.style.display = 'block';
+      } finally {
+        loadingIndicator.style.display = 'none';
+      }
+    }
+
+    /**
+     * Mock function to simulate API responses
+     * Replace with actual API call in production
+     */
+    function getMockSuggestions(query) {
+      query = query.toLowerCase();
+      const cities = ['Multiple',
+        'New York, NY, USA',
+        'Los Angeles, CA, USA',
+        'Chicago, IL, USA',
+        'Houston, TX, USA',
+        'Phoenix, AZ, USA',
+        'Philadelphia, PA, USA',
+        'San Antonio, TX, USA',
+        'San Diego, CA, USA',
+        'Dallas, TX, USA',
+        'San Jose, CA, USA',
+        'London, UK',
+        'Paris, France',
+        'Tokyo, Japan',
+        'Sydney, Australia',
+        'Toronto, Canada'
+      ];
+      
+      return cities.filter(city => city.toLowerCase().includes(query));
+    }
+
+    /**
+     * Display suggestions in the dropdown
+     * @param {Array} suggestions - List of location suggestions
+     */
+    function displaySuggestions(suggestions) {
+      if (suggestions.length === 0) {
+        suggestionsContainer.innerHTML = `
+          <div class='no-suggestions'>No locations found</div>
+        `;
+      } else {
+        suggestionsContainer.innerHTML = suggestions
+          .map(location => `
+            <div class='suggestion-item' data-location='${location}'>${location}</div>
+          `)
+          .join('');
+          
+        // Add click event to suggestions
+        const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
+        suggestionItems.forEach(item => {
+          item.addEventListener('click', () => {
+            locationInput.value = item.dataset.location;
+            hideSuggestions();
+          });
+        });
+      }
+      
+      suggestionsContainer.style.display = 'block';
+    }
+
+    /**
+     * Hide suggestions dropdown
+     */
+    function hideSuggestions() {
+      suggestionsContainer.style.display = 'none';
+    }
+
+    /**
+     * Handle clicks outside the suggestions dropdown
+     */
+    function handleOutsideClick(event) {
+      if (!suggestionsContainer.contains(event.target) && event.target !== locationInput) {
+        hideSuggestions();
+      }
+    }
+
+    /**
+     * Handle form submission
+     */
+    function handleSubmit(event) {
+      event.preventDefault();
+      const location = locationInput.value.trim();
+      
+      if (location) {
+        alert(`Location selected: ${location}`);
+        // Here you would typically send this data to your backend
+      } else {
+        alert('Please select a location');
+      }
+    }
+
+    // In a real implementation, replace the mock data with actual API calls:
+    // 
+    // async function fetchLocationSuggestions(query) {
+    //   try {
+    //     const response = await fetch(`${LOCATION_API_URL}?query=${encodeURIComponent(query)}`);
+    //     if (!response.ok) throw new Error('Network response was not ok');
+    //     const data = await response.json();
+    //     displaySuggestions(data.suggestions);
+    //   } catch (error) {
+    //     console.error('Error fetching location suggestions:', error);
+    //     suggestionsContainer.innerHTML = `
+    //       <div class='no-suggestions'>Unable to fetch suggestions. Please try again.</div>
+    //     `;
+    //     suggestionsContainer.style.display = 'block';
+    //   } finally {
+    //     loadingIndicator.style.display = 'none';
+    //   }
+    // }
+  </script>
+"
+                ></dangerous-html>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="jobtype-workplace-container"
+        class="create-job-post1st-page-jobtype-workplace-container"
+      >
+        <div
+          id="job-type-container"
+          class="create-job-post1st-page-job-type-container"
+        >
+          <span
+            id="job-type-text"
+            class="create-job-post1st-page-job-type-text"
+          >
+            Job Type
+          </span>
+          <div
+            id="job-types-container"
+            class="create-job-post1st-page-job-types-container"
+          >
+            <div
+              id="permanent-container"
+              class="create-job-post1st-page-permanent-container"
+            >
+              <input
+                type="radio"
+                id="permanent-radio"
+                name="permanent-radio"
+                class="create-job-post1st-page-permanent-radio"
+              />
+              <label
+                id="permanent-label"
+                class="create-job-post1st-page-permanent-label"
+              >
+                Permanent
+              </label>
+            </div>
+            <div
+              id="contract-container"
+              class="create-job-post1st-page-contract-container"
+            >
+              <input
+                type="radio"
+                id="contract-radio"
+                name="contract-radio"
+                class="create-job-post1st-page-contract-radio"
+              />
+              <span
+                id="contract-text"
+                class="create-job-post1st-page-contract-text"
+              >
+                Contract
+              </span>
+            </div>
+            <div
+              id="part-time-container"
+              class="create-job-post1st-page-part-time-container"
+            >
+              <input
+                type="radio"
+                id="part-time-radio"
+                name="part-time-radio"
+                class="create-job-post1st-page-part-time-radio"
+              />
+              <span
+                id="part-time-text"
+                class="create-job-post1st-page-part-time-text"
+              >
+                Part-time
+              </span>
+            </div>
+            <div
+              id="internship-text-container"
+              class="create-job-post1st-page-internship-text-container"
+            >
+              <input
+                type="radio"
+                id="internship-radio"
+                name="internship-radio"
+                class="create-job-post1st-page-internship-radio"
+              />
+              <span
+                id="internship-text"
+                class="create-job-post1st-page-internship-text"
+              >
+                Internship switch
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          id="workplace-container"
+          class="create-job-post1st-page-workplace-container"
+        >
+          <span
+            id="workplace-text"
+            class="create-job-post1st-page-workplace-text"
+          >
+            Workplace Type
+          </span>
+          <div
+            id="workplaces-container"
+            class="create-job-post1st-page-workplaces-container"
+          >
+            <div
+              id="onsite-container"
+              class="create-job-post1st-page-onsite-container"
+            >
+              <input
+                type="radio"
+                id="onsite-radio"
+                name="onsite-radio"
+                class="create-job-post1st-page-onsite-radio"
+              />
+              <label
+                id="onsite-label"
+                class="create-job-post1st-page-onsite-label"
+              >
+                Onsite
+              </label>
+            </div>
+            <div
+              id="hybrid-container"
+              class="create-job-post1st-page-hybrid-container"
+            >
+              <input
+                type="radio"
+                id="hybrid-radio"
+                name="hybrid-radio"
+                class="create-job-post1st-page-hybrid-radio"
+              />
+              <span
+                id="hybrid-text"
+                class="create-job-post1st-page-hybrid-text"
+              >
+                Hybrid
+              </span>
+            </div>
+            <div
+              id="remote-container"
+              class="create-job-post1st-page-remote-container"
+            >
+              <input
+                type="radio"
+                id="remote-radio"
+                name="remote-radio"
+                class="create-job-post1st-page-remote-radio"
+              />
+              <span
+                id="remote-text"
+                class="create-job-post1st-page-remote-text"
+              >
+                Remote
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="total-and-relevant-experience-container"
+        class="create-job-post1st-page-total-and-relevant-experience-container"
+      >
+        <div
+          id="total-experience-container"
+          class="create-job-post1st-page-total-experience-container"
+        >
+          <div
+            id="total-experience-text-container"
+            class="create-job-post1st-page-total-experience-text-container"
+          >
+            <span
+              id="total-experience-text"
+              class="create-job-post1st-page-total-experience-text"
+            >
+              Total Experience
+            </span>
+          </div>
+          <div
+            id="total-experience-code-container"
+            class="create-job-post1st-page-total-experience-code-container"
+          >
+            <div class="create-job-post1st-page-container15">
+              <div class="create-job-post1st-page-container16">
+                <dangerous-html
+                  html="
+    <style>
+        .range-indicator {
+            position: relative;
+            width: 90%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #E4E5E8;
+        }
+
+        .filled-segment {
+            position: absolute;
+            top: 20px;
+            height: 5px;
+            background-color: #05356C;
+        }
+
+        .marker {
+            position: absolute;
+            top: 17px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border-width: 2px;
+            border-color: #05356C;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .label {
+            position: absolute;
+            top: 0;
+            color: #6B7280;
+            font-family: sans-serif;
+            font-size: 12px;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <div class='range-indicator' id='rangeIndicator'>
+        <div class='line'></div>
+        <div class='filled-segment' id='filledSegment'></div>
+        <div class='marker' id='markerLeft' style='left: 55px;'></div>
+        <div class='marker' id='markerRight' style='left: 175px;'></div>
+        <div class='label' id='labelLeft' style='left: 60px;'>2yrs</div>
+        <div class='label' id='labelRight' style='left: 180px;'>6yrs</div>
+    </div>
+
+    <script>
+        const rangeIndicator = document.getElementById('rangeIndicator');
+        const markerLeft = document.getElementById('markerLeft');
+        const markerRight = document.getElementById('markerRight');
+        const labelLeft = document.getElementById('labelLeft');
+        const labelRight = document.getElementById('labelRight');
+        const filledSegment = document.getElementById('filledSegment');
+
+        let isDragging = false;
+        let currentMarker = null;
+
+        function updateFilledSegment() {
+            const leftPos = parseInt(markerLeft.style.left);
+            const rightPos = parseInt(markerRight.style.left);
+            filledSegment.style.left = `${leftPos + 5}px`;
+            filledSegment.style.width = `${rightPos - leftPos}px`;
+        }
+
+        function updateLabelPosition(marker, label) {
+            const markerPos = parseInt(marker.style.left);
+            label.style.left = `${markerPos + 5}px`;
+        }
+
+        function onMouseMove(e) {
+            if (!isDragging) return;
+
+            const rect = rangeIndicator.getBoundingClientRect();
+            let newLeft = e.clientX - rect.left - 5;
+
+            const minLeft = 0;
+            const maxLeft = rect.width - 10;
+
+            if (currentMarker === markerLeft) {
+                newLeft = Math.max(minLeft, Math.min(newLeft, parseInt(markerRight.style.left) - 10));
+            } else if (currentMarker === markerRight) {
+                newLeft = Math.min(maxLeft, Math.max(newLeft, parseInt(markerLeft.style.left) + 10));
+            }
+
+            currentMarker.style.left = `${newLeft}px`;
+            updateFilledSegment();
+            updateLabelPosition(currentMarker, currentMarker === markerLeft ? labelLeft : labelRight);
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        function onMouseDown(e) {
+            isDragging = true;
+            currentMarker = e.target;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        }
+
+        markerLeft.addEventListener('mousedown', onMouseDown);
+        markerRight.addEventListener('mousedown', onMouseDown);
+
+        // Initial setup
+        updateFilledSegment();
+    </script>
+"
+                ></dangerous-html>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          id="relevant-experience-container"
+          class="create-job-post1st-page-relevant-experience-container"
+        >
+          <div
+            id="relevant-experience-text-container"
+            class="create-job-post1st-page-relevant-experience-text-container"
+          >
+            <span
+              id="relevant-experience-text"
+              class="create-job-post1st-page-relevant-experience-text"
+            >
+              Relevant Experience
+            </span>
+          </div>
+          <div
+            id="relevant-experience-code-container"
+            class="create-job-post1st-page-relevant-experience-code-container"
+          >
+            <div class="create-job-post1st-page-container17">
+              <div class="create-job-post1st-page-container18">
+                <dangerous-html
+                  html="
+    <style>
+        .range-indicator {
+            position: relative;
+            width: 90%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #E4E5E8;
+        }
+
+        .filled-segment {
+            position: absolute;
+            top: 20px;
+            height: 5px;
+            background-color: #05356C;
+        }
+
+        .marker {
+            position: absolute;
+            top: 17px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border-width: 2px;
+            border-color: #05356C;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .label {
+            position: absolute;
+            top: 0;
+            color: #6B7280;
+            font-family: sans-serif;
+            font-size: 12px;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <div class='range-indicator' id='rangeIndicator'>
+        <div class='line'></div>
+        <div class='filled-segment' id='filledSegment'></div>
+        <div class='marker' id='markerLeft' style='left: 55px;'></div>
+        <div class='marker' id='markerRight' style='left: 175px;'></div>
+        <div class='label' id='labelLeft' style='left: 60px;'>2yrs</div>
+        <div class='label' id='labelRight' style='left: 180px;'>6yrs</div>
+    </div>
+
+    <script>
+        const rangeIndicator = document.getElementById('rangeIndicator');
+        const markerLeft = document.getElementById('markerLeft');
+        const markerRight = document.getElementById('markerRight');
+        const labelLeft = document.getElementById('labelLeft');
+        const labelRight = document.getElementById('labelRight');
+        const filledSegment = document.getElementById('filledSegment');
+
+        let isDragging = false;
+        let currentMarker = null;
+
+        function updateFilledSegment() {
+            const leftPos = parseInt(markerLeft.style.left);
+            const rightPos = parseInt(markerRight.style.left);
+            filledSegment.style.left = `${leftPos + 5}px`;
+            filledSegment.style.width = `${rightPos - leftPos}px`;
+        }
+
+        function updateLabelPosition(marker, label) {
+            const markerPos = parseInt(marker.style.left);
+            label.style.left = `${markerPos + 5}px`;
+        }
+
+        function onMouseMove(e) {
+            if (!isDragging) return;
+
+            const rect = rangeIndicator.getBoundingClientRect();
+            let newLeft = e.clientX - rect.left - 5;
+
+            const minLeft = 0;
+            const maxLeft = rect.width - 10;
+
+            if (currentMarker === markerLeft) {
+                newLeft = Math.max(minLeft, Math.min(newLeft, parseInt(markerRight.style.left) - 10));
+            } else if (currentMarker === markerRight) {
+                newLeft = Math.min(maxLeft, Math.max(newLeft, parseInt(markerLeft.style.left) + 10));
+            }
+
+            currentMarker.style.left = `${newLeft}px`;
+            updateFilledSegment();
+            updateLabelPosition(currentMarker, currentMarker === markerLeft ? labelLeft : labelRight);
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        function onMouseDown(e) {
+            isDragging = true;
+            currentMarker = e.target;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        }
+
+        markerLeft.addEventListener('mousedown', onMouseDown);
+        markerRight.addEventListener('mousedown', onMouseDown);
+
+        // Initial setup
+        updateFilledSegment();
+    </script>
+"
+                ></dangerous-html>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="budget-container"
+        class="create-job-post1st-page-budget-container"
+      >
+        <span id="budget-text" class="create-job-post1st-page-budget-text">
+          Budget
+        </span>
+        <div
+          id="budgets-container"
+          class="create-job-post1st-page-budgets-container"
+        >
+          <div
+            id="weekly-container"
+            class="create-job-post1st-page-weekly-container"
+          >
+            <input
+              type="radio"
+              id="weekly-radio"
+              name="weekly-radio"
+              class="create-job-post1st-page-weekly-radio"
+            />
+            <label
+              id="weekly-label"
+              class="create-job-post1st-page-weekly-label"
+            >
+              Weekly
+            </label>
+          </div>
+          <div
+            id="monthly-container"
+            class="create-job-post1st-page-monthly-container"
+          >
+            <input
+              type="radio"
+              id="monthly-radio"
+              name="monthly-radio"
+              class="create-job-post1st-page-monthly-radio"
+            />
+            <span
+              id="monthly-text"
+              class="create-job-post1st-page-monthly-text"
+            >
+              Monthly
+            </span>
+          </div>
+          <div
+            id="annually-container"
+            class="create-job-post1st-page-annually-container"
+          >
+            <input
+              type="radio"
+              id="annually-radio"
+              name="annually-radio"
+              class="create-job-post1st-page-annually-radio"
+            />
+            <span
+              id="annually-text"
+              class="create-job-post1st-page-annually-text"
+            >
+              Annually
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="min-max-budget-container"
+        class="create-job-post1st-page-min-max-budget-container"
+      >
+        <div
+          id="min-budget-container"
+          class="create-job-post1st-page-min-budget-container"
+        >
+          <div
+            id="min-budget-text-container"
+            class="create-job-post1st-page-min-budget-text-container"
+          >
+            <span
+              id="min-budget-text"
+              class="create-job-post1st-page-min-budget-text"
+            >
+              Min Budget
+            </span>
+          </div>
+          <div
+            id="min-budget-input-container"
+            class="create-job-post1st-page-min-budget-input-container"
+          >
+            <form
+              id="min-budget-form"
+              class="create-job-post1st-page-min-budget-form input"
+            >
+              <span id="inr-min" class="create-job-post1st-page-inr-min">
+                INR
+              </span>
+              <svg
+                id="drop-down-icon-min"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="create-job-post1st-page-drop-down-icon-min"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+            <input
+              type="text"
+              id="min-budget-input-field"
+              placeholder="Min"
+              class="create-job-post1st-page-min-budget-input-field input"
+            />
+          </div>
+        </div>
+        <div
+          id="max-budget-container"
+          class="create-job-post1st-page-max-budget-container"
+        >
+          <div
+            id="max-budget-text-container"
+            class="create-job-post1st-page-max-budget-text-container"
+          >
+            <span
+              id="max-budget-text"
+              class="create-job-post1st-page-max-budget-text"
+            >
+              Max Budget
+            </span>
+          </div>
+          <div
+            id="max-budget-input-container"
+            class="create-job-post1st-page-max-budget-input-container"
+          >
+            <form
+              id="max-budget-form"
+              class="create-job-post1st-page-max-budget-form input"
+            >
+              <span id="inr-max" class="create-job-post1st-page-inr-max">
+                INR
+              </span>
+              <svg
+                id="drop-down-icon-max"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="create-job-post1st-page-drop-down-icon-max"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+            <input
+              type="text"
+              id="max-budget-input"
+              placeholder="Max"
+              class="create-job-post1st-page-max-budget-input input"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        id="notice-period-container"
+        class="create-job-post1st-page-notice-period-container"
+      >
+        <div
+          id="notice-period-text-container"
+          class="create-job-post1st-page-notice-period-text-container"
+        >
+          <span
+            id="university-institute-text"
+            class="create-job-post1st-page-university-institute-text"
+          >
+            Notice Period
+          </span>
+          <span
+            id="notice-period-star-text"
+            class="create-job-post1st-page-notice-period-star-text"
+          >
+            *
+          </span>
+        </div>
+        <div
+          id="notice-period-input-container"
+          class="create-job-post1st-page-notice-period-input-container"
+        >
+          <input
+            type="text"
+            id="notice-period-input-filed"
+            placeholder="Enter Notice Period"
+            class="create-job-post1st-page-notice-period-input-filed input"
+          />
+        </div>
+      </div>
+      <div
+        id="skills-container"
+        class="create-job-post1st-page-skills-container"
+      >
+        <div
+          id="skill-text-container"
+          class="create-job-post1st-page-skill-text-container"
+        >
+          <span id="skill-text" class="create-job-post1st-page-skill-text">
+            Skills
+          </span>
+          <span
+            id="skill-star-text"
+            class="create-job-post1st-page-skill-star-text"
+          >
+            *
+          </span>
+        </div>
+        <div
+          id="skills-input-container"
+          class="create-job-post1st-page-skills-input-container"
+        >
+          <div class="create-job-post1st-page-container19">
+            <div class="create-job-post1st-page-container20">
+              <dangerous-html
+                html="
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #A7A7A7;
+            border-radius: 4px;
+            height: 100%;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e1f5fe;
+            color: #0288d1;
+            padding: 6px;
+            border-radius: 16px;
+            margin: 4px;
+            font-size: 16px;
+        }
+
+        .tag span {
+            margin-right: 6px;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: #0288d1;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .tag-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .suggestions {
+            position: absolute;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background-color: white;
+            max-height: 200px;
+            overflow-y: auto;
+            width: calc(100% - 40px);
+            max-width: 600px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 10;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .active-suggestion {
+            background-color: #e1f5fe;
+        }
+
+
+    </style>
+
+
+
+    <div class='tag-container' id='tagContainer'>
+        <input type='text' class='tag-input' id='tagInput' placeholder='Type to add Skills...'>
+    </div>
+    <div class='suggestions' id='suggestions'></div>
+
+    <script>
+        // Sample tags for demonstration
+        const availableTags = [
+            'JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular', 
+            'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby',
+            'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB',
+            'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API'
+        ];
+
+        const tagContainer = document.getElementById('tagContainer');
+        const tagInput = document.getElementById('tagInput');
+        const suggestions = document.getElementById('suggestions');
+        
+        let selectedTags = [];
+        let activeSuggestionIndex = -1;
+
+        // Filter suggestions based on input
+        function filterSuggestions(input) {
+            if (!input) return [];
+            
+            const inputLower = input.toLowerCase();
+            return availableTags.filter(tag => 
+                tag.toLowerCase().includes(inputLower) && 
+                !selectedTags.includes(tag)
+            );
+        }
+
+        // Display suggestions
+        function showSuggestions(filteredSuggestions) {
+            suggestions.innerHTML = '';
+            
+            if (filteredSuggestions.length === 0) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            filteredSuggestions.forEach((suggestion, index) => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.textContent = suggestion;
+                
+                item.addEventListener('click', () => {
+                    addTag(suggestion);
+                    tagInput.value = '';
+                    suggestions.style.display = 'none';
+                    tagInput.focus();
+                });
+
+                suggestions.appendChild(item);
+            });
+
+            suggestions.style.display = 'block';
+            activeSuggestionIndex = -1;
+        }
+
+        // Add a new tag
+        function addTag(text) {
+            if (!text || selectedTags.includes(text)) return;
+            
+            selectedTags.push(text);
+            
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            
+            const tagText = document.createElement('span');
+            tagText.textContent = text;
+            tag.appendChild(tagText);
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.addEventListener('click', () => {
+                tag.remove();
+                selectedTags = selectedTags.filter(t => t !== text);
+            });
+            
+            tag.appendChild(removeBtn);
+            tagContainer.insertBefore(tag, tagInput);
+        }
+
+        // Handle navigation through suggestions with keyboard
+        function navigateSuggestions(direction) {
+            const items = suggestions.querySelectorAll('.suggestion-item');
+            if (items.length === 0) return;
+            
+            // Remove active class from current selection
+            if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+                items[activeSuggestionIndex].classList.remove('active-suggestion');
+            }
+            
+            // Update index
+            if (direction === 'down') {
+                activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+            } else {
+                activeSuggestionIndex = activeSuggestionIndex <= 0 ? items.length - 1 : activeSuggestionIndex - 1;
+            }
+            
+            // Add active class to new selection
+            items[activeSuggestionIndex].classList.add('active-suggestion');
+            items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+        }
+
+        // Event listeners
+        tagInput.addEventListener('input', () => {
+            const filteredSuggestions = filterSuggestions(tagInput.value);
+            showSuggestions(filteredSuggestions);
+        });
+
+        tagInput.addEventListener('keydown', (e) => {
+            // Enter key - add tag from input or selected suggestion
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const items = suggestions.querySelectorAll('.suggestion-item');
+                if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+                    addTag(items[activeSuggestionIndex].textContent);
+                } else if (tagInput.value) {
+                    addTag(tagInput.value);
+                }
+                tagInput.value = '';
+                suggestions.style.display = 'none';
+            }
+            // Arrow down - navigate down
+            else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                navigateSuggestions('down');
+            }
+            // Arrow up - navigate up
+            else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                navigateSuggestions('up');
+            }
+            // Backspace - remove last tag if input is empty
+            else if (e.key === 'Backspace' && !tagInput.value) {
+                const lastIndex = selectedTags.length - 1;
+                if (lastIndex >= 0) {
+                    const lastTag = selectedTags[lastIndex];
+                    selectedTags.pop();
+                    // Remove the last tag element
+                    const tags = tagContainer.querySelectorAll('.tag');
+                    tags[tags.length - 1].remove();
+                }
+            }
+            // Escape - close suggestions
+            else if (e.key === 'Escape') {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Close suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!tagContainer.contains(e.target) && !suggestions.contains(e.target)) {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Focus input when clicking on container
+        tagContainer.addEventListener('click', (e) => {
+            if (e.target === tagContainer) {
+                tagInput.focus();
+            }
+        });
+    </script>
+
+
+"
+              ></dangerous-html>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="job-description-container"
+        class="create-job-post1st-page-job-description-container"
+      >
+        <div class="create-job-post1st-page-container21">
+          <div class="create-job-post1st-page-container22">
+            <dangerous-html
+              html="
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .job-title {
+            padding: 15px;
+            font-size: 20px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .required {
+            color: #e74c3c;
+            margin-left: 5px;
+        }
+        
+        .toolbar {
+            display: flex;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+        }
+        
+        .format-btn {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .format-btn:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .format-btn.active {
+            background-color: #ddd;
+        }
+        
+        #highlight-btn {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            margin-left: 10px;
+        }
+        
+        #highlight-btn:hover {
+            background-color: #ffeeba;
+        }
+
+        .separator1{
+            width: 1px;
+            height: 35px;
+            background-color: #ACACAD;
+            margin: 0 0;
+        }
+        
+        .separator2 {
+            width: 1px;
+            height: 35px;
+            background-color: #ACACAD;
+            margin: 0 0;
+        }
+        
+        .editor-content {
+            padding: 0px;
+            background-color: #fff;
+        }
+        
+        .editable-area {
+            border: 1px solid #ddd;
+            min-height: 200px;
+            padding: 15px;
+            border-radius: 4px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+        
+        .editable-area:focus {
+            outline: none;
+            border-color: #4a89dc;
+        }
+        
+        .editable-area[data-empty='true']::before {
+            content: attr(data-placeholder);
+            color: #999;
+        }
+    </style>
+
+    <div class='container'>
+        <div class='job-title'>
+            Job description <span></span>
+        </div>
+        
+        <div class='toolbar'>
+            <button onclick='formatText('bold')' id='bold-btn' class='format-btn' title='Bold'>B</button>
+            <button onclick='formatText('italic')' id='italic-btn' class='format-btn' title='Italic'><i>I</i></button>
+            <button onclick='formatText('underline')' id='underline-btn' class='format-btn' title='Underline'><u>U</u></button>
+            <button onclick='formatText('list')' id='list-btn' class='format-btn' title='List'>≡</button>
+            
+            <div class='separator1'></div>
+
+            <button onclick='formatText('highlight')' id='highlight-btn' class='format-btn' title='Highlight'>H</button>
+            
+            <div class='separator2'></div>
+    
+        </div>
+        
+        <div class='editor-content'>
+            <div id='editor' class='editable-area' contenteditable='true' data-placeholder='Enter your text here...' data-empty='true' onkeyup='checkEmpty('editor')' onblur='checkEmpty('editor')'></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the editor
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the editable area
+            checkEmpty('editor');
+            
+            // Add event listener for focus
+            document.getElementById('editor').addEventListener('focus', function() {
+                if (this.getAttribute('data-empty') === 'true') {
+                    this.setAttribute('data-empty', 'false');
+                    this.textContent = '';
+                }
+            });
+        });
+        
+        // Function to check if the editable area is empty
+        function checkEmpty(id) {
+            const element = document.getElementById(id);
+            if (!element) return;
+            
+            const isEmpty = element.textContent.trim() === '';
+            element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
+        }
+        
+        // Function to apply formatting to selected text
+        function formatText(type) {
+            // Get the selection
+            const selection = window.getSelection();
+            
+            // Check if something is selected
+            if (selection.rangeCount === 0) {
+                return;
+            }
+            
+            // For list formatting, we'll handle it even if no text is selected
+            if (type === 'list' || selection.toString().length > 0) {
+                // Format based on type
+                switch(type) {
+                    case 'bold':
+                        document.execCommand('bold', false, null);
+                        break;
+                    case 'italic':
+                        document.execCommand('italic', false, null);
+                        break;
+                    case 'underline':
+                        document.execCommand('underline', false, null);
+                        break;
+                    case 'list':
+                        document.execCommand('insertUnorderedList', false, null);
+                        break;
+                    case 'highlight':
+                        document.execCommand('backColor', false, '#fff3cd');
+                        break;
+                }
+            }
+            
+            // Make sure to re-focus on the editable area
+            document.getElementById('editor').focus();
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'b') {
+                    e.preventDefault();
+                    formatText('bold');
+                } else if (e.key === 'i') {
+                    e.preventDefault();
+                    formatText('italic');
+                } else if (e.key === 'u') {
+                    e.preventDefault();
+                    formatText('underline');
+                }
+            }
+        });
+    </script>
+"
+            ></dangerous-html>
+          </div>
+        </div>
+      </div>
+      <div
+        id="submit-cancel-buttons-container"
+        class="create-job-post1st-page-submit-cancel-buttons-container"
+      >
+        <button
+          id="cancel-button"
+          name="cancel-button"
+          type="button"
+          class="create-job-post1st-page-cancel-button button"
+        >
+          <span id="cancel-text" class="create-job-post1st-page-cancel-text">
+            Cancel
+          </span>
+        </button>
+        <button
+          id="submit-button"
+          name="submit-button"
+          type="button"
+          class="create-job-post1st-page-submit-button button"
+        >
+          <span id="submit-text" class="create-job-post1st-page-submit-text">
+            Submit
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

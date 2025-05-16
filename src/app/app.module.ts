@@ -49,10 +49,10 @@ const routes = [
       ),
   },
   {
-    path: 'recruiter-view-3rd-page',
+    path: 'recruiter-view-3rd-page1',
     loadChildren: () =>
-      import('./pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module').then(
-        (m) => m.RecruiterView3rdPageModule
+      import('./pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module').then(
+        (m) => m.RecruiterView3rdPage1Module
       ),
   },
   {
@@ -186,6 +186,13 @@ const routes = [
     loadChildren: () =>
       import('./pages/profile-overview-page/profile-overview-page.module').then(
         (m) => m.ProfileOverviewPageModule
+      ),
+  },
+   {
+    path: 'create-job-post-1st-page',
+    loadChildren: () =>
+      import('./pages/create-job-post-1st-page/create-job-post-1st-page.module').then(
+        (m) => m.CreateJobPost1stPageModule
       ),
   },
   {

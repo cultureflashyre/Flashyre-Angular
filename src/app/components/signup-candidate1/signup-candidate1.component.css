@@ -186,7 +186,7 @@
 .signup-candidate1-password-container1 {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -195,7 +195,7 @@
 .signup-candidate1-password1 {
   flex: 0 0 auto;
   width: 320px;
-  height: 76px;
+  height: auto;
   display: flex;
   position: relative;
   align-items: flex-start;
