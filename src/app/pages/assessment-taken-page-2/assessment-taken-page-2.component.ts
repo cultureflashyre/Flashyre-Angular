@@ -165,4 +165,32 @@ export class AssessmentTakenPage2 implements OnInit {
   onReattempt() {
   // Your logic for handling re-attempt
   }
+
+  // New variables to manage views
+  showDetailView: boolean = false;
+  selectedAttempt: any = null;
+
+  // Called when user clicks the right icon for an attempt
+  //openDetailView(attempt: any) {
+    //this.selectedAttempt = attempt;
+    //this.showDetailView = true;
+  //}
+
+  openDetailView(attempt: any) {
+    this.selectedAttempt = {
+      ...attempt, // all attempt properties
+      attempts_remaining: this.attempts_remaining,
+      created_by: this.created_by,
+      assessment_title: this.assessment_title,
+      assessment_logo_url: this.assessment_logo_url, // add more if needed
+      assessment_id: this.assessment_id
+    };
+    this.showDetailView = true;
+  }
+
+  // Called when user clicks back icon in detail view
+  closeDetailView() {
+    this.selectedAttempt = null;
+    this.showDetailView = false;
+  }
 }

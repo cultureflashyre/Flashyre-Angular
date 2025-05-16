@@ -104,6 +104,7 @@
     <div
       id="cloud-architecture-details-container"
       class="assessment-taken-page2-cloud-architecture-details-container"
+      *ngIf="!showDetailView"
     >
       <div
         id="text-id-attempts-container"
@@ -267,6 +268,7 @@
                 height="24"
                 viewBox="0 0 24 24"
                 class="assessment-taken-page2-right-icon"
+                (click)="openDetailView(attempt)"
               >
                 <path
                   d="m10 16l4-4l-4-4"
@@ -296,5 +298,10 @@
         </button>
       </div>
     </div>
+    <assessment-detailed-results 
+    *ngIf="showDetailView"
+    [assessmentData]="selectedAttempt"
+    (back)="closeDetailView()">
+  </assessment-detailed-results>
   </div>
 </div>

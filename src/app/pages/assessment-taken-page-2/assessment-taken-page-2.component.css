@@ -338,6 +338,7 @@
 }
  
 .assessment-taken-page2-score-container {
+  gap: 16px;
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
@@ -346,7 +347,7 @@
 .assessment-taken-page2-score-board-container {
   gap: 4px;
   flex: 0 0 auto;
-  width: 260px;
+  width: 220px;
   height: 43px;
   display: flex;
   align-items: flex-start;
@@ -445,7 +446,7 @@ body {
 
 .progress {
   position: relative;
-  width: 300px; /* Width of the progress bar */
+  width: 150px; /* Width of the progress bar */
   height: 6px; /* Height of the progress bar */
   background-color: #ccc; /* Background color for unfilled portion */
   border-radius: 15px; /* Rounded corners */
