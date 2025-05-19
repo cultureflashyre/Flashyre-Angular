@@ -12,18 +12,25 @@
             id="cloud-architecture-text-container"
             class="assessment-taken-page2-cloud-architecture-text-container"
           >
+           <button
+    (click)="goBack()"
+    class="back-button"
+    title="Go back to assessment taken page"
+  >
             <svg
               id="back-icon"
               width="32"
               height="32"
               viewBox="0 0 32 32"
               class="assessment-taken-page2-back-icon"
+              (click)="onBackClick()"
             >
               <path
                 d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
                 fill="currentColor"
               ></path>
             </svg>
+           </button>
             <span
               id="cloud-architecture-text"
               class="assessment-taken-page2-cloud-architecture-text"

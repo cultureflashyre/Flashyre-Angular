@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class AssessmentTakenPage implements OnInit {
   assessments: any[] = [];
   showAttempts: { [key: string]: boolean } = {};
+  selectedAssessmentId: string | null = null;
 
   constructor(
     private title: Title,
@@ -47,6 +48,20 @@ export class AssessmentTakenPage implements OnInit {
   }
 
   goToAssessmentDetails(assessmentId: string) {
-    this.showAttempts[assessmentId] = !this.showAttempts[assessmentId];
+  this.showAttempts[assessmentId] = !this.showAttempts[assessmentId];
+}
+
+selectAssessment(assessmentId: string) {
+    this.selectedAssessmentId = assessmentId;
+  }
+
+  // Optional: Method to return to the assessment list
+  //backToList() {
+    //this.selectedAssessmentId = null;
+  //}
+
+    closeDetailView() {
+    //this.showDetailView = false;
+    this.selectedAssessmentId = null;
   }
 }

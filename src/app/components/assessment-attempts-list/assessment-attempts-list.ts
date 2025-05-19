@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router'; // Add this import
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 
 @Component({
@@ -8,6 +9,8 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 })
 export class AssessmentAttemptsListComponent implements OnInit {
   @Input() assessmentId!: string;
+  @Output() back = new EventEmitter<void>();
+
   assessmentData: any;
   assessment_title: string = '';
   assessment_logo_url: string = '';
@@ -19,7 +22,10 @@ export class AssessmentAttemptsListComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private assessmentTakenService: AssessmentTakenService) {}
+  constructor(
+    private assessmentTakenService: AssessmentTakenService,
+    private router: Router // Inject Router here
+  ) {}
 
   ngOnInit() {
     if (this.assessmentId) {
@@ -83,7 +89,15 @@ export class AssessmentAttemptsListComponent implements OnInit {
     this.selectedAttempt = null;
   }
 
+  onBackClick() {
+  this.back.emit();
+}
+
   onReattempt() {
     // Implement re-attempt logic here if needed
+  }
+
+  goBack() {
+    this.router.navigate(['/assessment-taken-page']);
   }
 }

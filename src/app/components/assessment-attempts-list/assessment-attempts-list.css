@@ -173,7 +173,7 @@
 .assessment-taken-page2-cloud-architecture-details-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 1124px;
+  width: 100%;
   height: auto;
   display: flex;
   padding: 24px;
