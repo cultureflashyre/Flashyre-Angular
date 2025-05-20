@@ -1,136 +1,178 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { FileUploadService } from '../../services/file-upload.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { JobDescriptionService } from '../../services/job-description.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { JobDescriptionService } from '../../services/job-description.service';
+import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { JobDetails, AIJobResponse } from './types';
 
 @Component({
-  selector: 'create-job-post1st-page',
+  selector: 'app-create-job-post-1st-page',
   templateUrl: './create-job-post-1st-page.component.html',
   styleUrls: ['./create-job-post-1st-page.component.css']
 })
-export class CreateJobPost1stPageComponent implements OnInit {
-
+export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('suggestionsContainer') suggestionsContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
+  jobForm: FormGroup;
   private searchTerms = new Subject<string>();
   suggestions: string[] = [];
   isLoading = false;
   showSuggestions = false;
-  private readonly DEBOUNCE_DELAY = 300;
-  private readonly LOCATION_API_URL = 'https://api.example.com/locations/autocomplete';
-
-  jobDetails: any = {
-    role: '',
-    location: '',
-    job_type: '',
-    workplace_type: '',
-    total_experience_min: 0,
-    total_experience_max: 0,
-    relevant_experience_min: 0,
-    relevant_experience_max: 0,
-    budget_type: '',
-    min_budget: 0,
-    max_budget: 0,
-    notice_period: '',
-    skills: '',
-    job_description: '',
-    job_description_url: ''
-  };
   selectedFile: File | null = null;
-  token: string | null = null;
-  user_id: number = 1; // Hardcoded user_id for testing
+  private readonly DEBOUNCE_DELAY = 300;
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private fileUploadService: FileUploadService,
-    private jobDescriptionService: JobDescriptionService
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private jobDescriptionService: JobDescriptionService,
+    private corporateAuthService: CorporateAuthService,
+    private router: Router
   ) {
-    this.setupSearch();
+    this.jobForm = this.fb.group({
+      role: ['', [Validators.required, Validators.maxLength(100)]],
+      location: ['', [Validators.required, Validators.maxLength(200)]],
+      job_type: ['', [Validators.required]],
+      workplace_type: ['', [Validators.required]],
+      total_experience_min: [0, [Validators.required, Validators.min(0)]],
+      total_experience_max: [0, [Validators.required, Validators.min(0)]],
+      relevant_experience_min: [0, [Validators.required, Validators.min(0)]],
+      relevant_experience_max: [0, [Validators.required, Validators.min(0)]],
+      budget_type: ['', [Validators.required]],
+      min_budget: [0, [Validators.required, Validators.min(0)]],
+      max_budget: [0, [Validators.required, Validators.min(0)]],
+      notice_period: ['', [Validators.required, Validators.maxLength(50)]],
+      skills: [[], [Validators.required]],
+      job_description: ['', [Validators.maxLength(5000)]],
+      job_description_url: ['', [Validators.maxLength(200)]],
+      unique_id: ['']
+    }, { validators: this.experienceRangeValidator });
+  }
 
-    this.title.setTitle('Create-Job-Post-1st-page - Flashyre');
+  ngOnInit(): void {
+    this.title.setTitle('Create Job Post - Flashyre');
     this.meta.addTags([
-      {
-        property: 'og:title',
-        content: 'Create-Job-Post-1st-page - Flashyre'
-      },
+      { property: 'og:title', content: 'Create Job Post - Flashyre' },
       {
         property: 'og:image',
         content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
       }
     ]);
+
+    if (!this.corporateAuthService.isLoggedIn()) {
+      this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
+      this.router.navigate(['/login-corporate']);
+    }
+
+    this.setupSearch();
   }
 
-  ngOnInit(): void {
-    this.token = localStorage.getItem('access_token'); // Attempt to retrieve token
+  ngAfterViewInit(): void {
+    this.initializeSkillsInput();
+  }
+
+  private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
+    const totalMin = form.get('total_experience_min')?.value;
+    const totalMax = form.get('total_experience_max')?.value;
+    const relevantMin = form.get('relevant_experience_min')?.value;
+    const relevantMax = form.get('relevant_experience_max')?.value;
+
+    if (totalMin > totalMax) {
+      return { invalidTotalExperience: true };
+    }
+    if (relevantMin > relevantMax) {
+      return { invalidRelevantExperience: true };
+    }
+    return null;
   }
 
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
+    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
+    const ext = this.selectedFile.name.toLowerCase().substring(this.selectedFile.name.lastIndexOf('.'));
+    const maxSize = 10 * 1024 * 1024;
+    if (!allowedExtensions.includes(ext)) {
+      this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
+      this.selectedFile = null;
+      input.value = '';
+    } else if (this.selectedFile.size > maxSize) {
+      this.snackBar.open('File size exceeds 10MB limit.', 'Close', { duration: 5000 });
+      this.selectedFile = null;
+      input.value = '';
     }
+  } else {
+    this.selectedFile = null;
   }
+}
 
   uploadFile(): void {
-    if (!this.selectedFile) {
-      alert('Please select a file.');
-      return;
-    }
-
-    // Temporarily bypass token check and use hardcoded user_id
-    this.fileUploadService.uploadFile(this.selectedFile, 'temporary-token').subscribe({
-      next: (response) => {
-        this.jobDetails.job_description_url = response.file_url;
-        this.processJobDescription(response.file_url);
-      },
-      error: (error) => {
-        console.error('File upload failed:', error);
-        alert('Failed to upload file. Please try again.');
-      }
-    });
+  if (!this.selectedFile) {
+    this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
+    return;
   }
+  const token = this.corporateAuthService.getJWTToken();
+  if (!token) {
+    this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
+    this.router.navigate(['/login-corporate']);
+    return;
+  }
+  this.jobDescriptionService.uploadFile(this.selectedFile, token).subscribe({
+    next: (response) => {
+      this.jobForm.patchValue({ job_description_url: response.file_url, unique_id: response.unique_id });
+      this.snackBar.open('File uploaded successfully.', 'Close', { duration: 3000 });
+      this.processJobDescription(response.file_url, response.unique_id, token);
+    },
+    error: (error) => {
+      console.error('File upload error:', error);
+      this.snackBar.open(`File upload failed: ${error.message}`, 'Close', { duration: 5000 });
+    }
+  });
+}
 
-  processJobDescription(fileUrl: string): void {
-    // Use hardcoded user_id for testing
-    this.jobDescriptionService.processJobDescription(fileUrl, 'temporary-token').subscribe({
+  private processJobDescription(fileUrl: string, uniqueId: string, token: string): void {
+    this.jobDescriptionService.processJobDescription(fileUrl, uniqueId, token).subscribe({
       next: (response) => {
         this.populateForm(response);
-        this.jobDescriptionService.storeMCQs(response.mcqs);
+        this.snackBar.open('Job description processed successfully.', 'Close', { duration: 3000 });
       },
       error: (error) => {
-        console.error('AI processing failed:', error);
-        alert('Failed to process job description. Please try again.');
+        this.snackBar.open(`AI processing failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
       }
     });
   }
 
-  populateForm(jobData: any): void {
-    // Map AI response to form fields
-    this.jobDetails.role = jobData.job_titles[0]?.value || '';
-    this.jobDetails.location = jobData.location || 'Unknown';
-    this.jobDetails.job_type = this.mapJobType(jobData.job_titles[0]?.value || '');
-    this.jobDetails.workplace_type = jobData.workplace_type || 'Remote';
-    const [minExp, maxExp] = this.parseExperience(jobData.experience?.value || '0-0 years');
-    this.jobDetails.total_experience_min = minExp;
-    this.jobDetails.total_experience_max = maxExp;
-    this.jobDetails.relevant_experience_min = Math.max(0, minExp - 1);
-    this.jobDetails.relevant_experience_max = Math.min(maxExp, minExp + 2);
-    this.jobDetails.budget_type = jobData.budget_type || 'Annually';
-    this.jobDetails.min_budget = jobData.min_budget || 0;
-    this.jobDetails.max_budget = jobData.max_budget || 0;
-    this.jobDetails.notice_period = jobData.notice_period || '30 days';
-    this.jobDetails.skills = [
-      ...jobData.skills.primary.map((s: any) => s.skill),
-      ...jobData.skills.secondary.map((s: any) => s.skill)
-    ].join(',');
-    this.jobDetails.job_description = jobData.job_description || '';
+  private populateForm(jobData: AIJobResponse): void {
+    const jobDetails = jobData.job_details;
+    const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
+    this.jobForm.patchValue({
+      role: jobDetails.job_titles[0]?.value || 'Unknown',
+      location: jobDetails.location || 'Unknown',
+      job_type: this.mapJobType(jobDetails.job_titles[0]?.value || ''),
+      workplace_type: jobDetails.workplace_type || 'Remote',
+      total_experience_min: minExp,
+      total_experience_max: maxExp,
+      relevant_experience_min: Math.max(0, minExp - 1),
+      relevant_experience_max: Math.min(maxExp, minExp + 2),
+      budget_type: jobDetails.budget_type || 'Annually',
+      min_budget: jobDetails.min_budget || 0,
+      max_budget: jobDetails.max_budget || 0,
+      notice_period: jobDetails.notice_period || '30 days',
+      skills: [...(jobDetails.skills.primary || []).map(s => s.skill), ...(jobDetails.skills.secondary || []).map(s => s.skill)],
+      job_description: jobDetails.job_description || '',
+      unique_id: jobData.unique_id
+    });
   }
 
-  mapJobType(title: string): string {
+  private mapJobType(title: string): string {
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('intern')) return 'Internship';
     if (lowerTitle.includes('contract')) return 'Contract';
@@ -138,7 +180,7 @@ export class CreateJobPost1stPageComponent implements OnInit {
     return 'Permanent';
   }
 
-  parseExperience(exp: string): [number, number] {
+  private parseExperience(exp: string): [number, number] {
     const match = exp.match(/(\d+)-(\d+)/);
     return match ? [parseInt(match[1]), parseInt(match[2])] : [0, 0];
   }
@@ -152,15 +194,15 @@ export class CreateJobPost1stPageComponent implements OnInit {
         return this.fetchLocationSuggestions(query);
       })
     ).subscribe({
-      next: (suggestions: string[]) => {
+      next: (suggestions) => {
         this.suggestions = suggestions;
         this.showSuggestions = suggestions.length > 0;
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error fetching location suggestions:', error);
-        this.suggestions = ['Unable to fetch suggestions. Please try again.'];
-        this.showSuggestions = true;
+      error: (error) => {
+        this.snackBar.open('Failed to fetch location suggestions.', 'Close', { duration: 5000 });
+        this.suggestions = [];
+        this.showSuggestions = false;
         this.isLoading = false;
       }
     });
@@ -168,26 +210,17 @@ export class CreateJobPost1stPageComponent implements OnInit {
 
   onInput(event: Event): void {
     const query = (event.target as HTMLInputElement).value.trim();
-    
     if (query.length === 0) {
       this.showSuggestions = false;
       this.suggestions = [];
       return;
     }
-
     this.searchTerms.next(query);
   }
 
   private async fetchLocationSuggestions(query: string): Promise<string[]> {
-    // Simulate API call for demonstration
     await new Promise(resolve => setTimeout(resolve, 500));
     return this.getMockSuggestions(query);
-
-    // In a real implementation, use HTTP request:
-    // const response = await this.http.get<{ suggestions: string[] }>(
-    //   `${this.LOCATION_API_URL}?query=${encodeURIComponent(query)}`
-    // ).toPromise();
-    // return response.suggestions;
   }
 
   private getMockSuggestions(query: string): string[] {
@@ -210,12 +243,11 @@ export class CreateJobPost1stPageComponent implements OnInit {
       'Sydney, Australia',
       'Toronto, Canada'
     ];
-
     return cities.filter(city => city.toLowerCase().includes(query));
   }
 
   selectSuggestion(location: string): void {
-    this.locationInput.nativeElement.value = location;
+    this.jobForm.patchValue({ location });
     this.showSuggestions = false;
     this.suggestions = [];
   }
@@ -231,34 +263,188 @@ export class CreateJobPost1stPageComponent implements OnInit {
     }
   }
 
-  onSubmit(event: Event): void {
-    event.preventDefault();
-    const location = this.locationInput.nativeElement.value.trim();
+  private initializeSkillsInput(): void {
+    const tagInput = document.getElementById('tagInput') as HTMLInputElement;
+    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
+    const suggestions = document.getElementById('suggestions') as HTMLDivElement;
 
-    if (location) {
-      alert(`Location selected: ${location}`);
-      // Implement backend submission logic here
-    } else {
-      alert('Please select a location');
-    }
-  }
+    let selectedTags: string[] = [];
+    let activeSuggestionIndex = -1;
 
-  submitJobPost(): void {
-    // Use hardcoded user_id for testing
-    this.jobDescriptionService.saveJobPost(this.jobDetails, 'temporary-token').subscribe({
-      next: () => {
-        alert('Job post created successfully!');
-        this.resetForm();
-      },
-      error: (error) => {
-        console.error('Job post creation failed:', error);
-        alert('Failed to create job post. Please try again.');
+    const availableTags = [
+      'JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular',
+      'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby',
+      'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB',
+      'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API'
+    ];
+
+    const filterSuggestions = (input: string) => {
+      if (!input) return [];
+      const inputLower = input.toLowerCase();
+      return availableTags.filter(tag =>
+        tag.toLowerCase().includes(inputLower) && !selectedTags.includes(tag)
+      );
+    };
+
+    const showSuggestions = (filteredSuggestions: string[]) => {
+      suggestions.innerHTML = '';
+      if (filteredSuggestions.length === 0) {
+        suggestions.style.display = 'none';
+        return;
+      }
+
+      filteredSuggestions.forEach((suggestion, index) => {
+        const item = document.createElement('div');
+        item.className = 'suggestion-item';
+        item.textContent = suggestion;
+        item.addEventListener('click', () => {
+          addTag(suggestion);
+          tagInput.value = '';
+          suggestions.style.display = 'none';
+          tagInput.focus();
+        });
+        suggestions.appendChild(item);
+      });
+
+      suggestions.style.display = 'block';
+      activeSuggestionIndex = -1;
+    };
+
+    const addTag = (text: string) => {
+      if (!text || selectedTags.includes(text)) return;
+      selectedTags.push(text);
+      this.jobForm.patchValue({ skills: selectedTags });
+
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      const tagText = document.createElement('span');
+      tagText.textContent = text;
+      tag.appendChild(tagText);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', () => {
+        tag.remove();
+        selectedTags = selectedTags.filter(t => t !== text);
+        this.jobForm.patchValue({ skills: selectedTags });
+      });
+
+      tag.appendChild(removeBtn);
+      tagContainer.insertBefore(tag, tagInput);
+    };
+
+    const navigateSuggestions = (direction: 'up' | 'down') => {
+      const items = suggestions.querySelectorAll('.suggestion-item');
+      if (items.length === 0) return;
+
+      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+        items[activeSuggestionIndex].classList.remove('active-suggestion');
+      }
+
+      if (direction === 'down') {
+        activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+      } else {
+        activeSuggestionIndex = activeSuggestionIndex <= 0 ? items.length - 1 : activeSuggestionIndex - 1;
+      }
+
+      items[activeSuggestionIndex].classList.add('active-suggestion');
+      items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+    };
+
+    tagInput.addEventListener('input', () => {
+      const filteredSuggestions = filterSuggestions(tagInput.value);
+      showSuggestions(filteredSuggestions);
+    });
+
+    tagInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const items = suggestions.querySelectorAll('.suggestion-item');
+        if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+          addTag(items[activeSuggestionIndex].textContent || '');
+        } else if (tagInput.value) {
+          addTag(tagInput.value);
+        }
+        tagInput.value = '';
+        suggestions.style.display = 'none';
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateSuggestions('down');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        navigateSuggestions('up');
+      } else if (e.key === 'Backspace' && !tagInput.value) {
+        const lastIndex = selectedTags.length - 1;
+        if (lastIndex >= 0) {
+          const lastTag = selectedTags[lastIndex];
+          selectedTags.pop();
+          this.jobForm.patchValue({ skills: selectedTags });
+          const tags = tagContainer.querySelectorAll('.tag');
+          tags[tags.length - 1].remove();
+        }
+      } else if (e.key === 'Escape') {
+        suggestions.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!tagContainer.contains(e.target as Node) && !suggestions.contains(e.target as Node)) {
+        suggestions.style.display = 'none';
+      }
+    });
+
+    tagContainer.addEventListener('click', (e) => {
+      if (e.target === tagContainer) {
+        tagInput.focus();
       }
     });
   }
 
+  //Submit job post
+  submitJobPost(): void {
+    if (this.jobForm.invalid) {
+      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000 });
+      this.jobForm.markAllAsTouched();
+      return;
+    }
+
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
+      this.router.navigate(['/login-corporate']);
+      return;
+    }
+
+    // Get form values
+    const formValues = this.jobForm.value;
+    // Create JobDetails object, transforming skills array to { primary, secondary }
+    const jobDetails: JobDetails = {
+      ...formValues,
+      skills: {
+        primary: formValues.skills.slice(0, Math.ceil(formValues.skills.length / 2)),
+        secondary: formValues.skills.slice(Math.ceil(formValues.skills.length / 2))
+      }
+    };
+
+    this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
+      next: () => {
+        this.snackBar.open('Job post created successfully.', 'Close', { duration: 3000 });
+        this.resetForm();
+        this.router.navigate(['/job-posted']);
+      },
+      error: (error) => {
+        this.snackBar.open(`Job post creation failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
+      }
+    });
+  }
+
+  cancelJobPost(): void {
+    this.resetForm();
+    this.router.navigate(['/dashboard']);
+  }
+
   resetForm(): void {
-    this.jobDetails = {
+    this.jobForm.reset({
       role: '',
       location: '',
       job_type: '',
@@ -271,10 +457,17 @@ export class CreateJobPost1stPageComponent implements OnInit {
       min_budget: 0,
       max_budget: 0,
       notice_period: '',
-      skills: '',
+      skills: [],
       job_description: '',
-      job_description_url: ''
-    };
+      job_description_url: '',
+      unique_id: ''
+    });
     this.selectedFile = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
+    const tags = tagContainer.querySelectorAll('.tag');
+    tags.forEach(tag => tag.remove());
   }
 }
