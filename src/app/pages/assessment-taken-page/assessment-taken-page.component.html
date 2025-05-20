@@ -549,119 +549,98 @@
         </div>
       </div>
     </header>
-    <div
-      id="assessments-taken-container"
-      class="assessment-taken-page-assessments-taken-container1"
-    >
-      <div class="assessment-taken-page-container18">
-        <span
-          id="total-assessments-taken-text"
-          class="assessment-taken-page-total-assessments-taken-text"
-        >
-          All Assessment Taken
-        </span>
-        <div
-          id="job-title-container"
-          class="assessment-taken-page-job-title-container input"
-        >
-          <span
-            id="job-title-keyword-text"
-            class="assessment-taken-page-job-title-keyword-text"
-          >
-            Assessment....
-          </span>
-          <div
-            id="search-icon-container"
-            class="assessment-taken-page-search-icon-container"
-          >
-          <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>
-              <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>
-            </g>
-          </svg>
-          </div>
-        </div>
+    <div id="assessments-taken-container" class="assessment-taken-page-assessments-taken-container1">
+  <div class="assessment-taken-page-container18" *ngIf="selectedAssessmentId === null">
+    <span id="total-assessments-taken-text" class="assessment-taken-page-total-assessments-taken-text">
+      All Assessment Taken
+    </span>
+    <div id="job-title-container" class="assessment-taken-page-job-title-container input">
+      <input type="text" placeholder="Search assessments..." [(ngModel)]="searchQuery" class="assessment-taken-page-job-title-keyword-text" />
+      <div id="search-icon-container" class="assessment-taken-page-search-icon-container">
+        <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
+          <g fill="none" fill-rule="evenodd">
+            <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>
+            <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>
+          </g>
+        </svg>
       </div>
-      <div id="assessments-container" class="assessment-taken-page-assessments-container">
-  <!-- Show the assessment list only if no assessment is selected -->
-  <div *ngIf="selectedAssessmentId === null">
-    <!-- Show message if assessments array is empty -->
-  <div *ngIf="assessments?.length === 0" class="no-assessments-message">
-    No assessments taken yet.
+    </div>
   </div>
-
-  <!-- Show assessments if array is not empty -->
-   <div *ngIf="assessments?.length > 0">
-    <div *ngFor="let assessment of assessments">
-      <div class="assessment-taken-page-first-assessment-container">
-        <div class="assessment-taken-page-assessment-details-container">
-          <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />
-          <div id="details" class="assessment-taken-page-details">
-            <span class="assessment-taken-page-heading-text1">{{assessment.assessment_title}}</span>
-            <div class="assessment-taken-page-assessment-date-id-container">
-              <span class="assessment-taken-page-details-text">
-                Completed {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
-              </span>
-            </div>
-            <div class="assessment-taken-page-assessment-by-container1">
-              <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />
-              <span class="assessment-taken-page-assessment-by-text1">Assessment by {{assessment.created_by}}</span>
-            </div>
-          </div>
-        </div>
-        <div class="assessment-taken-page-score-container">
-          <div class="assessment-taken-page-score-board-container">
-            <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
-            <div class="assessment-taken-page-score-code-container">
-              <div class="assessment-taken-page-container20">
-                <div class="assessment-taken-page-container21">
-                  <div class='progress-container'>
-                    <div class="progress">
-                      <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
-                    </div>
-                    <span class="score">{{assessment.latest_score}}%</span>
-                  </div>
+  <div id="assessments-container" class="assessment-taken-page-assessments-container">
+    <!-- Show the assessment list only if no assessment is selected -->
+    <div *ngIf="selectedAssessmentId === null">
+      <!-- Show message if assessments array is empty -->
+      <div *ngIf="assessments?.length === 0" class="no-assessments-message">
+        No assessments taken yet.
+      </div>
+      <!-- Show assessments if array is not empty -->
+      <div *ngIf="assessments?.length > 0">
+        <div *ngFor="let assessment of getFilteredAssessments()">
+          <div class="assessment-taken-page-first-assessment-container">
+            <div class="assessment-taken-page-assessment-details-container">
+              <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />
+              <div id="details" class="assessment-taken-page-details">
+                <span class="assessment-taken-page-heading-text1">{{assessment.assessment_title}}</span>
+                <div class="assessment-taken-page-assessment-date-id-container">
+                  <span class="assessment-taken-page-details-text">
+                    Completed {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
+                  </span>
+                </div>
+                <div class="assessment-taken-page-assessment-by-container1">
+                  <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />
+                  <span class="assessment-taken-page-assessment-by-text1">Assessment by {{assessment.created_by}}</span>
                 </div>
               </div>
             </div>
+            <div class="assessment-taken-page-score-container">
+              <div class="assessment-taken-page-score-board-container">
+                <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
+                <div class="assessment-taken-page-score-code-container">
+                  <div class="assessment-taken-page-container20">
+                    <div class="assessment-taken-page-container21">
+                      <div class='progress-container'>
+                        <div class="progress">
+                          <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
+                        </div>
+                        <span class="score">{{assessment.latest_score}}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="assessment-taken-page-attempts-remaining-container">
+                <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
+                <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
+              </div>
+              <svg
+                id="right-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="assessment-taken-page-right-icon1"
+                (click)="selectAssessment(assessment.assessment_id)"
+                style="cursor: pointer;"
+              >
+                <path
+                  d="m10 16l4-4l-4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
           </div>
-          <div class="assessment-taken-page-attempts-remaining-container">
-            <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
-            <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
-          </div>
-          <svg
-            id="right-icon"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            class="assessment-taken-page-right-icon1"
-            (click)="selectAssessment(assessment.assessment_id)"
-            style="cursor: pointer;"
-          >
-            <path
-              d="m10 16l4-4l-4-4"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-          </svg>
         </div>
-      </div>
+        <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span>
       </div>
     </div>
-    <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span>
-  </div>
-
-  <!-- Show the attempts list when an assessment is selected -->
-  <assessment-attempts-list 
-    *ngIf="selectedAssessmentId !== null" 
-    [assessmentId]="selectedAssessmentId"
-    (back)="closeDetailView()">
-  </assessment-attempts-list>
-</div>
-    </div>
+    <!-- Show the attempts list when an assessment is selected -->
+    <assessment-attempts-list 
+      *ngIf="selectedAssessmentId !== null" 
+      [assessmentId]="selectedAssessmentId"
+      (back)="closeDetailView()">
+    </assessment-attempts-list>
   </div>
 </div>
