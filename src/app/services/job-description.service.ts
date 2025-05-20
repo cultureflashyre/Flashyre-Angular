@@ -57,12 +57,10 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'File upload failed');
-          }
-          return response.data;
-        }),
+        map(response => ({
+          file_url: response.data.file_url,
+          unique_id: response.data.unique_id
+        })),
         catchError(error => this.handleError(error))
       );
   }
@@ -77,7 +75,6 @@ export class JobDescriptionService {
   processJobDescription(fileUrl: string, uniqueId: string, token: string): Observable<AIJobResponse> {
     // Validate input
     if (!fileUrl || !uniqueId) {
-      console.error('Missing file_url or unique_id', { fileUrl, uniqueId });
       return throwError(() => new Error('file_url and unique_id are required'));
     }
 
@@ -100,13 +97,8 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'AI processing failed');
-          }
-          return response.data;
-        }),
-        catchError(error => this.handleError(error))
+        map(response => response.data),
+        catchError(this.handleError)
       );
   }
 
@@ -130,12 +122,7 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'Job post creation/update failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -148,12 +135,6 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   updateJobPostStatus(uniqueId: string, status: 'draft' | 'final', token: string): Observable<{ message: string; unique_id: string }> {
-    // Validate input
-    if (!uniqueId || !['draft', 'final'].includes(status)) {
-      console.error('Invalid unique_id or status', { uniqueId, status });
-      return throwError(() => new Error('Invalid unique_id or status'));
-    }
-
     // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -170,12 +151,7 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'Status update failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -187,12 +163,6 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   deleteJobPost(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
-    // Validate input
-    if (!uniqueId) {
-      console.error('Missing unique_id', { uniqueId });
-      return throwError(() => new Error('unique_id is required'));
-    }
-
     // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -208,12 +178,7 @@ export class JobDescriptionService {
         { headers, body: payload }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'Job post deletion failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -225,12 +190,6 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   deleteFile(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
-    // Validate input
-    if (!uniqueId) {
-      console.error('Missing unique_id', { uniqueId });
-      return throwError(() => new Error('unique_id is required'));
-    }
-
     // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -246,12 +205,7 @@ export class JobDescriptionService {
         { headers, body: payload }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'File deletion failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -280,12 +234,7 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'Job post listing failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -297,12 +246,6 @@ export class JobDescriptionService {
    * @returns Observable with job post details
    */
   getJobPost(uniqueId: string, token: string): Observable<JobDetails> {
-    // Validate input
-    if (!uniqueId) {
-      console.error('Missing unique_id', { uniqueId });
-      return throwError(() => new Error('unique_id is required'));
-    }
-
     // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
@@ -314,12 +257,7 @@ export class JobDescriptionService {
         { headers }
       )
       .pipe(
-        map(response => {
-          if (response.status !== 'success') {
-            throw new Error(response.message || 'Job post retrieval failed');
-          }
-          return response.data;
-        }),
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -356,21 +294,14 @@ export class JobDescriptionService {
       } else if (error.status === 404) {
         errorMessage = 'Not found: Resource does not exist';
       } else if (error.status === 500) {
-        // Handle PermissionError specifically
-        errorMessage = error.error?.message?.includes('PermissionError')
-          ? 'Server error: Unable to access the uploaded file due to permission issues. Please try uploading again or contact support.'
-          : `Server error: ${error.error?.message || 'Internal server error'}`;
+        errorMessage = `Server error: ${error.error?.message || 'Internal server error'}`;
       } else {
         errorMessage = `Server error: ${error.status} - ${error.message}`;
       }
     }
 
-    // Log error for debugging with additional context
-    console.error(errorMessage, {
-      status: error.status,
-      url: error.url,
-      response: error.error
-    });
+    // Log error for debugging
+    console.error(errorMessage, error);
     return throwError(() => new Error(errorMessage));
   }
 }
