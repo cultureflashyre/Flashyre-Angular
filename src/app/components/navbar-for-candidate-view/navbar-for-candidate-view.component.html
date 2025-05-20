@@ -108,9 +108,7 @@
         >
           <img
             id="user-image"
-            [src]="defaultProfilePicture"
-            [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
+            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -295,9 +293,7 @@
               >
                 <img
                   id="candidate-profile-picture"
-                  [src]="defaultProfilePicture"
-                  [attr.alt]="imageAlt4"
-                  [attr.src]="imageSrc4"
+                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   class="navbar-for-candidate-view-user-image2"
                 />
                 <div

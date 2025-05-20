@@ -103,7 +103,7 @@
             <img
               id="candidate-profile-picture"
               alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-              [src]="defaultProfilePicture"
+              [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
               class="candidate-home-candidate-image thq-img-ratio-1-1 thq-img-round"
             />
             <div

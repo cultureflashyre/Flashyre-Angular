@@ -70,7 +70,7 @@
               >
                 <img
                   id="user-image"
-                  [src]="defaultProfilePicture"
+                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   alt="Image of {{ candidateName }}"
 
                   class="candidate-assessment-user-image1"
@@ -213,7 +213,7 @@
                     >
                       <img
                         id="candidate-profile-picture"
-                        [src]="defaultProfilePicture"
+                        [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                         alt="Image of {{ candidateName }}"
                         class="candidate-assessment-user-image2"
                       />
@@ -568,7 +568,7 @@
               >
                 <img
                   id="candidate-profile-picture"
-                  [src]="defaultProfilePicture"
+                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   alt="Image of {{ candidateName }}"
                   class="candidate-assessment-candidate-image thq-img-ratio-1-1 thq-img-round"
                 />

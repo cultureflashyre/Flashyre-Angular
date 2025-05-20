@@ -11,6 +11,7 @@ import { ProfileBasicinformationComponent } from '../../components/profile-basic
 import { ProfileEmploymentComponent } from '../../components/profile-employment-component/profile-employment-component.component';
 import { ProfileEducationComponent } from '../../components/profile-education-component/profile-education-component.component';
 import { ProfileCertificationsComponent } from '../../components/profile-certifications-component/profile-certifications-component.component';
+import { UserProfileService } from 'src/app/services/user-profile.service';
 
 @Component({
   selector: 'profile-overview-page',
@@ -33,7 +34,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   resume: File | null = null;
   resumeName: string = '';
   imageSrc: string = '';
-  defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
+  defaultImageSrc: string = "/assets/placeholders/profile-placeholder.jpg";
   
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
@@ -51,7 +52,8 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     private educationService: EducationService,
     private certificationService: CertificationService,
     private spinner: NgxSpinnerService,
-    private router: Router
+    private router: Router,
+    private userProfileService: UserProfileService
   ) {
     this.title.setTitle('Profile Overview - Flashyre');
     this.meta.addTags([
@@ -193,6 +195,18 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         this.isSaving = false;
         console.log('onSaveAndNext completed, isSaving set to false');
       }
+    } else if (this.currentStep >= 6) {
+  // Await profile refresh before reading localStorage
+      try {
+        await this.userProfileService.refreshUserProfileValues();
+        const profileData = localStorage.getItem('userProfile');
+        console.log('Fresh profile data from localStorage:', profileData);
+      } catch (err) {
+        console.error('Failed to refresh user profile:', err);
+      }
+      this.isSaving = false;
+      // You may want to navigate or show a popup here
+      return;
     } else {
       this.isSaving = false;
     }
@@ -221,11 +235,25 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
     // If user has reached or passed the last step, navigate to candidate-home
     if (this.currentStep >= 6) {
-      console.log('All steps skipped or completed, navigating to candidate-home');
-      setTimeout(() => {
-        this.router.navigate(['candidate-home']);
-      }, 3000);
+      console.log('All steps skipped or completed, refreshing user profile...');
+    this.userProfileService.refreshUserProfileValues().subscribe({
+      next: () => {
+        const profileData = localStorage.getItem('userProfile');
+        console.log('Fresh profile data from localStorage:', profileData);
+        setTimeout(() => {
+          this.router.navigate(['candidate-home']);
+        }, 3000);
+      },
+      error: (err) => {
+        console.error('Failed to refresh user profile:', err);
+        setTimeout(() => {
+          this.router.navigate(['candidate-home']);
+        }, 3000);
+      }
+    });
+      return;
     }
+
   }
 
   isStepVisible(step: number): boolean {

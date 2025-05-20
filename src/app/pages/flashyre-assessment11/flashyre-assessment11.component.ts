@@ -91,9 +91,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     if (assessmentId) {
       this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
       this.startTime = new Date(); // Record start time when assessment begins
+      this.proctoringService.startMonitoring();
       try {
         await this.videoRecorder.startRecording();
-        this.proctoringService.startMonitoring();
       } catch (error) {
         console.error('Failed to start assessment:', error);
       }

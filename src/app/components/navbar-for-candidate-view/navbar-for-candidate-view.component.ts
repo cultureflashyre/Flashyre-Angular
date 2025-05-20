@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, Input, ContentChild, TemplateRef, OnInit } from '@angular/core'
 import { AuthService } from '../../services/candidate.service'; // Import AuthService
 
 @Component({
@@ -6,7 +6,7 @@ import { AuthService } from '../../services/candidate.service'; // Import AuthSe
   templateUrl: 'navbar-for-candidate-view.component.html',
   styleUrls: ['navbar-for-candidate-view.component.css'],
 })
-export class NavbarForCandidateView {
+export class NavbarForCandidateView implements OnInit {
 
   userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
@@ -76,6 +76,20 @@ export class NavbarForCandidateView {
   constructor(
     private authService: AuthService,
   ) {}
+
+    ngOnInit(): void {
+    // Initialize the score from the input property
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log("User Profile NOT fetched");
+    }
+  }
 
   onLogoutClick() {
     this.authService.logout(); // Call the logout method in AuthService

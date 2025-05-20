@@ -14,6 +14,10 @@ export class AssessmentTakenPage implements OnInit {
   showAttempts: { [key: string]: boolean } = {};
   selectedAssessmentId: string | null = null;
 
+  userProfile: any = {}; // To store user profile data
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -33,6 +37,16 @@ export class AssessmentTakenPage implements OnInit {
       (data) => { this.assessments = data; },
       (error) => { console.error('Error fetching assessment scores', error); }
     );
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log("User Profile NOT fetched");
+    }
   }
 
   getFillColor(score: number): string {

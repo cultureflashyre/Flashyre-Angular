@@ -7,7 +7,7 @@ import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, Ele
 })
 export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   userProfile: any = {}; // To store user profile data
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
   @Input() matchingScore: number = 80; // Default value
   score: number = 0;
   

@@ -12,15 +12,25 @@ export class ProctoringService {
   constructor(private router: Router, private ngZone: NgZone) {}
 
   startMonitoring() {
+    console.log('[ProctoringService] startMonitoring called');
     this.setupProctoringListeners();
   }
 
+  stopMonitoring() {
+    console.log('[ProctoringService] stopMonitoring called');
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
+    window.removeEventListener('blur', this.blurHandler);
+  }
+
+
   private setupProctoringListeners() {
     this.visibilityHandler = () => {
+      console.log('[ProctoringService] visibilitychange event:', document.hidden);
       if (document.hidden) this.handleViolation();
     };
 
     this.blurHandler = () => {
+      console.log('[ProctoringService] blur event triggered');
       this.handleViolation();
     };
 
@@ -29,15 +39,14 @@ export class ProctoringService {
   }
 
   private handleViolation() {
+    console.log('[ProctoringService] handleViolation called');
     this.ngZone.run(() => {
-      this.router.navigate(['/assessment-violation'], {
+      this.router.navigate(['/assessment-violation-message'], {
         state: { message: "Test submitted automatically due to screen/app switching" }
       });
     });
   }
 
-  stopMonitoring() {
-    document.removeEventListener('visibilitychange', this.visibilityHandler);
-    window.removeEventListener('blur', this.blurHandler);
-  }
+
+
 }

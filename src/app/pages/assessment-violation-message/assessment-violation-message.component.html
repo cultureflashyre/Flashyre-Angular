@@ -24,21 +24,21 @@
           >
             <nav id="header-links" class="assessment-violation-message-links">
               <a
-                href="https://www.teleporthq.io"
+                [routerLink]="['/assessment-taken-page']"
                 id="navbar-dashboard-link"
                 class="assessment-violation-message-dashboard-link thq-body-small button"
               >
                 Dashboard
               </a>
               <a
-                href="https://www.teleporthq.io"
+                [routerLink]="['/candidate-assessment']"
                 id="navbar-upskill-link"
                 class="assessment-violation-message-upskill-link thq-body-small button"
               >
                 Upskill
               </a>
               <a
-                href="https://www.teleporthq.io"
+                [routerLink]="['/candidate-assessment']"
                 id="navbar-assessment-link"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -47,7 +47,7 @@
                 Assessment
               </a>
               <a
-                href="https://www.teleporthq.io"
+                [routerLink]="['/candidate-home']"
                 id="navbar-jobs-for-you-link"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -67,8 +67,8 @@
             >
               <img
                 id="user-image"
-                alt="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
-                src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
+                [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+                alt="Image of {{ candidateName }}"
                 class="assessment-violation-message-user-image1"
               />
               <div
@@ -152,6 +152,7 @@
                   <span
                     id="navbar-logout-button"
                     class="assessment-violation-message-logout2"
+                    (click)="onLogoutClick()"
                   >
                     Logout
                   </span>
@@ -211,8 +212,8 @@
                   >
                     <img
                       id="candidate-profile-picture"
-                      alt="image"
-                      src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
+                      [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+                      alt="Image of {{ candidateName }}"
                       class="assessment-violation-message-user-image2"
                     />
                     <div
@@ -223,13 +224,13 @@
                         id="navbar-candidate-name"
                         class="assessment-violation-message-user-name"
                       >
-                        Kathryn Murphy
+                        {{ candidateName }}
                       </span>
                       <span
                         id="navbar-candidate-profile-completion"
                         class="assessment-violation-message-profile-complet-indication"
                       >
-                        ✅ 90% Profile Completion
+                        {{ userProfile.profile_completion || '90' }}% Profile Completion
                       </span>
                       <span
                         id="navbar-candidate-view-edit-profile-button"
@@ -505,6 +506,7 @@
             id="close-button"
             type="button"
             class="assessment-violation-message-close-button button"
+            (click)="onCloseClick()"
           >
             Close
           </button>

@@ -72,8 +72,7 @@
               >
                 <img
                   id="recruiter-profile-picture"
-                  alt="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
-                  src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"
+                  [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   class="assessment-taken-page-user-image1"
                 />
                 <div
@@ -204,7 +203,7 @@
                     <img
                       id="Candidate-Profile-Picture"
                       alt="image"
-                      src="https://s3-alpha-sig.figma.com/img/7583/57be/ae9594f1160471db992db1cf36ca3f46?Expires=1738540800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=JE7txqF-B6mlyS6vVm8jDQNtPmNVIGVkOwGQawWSQEp6~GRMYRWAujE~YfsPMSJxrYRZ8aQLddL-FDlDZ81lzmRF~Ne94jCeoFq-yaK6oGmYbn-fajTwG672CtQraNnyKi8xBDKSzTynf2LH824kvvVOz~wnWqsPrNvZhjcbGoL1HOvN2J3CcCPFr54hAh~kpQWX0U3VAtHwDCZiIVxMdxYlQdAFGXUL7y36B4Ce7P91cvdiAO~iwKAT63Faez7KXBjp~IIB1J~UZLE8S3cMQJcIiD5M-mnL9IwJxqFst5lgJGikKxP1oa8MqkBlGx3Yg3MQkRmhYnIskawUWWFVcA__"
+                      [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                       class="assessment-taken-page-user-image2"
                     />
                     <div class="assessment-taken-page-container13">
