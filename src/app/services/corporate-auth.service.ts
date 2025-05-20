@@ -3,6 +3,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { tap } from 'rxjs/operators';
+
 interface CorporateSignupData {
   first_name: string;
   last_name: string;
@@ -12,22 +14,45 @@ interface CorporateSignupData {
   password: string;
 }
 
+interface AuthResponse {
+  access: string;
+  refresh: string;
+  message?: string;
+  data?: any;
+  user_id?: number | string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class CorporateAuthService {
+  
+  
   private apiUrl = environment.apiUrl; // Adjust the API URL as needed
 
   constructor(private http: HttpClient) {}
 
-  signupCorporate(data: CorporateSignupData): Observable<any> {
-    return this.http.post(`${this.apiUrl}signup-corporate/`, data)
-      .pipe(catchError(this.handleError));
+loginCorporate(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}login-corporate/`, { email, password }).pipe(
+      tap((response: AuthResponse) => {
+        if (response.access && response.refresh) {
+          this.saveTokens(response.access, response.refresh);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  loginCorporate(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}login-corporate/`, { email, password })
-      .pipe(catchError(this.handleError));
+  signupCorporate(data: CorporateSignupData): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}signup-corporate/`, data).pipe(
+      tap((response: AuthResponse) => {
+        if (response.access && response.refresh) {
+          this.saveTokens(response.access, response.refresh);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -47,4 +72,37 @@ export class CorporateAuthService {
     }
     return throwError(() => new Error(errorMessage));
   }
+
+  saveTokens(access: string, refresh: string): void {
+  localStorage.setItem('jwtToken', access);
+  localStorage.setItem('refreshToken', refresh);
+}
+
+  getJWTToken(): string | null {
+    return localStorage.getItem('jwtToken');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
+  refreshToken(): Observable<any> {
+    const refresh = this.getRefreshToken();
+    if (!refresh) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+    return this.http.post<any>(`${this.apiUrl}api/token/refresh/`, { refresh });
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getJWTToken();
+  }
+
+  logout(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    // Optionally clear other stored corporate user data
+  }
+  
+
 }

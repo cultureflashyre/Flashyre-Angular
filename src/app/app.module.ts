@@ -105,7 +105,7 @@ const routes = [
       ),
   },
   {
-    path: 'recruiter-view-5th-page',
+    path: 'corporate/recruiter-view-5th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-5th-page/recruiter-view-5th-page.module'
@@ -126,7 +126,7 @@ const routes = [
       ).then((m) => m.ProfileCertificationPageModule),
   },
   {
-    path: 'recruiter-view-4th-page',
+    path: 'corporate/recruiter-view-4th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
