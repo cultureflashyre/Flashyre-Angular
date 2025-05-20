@@ -28,7 +28,8 @@ export class ProfileBasicinformationComponent implements OnInit {
   profilePicture: File | null = null;
   resume: File | null = null;
   imageSrc: string = ''; // Holds the preview URL of the selected image
-  defaultImageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
+  //defaultImageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
+  defaultImageSrc: string = "/assets/placeholders/profile-placeholder.jpg";
   imageAlt: string = 'Profile Picture';
 
   constructor(private profileService: ProfileService, private router: Router) {}
