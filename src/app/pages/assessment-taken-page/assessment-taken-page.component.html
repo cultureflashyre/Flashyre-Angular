@@ -583,263 +583,85 @@
           </div>
         </div>
       </div>
-      <div
-        id="assessments-container"
-        class="assessment-taken-page-assessments-container"
-      >
-        <div
-          id="assessments-taken-container"
-          class="assessment-taken-page-assessments-taken-container2"
-        >
-          <div class="assessment-taken-page-container19" *ngFor="let assessment of assessments">
-            <div
-              id="first-assessment-container"
-              class="assessment-taken-page-first-assessment-container"
-            >
-              <div
-                id="assessment-details-container"
-                class="assessment-taken-page-assessment-details-container"
-              >
-                <div
-                  id="assessment-details"
-                  class="assessment-taken-page-assessment-details"
-                >
-                <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />
-                  <div id="details" class="assessment-taken-page-details">
-                    <span class="assessment-taken-page-heading-text1">
-                      {{assessment.assessment_title}}
-                    </span>
-                    <div
-                      id="assessment-date-id-container"
-                      class="assessment-taken-page-assessment-date-id-container"
-                    >
-                    <span class="assessment-taken-page-details-text">
-                      Completed {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
-                    </span>
-                    </div>
-                    <div
-                      id="assessment-by-container"
-                      class="assessment-taken-page-assessment-by-container1"
-                    >
-                    <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />
-                    <span class="assessment-taken-page-assessment-by-text1">
-                      Assessment by {{assessment.created_by}}
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="score-container"
-                class="assessment-taken-page-score-container"
-              >
-                <div
-                  id="score-board-container"
-                  class="assessment-taken-page-score-board-container"
-                >
-                  <span
-                    id="score-board-text"
-                    class="assessment-taken-page-score-board-text"
-                  >
-                    🏆 Score Board
-                  </span>
-                  <div
-                    id="score-code-container"
-                    class="assessment-taken-page-score-code-container"
-                  >
-                    <div class="assessment-taken-page-container20">
-                      <div class="assessment-taken-page-container21">
-
-<body>
-  <div class='progress-container'>
-    <div class="progress">
-      <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
-    </div>
-    <span class="score">{{assessment.latest_score}}%</span>
+      <div id="assessments-container" class="assessment-taken-page-assessments-container">
+  <!-- Show the assessment list only if no assessment is selected -->
+  <div *ngIf="selectedAssessmentId === null">
+    <!-- Show message if assessments array is empty -->
+  <div *ngIf="assessments?.length === 0" class="no-assessments-message">
+    No assessments taken yet.
   </div>
 
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-  <script>
-    $(document).ready(function () {
-      const $progress = $('.progress');
-      const $bar = $progress.find('.bar');
-      const $score = $('.score');
-      const perc = 56.5; // Percentage value
-
-      // Determine the fill color based on the percentage
-      const getFillColor = (value) => {
-        if (value <= 40) return 'red';
-        if (value <= 60) return 'orange';
-        if (value <= 75) return '#4D91C6'; // Ampere color
-        if (value <= 84) return 'lightgreen';
-        return 'darkgreen';
-      };
-
-      $({ p: 0 }).animate({ p: perc }, {
-        duration: 3000,
-        easing: 'swing',
-        step: function (p) {
-          // Update the width and color of the bar
-          $bar.css({
-            width: p + '%',
-            backgroundColor: getFillColor(p)
-          });
-
-          // Update the displayed score
-          $score.text(Math.round(p) + '%');
-        }
-      });
-    });
-  </script>
-</body>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  id="attempts-remaining-container"
-                  class="assessment-taken-page-attempts-remaining-container"
-                >
-                  <span
-                    id="attempts-remaining-text"
-                    class="assessment-taken-page-attempts-remaining-text"
-                  >
-                    Attempt(s) Remaining
-                  </span>
-                  <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
-                </div>
-                <svg
-                  id="right-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="assessment-taken-page-right-icon1"
-                  (click)="goToAssessmentDetails(assessment)"
-                  style="cursor: pointer;"
-                >
-                  <path
-                    d="m10 16l4-4l-4-4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
+  <!-- Show assessments if array is not empty -->
+   <div *ngIf="assessments?.length > 0">
+    <div *ngFor="let assessment of assessments">
+      <div class="assessment-taken-page-first-assessment-container">
+        <div class="assessment-taken-page-assessment-details-container">
+          <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />
+          <div id="details" class="assessment-taken-page-details">
+            <span class="assessment-taken-page-heading-text1">{{assessment.assessment_title}}</span>
+            <div class="assessment-taken-page-assessment-date-id-container">
+              <span class="assessment-taken-page-details-text">
+                Completed {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
+              </span>
+            </div>
+            <div class="assessment-taken-page-assessment-by-container1">
+              <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />
+              <span class="assessment-taken-page-assessment-by-text1">Assessment by {{assessment.created_by}}</span>
             </div>
           </div>
-          <span
-            id="see-more-text1"
-            class="assessment-taken-page-see-more-text1"
-          >
-            See More
-          </span>
         </div>
-        <!-- <div class="assessment-taken-page-assessments-available-container">
-          <span
-            id="assessments-available-text"
-            class="assessment-taken-page-assessments-available-text"
-          >
-            New Assessment Available (2)
-          </span>
-          <div class="assessment-taken-page-container22">
-            <div
-              id="available-assessments-card-container"
-              class="assessment-taken-page-available-assessmnets-card-container"
-            >
-              <div
-                id="card-details-container"
-                class="assessment-taken-page-card-details-container"
-              >
-                <div
-                  id="details-container"
-                  class="assessment-taken-page-details-container2"
-                >
-                  <img
-                    alt="image"
-                    src="https://play.teleporthq.io/static/svg/default-img.svg"
-                    class="assessment-taken-page-assessment-image2"
-                  />
-                  <div
-                    id="detail-container"
-                    class="assessment-taken-page-detail-container"
-                  >
-                    <span
-                      id="heading-text"
-                      class="assessment-taken-page-heading-text2"
-                    >
-                      Generative AI for Leaders
-                    </span>
-                    <div
-                      id="date-id-container"
-                      class="assessment-taken-page-date-id-container"
-                    >
-                      <span
-                        id="date-id-text"
-                        class="assessment-taken-page-date-id-text"
-                      >
-                        Completed 7/03/2025 | Assessment ID : 109987
-                      </span>
+        <div class="assessment-taken-page-score-container">
+          <div class="assessment-taken-page-score-board-container">
+            <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
+            <div class="assessment-taken-page-score-code-container">
+              <div class="assessment-taken-page-container20">
+                <div class="assessment-taken-page-container21">
+                  <div class='progress-container'>
+                    <div class="progress">
+                      <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
                     </div>
-                    <div
-                      id="assessment-by-container"
-                      class="assessment-taken-page-assessment-by-container2"
-                    >
-                      <img
-                        id="assessment-image"
-                        alt="image"
-                        src="https://play.teleporthq.io/static/svg/default-img.svg"
-                        class="assessment-taken-page-assessment-image3"
-                      />
-                      <span
-                        id="Assessment-by-text"
-                        class="assessment-taken-page-assessment-by-text2"
-                      >
-                        Assessment by Flashyre
-                      </span>
-                    </div>
+                    <span class="score">{{assessment.latest_score}}%</span>
                   </div>
                 </div>
               </div>
-              <div
-                id="remaining-attempts-container"
-                class="assessment-taken-page-remaining-attempts-container"
-              >
-                <div
-                  id="remaining-attempts"
-                  class="assessment-taken-page-remaining-attempts"
-                >
-                  <span class="assessment-taken-page-text29">
-                    Attempt(s) Remaining
-                  </span>
-                  <span>2</span>
-                </div>
-                <svg
-                  id="right-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="assessment-taken-page-right-icon2"
-                >
-                  <path
-                    d="m10 16l4-4l-4-4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
             </div>
           </div>
-          <span id="num-text" class="assessment-taken-page-num-text2">
-            See More
-          </span>
-        </div> -->
+          <div class="assessment-taken-page-attempts-remaining-container">
+            <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
+            <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
+          </div>
+          <svg
+            id="right-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            class="assessment-taken-page-right-icon1"
+            (click)="selectAssessment(assessment.assessment_id)"
+            style="cursor: pointer;"
+          >
+            <path
+              d="m10 16l4-4l-4-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+        </div>
       </div>
+      </div>
+    </div>
+    <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span>
+  </div>
+
+  <!-- Show the attempts list when an assessment is selected -->
+  <assessment-attempts-list 
+    *ngIf="selectedAssessmentId !== null" 
+    [assessmentId]="selectedAssessmentId"
+    (back)="closeDetailView()">
+  </assessment-attempts-list>
+</div>
     </div>
   </div>
 </div>
