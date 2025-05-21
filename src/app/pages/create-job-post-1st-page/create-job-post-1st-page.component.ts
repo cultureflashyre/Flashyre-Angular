@@ -36,6 +36,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     private corporateAuthService: CorporateAuthService,
     private router: Router
   ) {
+    // Initialize form with validation rules
     this.jobForm = this.fb.group({
       role: ['', [Validators.required, Validators.maxLength(100)]],
       location: ['', [Validators.required, Validators.maxLength(200)]],
@@ -57,6 +58,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Set page title and meta tags
     this.title.setTitle('Create Job Post - Flashyre');
     this.meta.addTags([
       { property: 'og:title', content: 'Create Job Post - Flashyre' },
@@ -66,19 +68,23 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       }
     ]);
 
+    // Redirect to login if not authenticated
     if (!this.corporateAuthService.isLoggedIn()) {
       this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']);
     }
 
+    // Set up location search
     this.setupSearch();
   }
 
   ngAfterViewInit(): void {
+    // Initialize skills input after view is rendered
     this.initializeSkillsInput();
   }
 
   private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
+    // Validate experience ranges
     const totalMin = form.get('total_experience_min')?.value;
     const totalMax = form.get('total_experience_max')?.value;
     const relevantMin = form.get('relevant_experience_min')?.value;
@@ -94,65 +100,61 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.selectedFile = input.files[0];
-    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
-    const ext = this.selectedFile.name.toLowerCase().substring(this.selectedFile.name.lastIndexOf('.'));
-    const maxSize = 10 * 1024 * 1024;
-    if (!allowedExtensions.includes(ext)) {
-      this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
+    // Handle file selection
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
+      const ext = this.selectedFile.name.toLowerCase().substring(this.selectedFile.name.lastIndexOf('.'));
+      const maxSize = 10 * 1024 * 1024;
+      if (!allowedExtensions.includes(ext)) {
+        this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
+        this.selectedFile = null;
+        input.value = '';
+      } else if (this.selectedFile.size > maxSize) {
+        this.snackBar.open('File size exceeds 10MB limit.', 'Close', { duration: 5000 });
+        this.selectedFile = null;
+        input.value = '';
+      }
+    } else {
       this.selectedFile = null;
-      input.value = '';
-    } else if (this.selectedFile.size > maxSize) {
-      this.snackBar.open('File size exceeds 10MB limit.', 'Close', { duration: 5000 });
-      this.selectedFile = null;
-      input.value = '';
     }
-  } else {
-    this.selectedFile = null;
   }
-}
 
   uploadFile(): void {
-  if (!this.selectedFile) {
-    this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
-    return;
-  }
-  const token = this.corporateAuthService.getJWTToken();
-  if (!token) {
-    this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
-    this.router.navigate(['/login-corporate']);
-    return;
-  }
-  this.jobDescriptionService.uploadFile(this.selectedFile, token).subscribe({
-    next: (response) => {
-      this.jobForm.patchValue({ job_description_url: response.file_url, unique_id: response.unique_id });
-      this.snackBar.open('File uploaded successfully.', 'Close', { duration: 3000 });
-      this.processJobDescription(response.file_url, response.unique_id, token);
-    },
-    error: (error) => {
-      console.error('File upload error:', error);
-      this.snackBar.open(`File upload failed: ${error.message}`, 'Close', { duration: 5000 });
+    // Validate file selection
+    if (!this.selectedFile) {
+      this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
+      return;
     }
-  });
-}
-
-  private processJobDescription(fileUrl: string, uniqueId: string, token: string): void {
-    this.jobDescriptionService.processJobDescription(fileUrl, uniqueId, token).subscribe({
+    // Get JWT token
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
+      this.router.navigate(['/login-corporate']);
+      return;
+    }
+    // Upload file and process with AI
+    this.jobDescriptionService.uploadFile(this.selectedFile, token).subscribe({
       next: (response) => {
+        // Update form with file metadata
+        this.jobForm.patchValue({ job_description_url: response.file_url, unique_id: response.unique_id });
+        // Populate form with AI-processed data
         this.populateForm(response);
-        this.snackBar.open('Job description processed successfully.', 'Close', { duration: 3000 });
+        this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
       },
       error: (error) => {
-        this.snackBar.open(`AI processing failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
+        console.error('File upload error:', error);
+        this.snackBar.open(`File upload or processing failed: ${error.message}`, 'Close', { duration: 5000 });
       }
     });
   }
 
   private populateForm(jobData: AIJobResponse): void {
+    // Extract job details from AI response
     const jobDetails = jobData.job_details;
     const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
+    // Update form fields with AI-processed data
     this.jobForm.patchValue({
       role: jobDetails.job_titles[0]?.value || 'Unknown',
       location: jobDetails.location || 'Unknown',
@@ -173,6 +175,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private mapJobType(title: string): string {
+    // Map job title to job type
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('intern')) return 'Internship';
     if (lowerTitle.includes('contract')) return 'Contract';
@@ -181,11 +184,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private parseExperience(exp: string): [number, number] {
+    // Parse experience range from string
     const match = exp.match(/(\d+)-(\d+)/);
     return match ? [parseInt(match[1]), parseInt(match[2])] : [0, 0];
   }
 
   private setupSearch(): void {
+    // Set up location search with debounce
     this.searchTerms.pipe(
       debounceTime(this.DEBOUNCE_DELAY),
       distinctUntilChanged(),
@@ -209,6 +214,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   onInput(event: Event): void {
+    // Handle location input for suggestions
     const query = (event.target as HTMLInputElement).value.trim();
     if (query.length === 0) {
       this.showSuggestions = false;
@@ -219,11 +225,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private async fetchLocationSuggestions(query: string): Promise<string[]> {
+    // Simulate location suggestions API call
     await new Promise(resolve => setTimeout(resolve, 500));
     return this.getMockSuggestions(query);
   }
 
   private getMockSuggestions(query: string): string[] {
+    // Mock location suggestions
     query = query.toLowerCase();
     const cities = [
       'Multiple',
@@ -247,12 +255,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   selectSuggestion(location: string): void {
+    // Update form with selected location
     this.jobForm.patchValue({ location });
     this.showSuggestions = false;
     this.suggestions = [];
   }
 
   handleOutsideClick(event: MouseEvent): void {
+    // Hide suggestions on outside click
     const target = event.target as Node;
     if (
       this.suggestionsContainer &&
@@ -264,6 +274,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private initializeSkillsInput(): void {
+    // Initialize skills input with tag functionality
     const tagInput = document.getElementById('tagInput') as HTMLInputElement;
     const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
     const suggestions = document.getElementById('suggestions') as HTMLDivElement;
@@ -400,8 +411,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  //Submit job post
   submitJobPost(): void {
+    // Validate and submit job post
     if (this.jobForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000 });
       this.jobForm.markAllAsTouched();
@@ -421,8 +432,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const jobDetails: JobDetails = {
       ...formValues,
       skills: {
-        primary: formValues.skills.slice(0, Math.ceil(formValues.skills.length / 2)),
-        secondary: formValues.skills.slice(Math.ceil(formValues.skills.length / 2))
+        primary: formValues.skills.slice(0, Math.ceil(formValues.skills.length / 2)).map(skill => ({
+          skill,
+          skill_confidence: 0.9, // Default confidence, as not provided by form
+          type_confidence: 0.9
+        })),
+        secondary: formValues.skills.slice(Math.ceil(formValues.skills.length / 2)).map(skill => ({
+          skill,
+          skill_confidence: 0.8, // Default confidence, as not provided by form
+          type_confidence: 0.8
+        }))
       }
     };
 
@@ -439,11 +458,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   cancelJobPost(): void {
+    // Reset form and navigate to dashboard
     this.resetForm();
     this.router.navigate(['/dashboard']);
   }
 
   resetForm(): void {
+    // Reset form fields and clear file input
     this.jobForm.reset({
       role: '',
       location: '',

@@ -1,5 +1,3 @@
-
-// job-description.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -17,12 +15,12 @@ export class JobDescriptionService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Uploads a file to Google Cloud Storage and saves metadata
+   * Uploads a file to Google Cloud Storage, processes it with AI, and saves metadata and draft job post.
    * @param file The file to upload
    * @param token JWT token for authentication
-   * @returns Observable with file URL and unique ID
+   * @returns Observable with file URL, unique ID, job details, and MCQs
    */
-  uploadFile(file: File, token: string): Observable<{ file_url: string; unique_id: string }> {
+  uploadFile(file: File, token: string): Observable<AIJobResponse & { file_url: string; unique_id: string }> {
     // Validate file input
     if (!file) {
       console.error('No file provided for upload');
@@ -51,54 +49,14 @@ export class JobDescriptionService {
     });
 
     return this.http
-      .post<{ status: string; data: { file_url: string; unique_id: string } }>(
+      .post<{ status: string; data: AIJobResponse & { file_url: string; unique_id: string } }>(
         `${this.apiUrl}file-upload/`, // Endpoint: /api/file-upload/
         formData,
         { headers }
       )
       .pipe(
-        map(response => ({
-          file_url: response.data.file_url,
-          unique_id: response.data.unique_id
-        })),
-        catchError(error => this.handleError(error))
-      );
-  }
-
-  /**
-   * Processes a job description file using AI
-   * @param fileUrl URL of the uploaded file
-   * @param uniqueId Unique identifier for the file
-   * @param token JWT token for authentication
-   * @returns Observable with AI-processed job details and MCQs
-   */
-  processJobDescription(fileUrl: string, uniqueId: string, token: string): Observable<AIJobResponse> {
-    // Validate input
-    if (!fileUrl || !uniqueId) {
-      return throwError(() => new Error('file_url and unique_id are required'));
-    }
-
-    // Set headers for JSON request
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
-    // Prepare payload
-    const payload = {
-      file_url: fileUrl,
-      unique_id: uniqueId
-    };
-
-    return this.http
-      .post<{ status: string; data: AIJobResponse }>(
-        `${this.apiUrl}ai-process/`, // Endpoint: /api/ai-process/
-        payload,
-        { headers }
-      )
-      .pipe(
         map(response => response.data),
-        catchError(this.handleError)
+        catchError(error => this.handleError(error))
       );
   }
 
