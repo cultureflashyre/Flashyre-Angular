@@ -1,4 +1,3 @@
-// ../pages/create-job-post-1st-page/types.ts
 export interface Skill {
   skill: string;
   skill_confidence: number;
@@ -31,6 +30,8 @@ export interface JobDetails {
 }
 
 export interface AIJobResponse {
+  file_url: string; // URL of the uploaded file in GCS
+  unique_id: string; // Unique identifier for the file and job post
   job_details: {
     job_titles: { value: string; confidence: number }[];
     experience: { value: string; confidence: number };
@@ -44,7 +45,6 @@ export interface AIJobResponse {
     job_description: string;
   };
   mcqs: { [skill: string]: string }; // MCQs as text per skill
-  unique_id: string;
 }
 
 export interface PaginatedJobPostResponse {
