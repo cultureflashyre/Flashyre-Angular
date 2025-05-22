@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { JobDescriptionService } from '../../services/job-description.service';
@@ -10,7 +10,7 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 
 @Component({
-  selector: 'app-create-job-post-1st-page',
+  selector: 'create-job-post-1st-page',
   templateUrl: './create-job-post-1st-page.component.html',
   styleUrls: ['./create-job-post-1st-page.component.css']
 })
@@ -34,9 +34,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    // Initialize form with validation rules
     this.jobForm = this.fb.group({
       role: ['', [Validators.required, Validators.maxLength(100)]],
       location: ['', [Validators.required, Validators.maxLength(200)]],
@@ -58,7 +58,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // Set page title and meta tags
     this.title.setTitle('Create Job Post - Flashyre');
     this.meta.addTags([
       { property: 'og:title', content: 'Create Job Post - Flashyre' },
@@ -68,23 +67,38 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       }
     ]);
 
-    // Redirect to login if not authenticated
     if (!this.corporateAuthService.isLoggedIn()) {
       this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']);
     }
 
-    // Set up location search
     this.setupSearch();
+
+    // Fetch job post data if unique_id is provided
+    const uniqueId = this.route.snapshot.paramMap.get('unique_id');
+    if (uniqueId) {
+      const token = this.corporateAuthService.getJWTToken();
+      if (token) {
+        this.jobDescriptionService.getJobPost(uniqueId, token).subscribe({
+          next: (jobPost) => {
+            this.populateForm(jobPost);
+          },
+          error: (error) => {
+            this.snackBar.open('Failed to load job post data.', 'Close', { duration: 5000 });
+          }
+        });
+      } else {
+        this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
+        this.router.navigate(['/login-corporate']);
+      }
+    }
   }
 
   ngAfterViewInit(): void {
-    // Initialize skills input after view is rendered
     this.initializeSkillsInput();
   }
 
   private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
-    // Validate experience ranges
     const totalMin = form.get('total_experience_min')?.value;
     const totalMax = form.get('total_experience_max')?.value;
     const relevantMin = form.get('relevant_experience_min')?.value;
@@ -100,7 +114,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   onFileSelected(event: Event): void {
-    // Handle file selection
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
@@ -122,24 +135,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   uploadFile(): void {
-    // Validate file selection
     if (!this.selectedFile) {
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
       return;
     }
-    // Get JWT token
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']);
       return;
     }
-    // Upload file and process with AI
     this.jobDescriptionService.uploadFile(this.selectedFile, token).subscribe({
       next: (response) => {
-        // Update form with file metadata
         this.jobForm.patchValue({ job_description_url: response.file_url, unique_id: response.unique_id });
-        // Populate form with AI-processed data
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
       },
@@ -150,32 +158,186 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private populateForm(jobData: AIJobResponse): void {
-    // Extract job details from AI response
-    const jobDetails = jobData.job_details;
-    const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
-    // Update form fields with AI-processed data
+  private populateForm(jobData: JobDetails | AIJobResponse): void {
+    let role: string;
+    let location: string;
+    let job_type: string;
+    let workplace_type: string;
+    let total_experience_min: number;
+    let total_experience_max: number;
+    let relevant_experience_min: number;
+    let relevant_experience_max: number;
+    let budget_type: string;
+    let min_budget: number;
+    let max_budget: number;
+    let notice_period: string;
+    let skills: string[];
+    let job_description: string;
+
+    if ('job_details' in jobData) {
+      // Handle AIJobResponse
+      const aiJobData = jobData as AIJobResponse;
+      const jobDetails = aiJobData.job_details;
+      const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
+      role = jobDetails.job_titles[0]?.value || 'Unknown';
+      location = jobDetails.location || 'Unknown';
+      job_type = this.mapJobType(jobDetails.job_titles[0]?.value || '');
+      workplace_type = jobDetails.workplace_type || 'Remote';
+      total_experience_min = minExp;
+      total_experience_max = maxExp;
+      relevant_experience_min = Math.max(0, minExp - 1);
+      relevant_experience_max = Math.min(maxExp, minExp + 2);
+      budget_type = jobDetails.budget_type || 'Annually';
+      min_budget = jobDetails.min_budget || 0;
+      max_budget = jobDetails.max_budget || 0;
+      notice_period = jobDetails.notice_period || '30 days';
+      skills = [
+        ...(jobDetails.skills.primary || []).map(s => s.skill),
+        ...(jobDetails.skills.secondary || []).map(s => s.skill)
+      ];
+      job_description = jobDetails.job_description || '';
+    } else {
+      // Handle JobDetails
+      const jobDetails = jobData as JobDetails;
+      role = jobDetails.role;
+      location = jobDetails.location;
+      job_type = jobDetails.job_type;
+      workplace_type = jobDetails.workplace_type;
+      total_experience_min = jobDetails.total_experience_min;
+      total_experience_max = jobDetails.total_experience_max;
+      relevant_experience_min = jobDetails.relevant_experience_min;
+      relevant_experience_max = jobDetails.relevant_experience_max;
+      budget_type = jobDetails.budget_type;
+      min_budget = jobDetails.min_budget;
+      max_budget = jobDetails.max_budget;
+      notice_period = jobDetails.notice_period;
+      skills = jobDetails.skills.primary.map(s => s.skill).concat(jobDetails.skills.secondary.map(s => s.skill));
+      job_description = jobDetails.job_description;
+    }
+
+    // Populate form fields
     this.jobForm.patchValue({
-      role: jobDetails.job_titles[0]?.value || 'Unknown',
-      location: jobDetails.location || 'Unknown',
-      job_type: this.mapJobType(jobDetails.job_titles[0]?.value || ''),
-      workplace_type: jobDetails.workplace_type || 'Remote',
-      total_experience_min: minExp,
-      total_experience_max: maxExp,
-      relevant_experience_min: Math.max(0, minExp - 1),
-      relevant_experience_max: Math.min(maxExp, minExp + 2),
-      budget_type: jobDetails.budget_type || 'Annually',
-      min_budget: jobDetails.min_budget || 0,
-      max_budget: jobDetails.max_budget || 0,
-      notice_period: jobDetails.notice_period || '30 days',
-      skills: [...(jobDetails.skills.primary || []).map(s => s.skill), ...(jobDetails.skills.secondary || []).map(s => s.skill)],
-      job_description: jobDetails.job_description || '',
-      unique_id: jobData.unique_id
+      role,
+      location,
+      job_type,
+      workplace_type,
+      total_experience_min,
+      total_experience_max,
+      relevant_experience_min,
+      relevant_experience_max,
+      budget_type,
+      min_budget,
+      max_budget,
+      notice_period,
+      skills,
+      job_description,
+      unique_id: 'unique_id' in jobData ? (jobData as AIJobResponse).unique_id : (jobData as JobDetails).unique_id
     });
+
+    // Update DOM elements
+    this.setTextField('role-text', role);
+    this.setTextField('location-text', location);
+    this.setRadioButton('job_type', job_type);
+    this.setRadioButton('workplace_type', workplace_type);
+    this.setRadioButton('budget_type', budget_type);
+    this.setInputValue('min-budget-input-field', min_budget.toString());
+    this.setInputValue('max-budget-input', max_budget.toString());
+    this.setInputValue('notice-period-input-filed', notice_period);
+    this.populateSkills(skills);
+    this.setJobDescription(job_description);
+    this.setExperienceRange('total', total_experience_min, total_experience_max);
+    this.setExperienceRange('relevant', relevant_experience_min, relevant_experience_max);
+  }
+
+  private setTextField(id: string, value: string): void {
+    const element = document.getElementById(id) as HTMLSpanElement;
+    if (element) {
+      element.textContent = value;
+    }
+  }
+
+  private setInputValue(id: string, value: string): void {
+    const element = document.getElementById(id) as HTMLInputElement;
+    if (element) {
+      element.value = value;
+    }
+  }
+
+  private setRadioButton(groupName: string, value: string): void {
+    const radio = document.querySelector(`input[name="${groupName}"][value="${value}"]`) as HTMLInputElement;
+    if (radio) {
+      radio.checked = true;
+    }
+  }
+
+  private populateSkills(skills: string[]): void {
+    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
+    const tagInput = document.getElementById('tagInput') as HTMLInputElement;
+    if (!tagContainer || !tagInput) return;
+
+    tagContainer.innerHTML = ''; // Clear existing tags
+    skills.forEach(skill => {
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      const tagText = document.createElement('span');
+      tagText.textContent = skill;
+      tag.appendChild(tagText);
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', () => {
+        tag.remove();
+        const updatedSkills = this.jobForm.value.skills.filter(s => s !== skill);
+        this.jobForm.patchValue({ skills: updatedSkills });
+      });
+      tag.appendChild(removeBtn);
+      tagContainer.insertBefore(tag, tagInput);
+    });
+    this.jobForm.patchValue({ skills });
+  }
+
+  private setJobDescription(description: string): void {
+    const editor = document.getElementById('editor') as HTMLDivElement;
+    if (editor) {
+      editor.innerHTML = description;
+      this.checkEmpty('editor');
+    }
+  }
+
+  private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
+    const prefix = type === 'total' ? 'total_' : 'relevant_';
+    const rangeIndicator = document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
+    const markerLeft = document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;
+    const markerRight = document.getElementById(`${prefix}markerRight`) as HTMLDivElement;
+    const labelLeft = document.getElementById(`${prefix}labelLeft`) as HTMLDivElement;
+    const labelRight = document.getElementById(`${prefix}labelRight`) as HTMLDivElement;
+    const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
+
+    if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
+      const rect = rangeIndicator.getBoundingClientRect();
+      const width = rect.width;
+      const maxYears = 20; // Assuming range represents 0-20 years
+      const minPos = (min / maxYears) * (width - 10);
+      const maxPos = (max / maxYears) * (width - 10);
+
+      markerLeft.style.left = `${minPos}px`;
+      markerRight.style.left = `${maxPos}px`;
+      labelLeft.style.left = `${minPos + 5}px`;
+      labelLeft.textContent = `${min}yrs`;
+      labelRight.style.left = `${maxPos + 5}px`;
+      labelRight.textContent = `${max}yrs`;
+      filledSegment.style.left = `${minPos + 5}px`;
+      filledSegment.style.width = `${maxPos - minPos}px`;
+    }
+  }
+
+  private checkEmpty(id: string): void {
+    const element = document.getElementById(id) as HTMLDivElement;
+    if (!element) return;
+    const isEmpty = element.textContent.trim() === '';
+    element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
   }
 
   private mapJobType(title: string): string {
-    // Map job title to job type
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('intern')) return 'Internship';
     if (lowerTitle.includes('contract')) return 'Contract';
@@ -184,13 +346,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private parseExperience(exp: string): [number, number] {
-    // Parse experience range from string
     const match = exp.match(/(\d+)-(\d+)/);
     return match ? [parseInt(match[1]), parseInt(match[2])] : [0, 0];
   }
 
   private setupSearch(): void {
-    // Set up location search with debounce
     this.searchTerms.pipe(
       debounceTime(this.DEBOUNCE_DELAY),
       distinctUntilChanged(),
@@ -214,7 +374,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   onInput(event: Event): void {
-    // Handle location input for suggestions
     const query = (event.target as HTMLInputElement).value.trim();
     if (query.length === 0) {
       this.showSuggestions = false;
@@ -225,13 +384,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private async fetchLocationSuggestions(query: string): Promise<string[]> {
-    // Simulate location suggestions API call
     await new Promise(resolve => setTimeout(resolve, 500));
     return this.getMockSuggestions(query);
   }
 
   private getMockSuggestions(query: string): string[] {
-    // Mock location suggestions
     query = query.toLowerCase();
     const cities = [
       'Multiple',
@@ -255,14 +412,12 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   selectSuggestion(location: string): void {
-    // Update form with selected location
     this.jobForm.patchValue({ location });
     this.showSuggestions = false;
     this.suggestions = [];
   }
 
   handleOutsideClick(event: MouseEvent): void {
-    // Hide suggestions on outside click
     const target = event.target as Node;
     if (
       this.suggestionsContainer &&
@@ -274,7 +429,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private initializeSkillsInput(): void {
-    // Initialize skills input with tag functionality
     const tagInput = document.getElementById('tagInput') as HTMLInputElement;
     const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
     const suggestions = document.getElementById('suggestions') as HTMLDivElement;
@@ -284,7 +438,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 
     const availableTags = [
       'JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular',
-      'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby',
+      'Node.js', 'TypeScript', 'Python', 'Java', 'PHP Ascendantframeworks', 'PHP', 'Ruby',
       'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB',
       'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API'
     ];
@@ -412,7 +566,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   submitJobPost(): void {
-    // Validate and submit job post
     if (this.jobForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000 });
       this.jobForm.markAllAsTouched();
@@ -426,20 +579,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Get form values
     const formValues = this.jobForm.value;
-    // Create JobDetails object, transforming skills array to { primary, secondary }
     const jobDetails: JobDetails = {
       ...formValues,
       skills: {
         primary: formValues.skills.slice(0, Math.ceil(formValues.skills.length / 2)).map(skill => ({
           skill,
-          skill_confidence: 0.9, // Default confidence, as not provided by form
+          skill_confidence: 0.9,
           type_confidence: 0.9
         })),
         secondary: formValues.skills.slice(Math.ceil(formValues.skills.length / 2)).map(skill => ({
           skill,
-          skill_confidence: 0.8, // Default confidence, as not provided by form
+          skill_confidence: 0.8,
           type_confidence: 0.8
         }))
       }
@@ -458,13 +609,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   cancelJobPost(): void {
-    // Reset form and navigate to dashboard
     this.resetForm();
     this.router.navigate(['/dashboard']);
   }
 
   resetForm(): void {
-    // Reset form fields and clear file input
     this.jobForm.reset({
       role: '',
       location: '',
