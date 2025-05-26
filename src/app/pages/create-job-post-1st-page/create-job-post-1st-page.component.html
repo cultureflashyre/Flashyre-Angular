@@ -417,10 +417,10 @@
 <div class='range-indicator' id='total_rangeIndicator'>
   <div class='line'></div>
   <div class='filled-segment' id='total_filledSegment'></div>
-  <div class='marker' id='total_markerLeft' style='left: 55px;'></div>
-  <div class='marker' id='total_markerRight' style='left: 175px;'></div>
-  <div class='label' id='total_labelLeft' style='left: 60px;'>2yrs</div>
-  <div class='label' id='total_labelRight' style='left: 180px;'>6yrs</div>
+  <div class='marker' id='total_markerLeft' style='left: 0px;'></div>
+  <div class='marker' id='total_markerRight' style='left: 100%;'></div>
+  <div class='label' id='total_labelLeft' style='left: 5px;'>0yrs</div>
+  <div class='label' id='total_labelRight' style='left: calc(100% + 5px);'>30yrs</div>
 </div>
 
     <script>
@@ -562,12 +562,11 @@
 <div class='range-indicator' id='relevant_rangeIndicator'>
   <div class='line'></div>
   <div class='filled-segment' id='relevant_filledSegment'></div>
-  <div class='marker' id='relevant_markerLeft' style='left: 55px;'></div>
-  <div class='marker' id='relevant_markerRight' style='left: 175px;'></div>
-  <div class='label' id='relevant_labelLeft' style='left: 60px;'>2yrs</div>
-  <div class='label' id='relevant_labelRight' style='left: 180px;'>6yrs</div>
+  <div class='marker' id='relevant_markerLeft' style='left: 0px;'></div>
+  <div class='marker' id='relevant_markerRight' style='left: 100%;'></div>
+  <div class='label' id='relevant_labelLeft' style='left: 5px;'>0yrs</div>
+  <div class='label' id='relevant_labelRight' style='left: calc(100% + 5px);'>30yrs</div>
 </div>
-
     <script>
         const rangeIndicator = document.getElementById('relevant_rangeIndicator');
         const markerLeft = document.getElementById('relevant_markerLeft');
@@ -1299,6 +1298,7 @@
             
           </div>
         </div>
+        <!-- <button (click)="testExperienceRange(0, 20, 3, 7)">Test Experience Range with Zeros</button> -->
       </div>
       <div
         id="submit-cancel-buttons-container"
