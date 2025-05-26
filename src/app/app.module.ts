@@ -251,6 +251,13 @@ const routes = [
       ).then((m) => m.CreateJobPost1stPageModule),
   },
   {
+    path: 'create-job-post-2nd-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-2nd-page/create-job-post-2nd-page.module'
+      ).then((m) => m.CreateJobPost2ndPageModule),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
