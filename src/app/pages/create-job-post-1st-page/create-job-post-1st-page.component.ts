@@ -28,34 +28,34 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private readonly DEBOUNCE_DELAY = 300;
 
   constructor(
-    private title: Title,
-    private meta: Meta,
-    private fb: FormBuilder,
-    private snackBar: MatSnackBar,
-    private jobDescriptionService: JobDescriptionService,
-    private corporateAuthService: CorporateAuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.jobForm = this.fb.group({
-      role: ['', [Validators.required, Validators.maxLength(100)]],
-      location: ['', [Validators.required, Validators.maxLength(200)]],
-      job_type: ['', [Validators.required]],
-      workplace_type: ['', [Validators.required]],
-      total_experience_min: [0, [Validators.required, Validators.min(0)]],
-      total_experience_max: [0, [Validators.required, Validators.min(0)]],
-      relevant_experience_min: [0, [Validators.required, Validators.min(0)]],
-      relevant_experience_max: [0, [Validators.required, Validators.min(0)]],
-      budget_type: ['', [Validators.required]],
-      min_budget: [0, [Validators.required, Validators.min(0)]],
-      max_budget: [0, [Validators.required, Validators.min(0)]],
-      notice_period: ['', [Validators.required, Validators.maxLength(50)]],
-      skills: [[], [Validators.required]],
-      job_description: ['', [Validators.maxLength(5000)]],
-      job_description_url: ['', [Validators.maxLength(200)]],
-      unique_id: ['']
-    }, { validators: this.experienceRangeValidator });
-  }
+  private title: Title,
+  private meta: Meta,
+  private fb: FormBuilder,
+  private snackBar: MatSnackBar,
+  private jobDescriptionService: JobDescriptionService,
+  private corporateAuthService: CorporateAuthService,
+  private router: Router,
+  private route: ActivatedRoute
+) {
+  this.jobForm = this.fb.group({
+    role: ['', [Validators.required, Validators.maxLength(100)]],
+    location: ['', [Validators.required, Validators.maxLength(200)]],
+    job_type: ['', [Validators.required]],
+    workplace_type: ['', [Validators.required]],
+    total_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
+    total_experience_max: [30, [Validators.required, Validators.min(0), Validators.max(30)]],
+    relevant_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
+    relevant_experience_max: [30, [Validators.required, Validators.min(0), Validators.max(30)]],
+    budget_type: ['', [Validators.required]],
+    min_budget: [0, [Validators.required, Validators.min(0)]],
+    max_budget: [0, [Validators.required, Validators.min(0)]],
+    notice_period: ['', [Validators.required, Validators.maxLength(50)]],
+    skills: [[], [Validators.required]],
+    job_description: ['', [Validators.maxLength(5000)]],
+    job_description_url: ['', [Validators.maxLength(200)]],
+    unique_id: ['']
+  }, { validators: this.experienceRangeValidator });
+}
 
   ngOnInit(): void {
     this.title.setTitle('Create Job Post - Flashyre');
@@ -94,8 +94,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private adjustExperienceRange(min: number, max: number): [number, number] {
+  if (min === 0 && max === 0) {
+    return [0, 30];
+  }
+  return [min, max];
+}
+
   ngAfterViewInit(): void {
     this.initializeSkillsInput();
+    this.initializeRange('total');
+    this.initializeRange('relevant');
+    this.updateExperienceUI();
   }
 
   private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
@@ -134,6 +144,34 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+//   testExperienceRange(totalMin: number, totalMax: number, relevantMin: number, relevantMax: number): void {
+//   const mockJobData: JobDetails = {
+//     role: 'Test Role',
+//     location: 'Test Location',
+//     job_type: 'Permanent',
+//     workplace_type: 'Remote',
+//     total_experience_min: totalMin,
+//     total_experience_max: totalMax,
+//     relevant_experience_min: relevantMin,
+//     relevant_experience_max: relevantMax,
+//     budget_type: 'Annually',
+//     min_budget: 0,
+//     max_budget: 0,
+//     notice_period: '30 days',
+//     skills: { primary: [], secondary: [] },
+//     job_description: 'Test description',
+//     unique_id: 'test-unique-id',
+//     job_description_url: '',
+//     status: 'draft'
+//   };
+//   this.populateForm(mockJobData);
+// }
+
+  private updateExperienceUI(): void {
+    this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
+    this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
+  }
+
   uploadFile(): void {
     if (!this.selectedFile) {
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
@@ -159,95 +197,103 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private populateForm(jobData: JobDetails | AIJobResponse): void {
-    let role: string;
-    let location: string;
-    let job_type: string;
-    let workplace_type: string;
-    let total_experience_min: number;
-    let total_experience_max: number;
-    let relevant_experience_min: number;
-    let relevant_experience_max: number;
-    let budget_type: string;
-    let min_budget: number;
-    let max_budget: number;
-    let notice_period: string;
-    let skills: string[];
-    let job_description: string;
+  let role: string;
+  let location: string;
+  let job_type: string;
+  let workplace_type: string;
+  let total_experience_min: number;
+  let total_experience_max: number;
+  let relevant_experience_min: number;
+  let relevant_experience_max: number;
+  let budget_type: string;
+  let min_budget: number;
+  let max_budget: number;
+  let notice_period: string;
+  let skills: string[];
+  let job_description: string;
 
-    if ('job_details' in jobData) {
-      // Handle AIJobResponse
-      const aiJobData = jobData as AIJobResponse;
-      const jobDetails = aiJobData.job_details;
-      const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
-      role = jobDetails.job_titles[0]?.value || 'Unknown';
-      location = jobDetails.location || 'Unknown';
-      job_type = this.mapJobType(jobDetails.job_titles[0]?.value || '');
-      workplace_type = jobDetails.workplace_type || 'Remote';
-      total_experience_min = minExp;
-      total_experience_max = maxExp;
-      relevant_experience_min = Math.max(0, minExp - 1);
-      relevant_experience_max = Math.min(maxExp, minExp + 2);
-      budget_type = jobDetails.budget_type || 'Annually';
-      min_budget = jobDetails.min_budget || 0;
-      max_budget = jobDetails.max_budget || 0;
-      notice_period = jobDetails.notice_period || '30 days';
-      skills = [
-        ...(jobDetails.skills.primary || []).map(s => s.skill),
-        ...(jobDetails.skills.secondary || []).map(s => s.skill)
-      ];
-      job_description = jobDetails.job_description || '';
-    } else {
-      // Handle JobDetails
-      const jobDetails = jobData as JobDetails;
-      role = jobDetails.role;
-      location = jobDetails.location;
-      job_type = jobDetails.job_type;
-      workplace_type = jobDetails.workplace_type;
-      total_experience_min = jobDetails.total_experience_min;
-      total_experience_max = jobDetails.total_experience_max;
-      relevant_experience_min = jobDetails.relevant_experience_min;
-      relevant_experience_max = jobDetails.relevant_experience_max;
-      budget_type = jobDetails.budget_type;
-      min_budget = jobDetails.min_budget;
-      max_budget = jobDetails.max_budget;
-      notice_period = jobDetails.notice_period;
-      skills = jobDetails.skills.primary.map(s => s.skill).concat(jobDetails.skills.secondary.map(s => s.skill));
-      job_description = jobDetails.job_description;
-    }
-
-    // Populate form fields
-    this.jobForm.patchValue({
-      role,
-      location,
-      job_type,
-      workplace_type,
-      total_experience_min,
-      total_experience_max,
-      relevant_experience_min,
-      relevant_experience_max,
-      budget_type,
-      min_budget,
-      max_budget,
-      notice_period,
-      skills,
-      job_description,
-      unique_id: 'unique_id' in jobData ? (jobData as AIJobResponse).unique_id : (jobData as JobDetails).unique_id
-    });
-
-    // Update DOM elements
-    this.setTextField('role-text', role);
-    this.setTextField('location-text', location);
-    this.setRadioButton('job_type', job_type);
-    this.setRadioButton('workplace_type', workplace_type);
-    this.setRadioButton('budget_type', budget_type);
-    this.setInputValue('min-budget-input-field', min_budget.toString());
-    this.setInputValue('max-budget-input', max_budget.toString());
-    this.setInputValue('notice-period-input-filed', notice_period);
-    this.populateSkills(skills);
-    this.setJobDescription(job_description);
-    this.setExperienceRange('total', total_experience_min, total_experience_max);
-    this.setExperienceRange('relevant', relevant_experience_min, relevant_experience_max);
+  if ('job_details' in jobData) {
+    // Handle AIJobResponse
+    const aiJobData = jobData as AIJobResponse;
+    const jobDetails = aiJobData.job_details;
+    const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
+    role = jobDetails.job_titles[0]?.value || 'Unknown';
+    location = jobDetails.location || 'Unknown';
+    job_type = this.mapJobType(jobDetails.job_titles[0]?.value || '');
+    workplace_type = jobDetails.workplace_type || 'Remote';
+    total_experience_min = minExp;
+    total_experience_max = maxExp;
+    // Adjust total experience if both min and max are 0
+    [total_experience_min, total_experience_max] = this.adjustExperienceRange(total_experience_min, total_experience_max);
+    relevant_experience_min = Math.max(0, minExp - 1);
+    relevant_experience_max = Math.min(maxExp, minExp + 2);
+    // Adjust relevant experience if both min and max are 0
+    [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(relevant_experience_min, relevant_experience_max);
+    budget_type = jobDetails.budget_type || 'Annually';
+    min_budget = jobDetails.min_budget || 0;
+    max_budget = jobDetails.max_budget || 0;
+    notice_period = jobDetails.notice_period || '30 days';
+    skills = [
+      ...(jobDetails.skills.primary || []).map(s => s.skill),
+      ...(jobDetails.skills.secondary || []).map(s => s.skill)
+    ];
+    job_description = jobDetails.job_description || '';
+  } else {
+    // Handle JobDetails
+    const jobDetails = jobData as JobDetails;
+    role = jobDetails.role;
+    location = jobDetails.location;
+    job_type = jobDetails.job_type;
+    workplace_type = jobDetails.workplace_type;
+    total_experience_min = jobDetails.total_experience_min;
+    total_experience_max = jobDetails.total_experience_max;
+    // Adjust total experience if both min and max are 0
+    [total_experience_min, total_experience_max] = this.adjustExperienceRange(total_experience_min, total_experience_max);
+    relevant_experience_min = jobDetails.relevant_experience_min;
+    relevant_experience_max = jobDetails.relevant_experience_max;
+    // Adjust relevant experience if both min and max are 0
+    [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(relevant_experience_min, relevant_experience_max);
+    budget_type = jobDetails.budget_type;
+    min_budget = jobDetails.min_budget;
+    max_budget = jobDetails.max_budget;
+    notice_period = jobDetails.notice_period;
+    skills = jobDetails.skills.primary.map(s => s.skill).concat(jobDetails.skills.secondary.map(s => s.skill));
+    job_description = jobDetails.job_description;
   }
+
+  // Populate form fields
+  this.jobForm.patchValue({
+    role,
+    location,
+    job_type,
+    workplace_type,
+    total_experience_min,
+    total_experience_max,
+    relevant_experience_min,
+    relevant_experience_max,
+    budget_type,
+    min_budget,
+    max_budget,
+    notice_period,
+    skills,
+    job_description,
+    unique_id: 'unique_id' in jobData ? (jobData as AIJobResponse).unique_id : (jobData as JobDetails).unique_id
+  });
+
+  // Update DOM elements
+  this.setInputValue('Role-Input-Field', role);
+  this.setInputValue('location', location);
+  this.setRadioButton('job_type', job_type);
+  this.setRadioButton('workplace_type', workplace_type);
+  this.setRadioButton('budget_type', budget_type);
+  this.setInputValue('min-budget-input-field', min_budget.toString());
+  this.setInputValue('max-budget-input', max_budget.toString());
+  this.setInputValue('notice-period-input-filed', notice_period);
+  this.populateSkills(skills);
+  this.setJobDescription(job_description);
+  this.setExperienceRange('total', total_experience_min, total_experience_max);
+  this.setExperienceRange('relevant', relevant_experience_min, relevant_experience_max);
+}
 
   private setTextField(id: string, value: string): void {
     const element = document.getElementById(id) as HTMLSpanElement;
@@ -313,22 +359,22 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
 
     if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
-      const rect = rangeIndicator.getBoundingClientRect();
-      const width = rect.width;
-      const maxYears = 20; // Assuming range represents 0-20 years
-      const minPos = (min / maxYears) * (width - 10);
-      const maxPos = (max / maxYears) * (width - 10);
+        const rect = rangeIndicator.getBoundingClientRect();
+        const width = rect.width;
+        const maxYears = 30; // 0-30 years range
+        const minPos = (min / maxYears) * (width - 10);
+        const maxPos = (max / maxYears) * (width - 10);
 
-      markerLeft.style.left = `${minPos}px`;
-      markerRight.style.left = `${maxPos}px`;
-      labelLeft.style.left = `${minPos + 5}px`;
-      labelLeft.textContent = `${min}yrs`;
-      labelRight.style.left = `${maxPos + 5}px`;
-      labelRight.textContent = `${max}yrs`;
-      filledSegment.style.left = `${minPos + 5}px`;
-      filledSegment.style.width = `${maxPos - minPos}px`;
+        markerLeft.style.left = `${minPos}px`;
+        markerRight.style.left = `${maxPos}px`;
+        labelLeft.style.left = `${minPos + 5}px`;
+        labelLeft.textContent = `${min}yrs`;
+        labelRight.style.left = `${maxPos + 5}px`;
+        labelRight.textContent = `${max}yrs`;
+        filledSegment.style.left = `${minPos + 5}px`;
+        filledSegment.style.width = `${maxPos - minPos}px`;
     }
-  }
+}
 
   private checkEmpty(id: string): void {
     const element = document.getElementById(id) as HTMLDivElement;
@@ -344,6 +390,88 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (lowerTitle.includes('part-time')) return 'Part-time';
     return 'Permanent';
   }
+
+  private initializeRange(type: 'total' | 'relevant'): void {
+  const prefix = type === 'total' ? 'total_' : 'relevant_';
+  const rangeIndicator = document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
+  const markerLeft = document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;
+  const markerRight = document.getElementById(`${prefix}markerRight`) as HTMLDivElement;
+  const labelLeft = document.getElementById(`${prefix}labelLeft`) as HTMLDivElement;
+  const labelRight = document.getElementById(`${prefix}labelRight`) as HTMLDivElement;
+  const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
+
+  let isDragging = false;
+  let currentMarker: HTMLDivElement | null = null;
+
+  const updateFilledSegment = () => {
+    const leftPos = parseFloat(markerLeft.style.left);
+    const rightPos = parseFloat(markerRight.style.left);
+    filledSegment.style.left = `${leftPos + 5}px`;
+    filledSegment.style.width = `${rightPos - leftPos}px`;
+  };
+
+  const updateLabelPosition = (marker: HTMLDivElement, label: HTMLDivElement) => {
+    const markerPos = parseFloat(marker.style.left);
+    label.style.left = `${markerPos + 5}px`;
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !currentMarker || !rangeIndicator) return;
+
+    const rect = rangeIndicator.getBoundingClientRect();
+    let newLeft = e.clientX - rect.left - 5;
+
+    const minLeft = 0;
+    const maxLeft = rect.width - 10;
+
+    if (currentMarker === markerLeft) {
+      newLeft = Math.max(minLeft, Math.min(newLeft, parseFloat(markerRight.style.left) - 10));
+    } else if (currentMarker === markerRight) {
+      newLeft = Math.min(maxLeft, Math.max(newLeft, parseFloat(markerLeft.style.left) + 10));
+    }
+
+    currentMarker.style.left = `${newLeft}px`;
+    updateFilledSegment();
+    updateLabelPosition(currentMarker, currentMarker === markerLeft ? labelLeft : labelRight);
+
+    const width = rect.width - 10;
+    const maxYears = 30;
+    const minYear = Math.round((parseFloat(markerLeft.style.left) / width) * maxYears);
+    const maxYear = Math.round((parseFloat(markerRight.style.left) / width) * maxYears);
+
+    if (type === 'total') {
+      this.jobForm.patchValue({
+        total_experience_min: minYear,
+        total_experience_max: maxYear
+      });
+    } else {
+      this.jobForm.patchValue({
+        relevant_experience_min: minYear,
+        relevant_experience_max: maxYear
+      });
+    }
+    labelLeft.textContent = `${minYear}yrs`;
+    labelRight.textContent = `${maxYear}yrs`;
+  };
+
+  const onMouseUp = () => {
+    isDragging = false;
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  const onMouseDown = (e: MouseEvent, marker: HTMLDivElement) => {
+    isDragging = true;
+    currentMarker = marker;
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+
+  markerLeft.addEventListener('mousedown', (e) => onMouseDown(e, markerLeft));
+  markerRight.addEventListener('mousedown', (e) => onMouseDown(e, markerRight));
+
+  updateFilledSegment();
+}
 
   private parseExperience(exp: string): [number, number] {
     const match = exp.match(/(\d+)-(\d+)/);
@@ -632,12 +760,15 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       job_description_url: '',
       unique_id: ''
     });
-    this.selectedFile = null;
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
-    }
-    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
-    const tags = tagContainer.querySelectorAll('.tag');
-    tags.forEach(tag => tag.remove());
+    this.jobForm.reset(); // Resets to initial values: 0-30 for experience ranges
+  this.selectedFile = null;
+  if (this.fileInput) {
+    this.fileInput.nativeElement.value = '';
   }
+  const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
+  const tags = tagContainer.querySelectorAll('.tag');
+  tags.forEach(tag => tag.remove());
+  this.updateExperienceUI(); // Sync UI with reset form values
+  }
+  
 }
