@@ -94,6 +94,8 @@ import { ProgressBarStep4 } from './progress-bar-step-4/progress-bar-step-4.comp
 import { Contact10 } from './contact10/contact10.component'
 import { NavbarForCandidateView } from './navbar-for-candidate-view/navbar-for-candidate-view.component'
 import { EmailAndMobileNumberComponent } from './email-and-mobile-number-component/email-and-mobile-number-component.component'
+import { AssessmentQuestionsMainContainer } from './assessment-questions-main-container/assessment-questions-main-container.component'
+
 
 
 @NgModule({
@@ -181,7 +183,8 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent
+    EmailAndMobileNumberComponent,
+    AssessmentQuestionsMainContainer
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
@@ -268,7 +271,8 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent
+    EmailAndMobileNumberComponent,
+    AssessmentQuestionsMainContainer
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

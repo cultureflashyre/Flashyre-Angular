@@ -1,0 +1,925 @@
+<div
+  id="assessment-questions-main-container"
+  class="assessment-questions-main-container-assessment-questions-main-container"
+>
+  <div
+    id="assessment-questions-container"
+    class="assessment-questions-main-container-assessment-questions-container"
+  >
+    <span
+      id="assessment-questions-text"
+      class="assessment-questions-main-container-assessment-questions-text"
+    >
+      <ng-container>
+        <ng-template #defaultAssessmentQuestionsText>
+          <div class="assessment-questions-main-container-fragment14">
+            <span class="assessment-questions-main-container-text15">
+              Assessment Questions
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="assessmentQuestionsText ? assessmentQuestionsText : defaultAssessmentQuestionsText"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <div
+      id="assessment-name-input-container"
+      class="assessment-questions-main-container-assessment-name-input-container"
+    >
+      <input
+        type="text"
+        id="assessment-name-input"
+        [attr.placeholder]="assessmentNameInputPlaceholder"
+        class="assessment-questions-main-container-assessment-name-input input"
+      />
+      <div
+        id="upload-questions-container"
+        class="assessment-questions-main-container-upload-questions-container"
+      >
+        <div
+          id="upload-input-container"
+          class="assessment-questions-main-container-upload-input-container"
+        >
+          <input
+            type="text"
+            id="upload-input-field"
+            [attr.placeholder]="uploadInputFieldPlaceholder"
+            class="assessment-questions-main-container-upload-input-field input"
+          />
+          <div
+            id="upload-button-container"
+            class="assessment-questions-main-container-upload-button-container"
+          >
+            <svg
+              id="upload-icon"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              class="assessment-questions-main-container-upload-icon"
+            >
+              <path
+                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span
+              id="upload-text"
+              class="assessment-questions-main-container-upload-text"
+            >
+              <ng-container>
+                <ng-template #defaultUploadText>
+                  <div class="assessment-questions-main-container-fragment16">
+                    <span class="assessment-questions-main-container-text17">
+                      Upload
+                      <span [innerHTML]="rawr4wp"></span>
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="uploadText ? uploadText : defaultUploadText"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+        <span
+          id="upload-file-type-text"
+          class="assessment-questions-main-container-upload-file-type-text"
+        >
+          <ng-container>
+            <ng-template #defaultUploadFileTypeText>
+              <div class="assessment-questions-main-container-fragment17">
+                <span class="assessment-questions-main-container-text18">
+                  Upload file (xlsx, xls)
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="uploadFileTypeText ? uploadFileTypeText : defaultUploadFileTypeText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+    <div
+      id="select-container"
+      class="assessment-questions-main-container-select-container"
+    >
+      <div
+        id="select-all-container"
+        class="assessment-questions-main-container-select-all-container1"
+      >
+        <input
+          type="checkbox"
+          id="select-all-checkbox"
+          class="assessment-questions-main-container-select-all-checkbox1"
+        />
+        <span
+          id="select-all-text"
+          class="assessment-questions-main-container-select-all-text1"
+        >
+          <ng-container>
+            <ng-template #defaultSelectAllText>
+              <div class="assessment-questions-main-container-fragment18">
+                <span class="assessment-questions-main-container-text19">
+                  Select All
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="selectAllText ? selectAllText : defaultSelectAllText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <span
+        id="num-selected-text"
+        class="assessment-questions-main-container-num-selected-text1"
+      >
+        <ng-container>
+          <ng-template #defaultNumSelectedText>
+            <div class="assessment-questions-main-container-fragment32">
+              <span
+                id="num-selected-text"
+                class="assessment-questions-main-container-num-selected-text2"
+              >
+                <span class="assessment-questions-main-container-text33">
+                  10
+                </span>
+                <span>Selected</span>
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="numSelectedText ? numSelectedText : defaultNumSelectedText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="shuffle-container"
+        class="assessment-questions-main-container-shuffle-container"
+      >
+        <input
+          type="checkbox"
+          id="shuffle-checkbox"
+          class="assessment-questions-main-container-shuffle-checkbox"
+        />
+        <span
+          id="shuffle-text"
+          class="assessment-questions-main-container-shuffle-text"
+        >
+          <ng-container>
+            <ng-template #defaultShuffleText>
+              <div class="assessment-questions-main-container-fragment29">
+                <span class="assessment-questions-main-container-text30">
+                  Shuffle
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="shuffleText ? shuffleText : defaultShuffleText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <svg
+          id="information-icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          class="assessment-questions-main-container-information-icon"
+        >
+          <path
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <div
+      id="ai-generated-upload-questions-container"
+      class="assessment-questions-main-container-ai-generated-upload-questions-container"
+    >
+      <span
+        id="ai-generated-text"
+        class="assessment-questions-main-container-ai-generated-text"
+      >
+        <ng-container>
+          <ng-template #defaultAiGeneratedText>
+            <div class="assessment-questions-main-container-fragment10">
+              <span class="assessment-questions-main-container-text10">
+                AI Generated
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="aiGeneratedText ? aiGeneratedText : defaultAiGeneratedText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <span
+        id="uploaded-questions-text"
+        class="assessment-questions-main-container-uploaded-questions-text"
+      >
+        <ng-container>
+          <ng-template #defaultUploadedQuestionsText>
+            <div class="assessment-questions-main-container-fragment19">
+              <span class="assessment-questions-main-container-text20">
+                Uploaded Questions
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="uploadedQuestionsText ? uploadedQuestionsText : defaultUploadedQuestionsText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+    <div
+      id="questions-container"
+      class="assessment-questions-main-container-questions-container"
+    >
+      <div
+        id="question-container"
+        class="assessment-questions-main-container-question-container"
+      >
+        <div
+          id="checkbox-container"
+          class="assessment-questions-main-container-checkbox-container"
+        >
+          <input
+            type="checkbox"
+            id="question-select-checkbox"
+            class="assessment-questions-main-container-question-select-checkbox"
+          />
+        </div>
+        <div
+          id="que-container"
+          class="assessment-questions-main-container-que-container"
+        >
+          <span
+            id="question"
+            class="assessment-questions-main-container-question"
+          >
+            <ng-container>
+              <ng-template #defaultQuestion>
+                <div class="assessment-questions-main-container-fragment26">
+                  <span class="assessment-questions-main-container-text27">
+                    What is the correct syntax to declare a variable in Java?
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="question ? question : defaultQuestion"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="option-1-container"
+            class="assessment-questions-main-container-option1-container"
+          >
+            <input
+              type="radio"
+              id="option-1-radio"
+              name="option-1-radio"
+              class="assessment-questions-main-container-option1-radio"
+            />
+            <label
+              id="option-1"
+              class="assessment-questions-main-container-option1"
+            >
+              <ng-container>
+                <ng-template #defaultOption1>
+                  <div class="assessment-questions-main-container-fragment20">
+                    <span class="assessment-questions-main-container-text21">
+                      var x = 10;
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="option1 ? option1 : defaultOption1"
+                ></ng-container>
+              </ng-container>
+            </label>
+          </div>
+          <div
+            id="option-2-container"
+            class="assessment-questions-main-container-option2-container"
+          >
+            <input
+              type="radio"
+              id="option-2-radio"
+              name="option-2-radio"
+              class="assessment-questions-main-container-option2-radio"
+            />
+            <label
+              id="option-1"
+              class="assessment-questions-main-container-option2"
+            >
+              <ng-container>
+                <ng-template #defaultOption2>
+                  <div class="assessment-questions-main-container-fragment22">
+                    <span class="assessment-questions-main-container-text23">
+                      var x = 10;
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="option2 ? option2 : defaultOption2"
+                ></ng-container>
+              </ng-container>
+            </label>
+          </div>
+          <div
+            id="option-3-container"
+            class="assessment-questions-main-container-option3-container"
+          >
+            <input
+              type="radio"
+              id="option-3-radio"
+              name="option-3-radio"
+              class="assessment-questions-main-container-option3-radio"
+            />
+            <label
+              id="jt-label-permanent"
+              class="assessment-questions-main-container-option3"
+            >
+              <ng-container>
+                <ng-template #defaultOption3>
+                  <div class="assessment-questions-main-container-fragment31">
+                    <span class="assessment-questions-main-container-text32">
+                      var x = 10;
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="option3 ? option3 : defaultOption3"
+                ></ng-container>
+              </ng-container>
+            </label>
+          </div>
+          <div
+            id="option-4-container"
+            class="assessment-questions-main-container-option4-container"
+          >
+            <input
+              type="radio"
+              id="option-4-radio"
+              name="option-4-radio"
+              class="assessment-questions-main-container-option4-radio"
+            />
+            <label
+              id="option-4"
+              class="assessment-questions-main-container-option4"
+            >
+              <ng-container>
+                <ng-template #defaultOption4>
+                  <div class="assessment-questions-main-container-fragment33">
+                    <span class="assessment-questions-main-container-text35">
+                      var x = 10;
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="option4 ? option4 : defaultOption4"
+                ></ng-container>
+              </ng-container>
+            </label>
+          </div>
+        </div>
+        <div
+          id="marks-difficulty-container"
+          class="assessment-questions-main-container-marks-difficulty-container"
+        >
+          <span id="marks" class="assessment-questions-main-container-marks1">
+            <ng-container>
+              <ng-template #defaultMarks>
+                <div class="assessment-questions-main-container-fragment13">
+                  <span
+                    id="marks"
+                    class="assessment-questions-main-container-marks2"
+                  >
+                    <span class="assessment-questions-main-container-text13">
+                      2
+                    </span>
+                    <span> marks</span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="marks ? marks : defaultMarks"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span
+            id="easy-text"
+            class="assessment-questions-main-container-easy-text"
+          >
+            <ng-container>
+              <ng-template #defaultEasyText>
+                <div class="assessment-questions-main-container-fragment23">
+                  <span class="assessment-questions-main-container-text24">
+                    Easy
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="easyText ? easyText : defaultEasyText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span
+            id="medium-text"
+            class="assessment-questions-main-container-medium-text"
+          >
+            <ng-container>
+              <ng-template #defaultMediumText>
+                <div class="assessment-questions-main-container-fragment28">
+                  <span class="assessment-questions-main-container-text29">
+                    Medium
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="mediumText ? mediumText : defaultMediumText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span
+            id="hard-text"
+            class="assessment-questions-main-container-hard-text"
+          >
+            <ng-container>
+              <ng-template #defaultHardText>
+                <div class="assessment-questions-main-container-fragment21">
+                  <span class="assessment-questions-main-container-text22">
+                    Hard
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="hardText ? hardText : defaultHardText"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    id="assessment-questions-2nd-container"
+    class="assessment-questions-main-container-assessment-questions2nd-container"
+  >
+    <div
+      id="permissions-container"
+      class="assessment-questions-main-container-permissions-container"
+    >
+      <div
+        id="proctered-container"
+        class="assessment-questions-main-container-proctered-container"
+      >
+        <span
+          id="proctered-text"
+          class="assessment-questions-main-container-proctered-text"
+        >
+          <ng-container>
+            <ng-template #defaultProcteredText>
+              <div class="assessment-questions-main-container-fragment24">
+                <span class="assessment-questions-main-container-text25">
+                  Proctered
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="procteredText ? procteredText : defaultProcteredText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div class="assessment-questions-main-container-container1">
+          <div class="assessment-questions-main-container-container2">
+            <dangerous-html
+              html="<style>
+        body {
+            background-color: transperant; /* Dark background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 30px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (background of the switch) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc; /* Gray for 'off' state */
+            transition: .4s;
+            border-radius: 30px; /* Oval shape */
+        }
+
+        /* The knob (circle inside the switch) */
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 26px;
+            width: 26px;
+            align-items: center;
+            left: 8px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%; /* Circular knob */
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Subtle glow effect */
+        }
+
+        /* When the switch is 'on' (checked) */
+        input:checked + .slider {
+            background-color: #05356C; /* Blue for 'on' state */
+        }
+
+        /* Move the knob to the right when 'on' */
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            content: '';
+        }
+    </style>
+
+    <label class='switch'>
+        <input type='checkbox' notchecked> <!-- Default 'on' state -->
+        <span class='slider'></span>
+    </label>
+
+"
+            ></dangerous-html>
+          </div>
+        </div>
+      </div>
+      <div
+        id="video-recording-container"
+        class="assessment-questions-main-container-video-recording-container"
+      >
+        <span
+          id="video-recording-text"
+          class="assessment-questions-main-container-video-recording-text"
+        >
+          <ng-container>
+            <ng-template #defaultVideoRecordingText>
+              <div class="assessment-questions-main-container-fragment25">
+                <span class="assessment-questions-main-container-text26">
+                  Video Recording
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="videoRecordingText ? videoRecordingText : defaultVideoRecordingText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div class="assessment-questions-main-container-container3">
+          <div class="assessment-questions-main-container-container4">
+            <dangerous-html
+              html="<style>
+        body {
+            background-color: transperant; /* Dark background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 30px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (background of the switch) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc; /* Gray for 'off' state */
+            transition: .4s;
+            border-radius: 30px; /* Oval shape */
+        }
+
+        /* The knob (circle inside the switch) */
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 26px;
+            width: 26px;
+            align-items: center;
+            left: 8px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%; /* Circular knob */
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Subtle glow effect */
+        }
+
+        /* When the switch is 'on' (checked) */
+        input:checked + .slider {
+            background-color: #05356C; /* Blue for 'on' state */
+        }
+
+        /* Move the knob to the right when 'on' */
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            content: '';
+        }
+    </style>
+
+    <label class='switch'>
+        <input type='checkbox' notchecked> <!-- Default 'on' state -->
+        <span class='slider'></span>
+    </label>
+
+"
+            ></dangerous-html>
+          </div>
+        </div>
+      </div>
+      <div
+        id="phone-access-container"
+        class="assessment-questions-main-container-phone-access-container"
+      >
+        <span
+          id="phone-access-text"
+          class="assessment-questions-main-container-phone-access-text"
+        >
+          <ng-container>
+            <ng-template #defaultPhoneAccessText>
+              <div class="assessment-questions-main-container-fragment11">
+                <span class="assessment-questions-main-container-text11">
+                  Phone Access
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="phoneAccessText ? phoneAccessText : defaultPhoneAccessText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div class="assessment-questions-main-container-container5">
+          <div class="assessment-questions-main-container-container6">
+            <dangerous-html
+              html="<style>
+        body {
+            background-color: transperant; /* Dark background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 30px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (background of the switch) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc; /* Gray for 'off' state */
+            transition: .4s;
+            border-radius: 30px; /* Oval shape */
+        }
+
+        /* The knob (circle inside the switch) */
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 26px;
+            width: 26px;
+            align-items: center;
+            left: 8px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%; /* Circular knob */
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Subtle glow effect */
+        }
+
+        /* When the switch is 'on' (checked) */
+        input:checked + .slider {
+            background-color: #05356C; /* Blue for 'on' state */
+        }
+
+        /* Move the knob to the right when 'on' */
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            content: '';
+        }
+    </style>
+
+    <label class='switch'>
+        <input type='checkbox' notchecked> <!-- Default 'on' state -->
+        <span class='slider'></span>
+    </label>
+
+"
+            ></dangerous-html>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="choose-sections-container"
+      class="assessment-questions-main-container-choose-sections-container"
+    >
+      <span
+        id="choose-sections-text"
+        class="assessment-questions-main-container-choose-sections-text"
+      >
+        <ng-container>
+          <ng-template #defaultChooseSectionsText>
+            <div class="assessment-questions-main-container-fragment15">
+              <span class="assessment-questions-main-container-text16">
+                Choose Sections
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="chooseSectionsText ? chooseSectionsText : defaultChooseSectionsText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="select-all-total-questions-container"
+        class="assessment-questions-main-container-select-all-total-questions-container"
+      >
+        <div
+          id="select-all-container"
+          class="assessment-questions-main-container-select-all-container2"
+        >
+          <input
+            type="checkbox"
+            id="select-all-checkbox"
+            class="assessment-questions-main-container-select-all-checkbox2"
+          />
+          <span
+            id="select-all-text"
+            class="assessment-questions-main-container-select-all-text2"
+          >
+            <ng-container>
+              <ng-template #defaultSelectAllText1>
+                <div class="assessment-questions-main-container-fragment34">
+                  <span class="assessment-questions-main-container-text36">
+                    Select All
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="selectAllText1 ? selectAllText1 : defaultSelectAllText1"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <div
+          id="total-questions-container"
+          class="assessment-questions-main-container-total-questions-container"
+        >
+          <span
+            id="total-questions-text"
+            class="assessment-questions-main-container-total-questions-text"
+          >
+            <ng-container>
+              <ng-template #defaultTotalQuestionsText>
+                <div class="assessment-questions-main-container-fragment27">
+                  <span class="assessment-questions-main-container-text28">
+                    Total Questions
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="totalQuestionsText ? totalQuestionsText : defaultTotalQuestionsText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <input
+            type="text"
+            id="total-questions-input"
+            class="assessment-questions-main-container-total-questions-input input"
+          />
+        </div>
+      </div>
+      <div
+        id="sections-container"
+        class="assessment-questions-main-container-sections-container"
+      >
+        <div
+          id="sections-sub-container"
+          class="assessment-questions-main-container-sections-sub-container"
+        >
+          <div
+            id="section-1-container"
+            class="assessment-questions-main-container-section1-container"
+          >
+            <div
+              id="section-1"
+              class="assessment-questions-main-container-section1"
+            >
+              <input
+                type="checkbox"
+                id="section-1-checkbox"
+                class="assessment-questions-main-container-section1-checkbox"
+              />
+              <span
+                id="section-name-text"
+                class="assessment-questions-main-container-section-name-text"
+              >
+                <ng-container>
+                  <ng-template #defaultSectionNameText>
+                    <div class="assessment-questions-main-container-fragment12">
+                      <span class="assessment-questions-main-container-text12">
+                        Java
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="sectionNameText ? sectionNameText : defaultSectionNameText"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="num-of-questions-for-section"
+              class="assessment-questions-main-container-num-of-questions-for-section input"
+            />
+          </div>
+        </div>
+        <span
+          id="add-section-text"
+          class="assessment-questions-main-container-add-section-text button"
+        >
+          <ng-container>
+            <ng-template #defaultAddSectionText>
+              <div class="assessment-questions-main-container-fragment30">
+                <span class="assessment-questions-main-container-text31">
+                  + Add Section
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="addSectionText ? addSectionText : defaultAddSectionText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
