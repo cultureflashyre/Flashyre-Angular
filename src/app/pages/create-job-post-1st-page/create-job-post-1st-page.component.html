@@ -684,6 +684,7 @@
               id="min-budget-form"
               class="create-job-post1st-page-min-budget-form input"
             >
+            
               <span id="inr-min" class="create-job-post1st-page-inr-min">
                 INR
               </span>
@@ -891,7 +892,7 @@
             cursor: pointer;
         }
 
-        .suggestion-item:hover {
+        .suggestion-item:hover {  
             background-color: #f5f5f5;
         }
 
@@ -1173,11 +1174,13 @@
                 .editor-content {
                     padding: 0px;
                     background-color: #fff;
+                    
                 }
                 
                 .editable-area {
                     border: 1px solid #ddd;
-                    min-height: 200px;
+                    height: 200px;
+                    max-height: 200px;
                     padding: 15px;
                     border-radius: 4px;
                     color: #333;
@@ -1208,99 +1211,85 @@
                 </div>
                 
                 <div class="toolbar">
-                    <button onclick="formatText('bold')" id="bold-btn" class="format-btn" title="Bold">B</button>
-                    <button onclick="formatText('italic')" id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
-                    <button onclick="formatText('underline')" id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
-                    <button onclick="formatText('list')" id="list-btn" class="format-btn" title="List">≡</button>
+                    <button (click)="formatText('bold')" id="bold-btn" class="format-btn" title="Bold">B</button>
+                    <button (click)="formatText('italic')" id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
+                    <button (click)="formatText('underline')" id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
+                    <button (click)="formatText('list')" id="list-btn" class="format-btn" title="List">≡</button>
                     
                     <div class="separator1"></div>
             
-                    <button onclick="formatText('highlight')" id="highlight-btn" class="format-btn" title="Highlight">H</button>
+                    <button (click)="formatText('highlight')" id="highlight-btn" class="format-btn" title="Highlight">H</button>
                     
                     <div class="separator2"></div>
                 </div>
                 
                 <div class="editor-content">
-                    <div id="editor" class="editable-area" contenteditable="true" data-placeholder="Enter your text here..." data-empty="true" onkeyup="checkEmpty('editor')" onblur="checkEmpty('editor')"></div>
+                    <div id="editor" class="editable-area" contenteditable="true" data-placeholder="Enter your text here..." data-empty="true"></div>
                 </div>
             </div>
             
-            <script>
-                // Initialize the editor
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Initialize the editable area
-                    checkEmpty('editor');
-                    
-                    // Add event listener for focus
-                    document.getElementById('editor').addEventListener('focus', function() {
-                        if (this.getAttribute('data-empty') === 'true') {
-                            this.setAttribute('data-empty', 'false');
-                            this.textContent = '';
-                        }
-                    });
-                });
-                
-                // Function to check if the editable area is empty
-                function checkEmpty(id) {
-                    const element = document.getElementById(id);
-                    if (!element) return;
-                    
-                    const isEmpty = element.textContent.trim() === '';
-                    element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
-                }
-                
-                // Function to apply formatting to selected text
-                function formatText(type) {
-                    // Get the selection
-                    const selection = window.getSelection();
-                    
-                    // Check if something is selected
-                    if (selection.rangeCount === 0) {
-                        return;
-                    }
-                    
-                    // For list formatting, we'll handle it even if no text is selected
-                    if (type === 'list' || selection.toString().length > 0) {
-                        // Format based on type
-                        switch(type) {
-                            case 'bold':
-                                document.execCommand('bold', false, null);
-                                break;
-                            case 'italic':
-                                document.execCommand('italic', false, null);
-                                break;
-                            case 'underline':
-                                document.execCommand('underline', false, null);
-                                break;
-                            case 'list':
-                                document.execCommand('insertUnorderedList', false, null);
-                                break;
-                            case 'highlight':
-                                document.execCommand('backColor', false, '#fff3cd');
-                                break;
-                        }
-                    }
-                    
-                    // Make sure to re-focus on the editable area
-                    document.getElementById('editor').focus();
-                }
-                
-                // Add keyboard shortcuts
-                document.addEventListener('keydown', function(e) {
-                    if (e.ctrlKey || e.metaKey) {
-                        if (e.key === 'b') {
-                            e.preventDefault();
-                            formatText('bold');
-                        } else if (e.key === 'i') {
-                            e.preventDefault();
-                            formatText('italic');
-                        } else if (e.key === 'u') {
-                            e.preventDefault();
-                            formatText('underline');
-                        }
-                    }
-                });
-            </script>
+            
+                <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor');
+    if (editor) {
+        checkEmpty('editor');
+        editor.addEventListener('input', function() {
+            checkEmpty('editor');
+        });
+        editor.addEventListener('blur', function() {
+            checkEmpty('editor');
+        });
+        editor.addEventListener('focus', function() {
+            checkEmpty('editor');
+        });
+    }
+});
+
+    function checkEmpty(id) {
+    const element = document.getElementById(id);
+    if (!element) return;
+    
+    const isEmpty = element.textContent.trim() === '';
+    element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
+    console.log('checkEmpty:', {
+        textContent: element.textContent.trim(),
+        isEmpty: isEmpty,
+        dataEmpty: element.getAttribute('data-empty')
+    });
+} 
+
+    function formatText(type) {
+    const editor = document.getElementById('editor');
+    editor.focus();
+    const selection = window.getSelection();
+    if (selection.rangeCount === 0) return;
+    if (type === 'list' || selection.toString().length > 0) {
+        switch(type) {
+            case 'bold': document.execCommand('bold', false, null); break;
+            case 'italic': document.execCommand('italic', false, null); break;
+            case 'underline': document.execCommand('underline', false, null); break;
+            case 'list': document.execCommand('insertUnorderedList', false, null); break;
+            case 'highlight': document.execCommand('backColor', false, '#fff3cd'); break;
+        }
+    }
+}
+
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'b') {
+                e.preventDefault();
+                formatText('bold');
+            } else if (e.key === 'i') {
+                e.preventDefault();
+                formatText('italic');
+            } else if (e.key === 'u') {
+                e.preventDefault();
+                formatText('underline');
+            }
+        }
+    });
+</script>
             
           </div>
         </div>

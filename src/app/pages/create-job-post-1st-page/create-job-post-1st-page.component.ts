@@ -9,6 +9,7 @@ import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 
+
 @Component({
   selector: 'create-job-post-1st-page',
   templateUrl: './create-job-post-1st-page.component.html',
@@ -131,6 +132,25 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     return null;
   }
 
+  formatText(type: string) {
+    const editor = document.getElementById('editor');
+    if (editor) {
+        editor.focus();
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            const selectedText = selection.toString();
+            if (type === 'list' || selectedText.length > 0) {
+                switch (type) {
+                    case 'bold': document.execCommand('bold', false, null); break;
+                    case 'italic': document.execCommand('italic', false, null); break;
+                    case 'underline': document.execCommand('underline', false, null); break;
+                    case 'list': document.execCommand('insertUnorderedList', false, null); break;
+                    case 'highlight': document.execCommand('backColor', false, '#fff3cd'); break;
+                }
+            }
+        }
+    }
+}
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -363,10 +383,10 @@ private populateSkills(skills: string[]): void {
   private setJobDescription(description: string): void {
     const editor = document.getElementById('editor') as HTMLDivElement;
     if (editor) {
-      editor.innerHTML = description;
-      this.checkEmpty('editor');
+        editor.innerHTML = description;
+        this.checkEmpty('editor');
     }
-  }
+}
 
   private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
     const prefix = type === 'total' ? 'total_' : 'relevant_';
@@ -400,7 +420,7 @@ private populateSkills(skills: string[]): void {
     if (!element) return;
     const isEmpty = element.textContent.trim() === '';
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
-  }
+}
 
   private mapJobType(title: string): string {
     const lowerTitle = title.toLowerCase();
