@@ -1,0 +1,75 @@
+<div class="job-cards-container" [ngClass]="rootClassName">
+  <div id="job-cards-main-container" class="job-cards-job-cards-main-container">
+    <div
+      id="job-cards-first-container"
+      class="job-cards-job-cards-first-container"
+    >
+      <div
+        id="job-card-job-details-container"
+        class="job-cards-job-card-job-details-container"
+      >
+        <div
+          id="company-logo-container"
+          class="job-cards-company-logo-container"
+        >
+          <img
+            [attr.alt]="imageAlt2"
+            [attr.src]="imageSrc2"
+            id="company-image"
+            class="job-cards-company-image"
+          />
+        </div>
+        <div
+          id="role-company-location-main-container"
+          class="job-cards-role-company-location-main-container"
+        >
+          <div
+            id="role-company-location-container"
+            class="job-cards-role-company-location-container"
+          >
+            <span id="job-role-text" class="job-cards-job-role-text">
+              <ng-container>
+                <ng-template #defaultText>
+                  <div class="job-cards-fragment3">
+                    <span class="job-cards-text3">
+                      Senior Software Engineer
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text ? text : defaultText"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span id="company-name-text" class="job-cards-company-name-text">
+              <ng-container>
+                <ng-template #defaultText1>
+                  <div class="job-cards-fragment2">
+                    <span class="job-cards-text2">Google</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span class="job-cards-job-location-text">
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="job-cards-fragment1">
+                    <span class="job-cards-text1">
+                      Bengaluru, Karnataka, India (On-site)
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

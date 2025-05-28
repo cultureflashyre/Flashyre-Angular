@@ -1,0 +1,501 @@
+:host { 
+  display: contents; 
+}
+ 
+.candidate-job-details-container1 {
+  gap: 24px;
+  width: 713px;
+  height: auto;
+  display: flex;
+  padding: 20px;
+  position: relative;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-details-job-details-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+}
+ 
+.candidate-job-details-job-details-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-details-company-name-role-location-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 521px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-details-company-image-name-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 88px;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-details-image-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.candidate-job-details-image {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+  background-color: #747474;
+}
+ 
+.candidate-job-details-company-name-text {
+  fill: #18191C;
+  color: #18191C;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+  justify-content: center;
+}
+ 
+.candidate-job-details-progress-bar-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-details-container2 {
+  display: none;
+}
+ 
+.candidate-job-details-container3 {
+  display: contents;
+}
+ 
+.candidate-job-details-job-role-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.candidate-job-details-job-role-text {
+  fill: #18191C;
+  color: #18191C;
+  display: flex;
+  align-self: flex-start;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.candidate-job-details-location-text {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+  width: 443px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-job-details-apply-take-assessment-button-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.candidate-job-details-apply-button {
+  width: 69px;
+  height: 40px;
+  align-self: center;
+  transition: 0.3s;
+  padding-top: var(--dl-layout-space-halfunit);
+  border-width: 0px;
+  padding-left: var(--dl-layout-space-halfunit);
+  padding-right: var(--dl-layout-space-halfunit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  background-color: #41327B;
+}
+ 
+.candidate-job-details-apply-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.candidate-job-details-apply-button:active {
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-details-apply-text {
+  gap: 12px;
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #41327B;
+}
+ 
+.candidate-job-details-take-assessment-button {
+  gap: 8px;
+  width: auto;
+  height: 40px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: 12px;
+  border-color: #41327B;
+  border-width: 1px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  justify-content: center;
+}
+ 
+.candidate-job-details-take-assessment-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-details-take-assessment-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-details-take-assessment-text {
+  fill: #41327B;
+  color: #41327B;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.candidate-job-details-job-matching-score-container {
+  flex: 0 0 auto;
+  width: 120px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-details-container4 {
+  width: 100%;
+  height: auto;
+}
+ 
+.candidate-job-details-container5 {
+  display: contents;
+}
+ 
+.candidate-job-details-about-the-job-text {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+ 
+.candidate-job-details-fragment1 {
+  display: contents;
+}
+ 
+.candidate-job-details-text10 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-fragment2 {
+  display: contents;
+}
+ 
+.candidate-job-details-text11 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-fragment3 {
+  display: contents;
+}
+ 
+.candidate-job-details-text12 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-fragment4 {
+  display: contents;
+}
+ 
+.candidate-job-details-text13 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-fragment5 {
+  display: contents;
+}
+ 
+.candidate-job-details-text14 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-fragment6 {
+  display: contents;
+}
+ 
+.candidate-job-details-text15 {
+  display: inline-block;
+}
+ 
+.candidate-job-details-text16 {
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.candidate-job-details-text19 {
+  font-weight: 400;
+}
+ 
+.candidate-job-detailsroot-class-name {
+  align-self: flex-start;
+}
+ 
+@media(max-width: 991px) {
+  .candidate-job-details-container1 {
+    width: 670px;
+  }
+  .candidate-job-details-job-details-main-container {
+    width: 603px;
+  }
+  .candidate-job-details-container4 {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+  }
+  .candidate-job-details-text15 {
+    font-size: 14px;
+  }
+  .candidate-job-details-text16 {
+    font-style: normal;
+    font-weight: 700;
+  }
+  .candidate-job-details-text17 {
+    font-style: normal;
+    font-weight: 700;
+  }
+  .candidate-job-details-text19 {
+    font-weight: 400;
+  }
+  .candidate-job-details-text20 {
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .candidate-job-details-container1 {
+    gap: 16px;
+    width: 600px;
+  }
+  .candidate-job-details-job-details-main-container {
+    gap: 16px;
+    width: 400px;
+    flex-direction: row;
+  }
+  .candidate-job-details-job-details-container {
+    gap: 16px;
+    width: 419px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-name-role-location-container {
+    width: 100%;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-image-name-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .candidate-job-details-image-container {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-details-image {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-details-company-name-text {
+    font-size: 12px;
+  }
+  .candidate-job-details-progress-bar-container {
+    width: 401px;
+    align-self: flex-start;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-container2 {
+    width: 281px;
+    height: 20px;
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-details-job-role-text {
+    font-size: 12px;
+  }
+  .candidate-job-details-location-text {
+    width: auto;
+    height: auto;
+    font-size: 12px;
+  }
+  .candidate-job-details-apply-take-assessment-button-container {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-details-apply-button {
+    width: 60px;
+    height: 28px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .candidate-job-details-apply-text {
+    align-items: center;
+  }
+  .candidate-job-details-take-assessment-button {
+    width: auto;
+    height: 28px;
+    padding: 0px;
+    align-items: center;
+  }
+  .candidate-job-details-take-assessment-text {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .candidate-job-details-job-matching-score-container {
+    width: 150px;
+    height: 50px;
+  }
+  .candidate-job-details-container4 {
+    display: none;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+    font-size: 12px;
+  }
+  .candidate-job-details-text15 {
+    font-size: 12px;
+  }
+  .candidate-job-details-text16 {
+    font-style: normal;
+    font-weight: 700;
+  }
+  .candidate-job-details-text17 {
+    font-style: normal;
+    font-weight: 700;
+  }
+  .candidate-job-details-text19 {
+    font-weight: 400;
+  }
+  .candidate-job-details-text20 {
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .candidate-job-details-container1 {
+    gap: 16px;
+    width: 95%;
+    flex-direction: column;
+  }
+  .candidate-job-details-job-details-main-container {
+    gap: 0;
+    width: 430px;
+    flex-direction: row;
+  }
+  .candidate-job-details-job-details-container {
+    gap: 16px;
+    width: 335px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-name-role-location-container {
+    gap: 4;
+    width: 332px;
+    padding-right: 0px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-image-name-container {
+    gap: 4px;
+    width: 100%;
+    align-self: flex-start;
+  }
+  .candidate-job-details-progress-bar-container {
+    width: 258px;
+    height: auto;
+    border-width: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-container2 {
+    width: 141px;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-job-role-container {
+    gap: 4px;
+  }
+  .candidate-job-details-location-text {
+    width: 325px;
+  }
+  .candidate-job-details-apply-take-assessment-button-container {
+    gap: 8px;
+  }
+  .candidate-job-details-job-matching-score-container {
+    width: 109px;
+    height: auto;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+  }
+}

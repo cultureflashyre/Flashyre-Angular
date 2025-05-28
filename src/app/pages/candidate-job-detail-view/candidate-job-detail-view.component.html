@@ -3,104 +3,6 @@
   class="candidate-job-detail-view-container1"
 >
   <div id="main-container" class="candidate-job-detail-view-main-container">
-    <navbar-for-candidate-view
-      rootClassName="navbar-for-candidate-viewroot-class-name1"
-    >
-      <ng-template #link1>
-        <div class="candidate-job-detail-view-fragment10">
-          <span class="candidate-job-detail-view-text10">Dashboard</span>
-        </div>
-      </ng-template>
-      <ng-template #link2>
-        <div class="candidate-job-detail-view-fragment11">
-          <span class="candidate-job-detail-view-text11">Upskill</span>
-        </div>
-      </ng-template>
-      <ng-template #link3>
-        <div class="candidate-job-detail-view-fragment12">
-          <span class="candidate-job-detail-view-text12">Assessment</span>
-        </div>
-      </ng-template>
-      <ng-template #link4>
-        <div class="candidate-job-detail-view-fragment13">
-          <span class="candidate-job-detail-view-text13">Jobs for you</span>
-        </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="candidate-job-detail-view-fragment14">
-          <span class="candidate-job-detail-view-text14">Profile</span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="candidate-job-detail-view-fragment15">
-          <span class="candidate-job-detail-view-text15">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="candidate-job-detail-view-fragment16">
-          <span class="candidate-job-detail-view-text16">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #text4>
-        <div class="candidate-job-detail-view-fragment17">
-          <span class="candidate-job-detail-view-text17">Kathryn Murphy</span>
-        </div>
-      </ng-template>
-      <ng-template #text5>
-        <div class="candidate-job-detail-view-fragment18">
-          <span class="candidate-job-detail-view-text18">
-            ✅ 90% Profile Completion
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text6>
-        <div class="candidate-job-detail-view-fragment19">
-          <span class="candidate-job-detail-view-text19">
-            View &amp; edit profile
-          </span>
-        </div>
-      </ng-template>
-      <ng-template #text7>
-        <div class="candidate-job-detail-view-fragment20">
-          <span class="candidate-job-detail-view-text20">Dashboard</span>
-        </div>
-      </ng-template>
-      <ng-template #text8>
-        <div class="candidate-job-detail-view-fragment21">
-          <span class="candidate-job-detail-view-text21">Upskill</span>
-        </div>
-      </ng-template>
-      <ng-template #text9>
-        <div class="candidate-job-detail-view-fragment22">
-          <span class="candidate-job-detail-view-text22">Assessment</span>
-        </div>
-      </ng-template>
-      <ng-template #text10>
-        <div class="candidate-job-detail-view-fragment23">
-          <span class="candidate-job-detail-view-text23">Jobs for you</span>
-        </div>
-      </ng-template>
-      <ng-template #text11>
-        <div class="candidate-job-detail-view-fragment24">
-          <span class="candidate-job-detail-view-text24">Preference</span>
-        </div>
-      </ng-template>
-      <ng-template #text12>
-        <div class="candidate-job-detail-view-fragment25">
-          <span class="candidate-job-detail-view-text25">Settings</span>
-        </div>
-      </ng-template>
-      <ng-template #text13>
-        <div class="candidate-job-detail-view-fragment26">
-          <span class="candidate-job-detail-view-text26">Logout</span>
-        </div>
-      </ng-template>
-      <ng-template #text31>
-        <div class="candidate-job-detail-view-fragment27">
-          <span class="candidate-job-detail-view-text27">Logout</span>
-        </div>
-      </ng-template>
-    </navbar-for-candidate-view>
     <div
       id="details-container"
       class="candidate-job-detail-view-details-container"
@@ -446,206 +348,226 @@
           </span>
         </div>
       </div>
-      <div
-        id="job-details-main-container"
-        class="candidate-job-detail-view-job-details-main-container"
-      >
-        <div
-          id="job-cards-container"
-          class="candidate-job-detail-view-job-cards-container"
-        >
-          <candidate-view-last-page-card
-            rootClassName="candidate-view-last-page-cardroot-class-name"
+      <div class="candidate-job-detail-view-container4">
+        <job-cards rootClassName="job-cardsroot-class-name">
+          <ng-template #text>
+            <div class="candidate-job-detail-view-fragment10">
+              <span class="candidate-job-detail-view-text10">
+                Senior Software Engineer
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #text1>
+            <div class="candidate-job-detail-view-fragment11">
+              <span class="candidate-job-detail-view-text11">Google</span>
+            </div>
+          </ng-template>
+          <ng-template #text2>
+            <div class="candidate-job-detail-view-fragment12">
+              <span class="candidate-job-detail-view-text12">
+                Bengaluru, Karnataka, India (On-site)
+              </span>
+            </div>
+          </ng-template>
+        </job-cards>
+        <div class="candidate-job-detail-view-container5">
+          <candidate-job-details
+            rootClassName="candidate-job-detailsroot-class-name"
           >
             <ng-template #text>
-              <div class="candidate-job-detail-view-fragment28">
-                <span class="candidate-job-detail-view-text28">
-                  Senior Software Engineer
-                </span>
+              <div class="candidate-job-detail-view-fragment13">
+                <span class="candidate-job-detail-view-text13">Google</span>
               </div>
             </ng-template>
             <ng-template #text1>
-              <div class="candidate-job-detail-view-fragment29">
-                <span class="candidate-job-detail-view-text29">Google</span>
-              </div>
-            </ng-template>
-            <ng-template #text2>
-              <div class="candidate-job-detail-view-fragment30">
-                <span class="candidate-job-detail-view-text30">
-                  Bengaluru, Karnataka, India (On-site)
-                </span>
-              </div>
-            </ng-template>
-          </candidate-view-last-page-card>
-          <candidate-view-last-page-card
-            rootClassName="candidate-view-last-page-cardroot-class-name1"
-          >
-            <ng-template #text>
-              <div class="candidate-job-detail-view-fragment31">
-                <span class="candidate-job-detail-view-text31">
-                  Senior Software Engineer
-                </span>
-              </div>
-            </ng-template>
-            <ng-template #text1>
-              <div class="candidate-job-detail-view-fragment32">
-                <span class="candidate-job-detail-view-text32">Google</span>
-              </div>
-            </ng-template>
-            <ng-template #text2>
-              <div class="candidate-job-detail-view-fragment33">
-                <span class="candidate-job-detail-view-text33">
-                  Bengaluru, Karnataka, India (On-site)
-                </span>
-              </div>
-            </ng-template>
-          </candidate-view-last-page-card>
-          <candidate-view-last-page-card
-            rootClassName="candidate-view-last-page-cardroot-class-name2"
-          >
-            <ng-template #text>
-              <div class="candidate-job-detail-view-fragment34">
-                <span class="candidate-job-detail-view-text34">
-                  Senior Software Engineer
-                </span>
-              </div>
-            </ng-template>
-            <ng-template #text1>
-              <div class="candidate-job-detail-view-fragment35">
-                <span class="candidate-job-detail-view-text35">Google</span>
-              </div>
-            </ng-template>
-            <ng-template #text2>
-              <div class="candidate-job-detail-view-fragment36">
-                <span class="candidate-job-detail-view-text36">
-                  Bengaluru, Karnataka, India (On-site)
-                </span>
-              </div>
-            </ng-template>
-          </candidate-view-last-page-card>
-          <candidate-view-last-page-card
-            rootClassName="candidate-view-last-page-cardroot-class-name3"
-          >
-            <ng-template #text>
-              <div class="candidate-job-detail-view-fragment37">
-                <span class="candidate-job-detail-view-text37">
-                  Senior Software Engineer
-                </span>
-              </div>
-            </ng-template>
-            <ng-template #text1>
-              <div class="candidate-job-detail-view-fragment38">
-                <span class="candidate-job-detail-view-text38">Google</span>
-              </div>
-            </ng-template>
-            <ng-template #text2>
-              <div class="candidate-job-detail-view-fragment39">
-                <span class="candidate-job-detail-view-text39">
-                  Bengaluru, Karnataka, India (On-site)
-                </span>
-              </div>
-            </ng-template>
-          </candidate-view-last-page-card>
-        </div>
-        <div
-          id="job-cards-popup-container"
-          class="candidate-job-detail-view-job-cards-popup-container"
-        >
-          <about-the-job rootClassName="about-the-jobroot-class-name">
-            <ng-template #text>
-              <div class="candidate-job-detail-view-fragment40">
-                <span class="candidate-job-detail-view-text40">Google</span>
-              </div>
-            </ng-template>
-            <ng-template #text1>
-              <div class="candidate-job-detail-view-fragment41">
-                <span class="candidate-job-detail-view-text41">
+              <div class="candidate-job-detail-view-fragment14">
+                <span class="candidate-job-detail-view-text14">
                   Senior Software Engineer
                 </span>
               </div>
             </ng-template>
             <ng-template #text2>
-              <div class="candidate-job-detail-view-fragment42">
-                <span class="candidate-job-detail-view-text42">
+              <div class="candidate-job-detail-view-fragment15">
+                <span class="candidate-job-detail-view-text15">
                   Bengaluru, Karnataka, India (On-site) | Posted 2 days ago
                 </span>
               </div>
             </ng-template>
+            <ng-template #text3>
+              <div class="candidate-job-detail-view-fragment16">
+                <span class="candidate-job-detail-view-text16">
+                  <span class="candidate-job-detail-view-text17">
+                    About the job
+                  </span>
+                  <br class="candidate-job-detail-view-text18" />
+                  <br />
+                  <span class="candidate-job-detail-view-text20">
+                    At Google, we follow a simple but vital premise: &quot;Focus
+                    on the user and all else will follow.&quot; Google’s
+                    Interaction Designers take complex tasks and make them
+                    intuitive and easy-to-use for billions of people around the
+                    globe. Throughout the design process—from creating user
+                    flows and wireframes to building user interface mockups and
+                    prototypes—you’ll envision how people will experience our
+                    products, and bring that vision to life in a way that feels
+                    inspired, refined, and even magical.
+                  </span>
+                  <br class="candidate-job-detail-view-text21" />
+                  <br />
+                  <span>
+                      Google User Experience (UX) is made up of
+                    multi-disciplinary teams of UX Designers, Researchers,
+                    Writers, Content Strategists, Program Managers, and
+                    Engineers: we care deeply about the people who use our
+                    products. The UX team plays an integral part in gathering
+                    insights about the attitudes, emotions, and behaviors of
+                    people who use our products to inspire and inform design. We
+                    collaborate closely with each other and with engineering and
+                    product management to create industry-leading products that
+                    deliver value for the people who use them, and for Google’s
+                    businesses.
+                  </span>
+                  <br />
+                  <br />
+                  <span>Minimum qualifications:</span>
+                  <br />
+                  <br />
+                  <span>
+                    Bachelor&apos;s degree in Design, Human-Computer
+                    Interaction, Computer Science, a related field, or
+                    equivalent practical experience.
+                  </span>
+                  <br />
+                  <span>4 years of experience in product design or UX.</span>
+                  <br />
+                  <span>
+                    Experience designing across multiple platforms, and working
+                    with technical/design teams to create user flows,
+                    wireframes, and building user interface mockups and
+                    prototypes.
+                  </span>
+                  <br />
+                  <span>
+                    Include a portfolio, website, or any other relevant link to
+                    your work in your resume (providing a viewable link or
+                    access instructions).
+                  </span>
+                </span>
+              </div>
+            </ng-template>
             <ng-template #button>
-              <div class="candidate-job-detail-view-fragment43">
-                <span class="candidate-job-detail-view-text43">Apply</span>
+              <div class="candidate-job-detail-view-fragment17">
+                <span class="candidate-job-detail-view-text36">Apply</span>
               </div>
             </ng-template>
             <ng-template #button1>
-              <div class="candidate-job-detail-view-fragment44">
-                <span class="candidate-job-detail-view-text44">
+              <div class="candidate-job-detail-view-fragment18">
+                <span class="candidate-job-detail-view-text37">
                   Take Assessment
                 </span>
               </div>
             </ng-template>
-          </about-the-job>
-          <span
-            id="about-the-job-text"
-            class="candidate-job-detail-view-about-the-job-text"
-          >
-            <span class="candidate-job-detail-view-text45">About the job</span>
-            <br class="candidate-job-detail-view-text46" />
-            <br class="candidate-job-detail-view-text47" />
-            <span class="candidate-job-detail-view-text48">
-              At Google, we follow a simple but vital premise: &quot;Focus on
-              the user and all else will follow.&quot; Google’s Interaction
-              Designers take complex tasks and make them intuitive and
-              easy-to-use for billions of people around the globe. Throughout
-              the design process—from creating user flows and wireframes to
-              building user interface mockups and prototypes—you’ll envision how
-              people will experience our products, and bring that vision to life
-              in a way that feels inspired, refined, and even magical.
-            </span>
-            <br class="candidate-job-detail-view-text49" />
-            <br class="candidate-job-detail-view-text50" />
-            <span class="candidate-job-detail-view-text51">
-              Google User Experience (UX) is made up of multi-disciplinary teams
-              of UX Designers, Researchers, Writers, Content Strategists,
-              Program Managers, and Engineers: we care deeply about the people
-              who use our products. The UX team plays an integral part in
-              gathering insights about the attitudes, emotions, and behaviors of
-              people who use our products to inspire and inform design. We
-              collaborate closely with each other and with engineering and
-              product management to create industry-leading products that
-              deliver value for the people who use them, and for Google’s
-              businesses.
-            </span>
-            <br class="candidate-job-detail-view-text52" />
-            <br class="candidate-job-detail-view-text53" />
-            <span class="candidate-job-detail-view-text54">
-              Minimum qualifications:
-            </span>
-            <br class="candidate-job-detail-view-text55" />
-            <br class="candidate-job-detail-view-text56" />
-            <span class="candidate-job-detail-view-text57">
-              Bachelor&apos;s degree in Design, Human-Computer Interaction,
-              Computer Science, a related field, or equivalent practical
-              experience.
-            </span>
-            <br class="candidate-job-detail-view-text58" />
-            <span class="candidate-job-detail-view-text59">
-              4 years of experience in product design or UX.
-            </span>
-            <br class="candidate-job-detail-view-text60" />
-            <span class="candidate-job-detail-view-text61">
-              Experience designing across multiple platforms, and working with
-              technical/design teams to create user flows, wireframes, and
-              building user interface mockups and prototypes.
-            </span>
-            <br class="candidate-job-detail-view-text62" />
-            <span class="candidate-job-detail-view-text63">
-              Include a portfolio, website, or any other relevant link to your
-              work in your resume (providing a viewable link or access
-              instructions).
-            </span>
-          </span>
+          </candidate-job-details>
         </div>
       </div>
     </div>
   </div>
+  <navbar-for-candidate-view
+    rootClassName="navbar-for-candidate-viewroot-class-name1"
+  >
+    <ng-template #link11>
+      <div class="candidate-job-detail-view-fragment19">
+        <span class="candidate-job-detail-view-text38">Dashboard</span>
+      </div>
+    </ng-template>
+    <ng-template #link12>
+      <div class="candidate-job-detail-view-fragment20">
+        <span class="candidate-job-detail-view-text39">Upskill</span>
+      </div>
+    </ng-template>
+    <ng-template #link41>
+      <div class="candidate-job-detail-view-fragment21">
+        <span class="candidate-job-detail-view-text40">Jobs for you</span>
+      </div>
+    </ng-template>
+    <ng-template #text17>
+      <div class="candidate-job-detail-view-fragment22">
+        <span class="candidate-job-detail-view-text41">Profile</span>
+      </div>
+    </ng-template>
+    <ng-template #text21>
+      <div class="candidate-job-detail-view-fragment23">
+        <span class="candidate-job-detail-view-text42">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text33>
+      <div class="candidate-job-detail-view-fragment24">
+        <span class="candidate-job-detail-view-text43">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text74>
+      <div class="candidate-job-detail-view-fragment25">
+        <span class="candidate-job-detail-view-text44">Dashboard</span>
+      </div>
+    </ng-template>
+    <ng-template #link111>
+      <div class="candidate-job-detail-view-fragment26">
+        <span class="candidate-job-detail-view-text45">Assessment</span>
+      </div>
+    </ng-template>
+    <ng-template #text104>
+      <div class="candidate-job-detail-view-fragment27">
+        <span class="candidate-job-detail-view-text46">Upskill</span>
+      </div>
+    </ng-template>
+    <ng-template #text114>
+      <div class="candidate-job-detail-view-fragment28">
+        <span class="candidate-job-detail-view-text47">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text124>
+      <div class="candidate-job-detail-view-fragment29">
+        <span class="candidate-job-detail-view-text48">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text134>
+      <div class="candidate-job-detail-view-fragment30">
+        <span class="candidate-job-detail-view-text49">Logout</span>
+      </div>
+    </ng-template>
+    <ng-template #text154>
+      <div class="candidate-job-detail-view-fragment31">
+        <span class="candidate-job-detail-view-text50">Leslie Alexander</span>
+      </div>
+    </ng-template>
+    <ng-template #text163>
+      <div class="candidate-job-detail-view-fragment32">
+        <span class="candidate-job-detail-view-text51">Google</span>
+      </div>
+    </ng-template>
+    <ng-template #text311>
+      <div class="candidate-job-detail-view-fragment33">
+        <span class="candidate-job-detail-view-text52">Logout</span>
+      </div>
+    </ng-template>
+    <ng-template #text324>
+      <div class="candidate-job-detail-view-fragment34">
+        <span class="candidate-job-detail-view-text53">
+          <span>Software Development</span>
+          <br />
+          <span>Mountain View, CA</span>
+        </span>
+      </div>
+    </ng-template>
+    <ng-template #text1011>
+      <div class="candidate-job-detail-view-fragment35">
+        <span class="candidate-job-detail-view-text57">Assessment</span>
+      </div>
+    </ng-template>
+    <ng-template #text10111>
+      <div class="candidate-job-detail-view-fragment36">
+        <span class="candidate-job-detail-view-text58">Jobs for you</span>
+      </div>
+    </ng-template>
+  </navbar-for-candidate-view>
 </div>
