@@ -26,6 +26,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   showSuggestions = false;
   selectedFile: File | null = null;
   private readonly DEBOUNCE_DELAY = 300;
+  private jobData: JobDetails | AIJobResponse | null = null; // Store job data
+  private isViewInitialized = false; // Track view initialization
 
   constructor(
   private title: Title,
@@ -58,41 +60,43 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 }
 
   ngOnInit(): void {
-    this.title.setTitle('Create Job Post - Flashyre');
-    this.meta.addTags([
-      { property: 'og:title', content: 'Create Job Post - Flashyre' },
-      {
-        property: 'og:image',
-        content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
-      }
-    ]);
+  this.title.setTitle('Create Job Post - Flashyre');
+  this.meta.addTags([
+    { property: 'og:title', content: 'Create Job Post - Flashyre' },
+    {
+      property: 'og:image',
+      content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
+    }
+  ]);
 
-    if (!this.corporateAuthService.isLoggedIn()) {
-      this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
+  if (!this.corporateAuthService.isLoggedIn()) {
+    this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
+    this.router.navigate(['/login-corporate']);
+  }
+
+  this.setupSearch();
+
+  const uniqueId = this.route.snapshot.paramMap.get('unique_id');
+  if (uniqueId) {
+    const token = this.corporateAuthService.getJWTToken();
+    if (token) {
+      this.jobDescriptionService.getJobPost(uniqueId, token).subscribe({
+        next: (jobPost) => {
+          this.jobData = jobPost;
+          if (this.isViewInitialized) {
+            this.populateForm(jobPost);
+          }
+        },
+        error: (error) => {
+          this.snackBar.open('Failed to load job post data.', 'Close', { duration: 5000 });
+        }
+      });
+    } else {
+      this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']);
     }
-
-    this.setupSearch();
-
-    // Fetch job post data if unique_id is provided
-    const uniqueId = this.route.snapshot.paramMap.get('unique_id');
-    if (uniqueId) {
-      const token = this.corporateAuthService.getJWTToken();
-      if (token) {
-        this.jobDescriptionService.getJobPost(uniqueId, token).subscribe({
-          next: (jobPost) => {
-            this.populateForm(jobPost);
-          },
-          error: (error) => {
-            this.snackBar.open('Failed to load job post data.', 'Close', { duration: 5000 });
-          }
-        });
-      } else {
-        this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
-        this.router.navigate(['/login-corporate']);
-      }
-    }
   }
+}
 
   private adjustExperienceRange(min: number, max: number): [number, number] {
   if (min === 0 && max === 0) {
@@ -102,11 +106,15 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 }
 
   ngAfterViewInit(): void {
-    this.initializeSkillsInput();
-    this.initializeRange('total');
-    this.initializeRange('relevant');
-    this.updateExperienceUI();
+  this.isViewInitialized = true;
+  if (this.jobData) {
+    this.populateForm(this.jobData);
   }
+  this.initializeSkillsInput();
+  this.initializeRange('total');
+  this.initializeRange('relevant');
+  this.updateExperienceUI();
+}
 
   private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
     const totalMin = form.get('total_experience_min')?.value;
@@ -158,7 +166,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 //     min_budget: 0,
 //     max_budget: 0,
 //     notice_period: '30 days',
-//     skills: { primary: [], secondary: [] },
+//     skills: {
+//   primary: [
+//     { skill: 'JavaScript', skill_confidence: 0.9, type_confidence: 0.9 },
+//     { skill: 'Python', skill_confidence: 0.9, type_confidence: 0.9 }
+//   ],
+//   secondary: [
+//     { skill: 'HTML', skill_confidence: 0.8, type_confidence: 0.8 },
+//     { skill: 'CSS', skill_confidence: 0.8, type_confidence: 0.8 }
+//   ]
+// },
 //     job_description: 'Test description',
 //     unique_id: 'test-unique-id',
 //     job_description_url: '',
@@ -233,10 +250,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     min_budget = jobDetails.min_budget || 0;
     max_budget = jobDetails.max_budget || 0;
     notice_period = jobDetails.notice_period || '30 days';
-    skills = [
-      ...(jobDetails.skills.primary || []).map(s => s.skill),
-      ...(jobDetails.skills.secondary || []).map(s => s.skill)
-    ];
+    skills = jobDetails.skills.primary.map(s => s.skill).concat(jobDetails.skills.secondary.map(s => s.skill));
     job_description = jobDetails.job_description || '';
   } else {
     // Handle JobDetails
@@ -316,30 +330,35 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private populateSkills(skills: string[]): void {
-    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
-    const tagInput = document.getElementById('tagInput') as HTMLInputElement;
-    if (!tagContainer || !tagInput) return;
+private populateSkills(skills: string[]): void {
+  const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
+  const tagInput = document.getElementById('tagInput') as HTMLInputElement;
+  if (!tagContainer || !tagInput) return;
 
-    tagContainer.innerHTML = ''; // Clear existing tags
-    skills.forEach(skill => {
-      const tag = document.createElement('div');
-      tag.className = 'tag';
-      const tagText = document.createElement('span');
-      tagText.textContent = skill;
-      tag.appendChild(tagText);
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = '×';
-      removeBtn.addEventListener('click', () => {
-        tag.remove();
-        const updatedSkills = this.jobForm.value.skills.filter(s => s !== skill);
-        this.jobForm.patchValue({ skills: updatedSkills });
-      });
-      tag.appendChild(removeBtn);
-      tagContainer.insertBefore(tag, tagInput);
+  // Remove only the existing skill tags (elements with class 'tag')
+  const existingTags = tagContainer.querySelectorAll('.tag');
+  existingTags.forEach(tag => tag.remove());
+
+  // Add new skill tags
+  skills.forEach(skill => {
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    const tagText = document.createElement('span');
+    tagText.textContent = skill;
+    tag.appendChild(tagText);
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '×';
+    removeBtn.addEventListener('click', () => {
+      tag.remove();
+      const updatedSkills = this.jobForm.value.skills.filter(s => s !== skill);
+      this.jobForm.patchValue({ skills: updatedSkills });
     });
-    this.jobForm.patchValue({ skills });
-  }
+    tag.appendChild(removeBtn);
+    // Insert the new tag before the input field
+    tagContainer.insertBefore(tag, tagInput);
+  });
+  this.jobForm.patchValue({ skills });
+}
 
   private setJobDescription(description: string): void {
     const editor = document.getElementById('editor') as HTMLDivElement;
@@ -368,9 +387,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         markerLeft.style.left = `${minPos}px`;
         markerRight.style.left = `${maxPos}px`;
         labelLeft.style.left = `${minPos + 5}px`;
-        labelLeft.textContent = `${min}yrs`;
+        labelLeft.textContent = `${min}`;
         labelRight.style.left = `${maxPos + 5}px`;
-        labelRight.textContent = `${max}yrs`;
+        labelRight.textContent = `${max}`;
         filledSegment.style.left = `${minPos + 5}px`;
         filledSegment.style.width = `${maxPos - minPos}px`;
     }
@@ -450,8 +469,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         relevant_experience_max: maxYear
       });
     }
-    labelLeft.textContent = `${minYear}yrs`;
-    labelRight.textContent = `${maxYear}yrs`;
+    labelLeft.textContent = `${minYear}`;
+    labelRight.textContent = `${maxYear}`;
   };
 
   const onMouseUp = () => {
