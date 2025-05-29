@@ -22,8 +22,8 @@
           >
             <img
               id="Image"
-              [attr.alt]="imageAlt1"
-              [attr.src]="imageSrc1"
+              [attr.alt]="job.company_name ? job.company_name + ' logo' : 'Company logo'"
+              [attr.src]="job.logo || 'https://via.placeholder.com/24'"
               class="candidate-job-details-image"
             />
           </div>
@@ -34,7 +34,7 @@
             <ng-container>
               <ng-template #defaultText>
                 <div class="candidate-job-details-fragment3">
-                  <span class="candidate-job-details-text12">Google</span>
+                  <span class="candidate-job-details-text12">{{ job.company_name || 'Unknown Company' }}</span>
                 </div>
               </ng-template>
               <ng-container
@@ -56,22 +56,22 @@
       align-items: center;
       height: auto;
       margin: 0;
-      background-color: transparent; /* Transparent background */
+      background-color: transparent;
     }
 
     .progress-container {
       display: flex;
       align-items: center;
-      gap: 10px; /* Space between the bar and score */
+      gap: 10px;
     }
 
     .progress {
       position: relative;
-      width: 120px; /* Width of the progress bar */
-      height: 6px; /* Height of the progress bar */
-      background-color: #ccc; /* Background color for unfilled portion */
-      border-radius: 15px; /* Rounded corners */
-      overflow: hidden; /* Clip the progress bar inside the container */
+      width: 120px;
+      height: 6px;
+      background-color: #ccc;
+      border-radius: 15px;
+      overflow: hidden;
     }
 
     .bar {
@@ -79,16 +79,16 @@
       top: 0;
       left: 0;
       height: 100%;
-      width: 0; /* Initial width is 0% */
-      background-color: #0bf; /* Default color for filled portion */
-      transition: width 0.3s ease; /* Smooth width transition */
+      width: 0;
+      background-color: #0bf;
+      transition: width 0.3s ease;
     }
 
     .score {
-      font-family: 'Inter', sans-serif; /* Font family */
-      font-size: 16px; /* Font size */
-      font-weight: 500; /* Font weight */
-      color: #474748; /* Default text color */
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #474748;
     }
   </style>
 <body>
@@ -105,13 +105,12 @@
       const $progress = $('.progress');
       const $bar = $progress.find('.bar');
       const $score = $('.score');
-      const perc = 56.5; // Percentage value
+      const perc = 56.5;
 
-      // Determine the fill color based on the percentage
       const getFillColor = (value) => {
         if (value <= 40) return 'red';
         if (value <= 60) return 'orange';
-        if (value <= 75) return '#4D91C6'; // Ampere color
+        if (value <= 75) return '#4D91C6';
         if (value <= 84) return 'lightgreen';
         return 'darkgreen';
       };
@@ -120,13 +119,10 @@
         duration: 3000,
         easing: 'swing',
         step: function (p) {
-          // Update the width and color of the bar
           $bar.css({
             width: p + '%',
             backgroundColor: getFillColor(p)
           });
-
-          // Update the displayed score
           $score.text(Math.round(p) + '%');
         }
       });
@@ -146,9 +142,7 @@
             <ng-container>
               <ng-template #defaultText1>
                 <div class="candidate-job-details-fragment5">
-                  <span class="candidate-job-details-text14">
-                    Senior Software Engineer
-                  </span>
+                  <span class="candidate-job-details-text14">{{ job.title || 'Unknown Role' }}</span>
                 </div>
               </ng-template>
               <ng-container
@@ -162,14 +156,14 @@
             <ng-template #defaultText2>
               <div class="candidate-job-details-fragment4">
                 <span class="candidate-job-details-text13">
-                  Bengaluru, Karnataka, India (On-site) | Posted 2 days ago
+                  {{ job.location ? job.location + ' (' + job.job_type + ')' : 'Unknown Location' }} | Posted {{ job.created_at ? (job.created_at | date: 'shortDate') : 'Unknown Date' }}
                 </span>
               </div>
             </ng-template>
             <ng-container
-              *ngTemplateOutlet="text2 ? text2 : defaultText2"
-            ></ng-container>
-          </ng-container>
+                *ngTemplateOutlet="text2 ? text2 : defaultText2"
+              ></ng-container>
+            </ng-container>
         </span>
       </div>
       <div
@@ -180,6 +174,7 @@
           id="apply-button"
           type="button"
           class="candidate-job-details-apply-button button"
+          (click)="applyForJob()"
         >
           <span id="apply-text" class="candidate-job-details-apply-text">
             <ng-container>
@@ -206,9 +201,7 @@
             <ng-container>
               <ng-template #defaultButton1>
                 <div class="candidate-job-details-fragment2">
-                  <span class="candidate-job-details-text11">
-                    Take Assessment
-                  </span>
+                  <span class="candidate-job-details-text11">Take Assessment</span>
                 </div>
               </ng-template>
               <ng-container
@@ -234,7 +227,7 @@
     }
 
     .loader {
-      stroke-dasharray: 0 19; /* Start with no progress */
+      stroke-dasharray: 0 19;
       transition: stroke-dasharray 2s linear, stroke 0.5s;
       stroke-linecap: round;
     }
@@ -254,12 +247,11 @@
     }
 
     .progress-icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 5px; /* Adds spacing between the icon and label */
-    border-radius: 50%; /* Makes the icon round */
-}
-
+      width: 24px;
+      height: 24px;
+      margin-bottom: 5px;
+      border-radius: 50%;
+    }
 
     .progress-label {
       font-family: Arial, sans-serif;
@@ -269,7 +261,7 @@
     }
 
     .progress-description {
-      margin-top: 8px; /* Gap between the arch and the description */
+      margin-top: 8px;
       font-family: Arial, sans-serif;
       font-size: 12px;
       font-weight: normal;
@@ -294,7 +286,7 @@
     $(document).ready(function () {
       const $loader = $('.loader');
       const $label = $('.progress-label');
-      const percentage = 95; // Set your percentage value here
+      const percentage = 95;
 
       const getFillColor = (value) => {
         if (value <= 40) return 'red';
@@ -308,7 +300,7 @@
         duration: 3000,
         easing: 'swing',
         step: function (p) {
-          const strokeValue = (p / 100) * 19; // Calculate stroke-dasharray value
+          const strokeValue = (p / 100) * 19;
           $loader.css({
             'stroke-dasharray': `${strokeValue} 19`,
             'stroke': getFillColor(p)
@@ -319,7 +311,6 @@
     });
   </script>
 </body>
-
 
         </div>
       </div>
@@ -336,54 +327,16 @@
             <span class="candidate-job-details-text16">About the job</span>
             <br class="candidate-job-details-text17" />
             <br />
-            <span class="candidate-job-details-text19">
-              At Google, we follow a simple but vital premise: &quot;Focus on
-              the user and all else will follow.&quot; Google’s Interaction
-              Designers take complex tasks and make them intuitive and
-              easy-to-use for billions of people around the globe. Throughout
-              the design process—from creating user flows and wireframes to
-              building user interface mockups and prototypes—you’ll envision how
-              people will experience our products, and bring that vision to life
-              in a way that feels inspired, refined, and even magical.
-            </span>
+            <span class="candidate-job-details-text19">{{ job.description || 'No description available.' }}</span>
             <br class="candidate-job-details-text20" />
-            <br />
-            <span>
-              Google User Experience (UX) is made up of multi-disciplinary
-              teams of UX Designers, Researchers, Writers, Content Strategists,
-              Program Managers, and Engineers: we care deeply about the people
-              who use our products. The UX team plays an integral part in
-              gathering insights about the attitudes, emotions, and behaviors of
-              people who use our products to inspire and inform design. We
-              collaborate closely with each other and with engineering and
-              product management to create industry-leading products that
-              deliver value for the people who use them, and for Google’s
-              businesses.
-            </span>
-            <br />
             <br />
             <span>Minimum qualifications:</span>
             <br />
             <br />
-            <span>
-              Bachelor&apos;s degree in Design, Human-Computer Interaction,
-              Computer Science, a related field, or equivalent practical
-              experience.
-            </span>
+            <span>{{ job.requirements || 'No requirements listed.' }}</span>
             <br />
-            <span>4 years of experience in product design or UX.</span>
             <br />
-            <span>
-              Experience designing across multiple platforms, and working with
-              technical/design teams to create user flows, wireframes, and
-              building user interface mockups and prototypes.
-            </span>
-            <br />
-            <span>
-              Include a portfolio, website, or any other relevant link to your
-              work in your resume (providing a viewable link or access
-              instructions).
-            </span>
+            <span>Salary: {{ job.salary || 'Not disclosed' }}</span>
           </span>
         </div>
       </ng-template>

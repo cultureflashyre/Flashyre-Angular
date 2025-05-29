@@ -1,23 +1,36 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, OnInit, Output, EventEmitter, Input, TemplateRef } from '@angular/core';
+import { JobsService } from '../../services/job.service';
 
 @Component({
   selector: 'job-cards',
-  templateUrl: 'job-cards.component.html',
-  styleUrls: ['job-cards.component.css'],
+  templateUrl: './job-cards.component.html',
+  styleUrls: ['./job-cards.component.css'],
 })
-export class JobCards {
-  @Input()
-  rootClassName: string = ''
-  @Input()
-  imageAlt2: string = 'image'
-  @ContentChild('text2')
-  text2: TemplateRef<any>
-  @ContentChild('text1')
-  text1: TemplateRef<any>
-  @ContentChild('text')
-  text: TemplateRef<any>
-  @Input()
-  imageSrc2: string =
-    '/assets/Icons/corporate_fare_100dp_e3e3e3_fill0_wght400_grad0_opsz48-200h.png'
-  constructor() {}
+export class JobCardsComponent implements OnInit {
+  @Input() rootClassName: string = '';
+  @Input() text: TemplateRef<any> | null = null;
+  @Input() text1: TemplateRef<any> | null = null;
+  @Input() text2: TemplateRef<any> | null = null;
+  @Output() jobSelected = new EventEmitter<number>();
+  jobs: any[] = [];
+
+  constructor(private jobService: JobsService) {}
+
+  ngOnInit(): void {
+    this.jobService.getJobs().subscribe({
+      next: (data) => {
+        console.log('Jobs fetched:', data.map(job => ({ job_id: job.job_id, title: job.title })));
+        this.jobs = data;
+      },
+      error: (err) => {
+        console.error('Error fetching jobs:', err);
+        this.jobs = [];
+      }
+    });
+  }
+
+  selectJob(jobId: number): void {
+    console.log('Emitting jobId:', jobId);
+    this.jobSelected.emit(jobId);
+  }
 }

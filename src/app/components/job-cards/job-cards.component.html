@@ -1,71 +1,49 @@
-<div class="job-cards-container" [ngClass]="rootClassName">
-  <div id="job-cards-main-container" class="job-cards-job-cards-main-container">
+<div class="job-cards-container">
+  <div class="job-cards-job-cards-main-container">
     <div
-      id="job-cards-first-container"
+      *ngFor="let job of jobs"
+      (click)="selectJob(job.job_id)"
       class="job-cards-job-cards-first-container"
     >
-      <div
-        id="job-card-job-details-container"
-        class="job-cards-job-card-job-details-container"
-      >
-        <div
-          id="company-logo-container"
-          class="job-cards-company-logo-container"
-        >
+      <div class="job-cards-job-card-job-details-container">
+        <div class="job-cards-company-logo-container">
           <img
-            [attr.alt]="imageAlt2"
-            [attr.src]="imageSrc2"
-            id="company-image"
+            alt="{{ job.company_name || 'Company' }} logo"
+            src="{{ job.logo || 'https://via.placeholder.com/24' }}"
             class="job-cards-company-image"
           />
         </div>
-        <div
-          id="role-company-location-main-container"
-          class="job-cards-role-company-location-main-container"
-        >
-          <div
-            id="role-company-location-container"
-            class="job-cards-role-company-location-container"
-          >
-            <span id="job-role-text" class="job-cards-job-role-text">
-              <ng-container>
-                <ng-template #defaultText>
-                  <div class="job-cards-fragment3">
-                    <span class="job-cards-text3">
-                      Senior Software Engineer
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text ? text : defaultText"
-                ></ng-container>
+        <div class="job-cards-role-company-location-main-container">
+          <div class="job-cards-role-company-location-container">
+            <span class="job-cards-job-role-text">
+              <ng-container *ngIf="text; else defaultText">
+                <ng-container *ngTemplateOutlet="text"></ng-container>
               </ng-container>
+              <ng-template #defaultText>
+                <div class="job-cards-fragment1">
+                  <span class="job-cards-text1">{{ job.title || 'Unknown Job' }}</span>
+                </div>
+              </ng-template>
             </span>
-            <span id="company-name-text" class="job-cards-company-name-text">
-              <ng-container>
-                <ng-template #defaultText1>
-                  <div class="job-cards-fragment2">
-                    <span class="job-cards-text2">Google</span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text1 ? text1 : defaultText1"
-                ></ng-container>
+            <span class="job-cards-company-name-text">
+              <ng-container *ngIf="text1; else defaultText1">
+                <ng-container *ngTemplateOutlet="text1"></ng-container>
               </ng-container>
+              <ng-template #defaultText1>
+                <div class="job-cards-fragment2">
+                  <span class="job-cards-text2">{{ job.company_name || 'Unknown Company' }}</span>
+                </div>
+              </ng-template>
             </span>
             <span class="job-cards-job-location-text">
-              <ng-container>
-                <ng-template #defaultText2>
-                  <div class="job-cards-fragment1">
-                    <span class="job-cards-text1">
-                      Bengaluru, Karnataka, India (On-site)
-                    </span>
-                  </div>
-                </ng-template>
-                <ng-container
-                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
-                ></ng-container>
+              <ng-container *ngIf="text2; else defaultText2">
+                <ng-container *ngTemplateOutlet="text2"></ng-container>
               </ng-container>
+              <ng-template #defaultText2>
+                <div class="job-cards-fragment3">
+                  <span class="job-cards-text3">{{ job.location || '-' }} ({{ job.job_type || '-' }})</span>
+                </div>
+              </ng-template>
             </span>
           </div>
         </div>
