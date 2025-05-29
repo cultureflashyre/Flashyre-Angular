@@ -776,7 +776,21 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   // NEW: Renamed submitJobPost to onSubmit for consistent multi-step handling
   onSubmit(): void {
     if (this.currentStep === 'jobPost') {
+      // Log if the form is valid
+    console.log('Is Form Valid?', this.jobForm.valid);
+    // Log all form values
+    console.log('Form Values:', this.jobForm.value);
+    // Log form-level errors (like experience range)
+    console.log('Form Errors:', this.jobForm.errors);
+    // Log errors for each field
+    Object.keys(this.jobForm.controls).forEach(field => {
+      const control = this.jobForm.get(field);
+      if (control?.invalid) {
+        console.log(`Field ${field} is invalid. Errors:`, control.errors);
+      }
+    });
       // Logic for submitting the job post details (Step 1)
+      
       if (this.jobForm.invalid) {
         this.snackBar.open('Please fill all required fields correctly before proceeding.', 'Close', { duration: 5000 });
         this.jobForm.markAllAsTouched(); // Mark all controls as touched to show validation errors
