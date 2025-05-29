@@ -27,7 +27,7 @@ export class VideoRecorderService {
       });
 
       this.mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
+        if (event.data && event.data.size > 0) {
           this.recordedChunks.push(event.data);
           this.uploadChunk(event.data);
         }
@@ -69,10 +69,46 @@ export class VideoRecorderService {
     return this.videoPath;
   }
 
-  stopRecording(): void {
-    if (this.mediaRecorder?.state === 'recording') {
-      this.mediaRecorder.stop();
-      this.stream.getTracks().forEach(track => track.stop());
-    }
+  stopRecording(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+        console.log('[VideoRecorderService] Stopping mediaRecorder...');
+        this.mediaRecorder.onstop = () => {
+          console.log('[VideoRecorderService] mediaRecorder stopped');
+          // Stop all tracks in the stream to turn off camera and mic
+          this.stream.getTracks().forEach(track => {
+            console.log('[VideoRecorderService] Stopping track:', track.kind);
+            track.stop();
+          });
+
+          // Remove video preview element if exists
+          //const videoContainer = document.getElementById('video-container');
+         // if (videoContainer) {
+          //  videoContainer.innerHTML = ''; // Clear video preview
+         //   console.log('[VideoRecorderService] Video preview removed');
+         // }
+
+        resolve();
+        };
+
+        this.mediaRecorder.onerror = (event) => {
+          console.error('[VideoRecorderService] mediaRecorder error:', event);
+          reject(event);
+        };
+
+        console.log('Calling mediaRecorder.stop()');
+        this.mediaRecorder.stop();
+        console.log('mediaRecorder.stop() called');
+      } else {
+        console.log('[VideoRecorderService] mediaRecorder not recording or already stopped');
+        resolve();
+      }
+    });
   }
+
+
+
+
+
+
 }

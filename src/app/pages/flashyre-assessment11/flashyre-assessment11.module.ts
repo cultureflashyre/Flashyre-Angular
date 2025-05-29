@@ -7,11 +7,13 @@ import { HttpClientModule } from '@angular/common/http'
 import { NgxSpinnerModule } from 'ngx-spinner'
 import { SharedPipesModule } from '../../shared/shared-pipes.module' // Import the shared module
 import { FormsModule } from '@angular/forms'
+import { AssessmentDeactivateGuard } from '../../guards/assessment-deactivate.gaurd';
 
 const routes = [
   {
     path: '',
     component: FlashyreAssessment11,
+    canDeactivate: [AssessmentDeactivateGuard],
   },
 ]
 
@@ -28,5 +30,6 @@ const routes = [
   ],
   exports: [FlashyreAssessment11],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [AssessmentDeactivateGuard],
 })
 export class FlashyreAssessment11Module {}

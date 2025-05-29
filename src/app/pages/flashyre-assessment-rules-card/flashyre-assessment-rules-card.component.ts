@@ -12,6 +12,8 @@ import { ProctoringService } from '../../services/proctoring.service';
 export class FlashyreAssessmentRulesCard implements OnInit {
   assessmentId: number | null = null;
 
+  showMessageOverlay = false;
+
   constructor(
     private title: Title, 
     private meta: Meta, 
@@ -43,12 +45,31 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     });
   }
 
-  async startAssessment() {
-    if (this.assessmentId) {
-      this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: this.assessmentId } });
-    } else {
-      alert('Assessment ID is missing!');
-    }
+async startAssessment() {
+  if (!this.assessmentId) {
+    alert('Assessment ID is missing!');
+    return;
   }
+
+  try {
+    // Check video and audio permission
+    await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    // If successful, navigate
+    this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: this.assessmentId } });
+  } catch (error) {
+    // If permission denied or error, show overlay
+    this.showMessageOverlay = true;
+  }
+}
+
+onRetry() {
+  this.startAssessment(); // Retry the check and navigation
+}
+
+onGoBack() {
+  this.showMessageOverlay = false; // Hide overlay
+  this.router.navigate(['/candidate-assessment']); // Navigate back
+}
+
 
 }

@@ -1,6 +1,7 @@
 // proctoring.service.ts
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,14 @@ export class ProctoringService {
   private visibilityHandler!: () => void;
   private blurHandler!: () => void;
 
-  constructor(private router: Router, private ngZone: NgZone) {}
+  // Subject to emit violation events
+  private violationSubject = new Subject<void>();
+  violation$ = this.violationSubject.asObservable();
+
+  constructor(
+    private router: Router, 
+    private ngZone: NgZone
+  ) {}
 
   startMonitoring() {
     console.log('[ProctoringService] startMonitoring called');
@@ -41,9 +49,11 @@ export class ProctoringService {
   private handleViolation() {
     console.log('[ProctoringService] handleViolation called');
     this.ngZone.run(() => {
-      this.router.navigate(['/assessment-violation-message'], {
-        state: { message: "Test submitted automatically due to screen/app switching" }
-      });
+      this.violationSubject.next();
+
+      //this.router.navigate(['/assessment-violation-message'], {
+        //state: { message: "Test submitted automatically due to screen/app switching" }
+      //});
     });
   }
 

@@ -4,7 +4,7 @@ import { TrialAssessmentService } from '../../services/trial-assessment.service'
 import { Subscription } from 'rxjs';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 
@@ -20,6 +20,8 @@ interface SelectedAnswer {
   styleUrls: ['flashyre-assessment11.component.css'],
 })
 export class FlashyreAssessment11 implements OnInit, OnDestroy {
+  private violationSubscription!: Subscription;
+
   @ContentChild('endTestText')
   endTestText: TemplateRef<any>;
   @Input()
@@ -92,6 +94,12 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
       this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
       this.startTime = new Date(); // Record start time when assessment begins
       this.proctoringService.startMonitoring();
+
+      this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
+        console.log('Proctoring violation detected, terminating test...');
+        this.terminateTest();
+      });
+
       try {
         await this.videoRecorder.startRecording();
       } catch (error) {
@@ -101,15 +109,49 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
       console.error('No assessment ID provided in route');
       this.router.navigate(['/assessment-error']); // Redirect if no ID
     }
+
+    this.router.events.subscribe(event => {
+    if (event instanceof NavigationStart) {
+      // Detect back/forward navigation via popstate
+      if (event.navigationTrigger === 'popstate') {
+        console.log('Browser back/forward detected');
+        this.terminateTest();
+      }
+    }
+  });
   }
 
-  ngOnDestroy(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
-    clearInterval(this.timerInterval);
-    clearInterval(this.sectionTimerInterval);
+async  ngOnDestroy(): Promise<void> {
+
+  try {
+    await this.terminateTest();
+  } catch (error) {
+    console.error('Error during termination in ngOnDestroy:', error);
   }
+
+  // If there is an active subscription to the timer observable, unsubscribe to prevent memory leaks
+  if (this.timerSubscription) {
+    this.timerSubscription.unsubscribe();
+    console.log('Timer subscription unsubscribed');
+  }
+
+  // Clear the overall assessment timer interval to stop the timer and free resources
+  clearInterval(this.timerInterval);
+  console.log('Overall timer interval cleared');
+
+  // Clear the section-specific timer interval to stop section timing and free resources
+  clearInterval(this.sectionTimerInterval);
+  console.log('Section timer interval cleared');
+
+  // Unsubscribe from the proctoring violation observable to stop listening for violations
+  this.violationSubscription.unsubscribe();
+  console.log('Violation subscription unsubscribed');
+
+  // Stop the proctoring service listeners to clean up event handlers and release resources
+  this.proctoringService.stopMonitoring();
+  console.log('Proctoring service monitoring stopped');
+}
+
 
   fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
@@ -141,7 +183,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   startTimer(): void {
     this.timerSubscription = this.trialassessmentService.timer$.subscribe((time) => {
       this.timer = time;
-      console.log('timer data in startTimer(): ', this.timer);
+      //console.log('timer data in startTimer(): ', this.timer);
       if (this.timer <= 0) {
         this.terminateTest();
       }
@@ -174,17 +216,17 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  submitAssessment(): void {
-    const responses = this.prepareSubmissionData();
-    this.trialassessmentService.submitAssessment(responses).subscribe({
-      next: (response) => {
-        console.log('Assessment submitted successfully:', response);
-      },
-      error: (error) => {
-        console.error('Assessment submission failed:', error);
-      },
-    });
-  }
+  //submitAssessment(): void {
+   // const responses = this.prepareSubmissionData();
+   // this.trialassessmentService.submitAssessment(responses).subscribe({
+  //    next: (response) => {
+  //      console.log('Assessment submitted successfully:', response);
+  //    },
+  //    error: (error) => {
+   //     console.error('Assessment submission failed:', error);
+   //   },
+  //  });
+ // }
 
   selectSection(section: any): void {
     this.currentSection = section;
@@ -225,9 +267,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   checkIfLastQuestionInSection(): void {
     if (this.currentQuestions && this.currentQuestionIndex !== undefined) {
       this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
-      console.log('Is last question in section:', this.isLastQuestionInSection);
-      console.log('Current index:', this.currentQuestionIndex);
-      console.log('Total questions:', this.currentQuestions.length);
+      //console.log('Is last question in section:', this.isLastQuestionInSection);
+      //console.log('Current index:', this.currentQuestionIndex);
+      //console.log('Total questions:', this.currentQuestions.length);
     } else {
       this.isLastQuestionInSection = false;
     }
@@ -284,9 +326,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   }
 
   onOptionSelected(questionId: number, sectionId: number, answer: string): void {
-    console.log("Question ID:", questionId);
-    console.log("Section ID:", sectionId);
-    console.log("Selected answer (key):", answer);
+   // console.log("Question ID:", questionId);
+    //console.log("Section ID:", sectionId);
+    //console.log("Selected answer (key):", answer);
     
     // Find the full option object to get its value
     const currentQuestion = this.currentQuestions.find(q => q.question_id === questionId);
@@ -295,8 +337,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     // Get the actual text value from the question options
     const optionText = currentQuestion.options[answer];
     
-    console.log("Selected option in object format:", answer);
-    console.log("Option text value:", optionText);
+    //console.log("Selected option in object format:", answer);
+    //console.log("Option text value:", optionText);
       
   // Store both key and text value
   this.selectedAnswers[questionId] = {
@@ -312,7 +354,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   };
   }
     
-    console.log("Updated selectedAnswers object:", this.selectedAnswers);
+    //console.log("Updated selectedAnswers object:", this.selectedAnswers);
     this.markQuestionAsAnswered(this.currentQuestionIndex);
   }
 
@@ -336,9 +378,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
 
   async terminateTest(): Promise<void> {
     try {
-      this.videoRecorder.stopRecording();
+      await this.videoRecorder.stopRecording();
       this.proctoringService.stopMonitoring();
-      this.videoPath = await this.videoRecorder.getVideoPath();
+      this.videoPath = this.videoRecorder.getVideoPath();
 
       const responses = this.prepareSubmissionData();
       this.trialassessmentService.submitAssessment(responses).subscribe({

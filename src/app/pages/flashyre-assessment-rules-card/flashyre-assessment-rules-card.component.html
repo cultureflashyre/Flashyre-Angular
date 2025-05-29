@@ -163,4 +163,100 @@
       </div>
     </ng-template>
   </flashyre-assessment-rules>
+
+  <div *ngIf="showMessageOverlay" class="overlay">
+      <div
+      id="message-container"
+      class="error-system-requirement-failed-message-container"
+    >
+      <span
+        id="message-text"
+        class="error-system-requirement-failed-message-text"
+      >
+        Message
+      </span>
+      <div
+        id="message-main-container"
+        class="error-system-requirement-failed-message-main-container"
+      >
+        <div
+          id="message-first-container"
+          class="error-system-requirement-failed-message-first-container"
+        >
+          <span
+            id="navigate-to-text"
+            class="error-system-requirement-failed-navigate-to-text"
+          >
+            Navigate to 
+          </span>
+          <div
+            id="view-site-information-container"
+            class="error-system-requirement-failed-view-site-information-container"
+          >
+            <svg
+              id="view-site-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="error-system-requirement-failed-view-site-icon"
+            >
+              <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect
+                  x="2.75"
+                  y="2.75"
+                  rx="6"
+                  width="18.5"
+                  height="18.5"
+                ></rect>
+                <path
+                  d="M17.75 8.805h-1.437m-3.594 0H6.25m11.5 6.39h-6.469m-3.593 0H6.25m3.234 1.797a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594m5.032-6.39a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </g>
+            </svg>
+            <span
+              id="view-site-information-text"
+              class="error-system-requirement-failed-view-site-information-text"
+            >
+               &apos;view site information&apos; 
+            </span>
+          </div>
+          <span
+            id="remaining-text"
+            class="error-system-requirement-failed-remaining-text"
+          >
+            <span class="error-system-requirement-failed-text1">
+               enable audio &amp; video, then click 
+            </span>
+            <span class="error-system-requirement-failed-text2">&apos;</span>
+            <span class="error-system-requirement-failed-text3">Retry</span>
+            <span class="error-system-requirement-failed-text4">&apos;</span>
+            <span class="error-system-requirement-failed-text5">.</span>
+          </span>
+        </div>
+        <div
+          id="two-buttons-container"
+          class="error-system-requirement-failed-two-buttons-container"
+        >
+          <button
+            id="go-back-button"
+            type="button"
+            class="error-system-requirement-failed-go-back-button button"
+            (click)="onGoBack()"
+          >
+            Go Back
+          </button>
+          <button
+            id="retry-button"
+            type="button"
+            class="error-system-requirement-failed-retry-button button"
+            (click)="onRetry()"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
 </div>
