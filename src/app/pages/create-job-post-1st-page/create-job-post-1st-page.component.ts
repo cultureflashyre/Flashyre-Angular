@@ -17,7 +17,7 @@ import { JobDetails, AIJobResponse } from './types'; // Ensure these types are c
 export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('suggestionsContainer') suggestionsContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>; // For file upload
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   jobForm: FormGroup;
   private searchTerms = new Subject<string>();
@@ -26,12 +26,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   showSuggestions = false;
   selectedFile: File | null = null;
   private readonly DEBOUNCE_DELAY = 300;
-  // NEW: Property to track the current step of the job posting process
-  currentStep: 'jobPost' | 'assessment' = 'jobPost'; // 'jobPost' is the default initial step
+  currentStep: 'jobPost' | 'assessment' = 'jobPost';
 
-  // Properties to store job data for editing, similar to previous version analysis
   private jobData: JobDetails | AIJobResponse | null = null;
-  private isViewInitialized = false; // Track view initialization
+  private isViewInitialized = false;
 
   constructor(
     private title: Title,
@@ -53,13 +51,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       relevant_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
       relevant_experience_max: [30, [Validators.required, Validators.min(0), Validators.max(30)]],
       budget_type: ['', [Validators.required]],
-      min_budget: [0, [Validators.required, Validators.min(0)]],
-      max_budget: [0, [Validators.required, Validators.min(0)]],
+      min_budget: [null, [Validators.required, Validators.min(0)]], // Changed initial to null for placeholder
+      max_budget: [null, [Validators.required, Validators.min(0)]], // Changed initial to null for placeholder
       notice_period: ['', [Validators.required, Validators.maxLength(50)]],
-      skills: [[], [Validators.required]], // Skills array
-      job_description: ['', [Validators.maxLength(5000)]],
+      skills: [[], [Validators.required]],
+      job_description: ['', [Validators.maxLength(5000)]], // Not required, but good to have in form
       job_description_url: ['', [Validators.maxLength(200)]],
-      unique_id: [''] // To store the unique_id of the job post
+      unique_id: ['']
     }, { validators: this.experienceRangeValidator });
   }
 
@@ -76,20 +74,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (!this.corporateAuthService.isLoggedIn()) {
       this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']);
-      return; // Stop further execution if not logged in
+      return;
     }
 
     this.setupSearch();
 
-    // Fetch job post data if unique_id is provided (for editing/resuming a post)
     const uniqueIdFromRoute = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueIdFromRoute) {
       const token = this.corporateAuthService.getJWTToken();
       if (token) {
         this.jobDescriptionService.getJobPost(uniqueIdFromRoute, token).subscribe({
           next: (jobPost) => {
-            this.jobData = jobPost; // Store job data here
-            if (this.isViewInitialized) { // Populate form if view is ready
+            this.jobData = jobPost;
+            if (this.isViewInitialized) {
               this.populateForm(jobPost);
             }
             this.snackBar.open('Job post data loaded successfully.', 'Close', { duration: 3000 });
@@ -107,7 +104,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   private adjustExperienceRange(min: number, max: number): [number, number] {
-    // If both min and max are 0, it means no experience was parsed, default to 0-30 years
     if (min === 0 && max === 0) {
       return [0, 30];
     }
@@ -115,14 +111,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.isViewInitialized = true; // Set flag when view is initialized
-    if (this.jobData) { // If job data was loaded in ngOnInit, populate form now
+    this.isViewInitialized = true;
+    if (this.jobData) {
       this.populateForm(this.jobData);
     }
-    this.initializeSkillsInput();
+    this.initializeSkillsInput(); // Initialize skills after view is ready
     this.initializeRange('total');
     this.initializeRange('relevant');
-    this.updateExperienceUI(); // Update UI based on initial form values
+    this.updateExperienceUI();
+
+    // Initialize the job description editor script functionality (if any external JS relies on DOM ready)
+    // The inline script in HTML for the editor should run on its own.
+    // Call checkEmpty to set initial placeholder state for editor
+    this.checkEmpty('editor'); 
   }
 
   private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
@@ -130,6 +131,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const totalMax = form.get('total_experience_max')?.value;
     const relevantMin = form.get('relevant_experience_min')?.value;
     const relevantMax = form.get('relevant_experience_max')?.value;
+    const minBudget = form.get('min_budget')?.value;
+    const maxBudget = form.get('max_budget')?.value;
 
     if (totalMin > totalMax) {
       return { invalidTotalExperience: true };
@@ -137,25 +140,27 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (relevantMin > relevantMax) {
       return { invalidRelevantExperience: true };
     }
+    if (minBudget !== null && maxBudget !== null && minBudget > maxBudget) {
+        return { invalidBudgetRange: true };
+    }
     return null;
   }
 
-  // Existing onFileSelected method - keeps selected file and performs validation
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
+      const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv', '.doc']; // .doc was in original accept
       const ext = this.selectedFile.name.toLowerCase().substring(this.selectedFile.name.lastIndexOf('.'));
-      const maxSize = 10 * 1024 * 1024; // 10 MB
+      const maxSize = 10 * 1024 * 1024; 
       if (!allowedExtensions.includes(ext)) {
         this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
         this.selectedFile = null;
-        input.value = ''; // Clear file input value
+        input.value = ''; 
       } else if (this.selectedFile.size > maxSize) {
         this.snackBar.open('File size exceeds 10MB limit.', 'Close', { duration: 5000 });
         this.selectedFile = null;
-        input.value = ''; // Clear file input value
+        input.value = '';
       }
     } else {
       this.selectedFile = null;
@@ -167,7 +172,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
   }
 
-  // Existing uploadFile method - uploads file and populates form from AI response
   uploadFile(): void {
     if (!this.selectedFile) {
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 5000 });
@@ -181,8 +185,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     }
     this.jobDescriptionService.uploadFile(this.selectedFile, token).subscribe({
       next: (response) => {
-        // Populate form fields based on the AI response, including unique_id and job_description_url
-        this.jobData = response; // Store the AI response
+        this.jobData = response; 
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
       },
@@ -193,7 +196,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Populates the form fields based on fetched JobDetails or AIJobResponse
   private populateForm(jobData: JobDetails | AIJobResponse): void {
     let role: string;
     let location: string;
@@ -204,8 +206,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     let relevant_experience_min: number;
     let relevant_experience_max: number;
     let budget_type: string;
-    let min_budget: number;
-    let max_budget: number;
+    let min_budget: number | null; // Allow null for initial state
+    let max_budget: number | null; // Allow null for initial state
     let notice_period: string;
     let skills: string[];
     let job_description: string;
@@ -213,7 +215,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     let job_description_url_val: string = '';
 
     if ('job_details' in jobData) {
-      // Handle AIJobResponse (from file upload processing)
       const aiJobData = jobData as AIJobResponse;
       const jobDetails = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(jobDetails.experience?.value || '0-0 years');
@@ -221,54 +222,38 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       role = jobDetails.job_titles[0]?.value || '';
       location = jobDetails.location || '';
       job_type = this.mapJobType(jobDetails.job_titles[0]?.value || '');
-      workplace_type = jobDetails.workplace_type || 'Remote';
-      total_experience_min = minExp;
-      total_experience_max = maxExp;
-      // Adjust total experience if min/max are 0 (no specific exp found)
-      [total_experience_min, total_experience_max] = this.adjustExperienceRange(total_experience_min, total_experience_max);
-      relevant_experience_min = Math.max(0, minExp); // Relevant experience usually starts from total min or higher
-      relevant_experience_max = maxExp; // Relevant experience usually caps at total max
-      // Adjust relevant experience if min/max are 0
-      [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(relevant_experience_min, relevant_experience_max);
-      budget_type = jobDetails.budget_type || 'Annually';
-      min_budget = jobDetails.min_budget || 0;
-      max_budget = jobDetails.max_budget || 0;
-      notice_period = jobDetails.notice_period || '30 days';
+      workplace_type = jobDetails.workplace_type || 'Remote'; // Default if not provided
+      [total_experience_min, total_experience_max] = this.adjustExperienceRange(minExp, maxExp);
+      [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(minExp, maxExp);
+      budget_type = jobDetails.budget_type || 'Annually'; // Default if not provided
+      min_budget = jobDetails.min_budget || null;
+      max_budget = jobDetails.max_budget || null;
+      notice_period = jobDetails.notice_period || '30 days'; // Default
       skills = [
         ...(jobDetails.skills.primary || []).map(s => s.skill),
         ...(jobDetails.skills.secondary || []).map(s => s.skill)
       ];
       job_description = jobDetails.job_description || '';
-      unique_id_val = aiJobData.unique_id || ''; // Get unique_id from AI response
-      job_description_url_val = aiJobData.file_url || ''; // Get file_url from AI response
+      unique_id_val = aiJobData.unique_id || '';
+      job_description_url_val = aiJobData.file_url || '';
     } else {
-      // Handle JobDetails (from fetching an existing job post)
       const jobDetails = jobData as JobDetails;
-
       role = jobDetails.role;
       location = jobDetails.location;
       job_type = jobDetails.job_type;
       workplace_type = jobDetails.workplace_type;
-      total_experience_min = jobDetails.total_experience_min;
-      total_experience_max = jobDetails.total_experience_max;
-      // Adjust total experience if min/max are 0 (might be saved as 0-0)
-      [total_experience_min, total_experience_max] = this.adjustExperienceRange(total_experience_min, total_experience_max);
-      relevant_experience_min = jobDetails.relevant_experience_min;
-      relevant_experience_max = jobDetails.relevant_experience_max;
-      // Adjust relevant experience if min/max are 0
-      [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(relevant_experience_min, relevant_experience_max);
+      [total_experience_min, total_experience_max] = this.adjustExperienceRange(jobDetails.total_experience_min, jobDetails.total_experience_max);
+      [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(jobDetails.relevant_experience_min, jobDetails.relevant_experience_max);
       budget_type = jobDetails.budget_type;
       min_budget = jobDetails.min_budget;
       max_budget = jobDetails.max_budget;
       notice_period = jobDetails.notice_period;
-      // Combine primary and secondary skills into a single array for the form
-      skills = [...jobDetails.skills.primary.map(s => s.skill), ...jobDetails.skills.secondary.map(s => s.skill)];
+      skills = [...(jobDetails.skills.primary || []).map(s => s.skill), ...(jobDetails.skills.secondary || []).map(s => s.skill)];
       job_description = jobDetails.job_description;
-      unique_id_val = jobDetails.unique_id || ''; // Get unique_id from existing job post
+      unique_id_val = jobDetails.unique_id || '';
       job_description_url_val = jobDetails.job_description_url || '';
     }
 
-    // Patch form values
     this.jobForm.patchValue({
       role,
       location,
@@ -282,54 +267,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       min_budget,
       max_budget,
       notice_period,
-      skills, // This directly updates the Reactive Form control for skills
+      skills, // This will be handled by populateSkills for UI, but good to patch form value
       job_description,
       job_description_url: job_description_url_val,
       unique_id: unique_id_val
     });
 
-    // Manually update specific DOM elements not directly bound via formControlName
-    this.setInputValue('Role-Input-Field', role);
-    this.setInputValue('location', location);
-    this.setRadioButton('job_type', job_type);
-    this.setRadioButton('workplace_type', workplace_type);
-    this.setRadioButton('budget_type', budget_type);
-    this.setInputValue('min-budget-input-field', min_budget.toString());
-    this.setInputValue('max-budget-input', max_budget.toString());
-    this.setInputValue('notice-period-input-filed', notice_period);
-    this.populateSkills(skills); // This function renders the skill tags in the UI
-    this.setJobDescription(job_description);
+    // Update UI elements not directly managed by formControlName or needing special handling
+    this.populateSkills(skills); // Renders skill tags and syncs form skills
+    this.setJobDescription(job_description); // Sets content of the editor
     this.setExperienceRange('total', total_experience_min, total_experience_max);
     this.setExperienceRange('relevant', relevant_experience_min, relevant_experience_max);
   }
 
-  // Helper functions to update DOM elements (kept as is)
-  private setTextField(id: string, value: string): void {
-    const element = document.getElementById(id) as HTMLSpanElement;
-    if (element) {
-      element.textContent = value;
-    }
-  }
-
-  private setInputValue(id: string, value: string): void {
-    const element = document.getElementById(id) as HTMLInputElement;
-    if (element) {
-      element.value = value;
-    }
-  }
-
-  private setRadioButton(groupName: string, value: string): void {
-    const radio = document.querySelector(`input[name="${groupName}"][value="${value}"]`) as HTMLInputElement;
-    if (radio) {
-      radio.checked = true;
-    }
-  }
-
-  /**
-   * Updates the UI to display skill tags based on the provided array of skills.
-   * This method manipulates the DOM directly to create/remove tags.
-   * It also ensures the form control's `skills` value is synchronized.
-   */
   private populateSkills(skills: string[]): void {
     const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
     const tagInput = document.getElementById('tagInput') as HTMLInputElement;
@@ -338,11 +288,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Remove ONLY the existing skill tags (elements with class 'tag'), preserving the input field
     const existingTags = tagContainer.querySelectorAll('.tag');
     existingTags.forEach(tag => tag.remove());
 
-    // Add new skill tags to the UI
+    // This ensures the `selectedTags` array within initializeSkillsInput is also in sync
+    // if populateSkills is called after initializeSkillsInput has run.
+    // However, initializeSkillsInput should derive selectedTags from the form.
+    // The main thing is to update the form control.
+    this.jobForm.patchValue({ skills: [...skills] }); // Ensure form is up-to-date
+
+    // Then, build the UI from the skills array (which should now match the form)
     skills.forEach(skill => {
       const tag = document.createElement('div');
       tag.className = 'tag';
@@ -354,31 +309,31 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       removeBtn.textContent = '×';
       removeBtn.addEventListener('click', () => {
         tag.remove();
-        // Remove from the form's skills array
-        // Use `this.jobForm.get('skills')?.value` to ensure we get the current array state
         const currentFormSkills: string[] = this.jobForm.get('skills')?.value || [];
         const updatedSkills = currentFormSkills.filter(s => s !== skill);
         this.jobForm.patchValue({ skills: updatedSkills });
-        // After removing a tag, re-sync the internal `selectedTags` for `initializeSkillsInput`
-        this.initializeSkillsInput();
+        // Re-sync the internal `selectedTags` in initializeSkillsInput if it's stateful
+        // Or, ensure initializeSkillsInput reads from the form upon next interaction
       });
 
       tag.appendChild(removeBtn);
-      // Insert the new tag before the input field
       tagContainer.insertBefore(tag, tagInput);
     });
-
-    // IMPORTANT: Finally, patch the form control with the provided skills array.
-    // This ensures the Reactive Form model is in sync with the skills passed to populateSkills.
-    this.jobForm.patchValue({ skills });
   }
 
   private setJobDescription(description: string): void {
     const editor = document.getElementById('editor') as HTMLDivElement;
     if (editor) {
-      editor.innerHTML = description;
-      this.checkEmpty('editor');
+      editor.innerHTML = description; // Set content
+      this.checkEmpty('editor'); // Update placeholder visibility
     }
+  }
+
+  // ADDED: Method to update job_description form control from editor
+  updateJobDescriptionFromEditor(event: Event): void {
+    const editorContent = (event.target as HTMLDivElement).innerHTML;
+    this.jobForm.patchValue({ job_description: editorContent });
+    this.checkEmpty('editor'); // Also check empty on input
   }
 
   private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
@@ -392,33 +347,43 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 
     if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
       const rect = rangeIndicator.getBoundingClientRect();
-      const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth; // Fallback for width
-      const maxYears = 30; // 0-30 years range
+      const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth; 
+      const maxYears = 30;
 
-      // Clamp min/max values to ensure they are within 0-30
       const clampedMin = Math.max(0, Math.min(min, maxYears));
-      const clampedMax = Math.max(0, Math.min(max, maxYears));
+      const clampedMax = Math.max(clampedMin, Math.min(max, maxYears)); // Ensure max is not less than min
 
-      // Calculate positions, adjusting for marker visual size (approx 10px)
-      const minPos = (clampedMin / maxYears) * (width - 10);
-      const maxPos = (clampedMax / maxYears) * (width - 10);
+      // Adjust for marker width (e.g., 10px or 12px for marker.offsetWidth)
+      const markerWidth = markerLeft.offsetWidth || 12; // Default if offsetWidth is 0
+      const effectiveWidth = width - markerWidth;
+
+
+      const minPos = (clampedMin / maxYears) * effectiveWidth;
+      const maxPos = (clampedMax / maxYears) * effectiveWidth;
 
       markerLeft.style.left = `${minPos}px`;
       markerRight.style.left = `${maxPos}px`;
-      labelLeft.style.left = `${minPos + 5}px`;
+      
+      // Adjust label position to be centered with marker
+      labelLeft.style.left = `${minPos + markerWidth / 2}px`;
       labelLeft.textContent = `${clampedMin}yrs`;
-      labelRight.style.left = `${maxPos + 5}px`;
+      labelRight.style.left = `${maxPos + markerWidth / 2}px`;
       labelRight.textContent = `${clampedMax}yrs`;
-      filledSegment.style.left = `${minPos + 5}px`;
-      filledSegment.style.width = `${maxPos - minPos}px`;
+      
+      filledSegment.style.left = `${minPos + markerWidth / 2}px`;
+      filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
     }
   }
 
   private checkEmpty(id: string): void {
     const element = document.getElementById(id) as HTMLDivElement;
     if (!element) return;
-    const isEmpty = element.textContent?.trim() === '';
+    // Use innerHTML for contenteditable to correctly assess emptiness with formatting
+    const isEmpty = element.innerHTML.trim() === '' || element.innerHTML.trim() === '<br>';
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
+    if (isEmpty && element.hasAttribute('data-placeholder')) {
+        // Placeholder is handled by CSS pseudo-element :before
+    }
   }
 
   private mapJobType(title: string): string {
@@ -439,76 +404,84 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
 
     if (!rangeIndicator || !markerLeft || !markerRight || !labelLeft || !labelRight || !filledSegment) {
-      // console.warn(`Missing elements for range initialization for type: ${type}`);
-      return; // Exit if elements are not found
+      return;
     }
 
     let isDragging = false;
     let currentMarker: HTMLDivElement | null = null;
+    const maxYears = 30; 
+    const markerWidth = markerLeft.offsetWidth || 12; // Get marker width once
 
-    const updateFilledSegment = () => {
-      const leftPos = parseFloat(markerLeft.style.left);
-      const rightPos = parseFloat(markerRight.style.left);
-      filledSegment.style.left = `${leftPos + 5}px`; // Adjust by marker half-width
-      filledSegment.style.width = `${rightPos - leftPos}px`;
+    const updateUIFromMarkers = () => {
+        const rect = rangeIndicator.getBoundingClientRect();
+        if (rect.width <= 0) return; // Avoid division by zero if not rendered
+
+        const effectiveWidth = rect.width - markerWidth; // Width available for marker centers to travel
+
+        const leftPosPx = parseFloat(markerLeft.style.left) || 0;
+        const rightPosPx = parseFloat(markerRight.style.left) || 0;
+        
+        const minYear = Math.round((leftPosPx / effectiveWidth) * maxYears);
+        const maxYear = Math.round((rightPosPx / effectiveWidth) * maxYears);
+
+        // Update form controls
+        if (type === 'total') {
+            this.jobForm.patchValue({
+                total_experience_min: Math.min(minYear, maxYear), // Ensure min is not > max
+                total_experience_max: Math.max(minYear, maxYear)
+            }, { emitEvent: false });
+        } else {
+            this.jobForm.patchValue({
+                relevant_experience_min: Math.min(minYear, maxYear),
+                relevant_experience_max: Math.max(minYear, maxYear)
+            }, { emitEvent: false });
+        }
+
+        // Update labels and filled segment
+        labelLeft.textContent = `${this.jobForm.value[type + '_experience_min']}yrs`;
+        labelRight.textContent = `${this.jobForm.value[type + '_experience_max']}yrs`;
+        
+        labelLeft.style.left = `${leftPosPx + markerWidth / 2}px`;
+        labelRight.style.left = `${rightPosPx + markerWidth / 2}px`;
+
+        filledSegment.style.left = `${leftPosPx + markerWidth / 2}px`;
+        filledSegment.style.width = `${Math.max(0, rightPosPx - leftPosPx)}px`;
     };
 
-    const updateLabelPosition = (marker: HTMLDivElement, label: HTMLDivElement) => {
-      const markerPos = parseFloat(marker.style.left);
-      label.style.left = `${markerPos + 5}px`; // Adjust label position
-    };
 
     const onMouseMove = (e: MouseEvent) => {
       if (!isDragging || !currentMarker || !rangeIndicator) return;
 
       const rect = rangeIndicator.getBoundingClientRect();
-      // Calculate newLeft, considering the marker's own width to keep its center on the pointer
-      let newLeft = e.clientX - rect.left - (currentMarker.offsetWidth / 2);
+      let newLeftPx = e.clientX - rect.left - (markerWidth / 2); // Position for marker center
 
-      const minLeftBoundary = 0;
-      const maxRightBoundary = rect.width - currentMarker.offsetWidth;
+      const minBoundaryPx = 0;
+      const maxBoundaryPx = rect.width - markerWidth;
 
       if (currentMarker === markerLeft) {
-        newLeft = Math.max(minLeftBoundary, Math.min(newLeft, parseFloat(markerRight.style.left) - currentMarker.offsetWidth));
+        const rightMarkerPosPx = parseFloat(markerRight.style.left) || maxBoundaryPx;
+        newLeftPx = Math.max(minBoundaryPx, Math.min(newLeftPx, rightMarkerPosPx - markerWidth)); // Prevent overlap
       } else if (currentMarker === markerRight) {
-        newLeft = Math.min(maxRightBoundary, Math.max(newLeft, parseFloat(markerLeft.style.left) + currentMarker.offsetWidth));
+        const leftMarkerPosPx = parseFloat(markerLeft.style.left) || minBoundaryPx;
+        newLeftPx = Math.min(maxBoundaryPx, Math.max(newLeftPx, leftMarkerPosPx + markerWidth)); // Prevent overlap
       }
-
-      currentMarker.style.left = `${newLeft}px`;
-      updateFilledSegment();
-      updateLabelPosition(currentMarker, currentMarker === markerLeft ? labelLeft : labelRight);
-
-      const trackWidth = rect.width - currentMarker.offsetWidth;
-      const maxYears = 30; // The total range (0-30 years)
-
-      // Calculate year values based on position
-      const minYear = Math.round((parseFloat(markerLeft.style.left) / trackWidth) * maxYears);
-      const maxYear = Math.round((parseFloat(markerRight.style.left) / trackWidth) * maxYears);
-
-      // Update form values
-      if (type === 'total') {
-        this.jobForm.patchValue({
-          total_experience_min: minYear,
-          total_experience_max: maxYear
-        }, { emitEvent: false }); // Avoid infinite loop with UI update
-      } else {
-        this.jobForm.patchValue({
-          relevant_experience_min: minYear,
-          relevant_experience_max: maxYear
-        }, { emitEvent: false }); // Avoid infinite loop with UI update
-      }
-      labelLeft.textContent = `${minYear}yrs`;
-      labelRight.textContent = `${maxYear}yrs`;
+      
+      newLeftPx = Math.max(minBoundaryPx, Math.min(newLeftPx, maxBoundaryPx)); // Clamp within bounds
+      currentMarker.style.left = `${newLeftPx}px`;
+      updateUIFromMarkers();
     };
 
     const onMouseUp = () => {
+      if (isDragging) {
+         updateUIFromMarkers(); // Final update
+      }
       isDragging = false;
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
     const onMouseDown = (e: MouseEvent, marker: HTMLDivElement) => {
-      e.preventDefault(); // Prevent text selection or other default drag behaviors
+      e.preventDefault();
       isDragging = true;
       currentMarker = marker;
       document.addEventListener('mousemove', onMouseMove);
@@ -518,27 +491,28 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     markerLeft.addEventListener('mousedown', (e) => onMouseDown(e, markerLeft));
     markerRight.addEventListener('mousedown', (e) => onMouseDown(e, markerRight));
 
-    // Initial positioning based on current form values
+    // Initial UI setup from form values
     if (type === 'total') {
       this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
     } else {
       this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
     }
+    updateUIFromMarkers(); // Initial sync
   }
 
   private parseExperience(exp: string): [number, number] {
-    const rangeMatch = exp.match(/(\d+)-(\d+)/); // e.g., "3-5 years"
+    const rangeMatch = exp.match(/(\d+)\s*-\s*(\d+)/); 
     if (rangeMatch) {
       const min = parseInt(rangeMatch[1]);
       const max = parseInt(rangeMatch[2]);
       return [min, max];
     }
-    const singleMatch = exp.match(/(\d+)\s*years?/i); // e.g., "5 years" or "5year"
+    const singleMatch = exp.match(/(\d+)\s*years?/i); 
     if (singleMatch) {
       const singleExp = parseInt(singleMatch[1]);
       return [singleExp, singleExp];
     }
-    return [0, 0]; // Default if no specific experience is found
+    return [0, 0]; 
   }
 
   private setupSearch(): void {
@@ -546,6 +520,12 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       debounceTime(this.DEBOUNCE_DELAY),
       distinctUntilChanged(),
       switchMap((query: string) => {
+        if (!query) { // Handle empty query
+          this.isLoading = false;
+          this.showSuggestions = false;
+          this.suggestions = [];
+          return []; // Return empty observable or similar
+        }
         this.isLoading = true;
         return this.fetchLocationSuggestions(query);
       })
@@ -569,14 +549,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (query.length === 0) {
       this.showSuggestions = false;
       this.suggestions = [];
+      this.isLoading = false; // Stop loading if query is cleared
       return;
     }
     this.searchTerms.next(query);
   }
 
   private async fetchLocationSuggestions(query: string): Promise<string[]> {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 300)); // Shorter delay
     return this.getMockSuggestions(query);
   }
 
@@ -586,100 +566,103 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       'Multiple', 'New York, NY, USA', 'Los Angeles, CA, USA', 'Chicago, IL, USA',
       'Houston, TX, USA', 'Phoenix, AZ, USA', 'Philadelphia, PA, USA', 'San Antonio, TX, USA',
       'San Diego, CA, USA', 'Dallas, TX, USA', 'San Jose, CA, USA', 'London, UK',
-      'Paris, France', 'Tokyo, Japan', 'Sydney, Australia', 'Toronto, Canada'
+      'Paris, France', 'Tokyo, Japan', 'Sydney, Australia', 'Toronto, Canada',
+      'Bengaluru, India', 'Mumbai, India', 'Delhi, India', 'Pune, India'
     ];
     return cities.filter(city => city.toLowerCase().includes(query));
   }
 
   selectSuggestion(location: string): void {
     this.jobForm.patchValue({ location });
-    this.setInputValue('location', location); // Update visible input field
+    // The input field value will be updated by Angular's form binding
     this.showSuggestions = false;
     this.suggestions = [];
   }
 
-  handleOutsideClick(event: MouseEvent): void {
-    const target = event.target as Node;
-    if (
-      this.suggestionsContainer &&
-      !this.suggestionsContainer.nativeElement.contains(target) &&
-      this.locationInput && // Ensure locationInput is defined
-      target !== this.locationInput.nativeElement
-    ) {
-      this.showSuggestions = false;
-    }
+  // Modified to be called on (blur) of the input field
+  handleOutsideClick(event: FocusEvent): void {
+    // Hide suggestions if the related target (where focus is going)
+    // is not within the suggestions container.
+    // This is a bit tricky with blur, as click outside is more direct.
+    // A simple timeout can often work for blur to allow click on suggestion.
+    setTimeout(() => {
+        if (this.suggestionsContainer && !this.suggestionsContainer.nativeElement.contains(document.activeElement)) {
+            this.showSuggestions = false;
+        }
+    }, 150);
   }
 
-  /**
-   * Initializes the skill tag input functionality, including suggestions,
-   * adding/removing tags, and keyboard navigation.
-   * This is a self-contained unit that directly interacts with the DOM.
-   */
+
   private initializeSkillsInput(): void {
     const tagInput = document.getElementById('tagInput') as HTMLInputElement;
     const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
-    const suggestionsDiv = document.getElementById('suggestions') as HTMLDivElement; // Renamed for clarity to avoid conflict with `suggestions` property
+    // IMPORTANT: Use a unique ID for skills suggestions if it conflicts with location suggestions
+    const skillsSuggestionsDiv = document.getElementById('skillsSuggestions') as HTMLDivElement; 
 
-    if (!tagInput || !tagContainer || !suggestionsDiv) {
-      console.warn('Skill input related elements not found in DOM.');
+    if (!tagInput || !tagContainer || !skillsSuggestionsDiv) {
+      console.warn('Skill input related elements not found in DOM. Ensure "skillsSuggestions" div exists.');
       return;
     }
-
-    // Initialize selectedTags with the current form value. This is crucial for editing mode.
-    // When populateForm runs, it updates jobForm.skills. Then, when ngAfterViewInit calls
-    // initializeSkillsInput, this line ensures selectedTags correctly reflects the loaded data.
-    let selectedTags: string[] = [...this.jobForm.value.skills];
+    
+    // `selectedTags` should always reflect the form control's current value
+    let selectedTags: string[] = [...(this.jobForm.get('skills')?.value || [])]; 
     let activeSuggestionIndex = -1;
 
-    const availableTags = [
-      'JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular',
-      'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby',
-      'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB',
-      'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API',
-      'Machine Learning', 'Artificial Intelligence', 'Data Science', 'Cloud Computing',
-      'AWS', 'Azure', 'Google Cloud Platform', 'DevOps', 'CI/CD',
-      'Docker', 'Kubernetes', 'Cybersecurity', 'Blockchain', 'Mobile Development',
-      'Frontend Development', 'Backend Development', 'Full-stack Development',
-      'UI/UX Design', 'QA Testing', 'Agile Methodologies', 'Scrum', 'Project Management'
+    const availableTags = [ /* ... your extensive list of tags ... */ 
+        'JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular',
+        'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby',
+        'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB',
+        'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API',
+        'Machine Learning', 'Artificial Intelligence', 'Data Science', 'Cloud Computing',
+        'AWS', 'Azure', 'Google Cloud Platform', 'DevOps', 'CI/CD',
+        'Docker', 'Kubernetes', 'Cybersecurity', 'Blockchain', 'Mobile Development',
+        'Frontend Development', 'Backend Development', 'Full-stack Development',
+        'UI/UX Design', 'QA Testing', 'Agile Methodologies', 'Scrum', 'Project Management'
     ];
 
     const filterSuggestions = (input: string) => {
       if (!input) return [];
       const inputLower = input.toLowerCase();
+      // Update selectedTags from form before filtering, in case it changed programmatically
+      selectedTags = [...(this.jobForm.get('skills')?.value || [])]; 
       return availableTags.filter(tag =>
         tag.toLowerCase().includes(inputLower) && !selectedTags.includes(tag)
       );
     };
 
-    const showSuggestions = (filteredSuggestions: string[]) => {
-      suggestionsDiv.innerHTML = '';
+    const showAvailableSuggestions = (filteredSuggestions: string[]) => {
+      skillsSuggestionsDiv.innerHTML = '';
       if (filteredSuggestions.length === 0) {
-        suggestionsDiv.style.display = 'none';
+        skillsSuggestionsDiv.style.display = 'none';
         return;
       }
 
-      filteredSuggestions.forEach((suggestion, index) => {
+      filteredSuggestions.forEach((suggestion) => {
         const item = document.createElement('div');
-        item.className = 'suggestion-item';
+        item.className = 'suggestion-item'; // Ensure CSS for .suggestion-item applies
         item.textContent = suggestion;
         item.addEventListener('click', () => {
-          addTag(suggestion);
+          addSkillTag(suggestion); // Renamed to avoid conflict
           tagInput.value = '';
-          suggestionsDiv.style.display = 'none';
+          skillsSuggestionsDiv.style.display = 'none';
           tagInput.focus();
         });
-        suggestionsDiv.appendChild(item);
+        skillsSuggestionsDiv.appendChild(item);
       });
 
-      suggestionsDiv.style.display = 'block';
-      activeSuggestionIndex = -1; // Reset active suggestion
+      skillsSuggestionsDiv.style.display = 'block';
+      activeSuggestionIndex = -1;
     };
 
-    const addTag = (text: string) => {
+    const addSkillTag = (text: string) => { // Renamed
+      selectedTags = [...(this.jobForm.get('skills')?.value || [])]; // Get current skills from form
       if (!text || selectedTags.includes(text)) return;
+      
       selectedTags.push(text);
-      this.jobForm.patchValue({ skills: [...selectedTags] }); // Create a new array reference to trigger change detection
+      this.jobForm.patchValue({ skills: [...selectedTags] }); // Update form
 
+      // UI update (already handled by populateSkills, but this script manages its own tags)
+      // This local script's addTag should also create the visual tag if populateSkills isn't called immediately
       const tag = document.createElement('div');
       tag.className = 'tag';
       const tagText = document.createElement('span');
@@ -690,16 +673,17 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       removeBtn.textContent = '×';
       removeBtn.addEventListener('click', () => {
         tag.remove();
-        selectedTags = selectedTags.filter(t => t !== text);
-        this.jobForm.patchValue({ skills: [...selectedTags] }); // Update form control
+        // Update form when a tag is removed by its 'x' button
+        const currentSkillsFromForm = [...(this.jobForm.get('skills')?.value || [])];
+        this.jobForm.patchValue({ skills: currentSkillsFromForm.filter(s => s !== text) });
       });
 
       tag.appendChild(removeBtn);
       tagContainer.insertBefore(tag, tagInput);
     };
 
-    const navigateSuggestions = (direction: 'up' | 'down') => {
-      const items = suggestionsDiv.querySelectorAll('.suggestion-item');
+    const navigateAvailableSuggestions = (direction: 'up' | 'down') => { // Renamed
+      const items = skillsSuggestionsDiv.querySelectorAll('.suggestion-item');
       if (items.length === 0) return;
 
       if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
@@ -717,46 +701,46 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     };
 
     tagInput.addEventListener('input', () => {
-      const filteredSuggestions = filterSuggestions(tagInput.value);
-      showSuggestions(filteredSuggestions);
+      const filtered = filterSuggestions(tagInput.value);
+      showAvailableSuggestions(filtered);
     });
 
     tagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const items = suggestionsDiv.querySelectorAll('.suggestion-item');
+        const items = skillsSuggestionsDiv.querySelectorAll('.suggestion-item');
         if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
-          addTag(items[activeSuggestionIndex].textContent || '');
-        } else if (tagInput.value.trim()) { // Only add if input has non-empty text
-          addTag(tagInput.value.trim());
+          addSkillTag(items[activeSuggestionIndex].textContent || '');
+        } else if (tagInput.value.trim()) {
+          addSkillTag(tagInput.value.trim());
         }
         tagInput.value = '';
-        suggestionsDiv.style.display = 'none';
+        skillsSuggestionsDiv.style.display = 'none';
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
-        navigateSuggestions('down');
+        navigateAvailableSuggestions('down');
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        navigateSuggestions('up');
+        navigateAvailableSuggestions('up');
       } else if (e.key === 'Backspace' && !tagInput.value) {
-        const lastIndex = selectedTags.length - 1;
-        if (lastIndex >= 0) {
-          // No need to use `lastTag` variable here, just pop from `selectedTags`
-          selectedTags.pop();
-          this.jobForm.patchValue({ skills: [...selectedTags] });
-          const tags = tagContainer.querySelectorAll('.tag');
-          if (tags.length > 0) {
-            tags[tags.length - 1].remove(); // Remove the last visible tag
+        const currentSkills = [...(this.jobForm.get('skills')?.value || [])];
+        if (currentSkills.length > 0) {
+          currentSkills.pop(); // Remove last skill from array
+          this.jobForm.patchValue({ skills: currentSkills }); // Update form
+          // UI removal (the last tag in DOM)
+          const tagsInDOM = tagContainer.querySelectorAll('.tag');
+          if (tagsInDOM.length > 0) {
+            tagsInDOM[tagsInDOM.length - 1].remove();
           }
         }
       } else if (e.key === 'Escape') {
-        suggestionsDiv.style.display = 'none';
+        skillsSuggestionsDiv.style.display = 'none';
       }
     });
 
     document.addEventListener('click', (e) => {
-      if (!tagContainer.contains(e.target as Node) && !suggestionsDiv.contains(e.target as Node)) {
-        suggestionsDiv.style.display = 'none';
+      if (!tagContainer.contains(e.target as Node) && !skillsSuggestionsDiv.contains(e.target as Node)) {
+        skillsSuggestionsDiv.style.display = 'none';
       }
     });
 
@@ -765,15 +749,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         tagInput.focus();
       }
     });
-
-    // We do NOT call populateSkills here.
-    // `populateForm` calls `populateSkills` when data is loaded.
-    // `resetForm` calls `initializeSkillsInput` (which sets `selectedTags` based on the form's new `[]` state)
-    // and then calls `populateSkills` if needed (though it also clears tags directly).
-    // The initial rendering of tags is handled by `populateSkills` triggered by `populateForm`.
+    // Initial population of skill tags if form already has skills (e.g., on edit)
+    this.populateSkills(this.jobForm.get('skills')?.value || []);
   }
 
-  // NEW: Renamed submitJobPost to onSubmit for consistent multi-step handling
+
   onSubmit(): void {
     if (this.currentStep === 'jobPost') {
       // Log if the form is valid
@@ -789,11 +769,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         console.log(`Field ${field} is invalid. Errors:`, control.errors);
       }
     });
-      // Logic for submitting the job post details (Step 1)
-      
       if (this.jobForm.invalid) {
         this.snackBar.open('Please fill all required fields correctly before proceeding.', 'Close', { duration: 5000 });
-        this.jobForm.markAllAsTouched(); // Mark all controls as touched to show validation errors
+        console.log("Form Errors:", this.jobForm.errors);
+        Object.keys(this.jobForm.controls).forEach(key => {
+            const controlErrors = this.jobForm.get(key)?.errors;
+            if (controlErrors != null) {
+                console.log('Key control: ' + key + ', errors: ' + JSON.stringify(controlErrors));
+            }
+        });
+        this.jobForm.markAllAsTouched(); 
         return;
       }
 
@@ -807,17 +792,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       const formValues = this.jobForm.value;
       const jobDetails: JobDetails = {
         ...formValues,
-        skills: {
-          // Split skills into primary and secondary as required by the backend
-          primary: formValues.skills.slice(0, Math.ceil(formValues.skills.length / 2)).map((skill: string) => ({
+        skills: { 
+          primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((skill: string) => ({
             skill,
-            skill_confidence: 0.9, // Default confidence
-            type_confidence: 0.9 // Default confidence
+            skill_confidence: 0.9, 
+            type_confidence: 0.9 
           })),
-          secondary: formValues.skills.slice(Math.ceil(formValues.skills.length / 2)).map((skill: string) => ({
+          secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((skill: string) => ({
             skill,
-            skill_confidence: 0.8, // Default confidence
-            type_confidence: 0.8 // Default confidence
+            skill_confidence: 0.8, 
+            type_confidence: 0.8 
           }))
         }
       };
@@ -825,9 +809,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
         next: (response) => {
           this.snackBar.open('Job post saved successfully. Proceeding to assessment setup.', 'Close', { duration: 3000 });
-          // Ensure unique_id is updated in the form, especially for new posts where the backend assigns it
           this.jobForm.patchValue({ unique_id: response.unique_id });
-          this.currentStep = 'assessment'; // Move to the next step: assessment
+          this.currentStep = 'assessment';
         },
         error: (error) => {
           console.error('Job post saving failed:', error);
@@ -835,79 +818,61 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         }
       });
     } else if (this.currentStep === 'assessment') {
-      // Logic for submitting assessment details (Step 2)
-      // This section would contain calls to an assessment service or direct submission logic
-      // For now, it's a placeholder.
       this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
-      // After assessment is submitted, reset the form and navigate to a confirmation page
       this.resetForm();
-      this.router.navigate(['/job-posted']); // Navigate to a success/confirmation page
+      this.router.navigate(['/job-posted']); 
     }
   }
 
-  // NEW: Renamed cancelJobPost to onCancel for consistent multi-step handling
   onCancel(): void {
     if (this.currentStep === 'assessment') {
-      // If currently on assessment step, go back to job post form to allow editing
       this.snackBar.open('Returning to job post editing.', 'Close', { duration: 2000 });
       this.currentStep = 'jobPost';
     } else if (this.currentStep === 'jobPost') {
-      // If on job post step, cancel the entire process and navigate to dashboard
       this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
-      this.resetForm(); // Clear the form
-      this.router.navigate(['/dashboard']); // Navigate away
+      this.resetForm(); 
+      this.router.navigate(['/dashboard']); 
     }
   }
 
   resetForm(): void {
-    // Reset the Reactive Form to its initial state
-    this.jobForm.reset();
-    // Manually set default values for controls that might not reset as expected or need specific defaults
-    this.jobForm.patchValue({
+    this.jobForm.reset({
+      // Provide default values for reset
       role: '',
       location: '',
       job_type: '',
       workplace_type: '',
       total_experience_min: 0,
-      total_experience_max: 30, // Default to full range
+      total_experience_max: 30,
       relevant_experience_min: 0,
-      relevant_experience_max: 30, // Default to full range
+      relevant_experience_max: 30,
       budget_type: '',
-      min_budget: 0,
-      max_budget: 0,
+      min_budget: null,
+      max_budget: null,
       notice_period: '',
-      skills: [], // Ensure skills array is empty
+      skills: [],
       job_description: '',
       job_description_url: '',
       unique_id: ''
     });
 
-    // Clear the selected file and reset the file input element in the DOM
     this.selectedFile = null;
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
 
-    // Clear any displayed skill tags in the UI
-    const tagContainer = document.getElementById('tagContainer') as HTMLDivElement;
-    if (tagContainer) {
-      const tags = tagContainer.querySelectorAll('.tag');
-      tags.forEach(tag => tag.remove());
-      // Re-initialize skills input to ensure its internal state (selectedTags array) is also cleared
-      // This will set selectedTags inside initializeSkillsInput to an empty array from the form's reset state.
-      this.initializeSkillsInput();
-    }
-
-    // Reset job description editor
+    // Clear UI for skills and job description
+    this.populateSkills([]); // Clears skill tags and updates form
     this.setJobDescription('');
+    
+    this.updateExperienceUI(); // Reset sliders to default
 
-    // Update the experience range UI to reflect the reset values (0-30 years)
-    this.updateExperienceUI();
-
-    // Ensure the step is back to 'jobPost' if a full reset happens
     this.currentStep = 'jobPost';
-
-    // Clear any stored job data as the form has been reset
     this.jobData = null;
+
+    // Re-initialize skills input for a clean state if necessary,
+    // though populateSkills([]) should handle the form control and UI.
+    // If initializeSkillsInput has internal state not tied to the form, it might need a reset call.
+    // For now, assume populateSkills is sufficient for resetting the skills aspect.
   }
 }
