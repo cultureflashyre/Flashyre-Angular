@@ -27,6 +27,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   selectedFile: File | null = null;
   private readonly DEBOUNCE_DELAY = 300;
   currentStep: 'jobPost' | 'assessment' = 'jobPost';
+  // Flag to disable submit button during API call
+  isSubmitting: boolean = false;
 
   private jobData: JobDetails | AIJobResponse | null = null;
   private isViewInitialized = false;
@@ -70,6 +72,20 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
       }
     ]);
+
+    // Check for unique_id in route params (for editing existing job post)
+    const uniqueId = this.route.snapshot.paramMap.get('unique_id');
+    if (uniqueId) {
+      // Fetch existing job post data
+    this.jobDescriptionService.getJobPost(uniqueId, this.corporateAuthService.getJWTToken()!).subscribe({
+        next: (jobDetails) => {
+          this.populateForm(jobDetails);
+        },
+        error: (error) => {
+          this.snackBar.open(`Failed to load job post: ${error.message}`, 'Close', { duration: 5000 });
+        }
+      });
+    }
 
     if (!this.corporateAuthService.isLoggedIn()) {
       this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
