@@ -96,7 +96,8 @@ import { NavbarForCandidateView } from './navbar-for-candidate-view/navbar-for-c
 import { EmailAndMobileNumberComponent } from './email-and-mobile-number-component/email-and-mobile-number-component.component'
 import { AssessmentDetailedResults } from './assessment-detailed-results/assessment-detailed-results'
 import { AssessmentAttemptsListComponent } from './assessment-attempts-list/assessment-attempts-list'
-
+import { JobCards } from './job-cards/job-cards.component';
+import { CandidateJobDetails } from './candidate-job-details/candidate-job-details.component';
 
 @NgModule({
   declarations: [
@@ -185,7 +186,9 @@ import { AssessmentAttemptsListComponent } from './assessment-attempts-list/asse
     NavbarForCandidateView,
     EmailAndMobileNumberComponent,
     AssessmentDetailedResults,
-    AssessmentAttemptsListComponent
+    AssessmentAttemptsListComponent,
+    CandidateJobDetails,
+    JobCards
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
@@ -274,7 +277,9 @@ import { AssessmentAttemptsListComponent } from './assessment-attempts-list/asse
     NavbarForCandidateView,
     EmailAndMobileNumberComponent,
     AssessmentDetailedResults,
-    AssessmentAttemptsListComponent
+    AssessmentAttemptsListComponent,
+    CandidateJobDetails,
+    JobCards
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
