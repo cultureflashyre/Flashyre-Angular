@@ -2,6 +2,78 @@
     display: contents; 
   }
 
+  /* ... your existing CSS ... */
+
+/* Original CSS for the hidden input (ensure it is indeed hidden) */
+.create-job-post1st-page-upload-file-input {
+  display: none !important; /* Ensure it's hidden as we use a custom display */
+}
+
+/* Main container for the file input composite control */
+.create-job-post1st-page-upload-file-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px; /* Keep original height */
+  display: flex; /* Children will be side-by-side */
+  align-items: stretch; /* Children will take full height */
+  border: 1px solid #ACACAD; /* Original border */
+  border-radius: 5px; /* Original border-radius */
+  background-color: #FFFFFF; /* Ensure background for the "field" part */
+  overflow: hidden; /* Important for inner border-radius consistency */
+}
+
+/* New area to display filename or placeholder text */
+.file-display-area {
+  flex-grow: 1; /* Takes up available space left of the button */
+  display: flex;
+  align-items: center;
+  padding: 0 12px; /* Padding inside the text area */
+  /* border-right: 1px solid #ACACAD; /* Optional: separator line before button */
+  /* This was on the original hidden input, so we replicate the look */
+  border-top-left-radius: 4px; /* Match parent's border-radius minus border width */
+  border-bottom-left-radius: 4px;
+}
+
+.selected-file-name-text,
+.placeholder-text {
+  font-size: 1rem; /* Adjust as needed, to match typical input text */
+  color: #495057; /* Standard text color */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.placeholder-text {
+  color: #6c757d; /* Lighter color for placeholder */
+}
+
+/* Styles for the upload button container */
+.create-job-post1st-page-upload-file-button-container {
+  /* Original styles are mostly fine, ensure it doesn't shrink */
+  flex-shrink: 0;
+  /* The button originally had these, implying it was attached to an input-like element on its left.
+     The .file-display-area now serves as that element. */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  /* Ensure the right side radii match the main container if not already set */
+  /* border-top-right-radius: 4px; /* Matches parent's if it's the last element */
+  /* border-bottom-right-radius: 4px; /* Matches parent's */
+}
+
+/* Requirement 1: Style for upload success */
+.create-job-post1st-page-upload-file-button-container.upload-success-state {
+  background-color: #30B63F !important;
+}
+
+.create-job-post1st-page-upload-file-button-container.upload-success-state:hover {
+  background-color: #29a036 !important;
+}
+
+/* Optional: Style for when it's actively uploading */
+.create-job-post1st-page-upload-file-button-container.uploading-state {
+  /* background-color: #your-uploading-color; */
+}
+
   .body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
