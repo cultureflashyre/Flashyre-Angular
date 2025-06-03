@@ -255,6 +255,9 @@
                   class="create-job-post1st-page-role-input-field input"
                   formControlName="role"
                 />
+                <div *ngIf="jobForm.get('role')?.touched && jobForm.get('role')?.errors?.required" class="field-error-message">
+              Enter the Job Role
+            </div>
               </div>
             </div>
             <div
@@ -326,6 +329,9 @@
                     </div>
                   </div>
                 </div>
+                <div *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.required" class="field-error-message">
+              Enter Job Location
+            </div>
               </div>
             </div>
           </div>
@@ -424,6 +430,9 @@
                   >
                 </div>
               </div>
+              <div *ngIf="jobForm.get('job_type')?.touched && jobForm.get('job_type')?.errors?.required" class="field-error-message">
+            Enter the Job Type
+          </div>
             </div>
             <div
               id="workplace-container"
@@ -492,6 +501,9 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="jobForm.get('workplace_type')?.touched && jobForm.get('workplace_type')?.errors?.required" class="field-error-message">
+            Enter the Workplace Type
+          </div>
           </div>
           <div
             id="total-and-relevant-experience-container"
@@ -647,6 +659,9 @@
                 >
               </div>
             </div>
+            <div *ngIf="jobForm.get('budget_type')?.touched && jobForm.get('budget_type')?.errors?.required" class="field-error-message">
+          Enter the Budget Type
+        </div>
           </div>
           <div
             id="min-max-budget-container"
@@ -699,6 +714,13 @@
                   formControlName="min_budget"
                 />
               </div>
+              <div *ngIf="jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors?.required" class="field-error-message">
+              Enter your Minimum Budget
+            </div>
+            <!-- Form level error for range -->
+          <div *ngIf="jobForm.errors?.invalidBudgetRange && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)" class="field-error-message min-max-budget-error">
+            Min budget cannot exceed Max budget.
+          </div>
             </div>
             <div
               id="max-budget-container"
@@ -747,6 +769,9 @@
                   formControlName="max_budget"
                 />
               </div>
+              <div *ngIf="jobForm.get('max_budget')?.touched && jobForm.get('max_budget')?.errors?.required" class="field-error-message min-max-budget-error">
+            Enter your Maximum Budget
+          </div>
             </div>
           </div>
           <div
@@ -781,6 +806,9 @@
                 class="create-job-post1st-page-notice-period-input-filed input"
                 formControlName="notice_period"
               />
+              <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
+            Enter Notice Period
+          </div>
             </div>
           </div>
           <div
@@ -831,6 +859,9 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="jobForm.get('skills')?.touched && jobForm.get('skills')?.errors?.required" class="field-error-message">
+          Enter Skills Required for the Job 
+        </div> 
           </div>
           <div
             id="job-description-container"
@@ -883,6 +914,9 @@
               </div>
               </div>
             </div>
+            <div *ngIf="jobForm.get('job_description')?.touched && jobForm.get('job_description')?.errors?.required" class="field-error-message">
+          Enter Job Description
+        </div>
           </div>
         </div>
       </form>

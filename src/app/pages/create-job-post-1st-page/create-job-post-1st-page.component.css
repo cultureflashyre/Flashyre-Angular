@@ -1,6 +1,50 @@
   :host { 
     display: contents; 
   }
+  /* ... (your existing CSS, including .required-asterisk) ... */
+
+.field-error-message {
+  color: #F10400; /* Red color */
+  font-size: 0.8rem; /* Smaller font size for the error message */
+  margin-top: 4px; /* Space between the input and the error message */
+  display: block; /* Ensure it takes its own line if needed */
+  width: 100%; /* Take full width of its parent column/container */
+}
+
+/* Specific adjustment for error messages under radio groups or skills if needed */
+#job-type-container .field-error-message,
+#workplace-container .field-error-message,
+#budget-container .field-error-message,
+#skills-container .field-error-message,
+#job-description-container .field-error-message {
+  /* If these are directly under a flex-column container, width 100% might be good.
+     Adjust padding or margin as needed for visual alignment. */
+  padding-left: 0; /* Or align with the start of the radio buttons/input area */
+}
+
+/* For min-max budget errors, ensuring they fit well within their columns */
+.min-max-budget-error {
+  /* width: 100%; */ /* Already covered by .field-error-message */
+  /* text-align: left; */ /* if the parent container has text-align center */
+}
+
+/* Ensure error messages inside input containers are positioned well */
+.create-job-post1st-page-role-input-container .field-error-message,
+.create-job-post1st-page-location-input-container .field-error-message, /* Check placement here */
+.create-job-post1st-page-notice-period-input-container .field-error-message {
+  /* These are already inside a container that dictates width. */
+}
+
+/*
+  If location error message needs specific placement due to the complex google maps input structure:
+  You might need to adjust the DOM slightly or use more specific CSS for its error message position.
+  For example, ensuring it's clearly below the visual input area.
+*/
+#location-input-container .field-error-message {
+    /* Example: if the input itself has a specific height, position relative to that. */
+    /* This depends heavily on the exact rendered structure of your location input. */
+    /* For now, assuming it falls correctly below the input group. */
+}
 
   /* ... your existing CSS ... */
 
@@ -693,7 +737,7 @@
     gap: 24px;
     flex: 0 0 auto;
     width: 100%;
-    height: 152px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -703,7 +747,7 @@
     gap: 8px;
     flex: 0 0 auto;
     width: 100%;
-    height: 64px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -814,7 +858,7 @@
     gap: 8px;
     flex: 0 0 auto;
     width: 100%;
-    height: 64px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
