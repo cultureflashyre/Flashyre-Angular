@@ -1,60 +1,52 @@
-:host {
-  display: contents;
+:host { 
+  display: contents; 
 }
- 
+
 .profile-certifications-component-container1 {
   gap: 24px;
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   position: relative;
   align-items: flex-start;
   flex-direction: column;
+  background-color: transparent;
 }
- 
+
 .profile-certifications-component-profile-certification-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 720px;
-  height: 420px;
+  height: auto;
   display: flex;
   padding: 24px;
   align-self: center;
-  overflow-x: hidden;
-  overflow-y: scroll;
   align-items: flex-start;
   border-radius: 8px;
   flex-direction: column;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
   background-color: #FFFFFF;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
 }
- 
+
 .profile-certifications-component-certification-text {
   width: 672px;
   height: 24px;
   border-radius: 8px;
 }
- 
-.profile-certifications-component-container2 {
-  gap: var(--dl-layout-space-unit);
-  flex: 0 0 auto;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
+
 .profile-certifications-component-certificate-name-and-issuing-institute-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 672px;
+  width: auto;
   height: 76px;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
 }
- 
+
 .profile-certifications-component-certificate-name-container {
   flex: 0 0 auto;
   width: 324px;
@@ -62,8 +54,15 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  margin-bottom: 24px;
 }
- 
+
+.certification-divider {
+  border: 1px solid #ccc; /* Light gray line */
+  margin: 20px 0; /* Spacing above and below */
+  width: 100%; /* Full width of the container */
+}
+
 .profile-certifications-component-certifiacate-name-container {
   flex: 0 0 auto;
   width: 324px;
@@ -72,14 +71,81 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .profile-certifications-component-certificate-name-text {
   fill: #18191C;
   color: #18191C;
   width: 324px;
   height: 24px;
 }
- 
+
+.profile-certifications-component-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-certifications-component-form1 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: space-between;
+  padding-top: 12px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+
+.profile-certifications-component-select-text1 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-certifications-component-drop-down-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-certifications-component-certificate-issuing-institute-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-certifications-component-issuing-institute-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-certifications-component-issuing-institute-text {
+  fill: #18191C;
+  color: #18191C;
+  width: 324px;
+  height: 24px;
+}
+
 .profile-certifications-component-container3 {
   flex: 0 0 auto;
   width: auto;
@@ -89,97 +155,29 @@
   flex-direction: column;
   justify-content: flex-start;
 }
- 
-.profile-certifications-component-form1 {
-  width: 324px;
-  height: 48px;
-  display: flex;
-  align-self: center;
-  align-items: flex-start;
-  padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 10px;
-  flex-direction: row;
-  padding-bottom: 0px;
-  justify-content: center;
-}
- 
-/* .profile-certifications-component-select-text1 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: center;
-  margin-top: var(--dl-layout-space-halfunit);
-  margin-bottom: var(--dl-layout-space-halfunit);
-} */
- 
-/* .profile-certifications-component-drop-down-icon1 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: auto;
-  display: flex;
-  margin-top: -28px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
-} */
- 
-.profile-certifications-component-certificate-issuing-institute-container {
-  flex: 0 0 auto;
-  width: 324px;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.profile-certifications-component-issuing-institute-container {
-  flex: 0 0 auto;
-  width: 324px;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.profile-certifications-component-issuing-institute-text {
-  fill: #18191C;
-  color: #18191C;
-  width: 324px;
-  height: 24px;
-}
- 
-.profile-certifications-component-container4 {
-  flex: 0 0 auto;
-  width: auto;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-self: center;
-}
- 
+
 .profile-certifications-component-form2 {
   width: 324px;
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-start;
-  padding-top: 0px;
+  align-items: space-between;
+  padding-top: 12px;
   border-color: #A7A7A7;
   padding-right: 10px;
   flex-direction: column;
   padding-bottom: 0px;
   justify-content: center;
 }
- 
+
 .profile-certifications-component-select-text2 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-layout-space-halfunit);
-  margin-bottom: var(--dl-layout-space-halfunit);
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
 }
- 
+
 .profile-certifications-component-drop-down-icon2 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -189,26 +187,27 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
- 
+
 .profile-certifications-component-issued-renewal-date-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 672px;
   height: 76px;
   display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
- 
+
 .profile-certifications-component-issued-date-container {
   flex: 0 0 auto;
   width: 324px;
-  gap: 24px;
   height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
 }
- 
-.profile-certifications-component-container5 {
+
+.profile-certifications-component-container4 {
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
@@ -216,14 +215,14 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .profile-certifications-component-issuing-date-text {
   fill: #18191C;
   color: #18191C;
   width: 324px;
   height: 24px;
 }
- 
+
 .profile-certifications-component-select-container1 {
   flex: 0 0 auto;
   width: auto;
@@ -232,31 +231,30 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
-  margin-top: 5.5px;
 }
- 
+
 .profile-certifications-component-form3 {
   width: 324px;
   height: 48px;
   display: flex;
   align-self: center;
   align-items: space-between;
-  padding-top: 13px;
+  padding-top: 0px;
   border-color: #A7A7A7;
   padding-right: 10px;
   flex-direction: column;
   padding-bottom: 0px;
-  justify-content: space-between;
+  justify-content: center;
 }
- 
+
 .profile-certifications-component-select-text3 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-layout-space-halfunit);
-  margin-bottom: var(--dl-layout-space-halfunit);
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
 }
- 
+
 .profile-certifications-component-drop-down-icon3 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -266,7 +264,7 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
- 
+
 .profile-certifications-component-renewal-date-container {
   flex: 0 0 auto;
   width: 324px;
@@ -275,8 +273,8 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
-.profile-certifications-component-container6 {
+
+.profile-certifications-component-container5 {
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
@@ -284,14 +282,14 @@
   flex-direction: column;
   justify-content: flex-start;
 }
- 
+
 .profile-certifications-component-renewal-date-text {
   fill: #18191C;
   color: #18191C;
   width: 324px;
   height: 24px;
 }
- 
+
 .profile-certifications-component-select-container2 {
   flex: 0 0 auto;
   width: auto;
@@ -301,29 +299,29 @@
   flex-direction: column;
   justify-content: flex-start;
 }
- 
+
 .profile-certifications-component-form4 {
   width: 324px;
   height: 48px;
   display: flex;
   align-self: center;
   align-items: space-between;
-  padding-top: 13px;
+  padding-top: 0px;
   border-color: #A7A7A7;
   padding-right: 10px;
   flex-direction: column;
   padding-bottom: 0px;
-  justify-content: space-between;
+  justify-content: center;
 }
- 
+
 .profile-certifications-component-select-text4 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-layout-space-halfunit);
-  margin-bottom: var(--dl-layout-space-halfunit);
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
 }
- 
+
 .profile-certifications-component-drop-down-icon4 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -333,7 +331,7 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
- 
+
 .profile-certifications-component-credentials-container {
   flex: 0 0 auto;
   width: 324px;
@@ -341,14 +339,14 @@
   display: flex;
   flex-direction: column;
 }
- 
+
 .profile-certifications-component-credentials-text {
-  /* fill: #18191C; */
+  fill: #18191C;
   color: #18191C;
   width: 324px;
   height: 24px;
 }
- 
+
 .profile-certifications-component-select-container3 {
   flex: 0 0 auto;
   width: auto;
@@ -358,29 +356,29 @@
   flex-direction: column;
   justify-content: flex-start;
 }
- 
+
 .profile-certifications-component-form5 {
   width: 324px;
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-start;
-  padding-top: 0px;
+  align-items: space-between;
+  padding-top: 12px;
   border-color: #A7A7A7;
   padding-right: 10px;
-  flex-direction: row;
+  flex-direction: column;
   padding-bottom: 0px;
   justify-content: center;
 }
- 
+
 .profile-certifications-component-select-text5 {
   fill: #69737E;
   color: #69737E;
   align-self: flex-start;
-  margin-top: var(--dl-layout-space-halfunit);
-  margin-bottom: var(--dl-layout-space-halfunit);
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
 }
- 
+
 .profile-certifications-component-drop-down-icon5 {
   fill: var(--dl-color-theme-neutral-dark);
   color: var(--dl-color-theme-neutral-dark);
@@ -390,206 +388,151 @@
   border-color: var(--dl-color-theme-secondary1);
   border-width: 1px;
 }
- 
-.profile-certifications-component-container7 {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
- 
+
 .profile-certifications-component-add-certification-text {
   fill: #05356C;
   color: #05356C;
   width: auto;
-  height: 24px;
-  display: flex;
+  height: auto;
   font-style: normal;
   transition: 0.3s;
-  align-items: center;
   font-weight: 600;
   border-width: 0px;
-  justify-content: center;
   background-color: transparent;
+  padding: 8px 16px;
   margin-top: 20px;
 }
- 
+
 .profile-certifications-component-add-certification-text:hover {
-  color: #05356c;
+  color: FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .profile-certifications-component-add-certification-text:active {
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
- 
-.profile-certifications-component-remove-certification--text {
-  color: #F10400;
-  width: auto;
-  height: 24px;
-  display: flex;
-  font-style: normal;
-  font-weight: 600;
-  border: 0;
-  align-items: center;
-  justify-content: center;
-  justify-self: flex-end;
-  background-color: transparent;
-  transition: all 0.3s;
-  padding-top: 20px; /* Reset default button padding if needed */
-  margin: 0; /* Reset default button margin if needed */
-}
 
-.profile-certifications-component-remove-certification--text:hover {
-  color: #F10400;
-  cursor: pointer;
-  transform: scale(0.90);
-  transition: all 0.7s;
-}
-
-.profile-certifications-component-remove-certification--text:active {
-  transform: scale(1.05);
-  transition: all 0.7s;
-  background-color: #FFFFFF;
-}
-
-/* If the above doesn't work, try adding these */
-button.profile-certifications-component-remove-certification--text {
-  color: #F10400;
-  background: none;
-  border: none;
-}
- 
 .profile-certifications-component-fragment10 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text10 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment11 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text11 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment12 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text12 {
-  color: #f10400;
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment13 {
   display: contents;
 }
- 
-.profile-certifications-component-text13 {
+
+.profile-certifications-component-text15 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment14 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text16 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment15 {
   display: contents;
 }
- 
-.profile-certifications-component-text17 {
+
+.profile-certifications-component-text19 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment16 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text20 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment17 {
   display: contents;
 }
- 
-.profile-certifications-component-text21 {
+
+.profile-certifications-component-text23 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment18 {
   display: contents;
 }
- 
-.profile-certifications-component-text24 {
+
+.profile-certifications-component-text26 {
   display: inline-block;
 }
- 
+
 .profile-certifications-component-fragment19 {
   display: contents;
 }
- 
-.profile-certifications-component-text27 {
-  display: inline-block;
-}
- 
-.profile-certifications-component-fragment20 {
-  display: contents;
-}
- 
-.profile-certifications-component-text30 {
+
+.profile-certifications-component-text29 {
   display: inline-block;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
 }
- 
+
+.profile-certifications-component-fragment20 {
+  display: contents;
+}
+
+.profile-certifications-component-text30 {
+  display: inline-block;
+}
+
 .profile-certifications-component-fragment21 {
   display: contents;
 }
- 
+
 .profile-certifications-component-text31 {
   display: inline-block;
 }
- 
-.profile-certifications-component-fragment22 {
-  display: contents;
-}
- 
-.profile-certifications-component-text32 {
-  display: inline-block;
-}
- 
- 
- 
-.profile-certifications-componentroot-class-name1 {
-  width: auto;
-  align-self: center;
+
+.profile-certifications-component-remove-certification {
+  padding: 8px 16px;
+  background-color: #FFFFFF; /* Red background for remove */
+  color: #dc3545;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: 10px; /* Space above the button */
+  margin-left: 470px;
 }
 
-.certification-divider {
-  border: 0;                /* Removes default border */
-  height: 2px;             /* Sets the thickness of the line */
-  background-color: #E0E0E0;  /* Sets the color of the line (black in this case) */
-  margin: 10px 0;          /* Adds spacing above and below the line */
+.profile-certifications-component-remove-certification:hover {
+  transform: scale(0.90);
+  transition: all 0.8s;
+  transform: scale(1.05);
 }
 
-
- 
 @media(max-width: 1200px) {
   .profile-certifications-component-profile-certification-container {
     gap: 24px;
@@ -622,69 +565,58 @@ button.profile-certifications-component-remove-certification--text {
     font-style: normal;
     font-weight: 600;
   }
-  .profile-certifications-component-remove-certification--text {
-    width: auto;
-    height: 24px;
-    justify-self: flex-end;
-  }
-  
-  .profile-certifications-component-text12 {
-    fill: #F10400;
-    color: #F10400;
-    font-style: normal;
-    font-weight: 600;
-  }
-  .profile-certifications-component-text22 {
+  .profile-certifications-component-text21 {
     color: #18191c;
   }
-  .profile-certifications-component-text30 {
+  .profile-certifications-component-text29 {
     color: rgb(24, 25, 28);
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
   }
 }
- 
+
 @media(max-width: 479px) {
-  .profile-certifications-component-container {
-    width: 100%;
-    height: auto;
-  }
   .profile-certifications-component-container1 {
     width: 100%;
-    height: auto;
+    height: 684px;
   }
   .profile-certifications-component-profile-certification-container {
-    gap: 16px;
+    gap: var(--dl-space-space-twounits);
     width: 95%;
-    height: 595px;
+    height: 682px;
     align-items: center;
-    padding: 24px;
+    padding-top: var(--dl-space-space-twounits);
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+    flex-direction: column;
+    padding-bottom: var(--dl-space-space-twounits);
     justify-content: flex-start;
     background-color: #FFFFFF;
   }
   .profile-certifications-component-certification-text {
     width: 100%;
   }
-  .profile-certifications-component-container2 {
-    width: 324px;
-    gap: 16px;
-  }
   .profile-certifications-component-certificate-name-and-issuing-institute-container {
-    gap: 16px;
+    gap: var(--dl-space-space-twounits);
     width: 100%;
-    height: 180px;
+    height: 179px;
     flex-direction: column;
     padding-bottom: 0px;
   }
   .profile-certifications-component-certificate-name-container {
     width: 100%;
+    height: 179px;
+    gap: var(--dl-space-space-twounits);
+    flex-direction: column;
   }
- 
+  .profile-certifications-component-certifiacate-name-container {
+    width: 100%;
+  }
   .profile-certifications-component-certificate-name-text {
     width: 100%;
   }
-  .profile-certifications-component-container3 {
+  .profile-certifications-component-container2 {
     width: 100%;
   }
   .profile-certifications-component-form1 {
@@ -699,22 +631,22 @@ button.profile-certifications-component-remove-certification--text {
   .profile-certifications-component-issuing-institute-text {
     width: 100%;
   }
-  .profile-certifications-component-container4 {
+  .profile-certifications-component-container3 {
     width: 100%;
   }
   .profile-certifications-component-form2 {
     width: 100%;
   }
   .profile-certifications-component-issued-renewal-date-container {
-    gap: var(--dl-layout-space-unit);
+    gap: var(--dl-space-space-twounits);
     width: 100%;
-    height: 180px;
+    height: 179px;
     flex-direction: column;
   }
   .profile-certifications-component-issued-date-container {
     width: 100%;
   }
-  .profile-certifications-component-container5 {
+  .profile-certifications-component-container4 {
     width: 100%;
   }
   .profile-certifications-component-issuing-date-text {
@@ -729,13 +661,10 @@ button.profile-certifications-component-remove-certification--text {
   .profile-certifications-component-renewal-date-container {
     width: 100%;
   }
-  .profile-certifications-component-container6 {
+  .profile-certifications-component-container5 {
     width: 100%;
   }
   .profile-certifications-component-renewal-date-text {
-    width: 100%;
-  }
-  .profile-certifications-component-select-container2 {
     width: 100%;
   }
   .profile-certifications-component-form4 {
@@ -751,29 +680,13 @@ button.profile-certifications-component-remove-certification--text {
     width: 100%;
   }
   .profile-certifications-component-add-certification-text {
-    width: auto;
+    width: 100%;
     display: flex;
-    padding: 0px;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: #FFFFFF;
-  }
-  .profile-certifications-component-remove-certification-text {
-    width: auto;
-    display: flex;
-    padding: 0px;
     align-items: center;
     justify-content: flex-start;
     background-color: #FFFFFF;
-  }
-  .profile-certifications-component-text12 {
-    width: auto;
-    align-items: flex-start;
-    justify-content: center;
   }
   .profile-certifications-componentroot-class-name1 {
     height: auto;
   }
 }
- 
- 
