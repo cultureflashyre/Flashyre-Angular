@@ -1,1398 +1,198 @@
-:host { 
-  display: contents; 
+
+  :host { 
+    display: contents; 
+  }
+  /* ... (your existing CSS, including .required-asterisk) ... */
+
+.field-error-message {
+  color: #F10400; /* Red color */
+  font-size: 0.8rem; /* Smaller font size for the error message */
+  margin-top: 4px; /* Space between the input and the error message */
+  display: block; /* Ensure it takes its own line if needed */
+  width: 100%; /* Take full width of its parent column/container */
 }
 
-.body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  flex: 0 0 auto;
-  align-items: flex-start;
-  align-self: flex-start;
-  height: 100vh;
-  background-color: #FFFFFF;
-  width: 100%;
+/* Specific adjustment for error messages under radio groups or skills if needed */
+#job-type-container .field-error-message,
+#workplace-container .field-error-message,
+#budget-container .field-error-message,
+#skills-container .field-error-message,
+#job-description-container .field-error-message {
+  /* If these are directly under a flex-column container, width 100% might be good.
+     Adjust padding or margin as needed for visual alignment. */
+  padding-left: 0; /* Or align with the start of the radio buttons/input area */
 }
 
-.currency-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  max-height: 200px;
-  overflow-y: auto;
+/* For min-max budget errors, ensuring they fit well within their columns */
+.min-max-budget-error {
+  /* width: 100%; */ /* Already covered by .field-error-message */
+  /* text-align: left; */ /* if the parent container has text-align center */
 }
 
-.currency-option {
-  padding: 8px 12px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
+/* Ensure error messages inside input containers are positioned well */
+.create-job-post1st-page-role-input-container .field-error-message,
+.create-job-post1st-page-location-input-container .field-error-message, /* Check placement here */
+.create-job-post1st-page-notice-period-input-container .field-error-message {
+  /* These are already inside a container that dictates width. */
 }
 
-.currency-option:hover {
-  background-color: #f5f5f5;
+/*
+  If location error message needs specific placement due to the complex google maps input structure:
+  You might need to adjust the DOM slightly or use more specific CSS for its error message position.
+  For example, ensuring it's clearly below the visual input area.
+*/
+#location-input-container .field-error-message {
+    /* Example: if the input itself has a specific height, position relative to that. */
+    /* This depends heavily on the exact rendered structure of your location input. */
+    /* For now, assuming it falls correctly below the input group. */
 }
 
-.currency-option:last-child {
-  border-bottom: none;
+  /* ... your existing CSS ... */
+
+/* Generic class for required field asterisks */
+.required-asterisk {
+  color: #F10400; /* Red color */
+  margin-left: 2px; /* Optional: for slight spacing */
+  /* font-weight: bold; Optional: if you want them bolder */
 }
 
-/* Make the form containers relative positioned for dropdown positioning */
-.create-job-post1st-page-min-budget-form,
-.create-job-post1st-page-max-budget-form {
-  position: relative;
-}
+/* Ensure existing specific star classes are red using the 'color' property */
+.create-job-post1st-page-role-star-text {
+  color: #F10400; /* Red color */
+  /* fill: #F10400; */ /* Fill is for SVG, color is for text content of span */
+  width: 40px; /* These were in original, likely for layout if it was an icon */
 
-/* Make the currency spans clickable */
-.create-job-post1st-page-inr-min,
-.create-job-post1st-page-inr-max {
-  cursor: pointer;
-  user-select: none;
-}
-
-.progress-bar {
-  display: flex;
-  overflow: visible;
-  justify-content: space-between;
-  align-items: center;
-  width: 80%;
-  max-width: 600px;
-  margin: 20px auto;
-  font-family: Inter, sans-serif;
-}
-
-/* Style for each step */
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  flex: 1;
-}
-
-/* Line between steps */
-.step:before {
-  content: '';
-  position: absolute;
-  top: 30%;
-  left: calc(-40% + 15px); /* Adjust position to align the line between circles */
-  width: calc(80% - 30px); /* Width adjusted to match circle diameter */
-  height: 2px;
-  background-color: #ccc;
-  z-index: 0;
-}
-
-/* Remove line before the first step */
-.step:first-child:before {
-  display: none;
-}
-
-/* Circle for each step */
-.step-circle {
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #3AC14A;
-  color: white;
-  font-size: 1rem;
-  z-index: 1;
 }
 
-/* Change background color for the last three step circles */
-.step:nth-last-child(-n+3) .step-circle {
-  background-color: #747474;
-  color: white;
-  border: none;
-}
 
-/* Label under each circle */
-.step span {
-  margin-top: 8px;
-  font-size: 1rem;
-  color: #18191C;
-}
+.create-job-post1st-page-location-star-text {
+  color: #F10400; /* Red color */
+  /* fill: #f10400; */
 
- 
-.create-job-post1st-page-container10 {
-  width: 100vw;
+  width: 40px;
+  height: 40px;
   display: flex;
-  min-height: 100vh;
   align-items: center;
-  flex-direction: column;
+
+  /* Removed display: none from @media(max-width: 1200px) as per requirement to show all stars */
 }
 
-.create-job-post1st-page-upload-file-input {
-  display: none;
-}
+.create-job-post1st-page-notice-period-star-text {
+  color: #F10400; /* Red color */
+  /* fill: #F10400; */
 
-.create-job-post1st-page-upload-file-button-container {
-  cursor: pointer;
-}
- 
-.create-job-post1st-page-create-job-post-main-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 1440px;
-  height: auto;
+  width: 40px;
+  height: 40px;
   display: flex;
-  overflow-x: hidden;
   align-items: center;
-  flex-direction: column;
-  padding-bottom: 16px;
+}
+
+
+.create-job-post1st-page-skill-star-text {
+  color: #F10400; /* Red color */
+  /* fill: #F10400; */
+
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: center;
   justify-content: flex-start;
-  background-color: #F4F4F4;
 }
- 
-.create-job-post1st-page-fragment10 {
-  display: contents;
+
+
+/*
+  Review your @media queries. If any of them were hiding these star text elements
+  (e.g., .create-job-post1st-page-location-star-text { display: none; }),
+  you'll need to remove those `display: none;` rules if the requirement is for *all*
+  stars to be visible and red across all screen sizes.
+  The original CSS had:
+  @media(max-width: 1200px) {
+    .create-job-post1st-page-location-star-text {
+      display: none;
+    }
+  }
+  I am assuming you want this star visible now, so I've commented out the implication
+  that it should be hidden. If it needs to be hidden on smaller screens, that specific
+  `display: none` should remain. The request was "Display the star as red for all the fields",
+  implying visibility as well.
+*/
+
+/* ... rest of your CSS ... */
+
+  /* ... your existing CSS ... */
+
+/* Original CSS for the hidden input (ensure it is indeed hidden) */
+.create-job-post1st-page-upload-file-input {
+  display: none !important; /* Ensure it's hidden as we use a custom display */
 }
- 
-.create-job-post1st-page-text10 {
-  color: rgb(255, 255, 255);
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment11 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text11 {
-  color: rgb(5, 53, 108);
-  display: inline-block;
-  font-style: normal;
-  font-weight: 600;
-  background-color: rgb(255, 255, 255);
-}
- 
-.create-job-post1st-page-fragment12 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text12 {
-  color: rgb(5, 53, 108);
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment13 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text13 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment14 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text14 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment15 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text15 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment16 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text16 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment17 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text17 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment18 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text18 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment19 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text19 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment20 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text20 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment21 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text21 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment22 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text22 {
-  color: #ffffff;
-  display: inline-block;
-  font-size: 12px;
-}
- 
-.create-job-post1st-page-fragment23 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text23 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment24 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text24 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment25 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text25 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment26 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text26 {
-  display: inline-block;
-}
- 
-.create-job-post1st-page-fragment27 {
-  display: contents;
-}
- 
-.create-job-post1st-page-text30 {
-  color: #ffffff;
-  display: inline-block;
-  font-size: 12px;
-}
- 
-.create-job-post1st-page-create-job-post-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 1124px;
-  height: auto;
-  display: flex;
-  padding: 24px;
-  z-index: 999;
-  margin-top: 100px;
-  align-items: flex-start;
-  border-radius: 8px;
-  flex-direction: column;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-progress-bar1-container {
-  width: 100%;
-  height: 95px;
-  display: flex;
-  position: relative;
-  justify-content: center;
-}
- 
-.create-job-post1st-page-container11 {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-container12 {
-  display: contents;
-}
- 
-.create-job-post1st-page-create-job-post-text {
-  width: 100%;
-  height: 32px;
-  display: flex;
-  font-size: 24px;
-  font-style: normal;
-  align-items: center;
-  font-weight: 600;
-}
- 
-.create-job-post1st-page-jd-main-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 128px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-upload-attachment-text {
-  color: rgb(24, 25, 28);
-  width: 301px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
+
+/* Main container for the file input composite control */
 .create-job-post1st-page-upload-file-container {
   flex: 0 0 auto;
   width: 100%;
-  height: 48px;
+  height: 48px; /* Keep original height */
+  display: flex; /* Children will be side-by-side */
+  align-items: stretch; /* Children will take full height */
+  border: 1px solid #ACACAD; /* Original border */
+  border-radius: 5px; /* Original border-radius */
+  background-color: #FFFFFF; /* Ensure background for the "field" part */
+  overflow: hidden; /* Important for inner border-radius consistency */
+}
+
+/* New area to display filename or placeholder text */
+.file-display-area {
+  flex-grow: 1; /* Takes up available space left of the button */
   display: flex;
   align-items: center;
-  border-color: #ACACAD;
-  border-width: 1px;
-  border-radius: 5px;
-  justify-content: center;
+  padding: 0 12px; /* Padding inside the text area */
+  /* border-right: 1px solid #ACACAD; /* Optional: separator line before button */
+  /* This was on the original hidden input, so we replicate the look */
+  border-top-left-radius: 4px; /* Match parent's border-radius minus border width */
+  border-bottom-left-radius: 4px;
 }
- 
-.create-job-post1st-page-upload-file-input {
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  border-color: #ACACAD;
-  border-width: 1px;
-  justify-content: flex-start;
-  background-color: transparent;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+
+.selected-file-name-text,
+.placeholder-text {
+  font-size: 1rem; /* Adjust as needed, to match typical input text */
+  color: #495057; /* Standard text color */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
- 
+
+.placeholder-text {
+  color: #6c757d; /* Lighter color for placeholder */
+}
+
+/* Styles for the upload button container */
 .create-job-post1st-page-upload-file-button-container {
-  gap: 12px;
-  flex: 0 0 auto;
-  width: 147px;
-  height: 48px;
-  display: flex;
-  transition: 0.3s;
-  align-items: center;
-  padding-top: 16px;
-  padding-left: 12px;
-  border-radius: var(--dl-layout-radius-radius4);
-  padding-right: 12px;
-  padding-bottom: 16px;
-  justify-content: center;
-  background-color: #05356C;
+  /* Original styles are mostly fine, ensure it doesn't shrink */
+  flex-shrink: 0;
+  /* The button originally had these, implying it was attached to an input-like element on its left.
+     The .file-display-area now serves as that element. */
   border-top-left-radius: 0;
-  border-top-right-radius: 4px;
   border-bottom-left-radius: 0;
-  border-bottom-right-radius: 4px;
-}
- 
-.create-job-post1st-page-upload-file-button-container:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: all 0.8s;
-  background-color: 0A4992;
-}
- 
-.create-job-post1st-page-upload-file-button-container:active {
-  transform: scale(0.90);
-  background-color: 022954;
-}
- 
-.create-job-post1st-page-icon1 {
-  color: #FFFFFF;
-  width: 24px;
-  height: 24px;
-}
- 
-.create-job-post1st-page-text31 {
-  fill: #FFFFFF;
-  color: #FFFFFF;
-  width: 87px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
- 
-.create-job-post1st-page-note-for-file {
-  color: #18191c;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-enter-manually-text-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 736px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-enter-manually-text {
-  gap: 24px;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  font-size: 20px;
-  font-style: normal;
-  align-items: center;
-  font-weight: 600;
-}
- 
-.create-job-post1st-page-role-location-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
- 
-.create-job-post1st-page-role-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-role-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-role-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-role-star-text {
-  fill: #F10400;
-  color: rgb(241, 4, 0);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-role-input-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-role-input-field {
-  width: 100%;
-  height: 48px;
-  border-color: #A7A7A7;
-  background-color: transparent;
-}
- 
-.create-job-post1st-page-location-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-location-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-location-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-location-star-text {
-  fill: #f10400;
-  color: #f10400;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-location-input-container {
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: center;
-}
- 
-.create-job-post1st-page-container13 {
-  width: 100%;
-  height: 100%;
-}
- 
-.create-job-post1st-page-container14 {
-  display: contents;
-}
- 
-.create-job-post1st-page-jobtype-workplace-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 152px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-job-type-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 64px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-job-type-text {
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-job-types-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
- 
-.create-job-post1st-page-permanent-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-permanent-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-permanent-label {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-contract-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-contract-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-contract-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-part-time-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-part-time-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-part-time-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-internship-text-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-internship-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-internship-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-workplace-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 64px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-workplace-text {
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-workplaces-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
- 
-.create-job-post1st-page-onsite-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-onsite-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-onsite-label {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-hybrid-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-hybrid-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-hybrid-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-remote-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-remote-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-remote-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-total-and-relevant-experience-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
- 
-.create-job-post1st-page-total-experience-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-total-experience-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-total-experience-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-total-experience-code-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-container15 {
-  width: 100%;
-  height: 100%;
-}
- 
-.create-job-post1st-page-container16 {
-  display: contents;
-}
- 
-.create-job-post1st-page-relevant-experience-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-relevant-experience-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-relevant-experience-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-relevant-experience-code-container {
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: center;
-}
- 
-.create-job-post1st-page-container17 {
-  width: 100%;
-  height: 100%;
-}
- 
-.create-job-post1st-page-container18 {
-  display: contents;
-}
- 
-.create-job-post1st-page-budget-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 64px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-budget-text {
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-budgets-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
- 
-.create-job-post1st-page-weekly-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-weekly-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-weekly-label {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-monthly-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-monthly-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-monthly-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-annually-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-annually-radio {
-  width: 16px;
-  height: 16px;
-}
- 
-.create-job-post1st-page-annually-text {
-  width: auto;
-  height: 16px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-min-max-budget-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
- 
-.create-job-post1st-page-min-budget-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-min-budget-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-min-budget-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-min-budget-input-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-min-budget-form {
-  gap: 2px;
-  width: 15%;
-  height: 48px;
-  display: flex;
-  align-self: flex-start;
-  align-items: flex-end;
-  padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 10px;
-  flex-direction: row;
-  padding-bottom: 0px;
-  justify-content: flex-start;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-inr-min {
-  fill: #69737E;
-  color: #69737E;
-  margin: 0px;
-  align-self: center;
-}
- 
-.create-job-post1st-page-drop-down-icon-min {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-self: center;
-  margin-top: 0px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
-}
- 
-.create-job-post1st-page-min-budget-input-field {
-  width: 83%;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 0px;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-max-budget-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-max-budget-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-max-budget-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-max-budget-input-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-max-budget-form {
-  gap: 2px;
-  width: 15%;
-  height: 48px;
-  display: flex;
-  align-self: flex-start;
-  align-items: flex-end;
-  padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 10px;
-  flex-direction: row;
-  padding-bottom: 0px;
-  justify-content: flex-start;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-inr-max {
-  fill: #69737E;
-  color: #69737E;
-  margin: 0px;
-  align-self: center;
-}
- 
-.create-job-post1st-page-drop-down-icon-max {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-self: center;
-  margin-top: 0px;
-  border-color: var(--dl-color-theme-secondary1);
-  border-width: 1px;
-}
- 
-.create-job-post1st-page-max-budget-input {
-  width: 83%;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  padding-top: 0px;
-  border-color: #A7A7A7;
-  padding-right: 0px;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-notice-period-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 49%;
-  height: 76px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-notice-period-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-university-institute-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-notice-period-star-text {
-  fill: #F10400;
-  color: rgb(241, 4, 0);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-notice-period-input-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 48px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-notice-period-input-filed {
-  width: 100%;
-  height: 48px;
-  border-color: #A7A7A7;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-skills-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.create-job-post1st-page-skill-text-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-skill-text {
-  color: rgb(24, 25, 28);
-  width: auto;
-  height: 24px;
-  display: flex;
-  align-items: center;
-}
- 
-.create-job-post1st-page-skill-star-text {
-  fill: #F10400;
-  color: #F10400;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-self: center;
-  align-items: center;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-skills-input-container {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 72px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-container19 {
-  width: 100%;
-  height: 72px;
-  align-self: center;
-}
- 
-.create-job-post1st-page-container20 {
-  display: contents;
-}
- 
-.create-job-post1st-page-job-description-container {
-  gap: 4px;
-  flex: 0 0 auto;
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-start;
-}
- 
-.create-job-post1st-page-container21 {
-  width: 100%;
-}
- 
-.create-job-post1st-page-container22 {
-  display: contents;
-}
- 
-.create-job-post1st-page-submit-cancel-buttons-container {
-  gap: 16px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: flex-start;
-  border-radius: var(--dl-layout-radius-radius4);
-  justify-content: flex-end;
-}
- 
-.create-job-post1st-page-cancel-button {
-  width: 86px;
-  height: 40px;
-  transition: 0.3s;
-  border-color: #05356C;
-  background-color: #FFFFFF;
-}
- 
-.create-job-post1st-page-cancel-button:hover {
-  color: #FFFFFF;
-  cursor: pointer;
-  transform: scale(0.90);
-  transition: all 0.7s;
-}
- 
-.create-job-post1st-page-cancel-button:active {
-  color: #FFFFFF;
-  transform: scale(1.05);
-  transition: all 0.7s;
-}
- 
-.create-job-post1st-page-cancel-text {
-  color: #05356c;
-}
- 
-.create-job-post1st-page-submit-button {
-  fill: #FFFFFF;
-  color: #FFFFFF;
-  width: 86px;
-  height: 40px;
-  transition: 0.3s;
-  border-width: 0px;
-  background-color: #05356C;
-}
- 
-.create-job-post1st-page-submit-button:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  transition: all 0.8s;
-  background-color: 0A4992;
-}
- 
-.create-job-post1st-page-submit-button:active {
-  transform: scale(0.90);
-  background-color: 022954;
+  /* Ensure the right side radii match the main container if not already set */
+  /* border-top-right-radius: 4px; /* Matches parent's if it's the last element */
+  /* border-bottom-right-radius: 4px; /* Matches parent's */
 }
 
-.location-form {
-  position: relative;
+/* Requirement 1: Style for upload success */
+.create-job-post1st-page-upload-file-button-container.upload-success-state {
+  background-color: #30B63F !important;
 }
 
-.container {
-  width: 100%;
-  height: 100%;
+.create-job-post1st-page-upload-file-button-container.upload-success-state:hover {
+  background-color: #29a036 !important;
 }
 
-.input-wrapper {
-  position: relative;
-  height: 48px;
-}
-
-.location-input {
-  width: 100%;
-  padding-left: 14px;
-  /* border: 1px solid; */
-  border-color: #A7A7A7;
-  border-radius: 4px;
-  font-size: 18px;
-  box-sizing: border-box;
-  transition: border-color 0.3s;
-  height: 100%;
-}
-
-.location-input:focus {
-  outline: none;
-  border-color: #4299e1;
+/* Optional: Style for when it's actively uploading */
+.create-job-post1st-page-upload-file-button-container.uploading-state {
+  /* background-color: #your-uploading-color; */
 }
 
 
@@ -1947,7 +747,7 @@
     gap: 24px;
     flex: 0 0 auto;
     width: 100%;
-    height: 152px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -1957,7 +757,7 @@
     gap: 8px;
     flex: 0 0 auto;
     width: 100%;
-    height: 64px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -2068,7 +868,7 @@
     gap: 8px;
     flex: 0 0 auto;
     width: 100%;
-    height: 64px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
