@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import {HeaderContainer} from './header-container/header-container.component'
 import { Navbar6 } from './navbar6/navbar6.component'
@@ -94,7 +94,10 @@ import { ProgressBarStep4 } from './progress-bar-step-4/progress-bar-step-4.comp
 import { Contact10 } from './contact10/contact10.component'
 import { NavbarForCandidateView } from './navbar-for-candidate-view/navbar-for-candidate-view.component'
 import { EmailAndMobileNumberComponent } from './email-and-mobile-number-component/email-and-mobile-number-component.component'
-
+import { AssessmentDetailedResults } from './assessment-detailed-results/assessment-detailed-results'
+import { AssessmentAttemptsListComponent } from './assessment-attempts-list/assessment-attempts-list'
+import { JobCards } from './job-cards/job-cards.component';
+import { CandidateJobDetails } from './candidate-job-details/candidate-job-details.component';
 
 @NgModule({
   declarations: [
@@ -181,7 +184,11 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent
+    EmailAndMobileNumberComponent,
+    AssessmentDetailedResults,
+    AssessmentAttemptsListComponent,
+    CandidateJobDetails,
+    JobCards
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
@@ -268,7 +275,11 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
     ProgressBarStep4,
     Contact10,
     NavbarForCandidateView,
-    EmailAndMobileNumberComponent
+    EmailAndMobileNumberComponent,
+    AssessmentDetailedResults,
+    AssessmentAttemptsListComponent,
+    CandidateJobDetails,
+    JobCards
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

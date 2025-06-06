@@ -225,12 +225,12 @@ const routes = [
       import( './pages/profile-overview-page/profile-overview-page.module'
       ).then((m) => m.ProfileOverviewPageModule),
   },
-    {
-    path: 'assessment-taken-page-2/:assessmentId',
-    loadChildren: () =>
-      import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
-      ).then((m) => m.AssessmentTakenPage2Module),
-  },
+  //   {
+  //   path: 'assessment-taken-page-2/:assessmentId',
+  //   loadChildren: () =>
+  //     import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
+  //     ).then((m) => m.AssessmentTakenPage2Module),
+  // },
       {
     path: 'assessment-taken-page-3',
     loadChildren: () =>
@@ -261,7 +261,7 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule, HttpClientModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
   ],
