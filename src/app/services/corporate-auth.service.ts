@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
 import { environment } from '../../environments/environment';
+
 import { tap } from 'rxjs/operators';
+
 
 interface CorporateSignupData {
   first_name: string;
@@ -27,11 +30,11 @@ interface AuthResponse {
 })
 
 export class CorporateAuthService {
-  
-  
+
   private apiUrl = environment.apiUrl; // Adjust the API URL as needed
 
   constructor(private http: HttpClient) {}
+
 
 loginCorporate(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}login-corporate/`, { email, password }).pipe(
@@ -53,25 +56,42 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
       }),
       catchError(this.handleError)
     );
+
+
+  checkPhone(phone: string): Observable<any> {
+    const url = `${this.apiUrl}/check-phone/?phone=${phone}`;
+    console.log('Checking phone at:', url);
+    return this.http.get(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  checkEmail(email: string): Observable<any> {
+    const url = `${this.apiUrl}/check-email/?email=${email}`;
+    console.log('Checking email at:', url);
+    return this.http.get(url)
+      .pipe(catchError(this.handleError));
+
   }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred';
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Client-side error: ${error.error.message}`;
     } else {
-      // Server-side error
       if (error.status === 401) {
         errorMessage = error.error?.error || 'Invalid credentials';
       } else if (error.status === 400) {
         errorMessage = error.error?.error || 'Invalid request data';
+      } else if (error.status === 404) {
+        errorMessage = 'Service not found. Please check the server configuration.';
       } else {
         errorMessage = error.error?.error || `Server error: ${error.status}`;
       }
     }
-    return throwError(() => new Error(errorMessage));
+    console.error('HTTP error:', error);
+    return throwError(() => error);
   }
+
 
   saveTokens(access: string, refresh: string): void {
   localStorage.setItem('jwtToken', access);
@@ -106,3 +126,4 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   
 
 }
+

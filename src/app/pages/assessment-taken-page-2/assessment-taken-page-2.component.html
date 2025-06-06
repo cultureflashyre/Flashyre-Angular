@@ -130,7 +130,7 @@
               id="cloud-architecture-text"
               class="assessment-taken-page2-cloud-architecture-text"
             >
-              {{ assessment_title }}
+              Cloud Architecture
             </span>
           </div>
           <div
@@ -140,14 +140,14 @@
             <img
               id="assessment-company-logo"
               alt="image"
-              [src]="assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+              src="https://play.teleporthq.io/static/svg/default-img.svg"
               class="assessment-taken-page2-assessment-company-logo"
             />
             <span
               id="assessment-by-text"
               class="assessment-taken-page2-assessment-by-text"
             >
-              Assessment by {{ created_by }}
+              Assessment by Flashyre
             </span>
           </div>
         </div>
@@ -156,21 +156,20 @@
           class="assessment-taken-page2-id-attempts-container"
         >
           <span id="id-text" class="assessment-taken-page2-id-text">
-            Assessment ID : {{ assessment_id }}
+            Assessment ID : 109987
           </span>
           <span
             id="attempts-remaining-text"
             class="assessment-taken-page2-attempts-remaining-text"
           >
-            <span class="assessment-taken-page2-text31">{{ attempts_remaining < 0 ? 0 : attempts_remaining }}</span>
-            <span> Attempt(s) Remaining</span>
+            <span class="assessment-taken-page2-text31">1</span>
+            <span>Attempt(s) Remaining</span>
           </span>
         </div>
       </div>
       <div class="assessment-taken-page2-container3">
         <div class="assessment-taken-page2-container4">
           <div
-            *ngFor="let attempt of attempts; let i = index"
             id="attempt-container"
             class="assessment-taken-page2-attempt-container"
           >
@@ -186,10 +185,10 @@
                   id="attempt-text"
                   class="assessment-taken-page2-attempt-text"
                 >
-                  {{ (attempts.length - i) }}{{ getOrdinal(attempts.length - i) }} Attempt
+                  1st Attempt
                 </span>
                 <span id="date-text" class="assessment-taken-page2-date-text">
-                  Completed {{ attempt.end_time | date:'medium' }}
+                  Completed 7/03/2025
                 </span>
               </div>
             </div>
@@ -213,16 +212,59 @@
                 >
                   <div class="assessment-taken-page2-container5">
                     <div class="assessment-taken-page2-container6">
-                      <body>
-                      <div class='progress-container'>
-                        <div class='progress'>
-                          <div class='bar'
-                          [style.width.%]="attempt.score"
-                          [style.backgroundColor]="getFillColor(attempt.score)"></div>
-                        </div>
-                        <span class="score">{{ attempt.score }}%</span>
-                      </div>
-                        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+                      <dangerous-html
+                        html="<style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      margin: 0;
+      background-color: transparent; /* Transparent background */
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 5px; /* Space between the bar and score */
+    }
+
+    .progress {
+      position: relative;
+      width: 300px; /* Width of the progress bar */
+      height: 6px; /* Height of the progress bar */
+      background-color: #ccc; /* Background color for unfilled portion */
+      border-radius: 15px; /* Rounded corners */
+      overflow: hidden; /* Clip the progress bar inside the container */
+    }
+
+    .bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0; /* Initial width is 0% */
+      background-color: #0bf; /* Default color for filled portion */
+      transition: width 0.3s ease; /* Smooth width transition */
+    }
+
+    .score {
+      font-family: 'Inter', sans-serif; /* Font family */
+      font-size: 16px; /* Font size */
+      font-weight: 500; /* Font weight */
+      color: #474748; /* Default text color */
+    }
+  </style>
+<body>
+  <div class='progress-container'>
+    <div class='progress'>
+      <div class='bar'></div>
+    </div>
+    <span class='score'>0%</span>
+  </div>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
   <script>
     $(document).ready(function () {
       const $progress = $('.progress');
@@ -256,7 +298,8 @@
     });
   </script>
 </body>
-                      
+"
+                      ></dangerous-html>
                     </div>
                   </div>
                 </div>
@@ -289,10 +332,8 @@
           id="re-attempt-container"
           type="button"
           class="assessment-taken-page2-re-attempt-container button"
-          [disabled]="attempts_remaining <= 0"
-          (click)="onReattempt()"
         >
-          Re-attempt
+          Re- attempt
         </button>
       </div>
     </div>

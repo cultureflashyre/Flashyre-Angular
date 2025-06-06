@@ -12,8 +12,11 @@ import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 
+
 // Import the new SkillService and ApiSkill interface
 import { SkillService, ApiSkill } from '../../services/skill.service'; // Adjust path if necessary
+
+
 
 @Component({
   selector: 'create-job-post-1st-page',
@@ -49,6 +52,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 
   // For skill autocompletion
   isLoadingSkills = false; // Specific loading indicator for skills
+
 
   constructor(
     private title: Title,
@@ -124,6 +128,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         resolve();
         return;
       }
+
 
       const script = this.renderer.createElement('script');
       script.type = 'text/javascript';
@@ -222,7 +227,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 
   onInput(event: Event): void { /* Now handled by setupLocationInputListener */ }
 
+
   selectSuggestion(location: string): void { /* ... (same as before) ... */
+
     this.jobForm.patchValue({ location });
     this.showSuggestions = false;
     this.suggestions = []; // Clear suggestions
@@ -245,11 +252,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     return null;
   }
 
+
   triggerFileInput(): void { /* ... (same as before) ... */
      if (this.fileInput) this.fileInput.nativeElement.click();
   }
   onFileSelected(event: Event): void { /* ... (same as before) ... */
     this.isFileUploadCompletedSuccessfully = false; // Reset status
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -279,9 +288,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       // Don't clear displayedFileName here if you want it to persist until a new file is chosen or upload succeeds/fails
     }
   }
+
   private _performUpload(file: File): void { /* ... (same as before, ensure jobDescriptionService.uploadFile exists and works) ... */
     if (!file) return;
     const token = this.corporateAuthService.getJWTToken(); // Ensure this service exists and provides token
+
     if (!token) {
       this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']); // Adjust login route
@@ -316,6 +327,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private updateExperienceUI(): void { /* ... (same as before) ... */
     this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
+
   }
 
   private populateForm(jobData: JobDetails | AIJobResponse): void { /* ... (same as before, ensure types are consistent) ... */
@@ -423,6 +435,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   private setJobDescription(description: string): void { /* ... (same as before) ... */
     const editor = document.getElementById('editor') as HTMLDivElement;
     if (editor) {
@@ -433,7 +446,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
           this.jobForm.patchValue({ job_description: description}, { emitEvent: false });
       }
     }
-  }
+}
 
   updateJobDescriptionFromEditor(event: Event): void { /* ... (same as before) ... */
      const editorContent = (event.target as HTMLDivElement).innerHTML;
@@ -451,6 +464,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
 
     if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
+
       const rect = rangeIndicator.getBoundingClientRect();
       const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth; // Ensure width is positive
       const maxYears = 30;
@@ -474,6 +488,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
 
       filledSegment.style.left = `${minPos + markerWidth / 2}px`;
       filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`; // Ensure width is not negative
+
     }
   }
 
@@ -483,7 +498,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     // Consider empty if it's empty, just <br>, or just placeholder like content
     const isEmpty = !element.textContent?.trim() && !element.querySelector('img, li, table'); // More robust empty check
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
-  }
+}
 
   private mapJobType(title: string): string { /* ... (same as before) ... */
     if (!title) return 'Permanent'; // Default if title is empty
@@ -511,7 +526,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     let isDragging = false;
     let currentMarker: HTMLDivElement | null = null;
     const maxYears = 30;
+
     const markerWidth = markerLeft.offsetWidth || 12; // Default if not rendered yet
+
+
 
     const updateUIFromMarkers = () => {
       const rect = rangeIndicator.getBoundingClientRect();

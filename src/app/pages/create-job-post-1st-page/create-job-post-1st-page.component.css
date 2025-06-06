@@ -1,3 +1,4 @@
+
   :host { 
     display: contents; 
   }
@@ -60,33 +61,40 @@
   color: #F10400; /* Red color */
   /* fill: #F10400; */ /* Fill is for SVG, color is for text content of span */
   width: 40px; /* These were in original, likely for layout if it was an icon */
+
   height: 40px;
   display: flex;
   align-items: center;
 }
 
+
 .create-job-post1st-page-location-star-text {
   color: #F10400; /* Red color */
   /* fill: #f10400; */
+
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
+
   /* Removed display: none from @media(max-width: 1200px) as per requirement to show all stars */
 }
 
 .create-job-post1st-page-notice-period-star-text {
   color: #F10400; /* Red color */
   /* fill: #F10400; */
+
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
 }
 
+
 .create-job-post1st-page-skill-star-text {
   color: #F10400; /* Red color */
   /* fill: #F10400; */
+
   width: 40px;
   height: 40px;
   display: flex;
@@ -94,6 +102,7 @@
   align-items: center;
   justify-content: flex-start;
 }
+
 
 /*
   Review your @media queries. If any of them were hiding these star text elements
@@ -185,6 +194,7 @@
 .create-job-post1st-page-upload-file-button-container.uploading-state {
   /* background-color: #your-uploading-color; */
 }
+
 
   .body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
