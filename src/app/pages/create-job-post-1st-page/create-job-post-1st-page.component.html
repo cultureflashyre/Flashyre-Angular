@@ -313,6 +313,7 @@
                 </div>
               </div>
             </div>
+
           </div>
           <div
             id="jobtype-workplace-container"
@@ -486,6 +487,7 @@
               id="total-experience-container"
               class="create-job-post1st-page-total-experience-container"
             >
+
               <div
                 id="total-experience-text-container"
                 class="create-job-post1st-page-total-experience-text-container"
@@ -562,6 +564,7 @@
                 </div>
               </div>
             </div>
+
           </div>
           <div
             id="budget-container"
@@ -742,6 +745,7 @@
               id="notice-period-text-container"
               class="create-job-post1st-page-notice-period-text-container"
             >
+
               <span
                 id="university-institute-text"
                 class="create-job-post1st-page-university-institute-text"
@@ -841,10 +845,13 @@
                 .editable-area[data-empty='true']::before { content: attr(data-placeholder); color: #999; }
               </style>
               <div class="container">
+
+
                 <div class="job-title">
                   Job description <span></span>
                 </div>
                 <div class="toolbar">
+
                   <button onclick="formatText('bold')" id="bold-btn" class="format-btn" title="Bold">B</button>
                   <button onclick="formatText('italic')" id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
                   <button onclick="formatText('underline')" id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
@@ -852,8 +859,10 @@
                   <div class="separator1"></div>
                   <button onclick="formatText('highlight')" id="highlight-btn" class="format-btn" title="Highlight">H</button>
                   <div class="separator2"></div>
+
                 </div>
                 <div class="editor-content">
+
                   <div
                     id="editor"
                     class="editable-area"
@@ -864,10 +873,12 @@
                     onblur="checkEmpty('editor')"
                     (input)="updateJobDescriptionFromEditor($event)"
                   ></div>
+
                 </div>
               </div>
               </div>
             </div>
+
           </div>
         </div>
       </form>

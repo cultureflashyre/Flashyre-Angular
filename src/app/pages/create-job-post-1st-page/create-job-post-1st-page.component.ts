@@ -10,7 +10,9 @@ import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 
+
 // Ensure @types/google.maps is installed
+
 
 @Component({
   selector: 'create-job-post-1st-page',
@@ -39,6 +41,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private isViewInitialized = false;
   // private placesService?: google.maps.places.AutocompleteService; // DEPRECATED
   private autocomplete?: google.maps.places.Autocomplete; // NEW: Using Autocomplete
+
 
   constructor(
     private title: Title,
@@ -114,6 +117,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         resolve();
         return;
       }
+
 
       const script = this.renderer.createElement('script');
       script.type = 'text/javascript';
@@ -276,6 +280,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   }
   */
 
+
   selectSuggestion(location: string): void {
     // This is called when a user clicks on one of OUR custom suggestions.
     // If we are primarily using the Google Autocomplete widget's dropdown,
@@ -316,6 +321,25 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     this.fileInput.nativeElement.click();
   }
 
+  formatText(type: string) {
+    const editor = document.getElementById('editor');
+    if (editor) {
+        editor.focus();
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            const selectedText = selection.toString();
+            if (type === 'list' || selectedText.length > 0) {
+                switch (type) {
+                    case 'bold': document.execCommand('bold', false, null); break;
+                    case 'italic': document.execCommand('italic', false, null); break;
+                    case 'underline': document.execCommand('underline', false, null); break;
+                    case 'list': document.execCommand('insertUnorderedList', false, null); break;
+                    case 'highlight': document.execCommand('backColor', false, '#fff3cd'); break;
+                }
+            }
+        }
+    }
+}
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -342,6 +366,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       this.selectedFile = null;
     }
   }
+
 
   private _performUpload(file: File): void {
     if (!file) {
@@ -377,6 +402,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private updateExperienceUI(): void {
     this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
+
   }
 
   private populateForm(jobData: JobDetails | AIJobResponse): void {
@@ -493,13 +519,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   private setJobDescription(description: string): void {
     const editor = document.getElementById('editor') as HTMLDivElement;
     if (editor) {
-      editor.innerHTML = description;
-      this.checkEmpty('editor');
+        editor.innerHTML = description;
+        this.checkEmpty('editor');
     }
-  }
+}
 
   updateJobDescriptionFromEditor(event: Event): void {
     const editorContent = (event.target as HTMLDivElement).innerHTML;
@@ -517,6 +544,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const filledSegment = document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
 
     if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
+
       const rect = rangeIndicator.getBoundingClientRect();
       const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth;
       const maxYears = 30;
@@ -534,6 +562,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       labelRight.textContent = `${clampedMax}yrs`;
       filledSegment.style.left = `${minPos + markerWidth / 2}px`;
       filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
+
     }
   }
 
@@ -542,7 +571,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (!element) return;
     const isEmpty = element.innerHTML.trim() === '' || element.innerHTML.trim() === '<br>';
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
-  }
+}
 
   private mapJobType(title: string): string {
     const lowerTitle = title.toLowerCase();
@@ -565,7 +594,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     let isDragging = false;
     let currentMarker: HTMLDivElement | null = null;
     const maxYears = 30;
+
     const markerWidth = markerLeft.offsetWidth || 12;
+
 
     const updateUIFromMarkers = () => {
         const rect = rangeIndicator.getBoundingClientRect();
