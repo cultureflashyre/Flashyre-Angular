@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class FileUploadService {
-  private apiUrl = `${environment.apiUrl}/api/file-upload/`; // Django file upload endpoint
+  private apiUrl = `${environment.apiUrl}file-upload/`; // Django file upload endpoint
 
   constructor(private http: HttpClient) {}
 
