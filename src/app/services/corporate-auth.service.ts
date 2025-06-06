@@ -3,6 +3,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
+
 interface CorporateSignupData {
   first_name: string;
   last_name: string;
@@ -16,15 +18,18 @@ interface CorporateSignupData {
   providedIn: 'root'
 })
 export class CorporateAuthService {
-  private apiUrl = 'http://localhost:8000/api';
+
+  private apiUrl = environment.apiUrl; // Adjust the API URL as needed
 
   constructor(private http: HttpClient) {}
 
   signupCorporate(data: CorporateSignupData): Observable<any> {
-    const url = `${this.apiUrl}/signup-corporate/`;
+
+    return this.http.post(`${this.apiUrl}signup-corporate/`, data)
+
     console.log('Making POST request to:', url);
     console.log('Request data:', data);
-    return this.http.post(url, data)
+
       .pipe(catchError(this.handleError));
   }
 
