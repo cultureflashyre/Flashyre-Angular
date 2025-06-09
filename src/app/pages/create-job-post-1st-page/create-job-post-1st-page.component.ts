@@ -104,7 +104,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     return [0, 30];
   }
   return [min, max];
-}
+  }
 
   ngAfterViewInit(): void {
   this.isViewInitialized = true;
@@ -388,7 +388,7 @@ private populateSkills(skills: string[]): void {
     }
 }
 
-  private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
+     private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
     const prefix = type === 'total' ? 'total_' : 'relevant_';
     const rangeIndicator = document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
     const markerLeft = document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;

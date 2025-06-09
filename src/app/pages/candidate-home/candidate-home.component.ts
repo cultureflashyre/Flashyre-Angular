@@ -1,81 +1,224 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/candidate.service';
-import { forkJoin } from 'rxjs';
-
+import { JobsService } from '../../services/job.service';
 import { environment } from '../../../environments/environment';
-
 
 @Component({
   selector: 'candidate-home',
   templateUrl: 'candidate-home.component.html',
   styleUrls: ['candidate-home.component.css'],
 })
-export class CandidateHome implements OnInit {
-  userProfile: any = {}; // To store user profile data
+export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
+  userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
-
+  
+  // Job related properties
   jobs: any[] = [];
-
+  displayedJobs: any[] = [];
   appliedJobIds: number[] = [];
-
+  
+  // Pagination properties
+  private currentPage = 0;
+  private jobsPerPage = 30;
+  private isLoadingMore = false;
+  
+  // Application state
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
   isLoading: boolean = true;
+  
+  // Intersection Observer
+  private observer: IntersectionObserver | null = null;
+  private destroy$ = new Subject<void>();
 
-  images = [
-    'src/assets/temp-jobs-icon/1.png',
-    'src/assets/temp-jobs-icon/2.png',
-    'src/assets/temp-jobs-icon/3.png',
-    'src/assets/temp-jobs-icon/4.png',
-    'src/assets/temp-jobs-icon/5.png',
-    'src/assets/temp-jobs-icon/6.png',
-    'src/assets/temp-jobs-icon/7.png',
-    'src/assets/temp-jobs-icon/8.png'
-  ];
-
-  getRandomImage(): string {
-    const randomIndex = Math.floor(Math.random() * this.images.length);
-    return this.images[randomIndex];
-  }
-
-  jobsWithImages = this.jobs.map(job => ({
-    ...job,
-    imageSrc: this.getRandomImage()
-  }));
-
-  private apiUrl = environment.apiUrl+'api/jobs/'; // Adjust to your Django server URL
-
+  private apiUrl = environment.apiUrl + 'api/jobs/';
 
   constructor(
     private title: Title,
     private meta: Meta,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private jobService: JobsService
   ) {
     this.title.setTitle('Candidate-Home - Flashyre');
     this.meta.addTags([
-      {
-        property: 'og:title',
-        content: 'Candidate-Home - Flashyre',
-      },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
-      },
+      { property: 'og:title', content: 'Candidate-Home - Flashyre' },
+      { property: 'og:image', content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original' },
     ]);
   }
 
   ngOnInit(): void {
-    this.loadJobsAndFilterApplied();
     this.loadUserProfile();
+    this.initializeJobs();
   }
 
+  ngAfterViewInit(): void {
+    // Initialize intersection observer after view is ready
+    setTimeout(() => {
+      this.setupInfiniteScroll();
+    }, 100);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  /**
+   * Initialize jobs - check cache first, then fetch if needed
+   */
+  private initializeJobs(): void {
+    this.isLoading = true;
+    
+    // Check if jobs are already cached
+    if (this.jobService.areJobsCached()) {
+      console.log('Loading jobs from cache...');
+      this.loadJobsFromCache();
+    } else {
+      console.log('Fetching jobs from API...');
+      this.fetchJobsFromAPI();
+    }
+  }
+
+  /**
+   * Load jobs from cache
+   */
+  private loadJobsFromCache(): void {
+    this.jobService.getJobs()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(jobs => {
+        if (jobs.length > 0) {
+          this.filterAndDisplayJobs(jobs);
+        }
+      });
+  }
+
+  /**
+   * Fetch jobs from API
+   */
+  private fetchJobsFromAPI(): void {
+    this.jobService.fetchJobs()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        jobs => {
+          this.filterAndDisplayJobs(jobs);
+        },
+        error => {
+          console.error('Error fetching jobs:', error);
+          this.isLoading = false;
+        }
+      );
+  }
+
+  /**
+   * Filter jobs and set up initial display
+   */
+  private filterAndDisplayJobs(jobs: any[]): void {
+    this.authService.getAppliedJobs()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (appliedJobs) => {
+          this.appliedJobIds = appliedJobs.applied_job_ids || [];
+          
+          // Filter out applied jobs
+          this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+          
+          // Reset pagination
+          this.currentPage = 0;
+          this.displayedJobs = [];
+          
+          // Load first page
+          this.loadNextPage();
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching applied jobs:', error);
+          // Fallback: show all jobs without filtering
+          this.jobs = jobs;
+          this.currentPage = 0;
+          this.displayedJobs = [];
+          this.loadNextPage();
+          this.isLoading = false;
+        }
+      );
+  }
+
+  /**
+   * Load the next page of jobs
+   */
+  private loadNextPage(): void {
+    if (this.isLoadingMore || this.displayedJobs.length >= this.jobs.length) {
+      return;
+    }
+
+    this.isLoadingMore = true;
+    
+    const startIndex = this.currentPage * this.jobsPerPage;
+    const endIndex = startIndex + this.jobsPerPage;
+    const nextJobs = this.jobs.slice(startIndex, endIndex);
+    
+    if (nextJobs.length > 0) {
+      this.displayedJobs = [...this.displayedJobs, ...nextJobs];
+      this.currentPage++;
+      console.log(`Loaded page ${this.currentPage}, showing ${this.displayedJobs.length} of ${this.jobs.length} jobs`);
+    }
+    
+    this.isLoadingMore = false;
+    
+    // Re-setup intersection observer after DOM updates
+    setTimeout(() => {
+      this.setupInfiniteScroll();
+    }, 100);
+  }
+
+  /**
+   * Setup infinite scroll using Intersection Observer
+   */
+  private setupInfiniteScroll(): void {
+    // Disconnect existing observer
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+
+    const loadMoreElement = document.getElementById('load-more');
+    if (!loadMoreElement || this.displayedJobs.length >= this.jobs.length) {
+      return;
+    }
+
+    const options = {
+      root: null,
+      rootMargin: '100px', // Start loading 100px before element comes into view
+      threshold: 0.1
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !this.isLoadingMore) {
+        this.loadNextPage();
+      }
+    }, options);
+
+    this.observer.observe(loadMoreElement);
+  }
+
+  /**
+   * Load more jobs (called by intersection observer)
+   */
+  loadMoreJobs(): void {
+    this.loadNextPage();
+  }
+
+  /**
+   * Load user profile from localStorage
+   */
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
@@ -85,70 +228,121 @@ export class CandidateHome implements OnInit {
     }
   }
 
-  loadJobsAndFilterApplied(): void {
-    this.isLoading = true;
-    
-    // Get both jobs and applied job IDs in parallel
-    forkJoin({
-      jobs: this.http.get<any[]>(this.apiUrl),
-      appliedJobs: this.authService.getAppliedJobs()
-    }).subscribe(
-      (results) => {
-        // Store applied job IDs
-        this.appliedJobIds = results.appliedJobs.applied_job_ids || [];
-        
-        // Filter out jobs that the user has already applied for
-        this.jobs = results.jobs.filter(job => 
-          !this.appliedJobIds.includes(job.job_id)
-        );
-        
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error loading data:', error);
-        // If error occurs, still try to load jobs
-        this.fetchJobs();
-        this.isLoading = false;
-      }
-    );
-  }
-
-  fetchJobs(): void {
-    this.http.get<any[]>(this.apiUrl, {withCredentials: true}).subscribe(
-      (data) => {
-        this.jobs = data;
-      },
-      (error) => {
-        console.error('Error fetching jobs:', error);
-      }
-    );
-  }
-
+  /**
+   * Navigate to assessment page
+   */
   navigateToAssessment(jobId: number): void {
     this.router.navigate(['/flashyre-rules', jobId]);
   }
 
+  /**
+   * Apply for a job
+   */
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
     
-    this.authService.applyForJob(jobId).subscribe(
-      (response) => {
-        console.log('Application successful:', response);
-        this.applicationSuccess[jobId] = true;
-        
-        // Add job to applied jobs list
-        this.appliedJobIds.push(jobId);
-        
-        // Remove the job card after a delay
-        setTimeout(() => {
-          this.jobs = this.jobs.filter(job => job.job_id !== jobId);
-        }, 2000);
-      },
-      (error) => {
-        console.error('Application failed:', error);
-        this.processingApplications[jobId] = false;
-        alert(error.error?.error || 'Failed to apply for this job');
-      }
-    );
+    this.authService.applyForJob(jobId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (response) => {
+          console.log('Application successful:', response);
+          this.applicationSuccess[jobId] = true;
+          this.appliedJobIds.push(jobId);
+          
+          // Remove job from cache and display after 2 seconds
+          setTimeout(() => {
+            this.jobService.removeJobFromCache(jobId);
+            this.jobs = this.jobs.filter(job => job.job_id !== jobId);
+            this.displayedJobs = this.displayedJobs.filter(job => job.job_id !== jobId);
+          }, 2000);
+        },
+        (error) => {
+          console.error('Application failed:', error);
+          this.processingApplications[jobId] = false;
+          alert(error.error?.error || 'Failed to apply for this job');
+        }
+      );
   }
+
+  /**
+   * Refresh jobs (force fetch from API)
+   */
+  refreshJobs(): void {
+    this.jobService.clearCache_refresh();
+    this.initializeJobs();
+  }
+
+  /**
+   * Get loading state for more jobs
+   */
+  get isLoadingMoreJobs(): boolean {
+    return this.isLoadingMore;
+  }
+
+  /**
+   * Check if there are more jobs to load
+   */
+  get hasMoreJobs(): boolean {
+    return this.displayedJobs.length < this.jobs.length;
+  }
+
+  trackByJobId(index: number, job: any): number {
+  return job.job_id;
+}
+
+/**
+ * Check if user has scrolled to bottom manually (fallback for intersection observer)
+ */
+@HostListener('window:scroll', ['$event'])
+onWindowScroll(event: any): void {
+  // Only use this as fallback if intersection observer isn't working
+  if (!this.observer) {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+    
+    if ((scrollTop + clientHeight >= scrollHeight - 100) && this.hasMoreJobs && !this.isLoadingMoreJobs) {
+      this.loadNextPage();
+    }
+  }
+}
+
+/**
+ * Retry fetching jobs in case of network error
+ */
+retryFetchJobs(): void {
+  this.isLoading = true;
+  this.fetchJobsFromAPI();
+}
+
+/**
+ * Get job loading progress percentage
+ */
+getLoadingProgress(): number {
+  if (this.jobs.length === 0) return 0;
+  return Math.round((this.displayedJobs.length / this.jobs.length) * 100);
+}
+
+/**
+ * Scroll to top of job list
+ */
+scrollToTop(): void {
+  const jobContainer = document.getElementById('job-container');
+  if (jobContainer) {
+    jobContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+/**
+ * Debug method to check cache status
+ */
+checkCacheStatus(): void {
+  console.log('Cache Status:', {
+    isCached: this.jobService.areJobsCached(),
+    totalJobs: this.jobs.length,
+    displayedJobs: this.displayedJobs.length,
+    currentPage: this.currentPage,
+    hasMore: this.hasMoreJobs
+  });
+}
 }
