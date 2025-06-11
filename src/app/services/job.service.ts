@@ -82,7 +82,6 @@ export class JobsService {
     this.jobsSubject.next([]);
   }
 
-
   /**
    * Get job by ID with caching
    */
@@ -134,7 +133,7 @@ export class JobsService {
     this.jobsSubject.next([]);
     console.log('Cache cleared');
   }
- 
+  
   /**
    * Handle API error and format it properly
    */
