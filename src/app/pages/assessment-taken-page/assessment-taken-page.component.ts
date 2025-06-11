@@ -13,6 +13,7 @@ export class AssessmentTakenPage implements OnInit {
   assessments: any[] = [];
   showAttempts: { [key: string]: boolean } = {};
   selectedAssessmentId: string | null = null;
+  searchQuery: string = ''; // Added search query variable
 
   userProfile: any = {}; // To store user profile data
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
@@ -61,21 +62,23 @@ export class AssessmentTakenPage implements OnInit {
     this.authService.logout();
   }
 
-  goToAssessmentDetails(assessmentId: string) {
-  this.showAttempts[assessmentId] = !this.showAttempts[assessmentId];
-}
-
-selectAssessment(assessmentId: string) {
+  selectAssessment(assessmentId: string) {
     this.selectedAssessmentId = assessmentId;
   }
 
-  // Optional: Method to return to the assessment list
-  //backToList() {
-    //this.selectedAssessmentId = null;
-  //}
-
-    closeDetailView() {
-    //this.showDetailView = false;
+  closeDetailView() {
     this.selectedAssessmentId = null;
+  }
+
+  // Added method to filter assessments based on search query
+  getFilteredAssessments() {
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      return this.assessments; // Return all assessments if search query is empty
+    }
+    return this.assessments.filter(assessment =>
+      assessment.assessment_title.toLowerCase().includes(query) ||
+      String(assessment.assessment_id).toLowerCase().includes(query)
+    );
   }
 }

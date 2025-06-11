@@ -98,10 +98,23 @@
             formControlName="phone_number"
             placeholder="Enter Phone Number"
             class="signup-corporate1-last-name-input3 input"
+            (keypress)="restrictToNumbers($event)"
+            maxlength="10"
           />
-          <span *ngIf="signupForm.get('phone_number')?.invalid && signupForm.get('phone_number')?.touched" 
+          <span *ngIf="signupForm.get('phone_number')?.invalid" 
                 class="error-message" style="color: red; font-size: 12px;">
-            Phone Number is required.
+            <ng-container *ngIf="signupForm.get('phone_number')?.errors?.required && signupForm.get('phone_number')?.touched">
+              Phone Number is required.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('phone_number')?.errors?.pattern && signupForm.get('phone_number')?.touched">
+              Phone number must be exactly 10 digits.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('phone_number')?.errors?.phoneExists">
+              Phone number already exists.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('phone_number')?.errors?.serverError">
+              {{ signupForm.get('phone_number')?.errors?.serverError }}
+            </ng-container>
           </span>
         </div>
         <div id="email-container" class="signup-corporate1-email-container">
@@ -122,9 +135,20 @@
             placeholder="Enter Email Id"
             class="signup-corporate1-email-input input"
           />
-          <span *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" 
+          <span *ngIf="signupForm.get('email')?.invalid" 
                 class="error-message" style="color: red; font-size: 12px;">
-            Email is required.
+            <ng-container *ngIf="signupForm.get('email')?.errors?.required && signupForm.get('email')?.touched">
+              Email is required.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('email')?.errors?.email && signupForm.get('email')?.touched">
+              Please enter a valid email.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('email')?.errors?.emailExists">
+              Email already exists.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('email')?.errors?.serverError">
+              {{ signupForm.get('email')?.errors?.serverError }}
+            </ng-container>
           </span>
         </div>
         <div id="password-container" class="signup-corporate1-password-container1">
@@ -156,7 +180,15 @@
           </div>
           <span *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" 
                 class="error-message" style="color: red; font-size: 12px;">
-            Password is required.
+            <ng-container *ngIf="signupForm.get('password')?.errors?.required">
+              Password is required.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('password')?.errors?.minlength">
+              Password must be at least 8 characters long.
+            </ng-container>
+            <ng-container *ngIf="signupForm.get('password')?.errors?.maxlength">
+              Password cannot exceed 15 characters.
+            </ng-container>
           </span>
         </div>
         <div id="confirm-password-container" class="signup-corporate1-password-container2">
@@ -189,6 +221,10 @@
           <span *ngIf="signupForm.get('confirm_password')?.invalid && signupForm.get('confirm_password')?.touched" 
                 class="error-message" style="color: red; font-size: 12px;">
             Confirm Password is required.
+          </span>
+          <span *ngIf="signupForm.errors?.mismatch && signupForm.get('confirm_password')?.touched" 
+                class="error-message" style="color: red; font-size: 12px;">
+            Passwords do not match.
           </span>
         </div>
         <div id="signup-signin-container" class="signup-corporate1-signup-and-signin-container">
@@ -238,11 +274,10 @@
         </div>
       </div>
     </form>
-    <!-- Success Popup -->
+   <!-- Success Popup -->
     <div *ngIf="showSuccessPopup" class="popup-overlay">
       <div class="popup-content">
         <h3>Successfully signed up!</h3>
-        <button (click)="closePopup()">OK</button>
       </div>
     </div>
   </div>

@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from '../../components/components.module';
 import { AssessmentTakenPage } from './assessment-taken-page.component';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -12,6 +14,7 @@ import { AssessmentTakenPage } from './assessment-taken-page.component';
   imports: [
     CommonModule,
     ComponentsModule,
+    FormsModule,
     RouterModule.forChild([{ path: '', component: AssessmentTakenPage }]),
     HttpClientModule
   ],

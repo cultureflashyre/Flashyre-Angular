@@ -6,6 +6,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
 import { BufferPageModule } from './buffer-page/buffer-page.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BufferInterceptor } from './interceptors/buffer.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BufferService } from './services/buffer.service';
@@ -105,7 +106,7 @@ const routes = [
       ),
   },
   {
-    path: 'recruiter-view-5th-page',
+    path: 'corporate/recruiter-view-5th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-5th-page/recruiter-view-5th-page.module'
@@ -126,7 +127,7 @@ const routes = [
       ).then((m) => m.ProfileCertificationPageModule),
   },
   {
-    path: 'recruiter-view-4th-page',
+    path: 'corporate/recruiter-view-4th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
@@ -213,6 +214,27 @@ const routes = [
       ),
   },
   {
+    path: 'create-job-post-1st-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-1st-page/create-job-post-1st-page.module'
+      ).then((m) => m.CreateJobPost1stPageModule),
+  },
+  {
+    path: 'create-job-post-2nd-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-2nd-page/create-job-post-2nd-page.module'
+      ).then((m) => m.CreateJobPost2ndPageModule),
+  },
+  {
+    path: 'create-job-post-3rd-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-3rd-page/create-job-post-3rd-page.module'
+      ).then((m) => m.CreateJobPost3rdPageModule),
+  },
+  {
     path: 'buffer-page', // New route
     loadChildren: () =>
       import('./buffer-page/buffer-page.module').then(
@@ -254,7 +276,9 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule, HttpClientModule],
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
+    ReactiveFormsModule],
+
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
   ],
