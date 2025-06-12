@@ -139,7 +139,6 @@
           >
             Create Job Post
           </span>
-          <!-- ... other HTML ... -->
           <div
             id="jd-main-container"
             class="create-job-post1st-page-jd-main-container"
@@ -163,7 +162,6 @@
                 (change)="onFileSelected($event)"
                 accept=".pdf,.docx,.doc,.txt,.xml,.csv"
               />
-              <!-- This div will act as the visual replacement for the text part of a file input -->
               <div class="file-display-area">
                 <span *ngIf="displayedFileName; else noFileSelectedPlaceholder" class="selected-file-name-text">
                   {{ displayedFileName }}
@@ -210,7 +208,6 @@
               Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
             </span>
           </div>
-<!-- ... rest of your HTML ... -->
           <div
             id="enter-manually-text-container"
             class="create-job-post1st-page-enter-manually-text-container"
@@ -717,8 +714,7 @@
               <div *ngIf="jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors?.required" class="field-error-message">
               Enter your Minimum Budget
             </div>
-            <!-- Form level error for range -->
-          <div *ngIf="jobForm.errors?.invalidBudgetRange && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)" class="field-error-message min-max-budget-error">
+            <div *ngIf="jobForm.errors?.invalidBudgetRange && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)" class="field-error-message min-max-budget-error">
             Min budget cannot exceed Max budget.
           </div>
             </div>
@@ -891,12 +887,14 @@
                   Job description <span class="required-asterisk">*</span>
                 </div>
                 <div class="toolbar">
-                  <button onclick="formatText('bold')" id="bold-btn" class="format-btn" title="Bold">B</button>
-                  <button onclick="formatText('italic')" id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
-                  <button onclick="formatText('underline')" id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
-                  <button onclick="formatText('list')" id="list-btn" class="format-btn" title="List">≡</button>
+                  <!-- IMPORTANT: Remove onclick attributes for these buttons. Implement their functionality via Angular if needed. -->
+                  <!-- For now, they are non-functional to avoid further errors. -->
+                  <button id="bold-btn" class="format-btn" title="Bold">B</button>
+                  <button id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
+                  <button id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
+                  <button id="list-btn" class="format-btn" title="List">≡</button>
                   <div class="separator1"></div>
-                  <button onclick="formatText('highlight')" id="highlight-btn" class="format-btn" title="Highlight">H</button>
+                  <button id="highlight-btn" class="format-btn" title="Highlight">H</button>
                   <div class="separator2"></div>
                 </div>
                 <div class="editor-content">
@@ -906,9 +904,9 @@
                     contenteditable="true"
                     data-placeholder="Enter your text here..."
                     data-empty="true"
-                    onkeyup="checkEmpty('editor')"
-                    onblur="checkEmpty('editor')"
                     (input)="updateJobDescriptionFromEditor($event)"
+                    (keyup)="checkEmpty('editor')"
+                    (blur)="checkEmpty('editor')"
                   ></div>
                 </div>
               </div>
