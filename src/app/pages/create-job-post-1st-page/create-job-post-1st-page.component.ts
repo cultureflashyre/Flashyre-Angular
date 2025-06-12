@@ -1,12 +1,12 @@
 // src/app/pages/create-job-post-1st-page/create-job-post-1st-page.component.ts
 
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, NgZone, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, NgZone, Renderer2, Inject, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Observable, of, fromEvent } from 'rxjs';
+import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs'; // Added Subscription
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
@@ -18,12 +18,14 @@ import { SkillService, ApiSkill } from '../../services/skill.service';
   templateUrl: './create-job-post-1st-page.component.html',
   styleUrls: ['./create-job-post-1st-page.component.css']
 })
-export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
+export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy { // Added OnDestroy
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('suggestionsContainer') suggestionsContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key or config
+  // It's highly recommended to move API keys to environment variables or a configuration service
+  // and not hardcode them in components, especially if the code is committed to a public repository.
+  private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
   private googleScriptLoaded: boolean = false;
 
   jobForm: FormGroup;
@@ -45,6 +47,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private autocomplete?: google.maps.places.Autocomplete;
 
   isLoadingSkills = false;
+  private subscriptions = new Subscription(); // To manage subscriptions
 
   constructor(
     private title: Title,
@@ -74,7 +77,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       max_budget: [null, [Validators.required, Validators.min(0)]],
       notice_period: ['', [Validators.required, Validators.maxLength(50)]],
       skills: [[], [Validators.required]],
-      job_description: ['', [Validators.maxLength(5000)]],
+      job_description: ['', [Validators.maxLength(5000), Validators.required]], // Added required for job description
       job_description_url: ['', [Validators.maxLength(200)]],
       unique_id: ['']
     }, { validators: this.experienceRangeValidator });
@@ -90,10 +93,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       }
     ]);
 
-    // Start loading Google Maps script early
     this.loadGoogleMapsScript().catch(error => {
       console.error('Google Maps script could not be loaded (initiated from ngOnInit).', error);
-      // Snackbar will be shown in ngAfterViewInit if initialization still fails
     });
 
     if (!this.corporateAuthService.isLoggedIn()) {
@@ -105,7 +106,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const uniqueId = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueId) {
       console.log('Editing existing job post with unique_id:', uniqueId);
-      // TODO: Add logic to fetch and populate job data if editing
+      // TODO: Fetch job data if editing an existing post
+      // this.jobDescriptionService.getJobPost(uniqueId, this.corporateAuthService.getJWTToken()!).subscribe(data => {
+      //   this.jobData = data;
+      //   if (this.isViewInitialized) this.populateForm(data);
+      // });
     }
   }
 
@@ -115,33 +120,28 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         resolve();
         return;
       }
-      // Check if script is already in the DOM (e.g. by another instance or manual add)
       if (this.document.querySelector(`script[src*="maps.googleapis.com/maps/api/js"]`)) {
-        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-            this.googleScriptLoaded = true;
-            resolve();
-            return;
-        } else {
-             // Script tag exists but 'google' object not ready, wait a bit
-            let attempts = 0;
-            const interval = setInterval(() => {
-                attempts++;
-                if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-                    clearInterval(interval);
-                    this.googleScriptLoaded = true;
-                    resolve();
-                } else if (attempts > 20) { // Timeout after ~2 seconds
-                    clearInterval(interval);
-                    reject(new Error('Google Maps script loaded but API not available.'));
-                }
-            }, 100);
-            return;
-        }
+        let attempts = 0;
+        const intervalId = setInterval(() => {
+            attempts++;
+            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                clearInterval(intervalId);
+                this.googleScriptLoaded = true;
+                resolve();
+            } else if (attempts > 30) { // Timeout after ~3 seconds
+                clearInterval(intervalId);
+                console.warn('Google Maps script tag found, but API not available after timeout.');
+                this.googleScriptLoaded = false;
+                reject(new Error('Google Maps script loaded but API not available.'));
+            }
+        }, 100);
+        return;
       }
 
       const script = this.renderer.createElement('script');
       script.type = 'text/javascript';
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places`;
+      // Add async and defer for best practices, though Google's warning might still appear for dynamic loads.
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places&loading=async`;
       script.async = true;
       script.defer = true;
       script.onload = () => {
@@ -150,7 +150,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       };
       script.onerror = (error: any) => {
         console.error('Error loading Google Maps script:', error);
-        this.googleScriptLoaded = false; // Ensure it's false on error
+        this.googleScriptLoaded = false;
         reject(error);
       };
       this.renderer.appendChild(this.document.head, script);
@@ -161,18 +161,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.isViewInitialized = true;
 
+    // Initialize UI elements that don't depend on external scripts first
     this.initializeSkillsInput();
     this.initializeRange('total');
     this.initializeRange('relevant');
-    this.checkEmpty('editor');
+    this.checkEmpty('editor'); // Initial check for placeholder
 
     if (this.jobData) {
-      this.populateForm(this.jobData);
+      this.populateForm(this.jobData); // Populates form and calls UI updates
     } else {
       this.updateExperienceUI(); // Ensure sliders are set to default if no pre-existing data
     }
 
-    // Attempt to initialize location features (Google Maps Autocomplete)
     if (this.currentStep === 'jobPost') {
       this.initLocationServices();
     }
@@ -182,32 +182,28 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     if (this.googleScriptLoaded && typeof google !== 'undefined' && google.maps && google.maps.places) {
       this.attemptGooglePlacesInitialization();
     } else {
-      // Script not loaded or API not ready, try loading it again / wait
       this.loadGoogleMapsScript().then(() => {
         this.attemptGooglePlacesInitialization();
       }).catch(error => {
         console.error('Google Maps script could not be loaded during initLocationServices.', error);
-        this.snackBar.open('Could not load location services. Please try again later.', 'Close', { duration: 5000 });
+        if (this.currentStep === 'jobPost') { // Only show snackbar if relevant
+             this.snackBar.open('Could not load location services. Please try again later.', 'Close', { duration: 5000 });
+        }
       });
     }
   }
 
   private attemptGooglePlacesInitialization(): void {
-    // Run a brief timeout to ensure the DOM is fully settled, especially if *ngIf just made the element appear.
-    // This can help with elements needed by external scripts like Google Maps.
     setTimeout(() => {
-        this.ngZone.run(() => { // Ensure operations that might affect Angular's view are within its zone
+        this.ngZone.run(() => {
             if (this.currentStep === 'jobPost' && this.locationInput && this.locationInput.nativeElement) {
                 this.initializeGooglePlacesAutocomplete();
                 this.setupLocationInputListener();
-            } else {
-                if (this.currentStep === 'jobPost') {
-                     console.warn('Google Places Autocomplete setup skipped: locationInput not ready in DOM or not in jobPost step.');
-                }
-                // If not in jobPost step, it's expected not to initialize.
+            } else if (this.currentStep === 'jobPost') {
+                 console.warn('Google Places Autocomplete setup skipped: locationInput not ready or not in jobPost step.');
             }
         });
-    }, 100); // 100ms delay, can be adjusted. If issues persist, this might need a more robust solution like MutationObserver.
+    }, 150); // Slightly increased delay for safety
   }
 
   private initializeGooglePlacesAutocomplete(): void {
@@ -215,15 +211,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       console.warn('Google Maps or Places library not loaded. Autocomplete cannot be initialized.');
       return;
     }
-    // Check if locationInput.nativeElement is valid
     if (!this.locationInput || !this.locationInput.nativeElement || !(this.locationInput.nativeElement instanceof HTMLInputElement)) {
       console.warn('Location input HTML element not found or not an input. Autocomplete cannot be initialized.');
       return;
     }
-    if (this.autocomplete) { // Already initialized
+    if (this.autocomplete) {
       return;
     }
 
+    // Consider Google's recommendation to move to PlaceAutocompleteElement in the future
+    // console.warn("Using deprecated google.maps.places.Autocomplete. Consider migrating to PlaceAutocompleteElement.");
     this.autocomplete = new google.maps.places.Autocomplete(
       this.locationInput.nativeElement,
       { types: ['(cities)'] }
@@ -249,42 +246,34 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         console.warn('Location input not available for setting up listener.');
         return;
     }
-    fromEvent(this.locationInput.nativeElement, 'input').pipe(
+    const locationInputSub = fromEvent(this.locationInput.nativeElement, 'input').pipe(
       map(event => (event.target as HTMLInputElement).value),
       debounceTime(this.DEBOUNCE_DELAY),
       distinctUntilChanged(),
-      tap(query => this.isLoading = !!query.trim()), // Show loading if query has content
+      tap(query => this.isLoading = !!query.trim()),
       switchMap(query => {
         const trimmedQuery = query.trim();
-        const pacContainer = document.querySelector('.pac-container') as HTMLElement | null;
-        // Check if pacContainer exists and its computed display style is not 'none'
+        const pacContainer = this.document.querySelector('.pac-container') as HTMLElement | null;
         const isPacContainerVisible = pacContainer ? getComputedStyle(pacContainer).display !== 'none' : false;
 
         if (!trimmedQuery || (this.autocomplete && isPacContainerVisible)) {
-          this.isLoading = false; // Stop loading if query is empty or Google suggestions are shown
+          this.isLoading = false;
           return of([]);
         }
-        // Manual suggestion fetching logic would go here.
-        // For now, it's a placeholder:
-        this.isLoading = false; // Stop loading if no manual suggestions are fetched
+        this.isLoading = false;
         return of([]);
       })
     ).subscribe({
-      next: (manualSuggestions) => {
-        // this.suggestions = manualSuggestions; // Uncomment and implement if using manual suggestions
-        // this.showSuggestions = manualSuggestions.length > 0; // Uncomment for manual suggestions
-        // isLoading is handled within tap/switchMap
-      },
+      next: () => { /* Manual suggestions would be handled here */ },
       error: (err) => {
         this.isLoading = false;
         console.error("Error in location input listener stream:", err);
-        // Removed snackBar here as the original SyntaxError is fixed.
-        // If other errors occur, they'll be logged.
       }
     });
+    this.subscriptions.add(locationInputSub); // Add to subscriptions for cleanup
   }
 
-  onInput(event: Event): void { /* Now handled by setupLocationInputListener */ }
+  onInput(event: Event): void { /* Handled by setupLocationInputListener */ }
 
   selectSuggestion(location: string): void {
     this.jobForm.patchValue({ location });
@@ -304,18 +293,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const relevantMax = form.get('relevant_experience_max')?.value;
     const minBudget = form.get('min_budget')?.value;
     const maxBudget = form.get('max_budget')?.value;
-
     let errors: { [key: string]: any } = {};
-
-    if (totalMin !== null && totalMax !== null && totalMin > totalMax) {
-      errors['invalidTotalExperience'] = true;
-    }
-    if (relevantMin !== null && relevantMax !== null && relevantMin > relevantMax) {
-      errors['invalidRelevantExperience'] = true;
-    }
-    if (minBudget !== null && maxBudget !== null && minBudget > maxBudget) {
-      errors['invalidBudgetRange'] = true;
-    }
+    if (totalMin !== null && totalMax !== null && totalMin > totalMax) errors['invalidTotalExperience'] = true;
+    if (relevantMin !== null && relevantMax !== null && relevantMin > relevantMax) errors['invalidRelevantExperience'] = true;
+    if (minBudget !== null && maxBudget !== null && minBudget > maxBudget) errors['invalidBudgetRange'] = true;
     return Object.keys(errors).length ? errors : null;
   }
 
@@ -330,27 +311,31 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       const file = input.files[0];
       const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv', '.doc'];
       const ext = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
 
       if (!allowedExtensions.includes(ext)) {
         this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
-        this.selectedFile = null;
-        this.displayedFileName = null;
-        if (this.fileInput) input.value = '';
-        return;
+        this.clearFileInput(input); return;
       }
       if (file.size > maxSize) {
         this.snackBar.open('File size exceeds 10MB limit.', 'Close', { duration: 5000 });
-        this.selectedFile = null;
-        this.displayedFileName = null;
-        if (this.fileInput) input.value = '';
-        return;
+        this.clearFileInput(input); return;
       }
       this.selectedFile = file;
       this.displayedFileName = file.name;
       this._performUpload(this.selectedFile);
     } else {
       this.selectedFile = null;
+    }
+  }
+
+  private clearFileInput(inputElement?: HTMLInputElement): void {
+    this.selectedFile = null;
+    this.displayedFileName = null;
+    if (inputElement) {
+        inputElement.value = '';
+    } else if (this.fileInput && this.fileInput.nativeElement) {
+        this.fileInput.nativeElement.value = '';
     }
   }
 
@@ -362,13 +347,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       this.router.navigate(['/login-corporate']);
       return;
     }
-
     this.isSubmitting = true;
     this.isFileUploadCompletedSuccessfully = false;
-
-    this.jobDescriptionService.uploadFile(file, token).subscribe({
+    const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
-        this.jobData = response; // Store for potential later use or if form needs re-population
+        this.jobData = response;
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
         this.isSubmitting = false;
@@ -379,11 +362,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         this.snackBar.open(`File upload or processing failed: ${error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
         this.isSubmitting = false;
         this.isFileUploadCompletedSuccessfully = false;
-        // Optionally clear displayedFileName on error:
-        // this.displayedFileName = null;
-        // this.selectedFile = null;
       }
     });
+    this.subscriptions.add(uploadSub);
   }
 
   private updateExperienceUI(): void {
@@ -399,11 +380,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     let notice_period: string, skills: string[], job_description: string;
     let unique_id_val: string = '', job_description_url_val: string = '';
 
-    if ('job_details' in jobData) { // AIJobResponse
+    if ('job_details' in jobData) {
       const aiJobData = jobData as AIJobResponse;
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
-      
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
       location = details.location || '';
       job_type = this.mapJobType(details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '');
@@ -418,17 +398,12 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       job_description = details.job_description || '';
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = aiJobData.file_url || '';
-    } else { // JobDetails
+    } else {
       const details = jobData as JobDetails;
-      role = details.role;
-      location = details.location;
-      job_type = details.job_type;
-      workplace_type = details.workplace_type;
+      role = details.role; location = details.location; job_type = details.job_type; workplace_type = details.workplace_type;
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(details.total_experience_min, details.total_experience_max);
       [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(details.relevant_experience_min, details.relevant_experience_max);
-      budget_type = details.budget_type;
-      min_budget = details.min_budget;
-      max_budget = details.max_budget;
+      budget_type = details.budget_type; min_budget = details.min_budget; max_budget = details.max_budget;
       notice_period = details.notice_period;
       let primarySkills = Array.isArray(details.skills?.primary) ? details.skills.primary.map(s => s.skill) : [];
       let secondarySkills = Array.isArray(details.skills?.secondary) ? details.skills.secondary.map(s => s.skill) : [];
@@ -437,58 +412,42 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = details.job_description_url || '';
     }
-
     this.jobForm.patchValue({
       role, location, job_type, workplace_type,
       total_experience_min, total_experience_max,
       relevant_experience_min, relevant_experience_max,
       budget_type, min_budget, max_budget,
-      notice_period, skills, // job_description set by setJobDescription
+      notice_period, skills, job_description, // Now job_description is directly patched
       job_description_url: job_description_url_val, unique_id: unique_id_val
     });
-
-    if (this.isViewInitialized) { // Ensure view is ready for DOM manipulations
-        this.populateSkills(skills);
-        this.setJobDescription(job_description);
-        this.updateExperienceUI();
-    } else {
-        // If view is not initialized, these might be called again in ngAfterViewInit
-        // or rely on jobData being set there.
-        console.warn("populateForm called before view initialization. UI updates for skills/JD might be deferred.");
+    if (this.isViewInitialized) {
+        this.populateSkills(skills); // UI for skills
+        this.setJobDescription(job_description); // UI for editor (sets innerHTML)
+        this.updateExperienceUI(); // UI for sliders
     }
   }
 
   private populateSkills(skills: string[]): void {
     const tagContainer = this.document.getElementById('tagContainer') as HTMLDivElement;
     const tagInput = this.document.getElementById('tagInput') as HTMLInputElement;
-
     if (!tagContainer || !tagInput) {
       if(this.isViewInitialized) console.warn('Skill container or input not found during populateSkills.');
       return;
     }
-
     const existingTags = tagContainer.querySelectorAll('.tag');
     existingTags.forEach(tag => tag.remove());
-
-    // Form control value is already set via patchValue in populateForm
-    // this.jobForm.patchValue({ skills: [...skills] }); // This would be redundant if called after populateForm
-
     skills.forEach(skillText => {
       if (!skillText.trim()) return;
-      const tag = this.renderer.createElement('div');
-      this.renderer.addClass(tag, 'tag');
-      const tagTextSpan = this.renderer.createElement('span');
-      tagTextSpan.textContent = skillText;
+      const tag = this.renderer.createElement('div'); this.renderer.addClass(tag, 'tag');
+      const tagTextSpan = this.renderer.createElement('span'); tagTextSpan.textContent = skillText;
       this.renderer.appendChild(tag, tagTextSpan);
-      const removeBtn = this.renderer.createElement('button');
-      removeBtn.textContent = '×';
+      const removeBtn = this.renderer.createElement('button'); removeBtn.textContent = '×';
       this.renderer.setAttribute(removeBtn, 'type', 'button');
       this.renderer.listen(removeBtn, 'click', () => {
         this.renderer.removeChild(tagContainer, tag);
         const currentSkills: string[] = this.jobForm.get('skills')?.value || [];
         this.jobForm.patchValue({ skills: currentSkills.filter(s => s !== skillText) });
-        this.jobForm.get('skills')?.markAsDirty();
-        this.jobForm.get('skills')?.updateValueAndValidity();
+        this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
       });
       this.renderer.appendChild(tag, removeBtn);
       this.renderer.insertBefore(tagContainer, tag, tagInput);
@@ -498,20 +457,21 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
   private setJobDescription(description: string): void {
     const editor = this.document.getElementById('editor') as HTMLDivElement;
     if (editor) {
-      editor.innerHTML = description;
-      this.checkEmpty('editor');
-      if (this.jobForm.get('job_description')?.value !== description) {
-          this.jobForm.patchValue({ job_description: description}, { emitEvent: false });
-      }
-    } else {
-        if(this.isViewInitialized) console.warn('Job description editor element not found.');
+      editor.innerHTML = description; // Set content for display
+      this.checkEmpty('editor'); // Update placeholder
+      // Form control is updated in populateForm or updateJobDescriptionFromEditor
+    } else if (this.isViewInitialized) {
+        console.warn('Job description editor element not found.');
     }
   }
 
   updateJobDescriptionFromEditor(event: Event): void {
      const editorContent = (event.target as HTMLDivElement).innerHTML;
-    this.jobForm.patchValue({ job_description: editorContent });
-    this.checkEmpty('editor');
+    // Only patch if different to avoid unnecessary change detection cycles
+    if (this.jobForm.get('job_description')?.value !== editorContent) {
+      this.jobForm.patchValue({ job_description: editorContent });
+    }
+    this.checkEmpty('editor'); // Call public method
   }
 
   private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
@@ -523,40 +483,53 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const labelRight = this.document.getElementById(`${prefix}labelRight`) as HTMLDivElement;
     const filledSegment = this.document.getElementById(`${prefix}filledSegment`) as HTMLDivElement;
 
-    if (rangeIndicator && markerLeft && markerRight && labelLeft && labelRight && filledSegment) {
-      const rect = rangeIndicator.getBoundingClientRect();
-      const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth;
-      const maxYears = 30;
-      const markerWidth = markerLeft.offsetWidth || 12;
-      const effectiveWidth = Math.max(1, width - markerWidth);
-
-      const clampedMin = Math.max(0, Math.min(min, maxYears));
-      const clampedMax = Math.max(clampedMin, Math.min(max, maxYears));
-
-      const minPos = (clampedMin / maxYears) * effectiveWidth;
-      const maxPos = (clampedMax / maxYears) * effectiveWidth;
-
-      markerLeft.style.left = `${minPos}px`;
-      markerRight.style.left = `${maxPos}px`;
-      labelLeft.style.left = `${minPos + markerWidth / 2}px`;
-      labelLeft.textContent = `${clampedMin}yrs`;
-      labelRight.style.left = `${maxPos + markerWidth / 2}px`;
-      labelRight.textContent = `${clampedMax}yrs`;
-      filledSegment.style.left = `${minPos + markerWidth / 2}px`;
-      filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
+    if (!rangeIndicator || !markerLeft || !markerRight || !labelLeft || !labelRight || !filledSegment) {
+        if(this.isViewInitialized) console.warn(`Experience range UI elements not found for type: ${type}`);
+        return;
     }
+    const rect = rangeIndicator.getBoundingClientRect();
+    const width = rect.width > 0 ? rect.width : rangeIndicator.offsetWidth;
+    const maxYears = 30; const markerWidth = markerLeft.offsetWidth || 12;
+    const effectiveWidth = Math.max(1, width - markerWidth);
+    const clampedMin = Math.max(0, Math.min(min, maxYears));
+    const clampedMax = Math.max(clampedMin, Math.min(max, maxYears));
+    const minPos = (clampedMin / maxYears) * effectiveWidth;
+    const maxPos = (clampedMax / maxYears) * effectiveWidth;
+    markerLeft.style.left = `${minPos}px`; markerRight.style.left = `${maxPos}px`;
+    labelLeft.style.left = `${minPos + markerWidth / 2}px`; labelLeft.textContent = `${clampedMin}yrs`;
+    labelRight.style.left = `${maxPos + markerWidth / 2}px`; labelRight.textContent = `${clampedMax}yrs`;
+    filledSegment.style.left = `${minPos + markerWidth / 2}px`;
+    filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
   }
 
-  private checkEmpty(id: string): void {
+  // Changed to public to be callable from template
+  public checkEmpty(id: string): void {
     const element = this.document.getElementById(id) as HTMLDivElement;
     if (!element) return;
     const isEmpty = !element.textContent?.trim() && !element.querySelector('img, li, table');
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
+
+    // If using for validation feedback on the job_description field
+    if (id === 'editor' && this.jobForm.get('job_description')?.touched) {
+        if (isEmpty) {
+            this.jobForm.get('job_description')?.setErrors({ 'required': true });
+        } else {
+            // Clear 'required' error if content exists, but preserve other potential errors
+            const currentErrors = this.jobForm.get('job_description')?.errors;
+            if (currentErrors && currentErrors['required']) {
+                delete currentErrors['required'];
+                if (Object.keys(currentErrors).length === 0) {
+                    this.jobForm.get('job_description')?.setErrors(null);
+                } else {
+                    this.jobForm.get('job_description')?.setErrors(currentErrors);
+                }
+            }
+        }
+    }
   }
 
   private mapJobType(title: string): string {
-    if (!title) return 'Permanent';
-    const lowerTitle = title.toLowerCase();
+    if (!title) return 'Permanent'; const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes('intern')) return 'Internship';
     if (lowerTitle.includes('contract')) return 'Contract';
     if (lowerTitle.includes('part-time') || lowerTitle.includes('part time')) return 'Part-time';
@@ -568,59 +541,35 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const rangeIndicator = this.document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
     const markerLeft = this.document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;
     const markerRight = this.document.getElementById(`${prefix}markerRight`) as HTMLDivElement;
-    // labelLeft, labelRight, filledSegment are updated by setExperienceRange called from updateUIFromMarkers
-
     if (!rangeIndicator || !markerLeft || !markerRight) {
-      console.warn(`Range indicator elements not found for type: ${type}`);
+      if(this.isViewInitialized) console.warn(`Range indicator elements not found for type: ${type}`);
       return;
     }
-
-    let isDragging = false;
-    let currentMarker: HTMLDivElement | null = null;
-    const maxYears = 30;
-    const markerWidth = markerLeft.offsetWidth || 12;
+    let isDragging = false; let currentMarker: HTMLDivElement | null = null;
+    const maxYears = 30; const markerWidth = markerLeft.offsetWidth || 12;
 
     const updateUIFromMarkers = () => {
-      const rect = rangeIndicator.getBoundingClientRect();
-      if (rect.width <= 0) return;
-
-      const effectiveWidth = rect.width - markerWidth;
-      if (effectiveWidth <= 0) return;
-
+      const rect = rangeIndicator.getBoundingClientRect(); if (rect.width <= 0) return;
+      const effectiveWidth = rect.width - markerWidth; if (effectiveWidth <= 0) return;
       let leftPosPx = parseFloat(markerLeft.style.left) || 0;
       let rightPosPx = parseFloat(markerRight.style.left) || effectiveWidth;
-
       leftPosPx = Math.max(0, Math.min(leftPosPx, effectiveWidth));
       rightPosPx = Math.max(0, Math.min(rightPosPx, effectiveWidth));
-
-      if (leftPosPx > rightPosPx) {
-          if (currentMarker === markerLeft) leftPosPx = rightPosPx;
-          else rightPosPx = leftPosPx;
-      }
-
+      if (leftPosPx > rightPosPx) { if (currentMarker === markerLeft) leftPosPx = rightPosPx; else rightPosPx = leftPosPx; }
       const minYearRaw = Math.round((leftPosPx / effectiveWidth) * maxYears);
       const maxYearRaw = Math.round((rightPosPx / effectiveWidth) * maxYears);
-      const minYear = Math.min(minYearRaw, maxYearRaw);
-      const maxYear = Math.max(minYearRaw, maxYearRaw);
-
-      this.jobForm.patchValue(
-        type === 'total' ?
+      const minYear = Math.min(minYearRaw, maxYearRaw); const maxYear = Math.max(minYearRaw, maxYearRaw);
+      this.jobForm.patchValue( type === 'total' ?
           { total_experience_min: minYear, total_experience_max: maxYear } :
           { relevant_experience_min: minYear, relevant_experience_max: maxYear },
         { emitEvent: false }
       );
-      // Update the visual representation (labels, filled segment)
       this.setExperienceRange(type, this.jobForm.value[`${type}_experience_min`], this.jobForm.value[`${type}_experience_max`]);
     };
-
     const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging || !currentMarker) return;
-      e.preventDefault();
-      const rect = rangeIndicator.getBoundingClientRect();
-      let newLeftPx = e.clientX - rect.left - (markerWidth / 2);
-      const minBoundaryPx = 0;
-      const maxBoundaryPx = rect.width - markerWidth;
-
+      if (!isDragging || !currentMarker) return; e.preventDefault();
+      const rect = rangeIndicator.getBoundingClientRect(); let newLeftPx = e.clientX - rect.left - (markerWidth / 2);
+      const minBoundaryPx = 0; const maxBoundaryPx = rect.width - markerWidth;
       if (currentMarker === markerLeft) {
         const rightMarkerPos = parseFloat(markerRight.style.left) || maxBoundaryPx;
         newLeftPx = Math.max(minBoundaryPx, Math.min(newLeftPx, rightMarkerPos));
@@ -628,58 +577,38 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
         const leftMarkerPos = parseFloat(markerLeft.style.left) || minBoundaryPx;
         newLeftPx = Math.min(maxBoundaryPx, Math.max(newLeftPx, leftMarkerPos));
       }
-      currentMarker.style.left = `${newLeftPx}px`;
-      updateUIFromMarkers();
+      currentMarker.style.left = `${newLeftPx}px`; updateUIFromMarkers();
     };
-
     const onMouseUp = () => {
       if (isDragging) {
-        updateUIFromMarkers(); // Final update from marker positions
+        updateUIFromMarkers();
         this.jobForm.get(type === 'total' ? 'total_experience_min' : 'relevant_experience_min')?.markAsDirty();
         this.jobForm.get(type === 'total' ? 'total_experience_max' : 'relevant_experience_max')?.markAsDirty();
-        this.jobForm.updateValueAndValidity(); // Trigger form-level validators
+        this.jobForm.updateValueAndValidity();
       }
-      isDragging = false;
-      currentMarker = null;
+      isDragging = false; currentMarker = null;
       this.document.removeEventListener('mousemove', onMouseMove);
       this.document.removeEventListener('mouseup', onMouseUp);
     };
-
     const onMouseDown = (e: MouseEvent, marker: HTMLDivElement) => {
-      e.preventDefault();
-      isDragging = true;
-      currentMarker = marker;
+      e.preventDefault(); isDragging = true; currentMarker = marker;
       this.document.addEventListener('mousemove', onMouseMove);
       this.document.addEventListener('mouseup', onMouseUp);
     };
-
     markerLeft.addEventListener('mousedown', (e) => onMouseDown(e, markerLeft as HTMLDivElement));
     markerRight.addEventListener('mousedown', (e) => onMouseDown(e, markerRight as HTMLDivElement));
-
-    // Initial UI setup from form values
     this.setExperienceRange(type, this.jobForm.value[`${type}_experience_min`], this.jobForm.value[`${type}_experience_max`]);
   }
 
   private parseExperience(exp: string): [number, number] {
-    if (!exp) return [0, 0];
-    const rangeMatch = exp.match(/(\d+)\s*-\s*(\d+)/);
+    if (!exp) return [0, 0]; const rangeMatch = exp.match(/(\d+)\s*-\s*(\d+)/);
     if (rangeMatch) return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
-    
     const singleMatchMore = exp.match(/(\d+)\+\s*years?/i) || exp.match(/more than\s*(\d+)\s*years?/i);
-    if (singleMatchMore) {
-        const val = parseInt(singleMatchMore[1], 10);
-        return [val, 30];
-    }
+    if (singleMatchMore) { const val = parseInt(singleMatchMore[1], 10); return [val, 30]; }
     const singleMatchLess = exp.match(/less than\s*(\d+)\s*years?/i) || exp.match(/up to\s*(\d+)\s*years?/i);
-     if (singleMatchLess) {
-        const val = parseInt(singleMatchLess[1], 10);
-        return [0, val];
-    }
+    if (singleMatchLess) { const val = parseInt(singleMatchLess[1], 10); return [0, val]; }
     const singleMatch = exp.match(/(\d+)\s*years?/i);
-    if (singleMatch) {
-      const val = parseInt(singleMatch[1], 10);
-      return [val, val];
-    }
+    if (singleMatch) { const val = parseInt(singleMatch[1], 10); return [val, val]; }
     return [0, 0];
   }
 
@@ -687,12 +616,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       const relatedTarget = event.relatedTarget as HTMLElement;
       const pacContainer = this.document.querySelector('.pac-container');
-      if (
-        (this.suggestionsContainer && this.suggestionsContainer.nativeElement.contains(relatedTarget)) ||
-        (pacContainer && pacContainer.contains(relatedTarget))
-      ) {
-        return;
-      }
+      if ( (this.suggestionsContainer && this.suggestionsContainer.nativeElement.contains(relatedTarget)) ||
+           (pacContainer && pacContainer.contains(relatedTarget)) ) return;
       this.showSuggestions = false;
     }, 150);
   }
@@ -701,131 +626,76 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
     const tagInput = this.document.getElementById('tagInput') as HTMLInputElement;
     const tagContainer = this.document.getElementById('tagContainer') as HTMLDivElement;
     const skillsSuggestionsDiv = this.document.getElementById('skillsSuggestions') as HTMLDivElement;
-
     if (!tagInput || !tagContainer || !skillsSuggestionsDiv) {
-      // Don't log warning if view isn't initialized, as elements might not exist yet
-      if(this.isViewInitialized) console.warn('Skill input elements not found!');
-      return;
+      if(this.isViewInitialized) console.warn('Skill input elements not found!'); return;
     }
-
     let activeSuggestionIndex = -1;
-
     const showAvailableSuggestions = (suggestedSkills: string[]) => {
       skillsSuggestionsDiv.innerHTML = '';
       if (this.isLoadingSkills && suggestedSkills.length === 0 && tagInput.value.trim()) {
-          const item = this.renderer.createElement('div');
-          this.renderer.addClass(item, 'suggestion-item');
-          this.renderer.addClass(item, 'suggestion-loading');
-          item.textContent = 'Loading skills...';
-          this.renderer.appendChild(skillsSuggestionsDiv, item);
-          skillsSuggestionsDiv.style.display = 'block';
-          return;
+          const item = this.renderer.createElement('div'); this.renderer.addClass(item, 'suggestion-item');
+          this.renderer.addClass(item, 'suggestion-loading'); item.textContent = 'Loading skills...';
+          this.renderer.appendChild(skillsSuggestionsDiv, item); skillsSuggestionsDiv.style.display = 'block'; return;
       }
-
       if (suggestedSkills.length === 0) {
         if (tagInput.value.trim()) {
-          const item = this.renderer.createElement('div');
-          this.renderer.addClass(item, 'suggestion-item');
-          this.renderer.addClass(item, 'no-results');
-          item.textContent = 'No matching skills found.';
-          this.renderer.appendChild(skillsSuggestionsDiv, item);
-          skillsSuggestionsDiv.style.display = 'block';
-        } else {
-          skillsSuggestionsDiv.style.display = 'none';
-        }
-        return;
+          const item = this.renderer.createElement('div'); this.renderer.addClass(item, 'suggestion-item');
+          this.renderer.addClass(item, 'no-results'); item.textContent = 'No matching skills found.';
+          this.renderer.appendChild(skillsSuggestionsDiv, item); skillsSuggestionsDiv.style.display = 'block';
+        } else { skillsSuggestionsDiv.style.display = 'none'; } return;
       }
-
       suggestedSkills.forEach((skillName) => {
-        const item = this.renderer.createElement('div');
-        this.renderer.addClass(item, 'suggestion-item');
+        const item = this.renderer.createElement('div'); this.renderer.addClass(item, 'suggestion-item');
         item.textContent = skillName;
         this.renderer.listen(item, 'click', () => {
-          addSkillTag(skillName);
-          tagInput.value = '';
-          skillsSuggestionsDiv.style.display = 'none';
-          tagInput.focus();
+          addSkillTag(skillName); tagInput.value = '';
+          skillsSuggestionsDiv.style.display = 'none'; tagInput.focus();
         });
         this.renderer.appendChild(skillsSuggestionsDiv, item);
       });
-      skillsSuggestionsDiv.style.display = 'block';
-      activeSuggestionIndex = -1;
+      skillsSuggestionsDiv.style.display = 'block'; activeSuggestionIndex = -1;
     };
-
     const addSkillTag = (skillName: string) => {
-      if (!skillName.trim()) return;
-      let currentSkills: string[] = this.jobForm.get('skills')?.value || [];
+      if (!skillName.trim()) return; let currentSkills: string[] = this.jobForm.get('skills')?.value || [];
       if (currentSkills.includes(skillName)) {
-        this.snackBar.open(`Skill "${skillName}" is already added.`, 'Close', { duration: 2000 });
-        return;
+        this.snackBar.open(`Skill "${skillName}" is already added.`, 'Close', { duration: 2000 }); return;
       }
-
-      currentSkills = [...currentSkills, skillName];
-      this.jobForm.patchValue({ skills: currentSkills });
-      this.jobForm.get('skills')?.markAsDirty();
-      this.jobForm.get('skills')?.updateValueAndValidity();
-
-      const tag = this.renderer.createElement('div');
-      this.renderer.addClass(tag, 'tag');
-      const tagText = this.renderer.createElement('span');
-      tagText.textContent = skillName;
+      currentSkills = [...currentSkills, skillName]; this.jobForm.patchValue({ skills: currentSkills });
+      this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
+      const tag = this.renderer.createElement('div'); this.renderer.addClass(tag, 'tag');
+      const tagText = this.renderer.createElement('span'); tagText.textContent = skillName;
       this.renderer.appendChild(tag, tagText);
-      const removeBtn = this.renderer.createElement('button');
-      removeBtn.textContent = '×';
+      const removeBtn = this.renderer.createElement('button'); removeBtn.textContent = '×';
       this.renderer.setAttribute(removeBtn, 'type', 'button');
       this.renderer.listen(removeBtn, 'click', () => {
         this.renderer.removeChild(tagContainer, tag);
         let skillsAfterRemove: string[] = this.jobForm.get('skills')?.value || [];
         skillsAfterRemove = skillsAfterRemove.filter(s => s !== skillName);
         this.jobForm.patchValue({ skills: skillsAfterRemove });
-        this.jobForm.get('skills')?.markAsDirty();
-        this.jobForm.get('skills')?.updateValueAndValidity();
+        this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
       });
-      this.renderer.appendChild(tag, removeBtn);
-      this.renderer.insertBefore(tagContainer, tag, tagInput);
+      this.renderer.appendChild(tag, removeBtn); this.renderer.insertBefore(tagContainer, tag, tagInput);
     };
-
     const navigateAvailableSuggestions = (direction: 'up' | 'down') => {
       const items = skillsSuggestionsDiv.querySelectorAll('.suggestion-item:not(.suggestion-loading):not(.no-results)') as NodeListOf<HTMLDivElement>;
       if (items.length === 0) return;
-
-      if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
-        this.renderer.removeClass(items[activeSuggestionIndex], 'active-suggestion');
-      }
-
-      if (direction === 'down') {
-        activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
-      } else {
-        activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
-      }
-      
+      if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) this.renderer.removeClass(items[activeSuggestionIndex], 'active-suggestion');
+      if (direction === 'down') activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+      else activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
       if (items[activeSuggestionIndex]) {
         this.renderer.addClass(items[activeSuggestionIndex], 'active-suggestion');
         items[activeSuggestionIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }
     };
-
-    fromEvent(tagInput, 'input').pipe(
+    const skillInputSub = fromEvent(tagInput, 'input').pipe(
       map(event => (event.target as HTMLInputElement).value),
-      debounceTime(this.SKILL_DEBOUNCE_DELAY),
-      distinctUntilChanged(),
-      tap(term => {
-        this.isLoadingSkills = !!term.trim();
-        if (!term.trim()) {
-            showAvailableSuggestions([]);
-        }
-      }),
+      debounceTime(this.SKILL_DEBOUNCE_DELAY), distinctUntilChanged(),
+      tap(term => { this.isLoadingSkills = !!term.trim(); if (!term.trim()) showAvailableSuggestions([]); }),
       switchMap(term => {
-        if (!term.trim()) {
-          return of([]);
-        }
+        if (!term.trim()) return of([]);
         return this.skillService.searchSkills(term).pipe(
           map((apiSkills: ApiSkill[]) => apiSkills.map(s => s.name)),
-          catchError(() => {
-            this.isLoadingSkills = false;
-            this.snackBar.open('Error fetching skills.', 'Close', { duration: 3000 });
-            return of([]);
-          })
+          catchError(() => { this.isLoadingSkills = false; this.snackBar.open('Error fetching skills.', 'Close', { duration: 3000 }); return of([]); })
         );
       })
     ).subscribe(skillNames => {
@@ -834,126 +704,81 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
       showAvailableSuggestions(filteredForDisplay.slice(0, 10));
     });
+    this.subscriptions.add(skillInputSub);
 
     tagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         const activeItem = skillsSuggestionsDiv.querySelector('.suggestion-item.active-suggestion') as HTMLDivElement;
-        if (activeItem && activeItem.textContent) {
-          addSkillTag(activeItem.textContent);
-        } else if (tagInput.value.trim()) {
-          addSkillTag(tagInput.value.trim());
-        }
-        tagInput.value = '';
-        skillsSuggestionsDiv.style.display = 'none';
-        activeSuggestionIndex = -1;
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        navigateAvailableSuggestions('down');
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        navigateAvailableSuggestions('up');
-      } else if (e.key === 'Backspace' && !tagInput.value) {
+        if (activeItem && activeItem.textContent) addSkillTag(activeItem.textContent);
+        else if (tagInput.value.trim()) addSkillTag(tagInput.value.trim());
+        tagInput.value = ''; skillsSuggestionsDiv.style.display = 'none'; activeSuggestionIndex = -1;
+      } else if (e.key === 'ArrowDown') { e.preventDefault(); navigateAvailableSuggestions('down'); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); navigateAvailableSuggestions('up'); }
+      else if (e.key === 'Backspace' && !tagInput.value) {
         const currentSkills: string[] = this.jobForm.get('skills')?.value || [];
         if (currentSkills.length > 0) {
           const tagsInDOM = tagContainer.querySelectorAll('.tag');
-          if (tagsInDOM.length > 0) {
-            this.renderer.removeChild(tagContainer, tagsInDOM[tagsInDOM.length - 1]);
-          }
-          currentSkills.pop();
-          this.jobForm.patchValue({ skills: currentSkills });
-          this.jobForm.get('skills')?.markAsDirty();
-          this.jobForm.get('skills')?.updateValueAndValidity();
+          if (tagsInDOM.length > 0) this.renderer.removeChild(tagContainer, tagsInDOM[tagsInDOM.length - 1]);
+          currentSkills.pop(); this.jobForm.patchValue({ skills: currentSkills });
+          this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
         }
-      } else if (e.key === 'Escape') {
-        skillsSuggestionsDiv.style.display = 'none';
-        activeSuggestionIndex = -1;
-      }
+      } else if (e.key === 'Escape') { skillsSuggestionsDiv.style.display = 'none'; activeSuggestionIndex = -1; }
     });
-
     this.document.addEventListener('click', (e) => {
       const target = e.target as Node;
-      if (!tagContainer.contains(target) && !skillsSuggestionsDiv.contains(target)) {
-        skillsSuggestionsDiv.style.display = 'none';
-      }
+      if (!tagContainer.contains(target) && !skillsSuggestionsDiv.contains(target)) skillsSuggestionsDiv.style.display = 'none';
     });
-    
-    tagContainer.addEventListener('click', (e) => {
-      if (e.target === tagContainer) {
-        tagInput.focus();
-      }
-    });
-
-    // Initial population of skills (if form is pre-filled, e.g. from jobData)
-    // This is called within populateForm if jobData exists, or can be called here for default empty state.
-    // this.populateSkills(this.jobForm.get('skills')?.value || []); // Covered by populateForm
+    tagContainer.addEventListener('click', (e) => { if (e.target === tagContainer) tagInput.focus(); });
   }
 
   onSubmit(): void {
-    this.jobForm.markAllAsTouched();
-    if (this.jobForm.invalid) {
-      this.snackBar.open('Please fill all required fields correctly.', 'Close', {
-        duration: 5000,
-        panelClass: ['error-snackbar']
-      });
-      const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => {
-          const control = this.jobForm.controls[key];
-          return control.invalid;
-      });
+    this.jobForm.markAllAsTouched(); // Mark all fields including editor
+    this.checkEmpty('editor'); // Explicitly validate editor content on submit attempt
 
+    if (this.jobForm.invalid) {
+      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+      const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
       if (firstInvalidControl) {
-          // Attempt to find the element by formControlName, or by a more specific ID if available
           let element = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
-          if (!element) { // Fallback for custom/complex fields
+          if (!element) {
               if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
               else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
-              // Add more specific fallbacks if needed
           }
           element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
-
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
-      this.router.navigate(['/login-corporate']);
-      return;
+      this.router.navigate(['/login-corporate']); return;
     }
-
     this.isSubmitting = true;
-
     if (this.currentStep === 'jobPost') {
       const formValues = this.jobForm.getRawValue();
-      const jobDetails: JobDetails = {
-        ...formValues,
-        skills: { 
+      const jobDetails: JobDetails = { ...formValues,
+        skills: {
              primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
              secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
-        },
-        status: 'draft'
+        }, status: 'draft'
       };
-
-      this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
+      const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
         next: (response) => {
-          this.isSubmitting = false;
-          this.snackBar.open('Job post saved. Proceeding to assessment.', 'Close', { duration: 3000 });
-          this.jobForm.patchValue({ unique_id: response.unique_id });
-          this.currentStep = 'assessment';
+          this.isSubmitting = false; this.snackBar.open('Job post saved. Proceeding to assessment.', 'Close', { duration: 3000 });
+          this.jobForm.patchValue({ unique_id: response.unique_id }); this.currentStep = 'assessment';
         },
         error: (error) => {
-          this.isSubmitting = false;
-          console.error('Job post saving failed:', error);
+          this.isSubmitting = false; console.error('Job post saving failed:', error);
           this.snackBar.open(`Job post saving failed: ${error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
         }
       });
+      this.subscriptions.add(saveSub);
     } else if (this.currentStep === 'assessment') {
       // console.log('Submitting assessment for job unique_id:', this.jobForm.get('unique_id')?.value);
-      setTimeout(() => { // Simulate API call
-        this.isSubmitting = false;
-        this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
-        this.resetForm();
-        this.router.navigate(['/job-posted']);
+      setTimeout(() => {
+        this.isSubmitting = false; this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
+        this.resetForm(); this.router.navigate(['/job-posted']);
       }, 1500);
     }
   }
@@ -964,8 +789,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       this.currentStep = 'jobPost';
     } else {
       this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
-      this.resetForm();
-      this.router.navigate(['/dashboard']);
+      this.resetForm(); this.router.navigate(['/dashboard']);
     }
   }
 
@@ -978,28 +802,41 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit {
       notice_period: '', skills: [], job_description: '',
       job_description_url: '', unique_id: ''
     });
-    this.selectedFile = null;
-    if (this.fileInput && this.fileInput.nativeElement) {
-         this.fileInput.nativeElement.value = '';
-    }
-    this.displayedFileName = null;
+    this.clearFileInput();
     this.isFileUploadCompletedSuccessfully = false;
-    
-    // Clear UI for skills and job description if elements are available
     if (this.isViewInitialized) {
-        this.populateSkills([]);
-        this.setJobDescription('');
-        this.updateExperienceUI(); // Reset sliders
+        this.populateSkills([]); this.setJobDescription('');
+        this.updateExperienceUI();
     }
+    this.currentStep = 'jobPost'; this.jobData = null;
+    this.isSubmitting = false; this.isLoadingSkills = false;
+    if (this.currentStep === 'jobPost' && this.isViewInitialized && this.locationInput && this.locationInput.nativeElement) {
+        this.locationInput.nativeElement.value = '';
+        // Re-initialize location services if needed, or ensure autocomplete is cleared/reset
+        // For example, if this.autocomplete exists, you might want to unbind it or clear its input.
+        // For now, just clearing the input value.
+    }
+  }
 
-    this.currentStep = 'jobPost';
-    this.jobData = null; // Clear any fetched/parsed job data
-    this.isSubmitting = false;
-    this.isLoadingSkills = false;
-    // Potentially re-initialize location services if needed after reset and if still on jobPost step
-    if (this.currentStep === 'jobPost' && this.isViewInitialized) {
-        // this.initLocationServices(); // Or ensure locationInput is cleared if necessary
-        if(this.locationInput && this.locationInput.nativeElement) this.locationInput.nativeElement.value = '';
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe(); // Clean up all subscriptions
+
+    // Clean up Google Maps Autocomplete instance and its listeners if it exists
+    if (this.autocomplete) {
+        // google.maps.event.clearInstanceListeners(this.autocomplete); // Deprecated way
+        // New way: Autocomplete instance itself doesn't have a direct 'destroy' or 'clear listeners'.
+        // It's usually enough to let it be garbage collected once no references exist.
+        // If the input element it's attached to is removed from DOM, that also helps.
+        // For good measure, if you had specific listeners on the input element for autocomplete, clear them.
+        // If the locationInput element itself is part of this component and gets destroyed, that's usually sufficient.
     }
+    // Clean up dynamically added event listeners on document (if any were not auto-cleaned by Angular)
+    // The listeners on markers in initializeRange are on elements within the component's template,
+    // so Angular should handle their cleanup. The document listeners for mousemove/mouseup
+    // are removed in onMouseUp, which is good.
+    // The document listener for skills input click outside is okay as long as the component is destroyed.
+    // However, it's best practice to remove document listeners explicitly in ngOnDestroy.
+    // Example: (this requires storing the listener function)
+    // this.document.removeEventListener('click', this.boundHideSkillSuggestionsOnClickOutside);
   }
 }
