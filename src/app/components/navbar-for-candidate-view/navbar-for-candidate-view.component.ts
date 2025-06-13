@@ -81,4 +81,17 @@ export class NavbarForCandidateView {
     this.authService.logout(); // Call the logout method in AuthService
     //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log("User Profile NOT fetched");
+    }
+  }
 }
