@@ -98,80 +98,20 @@
   <div id="details-container" class="candidate-home-details-container">
     <div id="main-container" class="candidate-home-main-container">
       <div id="profile-container" class="candidate-home-profile-container">
-        <div id="candidate-profile-short" class="candidate-home-container2">
-          <div id="candidate-profile-card" class="candidate-home-container3">
-            <img
-              id="candidate-profile-picture"
-              alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
-              [src]="defaultProfilePicture"
-              class="candidate-home-candidate-image thq-img-ratio-1-1 thq-img-round"
-            />
-            <div
-              id="candidate-details-container"
-              class="candidate-home-candidate-details-container"
-            >
-              <div class="candidate-home-container4">
-                <span
-                  id="candidate-name"
-                  class="candidate-home-name-of-the-candidate"
-                >
-                {{ userProfile.first_name }} {{ userProfile.last_name }}
-                </span>
-                <span
-                  id="candidate-job-role"
-                  class="candidate-home-role-of-the-candidate"
-                >
-                  <span class="candidate-home-text118">
-                    {{
-                      userProfile.job_title 
-                        ? userProfile.job_title + ' @ ' + userProfile.company_name 
-                        : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
-                    }}
-                  </span>
-                  <br />
-                </span>
-                <div class="candidate-home-container5">
-                  <svg
-                    id="green-tik-mark"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 32 32"
-                    class="candidate-home-green-tick-icon"
-                  >
-                    <g fill="none">
-                      <path
-                        d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"
-                        fill="#00D26A"
-                      ></path>
-                      <path
-                        d="M13.242 23c-.383 0-.766-.143-1.059-.43l-5.744-5.642a1.453 1.453 0 0 1 0-2.08a1.517 1.517 0 0 1 2.118 0l4.685 4.601L23.443 9.431a1.517 1.517 0 0 1 2.118 0a1.45 1.45 0 0 1 0 2.08l-11.26 11.058a1.5 1.5 0 0 1-1.059.431"
-                        fill="#F4F4F4"
-                      ></path>
-                    </g>
-                  </svg>
-                  <span
-                    id="candidate-profile-completion"
-                    class="candidate-home-profile-completion"
-                  >
-                    90% Profile Completion
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button
-              id="complete-profile-button"
-              type="button"
-              class="candidate-home-complete-profile-button button"
-            >
-              <span
-                id="candidate-complete-profile-text"
-                class="candidate-home-complete-profile-text"
-              >
-                Complete Profile
-              </span>
-            </button>
-          </div>
-        </div>
+        <candidate-profile-short [placeholderImageAlt]="'Image of ' + userProfile.first_name + ' ' + userProfile.last_name">
+  <ng-template #text>
+    <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
+  </ng-template>
+  <ng-template #text1>
+    <span>
+      {{
+        userProfile.job_title 
+          ? userProfile.job_title + ' @ ' + userProfile.company_name 
+          : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
+      }}
+    </span>
+  </ng-template>
+</candidate-profile-short>
         <candidate-profile-score
           rootClassName="candidate-profile-scoreroot-class-name"
         >
