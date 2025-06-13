@@ -4,7 +4,7 @@
  
 .job-cards-container {
   width: auto;
-  height: auto;
+  height: 880px;
   display: flex;
   position: relative;
   align-items: flex-start;
@@ -15,10 +15,10 @@
 .job-cards-job-cards-main-container {
   flex: 0 0 auto;
   width: 364px;
-  height: auto;
+  height: 880px;
   display: flex;
   align-self: center;
-  max-height: 429px;
+  max-height: 900px;
   overflow-x: hidden;
   overflow-y: scroll;
   align-items: center;
@@ -26,12 +26,15 @@
   justify-content: flex-start;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  border-width: 1px;
+  border-color: #D9D9D9;
+  border-right-width: 0px;
 }
  
 .job-cards-job-cards-first-container {
   flex: 0 0 auto;
   width: 364px;
-  height: 108px;
+  height: auto;
   display: flex;
   padding: 16px;
   transition: 0.3s;
@@ -42,13 +45,14 @@
   flex-direction: column;
   background-color: #F5F7F9;
   border-right-width: 0px;
-}
- 
-.job-cards-job-cards-first-container:hover {
-  background-color: #FFFFFF;
+  border-top-width: 0px;
 }
  
 .job-cards-job-cards-first-container:active {
+  background-color: #FFFFFF;
+}
+
+.job-cards-job-cards-first-container.clicked {
   background-color: #FFFFFF;
 }
  
@@ -110,7 +114,7 @@
   fill: #18191C;
   color: #18191C;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
 }
  
 .job-cards-job-location-text {

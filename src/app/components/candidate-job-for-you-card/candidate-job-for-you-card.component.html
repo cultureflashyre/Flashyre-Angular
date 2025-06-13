@@ -1,22 +1,16 @@
-
-<!-- Root container -->
 <div
   class="candidate-job-for-you-card-container10"
   [ngClass]="rootClassName"
   (click)="onCardClick($event)"
 >
-  <!-- Container 11 -->
   <div class="candidate-job-for-you-card-container11">
-    <!-- Container 12 -->
     <div class="candidate-job-for-you-card-container12">
       <img
         [attr.alt]="imageAlt"
         [attr.src]="imageSrc"
         class="candidate-job-for-you-card-image"
       />
-      <!-- Container 13 -->
       <div class="candidate-job-for-you-card-container13">
-        <!-- Container 14 -->
         <div class="candidate-job-for-you-card-container14">
           <span class="candidate-job-for-you-card-text10">
             <ng-template #defaultText>
@@ -28,9 +22,7 @@
             </ng-template>
             <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
           </span>
-          <!-- Container 16 -->
           <div class="candidate-job-for-you-card-container16">
-            <!-- Container 17 -->
             <div class="candidate-job-for-you-card-container17">
               <div class="progress-container">
                 <div class="progress">
@@ -51,9 +43,7 @@
             <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
           </span>
         </div>
-        <!-- Container 18 -->
         <div class="candidate-job-for-you-card-container18">
-          <!-- Container 19 -->
           <div class="candidate-job-for-you-card-container19">
             <svg
               width="24"
@@ -77,7 +67,6 @@
               <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
             </span>
           </div>
-          <!-- Container 20 -->
           <div class="candidate-job-for-you-card-container20">
             <svg
               width="24"
@@ -102,7 +91,6 @@
             </span>
           </div>
         </div>
-        <!-- Job description -->
         <span class="candidate-job-for-you-card-text14">
           <ng-template #defaultText4>
             <div class="candidate-job-for-you-card-fragment3">
@@ -114,11 +102,11 @@
           </ng-template>
           <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
         </span>
-        <!-- Container 21: Buttons -->
         <div class="candidate-job-for-you-card-container21">
           <button
             type="button"
             class="candidate-job-for-you-card-button1 button"
+            (click)="onApply($event)"
           >
             <span>
               <ng-template #defaultButton>
@@ -132,6 +120,7 @@
           <button
             type="button"
             class="candidate-job-for-you-card-button2 button"
+            (click)="onTakeAssessment($event)"
           >
             <span>
               <ng-template #defaultButton1>
@@ -150,11 +139,8 @@
           class="candidate-job-for-you-card-progress-bar-for-mobile"
         ></div>
       </div>
-      <!-- Container 22 -->
       <div class="candidate-job-for-you-card-container22">
-        <!-- Container 23 -->
         <div class="candidate-job-for-you-card-container23">
-          <!-- Container 24 -->
           <div class="candidate-job-for-you-card-container24">
             <div class="progress-container">
               <svg viewBox="0 0.5 10 8">

@@ -3,9 +3,16 @@
   class="candidate-job-details-container1"
   [ngClass]="rootClassName"
 >
+  <!-- Display error message if job not found -->
+  <div *ngIf="errorMessage" class="candidate-job-details-error">
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Show job details if no error -->
   <div
     id="job-details-main-container"
     class="candidate-job-details-job-details-main-container"
+    *ngIf="!errorMessage"
   >
     <div class="candidate-job-details-job-details-container">
       <div
@@ -22,8 +29,8 @@
           >
             <img
               id="Image"
-              [attr.alt]="job.company_name ? job.company_name + ' logo' : 'Company logo'"
-              [attr.src]="job.logo || 'https://via.placeholder.com/24'"
+              [attr.alt]="job.company_name + ' logo'"
+              [attr.src]="job.logo"
               class="candidate-job-details-image"
             />
           </div>
@@ -34,103 +41,21 @@
             <ng-container>
               <ng-template #defaultText>
                 <div class="candidate-job-details-fragment3">
-                  <span class="candidate-job-details-text12">{{ job.company_name || 'Unknown Company' }}</span>
+                  <span class="candidate-job-details-text12">{{ job.company_name }}</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text ? text : defaultText"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
             </ng-container>
           </span>
           <div
             id="progress-bar-container"
             class="candidate-job-details-progress-bar-container"
           >
-            <div class="candidate-job-details-container2">
-              <div class="candidate-job-details-container3">
-                <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: auto;
-      margin: 0;
-      background-color: transparent;
-    }
-
-    .progress-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .progress {
-      position: relative;
-      width: 120px;
-      height: 6px;
-      background-color: #ccc;
-      border-radius: 15px;
-      overflow: hidden;
-    }
-
-    .bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 0;
-      background-color: #0bf;
-      transition: width 0.3s ease;
-    }
-
-    .score {
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      color: #474748;
-    }
-  </style>
-<body>
-  <div class='progress-container'>
-    <div class='progress'>
-      <div class='bar'></div>
-    </div>
-    <span class='score'>0%</span>
-  </div>
-
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-  <script>
-    $(document).ready(function () {
-      const $progress = $('.progress');
-      const $bar = $progress.find('.bar');
-      const $score = $('.score');
-      const perc = 56.5;
-
-      const getFillColor = (value) => {
-        if (value <= 40) return 'red';
-        if (value <= 60) return 'orange';
-        if (value <= 75) return '#4D91C6';
-        if (value <= 84) return 'lightgreen';
-        return 'darkgreen';
-      };
-
-      $({ p: 0 }).animate({ p: perc }, {
-        duration: 3000,
-        easing: 'swing',
-        step: function (p) {
-          $bar.css({
-            width: p + '%',
-            backgroundColor: getFillColor(p)
-          });
-          $score.text(Math.round(p) + '%');
-        }
-      });
-    });
-  </script>
-</body>
-
+            <div class="progress-container mobile" *ngIf="isMobile">
+              <div class="progress">
+                <div #mobileBar class="bar" [style.width.%]="progress" [style.backgroundColor]="fillColor"></div>
               </div>
+              <span class="score">{{ progress | number:'1.0-0' }}%</span>
             </div>
           </div>
         </div>
@@ -142,12 +67,10 @@
             <ng-container>
               <ng-template #defaultText1>
                 <div class="candidate-job-details-fragment5">
-                  <span class="candidate-job-details-text14">{{ job.title || 'Unknown Role' }}</span>
+                  <span class="candidate-job-details-text14">{{ job.title }}</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text1 ? text1 : defaultText1"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
             </ng-container>
           </span>
         </div>
@@ -156,14 +79,12 @@
             <ng-template #defaultText2>
               <div class="candidate-job-details-fragment4">
                 <span class="candidate-job-details-text13">
-                  {{ job.location ? job.location + ' (' + job.job_type + ')' : 'Unknown Location' }} | Posted {{ job.created_at ? (job.created_at | date: 'shortDate') : 'Unknown Date' }}
+                  {{ job.location }} ({{ job.job_type }}) | Posted {{ job.created_at | date: 'shortDate' }}
                 </span>
               </div>
             </ng-template>
-            <ng-container
-                *ngTemplateOutlet="text2 ? text2 : defaultText2"
-              ></ng-container>
-            </ng-container>
+            <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
+          </ng-container>
         </span>
       </div>
       <div
@@ -175,6 +96,7 @@
           type="button"
           class="candidate-job-details-apply-button button"
           (click)="applyForJob()"
+          [disabled]="!job.url"
         >
           <span id="apply-text" class="candidate-job-details-apply-text">
             <ng-container>
@@ -183,9 +105,7 @@
                   <span class="candidate-job-details-text10">Apply</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="button ? button : defaultButton"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
             </ng-container>
           </span>
         </button>
@@ -204,9 +124,7 @@
                   <span class="candidate-job-details-text11">Take Assessment</span>
                 </div>
               </ng-template>
-              <ng-container
-                *ngTemplateOutlet="button1 ? button1 : defaultButton1"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="button1 ? button1 : defaultButton1"></ng-container>
             </ng-container>
           </span>
         </button>
@@ -218,100 +136,41 @@
     >
       <div class="candidate-job-details-container4">
         <div class="candidate-job-details-container5">
-          <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-  <style>
-    svg {
-      display: block;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .loader {
-      stroke-dasharray: 0 19;
-      transition: stroke-dasharray 2s linear, stroke 0.5s;
-      stroke-linecap: round;
-    }
-
-    .progress-container {
-      position: relative;
-      text-align: center;
-      stroke-linecap: round;
-    }
-
-    .progress-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
-
-    .progress-icon {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 5px;
-      border-radius: 50%;
-    }
-
-    .progress-label {
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .progress-description {
-      margin-top: 8px;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      font-weight: normal;
-      color: #666;
-      text-align: center;
-    }
-  </style>
-<body>
-  <div class='progress-container'>
-    <svg viewBox='0 0.5 10 8'>
-      <path d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' stroke='#E8F6FD' />
-      <path class='loader' d='M2 8 A 4 4 0 1 1 8 8' fill='none' stroke-width='0.3' />
-    </svg>
-    <div class='progress-content'>
-      <img src='https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=CfIJ6moQiOBB~nz1awM9PvkoabzOIsDLbnY7Sme7ahET4M~TXRRPKRRF9hJd7hkqp0Xyv5gbWmjjcm1xb1fboBRclCvBhPFKVbF4fgZOFbDzaRBb10tCuZBqQrpP4Uck4bXpH9ZYkqEIjJYnmVGOEB1Pu6Ilbp-c7~HZgNsAMRRH74kbqJzj1rxCj-CLe3zCKgeb6uByvClNgTzqUpY91895Xrtl3pl-4L81JSzB5A9aZI3d1GkIFFvdb5W9O2rKOtt0seRAbcEzz7jQLFgn6DlmovpYdFvjs77sYu9SxOtmFK6oZx6gN6UOo6hgxumw5WpETSWBHlHt9c7m1U~Vmw__' alt='Icon' class='progress-icon' />
-      <div class='progress-label'>0%</div>
-    </div>
-    <div class='progress-description'>Job matching score</div>
-  </div>
-
-  <script>
-    $(document).ready(function () {
-      const $loader = $('.loader');
-      const $label = $('.progress-label');
-      const percentage = 95;
-
-      const getFillColor = (value) => {
-        if (value <= 40) return 'red';
-        if (value <= 60) return 'orange';
-        if (value <= 75) return '#4D91C6';
-        if (value <= 84) return 'lightgreen';
-        return 'darkgreen';
-      };
-
-      $({ p: 0 }).animate({ p: percentage }, {
-        duration: 3000,
-        easing: 'swing',
-        step: function (p) {
-          const strokeValue = (p / 100) * 19;
-          $loader.css({
-            'stroke-dasharray': `${strokeValue} 19`,
-            'stroke': getFillColor(p)
-          });
-          $label.text(`${Math.round(p)}%`);
-        }
-      });
-    });
-  </script>
-</body>
-
+          <div class="progress-container mobile" *ngIf="isMobile">
+            <div class="progress">
+              <div #mobileMatchingBar class="bar" [style.width.%]="matchingScore" [style.backgroundColor]="matchingScoreFillColor"></div>
+            </div>
+            <span class="score">{{ matchingScore | number:'1.0-0' }}%</span>
+          </div>
+          <div class="progress-container desktop" *ngIf="!isMobile">
+            <svg viewBox="0 0.5 10 8">
+              <path
+                d="M2 8 A 4 4 0 1 1 8 8"
+                fill="none"
+                stroke-width="0.3"
+                stroke="#E8F6FD"
+              />
+              <path
+                #desktopMatchingLoader
+                class="loader"
+                d="M2 8 A 4 4 0 1 1 8 8"
+                fill="none"
+                stroke-width="0.3"
+                [style.stroke]="matchingScoreFillColor"
+                [style.strokeDasharray]="matchingScoreStrokeDasharray"
+              />
+            </svg>
+            <div class="progress-content">
+              <img
+                [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+                alt="User Profile"
+                class="progress-icon"
+                (error)="handleImageError($event)"
+              />
+              <div class="progress-label">{{ matchingScore | number:'1.0-0' }}%</div>
+            </div>
+            <div class="progress-description">Job matching score</div>
+          </div>
         </div>
       </div>
     </div>
@@ -327,22 +186,31 @@
             <span class="candidate-job-details-text16">About the job</span>
             <br class="candidate-job-details-text17" />
             <br />
-            <span class="candidate-job-details-text19">{{ job.description || 'No description available.' }}</span>
+            <span class="candidate-job-details-text19">{{ job.description }}</span>
             <br class="candidate-job-details-text20" />
             <br />
             <span>Minimum qualifications:</span>
             <br />
+            <span>{{ job.requirements }}</span>
             <br />
-            <span>{{ job.requirements || 'No requirements listed.' }}</span>
             <br />
+            <span>Salary: {{ job.salary }}</span>
             <br />
-            <span>Salary: {{ job.salary || 'Not disclosed' }}</span>
+            <span *ngIf="job.experience_required">Experience Required: {{ job.experience_required }} years</span>
+            <br *ngIf="job.experience_required" />
+            <span *ngIf="job.source">Source: {{ job.source }}</span>
+            <br *ngIf="job.source" />
+            <span *ngIf="job.tag">Tags: {{ job.tag }}</span>
+            <br *ngIf="job.tag" />
+            <span *ngIf="job.contract_time">Contract Time: {{ job.contract_time }}</span>
+            <br *ngIf="job.contract_time" />
+            <span *ngIf="job.contract_type">Contract Type: {{ job.contract_type }}</span>
+            <br *ngIf="job.contract_type" />
+            <span *ngIf="job.external_id">External ID: {{ job.external_id }}</span>
           </span>
         </div>
       </ng-template>
-      <ng-container
-        *ngTemplateOutlet="text3 ? text3 : defaultText3"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
     </ng-container>
   </span>
 </div>

@@ -25,6 +25,7 @@ export class CandidateJobDetailView {
   }
 
   onJobSelected(jobId: number): void {
+    console.log('Received jobId in parent:', jobId);
     this.selectedJobId = jobId;
   }
 }

@@ -7,10 +7,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./candidate-job-for-you-card.component.css'],
 })
 export class CandidateJobForYouCard implements OnInit, AfterViewInit {
-  userProfile: any = {}; // To store user profile data
+  userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
-  @Input() matchingScore: number = 80; // Default value
-  @Input() jobId: string; // Job ID to identify the job for navigation
+  @Input() matchingScore: number = 80;
+  @Input() jobId: string;
   score: number = 0;
 
   @ViewChild('desktopBar') desktopBar: ElementRef;
@@ -53,19 +53,19 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   private getFillColor(value: number): string {
     if (value <= 40) return 'red';
     if (value <= 60) return 'orange';
-    if (value <= 75) return '#4D91C6'; // Ampere color
+    if (value <= 75) return '#4D91C6';
     if (value <= 84) return 'lightgreen';
     return 'darkgreen';
   }
 
   private animateProgressBar(): void {
-    const duration = 2000; // Animation duration in milliseconds
+    const duration = 2000;
     const startTime = Date.now();
 
     const animate = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1); // Progress between 0 and 1
+      const progress = Math.min(elapsedTime / duration, 1);
       const currentPercentage = progress * this.score;
       this.updateProgressBar(currentPercentage);
       if (progress < 1) {
@@ -92,6 +92,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
   onCardClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
+    // Navigate only if click is outside Apply and Take Assessment buttons
     if (
       !target.closest('.candidate-job-for-you-card-button1') &&
       !target.closest('.candidate-job-for-you-card-button2')
@@ -100,5 +101,17 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
         queryParams: { jobId: this.jobId },
       });
     }
+  }
+
+  onApply(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    console.log('Apply button clicked for jobId:', this.jobId);
+    // Add custom Apply functionality here (e.g., API call, navigation, etc.)
+  }
+
+  onTakeAssessment(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    console.log('Take Assessment button clicked for jobId:', this.jobId);
+    // Add custom Take Assessment functionality here (e.g., open assessment, etc.)
   }
 }

@@ -1,9 +1,91 @@
 :host { 
   display: contents; 
 }
- 
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: transparent;
+}
+
+.progress-container {
+  position: relative;
+  text-align: center;
+  stroke-linecap: round;
+}
+
+.progress-container.mobile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress {
+  width: 100px;
+  height: 6px;
+  background-color: #E8F6FD;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 0;
+  background-color: #4D91C6;
+  transition: width 0.2s ease;
+}
+
+.score {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #474748;
+}
+
+.progress-container.desktop svg {
+  width: 80px;
+  height: 80px;
+}
+
+.loader {
+  stroke-dasharray: 0 19;
+  transition: stroke-dasharray 2s linear, stroke 0.5s;
+  stroke-linecap: round;
+}
+
+.progress-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+}
+
+.progress-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-description {
+  margin-top: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  color: #474748;
+  text-align: center;
+}
+
 .candidate-job-details-container1 {
-  gap: 24px;
+  gap: 16px;
   width: 713px;
   height: auto;
   display: flex;
@@ -13,8 +95,9 @@
   align-items: flex-start;
   flex-direction: column;
   background-color: #FFFFFF;
+  gap: 24px;
 }
- 
+
 .candidate-job-details-job-details-main-container {
   flex: 0 0 auto;
   width: 100%;
@@ -25,17 +108,17 @@
   flex-direction: row;
   justify-content: space-between;
 }
- 
+
 .candidate-job-details-job-details-container {
-  gap: 24px;
-  flex: 0 0 auto;
+  gap: 16px;
+  flex: auto;
   width: auto;
   height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .candidate-job-details-company-name-role-location-container {
   gap: 8px;
   flex: 0 0 auto;
@@ -45,18 +128,18 @@
   align-items: flex-start;
   flex-direction: column;
 }
- 
+
 .candidate-job-details-company-image-name-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 88px;
+  width: auto;
   height: auto;
   display: flex;
   align-self: flex-start;
   align-items: center;
   justify-content: flex-start;
 }
- 
+
 .candidate-job-details-image-container {
   flex: 0 0 auto;
   width: 24px;
@@ -65,7 +148,7 @@
   align-items: flex-start;
   border-radius: var(--dl-layout-radius-round);
 }
- 
+
 .candidate-job-details-image {
   width: 24px;
   height: 24px;
@@ -73,35 +156,37 @@
   border-radius: var(--dl-layout-radius-round);
   background-color: #747474;
 }
- 
+
 .candidate-job-details-company-name-text {
-  fill: #18191C;
-  color: #18191C;
-  display: flex;
+  fill: #333;
+  color: #333;
+  display: inline-block;
   align-self: center;
   font-style: normal;
   align-items: center;
-  font-weight: 700;
-  justify-content: center;
+  font-weight: bold;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
 }
- 
+
 .candidate-job-details-progress-bar-container {
-  flex: 0 0 auto;
+  flex: auto;
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
- 
+
 .candidate-job-details-container2 {
   display: none;
 }
- 
+
 .candidate-job-details-container3 {
   display: contents;
 }
- 
+
 .candidate-job-details-job-role-container {
-  flex: 0 0 auto;
+  flex: auto;
   width: auto;
   height: auto;
   display: flex;
@@ -109,27 +194,27 @@
   flex-direction: column;
   justify-content: center;
 }
- 
+
 .candidate-job-details-job-role-text {
-  fill: #18191C;
-  color: #18191C;
-  display: flex;
+  fill: #333;
+  color: #333;
+  display: inline-block;
   align-self: flex-start;
   font-style: normal;
   align-items: center;
-  font-weight: 600;
+  font-weight: normal;
   justify-content: center;
 }
- 
+
 .candidate-job-details-location-text {
-  fill: #6B6C6D;
-  color: #6B6C6D;
-  width: 443px;
+  fill: #555;
+  color: #555;
+  width: auto;
   height: 24px;
-  display: flex;
+  display: inline-block;
   align-items: center;
 }
- 
+
 .candidate-job-details-apply-take-assessment-button-container {
   gap: 16px;
   flex: 0 0 auto;
@@ -140,41 +225,41 @@
   flex-direction: row;
   justify-content: center;
 }
- 
+
 .candidate-job-details-apply-button {
-  width: 69px;
+  width: 144px;
   height: 40px;
   align-self: center;
   transition: 0.3s;
-  padding-top: var(--dl-layout-space-halfunit);
+  padding-top: var(--dl-unit-space-halfunit);
   border-width: 0px;
-  padding-left: var(--dl-layout-space-halfunit);
-  padding-right: var(--dl-layout-space-halfunit);
-  padding-bottom: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-unit-space-halfunit);
+  padding-right: var(--dl-unit-space-halfunit);
+  padding-bottom: var(--dl-unit-space-halfunit);
   background-color: #41327B;
 }
- 
+
 .candidate-job-details-apply-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
 }
- 
+
 .candidate-job-details-apply-button:active {
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .candidate-job-details-apply-text {
   gap: 12px;
   fill: #FFFFFF;
   color: #FFFFFF;
-  display: flex;
+  display: inline-block;
   align-items: center;
   justify-content: center;
   background-color: #41327B;
 }
- 
+
 .candidate-job-details-take-assessment-button {
   gap: 8px;
   width: auto;
@@ -190,28 +275,28 @@
   padding-bottom: 12px;
   justify-content: center;
 }
- 
+
 .candidate-job-details-take-assessment-button:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
- 
+
 .candidate-job-details-take-assessment-button:active {
   transform: scale(1.05);
   transition: all 0.7s;
 }
- 
+
 .candidate-job-details-take-assessment-text {
   fill: #41327B;
   color: #41327B;
-  display: flex;
+  display: inline-block;
   font-style: normal;
   align-items: center;
-  font-weight: 600;
+  font-weight: normal;
   justify-content: center;
 }
- 
+
 .candidate-job-details-job-matching-score-container {
   flex: 0 0 auto;
   width: 120px;
@@ -219,85 +304,88 @@
   display: flex;
   align-items: flex-start;
 }
- 
+
 .candidate-job-details-container4 {
   width: 100%;
   height: auto;
 }
- 
+
 .candidate-job-details-container5 {
   display: contents;
 }
- 
+
 .candidate-job-details-about-the-job-text {
-  fill: #6B6C6D;
-  color: #6B6C6D;
+  fill: #555;
+  color: #555;
   width: 100%;
-  display: flex;
+  display: inline-block;
   justify-content: center;
 }
- 
+
 .candidate-job-details-fragment1 {
   display: contents;
 }
- 
+
 .candidate-job-details-text10 {
   display: inline-block;
 }
- 
+
 .candidate-job-details-fragment2 {
   display: contents;
 }
- 
+
 .candidate-job-details-text11 {
   display: inline-block;
 }
- 
+
 .candidate-job-details-fragment3 {
   display: contents;
 }
- 
+
 .candidate-job-details-text12 {
   display: inline-block;
 }
- 
+
 .candidate-job-details-fragment4 {
   display: contents;
 }
- 
+
 .candidate-job-details-text13 {
   display: inline-block;
 }
- 
+
 .candidate-job-details-fragment5 {
   display: contents;
 }
- 
+
 .candidate-job-details-text14 {
   display: inline-block;
 }
- 
+
 .candidate-job-details-fragment6 {
   display: contents;
 }
- 
+
 .candidate-job-details-text15 {
   display: inline-block;
+  align-items: flex-start;
+  width: 100%;
 }
- 
+
 .candidate-job-details-text16 {
   font-style: normal;
-  font-weight: 700;
+  font-weight: bold;
 }
- 
+
 .candidate-job-details-text19 {
-  font-weight: 400;
+  font-weight: normal;
 }
- 
+
 .candidate-job-detailsroot-class-name {
   align-self: flex-start;
 }
- 
+
+/* Responsive styles */
 @media(max-width: 991px) {
   .candidate-job-details-container1 {
     width: 670px;
@@ -317,20 +405,20 @@
   }
   .candidate-job-details-text16 {
     font-style: normal;
-    font-weight: 700;
+    font-weight: bold;
   }
   .candidate-job-details-text17 {
     font-style: normal;
-    font-weight: 700;
+    font-weight: bold;
   }
   .candidate-job-details-text19 {
-    font-weight: 400;
+    font-weight: normal;
   }
   .candidate-job-details-text20 {
-    font-weight: 400;
+    font-weight: normal;
   }
 }
- 
+
 @media(max-width: 767px) {
   .candidate-job-details-container1 {
     gap: 16px;
@@ -409,7 +497,7 @@
     align-items: center;
   }
   .candidate-job-details-take-assessment-text {
-    display: flex;
+    display: inline-block;
     font-size: 12px;
     align-items: center;
     padding-left: 4px;
@@ -431,20 +519,26 @@
   }
   .candidate-job-details-text16 {
     font-style: normal;
-    font-weight: 700;
+    font-weight: bold;
   }
   .candidate-job-details-text17 {
     font-style: normal;
-    font-weight: 700;
+    font-weight: bold;
   }
   .candidate-job-details-text19 {
-    font-weight: 400;
+    font-weight: normal;
   }
   .candidate-job-details-text20 {
-    font-weight: 400;
+    font-weight: normal;
+  }
+  .progress-container.desktop {
+    display: none;
+  }
+  .progress-container.mobile {
+    display: flex;
   }
 }
- 
+
 @media(max-width: 479px) {
   .candidate-job-details-container1 {
     gap: 16px;
@@ -462,7 +556,7 @@
     flex-direction: column;
   }
   .candidate-job-details-company-name-role-location-container {
-    gap: 4;
+    gap: 4px;
     width: 332px;
     padding-right: 0px;
     flex-direction: column;
@@ -497,5 +591,34 @@
   }
   .candidate-job-details-about-the-job-text {
     width: 100%;
+  }
+  .progress-container.desktop {
+    display: none;
+  }
+  .progress-container.mobile {
+    display: flex;
+  }
+  .progress-container.mobile svg {
+    width: 60px;
+    height: 60px;
+  }
+  .progress-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .progress-label {
+    font-size: 12px;
+  }
+  .progress-description {
+    font-size: 10px;
+  }
+}
+
+@media(min-width: 768px) {
+  .progress-container.desktop {
+    display: block;
+  }
+  .progress-container.mobile {
+    display: none;
   }
 }
