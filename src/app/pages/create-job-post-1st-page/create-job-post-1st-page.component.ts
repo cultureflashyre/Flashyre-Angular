@@ -6,35 +6,36 @@ import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs'; // Added Subscription
+import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 import { SkillService, ApiSkill } from '../../services/skill.service';
 
+declare const google: any;
+
 @Component({
   selector: 'create-job-post-1st-page',
   templateUrl: './create-job-post-1st-page.component.html',
   styleUrls: ['./create-job-post-1st-page.component.css']
 })
-export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy { // Added OnDestroy
-  @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('suggestionsContainer') suggestionsContainer!: ElementRef<HTMLDivElement>;
+export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
 
-  // It's highly recommended to move API keys to environment variables or a configuration service
-  // and not hardcode them in components, especially if the code is committed to a public repository.
   private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
-  private googleScriptLoaded: boolean = false;
+  private googleScriptLoadingPromise: Promise<void> | null = null;
+  private autocompleteService: any;
 
   jobForm: FormGroup;
-  suggestions: string[] = [];
-  isLoading = false;
-  showSuggestions = false;
   
+  locationSuggestions: any[] = [];
+  showLocationSuggestions = false;
+  isLoadingLocations = false;
+  private locationInput$ = new Subject<string>();
+
   selectedFile: File | null = null;
-  private readonly DEBOUNCE_DELAY = 300;
   private readonly SKILL_DEBOUNCE_DELAY = 400;
 
   currentStep: 'jobPost' | 'assessment' = 'jobPost';
@@ -44,10 +45,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
 
   private jobData: JobDetails | AIJobResponse | null = null;
   private isViewInitialized = false;
-  private autocomplete?: google.maps.places.Autocomplete;
 
   isLoadingSkills = false;
-  private subscriptions = new Subscription(); // To manage subscriptions
+  private subscriptions = new Subscription();
 
   constructor(
     private title: Title,
@@ -65,7 +65,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   ) {
     this.jobForm = this.fb.group({
       role: ['', [Validators.required, Validators.maxLength(100)]],
-      location: ['', [Validators.required, Validators.maxLength(200)]],
+      location: [[], [Validators.required]],
       job_type: ['', [Validators.required]],
       workplace_type: ['', [Validators.required]],
       total_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
@@ -77,7 +77,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       max_budget: [null, [Validators.required, Validators.min(0)]],
       notice_period: ['', [Validators.required, Validators.maxLength(50)]],
       skills: [[], [Validators.required]],
-      job_description: ['', [Validators.maxLength(5000), Validators.required]], // Added required for job description
+      job_description: ['', [Validators.maxLength(5000), Validators.required]],
       job_description_url: ['', [Validators.maxLength(200)]],
       unique_id: ['']
     }, { validators: this.experienceRangeValidator });
@@ -93,9 +93,20 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       }
     ]);
 
-    this.loadGoogleMapsScript().catch(error => {
-      console.error('Google Maps script could not be loaded (initiated from ngOnInit).', error);
-    });
+    this.subscriptions.add(
+      this.locationInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isLoadingLocations = true;
+          this.showLocationSuggestions = true;
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.isLoadingLocations = false;
+        this.locationSuggestions = suggestions;
+      })
+    );
 
     if (!this.corporateAuthService.isLoggedIn()) {
       this.snackBar.open('Please log in to create a job post.', 'Close', { duration: 5000 });
@@ -106,187 +117,116 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const uniqueId = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueId) {
       console.log('Editing existing job post with unique_id:', uniqueId);
-      // TODO: Fetch job data if editing an existing post
-      // this.jobDescriptionService.getJobPost(uniqueId, this.corporateAuthService.getJWTToken()!).subscribe(data => {
-      //   this.jobData = data;
-      //   if (this.isViewInitialized) this.populateForm(data);
-      // });
     }
   }
 
   private loadGoogleMapsScript(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (this.googleScriptLoaded && typeof google !== 'undefined' && google.maps && google.maps.places) {
+    if (this.googleScriptLoadingPromise) {
+      return this.googleScriptLoadingPromise;
+    }
+
+    this.googleScriptLoadingPromise = new Promise((resolve, reject) => {
+      if (typeof google !== 'undefined' && google.maps && google.maps.places) {
         resolve();
-        return;
-      }
-      if (this.document.querySelector(`script[src*="maps.googleapis.com/maps/api/js"]`)) {
-        let attempts = 0;
-        const intervalId = setInterval(() => {
-            attempts++;
-            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-                clearInterval(intervalId);
-                this.googleScriptLoaded = true;
-                resolve();
-            } else if (attempts > 30) { // Timeout after ~3 seconds
-                clearInterval(intervalId);
-                console.warn('Google Maps script tag found, but API not available after timeout.');
-                this.googleScriptLoaded = false;
-                reject(new Error('Google Maps script loaded but API not available.'));
-            }
-        }, 100);
         return;
       }
 
       const script = this.renderer.createElement('script');
-      script.type = 'text/javascript';
-      // Add async and defer for best practices, though Google's warning might still appear for dynamic loads.
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places&loading=async`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places`;
       script.async = true;
       script.defer = true;
-      script.onload = () => {
-        this.googleScriptLoaded = true;
-        resolve();
-      };
-      script.onerror = (error: any) => {
-        console.error('Error loading Google Maps script:', error);
-        this.googleScriptLoaded = false;
-        reject(error);
-      };
+      script.onload = () => resolve();
+      script.onerror = (error: any) => reject(error);
       this.renderer.appendChild(this.document.head, script);
     });
-  }
 
+    return this.googleScriptLoadingPromise;
+  }
 
   ngAfterViewInit(): void {
     this.isViewInitialized = true;
-
-    // Initialize UI elements that don't depend on external scripts first
     this.initializeSkillsInput();
     this.initializeRange('total');
     this.initializeRange('relevant');
-    this.checkEmpty('editor'); // Initial check for placeholder
+    this.checkEmpty('editor');
 
     if (this.jobData) {
-      this.populateForm(this.jobData); // Populates form and calls UI updates
+      this.populateForm(this.jobData);
     } else {
-      this.updateExperienceUI(); // Ensure sliders are set to default if no pre-existing data
+      this.updateExperienceUI();
     }
 
     if (this.currentStep === 'jobPost') {
-      this.initLocationServices();
+      this.initGoogleMapsFeatures();
     }
   }
 
-  private initLocationServices(): void {
-    if (this.googleScriptLoaded && typeof google !== 'undefined' && google.maps && google.maps.places) {
-      this.attemptGooglePlacesInitialization();
-    } else {
-      this.loadGoogleMapsScript().then(() => {
-        this.attemptGooglePlacesInitialization();
-      }).catch(error => {
-        console.error('Google Maps script could not be loaded during initLocationServices.', error);
-        if (this.currentStep === 'jobPost') { // Only show snackbar if relevant
-             this.snackBar.open('Could not load location services. Please try again later.', 'Close', { duration: 5000 });
-        }
-      });
+  private async initGoogleMapsFeatures(): Promise<void> {
+    try {
+      await this.loadGoogleMapsScript();
+      this.autocompleteService = new google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Fatal error: Google Maps script could not be loaded.', error);
+      this.snackBar.open('Could not load location services. Please check your connection and try again.', 'Close', { duration: 7000 });
     }
   }
 
-  private attemptGooglePlacesInitialization(): void {
-    setTimeout(() => {
-        this.ngZone.run(() => {
-            if (this.currentStep === 'jobPost' && this.locationInput && this.locationInput.nativeElement) {
-                this.initializeGooglePlacesAutocomplete();
-                this.setupLocationInputListener();
-            } else if (this.currentStep === 'jobPost') {
-                 console.warn('Google Places Autocomplete setup skipped: locationInput not ready or not in jobPost step.');
+  onLocationInput(event: Event): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showLocationSuggestions = false;
+      return;
+    }
+    this.locationInput$.next(term);
+  }
+
+  private getPlacePredictions(term: string): Observable<any[]> {
+    if (!this.autocompleteService) {
+      return of([]);
+    }
+    return new Observable(observer => {
+      this.autocompleteService.getPlacePredictions(
+        { input: term, types: ['(cities)'] },
+        (predictions: any[] | null, status: any) => {
+          this.ngZone.run(() => {
+            if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+              observer.next(predictions);
+            } else {
+              observer.next([]);
             }
-        });
-    }, 150); // Slightly increased delay for safety
+            observer.complete();
+          });
+        }
+      );
+    });
   }
 
-  private initializeGooglePlacesAutocomplete(): void {
-    if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
-      console.warn('Google Maps or Places library not loaded. Autocomplete cannot be initialized.');
-      return;
-    }
-    if (!this.locationInput || !this.locationInput.nativeElement || !(this.locationInput.nativeElement instanceof HTMLInputElement)) {
-      console.warn('Location input HTML element not found or not an input. Autocomplete cannot be initialized.');
-      return;
-    }
-    if (this.autocomplete) {
-      return;
-    }
-
-    // Consider Google's recommendation to move to PlaceAutocompleteElement in the future
-    // console.warn("Using deprecated google.maps.places.Autocomplete. Consider migrating to PlaceAutocompleteElement.");
-    this.autocomplete = new google.maps.places.Autocomplete(
-      this.locationInput.nativeElement,
-      { types: ['(cities)'] }
-    );
-    this.autocomplete.addListener('place_changed', () => {
-      this.ngZone.run(() => {
-        const place = this.autocomplete!.getPlace();
-        if (place && place.formatted_address) {
-          this.jobForm.patchValue({ location: place.formatted_address });
-          this.jobForm.get('location')?.markAsDirty();
-        } else if (place && place.name) {
-          this.jobForm.patchValue({ location: place.name });
-          this.jobForm.get('location')?.markAsDirty();
-        }
-        this.suggestions = [];
-        this.showSuggestions = false;
+  selectLocationSuggestion(suggestion: any): void {
+    const currentLocations = this.jobForm.get('location')?.value || [];
+    if (!currentLocations.includes(suggestion.description)) {
+      this.jobForm.patchValue({
+        location: [...currentLocations, suggestion.description]
       });
-    });
-  }
-
-  private setupLocationInputListener(): void {
-    if (!this.locationInput || !this.locationInput.nativeElement) {
-        console.warn('Location input not available for setting up listener.');
-        return;
+      this.jobForm.get('location')?.markAsDirty();
     }
-    const locationInputSub = fromEvent(this.locationInput.nativeElement, 'input').pipe(
-      map(event => (event.target as HTMLInputElement).value),
-      debounceTime(this.DEBOUNCE_DELAY),
-      distinctUntilChanged(),
-      tap(query => this.isLoading = !!query.trim()),
-      switchMap(query => {
-        const trimmedQuery = query.trim();
-        const pacContainer = this.document.querySelector('.pac-container') as HTMLElement | null;
-        const isPacContainerVisible = pacContainer ? getComputedStyle(pacContainer).display !== 'none' : false;
-
-        if (!trimmedQuery || (this.autocomplete && isPacContainerVisible)) {
-          this.isLoading = false;
-          return of([]);
-        }
-        this.isLoading = false;
-        return of([]);
-      })
-    ).subscribe({
-      next: () => { /* Manual suggestions would be handled here */ },
-      error: (err) => {
-        this.isLoading = false;
-        console.error("Error in location input listener stream:", err);
-      }
-    });
-    this.subscriptions.add(locationInputSub); // Add to subscriptions for cleanup
+    this.locationInput.nativeElement.value = '';
+    this.showLocationSuggestions = false;
   }
-
-  onInput(event: Event): void { /* Handled by setupLocationInputListener */ }
-
-  selectSuggestion(location: string): void {
-    this.jobForm.patchValue({ location });
+  
+  removeLocation(index: number): void {
+    const currentLocations = this.jobForm.get('location')?.value || [];
+    currentLocations.splice(index, 1);
+    this.jobForm.patchValue({ location: currentLocations });
     this.jobForm.get('location')?.markAsDirty();
-    this.showSuggestions = false;
-    this.suggestions = [];
   }
-
-  private adjustExperienceRange(min: number, max: number): [number, number] {
-    return (min === 0 && max === 0) ? [0, 30] : [min, max];
+  
+  onLocationInputKeydown(event: KeyboardEvent): void {
+     if (event.key === 'Backspace' && this.locationInput.nativeElement.value === '') {
+       this.removeLocation(this.jobForm.get('location')?.value.length - 1);
+     }
   }
-
-  private experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
+  
+  experienceRangeValidator(form: FormGroup): { [key: string]: any } | null {
     const totalMin = form.get('total_experience_min')?.value;
     const totalMax = form.get('total_experience_max')?.value;
     const relevantMin = form.get('relevant_experience_min')?.value;
@@ -372,8 +312,12 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
   }
 
+  private adjustExperienceRange(min: number, max: number): [number, number] {
+    return (min === 0 && max === 0) ? [0, 30] : [min, max];
+  }
+
   private populateForm(jobData: JobDetails | AIJobResponse): void {
-    let role: string, location: string, job_type: string, workplace_type: string;
+    let role: string, location: any, job_type: string, workplace_type: string;
     let total_experience_min: number, total_experience_max: number;
     let relevant_experience_min: number, relevant_experience_max: number;
     let budget_type: string, min_budget: number | null, max_budget: number | null;
@@ -385,7 +329,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
-      location = details.location || '';
+      // Ensure location is handled as an array
+      location = details.location ? [details.location] : [];
       job_type = this.mapJobType(details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '');
       workplace_type = details.workplace_type || 'Remote';
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(minExp, maxExp);
@@ -400,10 +345,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       job_description_url_val = aiJobData.file_url || '';
     } else {
       const details = jobData as JobDetails;
-      role = details.role; location = details.location; job_type = details.job_type; workplace_type = details.workplace_type;
+      role = details.role;
+      // Ensure location is an array
+      location = Array.isArray(details.location) ? details.location : [];
+      job_type = details.job_type;
+      workplace_type = details.workplace_type;
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(details.total_experience_min, details.total_experience_max);
       [relevant_experience_min, relevant_experience_max] = this.adjustExperienceRange(details.relevant_experience_min, details.relevant_experience_max);
-      budget_type = details.budget_type; min_budget = details.min_budget; max_budget = details.max_budget;
+      budget_type = details.budget_type;
+      min_budget = details.min_budget;
+      max_budget = details.max_budget;
       notice_period = details.notice_period;
       let primarySkills = Array.isArray(details.skills?.primary) ? details.skills.primary.map(s => s.skill) : [];
       let secondarySkills = Array.isArray(details.skills?.secondary) ? details.skills.secondary.map(s => s.skill) : [];
@@ -412,18 +363,20 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = details.job_description_url || '';
     }
+    
     this.jobForm.patchValue({
       role, location, job_type, workplace_type,
       total_experience_min, total_experience_max,
       relevant_experience_min, relevant_experience_max,
       budget_type, min_budget, max_budget,
-      notice_period, skills, job_description, // Now job_description is directly patched
+      notice_period, skills, job_description,
       job_description_url: job_description_url_val, unique_id: unique_id_val
     });
+    
     if (this.isViewInitialized) {
-        this.populateSkills(skills); // UI for skills
-        this.setJobDescription(job_description); // UI for editor (sets innerHTML)
-        this.updateExperienceUI(); // UI for sliders
+        this.populateSkills(skills);
+        this.setJobDescription(job_description);
+        this.updateExperienceUI();
     }
   }
 
@@ -457,21 +410,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   private setJobDescription(description: string): void {
     const editor = this.document.getElementById('editor') as HTMLDivElement;
     if (editor) {
-      editor.innerHTML = description; // Set content for display
-      this.checkEmpty('editor'); // Update placeholder
-      // Form control is updated in populateForm or updateJobDescriptionFromEditor
+      editor.innerHTML = description;
+      this.checkEmpty('editor');
     } else if (this.isViewInitialized) {
         console.warn('Job description editor element not found.');
     }
   }
 
   updateJobDescriptionFromEditor(event: Event): void {
-     const editorContent = (event.target as HTMLDivElement).innerHTML;
-    // Only patch if different to avoid unnecessary change detection cycles
+    const editorContent = (event.target as HTMLDivElement).innerHTML;
     if (this.jobForm.get('job_description')?.value !== editorContent) {
       this.jobForm.patchValue({ job_description: editorContent });
     }
-    this.checkEmpty('editor'); // Call public method
+    this.checkEmpty('editor');
   }
 
   private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
@@ -502,19 +453,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
   }
 
-  // Changed to public to be callable from template
   public checkEmpty(id: string): void {
     const element = this.document.getElementById(id) as HTMLDivElement;
     if (!element) return;
     const isEmpty = !element.textContent?.trim() && !element.querySelector('img, li, table');
     element.setAttribute('data-empty', isEmpty ? 'true' : 'false');
 
-    // If using for validation feedback on the job_description field
     if (id === 'editor' && this.jobForm.get('job_description')?.touched) {
         if (isEmpty) {
             this.jobForm.get('job_description')?.setErrors({ 'required': true });
         } else {
-            // Clear 'required' error if content exists, but preserve other potential errors
             const currentErrors = this.jobForm.get('job_description')?.errors;
             if (currentErrors && currentErrors['required']) {
                 delete currentErrors['required'];
@@ -610,16 +558,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const singleMatch = exp.match(/(\d+)\s*years?/i);
     if (singleMatch) { const val = parseInt(singleMatch[1], 10); return [val, val]; }
     return [0, 0];
-  }
-
-  handleOutsideClick(event: FocusEvent): void {
-    setTimeout(() => {
-      const relatedTarget = event.relatedTarget as HTMLElement;
-      const pacContainer = this.document.querySelector('.pac-container');
-      if ( (this.suggestionsContainer && this.suggestionsContainer.nativeElement.contains(relatedTarget)) ||
-           (pacContainer && pacContainer.contains(relatedTarget)) ) return;
-      this.showSuggestions = false;
-    }, 150);
   }
 
   private initializeSkillsInput(): void {
@@ -733,17 +671,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   }
 
   onSubmit(): void {
-    this.jobForm.markAllAsTouched(); // Mark all fields including editor
-    this.checkEmpty('editor'); // Explicitly validate editor content on submit attempt
+    this.jobForm.markAllAsTouched();
+    this.checkEmpty('editor');
 
     if (this.jobForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
       const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
       if (firstInvalidControl) {
-          let element = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
+          let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
           if (!element) {
               if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
               else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
+              else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
           }
           element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
@@ -775,7 +714,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       });
       this.subscriptions.add(saveSub);
     } else if (this.currentStep === 'assessment') {
-      // console.log('Submitting assessment for job unique_id:', this.jobForm.get('unique_id')?.value);
       setTimeout(() => {
         this.isSubmitting = false; this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
         this.resetForm(); this.router.navigate(['/job-posted']);
@@ -795,48 +733,40 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
 
   resetForm(): void {
     this.jobForm.reset({
-      role: '', location: '', job_type: '', workplace_type: '',
-      total_experience_min: 0, total_experience_max: 30,
-      relevant_experience_min: 0, relevant_experience_max: 30,
-      budget_type: '', min_budget: null, max_budget: null,
-      notice_period: '', skills: [], job_description: '',
-      job_description_url: '', unique_id: ''
+      role: '',
+      location: [],
+      job_type: '',
+      workplace_type: '',
+      total_experience_min: 0,
+      total_experience_max: 30,
+      relevant_experience_min: 0,
+      relevant_experience_max: 30,
+      budget_type: '',
+      min_budget: null,
+      max_budget: null,
+      notice_period: '',
+      skills: [],
+      job_description: '',
+      job_description_url: '',
+      unique_id: ''
     });
+
     this.clearFileInput();
     this.isFileUploadCompletedSuccessfully = false;
+
     if (this.isViewInitialized) {
-        this.populateSkills([]); this.setJobDescription('');
+        this.populateSkills([]);
+        this.setJobDescription('');
         this.updateExperienceUI();
     }
-    this.currentStep = 'jobPost'; this.jobData = null;
-    this.isSubmitting = false; this.isLoadingSkills = false;
-    if (this.currentStep === 'jobPost' && this.isViewInitialized && this.locationInput && this.locationInput.nativeElement) {
-        this.locationInput.nativeElement.value = '';
-        // Re-initialize location services if needed, or ensure autocomplete is cleared/reset
-        // For example, if this.autocomplete exists, you might want to unbind it or clear its input.
-        // For now, just clearing the input value.
-    }
+
+    this.currentStep = 'jobPost';
+    this.jobData = null;
+    this.isSubmitting = false;
+    this.isLoadingSkills = false;
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe(); // Clean up all subscriptions
-
-    // Clean up Google Maps Autocomplete instance and its listeners if it exists
-    if (this.autocomplete) {
-        // google.maps.event.clearInstanceListeners(this.autocomplete); // Deprecated way
-        // New way: Autocomplete instance itself doesn't have a direct 'destroy' or 'clear listeners'.
-        // It's usually enough to let it be garbage collected once no references exist.
-        // If the input element it's attached to is removed from DOM, that also helps.
-        // For good measure, if you had specific listeners on the input element for autocomplete, clear them.
-        // If the locationInput element itself is part of this component and gets destroyed, that's usually sufficient.
-    }
-    // Clean up dynamically added event listeners on document (if any were not auto-cleaned by Angular)
-    // The listeners on markers in initializeRange are on elements within the component's template,
-    // so Angular should handle their cleanup. The document listeners for mousemove/mouseup
-    // are removed in onMouseUp, which is good.
-    // The document listener for skills input click outside is okay as long as the component is destroyed.
-    // However, it's best practice to remove document listeners explicitly in ngOnDestroy.
-    // Example: (this requires storing the listener function)
-    // this.document.removeEventListener('click', this.boundHideSkillSuggestionsOnClickOutside);
+    this.subscriptions.unsubscribe();
   }
 }

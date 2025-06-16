@@ -258,79 +258,65 @@
               </div>
             </div>
             <div
-              id="location-container"
-              class="create-job-post1st-page-location-container"
-            >
-              <div
-                id="location-text-container"
-                class="create-job-post1st-page-location-text-container"
-              >
-                <span
-                  id="location-text"
-                  class="create-job-post1st-page-location-text"
-                >
-                  Location
-                </span>
-                <span
-                  id="location-star-text"
-                  class="create-job-post1st-page-location-star-text"
-                >
-                  *
-                </span>
-              </div>
-              <div
-                id="location-input-container"
-                class="create-job-post1st-page-location-input-container"
-              >
-                <div class="create-job-post1st-page-container13">
-                  <div class="create-job-post1st-page-container14">
-                    <div class="container">
-                      <div class="location-form">
-                        <div class="input-wrapper">
-                          <input
-                            type="text"
-                            id="location"
-                            #locationInput
-                            class="location-input"
-                            placeholder="Enter your location"
-                            autocomplete="off"
-                            formControlName="location"
-                            (input)="onInput($event)"
-                            (blur)="handleOutsideClick($event)"
-                          />
-                          <div class="loading" id="loading" *ngIf="isLoading"></div>
-                          <svg
-                            class="location-icon"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                          >
-                            <path
-                              d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
-                            ></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                          </svg>
-                        </div>
-                        <div class="suggestions" #suggestionsContainer *ngIf="showSuggestions">
-                           <div *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
-                            {{ suggestion }}
-                           </div>
-                           <div *ngIf="suggestions.length === 0 && isLoading === false && locationInput.value.length > 0 && !jobForm.get('location')?.value" class="no-suggestions">
-                            No suggestions found.
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.required" class="field-error-message">
-              Enter Job Location
-            </div>
-              </div>
-            </div>
+    id="location-container"
+    class="create-job-post1st-page-location-container"
+  >
+    <div
+      id="location-text-container"
+      class="create-job-post1st-page-location-text-container"
+    >
+      <span
+        id="location-text"
+        class="create-job-post1st-page-location-text"
+      >
+        Location(s)
+      </span>
+      <span
+        id="location-star-text"
+        class="create-job-post1st-page-location-star-text"
+      >
+        *
+      </span>
+    </div>
+    <div
+      id="location-input-container"
+      class="create-job-post1st-page-location-input-container"
+    >
+      <!-- Main container for chips and the live input -->
+      <div class="location-tag-container" (click)="locationInput.focus()">
+        <!-- Loop through and display selected locations as chips -->
+        <div *ngFor="let loc of jobForm.get('location')?.value; let i = index" class="location-tag">
+          <span>{{ loc }}</span>
+          <button type="button" class="remove-tag-btn" (click)="removeLocation(i)">×</button>
+        </div>
+        <!-- The live input field for typing the next location -->
+        <input
+          #locationInput
+          type="text"
+          class="location-live-input"
+          placeholder="Type a location..."
+          (input)="onLocationInput($event)"
+          (keydown)="onLocationInputKeydown($event)"
+        />
+      </div>
+
+      <!-- Dropdown for showing Google Places suggestions -->
+      <div *ngIf="showLocationSuggestions" class="location-suggestions-list">
+        <div *ngIf="isLoadingLocations" class="suggestion-item">Loading...</div>
+        <div *ngFor="let suggestion of locationSuggestions" class="suggestion-item" (click)="selectLocationSuggestion(suggestion)">
+          {{ suggestion.description }}
+        </div>
+        <div *ngIf="!isLoadingLocations && locationSuggestions.length === 0" class="suggestion-item">
+          No matches found.
+        </div>
+      </div>
+
+      <!-- Validation Error Message -->
+      <div *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.required" class="field-error-message">
+        Please enter at least one location.
+      </div>
+    </div>
+  </div>
           </div>
           <div
             id="jobtype-workplace-container"

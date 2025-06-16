@@ -1,6 +1,141 @@
   :host { 
     display: contents; 
   }
+  
+  /* Add these new styles to your CSS file for the multi-location input */
+
+.location-tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 48px; /* Adjust to match your other inputs */
+  cursor: text;
+  width: 100%;
+}
+
+.location-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e1f5fe;
+  color: #0288d1;
+  padding: 6px 10px;
+  border-radius: 16px;
+  margin: 4px;
+  font-size: 16px;
+}
+
+.location-tag span {
+  margin-right: 8px;
+}
+
+.remove-tag-btn {
+  background: none;
+  border: none;
+  color: #0288d1;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0;
+  line-height: 1;
+}
+
+.location-live-input {
+  flex-grow: 1; /* Allows the input to fill remaining space */
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 16px;
+  min-width: 150px; /* Ensures input is usable when container is full */
+}
+
+.location-suggestions-list {
+  position: absolute;
+  top: 100%; /* Position it directly below the parent container */
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 8px 8px; /* Match your container's border-radius */
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.suggestion-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Ensure the main container has a position relative for the absolute suggestions */
+#location-input-container {
+  position: relative;
+}
+
+/* Add these new styles to your existing CSS file. */
+
+.location-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 
+  Style the Google Place Autocomplete component itself.
+  It needs to fill its container.
+*/
+gmp-place-autocomplete {
+  width: 100%;
+  height: 100%;
+}
+
+/* 
+  Google's Web Component uses CSS Shadow Parts to allow styling.
+  `::part(input)` targets the input field inside the component.
+  We apply the same styles your old `.location-input` had.
+*/
+gmp-place-autocomplete::part(input) {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+  padding: 12px 16px 12px 40px; /* Add left padding for the icon */
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* Focus styles for the new component */
+gmp-place-autocomplete::part(input):focus {
+  border-color: #4a89dc;
+}
+
+/* Position the location icon on top of the input area */
+.location-input-wrapper .location-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none; /* Make sure the icon doesn't block clicks */
+}
 
   
   /* ... (your existing CSS, including .required-asterisk) ... */
