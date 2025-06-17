@@ -1,1 +1,0 @@
-# Flashyre-Angular
