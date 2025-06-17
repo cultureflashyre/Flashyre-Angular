@@ -1,0 +1,203 @@
+<div id="candidate-assessment" class="candidate-assessment-container10">
+    <div class="candidate-assessment-container11">
+      <navbar-for-candidate-view
+    rootClassName="navbar-for-candidate-viewroot-class-name"
+  >
+    <ng-template >
+      <div class="candidate-assessment-fragment10">
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-assessment-text100">Dashboard</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-assessment-fragment11">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-assessment-text101">Upskill</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-assessment-fragment12">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-assessment-text102">Assessment</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-assessment-fragment13">
+        <span [routerLink]="['/candidate-dashboard-main']" class="candidate-assessment-text103">Jobs for you</span>
+      </div>
+    </ng-template>
+    <ng-template #text1>
+      <div class="candidate-assessment-fragment14">
+        <span class="candidate-assessment-text104">Profile</span>
+      </div>
+    </ng-template>
+    <ng-template #text2>
+      <div class="candidate-assessment-fragment15">
+        <span class="candidate-assessment-text105">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text3>
+      <div class="candidate-assessment-fragment16">
+        <span class="candidate-assessment-text106">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text4>
+      <div class="candidate-assessment-fragment17">
+        <span class="candidate-assessment-text107">
+          {{ userProfile.first_name }} {{ userProfile.last_name }}
+        </span>
+      </div>
+    </ng-template>
+    <ng-template #text5>
+      <div class="candidate-assessment-fragment18">
+        <span class="candidate-assessment-text108">✅ 90% Profile Completion</span>
+      </div>
+    </ng-template>
+    <ng-template #text6>
+      <div class="candidate-assessment-fragment19">
+        <span class="candidate-assessment-text109">View & edit profile</span>
+      </div>
+    </ng-template>
+    <ng-template #text7>
+      <div class="candidate-assessment-fragment20">
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-assessment-text110">Dashboard</a>
+      </div>
+    </ng-template>
+    <ng-template #text8>
+      <div class="candidate-assessment-fragment21">
+        <span class="candidate-assessment-text111">Upskill</span>
+      </div>
+    </ng-template>
+    <ng-template #text9>
+      <div class="candidate-assessment-fragment22">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-assessment-text112">Assessment</a>
+      </div>
+    </ng-template>
+    <ng-template #text10>
+      <div class="candidate-assessment-fragment23">
+        <span class="candidate-assessment-text113">Jobs for you</span>
+      </div>
+    </ng-template>
+    <ng-template #text11>
+      <div class="candidate-assessment-fragment24">
+        <span class="candidate-assessment-text114">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text12>
+      <div class="candidate-assessment-fragment25">
+        <span class="candidate-assessment-text115">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text13>
+      <div class="candidate-assessment-fragment26">
+        <span class="candidate-assessment-text116">Logout</span>
+      </div>
+    </ng-template>
+    <ng-template #text31>
+      <div class="candidate-assessment-fragment27">
+        <span class="candidate-assessment-text117">Logout</span>
+      </div>
+    </ng-template>
+  </navbar-for-candidate-view>
+      <div id="details-container" class="candidate-assessment-details-container">
+        <div id="main-container" class="candidate-assessment-main-container">
+          <div
+            id="profile-container"
+            class="candidate-assessment-profile-container"
+          >
+            <candidate-profile-short [placeholderImageAlt]="'Image of ' + candidateName">
+  <ng-template #text>
+    <span>{{ candidateName }}</span>
+  </ng-template>
+  <ng-template #text1>
+    <span>{{ candidateJobRole }}</span>
+  </ng-template>
+</candidate-profile-short>
+            <candidate-profile-score
+              rootClassName="candidate-profile-scoreroot-class-name2"
+            >
+              <ng-template #text>
+                <div class="candidate-assessment-fragment1">
+                  <span class="candidate-assessment-text3">
+                    🏆 Profile Score Board
+                  </span>
+                </div>
+              </ng-template>
+            </candidate-profile-score>
+            <recruiter-job-posted1
+              rootClassName="recruiter-job-posted1root-class-name13"
+            >
+              <ng-template #text>
+                <div class="candidate-assessment-fragment2">
+                  <span class="candidate-assessment-text4">Job Posted</span>
+                </div>
+              </ng-template>
+              <ng-template #text3>
+                <div class="candidate-assessment-fragment3">
+                  <span class="candidate-assessment-text5">2 Jobs Posted</span>
+                </div>
+              </ng-template>
+            </recruiter-job-posted1>
+          </div>
+          <div
+            id="assessment-available-main-container"
+            class="candidate-assessment-assessment-available-main-container"
+          >
+            <span
+              id="assessment-available-text"
+              class="candidate-assessment-assessment-available-text"
+            >
+              Assessments Available
+            </span>
+            <div
+  id="assessments-main-container"
+  class="candidate-assessment-assessments-main-container"
+>
+  <!-- Loop through assessments dynamically -->
+  <div
+    *ngFor="let assessment of assessments"
+    id="assessment-article-card1-container"
+    class="candidate-assessment-assessment-article-card1-container"
+  >
+    <div
+      id="company-icon-container"
+      class="candidate-assessment-company-icon-container"
+    >
+      <img
+        [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
+        alt="Assessment Logo"
+        id="company-image"
+        class="candidate-assessment-company-image"
+      />
+    </div>
+    <div
+      id="assessment-description1-container"
+      class="candidate-assessment-assessment-description1-container"
+    >
+      <span
+        id="assessment1-name-container"
+        class="candidate-assessment-assessment1-name-container"
+      >
+        {{ assessment.assessment_title }}
+      </span>
+      <span
+        id="assessment1-description"
+        class="candidate-assessment-assessment1-description"
+      >
+        <span class="candidate-assessment-text6">
+          {{ assessment.assessment_description }}
+        </span>
+      </span>
+    </div>
+    <button
+      type="button"
+      id="lets-go1-button"
+      class="candidate-assessment-lets-go1-button button"
+      (click)="startAssessment(assessment.assessment_id)"
+    >
+      Let's Go
+    </button>
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

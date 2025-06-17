@@ -2,9 +2,17 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http';
-
+import { AuthGuard } from './guards/auth.guard';
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
+import { BufferPageModule } from './buffer-page/buffer-page.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BufferInterceptor } from './interceptors/buffer.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BufferService } from './services/buffer.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 const routes = [
   {
@@ -36,9 +44,9 @@ const routes = [
   {
     path: 'profile-basic-information',
     loadChildren: () =>
-      import(
-        './pages/profile-basic-information/profile-basic-information.module'
-      ).then((m) => m.ProfileBasicInformationModule),
+      import('./pages/profile-basic-information/profile-basic-information.module').then(
+        (m) => m.ProfileBasicInformationModule),
+     // Protect this route
   },
   {
     path: 'recruiter-view-3rd-page',
@@ -62,6 +70,20 @@ const routes = [
       ),
   },
   {
+    path: 'login-forgot-password',
+    loadChildren: () =>
+      import('./pages/login-forgot-password/login-forgot-password.module').then(
+        (m) => m.LoginForgotPasswordModule
+      ),
+  },
+  {
+    path: 'login-reset-password',
+    loadChildren: () =>
+      import('./pages/login-reset-password/login-reset-password.module').then(
+        (m) => m.LoginResetPasswordModule
+      ),
+  },
+  {
     path: 'profile-employment-page',
     loadChildren: () =>
       import(
@@ -73,7 +95,8 @@ const routes = [
     loadChildren: () =>
       import(
         './pages/candidate-job-detail-view/candidate-job-detail-view.module'
-      ).then((m) => m.CandidateJobDetailViewModule),
+      ).then((m) => m.CandidateJobDetailViewModule
+    ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'login-candidate',
@@ -83,7 +106,7 @@ const routes = [
       ),
   },
   {
-    path: 'recruiter-view-5th-page',
+    path: 'corporate/recruiter-view-5th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-5th-page/recruiter-view-5th-page.module'
@@ -94,7 +117,7 @@ const routes = [
     loadChildren: () =>
       import('./pages/candidate-home/candidate-home.module').then(
         (m) => m.CandidateHomeModule
-      ),
+      ), canActivate: [AuthGuard],  // Protect this route
   },
   {
     path: 'profile-certification-page',
@@ -104,7 +127,7 @@ const routes = [
       ).then((m) => m.ProfileCertificationPageModule),
   },
   {
-    path: 'recruiter-view-4th-page',
+    path: 'corporate/recruiter-view-4th-page',
     loadChildren: () =>
       import(
         './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
@@ -125,6 +148,110 @@ const routes = [
       ),
   },
   {
+    path: 'flashyre-assessment-rules-card',
+    loadChildren: () =>
+      import(
+        './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module'
+      ).then((m) => m.FlashyreAssessmentRulesCardModule
+    ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: 'flashyre-assessments',
+    loadChildren: () =>
+      import('./pages/flashyre-assessments/flashyre-assessments.module').then(
+        (m) => m.FlashyreAssessmentsModule
+      ),
+  },
+  {
+    path: 'candidate-dashboard',
+    loadChildren: () =>
+      import('./pages/candidate-dashboard/candidate-dashboard.module').then(
+        (m) => m.CandidateDashboardModule
+      ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: 'error-system-requirement-failed',
+    loadChildren: () =>
+      import('./pages/error-system-requirement-failed/error-system-requirement-failed.module').then(
+        (m) => m.ErrorSystemRequirementFailedModule
+      ),
+  },
+  {
+    path: 'flashyre-assessment1', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment1/flashyre-assessment1.module').then(
+        (m) => m.FlashyreAssessment1Module
+      ),
+  },
+  {
+    path: 'flashyre-assessment11', // New route
+    loadChildren: () =>
+      import('./pages/flashyre-assessment11/flashyre-assessment11.module').then(
+        (m) => m.FlashyreAssessment11Module
+      ),
+      canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: 'profile-last-page1', // New route
+    loadChildren: () =>
+    import('./pages/profile-last-page1/profile-last-page1.module').then(
+      (m) => m.ProfileLastPage1Module
+    ),
+  },   
+  {
+    path: 'candidate-assessment', // New route
+    loadChildren: () =>
+      import('./pages/candidate-assessment/candidate-assessment.module').then(
+        (m) => m.CandidateAssessmentModule
+      ),
+      canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: 'assessment-taken-page', // New route
+    loadChildren: () =>
+      import('./pages/assessment-taken-page/assessment-taken-page.module').then(
+        (m) => m.AssessmentTakenPageModule
+      ),
+  },
+  {
+    path: 'create-job-post-1st-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-1st-page/create-job-post-1st-page.module'
+      ).then((m) => m.CreateJobPost1stPageModule),
+  },
+  {
+    path: 'buffer-page', // New route
+    loadChildren: () =>
+      import('./buffer-page/buffer-page.module').then(
+        (m) => m.BufferPageModule
+      ),
+  },
+  {
+    path: 'profile-overview-page',
+    loadChildren: () =>
+      import( './pages/profile-overview-page/profile-overview-page.module'
+      ).then((m) => m.ProfileOverviewPageModule),
+  },
+    {
+    path: 'assessment-taken-page-2/:assessmentId',
+    loadChildren: () =>
+      import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
+      ).then((m) => m.AssessmentTakenPage2Module),
+  },
+      {
+    path: 'assessment-taken-page-3',
+    loadChildren: () =>
+      import( './pages/assessment-taken-page-3/assessment-taken-page-3.module'
+      ).then((m) => m.AssessmentTakenPage3Module),
+  },
+        {
+    path: 'assessment-violation-message',
+    loadChildren: () =>
+      import( './pages/assessment-violation-message/assessment-violation-message.module'
+      ).then((m) => m.AssessmentViolationMessageModule),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(
@@ -135,8 +262,11 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule],
-  providers: [],
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
+    ReactiveFormsModule],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

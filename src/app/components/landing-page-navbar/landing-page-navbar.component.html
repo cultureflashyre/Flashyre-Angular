@@ -182,8 +182,7 @@
           </li>
         </ul>
       </div>
-      <div data-thq="thq-burger-menu" class="landing-page-navbar-burger-menu">
-        <svg
+      <div data-thq="thq-burger-menu" class="landing-page-navbar-burger-menu" (click)="toggleMobileMenu()">        <svg
           id="burger-icon"
           viewBox="0 0 1024 1024"
           class="landing-page-navbar-burger-icon"
@@ -193,13 +192,14 @@
           ></path>
         </svg>
       </div>
-      <div data-thq="thq-mobile-menu" class="landing-page-navbar-mobile-menu">
-        <div id="popup-container" class="landing-page-navbar-popup-container">
-          <div id="close-icon" class="landing-page-navbar-close-icon">
-            <div
-              data-thq="thq-close-menu"
-              class="landing-page-navbar-close-menu"
-            >
+      <div 
+  data-thq="thq-mobile-menu" 
+  class="landing-page-navbar-mobile-menu"
+  [ngClass]="{'menu-open': isMobileMenuOpen}"
+>
+<div id="popup-container" class="landing-page-navbar-popup-container">  
+  <div id="close-icon" class="landing-page-navbar-close-icon" (click)="toggleMobileMenu()">
+    <div data-thq="thq-close-menu" class="landing-page-navbar-close-menu">
               <svg viewBox="0 0 1024 1024" class="landing-page-navbar-icon4">
                 <path
                   d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"

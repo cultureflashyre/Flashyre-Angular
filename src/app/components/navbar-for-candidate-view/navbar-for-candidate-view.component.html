@@ -16,6 +16,7 @@
         [attr.alt]="imageAlt1"
         [attr.src]="imageSrc1"
         class="navbar-for-candidate-view-flashyre-image"
+        [routerLink]="['/candidate-home']"
       />
       <div
         data-thq="thq-navbar-nav"
@@ -30,9 +31,9 @@
             <ng-container>
               <ng-template #defaultLink1>
                 <div class="navbar-for-candidate-view-fragment12">
-                  <span class="navbar-for-candidate-view-text12">
+                  <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text12">
                     Dashboard
-                  </span>
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -59,16 +60,15 @@
           <a
             [attr.href]="link3Url"
             id="navbar-assessment-link"
-            target="_blank"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-assessment-link thq-body-small button"
           >
             <ng-container>
               <ng-template #defaultLink3>
                 <div class="navbar-for-candidate-view-fragment19">
-                  <span class="navbar-for-candidate-view-text19">
+                  <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text19">
                     Assessment
-                  </span>
+                  </a>
                 </div>
               </ng-template>
               <ng-container
@@ -79,9 +79,9 @@
           <a
             [attr.href]="link4Url"
             id="navbar-jobs-for-you-link"
-            target="_blank"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
+            [routerLink]="['/candidate-home']"
           >
             <ng-container>
               <ng-template #defaultLink4>
@@ -108,8 +108,8 @@
         >
           <img
             id="user-image"
+            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
             class="navbar-for-candidate-view-user-image1"
           />
           <div
@@ -226,6 +226,7 @@
               <span
                 id="navbar-logout-button"
                 class="navbar-for-candidate-view-logout2"
+                (click)="onLogoutClick()"
               >
                 <ng-container>
                   <ng-template #defaultText31>
@@ -293,6 +294,7 @@
               >
                 <img
                   id="candidate-profile-picture"
+                  [src]="defaultProfilePicture"
                   [attr.alt]="imageAlt4"
                   [attr.src]="imageSrc4"
                   class="navbar-for-candidate-view-user-image2"
@@ -470,9 +472,9 @@
                   <ng-container>
                     <ng-template #defaultText7>
                       <div class="navbar-for-candidate-view-fragment25">
-                        <span class="navbar-for-candidate-view-text25">
+                        <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text25">
                           Dashboard
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container
@@ -540,9 +542,9 @@
                   <ng-container>
                     <ng-template #defaultText9>
                       <div class="navbar-for-candidate-view-fragment23">
-                        <span class="navbar-for-candidate-view-text23">
+                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text23">
                           Assessment
-                        </span>
+                        </a>
                       </div>
                     </ng-template>
                     <ng-container
@@ -554,6 +556,7 @@
               <div
                 id="jobs-for-you-container"
                 class="navbar-for-candidate-view-jobs-for-container"
+                [routerLink]="['/candidate-home']"
               >
                 <svg
                   id="briefcase-icon"
@@ -672,6 +675,7 @@
                 <div
                   id="logout-container"
                   class="navbar-for-candidate-view-logout-container button"
+                  (click)="onLogoutClick()"
                 >
                   <svg
                     id="logout-icon"

@@ -1,20 +1,26 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { RouterModule } from '@angular/router'
-import { CommonModule } from '@angular/common'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
-import { ComponentsModule } from '../../components/components.module'
-import { CandidateHome } from './candidate-home.component'
+import { ComponentsModule } from '../../components/components.module';
+import { CandidateHome } from './candidate-home.component';
 
 const routes = [
   {
     path: '',
     component: CandidateHome,
   },
-]
+];
 
 @NgModule({
   declarations: [CandidateHome],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    ComponentsModule,
+    HttpClientModule,
+    RouterModule.forChild(routes),
+  ],
   exports: [CandidateHome],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

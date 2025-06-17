@@ -34,6 +34,10 @@
   width: 200px;
   object-fit: cover;
 }
+
+.navbar-for-candidate-view-flashyre-image:hover {
+  cursor: pointer;
+}
  
 .navbar-for-candidate-view-desktop-menu {
   flex: 1;
@@ -848,7 +852,7 @@
     gap: var(--dl-space-space-halfunit);
     width: 292px;
     height: 853px;
-    heigth: 50vh;
+
     opacity: 1;
     padding: var(--dl-space-space-unit);
     background-color: #FFFFFF;

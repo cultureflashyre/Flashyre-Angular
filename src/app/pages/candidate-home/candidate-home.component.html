@@ -2,24 +2,24 @@
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
-    <ng-template #link1>
+    <ng-template >
       <div class="candidate-home-fragment10">
-        <span class="candidate-home-text100">Dashboard</span>
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
       </div>
     </ng-template>
-    <ng-template #link2>
+    <ng-template >
       <div class="candidate-home-fragment11">
-        <span class="candidate-home-text101">Upskill</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
       </div>
     </ng-template>
-    <ng-template #link3>
+    <ng-template >
       <div class="candidate-home-fragment12">
-        <span class="candidate-home-text102">Assessment</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
       </div>
     </ng-template>
-    <ng-template #link4>
+    <ng-template >
       <div class="candidate-home-fragment13">
-        <span class="candidate-home-text103">Jobs for you</span>
+        <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
       </div>
     </ng-template>
     <ng-template #text1>
@@ -39,7 +39,9 @@
     </ng-template>
     <ng-template #text4>
       <div class="candidate-home-fragment17">
-        <span class="candidate-home-text107">Kathryn Murphy</span>
+        <span class="candidate-home-text107">
+          {{ userProfile.first_name }} {{ userProfile.last_name }}
+        </span>
       </div>
     </ng-template>
     <ng-template #text5>
@@ -49,12 +51,12 @@
     </ng-template>
     <ng-template #text6>
       <div class="candidate-home-fragment19">
-        <span class="candidate-home-text109">View &amp; edit profile</span>
+        <span class="candidate-home-text109">View & edit profile</span>
       </div>
     </ng-template>
     <ng-template #text7>
       <div class="candidate-home-fragment20">
-        <span class="candidate-home-text110">Dashboard</span>
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
       </div>
     </ng-template>
     <ng-template #text8>
@@ -64,7 +66,7 @@
     </ng-template>
     <ng-template #text9>
       <div class="candidate-home-fragment22">
-        <span class="candidate-home-text112">Assessment</span>
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
       </div>
     </ng-template>
     <ng-template #text10>
@@ -96,76 +98,20 @@
   <div id="details-container" class="candidate-home-details-container">
     <div id="main-container" class="candidate-home-main-container">
       <div id="profile-container" class="candidate-home-profile-container">
-        <div id="candidate-profile-short" class="candidate-home-container2">
-          <div id="candidate-profile-card" class="candidate-home-container3">
-            <img
-              id="candidate-profile-picture"
-              alt="Image of John Doe"
-              src="https://images.unsplash.com/photo-1516471835429-167f83503f4b?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDYzfHxjaGVja3xlbnwwfHx8fDE3MzQwODM0Mjh8MA&amp;ixlib=rb-4.0.3&amp;w=300"
-              class="candidate-home-candidate-image thq-img-ratio-1-1 thq-img-round"
-            />
-            <div
-              id="candidate-details-container"
-              class="candidate-home-candidate-details-container"
-            >
-              <div class="candidate-home-container4">
-                <span
-                  id="candidate-name"
-                  class="candidate-home-name-of-the-candidate"
-                >
-                  Kathryn Murphy
-                </span>
-                <span
-                  id="candidate-job-role"
-                  class="candidate-home-role-of-the-candidate"
-                >
-                  <span class="candidate-home-text118">
-                    Senior Software Engineer &#64;Microsoft
-                  </span>
-                  <br />
-                </span>
-                <div class="candidate-home-container5">
-                  <svg
-                    id="green-tik-mark"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 32 32"
-                    class="candidate-home-green-tick-icon"
-                  >
-                    <g fill="none">
-                      <path
-                        d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"
-                        fill="#00D26A"
-                      ></path>
-                      <path
-                        d="M13.242 23c-.383 0-.766-.143-1.059-.43l-5.744-5.642a1.453 1.453 0 0 1 0-2.08a1.517 1.517 0 0 1 2.118 0l4.685 4.601L23.443 9.431a1.517 1.517 0 0 1 2.118 0a1.45 1.45 0 0 1 0 2.08l-11.26 11.058a1.5 1.5 0 0 1-1.059.431"
-                        fill="#F4F4F4"
-                      ></path>
-                    </g>
-                  </svg>
-                  <span
-                    id="candidate-profile-completion"
-                    class="candidate-home-profile-completion"
-                  >
-                    90% Profile Completion
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button
-              id="complete-profile-button"
-              type="button"
-              class="candidate-home-complete-profile-button button"
-            >
-              <span
-                id="candidate-complete-profile-text"
-                class="candidate-home-complete-profile-text"
-              >
-                Complete Profile
-              </span>
-            </button>
-          </div>
-        </div>
+        <candidate-profile-short [placeholderImageAlt]="'Image of ' + userProfile.first_name + ' ' + userProfile.last_name">
+  <ng-template #text>
+    <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
+  </ng-template>
+  <ng-template #text1>
+    <span>
+      {{
+        userProfile.job_title 
+          ? userProfile.job_title + ' @ ' + userProfile.company_name 
+          : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
+      }}
+    </span>
+  </ng-template>
+</candidate-profile-short>
         <candidate-profile-score
           rootClassName="candidate-profile-scoreroot-class-name"
         >
@@ -498,529 +444,171 @@
           </header>
         </div>
         <div id="Jobs-for-you" class="candidate-home-jobs-for-you-container">
-          <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
-            Jobs for you
-          </span>
-          <div id="job-container" class="candidate-home-jobs-container2">
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name8"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment31">
-                  <span class="candidate-home-text123">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment32">
-                  <span class="candidate-home-text124">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment33">
-                  <span class="candidate-home-text125">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment34">
-                  <span class="candidate-home-text126">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment35">
-                  <span class="candidate-home-text127">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment36">
-                  <span class="candidate-home-text128">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment37">
-                  <span class="candidate-home-text129">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name14"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment38">
-                  <span class="candidate-home-text130">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment39">
-                  <span class="candidate-home-text131">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment40">
-                  <span class="candidate-home-text132">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment41">
-                  <span class="candidate-home-text133">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment42">
-                  <span class="candidate-home-text134">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment43">
-                  <span class="candidate-home-text135">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment44">
-                  <span class="candidate-home-text136">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name13"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment45">
-                  <span class="candidate-home-text137">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment46">
-                  <span class="candidate-home-text138">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment47">
-                  <span class="candidate-home-text139">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment48">
-                  <span class="candidate-home-text140">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment49">
-                  <span class="candidate-home-text141">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment50">
-                  <span class="candidate-home-text142">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment51">
-                  <span class="candidate-home-text143">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name12"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment52">
-                  <span class="candidate-home-text144">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment53">
-                  <span class="candidate-home-text145">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment54">
-                  <span class="candidate-home-text146">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment55">
-                  <span class="candidate-home-text147">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment56">
-                  <span class="candidate-home-text148">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment57">
-                  <span class="candidate-home-text149">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment58">
-                  <span class="candidate-home-text150">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name11"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment59">
-                  <span class="candidate-home-text151">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment60">
-                  <span class="candidate-home-text152">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment61">
-                  <span class="candidate-home-text153">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment62">
-                  <span class="candidate-home-text154">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment63">
-                  <span class="candidate-home-text155">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment64">
-                  <span class="candidate-home-text156">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment65">
-                  <span class="candidate-home-text157">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name10"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment66">
-                  <span class="candidate-home-text158">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment67">
-                  <span class="candidate-home-text159">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment68">
-                  <span class="candidate-home-text160">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment69">
-                  <span class="candidate-home-text161">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment70">
-                  <span class="candidate-home-text162">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment71">
-                  <span class="candidate-home-text163">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment72">
-                  <span class="candidate-home-text164">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name9"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment73">
-                  <span class="candidate-home-text165">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment74">
-                  <span class="candidate-home-text166">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment75">
-                  <span class="candidate-home-text167">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment76">
-                  <span class="candidate-home-text168">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment77">
-                  <span class="candidate-home-text169">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment78">
-                  <span class="candidate-home-text170">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment79">
-                  <span class="candidate-home-text171">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment80">
-                  <span class="candidate-home-text172">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment81">
-                  <span class="candidate-home-text173">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment82">
-                  <span class="candidate-home-text174">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment83">
-                  <span class="candidate-home-text175">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment84">
-                  <span class="candidate-home-text176">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment85">
-                  <span class="candidate-home-text177">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment86">
-                  <span class="candidate-home-text178">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name1"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment87">
-                  <span class="candidate-home-text179">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment88">
-                  <span class="candidate-home-text180">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment89">
-                  <span class="candidate-home-text181">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment90">
-                  <span class="candidate-home-text182">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment91">
-                  <span class="candidate-home-text183">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment92">
-                  <span class="candidate-home-text184">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment93">
-                  <span class="candidate-home-text185">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name2"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment94">
-                  <span class="candidate-home-text186">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment95">
-                  <span class="candidate-home-text187">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment96">
-                  <span class="candidate-home-text188">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment97">
-                  <span class="candidate-home-text189">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment98">
-                  <span class="candidate-home-text190">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment99">
-                  <span class="candidate-home-text191">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment100">
-                  <span class="candidate-home-text192">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-            <candidate-job-for-you-card
-              rootClassName="candidate-job-for-you-cardroot-class-name3"
-            >
-              <ng-template #text>
-                <div class="candidate-home-fragment101">
-                  <span class="candidate-home-text193">
-                    Senior Software Engineer
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text1>
-                <div class="candidate-home-fragment102">
-                  <span class="candidate-home-text194">Google</span>
-                </div>
-              </ng-template>
-              <ng-template #text2>
-                <div class="candidate-home-fragment103">
-                  <span class="candidate-home-text195">6-8 Years</span>
-                </div>
-              </ng-template>
-              <ng-template #text3>
-                <div class="candidate-home-fragment104">
-                  <span class="candidate-home-text196">
-                    Bengaluru, Karnataka, India (On-site)
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #text4>
-                <div class="candidate-home-fragment105">
-                  <span class="candidate-home-text197">
-                    Aliquam vitae turpis in diam convallis finibus in at risus.
-                    Nullam in scelerisque leo, eget sollicitudin velit
-                    bestibulum.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-template #button>
-                <div class="candidate-home-fragment106">
-                  <span class="candidate-home-text198">Apply</span>
-                </div>
-              </ng-template>
-              <ng-template #button1>
-                <div class="candidate-home-fragment107">
-                  <span class="candidate-home-text199">Take Assessment</span>
-                </div>
-              </ng-template>
-            </candidate-job-for-you-card>
-          </div>
+  <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
+    Jobs for you
+  </span>
+  
+  <!-- Refresh button (optional) -->
+  <!-- <div class="refresh-container" style="text-align: right; margin-bottom: 10px;">
+    <button 
+      (click)="refreshJobs()" 
+      [disabled]="isLoading"
+      class="refresh-button"
+      style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer;">
+      🔄 Refresh Jobs
+    </button>
+  </div> -->
+
+  <div id="job-container" class="candidate-home-jobs-container2">
+    <!-- Initial loading indicator -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Loading jobs...</p>
+    </div>
+    
+    <!-- No jobs message -->
+    <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+      <p>No new jobs available. You've applied to all open positions!</p>
+    </div>
+    
+    <!-- Job listings -->
+    <candidate-job-for-you-card
+      *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
+      [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+      [imageSrc]="job.logo"
+      [imageAlt]="job.company_name + ' logo'"
+    >
+      <ng-template #text>
+        <div class="candidate-home-fragment31">
+          <span class="candidate-home-text123">{{ job.title }}</span>
         </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="candidate-home-fragment32">
+          <span class="candidate-home-text124">{{ job.company_name }}</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="candidate-home-fragment33">
+          <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="candidate-home-fragment34">
+          <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+        </div>
+      </ng-template>
+      <ng-template #text4>
+        <div class="candidate-home-fragment35">
+          <span class="candidate-home-text127">{{ job.description }}</span>
+        </div>
+      </ng-template>
+      <ng-template #button>
+        <div class="candidate-home-fragment36">
+          <button
+            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+            (click)="applyForJob(job.job_id, i)"
+          >
+            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+            <span *ngIf="applicationSuccess[job.job_id]">
+              <span class="tick-mark">✓</span> Applied Successfully
+            </span>
+          </button>
+        </div>
+      </ng-template>
+      <ng-template #button1>
+        <div class="candidate-home-fragment37">
+          <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+        </div>
+      </ng-template>
+    </candidate-job-for-you-card>
+    
+    <!-- Load more indicator - only show if there are more jobs to load -->
+    <div 
+      *ngIf="!isLoading && hasMoreJobs" 
+      id="load-more" 
+      class="load-more-container"
+      style="text-align: center; padding: 20px;">
+      
+      <!-- Loading more indicator -->
+      <div *ngIf="isLoadingMoreJobs" class="loading-more">
+        <div class="small-spinner"></div>
+        <p>Loading more jobs...</p>
+      </div>
+      
+      <!-- Trigger element for intersection observer -->
+      <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
+        <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
+      </div>
+    </div>
+    
+    <!-- End of jobs indicator -->
+    <div *ngIf="!isLoading && !hasMoreJobs && displayedJobs.length > 0" class="end-of-jobs">
+      <p style="text-align: center; color: #666; padding: 20px; font-size: 14px;">
+        🎉 You've seen all available jobs! ({{ displayedJobs.length }} total)
+      </p>
+    </div>
+    
+    <!-- Job statistics -->
+    <div *ngIf="!isLoading && displayedJobs.length > 0" class="job-stats" style="text-align: center; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+      <small style="color: #666;">
+        Showing {{ displayedJobs.length }} of {{ jobs.length }} available jobs
+        <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
+      </small>
+    </div>
+  </div>
+</div>
+
+<!-- Add these styles to your component CSS -->
+<style>
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+.small-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container, .loading-more {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.load-more-container {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*.refresh-button:hover:not(:disabled) {
+  background: #e9e9e9;
+}
+
+.refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}*/
+</style>
       </div>
     </div>
   </div>

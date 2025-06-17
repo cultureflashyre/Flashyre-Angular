@@ -1,16 +1,15 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { RouterModule } from '@angular/router'
-import { CommonModule } from '@angular/common'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ComponentsModule } from '../../components/components.module';
+import { ProfileEducationPageDuplicate } from './profile-education-page-duplicate.component';
 
-import { ComponentsModule } from '../../components/components.module'
-import { ProfileEducationPageDuplicate } from './profile-education-page-duplicate.component'
-
-const routes = [
+const routes: Routes = [
   {
     path: '',
     component: ProfileEducationPageDuplicate,
   },
-]
+];
 
 @NgModule({
   declarations: [ProfileEducationPageDuplicate],

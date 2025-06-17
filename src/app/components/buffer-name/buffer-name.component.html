@@ -1,179 +1,180 @@
 <div id="buffer-name" class="buffer-name-container1" [ngClass]="rootClassName">
-  <div id="buffer-name-container" class="buffer-name-container2">
-    <div class="buffer-name-container3">
-      <div class="buffer-name-container4">
-        <dangerous-html
-          html="<!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Zooming Image Loader</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif; /* Modern font */          
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #fff;
-            overflow: hidden;
-        }
-
-        /* Loading Overlay */
-        .loading-overlay {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 441px;
-            height: 291px;
-        }
-
-        /* Wave Loader */
-        .circle-loader {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%; /* Set width to auto so it adjusts based on content */
-            height: 80px;
-        }
-
-        .circle-loader img {
-            position: relative;
-            width: 28px; /* Adjust the image size */
-            height: 28px;
-            margin-right: 28px; /* Gap between images */
-            animation: zoomInOut 2s infinite ease-in-out; /* Slow down animation to 2s */
-            transform-origin: center center; /* Zoom around the center of each image */
-        }
-
-        .circle-loader img:last-child {
-            margin-right: 0; /* Remove margin from the last element */
-        }
-
-        /* Animate each image with delays for zoom motion */
-        .circle-loader img:nth-child(1) { animation-delay: 0s; }
-        .circle-loader img:nth-child(2) { animation-delay: 0.1s; }
-        .circle-loader img:nth-child(3) { animation-delay: 0.2s; }
-        .circle-loader img:nth-child(4) { animation-delay: 0.3s; }
-        .circle-loader img:nth-child(5) { animation-delay: 0.4s; }
-        .circle-loader img:nth-child(6) { animation-delay: 0.5s; }
-        .circle-loader img:nth-child(7) { animation-delay: 0.6s; }
-        .circle-loader img:nth-child(8) { animation-delay: 0.7s; }
-
-        /* Zoom In and Out Animation */
-        @keyframes zoomInOut {
-            0%, 100% {
-                transform: scale(1); /* Initial and final size */
-                opacity: 1;
-            }
-            50% {
-                transform: scale(2); /* Double size at the peak */
-                opacity: 1;
-            }
-        }
-
-        /* Responsive Adjustments */
-        @media screen and (max-width: 1024px) { /* Tablets and small desktops */
-            .loading-overlay {
-                width: 90%;
-                height: auto;
-            }
-
-            .circle-loader {
-                width: 140px;
-                height: 70px;
-            }
-
-            .circle-loader img {
-                width: 24px;
-                height: 24px;
-                margin-right: 24px; /* Gap between images for smaller screen */
-            }
-        }
-
-        @media screen and (max-width: 768px) { /* Tablets and large phones */
-            .loading-overlay {
-                width: 80%;
-                height: auto;
-            }
-
-            .circle-loader {
-                width: 120px;
-                height: 60px;
-            }
-
-            .circle-loader img {
-                width: 20px;
-                height: 20px;
-                margin-right: 20px; /* Gap between images for smaller screen */
-            }
-        }
-
-        @media screen and (max-width: 480px) { /* Small phones */                
-            .loading-overlay {
-                width: 100%;
-                height: auto;
-            }
-
-            .circle-loader {
-                width: auto;
-                height: 50px;
-                justify-content: center;
-                gap: 12px; /* Use gap instead of margin for better spacing */
-            }
-
-            .circle-loader img {
-                width: 18px;
-                height: 18px;
-                margin-right: 0; /* Remove individual margin */
-            }
-        }
-
-        @media screen and (orientation: landscape) and (max-height: 480px) { /* Mobile landscape */
-            .loading-overlay {
-                width: 100%;
-                height: auto;
-            }
-
-            .circle-loader {
-                width: auto;
-                height: 60px;
-                justify-content: center;
-                gap: 16px; /* Ensure spacing is consistent */
-            }
-
-            .circle-loader img {
-                width: 22px;
-                height: 22px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Loading Overlay -->
-    <div class='loading-overlay'>
-        <div class='circle-loader'>
-            <!-- Use images from the D:/Flashyre folder -->
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/c63c28fb-9dc7-4e21-8b95-58b783270a82?org_if_sml=1&force_format=original' alt='Image 1'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/bea26e42-29d8-4150-9b48-761cde897a3a?org_if_sml=1&force_format=original' alt='Image 2'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/4a26c2dc-5f27-44e2-9c45-aba36c70536a?org_if_sml=1&force_format=original' alt='Image 3'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/40d9d2bd-3d49-4a92-8c55-686846fd1d50?org_if_sml=1&force_format=original' alt='Image 4'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/ce223b28-19ef-420f-8c6e-b8267f39f647?org_if_sml=1&force_format=original' alt='Image 5'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/96aca8fe-5c7e-4d4b-a98a-89a5657bf87e?org_if_sml=1&force_format=original' alt='Image 6'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/06f443df-ea7f-420e-aadf-a05956689163?org_if_sml=1&force_format=original' alt='Image 7'>
-            <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/21d13124-a3e7-498e-ac69-0a825df4539e?org_if_sml=1&force_format=original' alt='Image 8'>
+    <div id="buffer-name-container" class="buffer-name-container2">
+      <div class="buffer-name-container3">
+        <div class="buffer-name-container4">
+          <!-- <dangerous-html -->
+            <!--html="<!DOCTYPE html>
+  <html lang='en'>
+  <head>
+      <meta charset='UTF-8'>
+      <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+      <title>Zooming Image Loader</title> -->
+      <style>
+          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');
+  
+          body {
+              margin: 0;
+              padding: 0;
+              font-family: 'Montserrat', sans-serif; /* Modern font */          
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: auto;
+              width: auto;
+              background-color: #ffffff;
+              overflow: visible;
+          }
+  
+          /* Loading Overlay */
+          .loading-overlay {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: auto;
+              height: 291px;
+          }
+  
+          /* Wave Loader */
+          .circle-loader {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: auto; /* Set width to auto so it adjusts based on content */
+              height: 80px;
+          }
+  
+          .circle-loader img {
+              position: relative;
+              width: 28px; /* Adjust the image size */
+              height: 28px;
+              margin-right: 28px; /* Gap between images */
+              animation: zoomInOut 2s infinite ease-in-out; /* Slow down animation to 2s */
+              transform-origin: center center; /* Zoom around the center of each image */
+          }
+  
+          .circle-loader img:last-child {
+              margin-right: 0; /* Remove margin from the last element */
+          }
+  
+          /* Animate each image with delays for zoom motion */
+          .circle-loader img:nth-child(1) { animation-delay: 0s; }
+          .circle-loader img:nth-child(2) { animation-delay: 0.1s; }
+          .circle-loader img:nth-child(3) { animation-delay: 0.2s; }
+          .circle-loader img:nth-child(4) { animation-delay: 0.3s; }
+          .circle-loader img:nth-child(5) { animation-delay: 0.4s; }
+          .circle-loader img:nth-child(6) { animation-delay: 0.5s; }
+          .circle-loader img:nth-child(7) { animation-delay: 0.6s; }
+          .circle-loader img:nth-child(8) { animation-delay: 0.7s; }
+  
+          /* Zoom In and Out Animation */
+          @keyframes zoomInOut {
+              0%, 100% {
+                  transform: scale(1); /* Initial and final size */
+                  opacity: 1;
+              }
+              50% {
+                  transform: scale(2); /* Double size at the peak */
+                  opacity: 1;
+              }
+          }
+  
+          /* Responsive Adjustments */
+          @media screen and (max-width: 1024px) { /* Tablets and small desktops */
+              .loading-overlay {
+                  width: 90%;
+                  height: auto;
+              }
+  
+              .circle-loader {
+                  width: 140px;
+                  height: 70px;
+              }
+  
+              .circle-loader img {
+                  width: 24px;
+                  height: 24px;
+                  margin-right: 24px; /* Gap between images for smaller screen */
+              }
+          }
+  
+          @media screen and (max-width: 768px) { /* Tablets and large phones */
+              .loading-overlay {
+                  width: 80%;
+                  height: auto;
+              }
+  
+              .circle-loader {
+                  width: 120px;
+                  height: 60px;
+              }
+  
+              .circle-loader img {
+                  width: 20px;
+                  height: 20px;
+                  margin-right: 20px; /* Gap between images for smaller screen */
+              }
+          }
+  
+          @media screen and (max-width: 480px) { /* Small phones */                
+              .loading-overlay {
+                  width: 100%;
+                  height: auto;
+              }
+  
+              .circle-loader {
+                  width: auto;
+                  height: 50px;
+                  justify-content: center;
+                  gap: 12px; /* Use gap instead of margin for better spacing */
+              }
+  
+              .circle-loader img {
+                  width: 18px;
+                  height: 18px;
+                  margin-right: 0; /* Remove individual margin */
+              }
+          }
+  
+          @media screen and (orientation: landscape) and (max-height: 480px) { /* Mobile landscape */
+              .loading-overlay {
+                  width: 100%;
+                  height: auto;
+              }
+  
+              .circle-loader {
+                  width: auto;
+                  height: 60px;
+                  justify-content: center;
+                  gap: 16px; /* Ensure spacing is consistent */
+              }
+  
+              .circle-loader img {
+                  width: 22px;
+                  height: 22px;
+              }
+          }
+      </style>
+  <!-- </head> -->
+  <body>
+      <!-- Loading Overlay -->
+      <div class='loading-overlay'>
+          <div class='circle-loader'>
+              <!-- Use images from the D:/Flashyre folder -->
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/c63c28fb-9dc7-4e21-8b95-58b783270a82?org_if_sml=1&force_format=original' alt='Image 1'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/bea26e42-29d8-4150-9b48-761cde897a3a?org_if_sml=1&force_format=original' alt='Image 2'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/4a26c2dc-5f27-44e2-9c45-aba36c70536a?org_if_sml=1&force_format=original' alt='Image 3'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/40d9d2bd-3d49-4a92-8c55-686846fd1d50?org_if_sml=1&force_format=original' alt='Image 4'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/ce223b28-19ef-420f-8c6e-b8267f39f647?org_if_sml=1&force_format=original' alt='Image 5'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/96aca8fe-5c7e-4d4b-a98a-89a5657bf87e?org_if_sml=1&force_format=original' alt='Image 6'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/06f443df-ea7f-420e-aadf-a05956689163?org_if_sml=1&force_format=original' alt='Image 7'>
+              <img src='https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/21d13124-a3e7-498e-ac69-0a825df4539e?org_if_sml=1&force_format=original' alt='Image 8'>
+          </div>
+      </div>
+  </body>
+  <!-- </html> -->
+  <!-- " -->
+          <!-- ></dangerous-html> -->
         </div>
-    </div>
-</body>
-</html>
-"
-        ></dangerous-html>
       </div>
     </div>
   </div>
-</div>

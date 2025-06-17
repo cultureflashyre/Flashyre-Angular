@@ -36,7 +36,7 @@
       <ng-template #text6>
         <div class="profile-certification-page-fragment15">
           <span class="profile-certification-page-text15">
-            View &amp; edit profile
+            View & edit profile
           </span>
         </div>
       </ng-template>
@@ -69,6 +69,7 @@
         rootClassName="progress-bar-step4root-class-name1"
       ></progress-bar-step4>
       <profile-certifications-component
+        #certificationsComponent
         rootClassName="profile-certifications-componentroot-class-name1"
       >
         <ng-template #text>
@@ -158,9 +159,12 @@
       >
         <ng-template #text>
           <div class="profile-certification-page-fragment32">
-            <span class="profile-certification-page-text42">
+            <span
+              class="profile-certification-page-text42"
+              (click)="goToPrevious()"
+            >
               <span class="profile-certification-page-text43">
-                &lt;- Previous
+                <- Previous
               </span>
               <br />
             </span>
@@ -168,13 +172,21 @@
         </ng-template>
         <ng-template #button>
           <div class="profile-certification-page-fragment33">
-            <span class="profile-certification-page-text45">Skip</span>
+            <span
+              class="profile-certification-page-text45"
+              (click)="skipToEmployment()"
+            >
+              Skip
+            </span>
           </div>
         </ng-template>
         <ng-template #button1>
           <div class="profile-certification-page-fragment34">
-            <span class="profile-certification-page-text46">
-              Save &amp; Next -&gt;
+            <span
+              class="profile-certification-page-text46"
+              (click)="saveAndNext()"
+            >
+              Save & Next ->
             </span>
           </div>
         </ng-template>

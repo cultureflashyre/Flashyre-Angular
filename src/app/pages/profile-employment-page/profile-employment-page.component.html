@@ -3,6 +3,7 @@
     <navbar-for-candidate-view1
       rootClassName="navbar-for-candidate-view1root-class-name"
     >
+      <!-- Existing navbar content unchanged -->
       <ng-template #text1>
         <div class="profile-employment-page-fragment10">
           <span class="profile-employment-page-text10">Profile</span>
@@ -33,7 +34,7 @@
       <ng-template #text6>
         <div class="profile-employment-page-fragment15">
           <span class="profile-employment-page-text15">
-            View &amp; edit profile
+            View & edit profile
           </span>
         </div>
       </ng-template>
@@ -66,6 +67,7 @@
         rootClassName="progress-bar-step2root-class-name1"
       ></progress-bar-step2>
       <profile-employment-component
+        #employmentComponent
         rootClassName="profile-employment-componentroot-class-name1"
       >
         <ng-template #text>
@@ -108,21 +110,23 @@
       >
         <ng-template #text>
           <div class="profile-employment-page-fragment26">
-            <span class="profile-employment-page-text29">
-              <span class="profile-employment-page-text30">&lt;- Previous</span>
+            <span (click)="goToPrevious()" class="profile-employment-page-text29 button">
+              <span class="profile-employment-page-text30"><- Previous</span>
               <br />
             </span>
           </div>
         </ng-template>
         <ng-template #button>
           <div class="profile-employment-page-fragment27">
-            <span class="profile-employment-page-text32">Skip</span>
+            <span (click)="skipToEducation()" class="profile-employment-page-text32 button">
+              Skip
+            </span>
           </div>
         </ng-template>
         <ng-template #button1>
           <div class="profile-employment-page-fragment28">
-            <span class="profile-employment-page-text33">
-              Save &amp; Next -&gt;
+            <span (click)="saveAndNext()" class="profile-employment-page-text33 button">
+              Save & Next ->
             </span>
           </div>
         </ng-template>
