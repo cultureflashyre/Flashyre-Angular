@@ -1,4 +1,4 @@
-<div class="candidate-job-for-you-card-container10" [ngClass]="rootClassName">
+<div class="candidate-job-for-you-card-container10" [ngClass]="rootClassName" (click)="onCardClick($event)">
   <div class="candidate-job-for-you-card-container11">
     <div class="candidate-job-for-you-card-container12">
       <img
@@ -125,6 +125,7 @@
           <button
             type="button"
             class="candidate-job-for-you-card-button1 button"
+            (click)="onApply($event)"
           >
             <span>
               <ng-container>
@@ -142,6 +143,7 @@
           <button
             type="button"
             class="candidate-job-for-you-card-button2 button"
+            (click)="onTakeAssessment($event)"
           >
             <span>
               <ng-container>

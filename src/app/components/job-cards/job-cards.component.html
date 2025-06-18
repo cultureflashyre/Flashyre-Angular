@@ -1,0 +1,67 @@
+<div class="job-cards-container">
+  <div class="job-cards-job-cards-main-container">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="job-cards-loading">
+      <span>Loading jobs...</span>
+    </div>
+    <!-- Error state -->
+    <div *ngIf="errorMessage && !loading" class="job-cards-error">
+      <span>{{ errorMessage }}</span>
+    </div>
+    <!-- No jobs state -->
+    <div *ngIf="!loading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
+      <span>No jobs available at the moment.</span>
+    </div>
+    <!-- Job cards -->
+    <div
+      *ngFor="let job of jobs; index as i"
+      (click)="selectJob(job.job_id)"
+      class="job-cards-job-cards-first-container"
+      [ngClass]="{'clicked': clickedIndex === i}"
+    >
+      <div class="job-cards-job-card-job-details-container">
+        <div class="job-cards-company-logo-container">
+          <img
+            alt="{{ job.company_name || 'Company' }} logo"
+            src="{{ job.logo || 'https://via.placeholder.com/24' }}"
+            class="job-cards-company-image"
+          />
+        </div>
+        <div class="job-cards-role-company-location-main-container">
+          <div class="job-cards-role-company-location-container">
+            <span class="job-cards-job-role-text">
+              <ng-container *ngIf="text; else defaultText">
+                <ng-container *ngTemplateOutlet="text"></ng-container>
+              </ng-container>
+              <ng-template #defaultText>
+                <div class="job-cards-fragment1">
+                  <span class="job-cards-text1">{{ job.title || 'Unknown Job' }}</span>
+                </div>
+              </ng-template>
+            </span>
+            <span class="job-cards-company-name-text">
+              <ng-container *ngIf="text1; else defaultText1">
+                <ng-container *ngTemplateOutlet="text1"></ng-container>
+              </ng-container>
+              <ng-template #defaultText1>
+                <div class="job-cards-fragment2">
+                  <span class="job-cards-text2">{{ job.company_name || 'Unknown Company' }}</span>
+                </div>
+              </ng-template>
+            </span>
+            <span class="job-cards-job-location-text">
+              <ng-container *ngIf="text2; else defaultText2">
+                <ng-container *ngTemplateOutlet="text2"></ng-container>
+              </ng-container>
+              <ng-template #defaultText2>
+                <div class="job-cards-fragment3">
+                  <span class="job-cards-text3">{{ job.location || '-' }} ({{ job.job_type || '-' }})</span>
+                </div>
+              </ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

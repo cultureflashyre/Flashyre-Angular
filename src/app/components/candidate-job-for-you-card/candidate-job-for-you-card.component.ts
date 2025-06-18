@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'candidate-job-for-you-card',
@@ -9,6 +10,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   userProfile: any = {}; // To store user profile data
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
   @Input() matchingScore: number = 80; // Default value
+  @Input() jobId: string;
   score: number = 0;
   
   // Use ViewChild to get direct references to the elements
@@ -27,7 +29,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() imageAlt: string = 'image';
   @ContentChild('text3') text3: TemplateRef<any>;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     // Initialize the score from the input property
@@ -108,4 +110,30 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       this.mobileLoader.nativeElement.style.stroke = this.getFillColor(actualPercentage);
     }
   }
+
+  onCardClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    // Navigate only if click is outside Apply and Take Assessment buttons
+    if (
+      !target.closest('.candidate-job-for-you-card-button1') &&
+      !target.closest('.candidate-job-for-you-card-button2')
+    ) {
+      this.router.navigate(['/candidate-job-detail-view'], {
+        queryParams: { jobId: this.jobId },
+      });
+    }
+  }
+
+  onApply(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    console.log('Apply button clicked for jobId:', this.jobId);
+    // Add custom Apply functionality here (e.g., API call, navigation, etc.)
+  }
+
+  onTakeAssessment(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    console.log('Take Assessment button clicked for jobId:', this.jobId);
+    // Add custom Take Assessment functionality here (e.g., open assessment, etc.)
+  }
+  
 }
