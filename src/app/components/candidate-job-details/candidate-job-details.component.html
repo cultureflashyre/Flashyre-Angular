@@ -1,0 +1,216 @@
+<div
+  id="candidate-job-details"
+  class="candidate-job-details-container1"
+  [ngClass]="rootClassName"
+>
+  <!-- Display error message if job not found -->
+  <div *ngIf="errorMessage" class="candidate-job-details-error">
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Show job details if no error -->
+  <div
+    id="job-details-main-container"
+    class="candidate-job-details-job-details-main-container"
+    *ngIf="!errorMessage"
+  >
+    <div class="candidate-job-details-job-details-container">
+      <div
+        id="company-name-role-location-container"
+        class="candidate-job-details-company-name-role-location-container"
+      >
+        <div
+          id="company-image-name-container"
+          class="candidate-job-details-company-image-name-container"
+        >
+          <div
+            id="image-container"
+            class="candidate-job-details-image-container"
+          >
+            <img
+              id="Image"
+              [attr.alt]="job.company_name + ' logo'"
+              [attr.src]="job.logo"
+              class="candidate-job-details-image"
+            />
+          </div>
+          <span
+            id="company-name-text"
+            class="candidate-job-details-company-name-text"
+          >
+            <ng-container>
+              <ng-template #defaultText>
+                <div class="candidate-job-details-fragment3">
+                  <span class="candidate-job-details-text12">{{ job.company_name }}</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="progress-bar-container"
+            class="candidate-job-details-progress-bar-container"
+          >
+            <div class="progress-container mobile" *ngIf="isMobile">
+              <div class="progress">
+                <div #mobileBar class="bar" [style.width.%]="progress" [style.backgroundColor]="fillColor"></div>
+              </div>
+              <span class="score">{{ progress | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+        </div>
+        <div
+          id="job-role-container"
+          class="candidate-job-details-job-role-container"
+        >
+          <span id="job-role-text" class="candidate-job-details-job-role-text">
+            <ng-container>
+              <ng-template #defaultText1>
+                <div class="candidate-job-details-fragment5">
+                  <span class="candidate-job-details-text14">{{ job.title }}</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <span id="location-text" class="candidate-job-details-location-text">
+          <ng-container>
+            <ng-template #defaultText2>
+              <div class="candidate-job-details-fragment4">
+                <span class="candidate-job-details-text13">
+                  {{ job.location }} ({{ job.job_type }}) | Posted {{ job.created_at | date: 'shortDate' }}
+                </span>
+              </div>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <div
+        id="apply-take-assessment-button-container"
+        class="candidate-job-details-apply-take-assessment-button-container"
+      >
+        <button
+          id="apply-button"
+          type="button"
+          class="candidate-job-details-apply-button button"
+          (click)="applyForJob()"
+          [disabled]="!job.url"
+        >
+          <span id="apply-text" class="candidate-job-details-apply-text">
+            <ng-container>
+              <ng-template #defaultButton>
+                <div class="candidate-job-details-fragment1">
+                  <span class="candidate-job-details-text10">Apply</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
+            </ng-container>
+          </span>
+        </button>
+        <button
+          id="take-assessment-button"
+          type="button"
+          class="candidate-job-details-take-assessment-button button"
+        >
+          <span
+            id="take-assessment-text"
+            class="candidate-job-details-take-assessment-text"
+          >
+            <ng-container>
+              <ng-template #defaultButton1>
+                <div class="candidate-job-details-fragment2">
+                  <span class="candidate-job-details-text11">Take Assessment</span>
+                </div>
+              </ng-template>
+              <ng-container *ngTemplateOutlet="button1 ? button1 : defaultButton1"></ng-container>
+            </ng-container>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      id="job-matching-score-container"
+      class="candidate-job-details-job-matching-score-container"
+    >
+      <div class="candidate-job-details-container4">
+        <div class="candidate-job-details-container5">
+          <div class="progress-container mobile" *ngIf="isMobile">
+            <div class="progress">
+              <div #mobileMatchingBar class="bar" [style.width.%]="matchingScore" [style.backgroundColor]="matchingScoreFillColor"></div>
+            </div>
+            <span class="score">{{ matchingScore | number:'1.0-0' }}%</span>
+          </div>
+          <div class="progress-container desktop" *ngIf="!isMobile">
+            <svg viewBox="0 0.5 10 8">
+              <path
+                d="M2 8 A 4 4 0 1 1 8 8"
+                fill="none"
+                stroke-width="0.3"
+                stroke="#E8F6FD"
+              />
+              <path
+                #desktopMatchingLoader
+                class="loader"
+                d="M2 8 A 4 4 0 1 1 8 8"
+                fill="none"
+                stroke-width="0.3"
+                [style.stroke]="matchingScoreFillColor"
+                [style.strokeDasharray]="matchingScoreStrokeDasharray"
+              />
+            </svg>
+            <div class="progress-content">
+              <img
+                [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+                alt="User Profile"
+                class="progress-icon"
+                (error)="handleImageError($event)"
+              />
+              <div class="progress-label">{{ matchingScore | number:'1.0-0' }}%</div>
+            </div>
+            <div class="progress-description">Job matching score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    id="about-the-job-text"
+    class="candidate-job-details-about-the-job-text"
+  >
+    <ng-container>
+      <ng-template #defaultText3>
+        <div class="candidate-job-details-fragment6">
+          <span class="candidate-job-details-text15">
+            <span class="candidate-job-details-text16">About the job</span>
+            <br class="candidate-job-details-text17" />
+            <br />
+            <span class="candidate-job-details-text19">{{ job.description }}</span>
+            <br class="candidate-job-details-text20" />
+            <br />
+            <span>Minimum qualifications:</span>
+            <br />
+            <span>{{ job.requirements }}</span>
+            <br />
+            <br />
+            <span>Salary: {{ job.salary }}</span>
+            <br />
+            <span *ngIf="job.experience_required">Experience Required: {{ job.experience_required }} years</span>
+            <br *ngIf="job.experience_required" />
+            <span *ngIf="job.source">Source: {{ job.source }}</span>
+            <br *ngIf="job.source" />
+            <span *ngIf="job.tag">Tags: {{ job.tag }}</span>
+            <br *ngIf="job.tag" />
+            <span *ngIf="job.contract_time">Contract Time: {{ job.contract_time }}</span>
+            <br *ngIf="job.contract_time" />
+            <span *ngIf="job.contract_type">Contract Type: {{ job.contract_type }}</span>
+            <br *ngIf="job.contract_type" />
+            <span *ngIf="job.external_id">External ID: {{ job.external_id }}</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
+    </ng-container>
+  </span>
+</div>
