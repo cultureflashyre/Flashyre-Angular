@@ -108,9 +108,8 @@
         >
           <img
             id="user-image"
-            [src]="defaultProfilePicture"
+            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
             class="navbar-for-candidate-view-user-image1"
           />
           <div

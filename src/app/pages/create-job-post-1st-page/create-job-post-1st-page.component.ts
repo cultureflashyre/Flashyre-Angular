@@ -15,6 +15,7 @@ import { SkillService, ApiSkill } from '../../services/skill.service';
 
 declare const google: any;
 
+
 @Component({
   selector: 'create-job-post-1st-page',
   templateUrl: './create-job-post-1st-page.component.html',
@@ -36,6 +37,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   private locationInput$ = new Subject<string>();
 
   selectedFile: File | null = null;
+
   private readonly SKILL_DEBOUNCE_DELAY = 400;
 
   currentStep: 'jobPost' | 'assessment' = 'jobPost';
@@ -117,8 +119,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const uniqueId = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueId) {
       console.log('Editing existing job post with unique_id:', uniqueId);
+
     }
   }
+}
 
   private loadGoogleMapsScript(): Promise<void> {
     if (this.googleScriptLoadingPromise) {
@@ -170,6 +174,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.snackBar.open('Could not load location services. Please check your connection and try again.', 'Close', { duration: 7000 });
     }
   }
+  this.initializeSkillsInput();
+  this.initializeRange('total');
+  this.initializeRange('relevant');
+  this.updateExperienceUI();
+}
 
   onLocationInput(event: Event): void {
     const term = (event.target as HTMLInputElement).value;
@@ -244,6 +253,25 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
      if (this.fileInput) this.fileInput.nativeElement.click();
   }
 
+  formatText(type: string) {
+    const editor = document.getElementById('editor');
+    if (editor) {
+        editor.focus();
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            const selectedText = selection.toString();
+            if (type === 'list' || selectedText.length > 0) {
+                switch (type) {
+                    case 'bold': document.execCommand('bold', false, null); break;
+                    case 'italic': document.execCommand('italic', false, null); break;
+                    case 'underline': document.execCommand('underline', false, null); break;
+                    case 'list': document.execCommand('insertUnorderedList', false, null); break;
+                    case 'highlight': document.execCommand('backColor', false, '#fff3cd'); break;
+                }
+            }
+        }
+    }
+}
   onFileSelected(event: Event): void {
     this.isFileUploadCompletedSuccessfully = false;
     const input = event.target as HTMLInputElement;
@@ -277,6 +305,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     } else if (this.fileInput && this.fileInput.nativeElement) {
         this.fileInput.nativeElement.value = '';
     }
+
+
   }
 
   private _performUpload(file: File): void {
@@ -307,9 +337,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.subscriptions.add(uploadSub);
   }
 
+
   private updateExperienceUI(): void {
     this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
+
   }
 
   private adjustExperienceRange(min: number, max: number): [number, number] {
@@ -407,6 +439,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
+
   private setJobDescription(description: string): void {
     const editor = this.document.getElementById('editor') as HTMLDivElement;
     if (editor) {
@@ -425,7 +458,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.checkEmpty('editor');
   }
 
-  private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
+     private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
     const prefix = type === 'total' ? 'total_' : 'relevant_';
     const rangeIndicator = this.document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
     const markerLeft = this.document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;
@@ -491,6 +524,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const markerRight = this.document.getElementById(`${prefix}markerRight`) as HTMLDivElement;
     if (!rangeIndicator || !markerLeft || !markerRight) {
       if(this.isViewInitialized) console.warn(`Range indicator elements not found for type: ${type}`);
+
       return;
     }
     let isDragging = false; let currentMarker: HTMLDivElement | null = null;
