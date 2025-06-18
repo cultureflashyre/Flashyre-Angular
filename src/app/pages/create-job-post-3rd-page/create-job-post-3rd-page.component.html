@@ -1,0 +1,478 @@
+<div class="create-job-post3rd-page-container1">
+  <div
+    id="create-job-post-3rd-page-main-container"
+    class="create-job-post3rd-page-create-job-post3rd-page-main-container"
+  >
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name6"
+    >
+      <ng-template #text>
+        <div class="create-job-post3rd-page-fragment10">
+          <span class="create-job-post3rd-page-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="create-job-post3rd-page-fragment11">
+          <span class="create-job-post3rd-page-text11">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="create-job-post3rd-page-fragment12">
+          <span class="create-job-post3rd-page-text12">Job Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="create-job-post3rd-page-fragment13">
+          <span class="create-job-post3rd-page-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="create-job-post3rd-page-fragment14">
+          <span class="create-job-post3rd-page-text14">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="create-job-post3rd-page-fragment15">
+          <span class="create-job-post3rd-page-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="create-job-post3rd-page-fragment16">
+          <span class="create-job-post3rd-page-text16">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="create-job-post3rd-page-fragment17">
+          <span class="create-job-post3rd-page-text17">Notifications</span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="create-job-post3rd-page-fragment18">
+          <span class="create-job-post3rd-page-text18">Jobs Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="create-job-post3rd-page-fragment19">
+          <span class="create-job-post3rd-page-text19">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="create-job-post3rd-page-fragment20">
+          <span class="create-job-post3rd-page-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="create-job-post3rd-page-fragment21">
+          <span class="create-job-post3rd-page-text21">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="create-job-post3rd-page-fragment22">
+          <span class="create-job-post3rd-page-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text15>
+        <div class="create-job-post3rd-page-fragment23">
+          <span class="create-job-post3rd-page-text23">Leslie Alexander</span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="create-job-post3rd-page-fragment24">
+          <span class="create-job-post3rd-page-text24">Google</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="create-job-post3rd-page-fragment25">
+          <span class="create-job-post3rd-page-text25">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text32>
+        <div class="create-job-post3rd-page-fragment26">
+          <span class="create-job-post3rd-page-text26">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="create-job-post3rd-page-fragment27">
+          <span class="create-job-post3rd-page-text30">2</span>
+        </div>
+      </ng-template>
+    </navbar-for-recruiter-view>
+    <div
+      id="interview-container"
+      class="create-job-post3rd-page-interview-container"
+    >
+      <div
+        id="progress-bar-3-container"
+        class="create-job-post3rd-page-progress-bar3-container1"
+      >
+        <div
+          id="progressBar-3-container"
+          class="create-job-post3rd-page-progress-bar3-container2"
+        >
+          <div class="create-job-post3rd-page-container2">
+            <div class="create-job-post3rd-page-container3">
+              <dangerous-html
+                html="<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Responsive Progress Bar</title>
+  <style>
+    /* Container for the progress bar */
+    .progress-bar {
+      display: flex;
+      overflow: visible;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      font-family: Inter, sans-serif;
+    }
+
+    /* Style for each step */
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      flex: 1;
+    }
+
+    /* Line between steps */
+    .step:before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: calc(-40% + 15px); /* Adjust position to align the line between circles */
+      width: calc(80% - 30px); /* Width adjusted to match circle diameter */
+      height: 2px;
+      background-color: #ccc;
+      z-index: 0;
+    }
+
+    /* Remove line before the first step */
+    .step:first-child:before {
+      display: none;
+    }
+
+    /* Circle for each step */
+    .step-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #3AC14A;
+      color: white;
+      font-size: 1rem;
+      z-index: 1;
+    }
+
+    /* Change background color for the last three step circles */
+    .step:nth-last-child(-n+1) .step-circle {
+      background-color: #747474;
+      color: white;
+      border: none;
+    }
+
+    /* Label under each circle */
+    .step span {
+      margin-top: 8px;
+      font-size: 1rem;
+      color: #18191C;
+    }
+
+
+     /* Media query for responsiveness */
+    @media (max-width: 728px) {
+      .progress-bar {
+        width: 90%;
+      }
+
+      .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        font-weig: 400;
+      }
+
+      .step span {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 478px) {
+
+      .step-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 0.6rem;
+      }
+
+      .step span {
+        font-size: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='progress-bar'>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Create Job Post</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Assessment for Job</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Interview process</span>
+    </div>
+  </div>
+</body>
+</html>
+"
+              ></dangerous-html>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="interview-process-container"
+        class="create-job-post3rd-page-interview-process-container"
+      >
+        <span
+          id="interview-process-text"
+          class="create-job-post3rd-page-interview-process-text"
+        >
+          Interview Process
+        </span>
+        <div
+          id="different-stages-container"
+          class="create-job-post3rd-page-different-stages-container"
+        >
+          <div
+            id="different-stage-container"
+            class="create-job-post3rd-page-different-stage-container"
+          >
+            <div
+              data-thq="thq-dropdown"
+              class="create-job-post3rd-page-select-stage-dropdown list-item"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="create-job-post3rd-page-dropdown-toggle10"
+              >
+                <span class="create-job-post3rd-page-text31">Select Stage</span>
+                <div
+                  data-thq="thq-dropdown-arrow"
+                  class="create-job-post3rd-page-dropdown-arrow1"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 32 32"
+                    class="create-job-post3rd-page-icon1"
+                  >
+                    <path
+                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <ul
+                data-thq="thq-dropdown-list"
+                class="create-job-post3rd-page-dropdown-list1"
+              >
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown1 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle11"
+                  >
+                    <span class="create-job-post3rd-page-resume-screening">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown2 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle12"
+                  >
+                    <span class="create-job-post3rd-page-text32">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown3 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle13"
+                  >
+                    <span class="create-job-post3rd-page-text33">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown4 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle14"
+                  >
+                    <span class="create-job-post3rd-page-text34">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown5 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle15"
+                  >
+                    <span class="create-job-post3rd-page-text35">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <input
+              type="text"
+              id="date-input"
+              placeholder="Enter Date"
+              class="create-job-post3rd-page-date-input input"
+            />
+            <div
+              data-thq="thq-dropdown"
+              class="create-job-post3rd-page-select-mode-dropdown list-item"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="create-job-post3rd-page-dropdown-toggle16"
+              >
+                <span class="create-job-post3rd-page-text36">Select Mode</span>
+                <div
+                  data-thq="thq-dropdown-arrow"
+                  class="create-job-post3rd-page-dropdown-arrow2"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 32 32"
+                    class="create-job-post3rd-page-icon3"
+                  >
+                    <path
+                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <ul
+                data-thq="thq-dropdown-list"
+                class="create-job-post3rd-page-dropdown-list2"
+              >
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown6 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle17"
+                  >
+                    <span class="create-job-post3rd-page-text37">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown7 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle18"
+                  >
+                    <span class="create-job-post3rd-page-text38">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+                <li
+                  data-thq="thq-dropdown"
+                  class="create-job-post3rd-page-dropdown8 list-item"
+                >
+                  <div
+                    data-thq="thq-dropdown-toggle"
+                    class="create-job-post3rd-page-dropdown-toggle19"
+                  >
+                    <span class="create-job-post3rd-page-text39">
+                      Sub-menu Item
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <input
+              type="text"
+              id="assigned-to-input"
+              placeholder="Assigned To"
+              class="create-job-post3rd-page-assigned-to-input input"
+            />
+            <svg
+              id="remove-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="create-job-post3rd-page-remove-icon"
+            >
+              <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+        <div
+          id="add-section-container"
+          class="create-job-post3rd-page-add-section-container"
+        >
+          <span
+            id="add-section-text"
+            class="create-job-post3rd-page-add-section-text button"
+          >
+            + Add Section
+          </span>
+          <span
+            id="remove-section-text"
+            class="create-job-post3rd-page-remove-section-text button"
+          >
+            - Remove Section
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -221,6 +221,20 @@ const routes = [
       ).then((m) => m.CreateJobPost1stPageModule),
   },
   {
+    path: 'create-job-post-2nd-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-2nd-page/create-job-post-2nd-page.module'
+      ).then((m) => m.CreateJobPost2ndPageModule),
+  },
+  {
+    path: 'create-job-post-3rd-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-3rd-page/create-job-post-3rd-page.module'
+      ).then((m) => m.CreateJobPost3rdPageModule),
+  },
+  {
     path: 'buffer-page', // New route
     loadChildren: () =>
       import('./buffer-page/buffer-page.module').then(
