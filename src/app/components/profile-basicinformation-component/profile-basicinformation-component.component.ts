@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+// FIXED Component.ts - Remove SafeUrl and keep it simple
+import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { Router } from '@angular/router';
 
@@ -27,13 +28,18 @@ export class ProfileBasicinformationComponent implements OnInit {
   phoneNumber: string = '';
   profilePicture: File | null = null;
   resume: File | null = null;
-  imageSrc: string = ''; // Holds the preview URL of the selected image
-  defaultImageSrc: string = 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIwfHxnaXJsfGVufDB8fHx8MTczNDA4MzI2NHww&ixlib=rb-4.0.3&w=200';
+  imageSrc: string = ''; // FIXED: Back to simple string
+  defaultImageSrc: string = "/assets/placeholders/profile-placeholder.jpg";
   imageAlt: string = 'Profile Picture';
 
-  constructor(private profileService: ProfileService, private router: Router) {}
-
+  constructor(
+  private profileService: ProfileService, 
+  private router: Router,
+  private cdr: ChangeDetectorRef
+) {}
   ngOnInit() {
+    console.log('Component initialized');
+    console.log('Default image source:', this.defaultImageSrc);
     this.fetchUserDetails();
   }
 
@@ -44,11 +50,12 @@ export class ProfileBasicinformationComponent implements OnInit {
         this.lastName = response.last_name || '';
         this.email = response.email || '';
         this.phoneNumber = response.phone_number || '';
+        console.log('User details fetched:', response);
       },
       (error) => {
         console.error('Error fetching user details', error);
         if (error.status === 401) {
-          this.router.navigate(['/login-candidate']); // Redirect to login if unauthorized
+          this.router.navigate(['/login-candidate']);
         } else {
           alert('Failed to load user details. Please try again.');
         }
@@ -57,6 +64,7 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   triggerProfilePictureUpload() {
+    console.log('Trigger profile picture upload clicked');
     this.profilePictureInput.nativeElement.click();
   }
 
@@ -65,16 +73,59 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   onProfilePictureSelected(event: any) {
-    const file = event.target.files[0];
-    if (file && this.validateProfilePicture(file)) {
-      this.profilePicture = file;
-      this.imageSrc = URL.createObjectURL(file);
-      console.log("Picture selected: ", this.imageSrc);
-    } else {
-      alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
-      this.profilePictureInput.nativeElement.value = '';
-    }
+  console.log('🔍 File selection triggered');
+  
+  const file = event.target.files[0];
+  console.log('🔍 Selected file:', file);
+  
+  if (!file) {
+    console.log('❌ No file selected');
+    return;
   }
+
+  if (this.validateProfilePicture(file)) {
+    console.log('✅ File validation passed');
+    this.profilePicture = file;
+    
+    // Clean up previous URL
+    if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
+      URL.revokeObjectURL(this.imageSrc);
+    }
+    
+    // Create new object URL
+    const objectURL = URL.createObjectURL(file);
+    console.log('🔗 Object URL created:', objectURL);
+    
+    // Set the image source
+    this.imageSrc = objectURL;
+    console.log('📝 imageSrc set to:', this.imageSrc);
+    
+    // Force change detection
+    this.cdr.detectChanges();
+    console.log('🔄 Change detection triggered');
+    
+    // Backup: Direct DOM manipulation
+    setTimeout(() => {
+      const imgElement = document.getElementById('candidate-profile-picture') as HTMLImageElement;
+      if (imgElement) {
+        console.log('🖼️ Setting image src directly');
+        imgElement.src = objectURL;
+        
+        imgElement.onload = () => {
+          console.log('✅ Image loaded successfully');
+        };
+        imgElement.onerror = (error) => {
+          console.log('❌ Image failed to load:', error);
+        };
+      }
+    }, 50);
+    
+  } else {
+    console.log('❌ File validation failed');
+    alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
+    this.profilePictureInput.nativeElement.value = '';
+  }
+}
 
   onResumeSelected(event: any) {
     const file = event.target.files[0];
@@ -87,9 +138,17 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   validateProfilePicture(file: File): boolean {
+    console.log('🔍 Validating file:', file.name, file.type, file.size);
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     const maxSize = 5 * 1024 * 1024; // 5MB
-    return allowedTypes.includes(file.type) && file.size <= maxSize;
+    
+    const isValidType = allowedTypes.includes(file.type);
+    const isValidSize = file.size <= maxSize;
+    
+    console.log('📋 Type valid:', isValidType);
+    console.log('📋 Size valid:', isValidSize, `(${file.size} bytes vs ${maxSize} max)`);
+    
+    return isValidType && isValidSize;
   }
 
   validateResume(file: File): boolean {
@@ -111,7 +170,9 @@ export class ProfileBasicinformationComponent implements OnInit {
       }
   
       const formData = new FormData();
-      formData.append('profile_picture', this.profilePicture);
+      if (this.profilePicture) {
+        formData.append('profile_picture', this.profilePicture);
+      }
       formData.append('resume', this.resume);
   
       this.profileService.saveProfile(formData).subscribe(
@@ -127,13 +188,13 @@ export class ProfileBasicinformationComponent implements OnInit {
       );
     });
   }
-  
 
   skip() {
     this.router.navigate(['/profile-employment-page']);
   }
 
   ngOnDestroy() {
+    // FIXED: Now works properly with string type
     if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
       URL.revokeObjectURL(this.imageSrc);
     }

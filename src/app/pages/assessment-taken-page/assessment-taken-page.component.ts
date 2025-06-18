@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser'
+import { Title, Meta } from '@angular/platform-browser';
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
-import { AuthService } from '../../services/candidate.service'; // Import AuthService
+import { AuthService } from '../../services/candidate.service';
 import { Router } from '@angular/router';
+
+interface UserProfile {
+  first_name: string;
+  last_name: string;
+}
 
 @Component({
   selector: 'assessment-taken-page',
@@ -10,14 +15,15 @@ import { Router } from '@angular/router';
   styleUrls: ['assessment-taken-page.component.css'],
 })
 export class AssessmentTakenPage implements OnInit {
-    assessments: any[] = [];
+  assessments: any[] = [];
+  userProfile: UserProfile | null = null;
 
   constructor(
     private title: Title,
     private meta: Meta,
     private assessmentTakenService: AssessmentTakenService,
     private authService: AuthService,
-    private router: Router,
+    private router: Router
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
@@ -34,6 +40,7 @@ export class AssessmentTakenPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadUserProfile();
     this.assessmentTakenService.getAllAssessmentScores().subscribe(
       (data) => {
         this.assessments = data;
@@ -42,6 +49,15 @@ export class AssessmentTakenPage implements OnInit {
         console.error('Error fetching assessment scores', error);
       }
     );
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log('User Profile NOT fetched');
+    }
   }
 
   getFillColor(score: number): string {
@@ -53,30 +69,11 @@ export class AssessmentTakenPage implements OnInit {
   }
 
   onLogoutClick() {
-    this.authService.logout(); // Call the logout method in AuthService
-    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
+    this.authService.logout();
+    // this.router.navigate(['/login-candidate']);
   }
 
-// goToAssessmentDetails(assessment: any) {
-//   console.log(assessment)
-//   this.router.navigate(
-//     ['/assessment-taken-page-2', assessment.assessment_id],
-//     {
-//       state: {
-//         assessment_title: assessment.assessment_title,
-//         assessment_logo_url: assessment.assessment_logo_url,
-//         created_by: assessment.created_by,
-//         assessment_id: assessment.assessment_id,
-//         attempts_remaining: assessment.attempts_remaining,
-//         attempts: assessment.attempts
-//       }
-//     }
-//   );
-// }
-
-goToAssessmentDetails(assessment: any) {
-  this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id]);
-}
-
-
+  goToAssessmentDetails(assessment: any) {
+    this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id]);
+  }
 }

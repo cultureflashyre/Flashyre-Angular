@@ -17,7 +17,7 @@
           <span class="profile-basicinformation-component-text17">Basic Information</span>
         </div>
       </ng-template>
-    </span>
+    </span> 
     <div
       id="profile-details-container"
       class="profile-basicinformation-component-profile-details-container"
@@ -38,24 +38,23 @@
           </ng-template>
         </span>
         <div class="profile-picture-wrapper">
-          <img
-            id="candidate-profile-picture"
-            [attr.alt]="imageAlt"
-            [src]="imageSrc || defaultImageSrc"
-            
-            class="profile-basicinformation-component-user-image"
-          />
-          <div class="overlay" (click)="triggerProfilePictureUpload()">
-            <span class="plus-symbol">+</span>
-          </div>
-          <input
-            type="file"
-            #profilePictureInput
-            (change)="onProfilePictureSelected($event)"
-            accept=".jpg,.jpeg,.png"
-            style="display: none;"
-          />
-        </div>
+  <img
+    id="candidate-profile-picture"
+    [attr.alt]="imageAlt"
+    [src]="imageSrc || defaultImageSrc"
+    class="profile-basicinformation-component-user-image"
+  />
+  <div class="overlay" (click)="triggerProfilePictureUpload()">
+    <span class="plus-symbol">+</span>
+  </div>
+  <input
+    type="file"
+    #profilePictureInput
+    (change)="onProfilePictureSelected($event)"
+    accept=".jpg,.jpeg,.png"
+    style="display: none;"
+  />
+</div>
       </div>
       <div
         id="candidate-details-container"
