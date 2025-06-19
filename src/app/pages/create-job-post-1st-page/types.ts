@@ -53,3 +53,55 @@ export interface PaginatedJobPostResponse {
   previous: string | null;
   results: JobDetails[];
 }
+
+export interface RawMCQItemFromBackend {
+  mcq_item_id: number; // Primary Key of MCQItem model
+  job_mcq_id: number; // Primary Key of JobMCQ model it belongs to
+  question_number: number;
+  question_text: string; // The raw text including Q, options, and answer
+}
+
+export interface JobMcqGroupFromBackend {
+  job_mcq_id: number; // ID of the JobMCQ object
+  skill: string;
+  mcq_items: RawMCQItemFromBackend[];
+}
+
+export interface McqsBySkillResponse {
+  [skill: string]: JobMcqGroupFromBackend; // The backend returns a dictionary keyed by skill
+}
+
+export interface ParsedMCQText {
+  question: string;
+  options: string[];
+  correctAnswerLabel: string; // e.g., 'a', 'b', 'c', 'd'
+  originalIndex?: number; // Optional, can be useful for mapping back if needed
+}
+
+export interface ParsedMCQItem extends RawMCQItemFromBackend {
+  parsedDetails: ParsedMCQText;
+  isSelected?: boolean; // For UI binding in the list
+}
+
+export interface DisplayableMcqGroup {
+  [skill: string]: {
+    jobMcqId: number; // PK of the JobMCQ model instance
+    items: ParsedMCQItem[];
+  };
+}
+
+export interface AssessmentPayload {
+  job_unique_id: string; // The JobPost unique_id (UUID string)
+  name: string;
+  selected_mcq_item_ids: number[]; // Array of MCQItem primary keys
+  is_proctored: boolean;
+  has_video_recording: boolean;
+  allow_phone_access: boolean;
+  shuffle_questions_overall: boolean;
+  total_questions_to_present?: number | null; // Optional
+}
+
+export interface AssessmentSaveResponse {
+  assessment_uuid: string;
+  name: string;
+}
