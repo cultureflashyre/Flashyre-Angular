@@ -1,3 +1,5 @@
+// src/app/pages/create-job-post-1st-page/types.ts
+
 export interface Skill {
   skill: string;
   skill_confidence: number;
@@ -90,6 +92,7 @@ export interface DisplayableMcqGroup {
   };
 }
 
+// THIS PAYLOAD IS FOR THE NEW 'mcq_assessment' APP (not the legacy one)
 export interface AssessmentPayload {
   job_unique_id: string; // The JobPost unique_id (UUID string)
   name: string;
@@ -101,7 +104,32 @@ export interface AssessmentPayload {
   total_questions_to_present?: number | null; // Optional
 }
 
+// THIS RESPONSE IS FOR THE NEW 'mcq_assessment' APP (not the legacy one)
 export interface AssessmentSaveResponse {
   assessment_uuid: string;
   name: string;
+}
+
+// ==============================================================================
+// === NEW TYPES FOR LEGACY ASSESSMENT CREATION =================================
+// ==============================================================================
+
+/**
+ * Payload for the endpoint that creates an assessment in the legacy 'trial_assessments' system.
+ */
+export interface LegacyAssessmentPayload {
+  job_unique_id: string;
+  assessment_name: string;
+  selected_mcq_item_ids: number[];
+  is_proctored: boolean;
+  has_video_recording: boolean;
+  allow_phone_access: boolean;
+}
+
+/**
+ * The expected success response after creating a legacy assessment.
+ */
+export interface LegacyAssessmentSaveResponse {
+  legacy_assessment_id: number;
+  assessment_title: string;
 }

@@ -8,10 +8,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
+
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
-import { JobDetails, AIJobResponse } from './types';
 import { SkillService, ApiSkill } from '../../services/skill.service';
+import { McqAssessmentService } from '../../services/mcq-assessment.service';
+
+import { JobDetails, AIJobResponse, LegacyAssessmentPayload } from './types';
+import { AssessmentQuestionsMainContainer } from '../../components/assessment-questions-main-container/assessment-questions-main-container.component';
 
 // Import the official Google Maps Loader
 import { Loader } from '@googlemaps/js-api-loader';
@@ -24,6 +28,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
+  // Add a ViewChild to get a reference to the assessment component instance
+  @ViewChild(AssessmentQuestionsMainContainer) private assessmentComponent!: AssessmentQuestionsMainContainer;
 
   private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
   
@@ -60,6 +66,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     private snackBar: MatSnackBar,
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
+    private mcqAssessmentService: McqAssessmentService, // Inject the service
     private router: Router,
     private route: ActivatedRoute,
     private ngZone: NgZone,
@@ -130,8 +137,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const uniqueId = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueId) {
       console.log('Editing existing job post with unique_id:', uniqueId);
-      // Logic to fetch job details if unique_id is present can be added here
-      // For now, it will be populated if jobData is set (e.g., after file upload)
     }
   }
 
@@ -180,7 +185,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.placesService.getPlacePredictions(
         {
           input: term,
-          types: ['(cities)'], // You can restrict to cities, regions, etc.
+          types: ['(cities)'],
           sessionToken: this.sessionToken 
         },
         (predictions: google.maps.places.AutocompletePrediction[] | null, status: google.maps.places.PlacesServiceStatus) => {
@@ -207,7 +212,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
     this.locationInput.nativeElement.value = '';
     this.showLocationSuggestions = false;
-    this.sessionToken = undefined; // Invalidate session token after selection
+    this.sessionToken = undefined;
   }
   
   removeLocation(index: number): void {
@@ -293,7 +298,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.isFileUploadCompletedSuccessfully = false;
     const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
-        this.jobData = response; // Store AI response
+        this.jobData = response;
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
         this.isSubmitting = false;
@@ -332,7 +337,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
       
-      // MODIFIED: Parse location string (potentially comma-separated) from AI into an array for the form
       const aiLocationString = details.location || '';
       locationArray = (typeof aiLocationString === 'string' && aiLocationString.trim() !== '')
                       ? aiLocationString.split(',').map(s => s.trim()).filter(s => s)
@@ -354,7 +358,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       const details = jobData as JobDetails;
       role = details.role;
 
-      // MODIFIED: Parse location string (comma-separated from DB) into an array for the form
       const dbLocationString = details.location || '';
       locationArray = (typeof dbLocationString === 'string' && dbLocationString.trim() !== '')
                       ? dbLocationString.split(',').map(s => s.trim()).filter(s => s)
@@ -378,7 +381,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     
     this.jobForm.patchValue({
       role, 
-      location: locationArray, // Use the parsed array for the form control
+      location: locationArray,
       job_type, 
       workplace_type,
       total_experience_min, total_experience_max,
@@ -681,8 +684,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     });
     this.document.addEventListener('click', (e) => {
       const target = e.target as Node;
-      const skillsContainer = this.document.getElementById('skills-input-container'); // Check this ID matches your HTML
-      const locationContainer = this.document.getElementById('location-input-container'); // Check this ID
+      const skillsContainer = this.document.getElementById('skills-input-container');
+      const locationContainer = this.document.getElementById('location-input-container');
 
       if (skillsContainer && !skillsContainer.contains(target)) {
         skillsSuggestionsDiv.style.display = 'none';
@@ -691,49 +694,43 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
           this.showLocationSuggestions = false;
       }
     });
-    tagInput.addEventListener('click', (e) => { e.stopPropagation(); /* Prevents document click listener from hiding suggestions immediately */ });
-    this.document.getElementById('tagContainer')?.addEventListener('click', () => tagInput.focus()); // Focus input when clicking container
+    tagInput.addEventListener('click', (e) => { e.stopPropagation(); });
+    this.document.getElementById('tagContainer')?.addEventListener('click', () => tagInput.focus());
   }
 
   onSubmit(): void {
-    this.jobForm.markAllAsTouched();
-    this.checkEmpty('editor'); // Manually trigger check for editor
-
-    if (this.jobForm.invalid) {
-      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
-      // Logic to scroll to the first invalid control
-      const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
-      if (firstInvalidControl) {
-          let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
-          if (!element) { // Fallbacks for custom controls
-              if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
-              else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
-              else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
-          }
-          element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
-    }
-
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']); return;
     }
 
-    this.isSubmitting = true;
     if (this.currentStep === 'jobPost') {
+      this.jobForm.markAllAsTouched();
+      this.checkEmpty('editor');
+
+      if (this.jobForm.invalid) {
+        this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+        const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
+        if (firstInvalidControl) {
+            let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
+            if (!element) {
+                if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
+                else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
+                else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
+            }
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      this.isSubmitting = true;
       const formValues = this.jobForm.getRawValue();
-
-      // MODIFIED: Convert location array to comma-separated string
-      const locationString = Array.isArray(formValues.location) 
-                             ? formValues.location.join(', ') 
-                             : (typeof formValues.location === 'string' ? formValues.location : '');
-
+      const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
       const jobDetails: JobDetails = {
         ...formValues,
-        location: locationString, // Use the processed string for JobDetails
-        skills: { // This structure for skills is for JobDetails. Ensure it matches what backend expects
+        location: locationString,
+        skills: {
              primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
              secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
         },
@@ -747,16 +744,49 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
         },
         error: (error) => {
           this.isSubmitting = false; console.error('Job post saving failed:', error);
-          this.snackBar.open(`Job post saving failed: ${error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
+          this.snackBar.open(`Job post saving failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
         }
       });
       this.subscriptions.add(saveSub);
+
     } else if (this.currentStep === 'assessment') {
-      // Simulate assessment submission
-      setTimeout(() => {
-        this.isSubmitting = false; this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
-        this.resetForm(); this.router.navigate(['/job-posted']); // Navigate to a success/listing page
-      }, 1500);
+      if (!this.assessmentComponent) {
+        this.snackBar.open('Assessment component is not available. Cannot submit.', 'Close', { duration: 5000 });
+        return;
+      }
+      
+      const payloadFromChild = this.assessmentComponent.getAssessmentPayload();
+      
+      if (!payloadFromChild) {
+        // Validation failed inside the child component, which is responsible for the error message.
+        return;
+      }
+
+      const legacyPayload: LegacyAssessmentPayload = {
+        job_unique_id: payloadFromChild.job_unique_id,
+        assessment_name: payloadFromChild.name,
+        selected_mcq_item_ids: payloadFromChild.selected_mcq_item_ids,
+        is_proctored: payloadFromChild.is_proctored,
+        has_video_recording: payloadFromChild.has_video_recording,
+        allow_phone_access: payloadFromChild.allow_phone_access
+      };
+      
+      this.isSubmitting = true;
+
+      const assessmentSub = this.mcqAssessmentService.createLegacyAssessment(legacyPayload, token).subscribe({
+        next: (response) => {
+          this.isSubmitting = false;
+          this.snackBar.open(`Assessment "${response.assessment_title}" created successfully!`, 'Close', { duration: 4000 });
+          this.resetForm();
+          this.router.navigate(['/job-posted']);
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          console.error('Legacy assessment submission failed:', error);
+          this.snackBar.open(`Assessment submission failed: ${error.message || 'Unknown server error'}`, 'Close', { duration: 6000 });
+        }
+      });
+      this.subscriptions.add(assessmentSub);
     }
   }
 
@@ -766,14 +796,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.currentStep = 'jobPost';
     } else {
       this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
-      this.resetForm(); this.router.navigate(['/dashboard']); // Or appropriate route
+      this.resetForm(); this.router.navigate(['/dashboard']);
     }
   }
 
   resetForm(): void {
     this.jobForm.reset({
       role: '',
-      location: [], // Reset to empty array for the form
+      location: [],
       job_type: '',
       workplace_type: '',
       total_experience_min: 0,
@@ -793,17 +823,17 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.clearFileInput();
     this.isFileUploadCompletedSuccessfully = false;
 
-    if (this.isViewInitialized) { // Ensure view elements are available
+    if (this.isViewInitialized) {
         this.populateSkills([]);
         this.setJobDescription('');
-        this.updateExperienceUI(); // This will use the reset form values
+        this.updateExperienceUI();
         if (this.locationInput && this.locationInput.nativeElement) {
-            this.locationInput.nativeElement.value = ''; // Clear location text input
+            this.locationInput.nativeElement.value = '';
         }
     }
 
     this.currentStep = 'jobPost';
-    this.jobData = null; // Clear any loaded job data
+    this.jobData = null;
     this.isSubmitting = false;
     this.isLoadingSkills = false;
     this.locationSuggestions = [];
@@ -812,6 +842,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.sessionToken = undefined; // Clean up Google Maps session token
+    this.sessionToken = undefined;
   }
 }
