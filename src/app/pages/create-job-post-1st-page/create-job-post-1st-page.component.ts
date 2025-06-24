@@ -13,8 +13,8 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobDetails, AIJobResponse } from './types';
 import { SkillService, ApiSkill } from '../../services/skill.service';
 
-declare const google: any;
-
+// Import the official Google Maps Loader
+import { Loader } from '@googlemaps/js-api-loader';
 
 @Component({
   selector: 'create-job-post-1st-page',
@@ -26,18 +26,20 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
 
   private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
-  private googleScriptLoadingPromise: Promise<void> | null = null;
-  private autocompleteService: any;
+  
+  private loader: Loader;
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any; // To hold the loaded google object reference
 
   jobForm: FormGroup;
   
-  locationSuggestions: any[] = [];
+  locationSuggestions: google.maps.places.AutocompletePrediction[] = [];
   showLocationSuggestions = false;
   isLoadingLocations = false;
   private locationInput$ = new Subject<string>();
 
   selectedFile: File | null = null;
-
   private readonly SKILL_DEBOUNCE_DELAY = 400;
 
   currentStep: 'jobPost' | 'assessment' = 'jobPost';
@@ -67,7 +69,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   ) {
     this.jobForm = this.fb.group({
       role: ['', [Validators.required, Validators.maxLength(100)]],
-      location: [[], [Validators.required]],
+      location: [[], [Validators.required]], // Form stores as array for UI
       job_type: ['', [Validators.required]],
       workplace_type: ['', [Validators.required]],
       total_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
@@ -83,6 +85,12 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       job_description_url: ['', [Validators.maxLength(200)]],
       unique_id: ['']
     }, { validators: this.experienceRangeValidator });
+
+    this.loader = new Loader({
+      apiKey: this.googleMapsApiKey,
+      version: 'weekly',
+      libraries: ['places']
+    });
   }
 
   ngOnInit(): void {
@@ -102,6 +110,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
         tap(() => {
           this.isLoadingLocations = true;
           this.showLocationSuggestions = true;
+          if (this.google && !this.sessionToken) {
+            this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+          }
         }),
         switchMap(term => this.getPlacePredictions(term))
       ).subscribe(suggestions => {
@@ -119,32 +130,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const uniqueId = this.route.snapshot.paramMap.get('unique_id');
     if (uniqueId) {
       console.log('Editing existing job post with unique_id:', uniqueId);
-
+      // Logic to fetch job details if unique_id is present can be added here
+      // For now, it will be populated if jobData is set (e.g., after file upload)
     }
-  }
-}
-
-  private loadGoogleMapsScript(): Promise<void> {
-    if (this.googleScriptLoadingPromise) {
-      return this.googleScriptLoadingPromise;
-    }
-
-    this.googleScriptLoadingPromise = new Promise((resolve, reject) => {
-      if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        resolve();
-        return;
-      }
-
-      const script = this.renderer.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => resolve();
-      script.onerror = (error: any) => reject(error);
-      this.renderer.appendChild(this.document.head, script);
-    });
-
-    return this.googleScriptLoadingPromise;
   }
 
   ngAfterViewInit(): void {
@@ -161,24 +149,19 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
 
     if (this.currentStep === 'jobPost') {
-      this.initGoogleMapsFeatures();
+      this.initializeGooglePlaces();
     }
   }
 
-  private async initGoogleMapsFeatures(): Promise<void> {
+  private async initializeGooglePlaces(): Promise<void> {
     try {
-      await this.loadGoogleMapsScript();
-      this.autocompleteService = new google.maps.places.AutocompleteService();
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
     } catch (error) {
       console.error('Fatal error: Google Maps script could not be loaded.', error);
       this.snackBar.open('Could not load location services. Please check your connection and try again.', 'Close', { duration: 7000 });
     }
   }
-  this.initializeSkillsInput();
-  this.initializeRange('total');
-  this.initializeRange('relevant');
-  this.updateExperienceUI();
-}
 
   onLocationInput(event: Event): void {
     const term = (event.target as HTMLInputElement).value;
@@ -189,14 +172,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.locationInput$.next(term);
   }
 
-  private getPlacePredictions(term: string): Observable<any[]> {
-    if (!this.autocompleteService) {
+  private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!this.placesService || !this.sessionToken) {
       return of([]);
     }
     return new Observable(observer => {
-      this.autocompleteService.getPlacePredictions(
-        { input: term, types: ['(cities)'] },
-        (predictions: any[] | null, status: any) => {
+      this.placesService.getPlacePredictions(
+        {
+          input: term,
+          types: ['(cities)'], // You can restrict to cities, regions, etc.
+          sessionToken: this.sessionToken 
+        },
+        (predictions: google.maps.places.AutocompletePrediction[] | null, status: google.maps.places.PlacesServiceStatus) => {
           this.ngZone.run(() => {
             if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
               observer.next(predictions);
@@ -210,8 +197,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
-  selectLocationSuggestion(suggestion: any): void {
-    const currentLocations = this.jobForm.get('location')?.value || [];
+  selectLocationSuggestion(suggestion: google.maps.places.AutocompletePrediction): void {
+    const currentLocations: string[] = this.jobForm.get('location')?.value || [];
     if (!currentLocations.includes(suggestion.description)) {
       this.jobForm.patchValue({
         location: [...currentLocations, suggestion.description]
@@ -220,18 +207,24 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
     this.locationInput.nativeElement.value = '';
     this.showLocationSuggestions = false;
+    this.sessionToken = undefined; // Invalidate session token after selection
   }
   
   removeLocation(index: number): void {
-    const currentLocations = this.jobForm.get('location')?.value || [];
-    currentLocations.splice(index, 1);
-    this.jobForm.patchValue({ location: currentLocations });
-    this.jobForm.get('location')?.markAsDirty();
+    const currentLocations: string[] = this.jobForm.get('location')?.value || [];
+    if (index >= 0 && index < currentLocations.length) {
+        currentLocations.splice(index, 1);
+        this.jobForm.patchValue({ location: currentLocations });
+        this.jobForm.get('location')?.markAsDirty();
+    }
   }
   
   onLocationInputKeydown(event: KeyboardEvent): void {
      if (event.key === 'Backspace' && this.locationInput.nativeElement.value === '') {
-       this.removeLocation(this.jobForm.get('location')?.value.length - 1);
+       const locations = this.jobForm.get('location')?.value;
+       if (locations && locations.length > 0) {
+           this.removeLocation(locations.length - 1);
+       }
      }
   }
   
@@ -253,25 +246,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
      if (this.fileInput) this.fileInput.nativeElement.click();
   }
 
-  formatText(type: string) {
-    const editor = document.getElementById('editor');
-    if (editor) {
-        editor.focus();
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-            const selectedText = selection.toString();
-            if (type === 'list' || selectedText.length > 0) {
-                switch (type) {
-                    case 'bold': document.execCommand('bold', false, null); break;
-                    case 'italic': document.execCommand('italic', false, null); break;
-                    case 'underline': document.execCommand('underline', false, null); break;
-                    case 'list': document.execCommand('insertUnorderedList', false, null); break;
-                    case 'highlight': document.execCommand('backColor', false, '#fff3cd'); break;
-                }
-            }
-        }
-    }
-}
   onFileSelected(event: Event): void {
     this.isFileUploadCompletedSuccessfully = false;
     const input = event.target as HTMLInputElement;
@@ -279,7 +253,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       const file = input.files[0];
       const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv', '.doc'];
       const ext = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
-      const maxSize = 10 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024; // 10MB
 
       if (!allowedExtensions.includes(ext)) {
         this.snackBar.open(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`, 'Close', { duration: 5000 });
@@ -305,8 +279,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     } else if (this.fileInput && this.fileInput.nativeElement) {
         this.fileInput.nativeElement.value = '';
     }
-
-
   }
 
   private _performUpload(file: File): void {
@@ -321,7 +293,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.isFileUploadCompletedSuccessfully = false;
     const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
-        this.jobData = response;
+        this.jobData = response; // Store AI response
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
         this.isSubmitting = false;
@@ -337,11 +309,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.subscriptions.add(uploadSub);
   }
 
-
   private updateExperienceUI(): void {
     this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
     this.setExperienceRange('relevant', this.jobForm.value.relevant_experience_min, this.jobForm.value.relevant_experience_max);
-
   }
 
   private adjustExperienceRange(min: number, max: number): [number, number] {
@@ -349,20 +319,25 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   }
 
   private populateForm(jobData: JobDetails | AIJobResponse): void {
-    let role: string, location: any, job_type: string, workplace_type: string;
+    let role: string, locationArray: string[], job_type: string, workplace_type: string;
     let total_experience_min: number, total_experience_max: number;
     let relevant_experience_min: number, relevant_experience_max: number;
     let budget_type: string, min_budget: number | null, max_budget: number | null;
     let notice_period: string, skills: string[], job_description: string;
     let unique_id_val: string = '', job_description_url_val: string = '';
 
-    if ('job_details' in jobData) {
+    if ('job_details' in jobData) { // AIJobResponse
       const aiJobData = jobData as AIJobResponse;
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
-      // Ensure location is handled as an array
-      location = details.location ? [details.location] : [];
+      
+      // MODIFIED: Parse location string (potentially comma-separated) from AI into an array for the form
+      const aiLocationString = details.location || '';
+      locationArray = (typeof aiLocationString === 'string' && aiLocationString.trim() !== '')
+                      ? aiLocationString.split(',').map(s => s.trim()).filter(s => s)
+                      : [];
+
       job_type = this.mapJobType(details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '');
       workplace_type = details.workplace_type || 'Remote';
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(minExp, maxExp);
@@ -375,11 +350,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       job_description = details.job_description || '';
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = aiJobData.file_url || '';
-    } else {
+    } else { // JobDetails (from existing saved data)
       const details = jobData as JobDetails;
       role = details.role;
-      // Ensure location is an array
-      location = Array.isArray(details.location) ? details.location : [];
+
+      // MODIFIED: Parse location string (comma-separated from DB) into an array for the form
+      const dbLocationString = details.location || '';
+      locationArray = (typeof dbLocationString === 'string' && dbLocationString.trim() !== '')
+                      ? dbLocationString.split(',').map(s => s.trim()).filter(s => s)
+                      : [];
+
       job_type = details.job_type;
       workplace_type = details.workplace_type;
       [total_experience_min, total_experience_max] = this.adjustExperienceRange(details.total_experience_min, details.total_experience_max);
@@ -397,12 +377,16 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
     
     this.jobForm.patchValue({
-      role, location, job_type, workplace_type,
+      role, 
+      location: locationArray, // Use the parsed array for the form control
+      job_type, 
+      workplace_type,
       total_experience_min, total_experience_max,
       relevant_experience_min, relevant_experience_max,
       budget_type, min_budget, max_budget,
       notice_period, skills, job_description,
-      job_description_url: job_description_url_val, unique_id: unique_id_val
+      job_description_url: job_description_url_val, 
+      unique_id: unique_id_val
     });
     
     if (this.isViewInitialized) {
@@ -439,7 +423,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
-
   private setJobDescription(description: string): void {
     const editor = this.document.getElementById('editor') as HTMLDivElement;
     if (editor) {
@@ -458,7 +441,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.checkEmpty('editor');
   }
 
-     private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
+  private setExperienceRange(type: 'total' | 'relevant', min: number, max: number): void {
     const prefix = type === 'total' ? 'total_' : 'relevant_';
     const rangeIndicator = this.document.getElementById(`${prefix}rangeIndicator`) as HTMLDivElement;
     const markerLeft = this.document.getElementById(`${prefix}markerLeft`) as HTMLDivElement;
@@ -524,7 +507,6 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const markerRight = this.document.getElementById(`${prefix}markerRight`) as HTMLDivElement;
     if (!rangeIndicator || !markerLeft || !markerRight) {
       if(this.isViewInitialized) console.warn(`Range indicator elements not found for type: ${type}`);
-
       return;
     }
     let isDragging = false; let currentMarker: HTMLDivElement | null = null;
@@ -586,7 +568,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     if (!exp) return [0, 0]; const rangeMatch = exp.match(/(\d+)\s*-\s*(\d+)/);
     if (rangeMatch) return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
     const singleMatchMore = exp.match(/(\d+)\+\s*years?/i) || exp.match(/more than\s*(\d+)\s*years?/i);
-    if (singleMatchMore) { const val = parseInt(singleMatchMore[1], 10); return [val, 30]; }
+    if (singleMatchMore) { const val = parseInt(singleMatchMore[1], 10); return [val, 30]; } // Assuming max 30 for '+'
     const singleMatchLess = exp.match(/less than\s*(\d+)\s*years?/i) || exp.match(/up to\s*(\d+)\s*years?/i);
     if (singleMatchLess) { const val = parseInt(singleMatchLess[1], 10); return [0, val]; }
     const singleMatch = exp.match(/(\d+)\s*years?/i);
@@ -611,8 +593,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       }
       if (suggestedSkills.length === 0) {
         if (tagInput.value.trim()) {
-          const item = this.renderer.createElement('div'); this.renderer.addClass(item, 'suggestion-item');
-          this.renderer.addClass(item, 'no-results'); item.textContent = 'No matching skills found.';
+          const item = this.renderer.createElement('div'); this.renderer.addClass(item, 'no-results'); item.textContent = 'No matching skills found.';
           this.renderer.appendChild(skillsSuggestionsDiv, item); skillsSuggestionsDiv.style.display = 'block';
         } else { skillsSuggestionsDiv.style.display = 'none'; } return;
       }
@@ -646,7 +627,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
         this.jobForm.patchValue({ skills: skillsAfterRemove });
         this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
       });
-      this.renderer.appendChild(tag, removeBtn); this.renderer.insertBefore(tagContainer, tag, tagInput);
+      this.renderer.appendChild(tag, removeBtn);
+      this.renderer.insertBefore(tagContainer, tag, tagInput);
     };
     const navigateAvailableSuggestions = (direction: 'up' | 'down') => {
       const items = skillsSuggestionsDiv.querySelectorAll('.suggestion-item:not(.suggestion-loading):not(.no-results)') as NodeListOf<HTMLDivElement>;
@@ -674,7 +656,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.isLoadingSkills = false;
       const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
       const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
-      showAvailableSuggestions(filteredForDisplay.slice(0, 10));
+      showAvailableSuggestions(filteredForDisplay.slice(0, 10)); // Show top 10
     });
     this.subscriptions.add(skillInputSub);
 
@@ -699,21 +681,31 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     });
     this.document.addEventListener('click', (e) => {
       const target = e.target as Node;
-      if (!tagContainer.contains(target) && !skillsSuggestionsDiv.contains(target)) skillsSuggestionsDiv.style.display = 'none';
+      const skillsContainer = this.document.getElementById('skills-input-container'); // Check this ID matches your HTML
+      const locationContainer = this.document.getElementById('location-input-container'); // Check this ID
+
+      if (skillsContainer && !skillsContainer.contains(target)) {
+        skillsSuggestionsDiv.style.display = 'none';
+      }
+      if (locationContainer && !locationContainer.contains(target)) {
+          this.showLocationSuggestions = false;
+      }
     });
-    tagContainer.addEventListener('click', (e) => { if (e.target === tagContainer) tagInput.focus(); });
+    tagInput.addEventListener('click', (e) => { e.stopPropagation(); /* Prevents document click listener from hiding suggestions immediately */ });
+    this.document.getElementById('tagContainer')?.addEventListener('click', () => tagInput.focus()); // Focus input when clicking container
   }
 
   onSubmit(): void {
     this.jobForm.markAllAsTouched();
-    this.checkEmpty('editor');
+    this.checkEmpty('editor'); // Manually trigger check for editor
 
     if (this.jobForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+      // Logic to scroll to the first invalid control
       const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
       if (firstInvalidControl) {
           let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
-          if (!element) {
+          if (!element) { // Fallbacks for custom controls
               if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
               else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
               else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
@@ -722,20 +714,32 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       }
       return;
     }
+
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.snackBar.open('Authentication required. Please log in.', 'Close', { duration: 5000 });
       this.router.navigate(['/login-corporate']); return;
     }
+
     this.isSubmitting = true;
     if (this.currentStep === 'jobPost') {
       const formValues = this.jobForm.getRawValue();
-      const jobDetails: JobDetails = { ...formValues,
-        skills: {
+
+      // MODIFIED: Convert location array to comma-separated string
+      const locationString = Array.isArray(formValues.location) 
+                             ? formValues.location.join(', ') 
+                             : (typeof formValues.location === 'string' ? formValues.location : '');
+
+      const jobDetails: JobDetails = {
+        ...formValues,
+        location: locationString, // Use the processed string for JobDetails
+        skills: { // This structure for skills is for JobDetails. Ensure it matches what backend expects
              primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
              secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
-        }, status: 'draft'
+        },
+        status: 'draft'
       };
+
       const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
         next: (response) => {
           this.isSubmitting = false; this.snackBar.open('Job post saved. Proceeding to assessment.', 'Close', { duration: 3000 });
@@ -748,9 +752,10 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       });
       this.subscriptions.add(saveSub);
     } else if (this.currentStep === 'assessment') {
+      // Simulate assessment submission
       setTimeout(() => {
         this.isSubmitting = false; this.snackBar.open('Assessment details submitted!', 'Close', { duration: 3000 });
-        this.resetForm(); this.router.navigate(['/job-posted']);
+        this.resetForm(); this.router.navigate(['/job-posted']); // Navigate to a success/listing page
       }, 1500);
     }
   }
@@ -761,14 +766,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.currentStep = 'jobPost';
     } else {
       this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
-      this.resetForm(); this.router.navigate(['/dashboard']);
+      this.resetForm(); this.router.navigate(['/dashboard']); // Or appropriate route
     }
   }
 
   resetForm(): void {
     this.jobForm.reset({
       role: '',
-      location: [],
+      location: [], // Reset to empty array for the form
       job_type: '',
       workplace_type: '',
       total_experience_min: 0,
@@ -788,19 +793,25 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.clearFileInput();
     this.isFileUploadCompletedSuccessfully = false;
 
-    if (this.isViewInitialized) {
+    if (this.isViewInitialized) { // Ensure view elements are available
         this.populateSkills([]);
         this.setJobDescription('');
-        this.updateExperienceUI();
+        this.updateExperienceUI(); // This will use the reset form values
+        if (this.locationInput && this.locationInput.nativeElement) {
+            this.locationInput.nativeElement.value = ''; // Clear location text input
+        }
     }
 
     this.currentStep = 'jobPost';
-    this.jobData = null;
+    this.jobData = null; // Clear any loaded job data
     this.isSubmitting = false;
     this.isLoadingSkills = false;
+    this.locationSuggestions = [];
+    this.showLocationSuggestions = false;
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.sessionToken = undefined; // Clean up Google Maps session token
   }
 }
