@@ -94,11 +94,12 @@
               formControlName="password"
               class="signup-candidate1-password-input1 input"
             />
-            <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+            
+          </div>
+          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
               <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
               <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
             </div>
-          </div>
         </div>
 
         <!-- Confirm Password -->
@@ -118,10 +119,11 @@
               formControlName="confirm_password"
               class="signup-candidate1-password-input2 input"
             />
-            <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
+            
+          </div>
+          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
               Passwords do not match.
             </div>
-          </div>
         </div>
 
         <!-- Signup Button and Error Message -->
@@ -148,7 +150,7 @@
             <span class="signup-candidate1-already-have-an-account-text">
               Already have an account?
             </span>
-            <span class="signup-candidate1-signin-text button" routerLink="/login">
+            <span class="signup-candidate1-signin-text button" routerLink="/login-candidate">
               Sign In
             </span>
           </div>
