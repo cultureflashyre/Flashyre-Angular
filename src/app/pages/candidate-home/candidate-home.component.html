@@ -1,23 +1,24 @@
+
 <div id="candidate-home" class="candidate-home-container1">
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment10">
         <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment11">
         <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment12">
         <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment13">
         <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
       </div>
@@ -99,19 +100,19 @@
     <div id="main-container" class="candidate-home-main-container">
       <div id="profile-container" class="candidate-home-profile-container">
         <candidate-profile-short [placeholderImageAlt]="'Image of ' + userProfile.first_name + ' ' + userProfile.last_name">
-  <ng-template #text>
-    <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
-  </ng-template>
-  <ng-template #text1>
-    <span>
-      {{
-        userProfile.job_title 
-          ? userProfile.job_title + ' @ ' + userProfile.company_name 
-          : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
-      }}
-    </span>
-  </ng-template>
-</candidate-profile-short>
+          <ng-template #text>
+            <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
+          </ng-template>
+          <ng-template #text1>
+            <span>
+              {{
+                userProfile.job_title 
+                  ? userProfile.job_title + ' @ ' + userProfile.company_name 
+                  : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
+              }}
+            </span>
+          </ng-template>
+        </candidate-profile-short>
         <candidate-profile-score
           rootClassName="candidate-profile-scoreroot-class-name"
         >
@@ -444,124 +445,115 @@
           </header>
         </div>
         <div id="Jobs-for-you" class="candidate-home-jobs-for-you-container">
-  <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
-    Jobs for you
-  </span>
-  
-  <!-- Refresh button (optional) -->
-  <!-- <div class="refresh-container" style="text-align: right; margin-bottom: 10px;">
-    <button 
-      (click)="refreshJobs()" 
-      [disabled]="isLoading"
-      class="refresh-button"
-      style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer;">
-      🔄 Refresh Jobs
-    </button>
-  </div> -->
-
-  <div id="job-container" class="candidate-home-jobs-container2">
-    <!-- Initial loading indicator -->
-    <div *ngIf="isLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Loading jobs...</p>
-    </div>
-    
-    <!-- No jobs message -->
-    <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
-      <p>No new jobs available. You've applied to all open positions!</p>
-    </div>
-    
-    <!-- Job listings -->
-    <candidate-job-for-you-card
-      *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
-      [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
-      [imageSrc]="job.logo"
-      [imageAlt]="job.company_name + ' logo'"
-    >
-      <ng-template #text>
-        <div class="candidate-home-fragment31">
-          <span class="candidate-home-text123">{{ job.title }}</span>
+          <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
+            Jobs for you
+          </span>
+          <div id="job-container" class="candidate-home-jobs-container2">
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="loading-spinner"></div>
+              <p>Loading jobs...</p>
+            </div>
+            
+            <!-- No jobs message -->
+            <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+              <p>No new jobs available. You've applied to all open positions!</p>
+            </div>
+            
+            <!-- Job listings -->
+            <candidate-job-for-you-card
+              *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
+              [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+              [jobId]="job.job_id.toString()"
+              [imageSrc]="job.logo || getRandomImage()"
+              [imageAlt]="job.company_name + ' logo'"
+              [matchingScore]="job.matching_score || 80"
+            >
+              <ng-template #text>
+                <div class="candidate-home-fragment31">
+                  <span class="candidate-home-text123">{{ job.title }}</span>
+                </div>
+              </ng-template>
+              <ng-template #text1>
+                <div class="candidate-home-fragment32">
+                  <span class="candidate-home-text124">{{ job.company_name }}</span>
+                </div>
+              </ng-template>
+              <ng-template #text2>
+                <div class="candidate-home-fragment33">
+                  <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
+                </div>
+              </ng-template>
+              <ng-template #text3>
+                <div class="candidate-home-fragment34">
+                  <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+                </div>
+              </ng-template>
+              <ng-template #text4>
+                <div class="candidate-home-fragment35">
+                  <span class="candidate-home-text127">{{ job.description }}</span>
+                </div>
+              </ng-template>
+              <ng-template #button>
+                <div class="candidate-home-fragment36">
+                  <button
+                    [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                    [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                    (click)="applyForJob(job.job_id, i)"
+                  >
+                    <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                    <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                    <span *ngIf="applicationSuccess[job.job_id]">
+                      <span class="tick-mark">✓</span> Applied Successfully
+                    </span>
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template #button1>
+                <div class="candidate-home-fragment37">
+                  <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+                </div>
+              </ng-template>
+            </candidate-job-for-you-card>
+            
+            <!-- Load more indicator -->
+            <div 
+              *ngIf="!isLoading && hasMoreJobs" 
+              id="load-more" 
+              class="load-more-container"
+              style="text-align: center; padding: 20px;"
+            >
+              <div *ngIf="isLoadingMoreJobs" class="loading-more">
+                <div class="small-spinner"></div>
+                <p>Loading more jobs...</p>
+              </div>
+              <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
+                <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
+              </div>
+            </div>
+            
+            <!-- End of jobs indicator -->
+            <div *ngIf="!isLoading && !hasMoreJobs && displayedJobs.length > 0" class="end-of-jobs">
+              <p style="text-align: center; color: #666; padding: 20px; font-size: 14px;">
+                🎉 You've seen all available jobs! ({{ displayedJobs.length }} total)
+              </p>
+            </div>
+            
+            <!-- Job statistics -->
+            <div *ngIf="!isLoading && displayedJobs.length > 0" class="job-stats" style="text-align: center; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+              <small style="color: #666;">
+                Showing {{ displayedJobs.length }} of {{ jobs.length }} available jobs
+                <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
+              </small>
+            </div>
+          </div>
         </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="candidate-home-fragment32">
-          <span class="candidate-home-text124">{{ job.company_name }}</span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="candidate-home-fragment33">
-          <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="candidate-home-fragment34">
-          <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
-        </div>
-      </ng-template>
-      <ng-template #text4>
-        <div class="candidate-home-fragment35">
-          <span class="candidate-home-text127">{{ job.description }}</span>
-        </div>
-      </ng-template>
-      <ng-template #button>
-        <div class="candidate-home-fragment36">
-          <button
-            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
-            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
-            (click)="applyForJob(job.job_id, i)"
-          >
-            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
-            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
-            <span *ngIf="applicationSuccess[job.job_id]">
-              <span class="tick-mark">✓</span> Applied Successfully
-            </span>
-          </button>
-        </div>
-      </ng-template>
-      <ng-template #button1>
-        <div class="candidate-home-fragment37">
-          <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
-        </div>
-      </ng-template>
-    </candidate-job-for-you-card>
-    
-    <!-- Load more indicator - only show if there are more jobs to load -->
-    <div 
-      *ngIf="!isLoading && hasMoreJobs" 
-      id="load-more" 
-      class="load-more-container"
-      style="text-align: center; padding: 20px;">
-      
-      <!-- Loading more indicator -->
-      <div *ngIf="isLoadingMoreJobs" class="loading-more">
-        <div class="small-spinner"></div>
-        <p>Loading more jobs...</p>
       </div>
-      
-      <!-- Trigger element for intersection observer -->
-      <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
-        <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
-      </div>
-    </div>
-    
-    <!-- End of jobs indicator -->
-    <div *ngIf="!isLoading && !hasMoreJobs && displayedJobs.length > 0" class="end-of-jobs">
-      <p style="text-align: center; color: #666; padding: 20px; font-size: 14px;">
-        🎉 You've seen all available jobs! ({{ displayedJobs.length }} total)
-      </p>
-    </div>
-    
-    <!-- Job statistics -->
-    <div *ngIf="!isLoading && displayedJobs.length > 0" class="job-stats" style="text-align: center; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
-      <small style="color: #666;">
-        Showing {{ displayedJobs.length }} of {{ jobs.length }} available jobs
-        <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
-      </small>
     </div>
   </div>
 </div>
 
-<!-- Add these styles to your component CSS -->
+<!-- Styles for pagination and loading indicators -->
 <style>
 .loading-spinner {
   border: 4px solid #f3f3f3;
@@ -599,17 +591,4 @@
   align-items: center;
   justify-content: center;
 }
-
-/*.refresh-button:hover:not(:disabled) {
-  background: #e9e9e9;
-}
-
-.refresh-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}*/
 </style>
-      </div>
-    </div>
-  </div>
-</div>
