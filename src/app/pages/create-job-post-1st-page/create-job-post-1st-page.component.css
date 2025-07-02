@@ -5,28 +5,59 @@
   /* Add these new styles to your CSS file for the multi-location input */
 
 .location-tag-container {
-  display: flex; /* Establishes a flexbox layout. */
-  flex-wrap: wrap; /* THIS IS THE KEY: Allows items to wrap to the next line. */
-  align-items: center; /* Vertically aligns items nicely. */
-  gap: 8px; /* Adds spacing between chips. */
-  
-  width: 100%;
-  min-height: 48px; /* Ensures it has a standard height when empty. */
-  /* DO NOT set a fixed 'height' property here, as that would prevent it from growing. */
+  display: grid; /* Use CSS Grid for the two-column layout */
+  grid-template-columns: repeat(2, 1fr); /* Create two equal-fraction columns */
+  gap: 8px; /* Spacing between tags, both horizontally and vertically */
 
+  width: 100%;
+  max-height: 60px; /* Set a height that fits one row, forcing scroll on overflow */
+  overflow-y: auto; /* Enable vertical scroll only when needed */
+  
   padding: 8px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  cursor: text; /* Makes it feel like a text input. */
-  box-sizing: border-box; /* Ensures padding and border are included in the width/height. */
+  cursor: text;
+  box-sizing: border-box;
+
+  /* --- CROSS-BROWSER SCROLLBAR STYLING --- */
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* For WebKit Browsers (Chrome, Safari, Edge) */
+.location-tag-container::-webkit-scrollbar {
+  width: 8px;
+}
+.location-tag-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.location-tag-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+.location-tag-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.location-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e1f5fe;
+  color: #0288d1;
+  padding: 6px 12px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  /* No width is needed here; the grid cell defines the width */
 }
 
 .location-tag span {
   margin-right: 8px;
-}
-
-.location-tag span {
-  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Prevents long location names from breaking the layout */
 }
 
 .remove-tag-btn {
@@ -41,12 +72,13 @@
 }
 
 .location-live-input {
-  flex-grow: 1; /* Allows the input to fill remaining space */
+  grid-column: 1 / -1; /* Make the input span across both columns */
   border: none;
   outline: none;
   padding: 8px;
   font-size: 16px;
-  min-width: 150px; /* Ensures input is usable when container is full */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .location-suggestions-list {

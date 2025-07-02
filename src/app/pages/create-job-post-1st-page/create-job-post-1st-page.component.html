@@ -757,42 +757,50 @@
             </div>
           </div>
           <div
-            id="notice-period-container"
-            class="create-job-post1st-page-notice-period-container"
-          >
-            <div
-              id="notice-period-text-container"
-              class="create-job-post1st-page-notice-period-text-container"
-            >
-              <span
-                id="university-institute-text"
-                class="create-job-post1st-page-university-institute-text"
-              >
-                Notice Period
-              </span>
-              <span
-                id="notice-period-star-text"
-                class="create-job-post1st-page-notice-period-star-text"
-              >
-                *
-              </span>
-            </div>
-            <div
-              id="notice-period-input-container"
-              class="create-job-post1st-page-notice-period-input-container"
-            >
-              <input
-                type="text"
-                id="notice-period-input-filed"
-                placeholder="Enter Notice Period"
-                class="create-job-post1st-page-notice-period-input-filed input"
-                formControlName="notice_period"
-              />
-              <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
-            Enter Notice Period
-          </div>
-            </div>
-          </div>
+  id="notice-period-container"
+  class="create-job-post1st-page-notice-period-container"
+>
+  <!-- The label and star, no changes here -->
+  <div
+    id="notice-period-text-container"
+    class="create-job-post1st-page-notice-period-text-container"
+  >
+    <span
+      id="university-institute-text"
+      class="create-job-post1st-page-university-institute-text"
+    >
+      Notice Period
+    </span>
+    <span
+      id="notice-period-star-text"
+      class="create-job-post1st-page-notice-period-star-text"
+    >
+      *
+    </span>
+  </div>
+              <div
+    id="notice-period-input-container"
+    class="create-job-post1st-page-notice-period-input-container"
+  >
+    <select
+      id="notice-period-select-field"
+      class="create-job-post1st-page-notice-period-input-filed input"
+      formControlName="notice_period"
+    >
+      <option value="" disabled>Select Notice Period</option>
+      <option value="Immediate">Immediate</option>
+      <option value="Less than 15 Days">Less than 15 Days</option>
+      <option value="30 Days">30 Days</option>
+      <option value="60 Days">60 Days</option>
+      <option value="90 Days">90 Days</option>
+    </select>
+
+    <!-- The validation message remains the same and will work with the select element -->
+    <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
+      Enter Notice Period
+    </div>
+  </div>
+</div>
           <div
             id="skills-container"
             class="create-job-post1st-page-skills-container"

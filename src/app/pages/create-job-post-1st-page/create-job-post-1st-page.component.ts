@@ -31,7 +31,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   // Add a ViewChild to get a reference to the assessment component instance
   @ViewChild(AssessmentQuestionsMainContainer) private assessmentComponent!: AssessmentQuestionsMainContainer;
 
-  private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
+  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik'; // Replace with your actual key
   
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
@@ -86,7 +86,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       budget_type: ['', [Validators.required]],
       min_budget: [null, [Validators.required, Validators.min(0)]],
       max_budget: [null, [Validators.required, Validators.min(0)]],
-      notice_period: ['', [Validators.required, Validators.maxLength(50)]],
+      // [MODIFIED] Removed maxLength validator as this field is now a dropdown select.
+      notice_period: ['', [Validators.required]],
       skills: [[], [Validators.required]],
       job_description: ['', [Validators.maxLength(5000), Validators.required]],
       job_description_url: ['', [Validators.maxLength(200)]],
