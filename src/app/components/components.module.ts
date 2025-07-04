@@ -95,6 +95,10 @@ import { Contact10 } from './contact10/contact10.component'
 import { NavbarForCandidateView } from './navbar-for-candidate-view/navbar-for-candidate-view.component'
 import { EmailAndMobileNumberComponent } from './email-and-mobile-number-component/email-and-mobile-number-component.component'
 import { AssessmentQuestionsMainContainer } from './assessment-questions-main-container/assessment-questions-main-container.component'
+import { CreateJobPost22 } from './create-job-post-22/create-job-post-22.component'
+import { CreateJobPost21 } from './create-job-post-21/create-job-post-21.component'
+import { CreateJobPostFooter2 } from './create-job-post-footer-2/create-job-post-footer-2.component'
+import { ProgressBar2Code } from './progress-bar-2-code/progress-bar-2-code.component'
 
 
 
@@ -184,7 +188,11 @@ import { AssessmentQuestionsMainContainer } from './assessment-questions-main-co
     Contact10,
     NavbarForCandidateView,
     EmailAndMobileNumberComponent,
-    AssessmentQuestionsMainContainer
+    AssessmentQuestionsMainContainer,
+    CreateJobPost22,
+CreateJobPost21,
+CreateJobPostFooter2,
+ProgressBar2Code,
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
@@ -272,7 +280,11 @@ import { AssessmentQuestionsMainContainer } from './assessment-questions-main-co
     Contact10,
     NavbarForCandidateView,
     EmailAndMobileNumberComponent,
-    AssessmentQuestionsMainContainer
+    AssessmentQuestionsMainContainer,
+    CreateJobPost22,
+CreateJobPost21,
+CreateJobPostFooter2,
+ProgressBar2Code
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

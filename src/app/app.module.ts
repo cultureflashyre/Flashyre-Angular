@@ -253,6 +253,20 @@ const routes = [
       import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
       ).then((m) => m.AssessmentTakenPage2Module),
   },
+  {
+    path: 'create-job-post-21-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-21-page/create-job-post-21-page.module'
+      ).then((m) => m.CreateJobPost21PageModule),
+  },
+  {
+    path: 'create-job-post-22-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-22-page/create-job-post-22-page.module'
+      ).then((m) => m.CreateJobPost22PageModule),
+  },
       {
     path: 'assessment-taken-page-3',
     loadChildren: () =>
