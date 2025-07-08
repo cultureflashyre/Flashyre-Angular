@@ -1,20 +1,29 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { RouterModule } from '@angular/router'
-import { CommonModule } from '@angular/common'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { ComponentsModule } from '../../components/components.module'
-import { CreateJobPost21Page } from './create-job-post-21-page.component'
+import { ComponentsModule } from '../../components/components.module';
+import { CreateJobPost21Page } from './create-job-post-21-page.component';
 
 const routes = [
   {
-    path: '',
+    path: '', // This path is relative to the parent route defined in app-routing.module.ts
     component: CreateJobPost21Page,
   },
-]
+];
 
 @NgModule({
   declarations: [CreateJobPost21Page],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    ComponentsModule,
+    RouterModule.forChild(routes),
+    // Added imports for the component's dependencies
+    HttpClientModule,
+    MatSnackBarModule,
+  ],
   exports: [CreateJobPost21Page],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

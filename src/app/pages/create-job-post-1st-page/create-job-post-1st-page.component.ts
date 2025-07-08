@@ -12,12 +12,10 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } f
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
-import { McqAssessmentService } from '../../services/mcq-assessment.service';
+import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 
-import { JobDetails, AIJobResponse, LegacyAssessmentPayload } from './types';
-import { AssessmentQuestionsMainContainer } from '../../components/assessment-questions-main-container/assessment-questions-main-container.component';
 
-// Import the official Google Maps Loader
+import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
 
 @Component({
@@ -28,15 +26,13 @@ import { Loader } from '@googlemaps/js-api-loader';
 export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
-  // Add a ViewChild to get a reference to the assessment component instance
-  @ViewChild(AssessmentQuestionsMainContainer) private assessmentComponent!: AssessmentQuestionsMainContainer;
 
-  private readonly googleMapsApiKey: string = 'AIzaSyCYvHT8TXJdvdfr0CBRV62q5MzaD008hAE'; // Replace with your actual key
+  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik'; // Replace with your actual key
   
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
-  private google: any; // To hold the loaded google object reference
+  private google: any;
 
   jobForm: FormGroup;
   
@@ -48,12 +44,11 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   selectedFile: File | null = null;
   private readonly SKILL_DEBOUNCE_DELAY = 400;
 
-  currentStep: 'jobPost' | 'assessment' = 'jobPost';
   isSubmitting: boolean = false;
   isFileUploadCompletedSuccessfully: boolean = false;
   displayedFileName: string | null = null;
 
-  private jobData: JobDetails | AIJobResponse | null = null;
+  private jobData: JobDetails | Omit<AIJobResponse, 'mcqs'> | null = null;
   private isViewInitialized = false;
 
   isLoadingSkills = false;
@@ -66,17 +61,18 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     private snackBar: MatSnackBar,
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
-    private mcqAssessmentService: McqAssessmentService, // Inject the service
     private router: Router,
     private route: ActivatedRoute,
     private ngZone: NgZone,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
-    private skillService: SkillService
+    private skillService: SkillService,
+    private workflowService: JobCreationWorkflowService // <-- INJECT THE NEW SERVICE
+
   ) {
     this.jobForm = this.fb.group({
       role: ['', [Validators.required, Validators.maxLength(100)]],
-      location: [[], [Validators.required]], // Form stores as array for UI
+      location: [[], [Validators.required]],
       job_type: ['', [Validators.required]],
       workplace_type: ['', [Validators.required]],
       total_experience_min: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
@@ -86,7 +82,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       budget_type: ['', [Validators.required]],
       min_budget: [null, [Validators.required, Validators.min(0)]],
       max_budget: [null, [Validators.required, Validators.min(0)]],
-      notice_period: ['', [Validators.required, Validators.maxLength(50)]],
+      notice_period: ['', [Validators.required]],
       skills: [[], [Validators.required]],
       job_description: ['', [Validators.maxLength(5000), Validators.required]],
       job_description_url: ['', [Validators.maxLength(200)]],
@@ -134,9 +130,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       return;
     }
     
-    const uniqueId = this.route.snapshot.paramMap.get('unique_id');
-    if (uniqueId) {
-      console.log('Editing existing job post with unique_id:', uniqueId);
+    // Check if there's an active workflow ID. This handles the "Previous" button case.
+    const workflowId = this.workflowService.getCurrentJobId();
+    if (workflowId) {
+      console.log('Resuming existing job post with unique_id:', workflowId);
+      this.loadJobPostForEditing(workflowId);
+    } else {
+        // This is a fresh start, so we clear the form to be safe.
+        this.resetForm();
     }
   }
 
@@ -153,9 +154,36 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.updateExperienceUI();
     }
 
-    if (this.currentStep === 'jobPost') {
-      this.initializeGooglePlaces();
+    this.initializeGooglePlaces();
+  }
+
+  private loadJobPostForEditing(uniqueId: string): void {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+        this.snackBar.open('Authentication error. Please log in.', 'Close', { duration: 4000 });
+        this.router.navigate(['/login-corporate']);
+        return;
     }
+
+    this.isSubmitting = true; // Use this as a loading indicator for the page
+    this.subscriptions.add(
+        this.jobDescriptionService.getJobPost(uniqueId, token).subscribe({
+            next: (jobDetails) => {
+                this.jobData = jobDetails;
+                // If the view is already initialized, populate form immediately.
+                // Otherwise, it will be populated in ngAfterViewInit.
+                if (this.isViewInitialized) {
+                    this.populateForm(jobDetails);
+                }
+                this.isSubmitting = false;
+            },
+            error: (err) => {
+                this.isSubmitting = false;
+                this.snackBar.open(`Failed to load existing job data: ${err.message}`, 'Close', { duration: 5000 });
+                this.router.navigate(['/dashboard']);
+            }
+        })
+    );
   }
 
   private async initializeGooglePlaces(): Promise<void> {
@@ -182,7 +210,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       return of([]);
     }
     return new Observable(observer => {
-      this.placesService.getPlacePredictions(
+      this.placesService!.getPlacePredictions(
         {
           input: term,
           types: ['(cities)'],
@@ -323,7 +351,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     return (min === 0 && max === 0) ? [0, 30] : [min, max];
   }
 
-  private populateForm(jobData: JobDetails | AIJobResponse): void {
+  private populateForm(jobData: JobDetails | Omit<AIJobResponse, 'mcqs'>): void {
     let role: string, locationArray: string[], job_type: string, workplace_type: string;
     let total_experience_min: number, total_experience_max: number;
     let relevant_experience_min: number, relevant_experience_max: number;
@@ -332,7 +360,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     let unique_id_val: string = '', job_description_url_val: string = '';
 
     if ('job_details' in jobData) { // AIJobResponse
-      const aiJobData = jobData as AIJobResponse;
+      const aiJobData = jobData as Omit<AIJobResponse, 'mcqs'>;
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
       role = details.job_titles && details.job_titles.length > 0 ? details.job_titles[0]?.value : '';
@@ -571,7 +599,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     if (!exp) return [0, 0]; const rangeMatch = exp.match(/(\d+)\s*-\s*(\d+)/);
     if (rangeMatch) return [parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10)];
     const singleMatchMore = exp.match(/(\d+)\+\s*years?/i) || exp.match(/more than\s*(\d+)\s*years?/i);
-    if (singleMatchMore) { const val = parseInt(singleMatchMore[1], 10); return [val, 30]; } // Assuming max 30 for '+'
+    if (singleMatchMore) { const val = parseInt(singleMatchMore[1], 10); return [val, 30]; }
     const singleMatchLess = exp.match(/less than\s*(\d+)\s*years?/i) || exp.match(/up to\s*(\d+)\s*years?/i);
     if (singleMatchLess) { const val = parseInt(singleMatchLess[1], 10); return [0, val]; }
     const singleMatch = exp.match(/(\d+)\s*years?/i);
@@ -659,7 +687,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.isLoadingSkills = false;
       const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
       const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
-      showAvailableSuggestions(filteredForDisplay.slice(0, 10)); // Show top 10
+      showAvailableSuggestions(filteredForDisplay.slice(0, 10));
     });
     this.subscriptions.add(skillInputSub);
 
@@ -705,99 +733,61 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       this.router.navigate(['/login-corporate']); return;
     }
 
-    if (this.currentStep === 'jobPost') {
-      this.jobForm.markAllAsTouched();
-      this.checkEmpty('editor');
+    this.jobForm.markAllAsTouched();
+    this.checkEmpty('editor');
 
-      if (this.jobForm.invalid) {
-        this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
-        const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
-        if (firstInvalidControl) {
-            let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
-            if (!element) {
-                if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
-                else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
-                else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
-            }
-            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
+    if (this.jobForm.invalid) {
+      this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+      const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid);
+      if (firstInvalidControl) {
+          let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
+          if (!element) {
+              if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
+              else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
+              else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
+          }
+          element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-
-      this.isSubmitting = true;
-      const formValues = this.jobForm.getRawValue();
-      const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
-      const jobDetails: JobDetails = {
-        ...formValues,
-        location: locationString,
-        skills: {
-             primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
-             secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
-        },
-        status: 'draft'
-      };
-
-      const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
-        next: (response) => {
-          this.isSubmitting = false; this.snackBar.open('Job post saved. Proceeding to assessment.', 'Close', { duration: 3000 });
-          this.jobForm.patchValue({ unique_id: response.unique_id }); this.currentStep = 'assessment';
-        },
-        error: (error) => {
-          this.isSubmitting = false; console.error('Job post saving failed:', error);
-          this.snackBar.open(`Job post saving failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
-        }
-      });
-      this.subscriptions.add(saveSub);
-
-    } else if (this.currentStep === 'assessment') {
-      if (!this.assessmentComponent) {
-        this.snackBar.open('Assessment component is not available. Cannot submit.', 'Close', { duration: 5000 });
-        return;
-      }
-      
-      const payloadFromChild = this.assessmentComponent.getAssessmentPayload();
-      
-      if (!payloadFromChild) {
-        // Validation failed inside the child component, which is responsible for the error message.
-        return;
-      }
-
-      const legacyPayload: LegacyAssessmentPayload = {
-        job_unique_id: payloadFromChild.job_unique_id,
-        assessment_name: payloadFromChild.name,
-        selected_mcq_item_ids: payloadFromChild.selected_mcq_item_ids,
-        is_proctored: payloadFromChild.is_proctored,
-        has_video_recording: payloadFromChild.has_video_recording,
-        allow_phone_access: payloadFromChild.allow_phone_access
-      };
-      
-      this.isSubmitting = true;
-
-      const assessmentSub = this.mcqAssessmentService.createLegacyAssessment(legacyPayload, token).subscribe({
-        next: (response) => {
-          this.isSubmitting = false;
-          this.snackBar.open(`Assessment "${response.assessment_title}" created successfully!`, 'Close', { duration: 4000 });
-          this.resetForm();
-          this.router.navigate(['/job-posted']);
-        },
-        error: (error) => {
-          this.isSubmitting = false;
-          console.error('Legacy assessment submission failed:', error);
-          this.snackBar.open(`Assessment submission failed: ${error.message || 'Unknown server error'}`, 'Close', { duration: 6000 });
-        }
-      });
-      this.subscriptions.add(assessmentSub);
+      return;
     }
+
+    this.isSubmitting = true;
+    const formValues = this.jobForm.getRawValue();
+    const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
+    const jobDetails: JobDetails = {
+      ...formValues,
+      location: locationString,
+      skills: {
+           primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
+           secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
+      },
+      status: 'draft'
+    };
+
+    const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        this.snackBar.open('Job post saved. Proceeding to assessment setup.', 'Close', { duration: 3000 });
+         // <<< MODIFICATION IS HERE >>>
+        // 1. Start the workflow with the new ID
+        this.workflowService.startWorkflow(response.unique_id);
+        
+        // 2. Navigate to the next page with a clean URL
+        this.router.navigate(['/create-job-post-21-page']); 
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        console.error('Job post saving failed:', error);
+        this.snackBar.open(`Job post saving failed: ${error.message || 'Unknown error'}`, 'Close', { duration: 5000 });
+      }
+    });
+    this.subscriptions.add(saveSub);
   }
 
   onCancel(): void {
-    if (this.currentStep === 'assessment') {
-      this.snackBar.open('Returning to job post editing.', 'Close', { duration: 2000 });
-      this.currentStep = 'jobPost';
-    } else {
-      this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
-      this.resetForm(); this.router.navigate(['/dashboard']);
-    }
+    this.snackBar.open('Job post creation cancelled.', 'Close', { duration: 3000 });
+    this.resetForm();
+    this.router.navigate(['/dashboard']);
   }
 
   resetForm(): void {
@@ -831,17 +821,20 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
             this.locationInput.nativeElement.value = '';
         }
     }
-
-    this.currentStep = 'jobPost';
+    
     this.jobData = null;
     this.isSubmitting = false;
     this.isLoadingSkills = false;
     this.locationSuggestions = [];
     this.showLocationSuggestions = false;
+    this.workflowService.clearWorkflow();
+
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.sessionToken = undefined;
+    
+
   }
 }

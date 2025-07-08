@@ -73,7 +73,13 @@
           </ng-container>
         </span>
       </button>
-      <button type="button" class="create-job-post-footer-2-button6 button">
+      
+      <!-- The 'Next' button, now with the [disabled] attribute binding -->
+      <button
+        type="button"
+        class="create-job-post-footer-2-button6 button"
+        [disabled]="isNextDisabled"
+      >
         <span class="create-job-post-footer-2-text15">
           <ng-container>
             <ng-template #defaultButton122>

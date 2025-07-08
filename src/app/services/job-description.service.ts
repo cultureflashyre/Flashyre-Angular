@@ -1,3 +1,5 @@
+// src/app/services/job-description.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -15,12 +17,12 @@ export class JobDescriptionService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Uploads a file to Google Cloud Storage, processes it with AI, and saves metadata and draft job post.
+   * Uploads a file, processes it with AI for job details (NO MCQs).
    * @param file The file to upload
    * @param token JWT token for authentication
-   * @returns Observable with file URL, unique ID, job details, and MCQs
+   * @returns Observable with file URL, unique ID, and job details.
    */
-  uploadFile(file: File, token: string): Observable<AIJobResponse & { file_url: string; unique_id: string }> {
+  uploadFile(file: File, token: string): Observable<Omit<AIJobResponse, 'mcqs'> & { file_url: string; unique_id: string }> {
     if (!file) {
       console.error('No file provided for upload');
       return throwError(() => new Error('No file selected for upload'));
@@ -30,7 +32,7 @@ export class JobDescriptionService {
       return throwError(() => new Error('File size exceeds 10MB'));
     }
 
-    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
+    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv', '.doc'];
     const ext = file.name.toLowerCase().split('.').pop();
     if (!ext || !allowedExtensions.includes(`.${ext}`)) {
       return throwError(() => new Error(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`));
@@ -48,7 +50,7 @@ export class JobDescriptionService {
     const endpoint = `${this.apiUrl}/file-upload/`;
 
     return this.http
-      .post<{ status: string; data: AIJobResponse & { file_url: string; unique_id: string } }>(
+      .post<{ status: string; data: Omit<AIJobResponse, 'mcqs'> & { file_url: string; unique_id: string } }>(
         endpoint,
         formData,
         { headers }
@@ -102,6 +104,29 @@ export class JobDescriptionService {
   }
 
   /**
+   * *** NEW METHOD as per the plan ***
+   * Triggers the backend to generate MCQs for a specific job post.
+   * @param uniqueId The unique ID of the job post.
+   * @param token JWT token for authentication.
+   */
+  generateMcqsForJob(uniqueId: string, token: string): Observable<{ status: string; message: string; }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}/job-post/${uniqueId}/generate-mcqs/`;
+
+    // The body is an empty object {} because the required data (uniqueId) is in the URL.
+    return this.http.post<{ status: string; message: string; }>(endpoint, {}, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success') {
+          return response;
+        }
+        // If status is not 'success', throw an error with the backend message
+        throw new Error(response.message || 'Failed to generate MCQs due to an unknown server issue.');
+      }),
+      catchError(error => this.handleError(error, 'generateMcqsForJob'))
+    );
+  }
+
+  /**
    * Updates the status of a job post
    * @param uniqueId Unique identifier of the job post
    * @param status New status ('draft' or 'final')
@@ -115,7 +140,6 @@ export class JobDescriptionService {
     });
 
     const payload = { unique_id: uniqueId, status };
-    // Corrected URL construction:
     const endpoint = `${this.apiUrl}/job-post/update-status/`;
 
     return this.http
@@ -148,7 +172,6 @@ export class JobDescriptionService {
     });
 
     const payload = { unique_id: uniqueId };
-    // Corrected URL construction:
     const endpoint = `${this.apiUrl}/job-post/delete/`;
 
     return this.http
@@ -180,7 +203,6 @@ export class JobDescriptionService {
     });
 
     const payload = { unique_id: uniqueId };
-    // Corrected URL construction:
     const endpoint = `${this.apiUrl}/file-upload/delete/`;
 
     return this.http
@@ -210,14 +232,13 @@ export class JobDescriptionService {
       Authorization: `Bearer ${token}`
     });
 
-    // Corrected URL construction:
     let endpoint = `${this.apiUrl}/job-post/`;
     if (page) {
       endpoint += `?page=${page}`;
     }
 
     return this.http
-      .get<{ status: string; data: PaginatedJobPostResponse }>( // Expecting {status: 'success', data: {...}}
+      .get<{ status: string; data: PaginatedJobPostResponse }>(
         endpoint,
         { headers }
       )
@@ -243,11 +264,10 @@ export class JobDescriptionService {
       Authorization: `Bearer ${token}`
     });
 
-    // Corrected URL construction:
     const endpoint = `${this.apiUrl}/job-post/${uniqueId}/`;
 
     return this.http
-      .get<{ status: string; data: JobDetails }>( // Expecting {status: 'success', data: {...}}
+      .get<{ status: string; data: JobDetails }>(
         endpoint,
         { headers }
       )
@@ -276,7 +296,6 @@ export class JobDescriptionService {
       errorMessage = `Client-side error in ${operation}: ${error.error.message}`;
     } else {
       // Server-side error
-      // Backend sends { "status": "error", "message": "...", "errors": {...} } or { "detail": "..." } for DRF defaults
       const serverError = error.error;
       if (serverError) {
         if (serverError.status === 'error') {
@@ -292,10 +311,9 @@ export class JobDescriptionService {
                 } else if (!serverError.message) {
                     errorMessage = `Validation errors occurred in ${operation}.`;
                 }
-            } else if (serverError.errors && typeof serverError.errors === 'string') { // Sometimes errors might be a string
+            } else if (serverError.errors && typeof serverError.errors === 'string') {
                 errorMessage = serverError.errors;
             } else if (!serverError.message && !serverError.errors) {
-                 // If only status: 'error'
                 errorMessage = `An error occurred on the server during ${operation}.`;
             }
         } else if (serverError.detail) { // Standard DRF error
@@ -306,7 +324,6 @@ export class JobDescriptionService {
             errorMessage = `Server error ${error.status} in ${operation}: ${error.message || 'No specific message'}`;
         }
       } else {
-        // Error object itself might not have 'error' property but status and message
         errorMessage = `HTTP ${error.status} in ${operation}: ${error.statusText || error.message || 'Server error'}`;
       }
     }

@@ -1,6 +1,31 @@
 :host { 
   display: contents; 
 }
+
+.disabled-button {
+  background-color: #cccccc !important; /* Light grey background */
+  color: #666666 !important; /* Darker grey text */
+  cursor: not-allowed !important; /* Show disabled cursor */
+  opacity: 0.6;
+}
+
+/* Ensure the button containers are clickable */
+.create-job-post-21-container4, .create-job-post-21-container5 {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.create-job-post-21-container4:hover, .create-job-post-21-container5:hover {
+  transform: scale(1.03);
+}
+
+.create-job-post-21-container4:disabled, .create-job-post-21-container5:disabled {
+  cursor: not-allowed;
+  background-color: #f0f0f0;
+  transform: none;
+  opacity: 0.7;
+}
+
  
 .create-job-post21-page-container1 {
   width: 100%;

@@ -102,7 +102,8 @@
       </ng-template>
     </navbar-for-recruiter-view>
 
-    <div *ngIf="currentStep === 'jobPost'">
+    <!-- This container is now always visible and contains only the job post form -->
+    <div>
       <form [formGroup]="jobForm">
         <div
           id="create-job-post-container"
@@ -757,42 +758,47 @@
             </div>
           </div>
           <div
-            id="notice-period-container"
-            class="create-job-post1st-page-notice-period-container"
-          >
-            <div
-              id="notice-period-text-container"
-              class="create-job-post1st-page-notice-period-text-container"
-            >
-              <span
-                id="university-institute-text"
-                class="create-job-post1st-page-university-institute-text"
-              >
-                Notice Period
-              </span>
-              <span
-                id="notice-period-star-text"
-                class="create-job-post1st-page-notice-period-star-text"
-              >
-                *
-              </span>
-            </div>
-            <div
-              id="notice-period-input-container"
-              class="create-job-post1st-page-notice-period-input-container"
-            >
-              <input
-                type="text"
-                id="notice-period-input-filed"
-                placeholder="Enter Notice Period"
-                class="create-job-post1st-page-notice-period-input-filed input"
-                formControlName="notice_period"
-              />
-              <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
-            Enter Notice Period
-          </div>
-            </div>
-          </div>
+  id="notice-period-container"
+  class="create-job-post1st-page-notice-period-container"
+>
+  <div
+    id="notice-period-text-container"
+    class="create-job-post1st-page-notice-period-text-container"
+  >
+    <span
+      id="university-institute-text"
+      class="create-job-post1st-page-university-institute-text"
+    >
+      Notice Period
+    </span>
+    <span
+      id="notice-period-star-text"
+      class="create-job-post1st-page-notice-period-star-text"
+    >
+      *
+    </span>
+  </div>
+              <div
+    id="notice-period-input-container"
+    class="create-job-post1st-page-notice-period-input-container"
+  >
+    <select
+      id="notice-period-select-field"
+      class="create-job-post1st-page-notice-period-input-filed input"
+      formControlName="notice_period"
+    >
+      <option value="" disabled>Select Notice Period</option>
+      <option value="Immediate">Immediate</option>
+      <option value="Less than 15 Days">Less than 15 Days</option>
+      <option value="30 Days">30 Days</option>
+      <option value="60 Days">60 Days</option>
+      <option value="90 Days">90 Days</option>
+    </select>
+    <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
+      Enter Notice Period
+    </div>
+  </div>
+</div>
           <div
             id="skills-container"
             class="create-job-post1st-page-skills-container"
@@ -827,7 +833,7 @@
                   .suggestions { position: absolute; border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; background-color: white; max-height: 150px; overflow-y: auto; width: auto; min-width: 200px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; }
                   .suggestions div { padding: 8px 12px; cursor: pointer; }
                   .suggestions div:hover { background-color: #f5f5f5; }
-                  .suggestion-item.active-suggestion { background-color: #e0e0e0; } /* Style for active skill suggestion */
+                  .suggestion-item.active-suggestion { background-color: #e0e0e0; }
                 </style>
                 <div class="tag-container" id="tagContainer">
                   <input
@@ -873,8 +879,6 @@
                   Job description <span class="required-asterisk">*</span>
                 </div>
                 <div class="toolbar">
-                  <!-- IMPORTANT: Remove onclick attributes for these buttons. Implement their functionality via Angular if needed. -->
-                  <!-- For now, they are non-functional to avoid further errors. -->
                   <button id="bold-btn" class="format-btn" title="Bold">B</button>
                   <button id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
                   <button id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
@@ -906,14 +910,7 @@
       </form>
     </div>
 
-    <!-- ***** MODIFICATION IS HERE ***** -->
-    <div *ngIf="currentStep === 'assessment'">
-      <assessment-questions-main-container
-        [jobUniqueId]="jobForm.get('unique_id')?.value"
-      ></assessment-questions-main-container>
-    </div>
-    <!-- ***** END OF MODIFICATION ***** -->
-
+    <!-- The assessment-questions-main-container is REMOVED from this file -->
 
     <div
       id="submit-cancel-buttons-container"
@@ -941,7 +938,7 @@
         [disabled]="isSubmitting"
       >
         <span id="submit-text" class="create-job-post1st-page-submit-text">
-          {{ isSubmitting && currentStep === 'jobPost' ? 'Saving...' : (currentStep === 'assessment' ? 'Submit Assessment' : 'Save & Next') }}
+          {{ isSubmitting ? 'Saving...' : 'Save & Next' }}
         </span>
       </button>
     </div>
