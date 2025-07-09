@@ -556,24 +556,26 @@
           </span>
         </div>
         <div
-          id="two-buttons-container"
-          class="error-system-requirement-failed-two-buttons-container"
-        >
-          <button
-            id="go-back-button"
-            type="button"
-            class="error-system-requirement-failed-go-back-button button"
-          >
-            Go Back
-          </button>
-          <button
-            id="retry-button"
-            type="button"
-            class="error-system-requirement-failed-retry-button button"
-          >
-            Retry
-          </button>
-        </div>
+  id="two-buttons-container"
+  class="error-system-requirement-failed-two-buttons-container"
+>
+  <button
+    id="go-back-button"
+    type="button"
+    class="error-system-requirement-failed-go-back-button button"
+    (click)="goBack()"
+  >
+    Go Back
+  </button>
+  <button
+    id="retry-button"
+    type="button"
+    class="error-system-requirement-failed-retry-button button"
+    (click)="retry()"
+  >
+    Retry
+  </button>
+</div>
       </div>
     </div>
   </div>
