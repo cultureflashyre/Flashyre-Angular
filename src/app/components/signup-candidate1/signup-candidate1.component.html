@@ -18,6 +18,8 @@
           <div *ngIf="signupForm.get('first_name').invalid && signupForm.get('first_name').touched" class="error-text">
             <span *ngIf="signupForm.get('first_name').errors?.required">First name is required.</span>
             <span *ngIf="signupForm.get('first_name').errors?.pattern">Only letters and spaces are allowed.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.minlength">First name must be at least 3 characters long.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.maxlength">First name cannot exceed 10 characters.</span>
           </div>
         </div>
 
@@ -34,6 +36,8 @@
           <div *ngIf="signupForm.get('last_name').invalid && signupForm.get('last_name').touched" class="error-text">
             <span *ngIf="signupForm.get('last_name').errors?.required">Last name is required.</span>
             <span *ngIf="signupForm.get('last_name').errors?.pattern">Only letters and spaces are allowed.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.minlength">Last name must be at least 3 characters long.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.maxlength">Last name cannot exceed 10 characters.</span>
           </div>
         </div>
 
@@ -94,11 +98,18 @@
               formControlName="password"
               class="signup-candidate1-password-input1 input"
             />
-            <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+            
+          </div>
+          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
               <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
               <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
+              <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
+              <span *ngIf="signupForm.get('password').errors?.uppercase">Password must include at least one uppercase letter.</span>
+              <span *ngIf="signupForm.get('password').errors?.lowercase">Password must include at least one lowercase letter.</span>
+              <span *ngIf="signupForm.get('password').errors?.number">Password must include at least one number.</span>
+              <span *ngIf="signupForm.get('password').errors?.specialChar">Password must include at least one special character.</span>
+              <span *ngIf="signupForm.get('password').errors?.alphabet">Password must include at least one alphabet.</span>
             </div>
-          </div>
         </div>
 
         <!-- Confirm Password -->
@@ -118,10 +129,11 @@
               formControlName="confirm_password"
               class="signup-candidate1-password-input2 input"
             />
-            <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
+            
+          </div>
+          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
               Passwords do not match.
             </div>
-          </div>
         </div>
 
         <!-- Signup Button and Error Message -->
@@ -148,7 +160,7 @@
             <span class="signup-candidate1-already-have-an-account-text">
               Already have an account?
             </span>
-            <span class="signup-candidate1-signin-text button" routerLink="/login">
+            <span class="signup-candidate1-signin-text button" routerLink="/login-candidate">
               Sign In
             </span>
           </div>

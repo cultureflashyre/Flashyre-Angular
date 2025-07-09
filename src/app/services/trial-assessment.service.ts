@@ -5,6 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../environments/environment';
 
 interface TrialAssessmentResponse {
+  attempts_allowed: number;
+  attempts_remaining: number;
   assessment_id: number;
   assessment_title: string;
   proctored: string;

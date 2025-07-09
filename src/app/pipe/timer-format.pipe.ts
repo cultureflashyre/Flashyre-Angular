@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TimerFormatPipe implements PipeTransform {
 
   transform(value: number): string {
-    console.log("Inside pipe, time value here: ", value);
+    //console.log("Inside pipe, time value here: ", value);
     const hours = Math.floor(value / 3600);
     const minutes = Math.floor((value % 3600) / 60);
     const seconds = Math.floor(value % 60);

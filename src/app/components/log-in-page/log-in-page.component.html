@@ -28,6 +28,11 @@
               class="log-in-page-email-input input"
               required
             />
+            <!-- Error messages for email -->
+            <div *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched" class="error-text">
+              <span *ngIf="loginForm.get('email').errors?.required">Email is required.</span>
+              <span *ngIf="loginForm.get('email').errors?.email">Please enter a valid email address.</span>
+            </div>
           </div>
         </div>
         <div id="password-container" class="log-in-page-password-container">

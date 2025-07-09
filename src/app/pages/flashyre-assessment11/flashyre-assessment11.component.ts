@@ -141,7 +141,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   startTimer(): void {
     this.timerSubscription = this.trialassessmentService.timer$.subscribe((time) => {
       this.timer = time;
-      console.log('timer data in startTimer(): ', this.timer);
+      //console.log('timer data in startTimer(): ', this.timer);
       if (this.timer <= 0) {
         this.terminateTest();
       }

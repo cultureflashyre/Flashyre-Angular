@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
 import { environment } from '../../../environments/environment';
@@ -15,7 +16,7 @@ import { environment } from '../../../environments/environment';
 })
 export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   userProfile: any = {};
-  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   
   // Job related properties
   jobs: any[] = [];
@@ -35,6 +36,18 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   // Intersection Observer
   private observer: IntersectionObserver | null = null;
   private destroy$ = new Subject<void>();
+
+  // Random images for jobs without logos
+  images = [
+    'src/assets/temp-jobs-icon/1.png',
+    'src/assets/temp-jobs-icon/2.png',
+    'src/assets/temp-jobs-icon/3.png',
+    'src/assets/temp-jobs-icon/4.png',
+    'src/assets/temp-jobs-icon/5.png',
+    'src/assets/temp-jobs-icon/6.png',
+    'src/assets/temp-jobs-icon/7.png',
+    'src/assets/temp-jobs-icon/8.png'
+  ];
 
   private apiUrl = environment.apiUrl + 'api/jobs/';
 
@@ -123,33 +136,27 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * Filter jobs and set up initial display
    */
   private filterAndDisplayJobs(jobs: any[]): void {
-    this.authService.getAppliedJobs()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (appliedJobs) => {
-          this.appliedJobIds = appliedJobs.applied_job_ids || [];
-          
-          // Filter out applied jobs
-          this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
-          
-          // Reset pagination
-          this.currentPage = 0;
-          this.displayedJobs = [];
-          
-          // Load first page
-          this.loadNextPage();
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching applied jobs:', error);
-          // Fallback: show all jobs without filtering
-          this.jobs = jobs;
-          this.currentPage = 0;
-          this.displayedJobs = [];
-          this.loadNextPage();
-          this.isLoading = false;
-        }
-      );
+    forkJoin({
+      jobs: this.http.get<any[]>(this.apiUrl),
+      appliedJobs: this.authService.getAppliedJobs()
+    }).subscribe(
+      (results) => {
+        this.appliedJobIds = results.appliedJobs.applied_job_ids || [];
+        this.jobs = results.jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+        this.currentPage = 0;
+        this.displayedJobs = [];
+        this.loadNextPage();
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+        this.jobs = jobs;
+        this.currentPage = 0;
+        this.displayedJobs = [];
+        this.loadNextPage();
+        this.isLoading = false;
+      }
+    );
   }
 
   /**
@@ -184,7 +191,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * Setup infinite scroll using Intersection Observer
    */
   private setupInfiniteScroll(): void {
-    // Disconnect existing observer
     if (this.observer) {
       this.observer.disconnect();
     }
@@ -196,7 +202,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
     const options = {
       root: null,
-      rootMargin: '100px', // Start loading 100px before element comes into view
+      rootMargin: '100px',
       threshold: 0.1
     };
 
@@ -210,7 +216,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Load more jobs (called by intersection observer)
+   * Load more jobs
    */
   loadMoreJobs(): void {
     this.loadNextPage();
@@ -232,7 +238,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * Navigate to assessment page
    */
   navigateToAssessment(jobId: number): void {
-    this.router.navigate(['/flashyre-rules', jobId]);
+    this.router.navigate(['/flashyre-assessment11', jobId]);
   }
 
   /**
@@ -265,6 +271,14 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Get random image for jobs without logos
+   */
+  getRandomImage(): string {
+    const randomIndex = Math.floor(Math.random() * this.images.length);
+    return this.images[randomIndex];
+  }
+
+  /**
    * Refresh jobs (force fetch from API)
    */
   refreshJobs(): void {
@@ -286,63 +300,65 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     return this.displayedJobs.length < this.jobs.length;
   }
 
+  /**
+   * TrackBy function for job list
+   */
   trackByJobId(index: number, job: any): number {
-  return job.job_id;
-}
+    return job.job_id;
+  }
 
-/**
- * Check if user has scrolled to bottom manually (fallback for intersection observer)
- */
-@HostListener('window:scroll', ['$event'])
-onWindowScroll(event: any): void {
-  // Only use this as fallback if intersection observer isn't working
-  if (!this.observer) {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = window.innerHeight;
-    
-    if ((scrollTop + clientHeight >= scrollHeight - 100) && this.hasMoreJobs && !this.isLoadingMoreJobs) {
-      this.loadNextPage();
+  /**
+   * Check if user has scrolled to bottom manually (fallback for intersection observer)
+   */
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(event: any): void {
+    if (!this.observer) {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      
+      if ((scrollTop + clientHeight >= scrollHeight - 100) && this.hasMoreJobs && !this.isLoadingMoreJobs) {
+        this.loadNextPage();
+      }
     }
   }
-}
 
-/**
- * Retry fetching jobs in case of network error
- */
-retryFetchJobs(): void {
-  this.isLoading = true;
-  this.fetchJobsFromAPI();
-}
-
-/**
- * Get job loading progress percentage
- */
-getLoadingProgress(): number {
-  if (this.jobs.length === 0) return 0;
-  return Math.round((this.displayedJobs.length / this.jobs.length) * 100);
-}
-
-/**
- * Scroll to top of job list
- */
-scrollToTop(): void {
-  const jobContainer = document.getElementById('job-container');
-  if (jobContainer) {
-    jobContainer.scrollIntoView({ behavior: 'smooth' });
+  /**
+   * Retry fetching jobs in case of network error
+   */
+  retryFetchJobs(): void {
+    this.isLoading = true;
+    this.fetchJobsFromAPI();
   }
-}
 
-/**
- * Debug method to check cache status
- */
-checkCacheStatus(): void {
-  console.log('Cache Status:', {
-    isCached: this.jobService.areJobsCached(),
-    totalJobs: this.jobs.length,
-    displayedJobs: this.displayedJobs.length,
-    currentPage: this.currentPage,
-    hasMore: this.hasMoreJobs
-  });
-}
+  /**
+   * Get job loading progress percentage
+   */
+  getLoadingProgress(): number {
+    if (this.jobs.length === 0) return 0;
+    return Math.round((this.displayedJobs.length / this.jobs.length) * 100);
+  }
+
+  /**
+   * Scroll to top of job list
+   */
+  scrollToTop(): void {
+    const jobContainer = document.getElementById('job-container');
+    if (jobContainer) {
+      jobContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Debug method to check cache status
+   */
+  checkCacheStatus(): void {
+    console.log('Cache Status:', {
+      isCached: this.jobService.areJobsCached(),
+      totalJobs: this.jobs.length,
+      displayedJobs: this.displayedJobs.length,
+      currentPage: this.currentPage,
+      hasMore: this.hasMoreJobs
+    });
+  }
 }

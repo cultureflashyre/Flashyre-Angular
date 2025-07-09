@@ -11,6 +11,10 @@
   flex-direction: column;
   justify-content: flex-start;
 }
+
+.job-cards-container:hover {
+  cursor: pointer;
+}
  
 .job-cards-job-cards-main-container {
   flex: 0 0 auto;

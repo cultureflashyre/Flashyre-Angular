@@ -173,11 +173,10 @@
 .assessment-taken-page3-cloud-architecture-details-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 1124px;
+  width: 100%;
   height: auto;
   display: flex;
   padding: 24px;
-  margin-top: 100px;
   align-items: center;
   border-color: #D9D9D9;
   border-width: 1px;
@@ -263,10 +262,31 @@
 .assessment-taken-page3-id-text {
   color: #6b6c6d;
 }
+
+.assessment-taken-page2-score-board-text {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.score {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #474748; /* Default text color */
+}
+
  
 .assessment-taken-page3-text31 {
   font-style: normal;
   font-weight: 700;
+}
+
+.attempts-remaining-and-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* or center, as needed */
+  gap: 12px; /* space between text and button */
 }
  
 .assessment-taken-page3-re-attempt-container {
@@ -498,14 +518,12 @@
 .assessment-taken-page3-correct-incorrect-text16 {
   fill: #1F882B;
   color: #1F882B;
-  display: none;
   font-size: 13px;
 }
  
 .assessment-taken-page3-correct-incorrect-text17 {
   fill: #F10400;
   color: #F10400;
-  display: none;
   font-size: 13px;
 }
  
@@ -1522,6 +1540,7 @@
   }
   .assessment-taken-page3-attempts-remaining-text {
     font-size: 14px;
+    margin-bottom: 0;
   }
   .assessment-taken-page3-re-attempt-container {
     width: 110px;

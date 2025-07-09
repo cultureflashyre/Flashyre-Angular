@@ -97,6 +97,8 @@ import { EmailAndMobileNumberComponent } from './email-and-mobile-number-compone
 import { AssessmentQuestionsMainContainer } from './assessment-questions-main-container/assessment-questions-main-container.component'
 import { JobCardsComponent } from './job-cards/job-cards.component';
 import { CandidateJobDetailsComponent } from './candidate-job-details/candidate-job-details.component';
+import { AssessmentDetailedResults } from './assessment-detailed-results/assessment-detailed-results'
+import { AssessmentAttemptsListComponent } from './assessment-attempts-list/assessment-attempts-list'
 
 
 @NgModule({
@@ -187,7 +189,9 @@ import { CandidateJobDetailsComponent } from './candidate-job-details/candidate-
     EmailAndMobileNumberComponent,
     AssessmentQuestionsMainContainer,
     CandidateJobDetailsComponent,
-    JobCardsComponent
+    JobCardsComponent,
+    AssessmentDetailedResults,
+    AssessmentAttemptsListComponent
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
   exports: [
@@ -277,7 +281,9 @@ import { CandidateJobDetailsComponent } from './candidate-job-details/candidate-
     EmailAndMobileNumberComponent,
     AssessmentQuestionsMainContainer,
     CandidateJobDetailsComponent,
-    JobCardsComponent
+    JobCardsComponent,
+    AssessmentDetailedResults,
+    AssessmentAttemptsListComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

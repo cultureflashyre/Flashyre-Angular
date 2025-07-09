@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -51,11 +51,23 @@ export class SignupCandidate1 implements OnInit {
   ngOnInit() {
     this.signupForm = this.fb.group(
       {
-        first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
-        last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
+        first_name: ['', [Validators.required, 
+          Validators.pattern(/^[a-zA-Z ]+$/), 
+          Validators.minLength(3),
+          Validators.maxLength(10),
+        ]],
+        last_name: ['', [Validators.required, 
+          Validators.pattern(/^[a-zA-Z ]+$/), 
+          Validators.minLength(3),
+          Validators.maxLength(10),
+      ]],
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: ['', [Validators.required, 
+          this.passwordComplexityValidator(), 
+          Validators.minLength(8),
+          Validators.maxLength(15)
+        ]],
         confirm_password: ['', Validators.required],
       },
       { validator: this.passwordMatchValidator }
@@ -67,6 +79,40 @@ export class SignupCandidate1 implements OnInit {
       ? null
       : { mismatch: true };
   }
+
+  passwordComplexityValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value || '';
+
+    if (!value) {
+      return null; // Let required validator handle empty case
+    }
+
+    const errors: ValidationErrors = {};
+
+    if (value.length < 8) {
+      errors.minlength = { requiredLength: 8, actualLength: value.length };
+    }
+    if (!/[A-Z]/.test(value)) {
+      errors.uppercase = true;
+    }
+    if (!/[a-z]/.test(value)) {
+      errors.lowercase = true;
+    }
+    if (!/[0-9]/.test(value)) {
+      errors.number = true;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      errors.specialChar = true;
+    }
+    // At least one alphabet is covered by uppercase or lowercase, but if you want to explicitly check:
+    if (!/[a-zA-Z]/.test(value)) {
+      errors.alphabet = true;
+    }
+
+    return Object.keys(errors).length ? errors : null;
+  };
+}
 
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';

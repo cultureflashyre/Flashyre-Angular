@@ -1,6 +1,6 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router'; // Import Router for navigation
-import { SystemRequirementService } from '../../services/system-requirement.service'; // Import SystemRequirementService
+import { ProctoringService } from '../../services/proctoring.service'; // Import SystemRequirementService
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -45,7 +45,7 @@ export class FlashyreDashboard {
 
   constructor(
     private router: Router, 
-    private systemRequirementService: SystemRequirementService, 
+    private proctoringService: ProctoringService, 
     private deviceService: DeviceDetectorService) {} // Inject Router
 
 

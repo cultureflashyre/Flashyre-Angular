@@ -3,6 +3,7 @@ import { Title, Meta } from '@angular/platform-browser'
 import { Router, ActivatedRoute } from '@angular/router';
 import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
+import { TrialAssessmentService } from '../../services/trial-assessment.service';
 
 @Component({
   selector: 'flashyre-assessment-rules-card',
@@ -10,7 +11,13 @@ import { ProctoringService } from '../../services/proctoring.service';
   styleUrls: ['flashyre-assessment-rules-card.component.css'],
 })
 export class FlashyreAssessmentRulesCard implements OnInit {
+
   assessmentId: number | null = null;
+  assessmentData: any = null;
+  attemptsAllowed: number = 0;
+  attemptsRemaining: number = 0;
+  assessmentTitle: string = '';
+  totalAssessmentDuration: number = 0;
 
   constructor(
     private title: Title, 
@@ -18,7 +25,8 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private videoRecorder: VideoRecorderService,
-    private proctoringService: ProctoringService
+    private proctoringService: ProctoringService,
+    private trialAssessmentService: TrialAssessmentService
   ) {
     this.title.setTitle('Flashyre-Assessment-Rules-Card - Flashyre')
     this.meta.addTags([
@@ -34,11 +42,29 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     ])
   }
 
-  ngOnInit() {
+ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const id = params['id'];
       if (id) {
         this.assessmentId = +id;
+        this.fetchAssessmentData(this.assessmentId);
+      }
+    });
+  }
+
+  fetchAssessmentData(assessmentId: number): void {
+    this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
+      next: (data) => {
+        console.log('Assessment data fetched:', data);
+        this.assessmentData = data;
+        this.attemptsAllowed = data.attempts_allowed;
+        this.attemptsRemaining = data.attempts_remaining;
+        this.assessmentTitle = data.assessment_title;
+        this.totalAssessmentDuration = data.total_assessment_duration;
+      },
+      error: (error) => {
+        console.error('Error fetching assessment data:', error);
+        alert('Failed to load assessment details.');
       }
     });
   }

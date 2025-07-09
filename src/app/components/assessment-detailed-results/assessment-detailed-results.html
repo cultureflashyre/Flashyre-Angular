@@ -1,0 +1,157 @@
+
+    <div
+      id="cloud-architecture-details-container"
+      class="assessment-taken-page3-cloud-architecture-details-container"
+    >
+      <div
+        id="text-id-attempts-container"
+        class="assessment-taken-page3-text-id-attempts-container"
+      >
+        <div class="assessment-taken-page3-container11">
+          <div
+            id="cloud-architecture-text-container"
+            class="assessment-taken-page3-cloud-architecture-text-container"
+          >
+            <svg
+              id="back-icon"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              class="assessment-taken-page3-back-icon"
+              (click)="onBackClick()"
+            >
+              <path
+                d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+                fill="currentColor"
+              ></path>
+            </svg>
+            <span
+              id="cloud-architecture-text"
+              class="assessment-taken-page3-cloud-architecture-text"
+            >
+              {{ assessmentData.assessment_title }}
+            </span>
+          </div>
+          <div
+            id="assessment-by-container"
+            class="assessment-taken-page3-assessment-by-container"
+          >
+            <img
+              id="assessment-company-logo"
+              alt="image"
+              [src]="assessmentData.assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+              class="assessment-taken-page3-assessment-company-logo"
+            />
+            <span
+              id="assessment-by-text"
+              class="assessment-taken-page3-assessment-by-text"
+            >
+              Assessment by {{ assessmentData.created_by }}
+            </span>
+          </div>
+        </div>
+        <div
+          id="id-attempts-container"
+          class="assessment-taken-page3-id-attempts-container"
+        >
+          <span id="id-text" class="assessment-taken-page3-id-text">
+            Assessment ID : {{ assessmentData.assessment_id }}
+          </span>
+
+          <div class='progress-container'>
+            <div class='progress'>
+              <div class='bar'
+                [style.width.%]="assessmentData.score"
+                [style.backgroundColor]="getFillColor(assessmentData.score)">
+              </div>
+            </div>
+                <span
+                  id="score-board-text"
+                  class="assessment-taken-page2-score-board-text"
+                >Score: </span>
+            <span 
+              class="score"
+              [style.color]="getFillColor(assessmentData.score)">
+              {{ assessmentData.score }}%
+            </span>
+          </div>
+
+        </div>
+        <div class="attempts-remaining-and-button-container">
+          <button
+            id="re-attempt-container"
+            type="button"
+            class="assessment-taken-page3-re-attempt-container button"
+            [disabled]="assessmentData.attempts_remaining <= 0"
+          >
+            Re-attempt
+          </button>
+          <span
+            id="attempts-remaining-text"
+            class="assessment-taken-page3-attempts-remaining-text"
+          >
+            <span class="assessment-taken-page3-text31">
+              {{ assessmentData.attempts_remaining < 0 ? 0 : assessmentData.attempts_remaining }}
+            </span>
+            <span>Attempt(s) Remaining</span>
+          </span>
+        </div>
+
+      </div>
+      <div class="assessment-taken-page3-qa-details-container">
+        <div *ngFor="let question of assessmentData?.detailed_questions; let i = index"
+         class="assessment-taken-page3-qa-container1">
+          <div class="assessment-taken-page3-question-number-container1">
+            <span class="assessment-taken-page3-text33">
+              Question {{ i + 1 }}/{{ assessmentData?.detailed_questions?.length }}
+            </span>
+          </div>
+          <div class="assessment-taken-page3-question-container1">
+            <span class="assessment-taken-page3-text34">
+              {{ question.question_text }}
+            </span>
+            <img *ngIf="question.question_image" [src]="question.question_image" class="question-image" />
+          </div>
+          <div class="assessment-taken-page3-options-container1">
+
+
+              <div *ngFor="let opt of getOptions(question); let optIdx = index" 
+              class="assessment-taken-page3-option-container10">
+                <input
+                  type="radio"
+                  [name]="'radio-' + i"
+                  [checked]="logRadioStatus(question, opt, i)"
+                  disabled
+                  class="assessment-taken-page3-radiobutton13"
+                />
+                <div class="assessment-taken-page3-container15">
+                  <label>{{ opt.value }}</label>
+                  <span *ngIf="getOptionStatus(question, opt) === 'correct'"
+                        class="assessment-taken-page3-correct-incorrect-text16">
+                    Correct
+                  </span>
+                  <span *ngIf="getOptionStatus(question, opt) === 'incorrect'"
+                        class="assessment-taken-page3-correct-incorrect-text17">
+                    Incorrect
+                  </span>
+                </div>
+              </div>
+
+          </div>
+          <div class="assessment-taken-page3-explianation-container1">
+              <div class="assessment-taken-page3-container16">
+                <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
+                <span class="assessment-taken-page3-correct-option-text1">
+                  {{ getCorrectOptionLetter(question) }}
+                </span>
+              </div>
+              <div class="assessment-taken-page3-container17">
+                <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
+                <span class="assessment-taken-page3-correct-answer-explained-text1">
+                  {{ question.q_answer_explained || 'No explanation provided.' }}
+                </span>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>

@@ -4,19 +4,16 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 import { AuthService } from '../../services/candidate.service';
 import { Router } from '@angular/router';
 
-interface UserProfile {
-  first_name: string;
-  last_name: string;
-}
-
 @Component({
   selector: 'assessment-taken-page',
   templateUrl: 'assessment-taken-page.component.html',
-  styleUrls: ['assessment-taken-page.component.css'],
+  styleUrls: ['assessment-taken-page.component.css']
 })
 export class AssessmentTakenPage implements OnInit {
   assessments: any[] = [];
-  userProfile: UserProfile | null = null;
+  showAttempts: { [key: string]: boolean } = {};
+  selectedAssessmentId: string | null = null;
+  searchQuery: string = ''; // Added search query variable
 
   constructor(
     private title: Title,
@@ -27,37 +24,16 @@ export class AssessmentTakenPage implements OnInit {
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
-      {
-        property: 'og:title',
-        content: 'Assessment-Taken-Page - Flashyre',
-      },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
-      },
+      { property: 'og:title', content: 'Assessment-Taken-Page - Flashyre' },
+      { property: 'og:image', content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original' }
     ]);
   }
 
   ngOnInit() {
-    this.loadUserProfile();
     this.assessmentTakenService.getAllAssessmentScores().subscribe(
-      (data) => {
-        this.assessments = data;
-      },
-      (error) => {
-        console.error('Error fetching assessment scores', error);
-      }
+      (data) => { this.assessments = data; },
+      (error) => { console.error('Error fetching assessment scores', error); }
     );
-  }
-
-  loadUserProfile(): void {
-    const profileData = localStorage.getItem('userProfile');
-    if (profileData) {
-      this.userProfile = JSON.parse(profileData);
-    } else {
-      console.log('User Profile NOT fetched');
-    }
   }
 
   getFillColor(score: number): string {
@@ -70,10 +46,25 @@ export class AssessmentTakenPage implements OnInit {
 
   onLogoutClick() {
     this.authService.logout();
-    // this.router.navigate(['/login-candidate']);
   }
 
-  goToAssessmentDetails(assessment: any) {
-    this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id]);
+  selectAssessment(assessmentId: string) {
+    this.selectedAssessmentId = assessmentId;
+  }
+
+  closeDetailView() {
+    this.selectedAssessmentId = null;
+  }
+
+  // Added method to filter assessments based on search query
+  getFilteredAssessments() {
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      return this.assessments; // Return all assessments if search query is empty
+    }
+    return this.assessments.filter(assessment =>
+      assessment.assessment_title.toLowerCase().includes(query) ||
+      String(assessment.assessment_id).toLowerCase().includes(query)
+    );
   }
 }

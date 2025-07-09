@@ -12,6 +12,10 @@
   justify-content: center;
 }
 
+.candidate-job-for-you-card-container10:hover {
+  cursor: pointer;
+}
+
 .candidate-job-for-you-card-container11 {
   gap: 24px;
   flex: 0 0 auto;

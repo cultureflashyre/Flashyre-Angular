@@ -202,6 +202,12 @@
   padding: 5px 10px; /* Add padding for better appearance */
   border-radius: 4px; /* Optional: Rounded corners */
 }
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
  
 .log-in-page-container6 {
   gap: 0;

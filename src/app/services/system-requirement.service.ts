@@ -1,46 +1,43 @@
-// system-requirement.service.ts
-import { Injectable } from '@angular/core';
+// proctoring.service.ts
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SystemRequirementService {
+export class ProctoringService {
+  private visibilityHandler!: () => void;
+  private blurHandler!: () => void;
 
-  private router: Router;
+  constructor(private router: Router, private ngZone: NgZone) {}
 
-  constructor(router: Router, private deviceService: DeviceDetectorService) {
-    this.router = router;
+  startMonitoring() {
+    this.setupProctoringListeners();
   }
 
-  async checkSystemRequirements(): Promise<boolean> {
-    // Implement checks for device type and audio/video availability
-    const isDeviceSupported = this.isDeviceSupported();
-    const isAudioVideoEnabled = await this.isAudioVideoEnabled();
-  
-    return isDeviceSupported && isAudioVideoEnabled;
-  }
-  
+  private setupProctoringListeners() {
+    this.visibilityHandler = () => {
+      if (document.hidden) this.handleViolation();
+    };
 
-  isDeviceSupported(): boolean {
-    return !this.deviceService.isMobile();
-  }
+    this.blurHandler = () => {
+      this.handleViolation();
+    };
 
-  async isAudioVideoEnabled(): Promise<boolean> {
-    try {
-      await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      return true;
-    } catch (error) {
-      return false;
-    }
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+    window.addEventListener('blur', this.blurHandler);
   }
 
-  reInitiateCheck(): void {
-    if (this.checkSystemRequirements()) {
-      this.router.navigate(['/flashyre-assessment-rules-card']);
-    } else {
-      // Do nothing if requirements are still not met
-    }
+  private handleViolation() {
+    this.ngZone.run(() => {
+      this.router.navigate(['/assessment-violation'], {
+        state: { message: "Test submitted automatically due to screen/app switching" }
+      });
+    });
+  }
+
+  stopMonitoring() {
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
+    window.removeEventListener('blur', this.blurHandler);
   }
 }
