@@ -49,8 +49,8 @@ export class ProctoringService {
     // Use NgZone.run to ensure navigation happens inside Angular's zone,
     // so change detection works properly
     this.ngZone.run(() => {
-      console.log('Navigating to /assessment-violation due to violation');
-      this.router.navigate(['/assessment-violation'], {
+      console.log('Navigating to /assessment-violation-message due to violation');
+      this.router.navigate(['/assessment-violation-message'], {
         state: { message: "Test submitted automatically due to screen/app switching" }
       });
     });

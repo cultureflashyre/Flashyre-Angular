@@ -502,12 +502,13 @@
           class="assessment-violation-message-button-container"
         >
           <button
-            id="close-button"
-            type="button"
-            class="assessment-violation-message-close-button button"
-          >
-            Close
-          </button>
+  id="close-button"
+  type="button"
+  class="assessment-violation-message-close-button button"
+  (click)="onCloseClick()"
+>
+  Close
+</button>
         </div>
       </div>
     </div>
