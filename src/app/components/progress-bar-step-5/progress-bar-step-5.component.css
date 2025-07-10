@@ -1,0 +1,152 @@
+:host { 
+  display: contents; 
+}
+ 
+.progress-bar-step-5-container1 {
+  width: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.progress-bar-step-5-container2 {
+  flex: 0 0 auto;
+  width: 728px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+    /* Container for the progress bar */
+    body {
+      background-color: transparent;
+    }
+    .progress-bar {
+      display: flex;
+      overflow: visible;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      font-family: Inter, sans-serif;
+    }
+
+    /* Style for each step */
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      flex: 1;
+    }
+
+    /* Line between steps */
+    .step:before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: calc(-40% + 15px); /* Adjust position to align the line between circles */
+      width: calc(80% - 30px); /* Width adjusted to match circle diameter */
+      height: 2px;
+      background-color: #ccc;
+      z-index: 0;
+    }
+
+    /* Remove line before the first step */
+    .step:first-child:before {
+      display: none;
+    }
+
+    /* Circle for each step */
+    .step-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #3AC14A;
+      color: white;
+      font-size: 1rem;
+      z-index: 1;
+    }
+
+    /* Label under each circle */
+    .step span {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: #18191C;
+    }
+
+    /* Media query for responsiveness */
+    @media (max-width: 768px) {
+      .progress-bar {
+        width: 90%;
+      }
+
+      .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+      }
+
+      .step span {
+        font-size: 0.7rem;
+      }
+    }
+
+        @media (max-width: 478px) {
+      .progress-bar {
+        width: 90%;
+      }
+
+      .step-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 0.6rem;
+        font-weight: 400;
+      }
+
+      .step span {
+        font-size: 0.5rem;
+      }
+    }
+  
+
+ 
+.progress-bar-step-5-container3 {
+  width: 90%;
+  height: 100px;
+}
+ 
+.progress-bar-step-5-container4 {
+  display: contents;
+}
+ 
+.progress-bar-step-5root-class-name {
+  width: 860px;
+  height: 100px;
+  align-self: center;
+}
+ 
+@media(max-width: 479px) {
+  .progress-bar-step-5-container1 {
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+  }
+  .progress-bar-step-5-container2 {
+    width: 100%;
+    justify-content: center;
+  }
+  .progress-bar-step-5-container3 {
+    width: 90%;
+    height: 100p;
+  }
+}

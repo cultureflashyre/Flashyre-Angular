@@ -1,0 +1,188 @@
+:host { 
+  display: contents; 
+}
+ 
+.progress-bar-step-1-container1 {
+  width: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.progress-bar-step-1-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.progress-bar-step-1-container3 {
+  width: 720px;
+  height: 100px;
+}
+ 
+.progress-bar-step-1-container4 {
+  display: contents;
+}
+ 
+
+    /* Container for the progress bar */
+    body {
+      background-color: transparent; 
+    }
+    .progress-bar {
+      display: flex;
+      overflow: visible;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      font-family: Inter, sans-serif;
+
+    }
+
+    /* Style for each step */
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      flex: 1;
+    }
+
+    /* Line between steps */
+    .step:before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: calc(-40% + 15px); /* Adjust position to align the line between circles */
+      width: calc(80% - 30px); /* Width adjusted to match circle diameter */
+      height: 2px;
+      background-color: #ccc;
+      z-index: 0;
+    }
+
+    /* Remove line before the first step */
+    .step:first-child:before {
+      display: none;
+    }
+
+    /* Circle for each step */
+    .step-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #747474;
+      color: white;
+      font-size: 1rem;
+      z-index: 1;
+    }
+
+    /* Label under each circle */
+    .step span {
+      margin-top: 8px;
+      font-size: 1rem;
+      color: #18191C;
+    }
+
+    /* Media query for responsiveness */
+    @media (max-width: 728px) {
+      .progress-bar {
+        width: 90%;
+      }
+
+      .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        font-weight: 400;
+      }
+
+      .step span {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 478px) {
+
+      .step-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 0.6rem;
+      }
+
+      .step span {
+        font-size: 0.5rem;
+      }
+    }
+
+  
+ 
+
+ 
+.progress-bar-step-1root-class-name2 {
+  align-self: center;
+}
+ 
+
+ 
+@media(max-width: 767px) {
+  .progress-bar-step-1-container1 {
+    width: 100%;
+  }
+  .progress-bar-step-1root-class-name1 {
+    align-self: center;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .progress-bar-step-1-container1 {
+    width: 100%;
+    overflow: hidden;
+  }
+  .progress-bar-step-1-container2 {
+    width: 479px;
+    height: auto;
+    align-self: center;
+    align-items: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    justify-content: center;
+  }
+  .progress-bar-step-1-container3 {
+    top: NaNpx;
+    left: 0px;
+    width: 90%;
+    height: 100px;
+    display: flex;
+    font-size: 12px;
+    align-self: center;
+    align-items: center;
+    margin-right: -5px;
+    justify-content: center;
+  }
+  .progress-bar-step-1root-class-name {
+    overflow: hidden;
+  }
+  .progress-bar-step-1root-class-name1 {
+    width: auto;
+    align-self: center;
+  }
+  .progress-bar-step-1root-class-name2 {
+    align-self: center;
+  }
+  .progress-bar-step-1root-class-name3 {
+    width: 95%;
+    position: static;
+    align-self: center;
+  }
+}

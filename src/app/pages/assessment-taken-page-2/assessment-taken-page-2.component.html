@@ -1,0 +1,300 @@
+<div class="assessment-taken-page2-container1">
+  <div
+    id="cloud-architecture-main-container"
+    class="assessment-taken-page2-cloud-architecture-main-container"
+  >
+    <navbar-for-candidate-view
+      rootClassName="navbar-for-candidate-viewroot-class-name7"
+    >
+      <ng-template #link11>
+        <div class="assessment-taken-page2-fragment10">
+          <span class="assessment-taken-page2-text10">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link12>
+        <div class="assessment-taken-page2-fragment11">
+          <span class="assessment-taken-page2-text11">Upskill</span>
+        </div>
+      </ng-template>
+      <ng-template #link41>
+        <div class="assessment-taken-page2-fragment12">
+          <span class="assessment-taken-page2-text12">Jobs for you</span>
+        </div>
+      </ng-template>
+      <ng-template #text17>
+        <div class="assessment-taken-page2-fragment13">
+          <span class="assessment-taken-page2-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text21>
+        <div class="assessment-taken-page2-fragment14">
+          <span class="assessment-taken-page2-text14">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text33>
+        <div class="assessment-taken-page2-fragment15">
+          <span class="assessment-taken-page2-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text74>
+        <div class="assessment-taken-page2-fragment16">
+          <span class="assessment-taken-page2-text16">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link111>
+        <div class="assessment-taken-page2-fragment17">
+          <span class="assessment-taken-page2-text17">Assessment</span>
+        </div>
+      </ng-template>
+      <ng-template #text104>
+        <div class="assessment-taken-page2-fragment18">
+          <span class="assessment-taken-page2-text18">Upskill</span>
+        </div>
+      </ng-template>
+      <ng-template #text114>
+        <div class="assessment-taken-page2-fragment19">
+          <span class="assessment-taken-page2-text19">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text124>
+        <div class="assessment-taken-page2-fragment20">
+          <span class="assessment-taken-page2-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text134>
+        <div class="assessment-taken-page2-fragment21">
+          <span class="assessment-taken-page2-text21">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text154>
+        <div class="assessment-taken-page2-fragment22">
+          <span class="assessment-taken-page2-text22">Leslie Alexander</span>
+        </div>
+      </ng-template>
+      <ng-template #text163>
+        <div class="assessment-taken-page2-fragment23">
+          <span class="assessment-taken-page2-text23">Google</span>
+        </div>
+      </ng-template>
+      <ng-template #text311>
+        <div class="assessment-taken-page2-fragment24">
+          <span class="assessment-taken-page2-text24">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text324>
+        <div class="assessment-taken-page2-fragment25">
+          <span class="assessment-taken-page2-text25">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1011>
+        <div class="assessment-taken-page2-fragment26">
+          <span class="assessment-taken-page2-text29">Assessment</span>
+        </div>
+      </ng-template>
+      <ng-template #text10111>
+        <div class="assessment-taken-page2-fragment27">
+          <span class="assessment-taken-page2-text30">Jobs for you</span>
+        </div>
+      </ng-template>
+    </navbar-for-candidate-view>
+    <div
+      id="cloud-architecture-details-container"
+      class="assessment-taken-page2-cloud-architecture-details-container"
+    >
+      <div
+        id="text-id-attempts-container"
+        class="assessment-taken-page2-text-id-attempts-container"
+      >
+        <div class="assessment-taken-page2-container2">
+          <div
+            id="cloud-architecture-text-container"
+            class="assessment-taken-page2-cloud-architecture-text-container"
+          >
+            <svg
+              id="back-icon"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              class="assessment-taken-page2-back-icon"
+            >
+              <path
+                d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+                fill="currentColor"
+              ></path>
+            </svg>
+            <span
+              id="cloud-architecture-text"
+              class="assessment-taken-page2-cloud-architecture-text"
+            >
+              {{ assessment_title }}
+            </span>
+          </div>
+          <div
+            id="assessment-by-container"
+            class="assessment-taken-page2-assessment-by-container"
+          >
+            <img
+              id="assessment-company-logo"
+              alt="image"
+              [src]="assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+              class="assessment-taken-page2-assessment-company-logo"
+            />
+            <span
+              id="assessment-by-text"
+              class="assessment-taken-page2-assessment-by-text"
+            >
+              Assessment by {{ created_by }}
+            </span>
+          </div>
+        </div>
+        <div
+          id="id-attempts-container"
+          class="assessment-taken-page2-id-attempts-container"
+        >
+          <span id="id-text" class="assessment-taken-page2-id-text">
+            Assessment ID : {{ assessment_id }}
+          </span>
+          <span
+            id="attempts-remaining-text"
+            class="assessment-taken-page2-attempts-remaining-text"
+          >
+            <span class="assessment-taken-page2-text31">{{ attempts_remaining < 0 ? 0 : attempts_remaining }}</span>
+            <span> Attempt(s) Remaining</span>
+          </span>
+        </div>
+      </div>
+      <div class="assessment-taken-page2-container3">
+        <div class="assessment-taken-page2-container4">
+          <div
+            *ngFor="let attempt of attempts; let i = index"
+            id="attempt-container"
+            class="assessment-taken-page2-attempt-container"
+          >
+            <div
+              id="attempt-date-container"
+              class="assessment-taken-page2-attempt-date-container"
+            >
+              <div
+                id="date-attempt-container"
+                class="assessment-taken-page2-date-attempt-container"
+              >
+                <span
+                  id="attempt-text"
+                  class="assessment-taken-page2-attempt-text"
+                >
+                  {{ (attempts.length - i) }}{{ getOrdinal(attempts.length - i) }} Attempt
+                </span>
+                <span id="date-text" class="assessment-taken-page2-date-text">
+                  Completed {{ attempt.end_time | date:'medium' }}
+                </span>
+              </div>
+            </div>
+            <div
+              id="score-container"
+              class="assessment-taken-page2-score-container"
+            >
+              <div
+                id="score-board-container"
+                class="assessment-taken-page2-score-board-container"
+              >
+                <span
+                  id="score-board-text"
+                  class="assessment-taken-page2-score-board-text"
+                >
+                  🏆 Score Board
+                </span>
+                <div
+                  id="score-board-code-container"
+                  class="assessment-taken-page2-score-board-code-container"
+                >
+                  <div class="assessment-taken-page2-container5">
+                    <div class="assessment-taken-page2-container6">
+                      <body>
+                      <div class='progress-container'>
+                        <div class='progress'>
+                          <div class='bar'
+                          [style.width.%]="attempt.score"
+                          [style.backgroundColor]="getFillColor(attempt.score)"></div>
+                        </div>
+                        <span class="score">{{ attempt.score }}%</span>
+                      </div>
+                        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+  <script>
+    $(document).ready(function () {
+      const $progress = $('.progress');
+      const $bar = $progress.find('.bar');
+      const $score = $('.score');
+      const perc = 56.5; // Percentage value
+
+      // Determine the fill color based on the percentage
+      const getFillColor = (value) => {
+        if (value <= 40) return 'red';
+        if (value <= 60) return 'orange';
+        if (value <= 75) return '#4D91C6'; // Ampere color
+        if (value <= 84) return 'lightgreen';
+        return 'darkgreen';
+      };
+
+      $({ p: 0 }).animate({ p: perc }, {
+        duration: 3000,
+        easing: 'swing',
+        step: function (p) {
+          // Update the width and color of the bar
+          $bar.css({
+            width: p + '%',
+            backgroundColor: getFillColor(p)
+          });
+
+          // Update the displayed score
+          $score.text(Math.round(p) + '%');
+        }
+      });
+    });
+  </script>
+</body>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg
+                id="right-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="assessment-taken-page2-right-icon"
+              >
+                <path
+                  d="m10 16l4-4l-4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="re-attempt-button-container"
+        class="assessment-taken-page2-re-attempt-button-container"
+      >
+        <button
+          id="re-attempt-container"
+          type="button"
+          class="assessment-taken-page2-re-attempt-container button"
+          [disabled]="attempts_remaining <= 0"
+          (click)="onReattempt()"
+        >
+          Re-attempt
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

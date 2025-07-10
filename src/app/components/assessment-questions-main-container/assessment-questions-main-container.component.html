@@ -1,0 +1,377 @@
+<!-- src/app/components/assessment-questions-main-container/assessment-questions-main-container.component.html -->
+<div
+  id="assessment-questions-main-container"
+  class="assessment-questions-main-container-assessment-questions-main-container"
+>
+  <!-- Left Panel: Questions Listing -->
+  <div
+    id="assessment-questions-container"
+    class="assessment-questions-main-container-assessment-questions-container"
+  >
+    <span
+      id="assessment-questions-text"
+      class="assessment-questions-main-container-assessment-questions-text"
+    >
+      Assessment Questions
+    </span>
+
+    <div
+      id="assessment-name-input-container"
+      class="assessment-questions-main-container-assessment-name-input-container"
+    >
+      <input
+        type="text"
+        id="assessment-name-input" #assessmentNameInput
+        [(ngModel)]="assessmentName"
+        [placeholder]="assessmentNameInputPlaceholder"
+        class="assessment-questions-main-container-assessment-name-input input"
+      />
+      <!-- Upload questions section (remains for future use, not fully wired up here) -->
+      <div
+        id="upload-questions-container"
+        class="assessment-questions-main-container-upload-questions-container"
+      >
+        <div
+          id="upload-input-container"
+          class="assessment-questions-main-container-upload-input-container"
+        >
+          <input
+            type="text"
+            id="upload-input-field"
+            [placeholder]="uploadInputFieldPlaceholder"
+            class="assessment-questions-main-container-upload-input-field input"
+          />
+          <div
+            id="upload-button-container"
+            class="assessment-questions-main-container-upload-button-container"
+          >
+            <svg
+              id="upload-icon"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              class="assessment-questions-main-container-upload-icon"
+            >
+              <path
+                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span
+              id="upload-text"
+              class="assessment-questions-main-container-upload-text"
+            >
+             Upload
+            </span>
+          </div>
+        </div>
+        <span
+          id="upload-file-type-text"
+          class="assessment-questions-main-container-upload-file-type-text"
+        >
+          Upload file (xlsx, xls)
+        </span>
+      </div>
+    </div>
+
+    <div
+      id="select-container"
+      class="assessment-questions-main-container-select-container"
+    >
+      <div
+        id="select-all-container-main"
+        class="assessment-questions-main-container-select-all-container1"
+      >
+        <input
+          type="checkbox"
+          id="select-all-ai-checkbox" #selectAllAiCheckbox
+          class="assessment-questions-main-container-select-all-checkbox1"
+          [(ngModel)]="selectAllAiQuestions"
+          (ngModelChange)="toggleSelectAllAiQuestions()"
+          [disabled]="isLoadingMcqs || activeTab !== 'ai' || getObjectKeys(aiGeneratedMcqsBySkill).length === 0"
+        />
+        <span
+          id="select-all-text-main"
+          class="assessment-questions-main-container-select-all-text1"
+        >
+          Select All {{ activeTab === 'ai' ? 'AI Questions' : (activeTab === 'uploaded' ? 'Uploaded Questions' : '') }}
+        </span>
+      </div>
+      <span
+        id="num-selected-text-main"
+        class="assessment-questions-main-container-num-selected-text1"
+      >
+        <span class="assessment-questions-main-container-text33">{{ selectedMcqItemIds.size }}</span> Selected
+      </span>
+      <div
+        id="shuffle-container-main"
+        class="assessment-questions-main-container-shuffle-container"
+      >
+        <input
+          type="checkbox"
+          id="shuffle-checkbox-main"
+          class="assessment-questions-main-container-shuffle-checkbox"
+          [(ngModel)]="shuffleQuestionsOverall"
+        />
+        <span
+          id="shuffle-text-main"
+          class="assessment-questions-main-container-shuffle-text"
+        >
+          Shuffle
+        </span>
+        <svg
+          id="information-icon-main"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          class="assessment-questions-main-container-information-icon"
+          title="Shuffle the order of all selected questions when the assessment is presented."
+        >
+          <path
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </div>
+
+    <div
+      id="ai-generated-upload-questions-container"
+      class="assessment-questions-main-container-ai-generated-upload-questions-container"
+    >
+      <span
+        id="ai-generated-text-tab"
+        class="assessment-questions-main-container-ai-generated-text tab-button"
+        [class.active-tab]="activeTab === 'ai'"
+        (click)="setActiveTab('ai')"
+      >
+        AI Generated
+      </span>
+      <span
+        id="uploaded-questions-text-tab"
+        class="assessment-questions-main-container-uploaded-questions-text tab-button"
+        [class.active-tab]="activeTab === 'uploaded'"
+        (click)="setActiveTab('uploaded')"
+      >
+        Uploaded Questions
+      </span>
+    </div>
+
+    <!-- AI Generated Questions Display Section -->
+    <div *ngIf="activeTab === 'ai'" id="ai-questions-list-container" class="assessment-questions-main-container-questions-container">
+      <div *ngIf="isLoadingMcqs" class="loading-indicator">Loading AI Questions...</div>
+      
+      <ng-container *ngIf="!isLoadingMcqs && getObjectKeys(aiGeneratedMcqsBySkill).length > 0">
+        <div *ngFor="let skill of getObjectKeys(aiGeneratedMcqsBySkill)" class="skill-group">
+          <h3 class="skill-title-header">{{ skill }} ({{ aiGeneratedMcqsBySkill[skill].items.length }} questions)</h3>
+          <div *ngFor="let mcq of aiGeneratedMcqsBySkill[skill].items; let mcqIndex = index" 
+               class="assessment-questions-main-container-question-container" 
+               id="question-container-ai-{{mcq.mcq_item_id}}">
+            
+            <div class="assessment-questions-main-container-checkbox-container">
+              <input type="checkbox" 
+                     id="question-select-checkbox-ai-{{mcq.mcq_item_id}}" 
+                     class="assessment-questions-main-container-question-select-checkbox"
+                     [checked]="selectedMcqItemIds.has(mcq.mcq_item_id)"
+                     (change)="toggleMcqSelection(mcq.mcq_item_id, $event)"/>
+            </div>
+
+            <div class="assessment-questions-main-container-que-container" id="que-container-ai-{{mcq.mcq_item_id}}">
+              <span id="question-text-ai-{{mcq.mcq_item_id}}" class="assessment-questions-main-container-question">
+                <strong>Q{{ mcq.question_number }}.</strong> {{ mcq.parsedDetails.question }}
+              </span>
+              <!-- Options Display -->
+              <div *ngFor="let optionText of mcq.parsedDetails.options; let i = index" 
+                   class="assessment-questions-main-container-option{{i+1}}-container option-item"
+                   id="option-container-ai-{{mcq.mcq_item_id}}-{{i}}">
+                <input type="radio" 
+                       id="option-radio-ai-{{mcq.mcq_item_id}}-{{i}}" 
+                       name="mcq_option_ai_{{mcq.mcq_item_id}}" 
+                       class="assessment-questions-main-container-option{{i+1}}-radio"
+                       [value]="getOptionLabel(i)"
+                       [checked]="getOptionLabel(i) === mcq.parsedDetails.correctAnswerLabel" 
+                       disabled />
+                <label [for]="'option-radio-ai-'+mcq.mcq_item_id+'-'+i"
+                       class="assessment-questions-main-container-option{{i+1}}"
+                       [class.correct-answer-label]="getOptionLabel(i) === mcq.parsedDetails.correctAnswerLabel">
+                  {{ getOptionLabel(i) }}) {{ optionText || 'N/A' }}
+                </label>
+              </div>
+            </div>
+            
+            <div class="assessment-questions-main-container-marks-difficulty-container">
+              <!-- Placeholder: Replace with dynamic data if available from backend -->
+              <span class="assessment-questions-main-container-marks1">2 marks</span>
+              <span class="assessment-questions-main-container-medium-text">Medium</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="!isLoadingMcqs && getObjectKeys(aiGeneratedMcqsBySkill).length === 0" class="no-questions-message">
+        No AI-generated questions found for this job post.
+      </div>
+    </div>
+
+    <!-- Placeholder for Uploaded Questions Display Section -->
+    <div *ngIf="activeTab === 'uploaded'" class="questions-placeholder assessment-questions-main-container-questions-container">
+      Uploaded questions section (To be implemented).
+    </div>
+  </div>
+
+  <!-- Right Panel: Assessment Settings -->
+  <div
+    id="assessment-questions-2nd-container"
+    class="assessment-questions-main-container-assessment-questions2nd-container"
+  >
+    <div
+      id="permissions-container"
+      class="assessment-questions-main-container-permissions-container"
+    >
+      <div
+        id="proctered-container"
+        class="assessment-questions-main-container-proctered-container"
+      >
+        <span
+          id="proctered-text"
+          class="assessment-questions-main-container-proctered-text"
+        >
+          Proctored
+        </span>
+        <div class="assessment-questions-main-container-container1 toggle-switch-container">
+          <label class='switch'>
+            <input type='checkbox' [(ngModel)]="isProctored" (change)="onProctoredChange($event)">
+            <span class='slider round'></span>
+          </label>
+        </div>
+      </div>
+      <div
+        id="video-recording-container"
+        class="assessment-questions-main-container-video-recording-container"
+      >
+        <span
+          id="video-recording-text"
+          class="assessment-questions-main-container-video-recording-text"
+        >
+          Video Recording
+        </span>
+         <div class="assessment-questions-main-container-container3 toggle-switch-container">
+           <label class='switch'>
+            <input type='checkbox' [(ngModel)]="hasVideoRecording" (change)="onVideoRecordingChange($event)">
+            <span class='slider round'></span>
+          </label>
+        </div>
+      </div>
+      <div
+        id="phone-access-container"
+        class="assessment-questions-main-container-phone-access-container"
+      >
+        <span
+          id="phone-access-text"
+          class="assessment-questions-main-container-phone-access-text"
+        >
+          Phone Access
+        </span>
+        <div class="assessment-questions-main-container-container5 toggle-switch-container">
+           <label class='switch'>
+            <input type='checkbox' [(ngModel)]="allowPhoneAccess" (change)="onPhoneAccessChange($event)">
+            <span class='slider round'></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="choose-sections-container"
+      class="assessment-questions-main-container-choose-sections-container"
+    >
+      <span
+        id="choose-sections-text"
+        class="assessment-questions-main-container-choose-sections-text"
+      >
+        Choose Sections
+      </span>
+      <div
+        id="select-all-total-questions-container"
+        class="assessment-questions-main-container-select-all-total-questions-container"
+      >
+        <div
+          id="select-all-sections-group" 
+          class="assessment-questions-main-container-select-all-container2"
+        >
+          <input
+            type="checkbox"
+            id="select-all-sections-checkbox"
+            class="assessment-questions-main-container-select-all-checkbox2"
+            disabled 
+            title="Functionality to select all sections to be implemented if sections are individually configurable."
+          />
+          <span
+            id="select-all-sections-text"
+            class="assessment-questions-main-container-select-all-text2"
+          >
+            Select All
+          </span>
+        </div>
+        <div
+          id="total-questions-to-ask-container"
+          class="assessment-questions-main-container-total-questions-container"
+        >
+          <span
+            id="total-questions-to-ask-text"
+            class="assessment-questions-main-container-total-questions-text"
+            title="Max questions to present from the selected ones. Leave blank to use all selected."
+          >
+            Present Max
+          </span>
+          <input
+            type="number"
+            id="total-questions-input"
+            [(ngModel)]="totalQuestionsToPresentInput"
+            class="assessment-questions-main-container-total-questions-input input"
+            min="0"
+            placeholder="All"
+          />
+        </div>
+      </div>
+      <div
+        id="sections-list-container"
+        class="assessment-questions-main-container-sections-container"
+      >
+        <div
+          id="sections-sub-container-scroll"
+          class="assessment-questions-main-container-sections-sub-container"
+        >
+          <!-- Sections dynamically populated based on skills with loaded questions -->
+          <div *ngIf="activeTab === 'ai' && getObjectKeys(aiGeneratedMcqsBySkill).length > 0; else noSectionsAvailable">
+             <div *ngFor="let skill of getObjectKeys(aiGeneratedMcqsBySkill)" class="assessment-questions-main-container-section1-container" id="section-display-{{skill}}">
+                <div class="assessment-questions-main-container-section1">
+                    <input type="checkbox" id="section-checkbox-display-{{skill}}" class="assessment-questions-main-container-section1-checkbox" checked disabled/> 
+                    <span class="assessment-questions-main-container-section-name-text">{{skill}} ({{aiGeneratedMcqsBySkill[skill].items.length}})</span>
+                </div>
+                <!-- Input for num questions from this section (can be complex if total questions is also set) -->
+                <!-- <input type="text" class="assessment-questions-main-container-num-of-questions-for-section input" placeholder="All" /> -->
+             </div>
+          </div>
+          <ng-template #noSectionsAvailable>
+            <div class="no-sections-message" *ngIf="!isLoadingMcqs">
+                No sections available (load questions first or define manually).
+            </div>
+          </ng-template>
+           <div *ngIf="isLoadingMcqs" class="loading-indicator-small">Loading sections...</div>
+        </div>
+        <span
+          id="add-section-text-button"
+          class="assessment-questions-main-container-add-section-text button"
+          title="Functionality to manually add and define sections to be implemented."
+        >
+          + Add Section (Manual)
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

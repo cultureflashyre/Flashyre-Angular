@@ -1,0 +1,206 @@
+:host { 
+  display: contents; 
+}
+ 
+.flashyre-navbar-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  position: relative;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-left: 120px;
+  padding-right: 120px;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-navbar-logo {
+  width: 350px;
+  object-fit: cover;
+}
+ 
+.flashyre-navbar-buttons-container {
+  gap: 32px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.flashyre-navbar-job-opening {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-navbar-job-opening:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-job-opening:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-dashboard {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-navbar-dashboard:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-dashboard:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-assessment {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-navbar-assessment:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-assessment:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-profile {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-navbar-profile:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-profile:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-logout {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-navbar-logout:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-logout:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.flashyre-navbar-fragment1 {
+  display: contents;
+}
+ 
+.flashyre-navbar-text1 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-navbar-fragment2 {
+  display: contents;
+}
+ 
+.flashyre-navbar-text2 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-navbar-fragment3 {
+  display: contents;
+}
+ 
+.flashyre-navbar-text3 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-navbar-fragment4 {
+  display: contents;
+}
+ 
+.flashyre-navbar-text4 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-navbar-fragment5 {
+  display: contents;
+}
+ 
+.flashyre-navbar-text5 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-navbarroot-class-name {
+  height: 10%;
+}
+ 
+@media(max-width: 1200px) {
+  .flashyre-navbar-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .flashyre-navbarroot-class-name {
+    height: 100px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}

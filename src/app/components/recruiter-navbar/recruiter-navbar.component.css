@@ -1,0 +1,517 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-navbar-container1 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.recruiter-navbar-recruiter-navbar-container {
+  flex: 0 0 auto;
+  width: 751px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  justify-content: center;
+}
+ 
+.recruiter-navbar-container2 {
+  flex: 0 0 auto;
+  width: 751px;
+  height: 48px;
+  display: flex;
+  position: relative;
+  align-self: center;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.recruiter-navbar-details-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.recruiter-navbar-applied {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-color: #05356C;
+  border-width: 1px;
+  justify-content: center;
+  background-color: transparent;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 2px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+ 
+.recruiter-navbar-applied:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-applied:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-sourced {
+  width: 115px;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-navbar-sourced:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-sourced:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-selected {
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-navbar-selected:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-selected:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-navbar-thq-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-radius-radius-radius2);
+}
+ 
+.recruiter-navbar-dropdown-toggle1 {
+  gap: 4px;
+  fill: #595959;
+  color: #595959;
+  width: auto;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  padding-top: 12px;
+  padding-left: var(--dl-space-space-halfunit);
+  border-radius: 4px;
+  padding-right: var(--dl-space-space-halfunit);
+  padding-bottom: 12px;
+  background-color: #05356C;
+}
+ 
+.recruiter-navbar-dropdown-toggle1:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.recruiter-navbar-dropdown-toggle1:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.recruiter-navbar-take-action-text {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: auto;
+  height: 24px;
+  display: flex;
+  font-size: 16px;
+  font-style: normal;
+  text-align: center;
+  align-items: center;
+  font-weight: 600;
+  margin-right: 0px;
+  vertical-align: middle;
+  justify-content: center;
+}
+ 
+.recruiter-navbar-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.recruiter-navbar-dropdown-icon {
+  fill: #FFFFFF;
+  width: 24px;
+  height: 24px;
+  transform: rotate(90deg);
+  transition: 0.3s;
+}
+ 
+.recruiter-navbar-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-radius-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.recruiter-navbar-dropdown1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-radius-radius-radius2);
+}
+ 
+.recruiter-navbar-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-space-space-halfunit);
+  padding-left: var(--dl-space-space-unit);
+  border-radius: var(--dl-radius-radius-radius4);
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.recruiter-navbar-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-navbar-screening-call-invite-text {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-navbar-dropdown2 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-radius-radius-radius2);
+}
+ 
+.recruiter-navbar-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-space-space-halfunit);
+  padding-left: var(--dl-space-space-unit);
+  border-radius: var(--dl-radius-radius-radius4);
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.recruiter-navbar-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-navbar-assessment-invite-text {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-navbar-dropdown3 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-radius-radius-radius2);
+}
+ 
+.recruiter-navbar-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-space-space-halfunit);
+  padding-left: var(--dl-space-space-unit);
+  border-radius: var(--dl-radius-radius-radius4);
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.recruiter-navbar-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-navbar-interview-invite-text {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-navbar-fragment1 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text1 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.recruiter-navbar-fragment2 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text2 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-navbar-fragment3 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text3 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.recruiter-navbar-fragment4 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text4 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-navbar-fragment5 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text5 {
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-navbar-fragment6 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text6 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.recruiter-navbar-fragment7 {
+  display: contents;
+}
+ 
+.recruiter-navbar-text7 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+
+ 
+
+ 
+@media(max-width: 991px) {
+  .recruiter-navbar-container1 {
+    width: 100%;
+    height: auto;
+  }
+  .recruiter-navbar-recruiter-navbar-container {
+    width: 100%;
+  }
+  .recruiter-navbar-container2 {
+    width: 100%;
+  }
+  .recruiter-navbar-applied {
+    background-color: transparent;
+  }
+  .recruiter-navbar-sourced {
+    background-color: transparent;
+  }
+  .recruiter-navbar-selected {
+    background-color: transparent;
+  }
+  .recruiter-navbar-dropdown-toggle1 {
+    width: auto;
+  }
+  .recruiter-navbar-take-action-text {
+    font-size: 14px;
+  }
+  .recruiter-navbar-text4 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbar-text5 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbarroot-class-name {
+    width: 100%;
+  }
+  .recruiter-navbarroot-class-name1 {
+    width: 100%;
+    align-self: center;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-navbar-container1 {
+    width: 100%;
+  }
+  .recruiter-navbar-recruiter-navbar-container {
+    width: 100%;
+  }
+  .recruiter-navbar-container2 {
+    width: 95%;
+  }
+  .recruiter-navbar-text2 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbar-text4 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbar-text5 {
+    font-size: 12px;
+  }
+  .recruiter-navbar-text7 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-navbar-container1 {
+    width: 100%;
+  }
+  .recruiter-navbar-recruiter-navbar-container {
+    width: 100%;
+  }
+  .recruiter-navbar-container2 {
+    width: 100%;
+  }
+  .recruiter-navbar-details-container {
+    gap: 2px;
+    width: auto;
+  }
+  .recruiter-navbar-applied {
+    width: auto;
+  }
+  .recruiter-navbar-sourced {
+    width: auto;
+    padding-left: var(--dl-space-space-halfunit);
+  }
+  .recruiter-navbar-selected {
+    width: auto;
+  }
+  .recruiter-navbar-thq-dropdown {
+    width: 131px;
+    display: flex;
+    position: static;
+    justify-content: flex-end;
+  }
+  .recruiter-navbar-dropdown-toggle1 {
+    width: 108px;
+    padding-right: 0px;
+  }
+  .recruiter-navbar-text2 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbar-text4 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .recruiter-navbar-text7 {
+    color: rgb(5, 53, 108);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+  }
+}

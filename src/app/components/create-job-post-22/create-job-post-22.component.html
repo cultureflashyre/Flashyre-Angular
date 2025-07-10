@@ -1,0 +1,1223 @@
+<div class="create-job-post-22-container10" [ngClass]="rootClassName">
+  <div
+    id="create-job-post-2.2-main-container"
+    class="create-job-post-22-create-job-post22-main-container"
+  >
+    <div
+      id="assessment-additional-settings-main-container"
+      class="create-job-post-22-assessment-additional-settings-main-container"
+    >
+      <div
+        id="assessment-container"
+        class="create-job-post-22-assessment-container"
+      >
+        <span id="assessment-text" class="create-job-post-22-assessment-text">
+          <ng-container>
+            <ng-template #defaultText>
+              <div class="create-job-post-22-fragment25">
+                <span class="create-job-post-22-text25">Assessment Name</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text ? text : defaultText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="enter-name-input"
+          placeholder="Enter Name"
+          class="create-job-post-22-enter-name-input input"
+        />
+      </div>
+      <div
+        id="additional-dropdown-container"
+        class="create-job-post-22-additional-dropdown-container"
+      >
+        <span
+          id="additional-settings-text"
+          class="create-job-post-22-additional-settings-text"
+        >
+          <ng-container>
+            <ng-template #defaultText30>
+              <div class="create-job-post-22-fragment26">
+                <span class="create-job-post-22-text26">
+                  Additional Settings
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text30 ? text30 : defaultText30"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          data-thq="thq-dropdown"
+          class="create-job-post-22-thq-dropdown list-item"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="create-job-post-22-dropdown-toggle"
+          >
+            <div
+              data-thq="thq-dropdown-arrow"
+              class="create-job-post-22-dropdown-arrow"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="create-job-post-22-icon10"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <ul
+            data-thq="thq-dropdown-list"
+            class="create-job-post-22-dropdown-list"
+          >
+            <div
+              id="additional-settings-slide-bar-time-limit-container"
+              class="create-job-post-22-additional-settings-slide-bar-time-limit-container1"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="create-job-post-22-icon12"
+              >
+                <path
+                  d="m18 6l-6 6m0 0l-6 6m6-6l6 6m-6-6L6 6"
+                  fill="none"
+                  color="currentColor"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+              <div
+                id="additional-settings-container"
+                class="create-job-post-22-additional-settings-container1"
+              >
+                <div class="create-job-post-22-container11">
+                  <div
+                    id="assessment-options-container"
+                    class="create-job-post-22-assessment-options-container1"
+                  >
+                    <div
+                      id="shuffle-questions-container"
+                      class="create-job-post-22-shuffle-questions-container1"
+                    >
+                      <input
+                        type="checkbox"
+                        id="shuffle-questions-checkbox"
+                        checked="true"
+                        class="create-job-post-22-shuffle-questions-checkbox1"
+                      />
+                      <span
+                        id="shuffle-questions-text"
+                        class="create-job-post-22-shuffle-questions-text1"
+                      >
+                        <ng-container>
+                          <ng-template #defaultShuffleQuestionsText>
+                            <div class="create-job-post-22-fragment10">
+                              <span class="create-job-post-22-text10">
+                                Shuffle questions for Candidate
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="shuffleQuestionsText ? shuffleQuestionsText : defaultShuffleQuestionsText"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                    <div
+                      id="proctored-container"
+                      class="create-job-post-22-proctored-container1"
+                    >
+                      <input
+                        type="checkbox"
+                        id="proctored-checkbox"
+                        checked="true"
+                        class="create-job-post-22-proctored-checkbox1"
+                      />
+                      <span
+                        id="proctored-text"
+                        class="create-job-post-22-proctored-text1"
+                      >
+                        <ng-container>
+                          <ng-template #defaultProctoredText>
+                            <div class="create-job-post-22-fragment34">
+                              <span class="create-job-post-22-text34">
+                                Proctored
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="proctoredText ? proctoredText : defaultProctoredText"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                      <svg
+                        id="info-icon"
+                        width="256"
+                        height="256"
+                        viewBox="0 0 256 256"
+                        class="create-job-post-22-info-icon1"
+                      >
+                        <path
+                          d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m16-40a8 8 0 0 1-8 8a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 8 8m-32-92a12 12 0 1 1 12 12a12 12 0 0 1-12-12"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div
+                      id="allow-phone-access-container"
+                      class="create-job-post-22-allow-phone-access-container1"
+                    >
+                      <input
+                        type="checkbox"
+                        id="phone-access-checkbox"
+                        checked="true"
+                        class="create-job-post-22-phone-access-checkbox1"
+                      />
+                      <span
+                        id="allow-phone-access-text"
+                        class="create-job-post-22-allow-phone-access-text1"
+                      >
+                        <ng-container>
+                          <ng-template #defaultAllowPhoneAccessText>
+                            <div class="create-job-post-22-fragment18">
+                              <span class="create-job-post-22-text18">
+                                Allow Phone Access
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="allowPhoneAccessText ? allowPhoneAccessText : defaultAllowPhoneAccessText"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                    <div
+                      id="video-recording-container"
+                      class="create-job-post-22-video-recording-container1"
+                    >
+                      <input
+                        type="checkbox"
+                        id="video-recorder-checkbox"
+                        checked="true"
+                        class="create-job-post-22-video-recorder-checkbox1"
+                      />
+                      <span
+                        id="allow-video-recording-text"
+                        class="create-job-post-22-allow-video-recording-text1"
+                      >
+                        <ng-container>
+                          <ng-template #defaultAllowVideoRecordingText>
+                            <div class="create-job-post-22-fragment31">
+                              <span class="create-job-post-22-text31">
+                                Allow Video Recording
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="allowVideoRecordingText ? allowVideoRecordingText : defaultAllowVideoRecordingText"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="slide-bar-main-container"
+                class="create-job-post-22-slide-bar-main-container1"
+              >
+                <span
+                  id="difficulty-level-text"
+                  class="create-job-post-22-difficulty-level-text1"
+                >
+                  <ng-container>
+                    <ng-template #defaultDifficultyLevelText>
+                      <div class="create-job-post-22-fragment14">
+                        <span class="create-job-post-22-text14">
+                          Choose difficulty level
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="difficultyLevelText ? difficultyLevelText : defaultDifficultyLevelText"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <div
+                  id="slide-bar-container"
+                  class="create-job-post-22-slide-bar-container1"
+                >
+                  <div class="create-job-post-22-container12">
+                    <div class="create-job-post-22-container13">
+                      <dangerous-html
+                        html="<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <style>
+    .slider-wrapper {
+      width: 294.75px;
+      height: 39.07px;
+      padding: 5px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: #666;
+    }
+
+    .slider-container {
+      position: relative;
+    }
+
+    .slider-percentage {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: #333;
+    }
+
+    input[type='range'] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #41327B 60%, #e0e0e0 60%);
+      outline: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #41327B;
+      cursor: pointer;
+      margin-top: -2px;
+    }
+
+    input[type='range']::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #41327B;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class='slider-wrapper'>
+  <div class='slider-labels'>
+    <span>Easy</span>
+    <span>Hard</span>
+  </div>
+  <div class='slider-container'>
+    <div class='slider-percentage' id='percentage'>60%</div>
+    <input type='range' min='0' max='100' value='60' id='slider'>
+  </div>
+</div>
+
+<script>
+  const slider = document.getElementById('slider');
+  const percentage = document.getElementById('percentage');
+
+  function updateSliderBackground(value) {
+    slider.style.background = `linear-gradient(to right, #41327B ${value}%, #e0e0e0 ${value}%)`;
+  }
+
+  slider.addEventListener('input', function () {
+    percentage.textContent = slider.value + '%';
+    updateSliderBackground(slider.value);
+  });
+
+  updateSliderBackground(slider.value); // initial background
+</script>
+
+</body>
+</html>
+"
+                      ></dangerous-html>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="time-limit-container"
+                  class="create-job-post-22-time-limit-container1"
+                >
+                  <span
+                    id="time-limit-text"
+                    class="create-job-post-22-time-limit-text1"
+                  >
+                    <ng-container>
+                      <ng-template #defaultTimeLimitText>
+                        <div class="create-job-post-22-fragment37">
+                          <span class="create-job-post-22-text37">
+                            Set time limit
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="timeLimitText ? timeLimitText : defaultTimeLimitText"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <input
+                    type="text"
+                    id="time-input"
+                    [attr.placeholder]="timeInputPlaceholder"
+                    class="create-job-post-22-time-input1 input"
+                  />
+                </div>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div
+        id="additional-settings-slide-bar-time-limit-container"
+        class="create-job-post-22-additional-settings-slide-bar-time-limit-container2"
+      >
+        <div
+          id="additional-settings-container"
+          class="create-job-post-22-additional-settings-container2"
+        >
+          <div class="create-job-post-22-container14">
+            <div
+              id="assessment-options-container"
+              class="create-job-post-22-assessment-options-container2"
+            >
+              <div
+                id="shuffle-questions-container"
+                class="create-job-post-22-shuffle-questions-container2"
+              >
+                <input
+                  type="checkbox"
+                  id="shuffle-questions-checkbox"
+                  checked="true"
+                  class="create-job-post-22-shuffle-questions-checkbox2"
+                />
+                <span
+                  id="shuffle-questions-text"
+                  class="create-job-post-22-shuffle-questions-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText2>
+                      <div class="create-job-post-22-fragment22">
+                        <span class="create-job-post-22-text22">
+                          Shuffle questions for Candidate
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="proctored-container"
+                class="create-job-post-22-proctored-container2"
+              >
+                <input
+                  type="checkbox"
+                  id="proctored-checkbox"
+                  checked="true"
+                  class="create-job-post-22-proctored-checkbox2"
+                />
+                <span
+                  id="proctored-text"
+                  class="create-job-post-22-proctored-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText21>
+                      <div class="create-job-post-22-fragment20">
+                        <span class="create-job-post-22-text20">Proctored</span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text21 ? text21 : defaultText21"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <svg
+                  id="info-icon"
+                  width="256"
+                  height="256"
+                  viewBox="0 0 256 256"
+                  class="create-job-post-22-info-icon2"
+                >
+                  <path
+                    d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m16-40a8 8 0 0 1-8 8a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 8 8m-32-92a12 12 0 1 1 12 12a12 12 0 0 1-12-12"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                id="allow-phone-access-container"
+                class="create-job-post-22-allow-phone-access-container2"
+              >
+                <input
+                  type="checkbox"
+                  id="phone-access-checkbox"
+                  checked="true"
+                  class="create-job-post-22-phone-access-checkbox2"
+                />
+                <span
+                  id="allow-phone-access-text"
+                  class="create-job-post-22-allow-phone-access-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText211>
+                      <div class="create-job-post-22-fragment42">
+                        <span class="create-job-post-22-text42">
+                          Allow Phone Access
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text211 ? text211 : defaultText211"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="video-recording-container"
+                class="create-job-post-22-video-recording-container2"
+              >
+                <input
+                  type="checkbox"
+                  id="video-recorder-checkbox"
+                  checked="true"
+                  class="create-job-post-22-video-recorder-checkbox2"
+                />
+                <span
+                  id="allow-video-recording-text"
+                  class="create-job-post-22-allow-video-recording-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText2111>
+                      <div class="create-job-post-22-fragment41">
+                        <span class="create-job-post-22-text41">
+                          Allow Video Recording
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text2111 ? text2111 : defaultText2111"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          id="slide-bar-main-container"
+          class="create-job-post-22-slide-bar-main-container2"
+        >
+          <span
+            id="difficulty-level-text"
+            class="create-job-post-22-difficulty-level-text2"
+          >
+            <ng-container>
+              <ng-template #defaultText3>
+                <div class="create-job-post-22-fragment29">
+                  <span class="create-job-post-22-text29">
+                    Choose difficulty level
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text3 ? text3 : defaultText3"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="slide-bar-container"
+            class="create-job-post-22-slide-bar-container2"
+          >
+            <div class="create-job-post-22-container15">
+              <div class="create-job-post-22-container16">
+                <dangerous-html
+                  html="<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <style>
+    .slider-wrapper {
+      width: 294.75px;
+      height: 39.07px;
+      
+      padding: 5px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: #666;
+    }
+
+    .slider-container {
+      position: relative;
+    }
+
+    .slider-percentage {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: #333;
+    }
+
+    input[type='range'] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #41327B 60%, #e0e0e0 60%);
+      outline: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #41327B;
+      cursor: pointer;
+      margin-top: -2px;
+    }
+
+    input[type='range']::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #41327B;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class='slider-wrapper'>
+  <div class='slider-labels'>
+    <span>Easy</span>
+    <span>Hard</span>
+  </div>
+  <div class='slider-container'>
+    <div class='slider-percentage' id='percentage'>60%</div>
+    <input type='range' min='0' max='100' value='60' id='slider'>
+  </div>
+</div>
+
+<script>
+  const slider = document.getElementById('slider');
+  const percentage = document.getElementById('percentage');
+
+  function updateSliderBackground(value) {
+    slider.style.background = `linear-gradient(to right, #41327B ${value}%, #e0e0e0 ${value}%)`;
+  }
+
+  slider.addEventListener('input', function () {
+    percentage.textContent = slider.value + '%';
+    updateSliderBackground(slider.value);
+  });
+
+  updateSliderBackground(slider.value); // initial background
+</script>
+
+</body>
+</html>
+"
+                ></dangerous-html>
+              </div>
+            </div>
+          </div>
+          <div
+            id="time-limit-container"
+            class="create-job-post-22-time-limit-container2"
+          >
+            <span
+              id="time-limit-text"
+              class="create-job-post-22-time-limit-text2"
+            >
+              <ng-container>
+                <ng-template #defaultText4>
+                  <div class="create-job-post-22-fragment21">
+                    <span class="create-job-post-22-text21">
+                      Set time limit
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <input
+              type="text"
+              id="time-input"
+              placeholder="HH:MM"
+              class="create-job-post-22-time-input2 input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="questions-main-container"
+      class="create-job-post-22-questions-main-container1"
+    >
+      <div
+        id="questions-ai-upload-button-container"
+        class="create-job-post-22-questions-ai-upload-button-container"
+      >
+        <div
+          id="questions-score-container"
+          class="create-job-post-22-questions-score-container"
+        >
+          <span id="questions-text" class="create-job-post-22-questions-text1">
+            <ng-container>
+              <ng-template #defaultText5>
+                <div class="create-job-post-22-fragment33">
+                  <span class="create-job-post-22-text33">Questions</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text5 ? text5 : defaultText5"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span id="selected-text" class="create-job-post-22-selected-text">
+            <ng-container>
+              <ng-template #defaultText6>
+                <div class="create-job-post-22-fragment35">
+                  <span class="create-job-post-22-text35">
+                    (Selected 40/100)
+                    <span [innerHTML]="raw4lng"></span>
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text6 ? text6 : defaultText6"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <div class="create-job-post-22-container17">
+          <button
+            id="add-questions-with-ai-button"
+            type="button"
+            class="create-job-post-22-add-questions-with-ai-button button"
+          >
+            <span
+              id="add-questions-with-ai-text"
+              class="create-job-post-22-add-questions-with-ai-text"
+            >
+              <ng-container>
+                <ng-template #defaultButton1>
+                  <div class="create-job-post-22-fragment36">
+                    <span class="create-job-post-22-text36">
+                      ✨Add Question with AI
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="button1 ? button1 : defaultButton1"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </button>
+          <div
+            id="upload-file-button-container"
+            class="create-job-post-22-upload-file-button-container"
+          >
+            <svg
+              id="upload-icon"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              class="create-job-post-22-upload-icon"
+            >
+              <path
+                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span id="upload-text" class="create-job-post-22-upload-text">
+              <ng-container>
+                <ng-template #defaultText7>
+                  <div class="create-job-post-22-fragment16">
+                    <span class="create-job-post-22-text16">Upload </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="ai-generated-uploaded-questions-main-container"
+        class="create-job-post-22-ai-generated-uploaded-questions-main-container"
+      >
+        <div
+          id="ai-generated-uploaded-container"
+          class="create-job-post-22-ai-generated-uploaded-container"
+        >
+          <div
+            id="ai-generated-container"
+            class="create-job-post-22-ai-generated-container"
+          >
+            <span
+              id="ai-generated-text"
+              class="create-job-post-22-ai-generated-text"
+            >
+              <ng-container>
+                <ng-template #defaultText8>
+                  <div class="create-job-post-22-fragment28">
+                    <span class="create-job-post-22-text28">
+                      AI Generated (5/30)
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text8 ? text8 : defaultText8"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <div
+            id="uploaded-container"
+            class="create-job-post-22-uploaded-container"
+          >
+            <div
+              id="border-line-container"
+              class="create-job-post-22-border-line-container"
+            >
+              <span id="uploaded-text" class="create-job-post-22-uploaded-text">
+                <ng-container>
+                  <ng-template #defaultText9>
+                    <div class="create-job-post-22-fragment32">
+                      <span class="create-job-post-22-text32">
+                        Uploaded (29/40)
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text9 ? text9 : defaultText9"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          id="language-questions-main-container"
+          class="create-job-post-22-language-questions-main-container"
+        >
+          <div
+            id="languages-main-container"
+            class="create-job-post-22-languages-main-container"
+          >
+            <div
+              id="left-arrow-container"
+              class="create-job-post-22-left-arrow-container"
+            >
+              <svg
+                id="left-arrow-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="create-job-post-22-left-arrow-icon"
+              >
+                <path
+                  d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <div class="create-job-post-22-container18">
+              <div
+                id="language-1-container"
+                class="create-job-post-22-language1-container"
+              >
+                <span
+                  id="language-1-text"
+                  class="create-job-post-22-language1-text"
+                >
+                  <ng-container>
+                    <ng-template #defaultText10>
+                      <div class="create-job-post-22-fragment39">
+                        <span class="create-job-post-22-text39">
+                          Java (5/40)
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text10 ? text10 : defaultText10"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="language-2-container"
+                class="create-job-post-22-language2-container"
+              >
+                <div
+                  id="language-2-line-container"
+                  class="create-job-post-22-language2-line-container"
+                >
+                  <span
+                    id="language-2-text"
+                    class="create-job-post-22-language2-text"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText11>
+                        <div class="create-job-post-22-fragment24">
+                          <span class="create-job-post-22-text24">
+                            Python (5/40)
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text11 ? text11 : defaultText11"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </div>
+              <div
+                id="language-3-container"
+                class="create-job-post-22-language3-container"
+              >
+                <span
+                  id="language-3-text"
+                  class="create-job-post-22-language3-text"
+                >
+                  <ng-container>
+                    <ng-template #defaultText12>
+                      <div class="create-job-post-22-fragment38">
+                        <span class="create-job-post-22-text38">
+                          Cloud Computing (13/40)
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="language-4-container"
+                class="create-job-post-22-language4-container"
+              >
+                <span
+                  id="language-4-text"
+                  class="create-job-post-22-language4-text"
+                >
+                  <ng-container>
+                    <ng-template #defaultText13>
+                      <div class="create-job-post-22-fragment30">
+                        <span class="create-job-post-22-text30">
+                          Security Essentials (2/10)
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text13 ? text13 : defaultText13"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="create-job-post-22-icon18"
+            >
+              <path
+                d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+          <div
+            id="select-all-container"
+            class="create-job-post-22-select-all-container"
+          >
+            <div
+              id="check-box-container"
+              class="create-job-post-22-check-box-container"
+            >
+              <input
+                type="checkbox"
+                id="checkbox-icon"
+                checked="true"
+                class="create-job-post-22-checkbox-icon"
+              />
+            </div>
+            <span
+              id="select-all-text"
+              class="create-job-post-22-select-all-text"
+            >
+              <ng-container>
+                <ng-template #defaultText14>
+                  <div class="create-job-post-22-fragment19">
+                    <span class="create-job-post-22-text19">
+                      Select all (5)
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text14 ? text14 : defaultText14"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <div
+            id="questions-main-container"
+            class="create-job-post-22-questions-main-container2"
+          >
+            <div
+              id="questions-container"
+              class="create-job-post-22-questions-container"
+            >
+              <div class="create-job-post-22-container19">
+                <div
+                  id="questions-checkbox-container"
+                  class="create-job-post-22-questions-checkbox-container"
+                >
+                  <input
+                    type="checkbox"
+                    id="questions-checkbox"
+                    checked="true"
+                    class="create-job-post-22-questions-checkbox"
+                  />
+                </div>
+                <div
+                  id="question-1-container"
+                  class="create-job-post-22-question1-container"
+                >
+                  <span
+                    id="questions-text"
+                    class="create-job-post-22-questions-text2"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText15>
+                        <div class="create-job-post-22-fragment40">
+                          <span class="create-job-post-22-text40">
+                            ✨ Which of the following is not a type of cloud
+                            server?
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text15 ? text15 : defaultText15"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <div
+                    id="options-container"
+                    class="create-job-post-22-options-container"
+                  >
+                    <div
+                      id="option-1-container"
+                      class="create-job-post-22-option1-container"
+                    >
+                      <input
+                        type="radio"
+                        id="radio-icon"
+                        name="radio"
+                        class="create-job-post-22-radio-icon"
+                      />
+                      <span
+                        id="option-1-text"
+                        class="create-job-post-22-option1-text"
+                      >
+                        <ng-container>
+                          <ng-template #defaultText16>
+                            <div class="create-job-post-22-fragment17">
+                              <span class="create-job-post-22-text17">
+                                Onsite
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="text16 ? text16 : defaultText16"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                    <div
+                      id="option-2-container"
+                      class="create-job-post-22-option2-container"
+                    >
+                      <input
+                        type="radio"
+                        id="radio-2-icon"
+                        name="radio"
+                        class="create-job-post-22-radio2-icon"
+                      />
+                      <span
+                        id="option-2-text"
+                        class="create-job-post-22-option2-text"
+                      >
+                        <ng-container>
+                          <ng-template #defaultText162>
+                            <div class="create-job-post-22-fragment27">
+                              <span class="create-job-post-22-text27">
+                                Hybrid
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="text162 ? text162 : defaultText162"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                    <div
+                      id="option-3-container"
+                      class="create-job-post-22-option3-container"
+                    >
+                      <input
+                        type="radio"
+                        id="radio-3-icon"
+                        name="radio"
+                        checked
+                        class="create-job-post-22-radio3-icon"
+                      />
+                      <span
+                        id="option-3-text"
+                        class="create-job-post-22-option3-text"
+                      >
+                        <ng-container>
+                          <ng-template #defaultText161>
+                            <div class="create-job-post-22-fragment12">
+                              <span class="create-job-post-22-text12">
+                                Remote
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="text161 ? text161 : defaultText161"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="marks-container"
+                class="create-job-post-22-marks-container"
+              >
+                <span id="marks-text" class="create-job-post-22-marks-text">
+                  <ng-container>
+                    <ng-template #defaultText17>
+                      <div class="create-job-post-22-fragment11">
+                        <span class="create-job-post-22-text11">2 marks</span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text17 ? text17 : defaultText17"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <div
+                  id="levels-container"
+                  class="create-job-post-22-levels-container"
+                >
+                  <span id="easy-text" class="create-job-post-22-easy-text">
+                    <ng-container>
+                      <ng-template #defaultText18>
+                        <div class="create-job-post-22-fragment23">
+                          <span class="create-job-post-22-text23">Easy</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text18 ? text18 : defaultText18"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <span id="medium-text" class="create-job-post-22-medium-text">
+                    <ng-container>
+                      <ng-template #defaultText181>
+                        <div class="create-job-post-22-fragment15">
+                          <span class="create-job-post-22-text15">Medium</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text181 ? text181 : defaultText181"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <span id="hard-text" class="create-job-post-22-hard-text">
+                    <ng-container>
+                      <ng-template #defaultText18111>
+                        <div class="create-job-post-22-fragment13">
+                          <span class="create-job-post-22-text13">Hard</span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text18111 ? text18111 : defaultText18111"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

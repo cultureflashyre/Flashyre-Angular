@@ -1,0 +1,579 @@
+<div id="candidate-home" class="candidate-home-container1">
+  <navbar-for-candidate-view
+    rootClassName="navbar-for-candidate-viewroot-class-name"
+  >
+    <ng-template >
+      <div class="candidate-home-fragment10">
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-home-fragment11">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-home-fragment12">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
+      </div>
+    </ng-template>
+    <ng-template >
+      <div class="candidate-home-fragment13">
+        <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
+      </div>
+    </ng-template>
+    <ng-template #text1>
+      <div class="candidate-home-fragment14">
+        <span class="candidate-home-text104">Profile</span>
+      </div>
+    </ng-template>
+    <ng-template #text2>
+      <div class="candidate-home-fragment15">
+        <span class="candidate-home-text105">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text3>
+      <div class="candidate-home-fragment16">
+        <span class="candidate-home-text106">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text4>
+      <div class="candidate-home-fragment17">
+        <span class="candidate-home-text107">
+          {{ userProfile.first_name }} {{ userProfile.last_name }}
+        </span>
+      </div>
+    </ng-template>
+    <ng-template #text5>
+      <div class="candidate-home-fragment18">
+        <span class="candidate-home-text108">✅ 90% Profile Completion</span>
+      </div>
+    </ng-template>
+    <ng-template #text6>
+      <div class="candidate-home-fragment19">
+        <span class="candidate-home-text109">View & edit profile</span>
+      </div>
+    </ng-template>
+    <ng-template #text7>
+      <div class="candidate-home-fragment20">
+        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
+      </div>
+    </ng-template>
+    <ng-template #text8>
+      <div class="candidate-home-fragment21">
+        <span class="candidate-home-text111">Upskill</span>
+      </div>
+    </ng-template>
+    <ng-template #text9>
+      <div class="candidate-home-fragment22">
+        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
+      </div>
+    </ng-template>
+    <ng-template #text10>
+      <div class="candidate-home-fragment23">
+        <span class="candidate-home-text113">Jobs for you</span>
+      </div>
+    </ng-template>
+    <ng-template #text11>
+      <div class="candidate-home-fragment24">
+        <span class="candidate-home-text114">Preference</span>
+      </div>
+    </ng-template>
+    <ng-template #text12>
+      <div class="candidate-home-fragment25">
+        <span class="candidate-home-text115">Settings</span>
+      </div>
+    </ng-template>
+    <ng-template #text13>
+      <div class="candidate-home-fragment26">
+        <span class="candidate-home-text116">Logout</span>
+      </div>
+    </ng-template>
+    <ng-template #text31>
+      <div class="candidate-home-fragment27">
+        <span class="candidate-home-text117">Logout</span>
+      </div>
+    </ng-template>
+  </navbar-for-candidate-view>
+  <div id="details-container" class="candidate-home-details-container">
+    <div id="main-container" class="candidate-home-main-container">
+      <div id="profile-container" class="candidate-home-profile-container">
+        <div id="candidate-profile-short" class="candidate-home-container2">
+          <div id="candidate-profile-card" class="candidate-home-container3">
+            <img
+              id="candidate-profile-picture"
+              alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
+              [src]="defaultProfilePicture"
+              class="candidate-home-candidate-image thq-img-ratio-1-1 thq-img-round"
+            />
+            <div
+              id="candidate-details-container"
+              class="candidate-home-candidate-details-container"
+            >
+              <div class="candidate-home-container4">
+                <span
+                  id="candidate-name"
+                  class="candidate-home-name-of-the-candidate"
+                >
+                {{ userProfile.first_name }} {{ userProfile.last_name }}
+                </span>
+                <span
+                  id="candidate-job-role"
+                  class="candidate-home-role-of-the-candidate"
+                >
+                  <span class="candidate-home-text118">
+                    {{
+                      userProfile.job_title 
+                        ? userProfile.job_title + ' @ ' + userProfile.company_name 
+                        : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
+                    }}
+                  </span>
+                  <br />
+                </span>
+                <div class="candidate-home-container5">
+                  <svg
+                    id="green-tik-mark"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 32 32"
+                    class="candidate-home-green-tick-icon"
+                  >
+                    <g fill="none">
+                      <path
+                        d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"
+                        fill="#00D26A"
+                      ></path>
+                      <path
+                        d="M13.242 23c-.383 0-.766-.143-1.059-.43l-5.744-5.642a1.453 1.453 0 0 1 0-2.08a1.517 1.517 0 0 1 2.118 0l4.685 4.601L23.443 9.431a1.517 1.517 0 0 1 2.118 0a1.45 1.45 0 0 1 0 2.08l-11.26 11.058a1.5 1.5 0 0 1-1.059.431"
+                        fill="#F4F4F4"
+                      ></path>
+                    </g>
+                  </svg>
+                  <span
+                    id="candidate-profile-completion"
+                    class="candidate-home-profile-completion"
+                  >
+                    90% Profile Completion
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              id="complete-profile-button"
+              type="button"
+              class="candidate-home-complete-profile-button button"
+            >
+              <span
+                id="candidate-complete-profile-text"
+                class="candidate-home-complete-profile-text"
+              >
+                Complete Profile
+              </span>
+            </button>
+          </div>
+        </div>
+        <candidate-profile-score
+          rootClassName="candidate-profile-scoreroot-class-name"
+        >
+          <ng-template #text>
+            <div class="candidate-home-fragment28">
+              <span class="candidate-home-text120">🏆 Profile Score Board</span>
+            </div>
+          </ng-template>
+        </candidate-profile-score>
+        <recruiter-job-posted1
+          rootClassName="recruiter-job-posted1root-class-name"
+        >
+          <ng-template #text>
+            <div class="candidate-home-fragment29">
+              <span class="candidate-home-text121">Job Posted</span>
+            </div>
+          </ng-template>
+          <ng-template #text3>
+            <div class="candidate-home-fragment30">
+              <span class="candidate-home-text122">2 Jobs Posted</span>
+            </div>
+          </ng-template>
+        </recruiter-job-posted1>
+      </div>
+      <div id="jobs-container" class="candidate-home-jobs-container1">
+        <div
+          id="search-navbar-main-container"
+          class="candidate-home-search-container"
+        >
+          <header
+            id="search-navbar-container"
+            class="candidate-home-container6"
+          >
+            <header
+              data-thq="thq-navbar"
+              class="candidate-home-navbar-interactive"
+            >
+              <div
+                data-thq="thq-navbar-nav"
+                class="candidate-home-desktop-menu"
+              >
+                <nav
+                  id="job-location-experience-container"
+                  class="candidate-home-links1"
+                >
+                  <div
+                    id="job-loc-exp-container"
+                    class="candidate-home-container7"
+                  >
+                    <div
+                      id="search-job-title-container"
+                      class="candidate-home-job-title-container1"
+                    >
+                      <svg
+                        id="search-icon"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
+                        class="candidate-home-search-icon1"
+                      >
+                        <path
+                          d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-job-title-input"
+                        class="candidate-home-job-title-text1"
+                      >
+                        Job tittle, Keyword...
+                      </span>
+                    </div>
+                    <div
+                      id="location-container"
+                      class="candidate-home-location-container1"
+                    >
+                      <svg
+                        id="location-icon"
+                        width="1024"
+                        height="1024"
+                        viewBox="0 0 1024 1024"
+                        class="candidate-home-location-icon1"
+                      >
+                        <path
+                          d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-location-input"
+                        class="candidate-home-your-location-text1"
+                      >
+                        Your Location
+                      </span>
+                    </div>
+                    <div
+                      id="experience-search-container"
+                      class="candidate-home-experience-container1"
+                    >
+                      <svg
+                        id="briefcase-icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-experience-input"
+                        class="candidate-home-experience-text1"
+                      >
+                        Experience
+                      </span>
+                    </div>
+                  </div>
+                </nav>
+                <svg
+                  id="filter-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="candidate-home-filter-icon1"
+                >
+                  <path
+                    d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
+                    fill="none"
+                    color="currentColor"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+                <div id="button-conatiner" class="candidate-home-buttons1">
+                  <button
+                    id="search-button"
+                    type="button"
+                    class="candidate-home-search-button1 button"
+                  >
+                    <span id="search-text" class="candidate-home-search-text1">
+                      Search
+                    </span>
+                  </button>
+                  <button
+                    id="preference-button"
+                    type="button"
+                    class="candidate-home-preference-button1 button"
+                  >
+                    <span
+                      id="preference-text"
+                      class="candidate-home-preference-text1"
+                    >
+                      Preference
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div
+                data-thq="thq-burger-menu"
+                class="candidate-home-burger-menu"
+              >
+                <span
+                  id="job-title-input"
+                  class="candidate-home-job-title-text2"
+                >
+                  Job title, skills...
+                </span>
+                <svg
+                  id="job-search-icon-navbar"
+                  viewBox="0 0 32 32"
+                  class="candidate-home-search-icon2"
+                >
+                  <path
+                    d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                data-thq="thq-mobile-menu"
+                class="candidate-home-mobile-menu"
+              >
+                <div id="mobile-popup-container" class="candidate-home-nav">
+                  <div id="top" class="candidate-home-top">
+                    <div
+                      data-thq="thq-close-menu"
+                      class="candidate-home-close-menu"
+                    >
+                      <svg
+                        viewBox="0 0 1024 1024"
+                        class="candidate-home-close-icon"
+                      >
+                        <path
+                          d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+                        ></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <nav
+                    id="job-title-loc-exp-container"
+                    class="candidate-home-links2"
+                  >
+                    <div
+                      id="job-title-container"
+                      class="candidate-home-job-title-container2"
+                    >
+                      <svg
+                        id="job-title-search-icon"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
+                        class="candidate-home-search-icon3"
+                      >
+                        <path
+                          d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-job-title-input-navbar"
+                        class="candidate-home-job-title-text3"
+                      >
+                        Job tittle, Keyword...
+                      </span>
+                    </div>
+                    <div
+                      id="experience-container"
+                      class="candidate-home-experience-container2"
+                    >
+                      <svg
+                        id="briefcase-icon-navbar"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        class="candidate-home-briefcase-icon2"
+                      >
+                        <path
+                          d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-experience-input-navbar"
+                        class="candidate-home-experience-text2"
+                      >
+                        Experience
+                      </span>
+                    </div>
+                    <div
+                      id="location-container-navbar-conatiner"
+                      class="candidate-home-location-container2"
+                    >
+                      <svg
+                        id="location-icon-navbar"
+                        width="1024"
+                        height="1024"
+                        viewBox="0 0 1024 1024"
+                        class="candidate-home-location-icon2"
+                      >
+                        <path
+                          d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="search-location-input-navbar"
+                        class="candidate-home-your-location-text2"
+                      >
+                        Your Location
+                      </span>
+                    </div>
+                  </nav>
+                  <div id="buttons-container" class="candidate-home-buttons2">
+                    <svg
+                      id="job-filter-icon"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      class="candidate-home-filter-icon2"
+                    >
+                      <path
+                        d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
+                        fill="none"
+                        color="currentColor"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </svg>
+                    <button
+                      id="search-button-navbar"
+                      type="button"
+                      class="candidate-home-search-button2 button"
+                    >
+                      <span
+                        id="search-text-navbar"
+                        class="candidate-home-search-text2"
+                      >
+                        Search
+                      </span>
+                    </button>
+                    <button
+                      id="preference-button-navbar"
+                      type="button"
+                      class="candidate-home-preference-button2 button"
+                    >
+                      <span
+                        id="preference-text-navbar"
+                        class="candidate-home-preference-text2"
+                      >
+                        Preference
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </header>
+          </header>
+        </div>
+        <div id="Jobs-for-you" class="candidate-home-jobs-for-you-container">
+          <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
+            Jobs for you
+          </span>
+          <div id="job-container" class="candidate-home-jobs-container2">
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="loading-container">
+                <p>Loading jobs...</p>
+            </div>
+            
+            <!-- No jobs message -->
+            <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+                <p>No new jobs available. You've applied to all open positions!</p>
+            </div>
+            
+            <!-- Job listings -->
+            <candidate-job-for-you-card
+                *ngFor="let job of jobs; let i = index"
+                [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+                [imageSrc]="job.logo"
+                [imageAlt]="job.company_name + ' logo'"
+            >
+                <ng-template #text>
+                    <div class="candidate-home-fragment31">
+                        <span class="candidate-home-text123">{{ job.title }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text1>
+                    <div class="candidate-home-fragment32">
+                        <span class="candidate-home-text124">{{ job.company_name }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text2>
+                    <div class="candidate-home-fragment33">
+                        <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #text3>
+                    <div class="candidate-home-fragment34">
+                        <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+                    </div>
+                </ng-template>
+                <ng-template #text4>
+                    <div class="candidate-home-fragment35">
+                        <span class="candidate-home-text127">{{ job.description }}</span>
+                    </div>
+                </ng-template>
+                <ng-template #button>
+                    <div class="candidate-home-fragment36">
+                        <button
+                            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                            (click)="applyForJob(job.job_id, i)"
+                        >
+                            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                            <span *ngIf="applicationSuccess[job.job_id]">
+                                <span class="tick-mark">✓</span> Applied Successfully
+                            </span>
+                        </button>
+                    </div>
+                </ng-template>
+                <ng-template #button1>
+                    <div class="candidate-home-fragment37">
+                        <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+                    </div>
+                </ng-template>
+            </candidate-job-for-you-card>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="flashyre-navbar-container" [ngClass]="rootClassName">
+  <img
+    id="logo"
+    [attr.alt]="imageAlt3"
+    [attr.src]="imageSrc3"
+    class="flashyre-navbar-logo"
+  />
+  <div id="buttons-container" class="flashyre-navbar-buttons-container">
+    <span id="job-opening" class="flashyre-navbar-job-opening">
+      <ng-container>
+        <ng-template #defaultText121>
+          <div class="flashyre-navbar-fragment1">
+            <span class="flashyre-navbar-text1">Job Opening</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text121 ? text121 : defaultText121"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <span id="dashboard" class="flashyre-navbar-dashboard">
+      <ng-container>
+        <ng-template #defaultText122>
+          <div class="flashyre-navbar-fragment2">
+            <span class="flashyre-navbar-text2">Dashboard</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text122 ? text122 : defaultText122"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <span id="assessment" class="flashyre-navbar-assessment">
+      <ng-container>
+        <ng-template #defaultText1231>
+          <div class="flashyre-navbar-fragment5">
+            <span class="flashyre-navbar-text5">Assessment</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text1231 ? text1231 : defaultText1231"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <span id="profile" class="flashyre-navbar-profile">
+      <ng-container>
+        <ng-template #defaultText123>
+          <div class="flashyre-navbar-fragment3">
+            <span class="flashyre-navbar-text3">Profile</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text123 ? text123 : defaultText123"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <span id="logout" class="flashyre-navbar-logout">
+      <ng-container>
+        <ng-template #defaultText12>
+          <div class="flashyre-navbar-fragment4">
+            <span class="flashyre-navbar-text4">Logout</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text12 ? text12 : defaultText12"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+</div>

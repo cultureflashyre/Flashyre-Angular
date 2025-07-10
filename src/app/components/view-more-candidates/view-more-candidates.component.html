@@ -1,0 +1,14 @@
+<div class="view-more-candidates-container">
+  <span class="view-more-candidates-text1">
+    <ng-container>
+      <ng-template #defaultText>
+        <div class="view-more-candidates-fragment">
+          <span class="view-more-candidates-text2">View More Candidates</span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="text ? text : defaultText"
+      ></ng-container>
+    </ng-container>
+  </span>
+</div>

@@ -1,0 +1,72 @@
+:host { 
+  display: contents; 
+}
+ 
+.email-and-mobile-number-component-container1 {
+  flex: 0 0 auto;
+  width: 664px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+ 
+.email-and-mobile-number-component-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.email-and-mobile-number-component-text1 {
+  width: 320px;
+  height: 24px;
+}
+ 
+.email-and-mobile-number-component-textinput1 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+}
+ 
+.email-and-mobile-number-component-container3 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.email-and-mobile-number-component-text2 {
+  width: 320px;
+  height: 24px;
+  margin-left: 24px;
+}
+ 
+.email-and-mobile-number-component-textinput2 {
+  width: 320px;
+  height: 48px;
+  margin-left: 24px;
+  border-color: #A7A7A7;
+}
+ 
+.email-and-mobile-number-component-fragment1 {
+  display: contents;
+}
+ 
+.email-and-mobile-number-component-text3 {
+  width: 320px;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.email-and-mobile-number-component-fragment2 {
+  display: contents;
+}
+ 
+.email-and-mobile-number-component-text6 {
+  display: inline-block;
+}

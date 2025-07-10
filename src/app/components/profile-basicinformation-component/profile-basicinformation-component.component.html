@@ -1,0 +1,212 @@
+<div
+  id="profile-basic-information-main-container"
+  class="profile-basicinformation-component-container"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="profile-basic-information-container"
+    class="profile-basicinformation-component-profile-basic-information-container"
+  >
+    <span
+      id="profile-basic-information-header"
+      class="profile-basicinformation-component-basic-information-header"
+    >
+      <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+      <ng-template #defaultText1>
+        <div class="profile-basicinformation-component-fragment5">
+          <span class="profile-basicinformation-component-text17">Basic Information</span>
+        </div>
+      </ng-template>
+    </span>
+    <div
+      id="profile-details-container"
+      class="profile-basicinformation-component-profile-details-container"
+    >
+      <div
+        id="profile-picture-container"
+        class="profile-basicinformation-component-profile-picture-container"
+      >
+        <span
+          id="profile-picture-text"
+          class="profile-basicinformation-component-profile-picturure-text"
+        >
+          <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
+          <ng-template #defaultText2>
+            <div class="profile-basicinformation-component-fragment1">
+              <span class="profile-basicinformation-component-text13">Profile Picture</span>
+            </div>
+          </ng-template>
+        </span>
+        <div class="profile-picture-wrapper">
+          <img
+            id="candidate-profile-picture"
+            [attr.alt]="imageAlt"
+            [src]="imageSrc || defaultImageSrc"
+            
+            class="profile-basicinformation-component-user-image"
+          />
+          <div class="overlay" (click)="triggerProfilePictureUpload()">
+            <span class="plus-symbol">+</span>
+          </div>
+          <input
+            type="file"
+            #profilePictureInput
+            (change)="onProfilePictureSelected($event)"
+            accept=".jpg,.jpeg,.png"
+            style="display: none;"
+          />
+        </div>
+      </div>
+      <div
+        id="candidate-details-container"
+        class="profile-basicinformation-component-information-container"
+      >
+        <div
+          id="resume-container"
+          class="profile-basicinformation-component-resume-container"
+        >
+          <span
+            id="resume-text"
+            class="profile-basicinformation-component-resume-text"
+          >
+            <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
+            <ng-template #defaultText>
+              <div class="profile-basicinformation-component-fragment6">
+                <span class="profile-basicinformation-component-text18">Resume</span>
+              </div>
+            </ng-template>
+          </span>
+          <div
+            id="upload-resume-container"
+            class="profile-basicinformation-component-upload-resume-container"
+          >
+            <input
+              type="text"
+              id="upload-resume-filed"
+              name="upload-resume-input"
+              [value]="resume ? resume.name : ''"
+              readonly
+              placeholder="No file selected"
+              class="profile-basicinformation-component-upload-resume-input input"
+            />
+            <button
+              id="resume-upload-button"
+              type="button"
+              class="profile-basicinformation-component-upload-button button"
+              (click)="triggerResumeUpload()"
+            >
+              <span id="upload-text">
+                <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
+                <ng-template #defaultButton>
+                  <div class="profile-basicinformation-component-fragment3">
+                    <span class="profile-basicinformation-component-text15">Upload</span>
+                  </div>
+                </ng-template>
+              </span>
+            </button>
+            <input
+              type="file"
+              #resumeInput
+              (change)="onResumeSelected($event)"
+              accept=".pdf,.doc,.docx"
+              style="display: none;"
+            />
+          </div>
+        </div>
+        <div
+          id="first-last-name-container"
+          class="profile-basicinformation-component-first-last-name-container"
+        >
+          <div
+            id="first-name-container"
+            class="profile-basicinformation-component-first-name-container"
+          >
+            <span
+              id="first-name"
+              class="profile-basicinformation-component-first-name-text"
+            >
+              <ng-container *ngTemplateOutlet="text6 ? text6 : defaultText6"></ng-container>
+              <ng-template #defaultText6>
+                <div class="profile-basicinformation-component-fragment2">
+                  <span class="profile-basicinformation-component-text14">First Name</span>
+                </div>
+              </ng-template>
+            </span>
+            <input
+              type="text"
+              id="basic-information-first-name-input"
+              [value]="firstName"
+              readonly
+              class="profile-basicinformation-component-first-name-input input"
+            />
+          </div>
+          <div
+            id="last-name-container"
+            class="profile-basicinformation-component-last-name-container"
+          >
+            <span id="last-name" class="profile-basicinformation-component-text10">
+              <ng-container *ngTemplateOutlet="text5 ? text5 : defaultText5"></ng-container>
+              <ng-template #defaultText5>
+                <div class="profile-basicinformation-component-fragment8">
+                  <span class="profile-basicinformation-component-text20">Last Name</span>
+                </div>
+              </ng-template>
+            </span>
+            <input
+              type="text"
+              id="basic-information-last-name-input"
+              [value]="lastName"
+              readonly
+              class="profile-basicinformation-component-textinput1 input"
+            />
+          </div>
+        </div>
+        <div
+          id="email-mob-num-container"
+          class="profile-basicinformation-component-email-mob-num-container"
+        >
+          <div
+            id="email-container"
+            class="profile-basicinformation-component-email-container"
+          >
+            <span id="email" class="profile-basicinformation-component-text11">
+              <ng-container *ngTemplateOutlet="text52 ? text52 : defaultText52"></ng-container>
+              <ng-template #defaultText52>
+                <div class="profile-basicinformation-component-fragment4">
+                  <span class="profile-basicinformation-component-text16">Email</span>
+                </div>
+              </ng-template>
+            </span>
+            <input
+              type="text"
+              id="basic-information-email-input"
+              [value]="email"
+              readonly
+              class="profile-basicinformation-component-textinput2 input"
+            />
+          </div>
+          <div
+            id="mobile-number-container"
+            class="profile-basicinformation-component-mobile-number-container"
+          >
+            <span id="mobile-number" class="profile-basicinformation-component-text12">
+              <ng-container *ngTemplateOutlet="text51 ? text51 : defaultText51"></ng-container>
+              <ng-template #defaultText51>
+                <div class="profile-basicinformation-component-fragment7">
+                  <span class="profile-basicinformation-component-text19">Mobile Number</span>
+                </div>
+              </ng-template>
+            </span>
+            <input
+              type="text"
+              id="basic-Information-mobile-number-input"
+              [value]="phoneNumber"
+              readonly
+              class="profile-basicinformation-component-textinput3 input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

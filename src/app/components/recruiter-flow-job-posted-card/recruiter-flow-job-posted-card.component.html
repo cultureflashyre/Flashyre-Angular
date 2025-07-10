@@ -1,0 +1,135 @@
+<div
+  id="recruiter-flow-job-posted-card"
+  class="recruiter-flow-job-posted-card-container1"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="recruiter-flow-job-posted-container"
+    class="recruiter-flow-job-posted-card-recruiter-flow-job-posted-container"
+  >
+    <div
+      id="job-description-container"
+      class="recruiter-flow-job-posted-card-job-description-container"
+    >
+      <div
+        id="job-description"
+        class="recruiter-flow-job-posted-card-job-description"
+      >
+        <img
+          id="Company-logo"
+          [attr.alt]="imageAlt"
+          [attr.src]="imageSrc"
+          class="recruiter-flow-job-posted-card-company-image"
+        />
+        <div
+          id="details-container"
+          class="recruiter-flow-job-posted-card-details-container"
+        >
+          <div
+            id="Job-role-experience-location-container"
+            class="recruiter-flow-job-posted-card-job-role-experience-location-container"
+          >
+            <span
+              id="job-role"
+              class="recruiter-flow-job-posted-card-job-role-text"
+            >
+              <ng-container>
+                <ng-template #defaultText>
+                  <div class="recruiter-flow-job-posted-card-fragment2">
+                    <span class="recruiter-flow-job-posted-card-text2">
+                      Senior Software Engineer
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text ? text : defaultText"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span
+              id="experience-location"
+              class="recruiter-flow-job-posted-card-experience-location-text"
+            >
+              <ng-container>
+                <ng-template #defaultText1>
+                  <div class="recruiter-flow-job-posted-card-fragment3">
+                    <span class="recruiter-flow-job-posted-card-text3">
+                      6-8 Years · Bengaluru, India (On-site)
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <div
+            id="number-of-candidates-applied-container"
+            class="recruiter-flow-job-posted-card-number-of-candidates-applied-container"
+          >
+            <div class="recruiter-flow-job-posted-card-container2">
+              <img
+                [attr.alt]="imageAlt5"
+                [attr.src]="imageSrc5"
+                class="recruiter-flow-job-posted-card-image"
+              />
+            </div>
+            <img
+              id="multiple-images"
+              [attr.alt]="imageAlt6"
+              [attr.src]="imageSrc6"
+              class="recruiter-flow-job-posted-card-multiple-images"
+            />
+            <span
+              id="total-applications"
+              class="recruiter-flow-job-posted-card-number-of-canadidates-applied-text"
+            >
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="recruiter-flow-job-posted-card-fragment1">
+                    <span class="recruiter-flow-job-posted-card-text1">
+                      Over 100 Candidates applied
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <span
+            id="expiry-date"
+            class="recruiter-flow-job-posted-card-expire-in2-days-text"
+          >
+            <ng-container>
+              <ng-template #defaultText3>
+                <div class="recruiter-flow-job-posted-card-fragment4">
+                  <span class="recruiter-flow-job-posted-card-text4">
+                    Expires in 2 days
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text3 ? text3 : defaultText3"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+    <svg
+      id="right-icon"
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      class="recruiter-flow-job-posted-card-right-icon"
+    >
+      <path
+        d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div
+  id="candidate-view-last-page-card"
+  class="candidate-view-last-page-card-container"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="candidate-view-last-page-card-container"
+    class="candidate-view-last-page-card-candidate-view-last-page-card-container"
+  >
+    <div
+      id="Candidate-view-page-container"
+      class="candidate-view-last-page-card-candidate-view-page-container"
+    >
+      <img
+        id="Company-logo"
+        [attr.alt]="imageAlt"
+        [attr.src]="imageSrc"
+        class="candidate-view-last-page-card-image"
+      />
+      <div
+        id="job-details-container"
+        class="candidate-view-last-page-card-job-details-container"
+      >
+        <div
+          id="job-role-company-location-container"
+          class="candidate-view-last-page-card-job-role-company-location-container"
+        >
+          <span id="job-role" class="candidate-view-last-page-card-job-role">
+            <ng-container>
+              <ng-template #defaultText>
+                <div class="candidate-view-last-page-card-fragment3">
+                  <span class="candidate-view-last-page-card-text3">
+                    Senior Software Engineer
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text ? text : defaultText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span
+            id="company-name"
+            class="candidate-view-last-page-card-company-name"
+          >
+            <ng-container>
+              <ng-template #defaultText1>
+                <div class="candidate-view-last-page-card-fragment2">
+                  <span class="candidate-view-last-page-card-text2">
+                    Google
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1 ? text1 : defaultText1"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="job-location-container"
+            class="candidate-view-last-page-card-job-location-container"
+          >
+            <span
+              id="job-location"
+              class="candidate-view-last-page-card-job-location"
+            >
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="candidate-view-last-page-card-fragment1">
+                    <span class="candidate-view-last-page-card-text1">
+                      Bengaluru, Karnataka, India (On-site)
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
