@@ -490,6 +490,35 @@ svg {
   color: #474748;
 }
 
+.candidate-job-for-you-card-container25 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+
+.candidate-job-for-you-card-icon14 {
+  fill: #05356c;
+  color: #05356c;
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-for-you-card-icon16 {
+  fill: #05356c;
+  color: #05356c;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  margin-left: 0px;
+  margin-right: 0px;
+  justify-content: flex-start;
+}
+
 @media (max-width: 1200px) {
   .candidate-job-for-you-card-progress-bar-for-mobile {
     display: none;

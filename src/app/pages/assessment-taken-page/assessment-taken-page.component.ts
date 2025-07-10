@@ -4,6 +4,11 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 import { AuthService } from '../../services/candidate.service';
 import { Router } from '@angular/router';
 
+interface UserProfile {
+  first_name: string;
+  last_name: string;
+}
+
 @Component({
   selector: 'assessment-taken-page',
   templateUrl: 'assessment-taken-page.component.html',
@@ -14,6 +19,7 @@ export class AssessmentTakenPage implements OnInit {
   showAttempts: { [key: string]: boolean } = {};
   selectedAssessmentId: string | null = null;
   searchQuery: string = ''; // Added search query variable
+  userProfile: UserProfile | null = null;
 
   constructor(
     private title: Title,
@@ -30,10 +36,20 @@ export class AssessmentTakenPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadUserProfile();
     this.assessmentTakenService.getAllAssessmentScores().subscribe(
       (data) => { this.assessments = data; },
       (error) => { console.error('Error fetching assessment scores', error); }
     );
+  }
+
+    loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
+    } else {
+      console.log('User Profile NOT fetched');
+    }
   }
 
   getFillColor(score: number): string {

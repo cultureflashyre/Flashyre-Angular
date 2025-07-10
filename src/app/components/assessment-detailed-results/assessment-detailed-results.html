@@ -79,13 +79,14 @@
         </div>
         <div class="attempts-remaining-and-button-container">
           <button
-            id="re-attempt-container"
-            type="button"
-            class="assessment-taken-page3-re-attempt-container button"
-            [disabled]="assessmentData.attempts_remaining <= 0"
-          >
-            Re-attempt
-          </button>
+  id="re-attempt-container"
+  type="button"
+  class="assessment-taken-page3-re-attempt-container button"
+  [disabled]="assessmentData.attempts_remaining <= 0"
+  (click)="onReattempt()"
+>
+  Re-attempt
+</button>
           <span
             id="attempts-remaining-text"
             class="assessment-taken-page3-attempts-remaining-text"
