@@ -1,4 +1,6 @@
 import { ContentChild, Input, TemplateRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
 import { Title, Meta } from '@angular/platform-browser';
 import { TrialAssessmentService } from '../../services/trial-assessment.service';
 import { Subscription } from 'rxjs';
@@ -19,7 +21,9 @@ interface SelectedAnswer {
   templateUrl: 'flashyre-assessment11.component.html',
   styleUrls: ['flashyre-assessment11.component.css'],
 })
-export class FlashyreAssessment11 implements OnInit, OnDestroy {
+export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
+
   @ContentChild('endTestText')
   endTestText: TemplateRef<any>;
   @Input()
@@ -28,6 +32,11 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   rootClassName: string = '';
   @Input()
   logoAlt: string = 'image';
+
+  ngAfterViewInit(): void {
+    // Scroll to active question on init
+    this.scrollToActiveQuestion();
+  }
 
   totalQuestionsInSection: number;
   isLastSection: boolean;
@@ -202,10 +211,57 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
     if (this.currentQuestions && this.currentQuestions.length > 0) {
       this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
       this.updateCurrentOptions();
-      this.checkIfLastQuestionInSection(); // Add this line
+      this.checkIfLastQuestionInSection();
+      this.scrollToActiveQuestion();  // <-- Add this line
     } else {
       this.currentQuestion = { question: 'No questions available' };
       this.currentOptions = [];
+    }
+  }
+
+  scrollLeft(): void {
+    if (this.numbersContainer) {
+      this.numbersContainer.nativeElement.scrollBy({
+        left: -100, // scroll left by 100px
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  scrollRight(): void {
+    if (this.numbersContainer) {
+      this.numbersContainer.nativeElement.scrollBy({
+        left: 100, // scroll right by 100px
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  scrollToActiveQuestion(): void {
+    if (!this.numbersContainer) return;
+
+    const container = this.numbersContainer.nativeElement;
+    const activeButton = container.querySelector('.active') as HTMLElement;
+
+    if (activeButton) {
+      // Calculate the visible boundaries of the container
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeButton.getBoundingClientRect();
+
+      // If active button is out of view on the left, scroll left
+      if (activeRect.left < containerRect.left) {
+        container.scrollBy({
+          left: activeRect.left - containerRect.left - 8, // 8px gap
+          behavior: 'smooth'
+        });
+      }
+      // If active button is out of view on the right, scroll right
+      else if (activeRect.right > containerRect.right) {
+        container.scrollBy({
+          left: activeRect.right - containerRect.right + 8,
+          behavior: 'smooth'
+        });
+      }
     }
   }
 
@@ -263,6 +319,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy {
   }
 
   navigateToQuestion(index: number): void {
+    console.log('Navigating to question index:', index);
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
       this.markQuestionAsVisited(index);

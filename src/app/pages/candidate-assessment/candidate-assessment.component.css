@@ -917,6 +917,13 @@
     transform: scale(0.90);
     background-color: #30B63F;
   }
+
+  .candidate-assessment-lets-go1-button[disabled] {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  border: 1px solid #aaa;
+}
    
   @media(max-width: 1200px) {
     .candidate-assessment-container10 {

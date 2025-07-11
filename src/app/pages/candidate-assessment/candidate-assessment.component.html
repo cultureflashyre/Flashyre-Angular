@@ -191,6 +191,8 @@
                   id="lets-go1-button"
                   class="candidate-assessment-lets-go1-button button"
                   (click)="startAssessment(assessment.assessment_id)"
+                  [disabled]="assessment.attempts_remaining === 0"
+                  [title]="assessment.attempts_remaining === 0 ? 'Attempts remaining: 0' : 'Start assessment'"
                 >
                   Let's Go
                 </button>

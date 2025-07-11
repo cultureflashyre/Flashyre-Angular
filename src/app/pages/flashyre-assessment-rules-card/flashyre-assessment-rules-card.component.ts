@@ -48,7 +48,7 @@ export class FlashyreAssessmentRulesCard implements OnInit {
       const id = params['id'];
       if (id) {
         this.assessmentId = +id;
-        this.fetchAssessmentData(this.assessmentId);
+        //this.fetchAssessmentData(this.assessmentId);
       } else {
         console.error('Rules Card: No assessment ID was found. Redirecting.');
         this.router.navigate(['/candidate-assessment']);
@@ -91,7 +91,8 @@ export class FlashyreAssessmentRulesCard implements OnInit {
    * Redirects to error page if camera/microphone is not accessible.
    */
   async startAssessment(): Promise<void> {
-    if (!this.assessmentData || !this.assessmentId) {
+//    if (!this.assessmentData || !this.assessmentId) {
+    if (!this.assessmentId) {
       console.error('Error: "Start Assessment" was clicked before assessment data was loaded.');
       alert('Assessment ID is missing!');
       return;

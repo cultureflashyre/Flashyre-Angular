@@ -329,32 +329,49 @@
  
 .flashyre-assessment11-question-numbers-main-container {
   flex: 0 0 auto;
-  width: 300px;
+  width: 360px;
   display: flex;
   box-shadow: 5px 5px 10px 0px #d4d4d4;
   align-items: flex-start;
   border-color: #E0E0E0;
   border-width: 1px;
   border-radius: 2px;
+
+  align-items: center;
+  border: 1px solid #E0E0E0;
+  padding: 0 10px; /* Add horizontal padding */
+  box-sizing: border-box;
 }
  
-.flashyre-assessment11-backward-arrow-icon {
-  width: 60px;
+.flashyre-assessment11-backward-arrow-icon,
+.flashyre-assessment11-forward-arrow-icon {
+  width: 40px;
   height: 40px;
+  flex-shrink: 0; /* Prevent shrinking */
+  cursor: pointer;
+  margin: 0 5px; /* Add margin so arrows don't touch numbers */
 }
  
 .flashyre-assessment11-numbers-main-container {
   gap: 8px;
-  flex: nowrap;
+  /* flex: nowrap; */
   width: 200px;
   height: auto;
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   align-items: flex-start;
   white-space: nowrap;
   scroll-behavior: smooth;
   scrollbar-width: none;
+
+  flex: 1 1 auto; /* Take remaining space */
+  padding: 0 5px; /* Padding so numbers don't get flush to edges */
+  box-sizing: border-box;
+}
+
+.flashyre-assessment11-numbers-main-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
  
 .flashyre-assessment11-question-number1-button10 {
@@ -380,10 +397,12 @@
   background-color: #05356C;
 }
  
-.flashyre-assessment11-question-number1-button10:active {
-  color: #FFFFFF;
-  box-shadow: initial;
-  background-color: #5F7DA1;
+.flashyre-assessment11-question-number1-button10.active {
+  background-color: #05356C !important; /* Use !important to override */
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px #05356C !important;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
 }
  
 .flashyre-assessment11-question-number1-button11 {
