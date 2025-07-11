@@ -385,6 +385,22 @@ body {
   align-self: flex-start;
 }
 
+.applying {
+  background-color: #FFA500;
+  color: white;
+  cursor: not-allowed;
+}
+
+.applied {
+  background-color: #28a745;
+  color: white;
+  cursor: not-allowed;
+}
+
+.tick-mark {
+  margin-right: 5px;
+}
+
 /* Responsive styles */
 @media(max-width: 991px) {
   .candidate-job-details-container1 {

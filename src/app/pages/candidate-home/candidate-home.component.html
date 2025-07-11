@@ -496,17 +496,17 @@
               </ng-template>
               <ng-template #button>
                 <div class="candidate-home-fragment36">
-                  <button
-                    [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
-                    [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
-                    (click)="applyForJob(job.job_id, i)"
-                  >
-                    <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
-                    <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
-                    <span *ngIf="applicationSuccess[job.job_id]">
-                      <span class="tick-mark">✓</span> Applied Successfully
-                    </span>
-                  </button>
+                    <button
+                      [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                      [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                      (click)="applyForJob(job.job_id, i)"
+                    >
+                      <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                      <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                      <span *ngIf="applicationSuccess[job.job_id]">
+                        <span class="tick-mark">✓</span> Applied Successfully
+                      </span>
+                    </button>
                 </div>
               </ng-template>
               <ng-template #button1>

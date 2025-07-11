@@ -9,6 +9,9 @@ import { tap } from 'rxjs/operators'; // Import tap for side effects
   providedIn: 'root'
 })
 export class AuthService {
+  addRecentlyAppliedJobId(job_id: any) {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {}

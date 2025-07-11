@@ -92,23 +92,20 @@
         class="candidate-job-details-apply-take-assessment-button-container"
       >
         <button
-          id="apply-button"
-          type="button"
-          class="candidate-job-details-apply-button button"
-          (click)="applyForJob()"
-          [disabled]="!job.url"
-        >
-          <span id="apply-text" class="candidate-job-details-apply-text">
-            <ng-container>
-              <ng-template #defaultButton>
-                <div class="candidate-job-details-fragment1">
-                  <span class="candidate-job-details-text10">Apply</span>
-                </div>
-              </ng-template>
-              <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
-            </ng-container>
-          </span>
-        </button>
+  id="apply-button"
+  type="button"
+  [ngClass]="{'candidate-job-details-apply-button': true, 'applying': processingApplication, 'applied': applicationSuccess}"
+  (click)="applyForJob()"
+  [disabled]="processingApplication || applicationSuccess"
+>
+  <span id="apply-text" class="candidate-job-details-apply-text">
+    <span *ngIf="!processingApplication && !applicationSuccess">Apply</span>
+    <span *ngIf="processingApplication && !applicationSuccess">Applying...</span>
+    <span *ngIf="applicationSuccess">
+      <span class="tick-mark">✓</span> Applied Successfully
+    </span>
+  </span>
+</button>
         <button
           id="take-assessment-button"
           type="button"
