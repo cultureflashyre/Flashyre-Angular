@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'assessment-detailed-results',
@@ -11,15 +12,12 @@ export class AssessmentDetailedResults implements OnChanges  {
     @Output() back = new EventEmitter<void>();
 
     questions: any[] = [];
-
-    
-
     rawhg86: string = ' '
     rawdt3n: string = ' '
     rawrm7v: string = ' '
     rawvn2j: string = ' '
     rawvdwg: string = ' '
-    constructor(private title: Title, private meta: Meta) {
+    constructor(private title: Title, private meta: Meta, private router: Router) {
       this.title.setTitle('Assessment-Detailed-Results - Flashyre')
       this.meta.addTags([
         {
@@ -46,6 +44,14 @@ export class AssessmentDetailedResults implements OnChanges  {
   onBackClick() {
   this.back.emit();
 }
+
+onReattempt() {
+    // Navigate to assessment rules page with the assessment ID
+    this.router.navigate(['/flashyre-assessment-rules-card'], { 
+      queryParams: { id: this.assessmentData.assessment_id } 
+    });
+  }
+
 
 // Helper methods for options and correct answer
   //getOptions(question: any) {
@@ -111,5 +117,6 @@ export class AssessmentDetailedResults implements OnChanges  {
     if (value <= 84) return 'lightgreen';
     return 'darkgreen';
   }
+  
   
 }

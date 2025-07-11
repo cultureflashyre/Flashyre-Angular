@@ -94,8 +94,11 @@ export class AssessmentAttemptsListComponent implements OnInit {
 }
 
   onReattempt() {
-    // Implement re-attempt logic here if needed
-  }
+  // Navigate to assessment rules page with the current assessment ID
+  this.router.navigate(['/flashyre-assessment-rules-card'], { 
+    queryParams: { id: this.assessmentId } 
+  });
+}
 
   goBack() {
     this.router.navigate(['/assessment-taken-page']);
