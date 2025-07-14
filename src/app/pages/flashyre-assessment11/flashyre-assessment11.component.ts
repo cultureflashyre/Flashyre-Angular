@@ -9,6 +9,7 @@ import { ProctoringService } from '../../services/proctoring.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
+import { lastValueFrom } from 'rxjs';
 
 interface SelectedAnswer {
   answer: string;
@@ -49,7 +50,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   currentSection: any;
   currentQuestions: any[] = [];
   timer: number;
-  userId = 1;
+  userId: string | null;
   startTime: Date;
   videoPath: string | null;
   sectionTimer: number = 0;
@@ -92,33 +93,64 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private timerInterval: any;
+  private violationSubscription: Subscription;
+  private isCleanedUp = false;
 
   async ngOnInit(): Promise<void> {
+
+    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
+      this.terminateTest(true); // Pass a flag if you want to distinguish violation termination
+    });
+
     // Extract assessmentId from query parameters
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
+    this.userId = localStorage.getItem('user_id');
     
-    if (assessmentId) {
-      this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
-      this.startTime = new Date(); // Record start time when assessment begins
-      try {
-        await this.videoRecorder.startRecording();
-        this.proctoringService.startMonitoring();
-      } catch (error) {
-        console.error('Failed to start assessment:', error);
-      }
-    } else {
-      console.error('No assessment ID provided in route');
+    if (assessmentId && this.userId) {   // <-- Ensure both are present
+    this.fetchAssessmentData(+assessmentId);
+    this.startTime = new Date();
+    try {
+      await this.videoRecorder.startRecording(this.userId, assessmentId); // <-- Pass both arguments
+      this.proctoringService.startMonitoring();
+    } catch (error) {
+      console.error('Failed to start assessment:', error);
+    }
+  } else {
+      console.error('No assessment ID or user ID provided');
       this.router.navigate(['/assessment-error']); // Redirect if no ID
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
+  private async cleanupResources(): Promise<void> {
+    if (this.isCleanedUp) return;
+    this.isCleanedUp = true;
+
+    try {
+      if (this.timerSubscription) {
+        this.timerSubscription.unsubscribe();
+      }
+      clearInterval(this.timerInterval);
+      clearInterval(this.sectionTimerInterval);
+
+      // Await stopRecording to ensure video is stopped and path is retrieved
+      this.videoPath = await this.videoRecorder.stopRecording();
+
+      this.proctoringService.stopMonitoring();
+
+      // Any other cleanup logic here
+
+    } catch (error) {
+      console.error('Error during cleanupResources:', error);
+      // Handle less fatal errors here if needed, e.g., continue cleanup despite error
     }
-    clearInterval(this.timerInterval);
-    clearInterval(this.sectionTimerInterval);
   }
+
+  ngOnDestroy(): void {
+  if (this.violationSubscription) {
+    this.violationSubscription.unsubscribe();
+  }
+  this.cleanupResources();
+}
 
   fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
@@ -391,25 +423,31 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async terminateTest(): Promise<void> {
+  async terminateTest(isViolation = false): Promise<void> {
     try {
-      this.videoRecorder.stopRecording();
-      this.proctoringService.stopMonitoring();
-      this.videoPath = await this.videoRecorder.getVideoPath();
+      // Await cleanup to ensure video recording stopped and videoPath obtained
+      await this.cleanupResources();
 
+      // Prepare submission data including the videoPath obtained from cleanupResources
       const responses = this.prepareSubmissionData();
-      this.trialassessmentService.submitAssessment(responses).subscribe({
-        next: (response) => {
-          console.log('Assessment submitted successfully:', response);
-          this.router.navigate(['/assessment-taken-page']);
-        },
-        error: (error) => {
-          console.error('Assessment submission failed:', error);
-          this.router.navigate(['/assessment-error']);
-        },
-      });
+
+      // Await the submission observable converted to a promise
+      const response = await lastValueFrom(this.trialassessmentService.submitAssessment(responses));
+
+      console.log('Assessment submitted successfully:', response);
+
+      if (isViolation) {
+        console.log('Assessment Violation detected:');
+        this.router.navigate(['/assessment-violation-message'], {
+          state: { message: "Test submitted automatically due to screen/app switching" }
+        });
+      } else {
+        this.router.navigate(['/assessment-taken-page']);
+      }
+
     } catch (error) {
       console.error('Termination failed:', error);
+      // You may want to differentiate fatal vs less fatal errors here
       this.router.navigate(['/assessment-error']);
     }
   }
@@ -470,7 +508,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     return url && (url.startsWith('http://') || url.startsWith('https://'));
 }
 
-handleImageError(event: Event): void {
+  handleImageError(event: Event): void {
     console.warn('Image failed to load:', (event.target as HTMLImageElement).src);
     (event.target as HTMLImageElement).style.display = 'none'; // Hide broken image
 }

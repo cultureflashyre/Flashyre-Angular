@@ -40,6 +40,9 @@ export class LoginCandidate {
     if (response.message === 'Login successful' && response.access) {
       console.log("Login response: ", response);
       localStorage.setItem('jwtToken', response.access); // Ensure token is stored
+      // Store user_id in local storage
+      localStorage.setItem('user_id', response.user_id);
+      
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {
           this.errorMessage = '';

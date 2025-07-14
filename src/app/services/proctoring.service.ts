@@ -1,6 +1,7 @@
 // proctoring.service.ts
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'  // This service is provided application-wide (singleton)
@@ -9,6 +10,9 @@ export class ProctoringService {
   // Handlers for event listeners, stored so they can be removed later
   private visibilityHandler!: () => void;
   private blurHandler!: () => void;
+
+  private violationSubject = new Subject<void>();
+  violation$ = this.violationSubject.asObservable();
 
   // Inject Angular Router for navigation and NgZone for running code inside Angular zone
   constructor(private router: Router, private ngZone: NgZone) {}
@@ -49,10 +53,11 @@ export class ProctoringService {
     // Use NgZone.run to ensure navigation happens inside Angular's zone,
     // so change detection works properly
     this.ngZone.run(() => {
+      this.violationSubject.next(); // Notify subscribers of the violation
       console.log('Navigating to /assessment-violation-message due to violation');
-      this.router.navigate(['/assessment-violation-message'], {
-        state: { message: "Test submitted automatically due to screen/app switching" }
-      });
+      //this.router.navigate(['/assessment-violation-message'], {
+        //state: { message: "Test submitted automatically due to screen/app switching" }
+      //});
     });
   }
 

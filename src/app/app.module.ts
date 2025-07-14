@@ -155,13 +155,7 @@ const routes = [
       ).then((m) => m.FlashyreAssessmentRulesCardModule
     ), canActivate: [AuthGuard],  // Protect this route
   },
-  {
-    path: 'flashyre-assessments',
-    loadChildren: () =>
-      import('./pages/flashyre-assessments/flashyre-assessments.module').then(
-        (m) => m.FlashyreAssessmentsModule
-      ),
-  },
+
   {
     path: 'candidate-dashboard',
     loadChildren: () =>
@@ -174,13 +168,6 @@ const routes = [
     loadChildren: () =>
       import('./pages/error-system-requirement-failed/error-system-requirement-failed.module').then(
         (m) => m.ErrorSystemRequirementFailedModule
-      ),
-  },
-  {
-    path: 'flashyre-assessment1', // New route
-    loadChildren: () =>
-      import('./pages/flashyre-assessment1/flashyre-assessment1.module').then(
-        (m) => m.FlashyreAssessment1Module
       ),
   },
   {
