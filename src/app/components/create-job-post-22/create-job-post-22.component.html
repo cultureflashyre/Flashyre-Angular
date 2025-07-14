@@ -79,10 +79,26 @@
             <button id="add-questions-with-ai-button" type="button" class="create-job-post-22-add-questions-with-ai-button button" (click)="addMoreAiQuestions()" [disabled]="isSubmitting || skillSections.length === 0">
               <span id="add-questions-with-ai-text" class="create-job-post-22-add-questions-with-ai-text">✨ {{ isSubmitting ? 'Generating...' : 'Add Question with AI' }}</span>
             </button>
+            <!-- Upload button is re-added visually but disabled as functionality is not needed yet -->
+            <div id="upload-file-button-container" class="create-job-post-22-upload-file-button-container" [class.disabled]="true" title="Upload functionality is not yet active.">
+              <svg id="upload-icon" viewBox="0 0 48 48" class="create-job-post-22-upload-icon"><path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span id="upload-text" class="create-job-post-22-upload-text">Upload</span>
+            </div>
           </div>
         </div>
         
         <div id="ai-generated-uploaded-questions-main-container" class="create-job-post-22-ai-generated-uploaded-questions-main-container">
+          <div id="ai-generated-uploaded-container" class="create-job-post-22-ai-generated-uploaded-container">
+            <div id="ai-generated-container" class="create-job-post-22-ai-generated-container active-tab">
+              <span id="ai-generated-text" class="create-job-post-22-ai-generated-text">AI Generated ({{totalQuestionCount}})</span>
+            </div>
+            <div id="uploaded-container" class="create-job-post-22-uploaded-container">
+              <div id="border-line-container" class="create-job-post-22-border-line-container">
+                <span id="uploaded-text" class="create-job-post-22-uploaded-text">Uploaded (0)</span>
+              </div>
+            </div>
+          </div>
+          
           <div id="language-questions-main-container" class="create-job-post-22-language-questions-main-container">
             <div id="languages-main-container" class="create-job-post-22-languages-main-container">
               <!-- Left Arrow Icon (can be implemented with a scroll function later if needed) -->
@@ -120,8 +136,20 @@
                         <!-- AI icon shown conditionally -->
                         <span *ngIf="question.isAiGenerated">✨ </span>
                         <!-- Display question text -->
-                        {{ question.question_text }}
+                        {{ question.parsed.question }}
                       </label>
+                      <div id="options-container" class="create-job-post-22-options-container">
+                        <div *ngFor="let option of question.parsed.options; let j = index" class="create-job-post-22-option1-container">
+                          <input type="radio" [id]="'q-' + question.mcq_item_id + '-option-' + j" [name]="'q-radio-' + question.mcq_item_id" class="create-job-post-22-radio-icon" [checked]="'abcd'[j] === question.parsed.correctAnswer" disabled />
+                          <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="marks-container" class="create-job-post-22-marks-container">
+                    <span id="marks-text" class="create-job-post-22-marks-text">2 marks</span>
+                    <div id="levels-container" class="create-job-post-22-levels-container">
+                      <span class="create-job-post-22-level-tag" [ngClass]="question.parsed.difficulty.toLowerCase()">{{ question.parsed.difficulty }}</span>
                     </div>
                   </div>
                 </div>

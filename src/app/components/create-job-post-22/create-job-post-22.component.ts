@@ -12,12 +12,22 @@ import { JobCreationWorkflowService } from '../../services/job-creation-workflow
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { MCQItem as IMcqItem } from '../../pages/create-job-post-1st-page/types';
 
-// Define internal interfaces for strong typing and clarity
+// Interface to hold the structured parts of a parsed question
+interface ParsedDetails {
+  question: string;
+  options: string[];
+  correctAnswer: string; // 'a', 'b', 'c', or 'd'
+  difficulty: string;    // e.g., 'Easy', 'Medium', 'Hard'
+}
+
+// The main interface for a question used within this component
 interface McqQuestion extends IMcqItem {
   isSelected: boolean;
   isAiGenerated: boolean;
+  parsed: ParsedDetails; // Holds the structured question data for display
 }
 
+// The main interface for a section/skill tab
 interface SkillSection {
   skillName: string;
   questions: McqQuestion[];
@@ -64,6 +74,48 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Helper method to parse the raw question text from the backend into a structured object.
+   * This logic is now centralized here to be used for both initial fetch and AI generation.
+   */
+  private parseQuestionText(rawText: string): ParsedDetails {
+    const lines = rawText.split('\n').filter(line => line.trim() !== '');
+    
+    // Default structure in case of parsing failure
+    const defaultResult: ParsedDetails = {
+      question: rawText,
+      options: [],
+      correctAnswer: '',
+      difficulty: 'Medium', // Default difficulty
+    };
+
+    try {
+      // Find the question line (usually the first line)
+      let questionLine = lines.find(line => !/^[a-d]\)|Correct Answer:|easy|medium|hard/i.test(line.trim()));
+      defaultResult.question = questionLine ? questionLine.replace(/^Q\d+\.?\s*/, '').trim() : 'Could not parse question.';
+
+      // Extract options
+      const optionLines = lines.filter(line => /^[a-d]\)/i.test(line.trim()));
+      defaultResult.options = optionLines.map(line => line.trim().substring(3).trim());
+
+      // Extract correct answer
+      const answerLine = lines.find(line => /Correct Answer:/i.test(line));
+      if (answerLine) {
+        const match = answerLine.match(/Correct Answer:\s*([a-d])/i);
+        if (match) defaultResult.correctAnswer = match[1].toLowerCase();
+      }
+      
+      // Determine difficulty
+      if (rawText.toLowerCase().includes('easy')) defaultResult.difficulty = 'Easy';
+      if (rawText.toLowerCase().includes('hard')) defaultResult.difficulty = 'Hard';
+
+      return defaultResult;
+    } catch (e) {
+      console.error("Failed to parse question text:", rawText, e);
+      return defaultResult; // Return default on any error
+    }
+  }
+
   private initializeForm(): void {
     this.assessmentForm = this.fb.group({
       assessmentName: ['', Validators.required],
@@ -95,14 +147,12 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
             const questions = sectionData.mcq_items.map((item): McqQuestion => ({
               ...item,
               isSelected: false,
-              isAiGenerated: item.question_text.includes('✨')
+              isAiGenerated: item.question_text.includes('✨'),
+              parsed: this.parseQuestionText(item.question_text) // Parse each question
             }));
             return {
-              skillName: skillName,
-              questions: questions,
-              totalCount: questions.length,
-              selectedCount: 0,
-              isAllSelected: false,
+              skillName: skillName, questions: questions, totalCount: questions.length,
+              selectedCount: 0, isAllSelected: false,
             };
           });
           this.isLoading = false;
@@ -116,7 +166,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   }
 
   // --- UI Event Handlers ---
-
   onDifficultyChange(event: Event): void {
     const value = (event.target as HTMLInputElement).valueAsNumber;
     this.assessmentForm.get('difficulty')?.setValue(value / 100);
@@ -139,7 +188,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   onQuestionSelectionChange(): void {
     const activeSection = this.skillSections[this.activeSectionIndex];
     if (activeSection) {
-      // An individual checkbox was changed, so update the "Select All" state
       activeSection.isAllSelected = activeSection.questions.length > 0 && activeSection.questions.every(q => q.isSelected);
     }
     this.updateCounts();
@@ -152,7 +200,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   }
 
   // --- Getters for Template Binding ---
-
   get totalSelectedCount(): number {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.selectedCount, 0);
@@ -167,7 +214,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   }
 
   // --- Action Button Handlers ---
-
   addMoreAiQuestions(): void {
     if (this.isSubmitting) return;
     const activeSection = this.skillSections[this.activeSectionIndex];
@@ -186,8 +232,9 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
         next: (newMcqs) => {
           const newQuestions: McqQuestion[] = newMcqs.map(item => ({
             ...item, 
-            isSelected: false, // Default to not selected
-            isAiGenerated: true 
+            isSelected: false, // Default new questions to not selected
+            isAiGenerated: true,
+            parsed: this.parseQuestionText(item.question_text) // Parse new questions
           }));
           activeSection.questions.push(...newQuestions);
           activeSection.totalCount = activeSection.questions.length;
@@ -228,6 +275,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       .filter(q => q.isSelected)
       .map(q => q.mcq_item_id);
 
+
     const payload = {
       job_unique_id: this.jobUniqueId,
       name: formValue.assessmentName,
@@ -236,7 +284,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       allow_phone_access: formValue.allowPhoneAccess,
       shuffle_questions_overall: formValue.shuffleQuestions,
       selected_mcq_item_ids: selectedIds,
-      total_questions_to_present: null // This can be enhanced later if needed
+      total_questions_to_present: null
     };
 
     const token = this.authService.getJWTToken();
