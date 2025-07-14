@@ -5,13 +5,13 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment'; // Ensure this path is correct
-import { JobDetails, AIJobResponse, PaginatedJobPostResponse } from '../pages/create-job-post-1st-page/types'; // Ensure this path is correct
+import { JobDetails, AIJobResponse, PaginatedJobPostResponse, MCQItem } from '../pages/create-job-post-1st-page/types'; // Ensure this path is correct
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobDescriptionService {
-  // Base API URL from environment configuration (e.g., 'http://localhost:8000/api')
+  // Base API URL from environment configuration (e.g., 'http://localhost:8000')
   private readonly apiUrl: string = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
@@ -78,7 +78,6 @@ export class JobDescriptionService {
       'Content-Type': 'application/json'
     });
 
-    // Corrected URL construction:
     const endpoint = `${this.apiUrl}/job-post/`;
 
     return this.http.post<{ status: string, data: { message: string, unique_id: string }, errors?: any }>(
@@ -93,7 +92,6 @@ export class JobDescriptionService {
             message: response.data.message
           };
         }
-        // If status is 'error' but a 2xx response (unlikely but possible)
         if (response.status === 'error' && response.errors) {
             throw new HttpErrorResponse({ error: response, status: 400 }); // Simulate an error
         }
@@ -104,8 +102,8 @@ export class JobDescriptionService {
   }
 
   /**
-   * *** NEW METHOD as per the plan ***
    * Triggers the backend to generate MCQs for a specific job post.
+   * This is for the initial generation step.
    * @param uniqueId The unique ID of the job post.
    * @param token JWT token for authentication.
    */
@@ -113,16 +111,53 @@ export class JobDescriptionService {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     const endpoint = `${this.apiUrl}/job-post/${uniqueId}/generate-mcqs/`;
 
-    // The body is an empty object {} because the required data (uniqueId) is in the URL.
     return this.http.post<{ status: string; message: string; }>(endpoint, {}, { headers }).pipe(
       map(response => {
         if (response.status === 'success') {
           return response;
         }
-        // If status is not 'success', throw an error with the backend message
         throw new Error(response.message || 'Failed to generate MCQs due to an unknown server issue.');
       }),
       catchError(error => this.handleError(error, 'generateMcqsForJob'))
+    );
+  }
+
+  /**
+   * Retrieves all existing MCQs for a given job post.
+   * @param uniqueId The unique ID of the job post.
+   * @param token JWT token for authentication.
+   */
+  job_post_mcqs_list_api(uniqueId: string, token: string): Observable<{ status: string; data: { [skill: string]: { mcq_items: MCQItem[] } } }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}/job-post/${uniqueId}/mcqs/`;
+    return this.http.get<{ status: string; data: { [skill: string]: { mcq_items: MCQItem[] } } }>(endpoint, { headers }).pipe(
+      catchError(error => this.handleError(error, 'job_post_mcqs_list_api'))
+    );
+  }
+
+  /**
+   * NEW METHOD: Generates more MCQs for a specific skill.
+   * @param jobUniqueId The unique identifier of the job post.
+   * @param skill The name of the skill to generate questions for.
+   * @param token JWT token for authentication.
+   * @returns An Observable containing the list of newly generated MCQItems.
+   */
+  generateMoreMcqsForSkill(jobUniqueId: string, skill: string, token: string): Observable<MCQItem[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const endpoint = `${this.apiUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`;
+    const body = { skill };
+
+    return this.http.post<{ status: string; data: MCQItem[] }>(endpoint, body, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Failed to generate more questions or unexpected response structure.');
+      }),
+      catchError(error => this.handleError(error, 'generateMoreMcqsForSkill'))
     );
   }
 
@@ -138,21 +173,13 @@ export class JobDescriptionService {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
     const payload = { unique_id: uniqueId, status };
     const endpoint = `${this.apiUrl}/job-post/update-status/`;
 
-    return this.http
-      .post<{ status: string; data: { message: string; unique_id: string } }>(
-        endpoint,
-        payload,
-        { headers }
-      )
+    return this.http.post<{ status: string; data: { message: string; unique_id: string } }>(endpoint, payload, { headers })
       .pipe(
         map(response => {
-            if (response.status === 'success' && response.data) {
-                return response.data;
-            }
+            if (response.status === 'success' && response.data) { return response.data; }
             throw new Error('Unexpected response structure during status update');
         }),
         catchError(error => this.handleError(error, 'updateJobPostStatus'))
@@ -168,22 +195,15 @@ export class JobDescriptionService {
   deleteJobPost(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json' // Django expects body for delete with unique_id
+      'Content-Type': 'application/json'
     });
-
     const payload = { unique_id: uniqueId };
     const endpoint = `${this.apiUrl}/job-post/delete/`;
 
-    return this.http
-      .delete<{ status: string; data: { message: string; unique_id: string } }>(
-        endpoint,
-        { headers, body: payload } // Send payload in body for DELETE
-      )
+    return this.http.delete<{ status: string; data: { message: string; unique_id: string } }>(endpoint, { headers, body: payload })
       .pipe(
         map(response => {
-            if (response.status === 'success' && response.data) {
-                return response.data;
-            }
+            if (response.status === 'success' && response.data) { return response.data; }
             throw new Error('Unexpected response structure during delete job post');
         }),
         catchError(error => this.handleError(error, 'deleteJobPost'))
@@ -199,22 +219,15 @@ export class JobDescriptionService {
   deleteFile(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json' // Django expects body for delete with unique_id
+      'Content-Type': 'application/json'
     });
-
     const payload = { unique_id: uniqueId };
     const endpoint = `${this.apiUrl}/file-upload/delete/`;
 
-    return this.http
-      .delete<{ status: string; data: { message: string; unique_id: string } }>(
-        endpoint,
-        { headers, body: payload } // Send payload in body for DELETE
-      )
+    return this.http.delete<{ status: string; data: { message: string; unique_id: string } }>(endpoint, { headers, body: payload })
       .pipe(
         map(response => {
-            if (response.status === 'success' && response.data) {
-                return response.data;
-            }
+            if (response.status === 'success' && response.data) { return response.data; }
             throw new Error('Unexpected response structure during delete file');
         }),
         catchError(error => this.handleError(error, 'deleteFile'))
@@ -228,25 +241,16 @@ export class JobDescriptionService {
    * @returns Observable with paginated job posts
    */
   listJobPosts(token: string, page?: number): Observable<PaginatedJobPostResponse> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     let endpoint = `${this.apiUrl}/job-post/`;
     if (page) {
       endpoint += `?page=${page}`;
     }
 
-    return this.http
-      .get<{ status: string; data: PaginatedJobPostResponse }>(
-        endpoint,
-        { headers }
-      )
+    return this.http.get<{ status: string; data: PaginatedJobPostResponse }>(endpoint, { headers })
       .pipe(
         map(response => {
-          if (response.status === 'success' && response.data) {
-            return response.data;
-          }
+          if (response.status === 'success' && response.data) { return response.data; }
           throw new Error('Unexpected response structure when listing job posts');
         }),
         catchError(error => this.handleError(error, 'listJobPosts'))
@@ -260,22 +264,13 @@ export class JobDescriptionService {
    * @returns Observable with job post details
    */
   getJobPost(uniqueId: string, token: string): Observable<JobDetails> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     const endpoint = `${this.apiUrl}/job-post/${uniqueId}/`;
 
-    return this.http
-      .get<{ status: string; data: JobDetails }>(
-        endpoint,
-        { headers }
-      )
+    return this.http.get<{ status: string; data: JobDetails }>(endpoint, { headers })
       .pipe(
         map(response => {
-          if (response.status === 'success' && response.data) {
-            return response.data;
-          }
+          if (response.status === 'success' && response.data) { return response.data; }
           throw new Error('Unexpected response structure when fetching a single job post');
         }),
         catchError(error => this.handleError(error, 'getJobPost'))
@@ -292,10 +287,8 @@ export class JobDescriptionService {
     let errorMessage = `An unknown error occurred during ${operation}`;
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error (e.g., network issue)
       errorMessage = `Client-side error in ${operation}: ${error.error.message}`;
     } else {
-      // Server-side error
       const serverError = error.error;
       if (serverError) {
         if (serverError.status === 'error') {
@@ -307,7 +300,7 @@ export class JobDescriptionService {
                 .map(key => `${key}: ${Array.isArray(serverError.errors[key]) ? serverError.errors[key].join(', ') : serverError.errors[key]}`)
                 .join('; ');
                 if (fieldErrors) {
-                    errorMessage = fieldErrors; // Prioritize specific field errors
+                    errorMessage = fieldErrors;
                 } else if (!serverError.message) {
                     errorMessage = `Validation errors occurred in ${operation}.`;
                 }
@@ -316,9 +309,9 @@ export class JobDescriptionService {
             } else if (!serverError.message && !serverError.errors) {
                 errorMessage = `An error occurred on the server during ${operation}.`;
             }
-        } else if (serverError.detail) { // Standard DRF error
+        } else if (serverError.detail) {
             errorMessage = serverError.detail;
-        } else if (typeof serverError === 'string') { // Plain text error response
+        } else if (typeof serverError === 'string') {
             errorMessage = serverError;
         } else {
             errorMessage = `Server error ${error.status} in ${operation}: ${error.message || 'No specific message'}`;

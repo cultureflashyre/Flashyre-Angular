@@ -1,82 +1,267 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+// src/app/components/create-job-post-22/create-job-post-22.component.ts
+
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
+
+import { McqAssessmentService } from '../../services/mcq-assessment.service';
+import { JobDescriptionService } from '../../services/job-description.service';
+import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
+import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { MCQItem as IMcqItem } from '../../pages/create-job-post-1st-page/types';
+
+// Define internal interfaces for strong typing and clarity
+interface McqQuestion extends IMcqItem {
+  isSelected: boolean;
+  isAiGenerated: boolean;
+}
+
+interface SkillSection {
+  skillName: string;
+  questions: McqQuestion[];
+  totalCount: number;
+  selectedCount: number;
+  isAllSelected: boolean;
+}
 
 @Component({
   selector: 'create-job-post22',
   templateUrl: 'create-job-post-22.component.html',
   styleUrls: ['create-job-post-22.component.css'],
 })
-export class CreateJobPost22 {
-  @ContentChild('shuffleQuestionsText')
-  shuffleQuestionsText: TemplateRef<any>
-  @ContentChild('text17')
-  text17: TemplateRef<any>
-  @ContentChild('text161')
-  text161: TemplateRef<any>
-  @ContentChild('text18111')
-  text18111: TemplateRef<any>
-  @Input()
-  timeInputPlaceholder: string = 'HH:MM'
-  @ContentChild('difficultyLevelText')
-  difficultyLevelText: TemplateRef<any>
-  @ContentChild('text181')
-  text181: TemplateRef<any>
-  @ContentChild('text7')
-  text7: TemplateRef<any>
-  @ContentChild('text16')
-  text16: TemplateRef<any>
-  @ContentChild('allowPhoneAccessText')
-  allowPhoneAccessText: TemplateRef<any>
-  @ContentChild('text14')
-  text14: TemplateRef<any>
-  @ContentChild('text21')
-  text21: TemplateRef<any>
-  @ContentChild('text4')
-  text4: TemplateRef<any>
-  @ContentChild('text2')
-  text2: TemplateRef<any>
-  @ContentChild('text18')
-  text18: TemplateRef<any>
-  @ContentChild('text11')
-  text11: TemplateRef<any>
-  @Input()
-  rootClassName: string = ''
-  @ContentChild('text')
-  text: TemplateRef<any>
-  @ContentChild('text30')
-  text30: TemplateRef<any>
-  @ContentChild('text162')
-  text162: TemplateRef<any>
-  @ContentChild('text8')
-  text8: TemplateRef<any>
-  @ContentChild('text3')
-  text3: TemplateRef<any>
-  @ContentChild('text13')
-  text13: TemplateRef<any>
-  @ContentChild('allowVideoRecordingText')
-  allowVideoRecordingText: TemplateRef<any>
-  @ContentChild('text9')
-  text9: TemplateRef<any>
-  @ContentChild('text5')
-  text5: TemplateRef<any>
-  @ContentChild('proctoredText')
-  proctoredText: TemplateRef<any>
-  @ContentChild('text6')
-  text6: TemplateRef<any>
-  @ContentChild('button1')
-  button1: TemplateRef<any>
-  @ContentChild('timeLimitText')
-  timeLimitText: TemplateRef<any>
-  @ContentChild('text12')
-  text12: TemplateRef<any>
-  @ContentChild('text10')
-  text10: TemplateRef<any>
-  @ContentChild('text15')
-  text15: TemplateRef<any>
-  @ContentChild('text2111')
-  text2111: TemplateRef<any>
-  @ContentChild('text211')
-  text211: TemplateRef<any>
-  rawps5t: string = ' '
-  raw4lng: string = ' '
-  constructor() {}
+export class CreateJobPost22 implements OnInit, OnDestroy {
+  @Input() jobUniqueId: string;
+  @Input() rootClassName: string = '';
+
+  private subscriptions = new Subscription();
+
+  assessmentForm: FormGroup;
+  skillSections: SkillSection[] = [];
+  activeSectionIndex = 0;
+  
+  isLoading: boolean = true;
+  isSubmitting: boolean = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private authService: CorporateAuthService,
+    private mcqService: McqAssessmentService,
+    private jobService: JobDescriptionService,
+    private workflowService: JobCreationWorkflowService
+  ) {}
+
+  ngOnInit(): void {
+    this.initializeForm();
+    if (this.jobUniqueId) {
+      this.fetchMcqData();
+    } else {
+      this.snackBar.open('Error: Job context is missing. Cannot load assessment.', 'Close', { duration: 5000 });
+      this.isLoading = false;
+    }
+  }
+
+  private initializeForm(): void {
+    this.assessmentForm = this.fb.group({
+      assessmentName: ['', Validators.required],
+      shuffleQuestions: [true],
+      isProctored: [true],
+      allowPhoneAccess: [true],
+      allowVideoRecording: [true],
+      difficulty: [0.6], // Represents 60%
+      timeLimit: ['01:00', [Validators.required, Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)]],
+    });
+  }
+
+  private fetchMcqData(): void {
+    this.isLoading = true;
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.router.navigate(['/login-corporate']);
+      this.isLoading = false;
+      return;
+    }
+
+    this.subscriptions.add(
+      this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
+        next: (response) => {
+          const skillData = response.data;
+          this.skillSections = Object.keys(skillData).map(skillName => {
+            const sectionData = skillData[skillName];
+            const questions = sectionData.mcq_items.map((item): McqQuestion => ({
+              ...item,
+              isSelected: false,
+              isAiGenerated: item.question_text.includes('✨')
+            }));
+            return {
+              skillName: skillName,
+              questions: questions,
+              totalCount: questions.length,
+              selectedCount: 0,
+              isAllSelected: false,
+            };
+          });
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.isLoading = false;
+        }
+      })
+    );
+  }
+
+  // --- UI Event Handlers ---
+
+  onDifficultyChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).valueAsNumber;
+    this.assessmentForm.get('difficulty')?.setValue(value / 100);
+  }
+  
+  get difficultyPercentage(): number {
+    return (this.assessmentForm.get('difficulty')?.value || 0) * 100;
+  }
+
+  toggleSelectAllForSection(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const activeSection = this.skillSections[this.activeSectionIndex];
+    if (activeSection) {
+      activeSection.isAllSelected = isChecked;
+      activeSection.questions.forEach(q => q.isSelected = isChecked);
+      this.updateCounts();
+    }
+  }
+
+  onQuestionSelectionChange(): void {
+    const activeSection = this.skillSections[this.activeSectionIndex];
+    if (activeSection) {
+      // An individual checkbox was changed, so update the "Select All" state
+      activeSection.isAllSelected = activeSection.questions.length > 0 && activeSection.questions.every(q => q.isSelected);
+    }
+    this.updateCounts();
+  }
+  
+  private updateCounts(): void {
+    this.skillSections.forEach(section => {
+      section.selectedCount = section.questions.filter(q => q.isSelected).length;
+    });
+  }
+
+  // --- Getters for Template Binding ---
+
+  get totalSelectedCount(): number {
+    if (!this.skillSections) return 0;
+    return this.skillSections.reduce((acc, section) => acc + section.selectedCount, 0);
+  }
+  get totalQuestionCount(): number {
+    if (!this.skillSections) return 0;
+    return this.skillSections.reduce((acc, section) => acc + section.totalCount, 0);
+  }
+
+  selectSection(index: number): void {
+    this.activeSectionIndex = index;
+  }
+
+  // --- Action Button Handlers ---
+
+  addMoreAiQuestions(): void {
+    if (this.isSubmitting) return;
+    const activeSection = this.skillSections[this.activeSectionIndex];
+    if (!activeSection) return;
+
+    this.isSubmitting = true;
+    const token = this.authService.getJWTToken();
+    if (!token) {
+        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.isSubmitting = false; 
+        return; 
+    }
+
+    this.subscriptions.add(
+      this.jobService.generateMoreMcqsForSkill(this.jobUniqueId, activeSection.skillName, token).subscribe({
+        next: (newMcqs) => {
+          const newQuestions: McqQuestion[] = newMcqs.map(item => ({
+            ...item, 
+            isSelected: false, // Default to not selected
+            isAiGenerated: true 
+          }));
+          activeSection.questions.push(...newQuestions);
+          activeSection.totalCount = activeSection.questions.length;
+          this.onQuestionSelectionChange(); // Update counts and select-all state
+          this.snackBar.open(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`, 'Close', { duration: 3000 });
+          this.isSubmitting = false;
+        },
+        error: (err) => {
+          this.snackBar.open(`Failed to generate more questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.isSubmitting = false;
+        }
+      })
+    );
+  }
+
+  onPrevious(): void { this.router.navigate(['/create-job-post-21-page']); }
+  onSkip(): void { this.router.navigate(['/create-job-post-3rd-page']); }
+  onCancel(): void {
+    this.workflowService.clearWorkflow();
+    this.router.navigate(['/dashboard']);
+  }
+
+  onNext(): void {
+    this.assessmentForm.markAllAsTouched();
+    if (this.assessmentForm.invalid) {
+      this.snackBar.open('Please fill in all required settings (e.g., Assessment Name).', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      return;
+    }
+    if (this.totalSelectedCount === 0) {
+      this.snackBar.open('Please select at least one question to proceed.', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      return;
+    }
+
+    this.isSubmitting = true;
+    const formValue = this.assessmentForm.value;
+    const selectedIds = this.skillSections
+      .reduce((acc, s) => acc.concat(s.questions), [] as McqQuestion[])
+      .filter(q => q.isSelected)
+      .map(q => q.mcq_item_id);
+
+    const payload = {
+      job_unique_id: this.jobUniqueId,
+      name: formValue.assessmentName,
+      is_proctored: formValue.isProctored,
+      has_video_recording: formValue.allowVideoRecording,
+      allow_phone_access: formValue.allowPhoneAccess,
+      shuffle_questions_overall: formValue.shuffleQuestions,
+      selected_mcq_item_ids: selectedIds,
+      total_questions_to_present: null // This can be enhanced later if needed
+    };
+
+    const token = this.authService.getJWTToken();
+    if (!token) {
+        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.isSubmitting = false;
+        return;
+    }
+
+    this.subscriptions.add(
+      this.mcqService.saveAssessment(payload, token).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.snackBar.open('Assessment saved successfully!', 'Close', { duration: 3000 });
+          this.router.navigate(['/create-job-post-3rd-page']);
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          this.snackBar.open(`Save failed: ${err.message}`, 'Close', { panelClass: ['error-snackbar'], duration: 5000 });
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }

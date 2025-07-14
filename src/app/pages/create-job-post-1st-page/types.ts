@@ -133,3 +133,10 @@ export interface LegacyAssessmentSaveResponse {
   legacy_assessment_id: number;
   assessment_title: string;
 }
+
+export interface MCQItem {
+  mcq_item_id: number;      // Primary Key of the MCQItem model
+  job_mcq_id: number;       // FK to the parent JobMCQ model
+  question_number: number;
+  question_text: string;    // The raw text including the question, options, and answer
+}
