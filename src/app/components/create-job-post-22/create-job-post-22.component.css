@@ -1,6 +1,90 @@
 :host { 
   display: contents; 
 }
+
+/* src/app/components/create-job-post-22/create-job-post-22.component.css */
+
+/* --- All your original CSS rules from this file remain here --- */
+.create-job-post-22-container10 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+/* ... etc. ... */
+
+
+/* ============================================================================== */
+/* === NEW CSS RULES FOR ACTIVE STATES AND COLORS =============================== */
+/* ============================================================================== */
+
+/* Style for the main tabs (AI Generated / Uploaded) */
+.create-job-post-22-ai-generated-container,
+.create-job-post-22-uploaded-container {
+  cursor: pointer;
+  padding-bottom: 8px;
+  border-bottom: 3px solid transparent; /* Default state is transparent */
+  transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Style for the active main tab */
+.create-job-post-22-ai-generated-container.active-tab {
+  border-bottom-color: #41327B; /* Your primary theme color */
+}
+
+.create-job-post-22-ai-generated-container.active-tab .create-job-post-22-ai-generated-text {
+  color: #41327B; /* Your primary theme color */
+  font-weight: 600;
+}
+
+
+/* Style for the skill sections (Java, Python, etc.) */
+.create-job-post-22-language-tab {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-bottom: 3px solid transparent; /* Default state */
+  color: #555; /* Default text color for non-active sections */
+  transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* REQUIREMENT 2 & 4: Active section gets an indicator line and colored text */
+.create-job-post-22-language-tab.active-section .create-job-post-22-language-text {
+  color: #41327B; /* Color to match the active main tab */
+  font-weight: 600;
+}
+
+.create-job-post-22-language-tab.active-section {
+  border-bottom-color: #41327B; /* Color to match the active main tab */
+}
+
+
+/* REQUIREMENT 3: Colors for the difficulty level tags */
+.create-job-post-22-level-tag {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: white;
+}
+
+.difficulty-easy {
+  background-color: #1F882B; /* Green */
+}
+
+.difficulty-medium {
+  background-color: #F19000; /* Orange/Amber */
+}
+
+.difficulty-hard {
+  background-color: #F10400; /* Red */
+}
+
+/* Utility class to disable the upload button visually */
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
  
 .create-job-post-22-container10 {
   width: 100%;
