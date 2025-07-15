@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,7 +29,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() imageAlt: string = 'image';
   @ContentChild('text3') text3: TemplateRef<any>;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.score = this.matchingScore;
@@ -92,10 +93,12 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
   onCardClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    // Navigate only if click is outside Apply and Take Assessment buttons
+    // Navigate only if click is outside Apply, Take Assessment, Dislike, and Save buttons/icons
     if (
       !target.closest('.candidate-job-for-you-card-button1') &&
-      !target.closest('.candidate-job-for-you-card-button2')
+      !target.closest('.candidate-job-for-you-card-button2') &&
+      !target.closest('.candidate-job-for-you-card-icon14') &&
+      !target.closest('.candidate-job-for-you-card-icon16')
     ) {
       this.router.navigate(['/candidate-job-detail-view'], {
         queryParams: { jobId: this.jobId },
@@ -113,5 +116,35 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     event.stopPropagation(); // Prevent card navigation
     console.log('Take Assessment button clicked for jobId:', this.jobId);
     // Add custom Take Assessment functionality here (e.g., open assessment, etc.)
+  }
+
+  onDislike(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    const userId = this.userProfile?.user_id;
+    if (!userId || !this.jobId) {
+      console.error('user_id or job_id missing for dislike action');
+      return;
+    }
+    this.http
+      .post('/api/job_disliked/dislike/', { user_id: userId, job_id: this.jobId })
+      .subscribe({
+        next: (response) => console.log('Job disliked successfully:', response),
+        error: (error) => console.error('Error disliking job:', error),
+      });
+  }
+
+  onSave(event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card navigation
+    const userId = this.userProfile?.user_id;
+    if (!userId || !this.jobId) {
+      console.error('user_id or job_id missing for save action');
+      return;
+    }
+    this.http
+      .post('/api/job_saved/save/', { user_id: userId, job_id: this.jobId })
+      .subscribe({
+        next: (response) => console.log('Job saved successfully:', response),
+        error: (error) => console.error('Error saving job:', error),
+      });
   }
 }
