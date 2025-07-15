@@ -16,8 +16,8 @@ export class JobCardsComponent implements OnInit {
   
   loading: boolean = false;
   errorMessage: string | null = null;
-  @Input() jobs: any[] = [];
-  clickedIndex: number | null = null;
+  jobs: any[] = [];
+  selectedJobId: number | null = null;
 
   constructor(
     private jobService: JobsService,
@@ -25,53 +25,69 @@ export class JobCardsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Clear the jobs cache to ensure a fresh list
-    this.jobService.clearCache();
-    // Get jobId from URL query parameters and fetch jobs
-    this.route.queryParams.subscribe(params => {
-      const jobId = params['jobId'] ? +params['jobId'] : null;
-      this.fetchJobs(jobId);
-    });
-  }
-
-  private fetchJobs(selectedJobId: number | null = null): void {
     this.loading = true;
-    this.errorMessage = null;
-    this.jobService.fetchJobs().subscribe({
-      next: (data) => {
-        console.log('Jobs fetched:', data);
-        console.log('Available job IDs:', data.map(job => job.job_id));
-        this.jobs = data;
-        // Reorder if a jobId is provided (from URL)
-        if (selectedJobId !== null) {
-          const jobIndex = this.jobs.findIndex(job => job.job_id === selectedJobId);
-          if (jobIndex !== -1) {
-            const [selectedJob] = this.jobs.splice(jobIndex, 1);
-            this.jobs.unshift(selectedJob);
-            this.clickedIndex = 0;
-            console.log(`Reordered jobs with jobId ${selectedJobId} to top`);
+    this.jobService.getJobs().subscribe({
+      next: (jobs) => {
+        this.jobs = jobs;
+        if (this.selectedJobId !== null && !this.jobs.some(job => job.job_id === this.selectedJobId)) {
+          if (this.jobs.length > 0) {
+            this.selectJob(this.jobs[0].job_id);
+          } else {
+            this.selectedJobId = null;
           }
+        } else if (this.jobs.length > 0 && this.selectedJobId === null) {
+          this.selectJob(this.jobs[0].job_id);
         }
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching jobs:', err);
+        console.error('Error getting jobs:', err);
         this.errorMessage = err.message || 'Failed to load jobs. Please try again later.';
-        this.jobs = [];
         this.loading = false;
       }
     });
+
+    this.route.queryParams.subscribe(params => {
+      const jobId = params['jobId'] ? +params['jobId'] : null;
+      if (jobId && this.jobs.length > 0) {
+        const jobIndex = this.jobs.findIndex(job => job.job_id === jobId);
+        if (jobIndex !== -1) {
+          this.selectJob(jobId);
+        }
+      }
+    });
+
+    if (!this.jobService.areJobsCached()) {
+      this.jobService.fetchJobs().subscribe();
+    }
+  }
+
+  get displayedJobs(): any[] {
+    if (this.selectedJobId === null) {
+      return this.jobs;
+    }
+    const selectedJob = this.jobs.find(job => job.job_id === this.selectedJobId);
+    if (!selectedJob) {
+      return this.jobs;
+    }
+    const otherJobs = this.jobs.filter(job => job.job_id !== this.selectedJobId);
+    return [selectedJob, ...otherJobs];
   }
 
   selectJob(jobId: number): void {
     console.log('Emitting jobId:', jobId);
-    // Find the clicked job
-    const clickedJobIndex = this.jobs.findIndex(job => job.job_id === jobId);
-    if (clickedJobIndex !== -1) {
-      // Set clickedIndex for highlighting without reordering
-      this.clickedIndex = clickedJobIndex;
-    }
-    // Emit the jobId to the parent component
+    this.selectedJobId = jobId;
     this.jobSelected.emit(jobId);
+  }
+
+  selectNextJob() {
+    if (this.jobs.length > 0) {
+      const currentIndex = this.jobs.findIndex(job => job.job_id === this.selectedJobId);
+      let nextIndex = currentIndex + 1;
+      if (nextIndex >= this.jobs.length) {
+        nextIndex = 0;
+      }
+      this.selectJob(this.jobs[nextIndex].job_id);
+    }
   }
 }
