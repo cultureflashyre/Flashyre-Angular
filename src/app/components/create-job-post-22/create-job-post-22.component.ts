@@ -284,8 +284,12 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       allow_phone_access: formValue.allowPhoneAccess,
       shuffle_questions_overall: formValue.shuffleQuestions,
       selected_mcq_item_ids: selectedIds,
-      total_questions_to_present: null
+      difficulty: formValue.difficulty,
+      time_limit: formValue.timeLimit
     };
+
+    console.log('--- Sending Assessment Payload to Backend ---');
+    console.log(JSON.stringify(payload, null, 2)); // Using JSON.stringify for a clean, readable output
 
     const token = this.authService.getJWTToken();
     if (!token) {

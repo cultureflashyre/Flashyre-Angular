@@ -53,7 +53,7 @@ export class McqAssessmentService {
       'Content-Type': 'application/json'
     });
     // CORRECTED PATH: No leading slash
-    const endpoint = `${this.apiUrl}/api/mcq-assessments/create/`;
+    const endpoint = `${this.apiUrl}api/mcq-assessments/create/`;
 
     return this.http.post<{ status: string; data: AssessmentSaveResponse; errors?: any }>(endpoint, payload, { headers }).pipe(
       map(response => {

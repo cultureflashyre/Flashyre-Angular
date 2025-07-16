@@ -1,96 +1,55 @@
+<!-- src/app/components/create-job-post-footer-2/create-job-post-footer-2.component.html -->
+
 <div class="create-job-post-footer-2-container1" [ngClass]="rootClassName">
   <div class="create-job-post-footer-2-container2">
-    <button type="button" class="create-job-post-footer-2-button1 button">
+
+    <!-- 
+      ACTION: The complex <ng-container> and <ng-template> structure has been replaced
+      with a simple (click) event emitter.
+    -->
+    <button type="button" class="create-job-post-footer-2-button1 button" (click)="cancelClick.emit()">
       <span class="create-job-post-footer-2-text10">
-        <ng-container>
-          <ng-template #defaultButton>
-            <div class="create-job-post-footer-2-fragment5">
-              <span class="create-job-post-footer-2-text20">Cancel</span>
-            </div>
-          </ng-template>
-          <ng-container
-            *ngTemplateOutlet="button ? button : defaultButton"
-          ></ng-container>
-        </ng-container>
+        <!-- The button text is now a simple span -->
+        <span class="create-job-post-footer-2-text20">Cancel</span>
       </span>
     </button>
+
     <div class="create-job-post-footer-2-container3">
-      <button type="button" class="create-job-post-footer-2-button2 button">
+      <!-- Previous Button -->
+      <button type="button" class="create-job-post-footer-2-button2 button" (click)="previousClick.emit()">
         <span class="create-job-post-footer-2-text11">
-          <ng-container>
-            <ng-template #defaultButton2>
-              <div class="create-job-post-footer-2-fragment1">
-                <span class="create-job-post-footer-2-text16">Previous</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="button2 ? button2 : defaultButton2"
-            ></ng-container>
-          </ng-container>
+          <span class="create-job-post-footer-2-text16">Previous</span>
         </span>
       </button>
-      <button type="button" class="create-job-post-footer-2-button3 button">
+
+      <!-- Save Draft Button -->
+      <button type="button" class="create-job-post-footer-2-button3 button" (click)="saveDraftClick.emit()">
         <span class="create-job-post-footer-2-text12">
-          <ng-container>
-            <ng-template #defaultButton1>
-              <div class="create-job-post-footer-2-fragment6">
-                <span class="create-job-post-footer-2-text21">Save Draft</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="button1 ? button1 : defaultButton1"
-            ></ng-container>
-          </ng-container>
+          <span class="create-job-post-footer-2-text21">Save Draft</span>
         </span>
       </button>
-      <button type="button" class="create-job-post-footer-2-button4 button">
-        <span class="create-job-post-footer-2-text13">
-          <ng-container>
-            <ng-template #defaultButton11>
-              <div class="create-job-post-footer-2-fragment2">
-                <span class="create-job-post-footer-2-text17">
-                  Generate Assessment question
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="button11 ? button11 : defaultButton11"
-            ></ng-container>
-          </ng-container>
-        </span>
-      </button>
-      <button type="button" class="create-job-post-footer-2-button5 button">
+
+      <!-- 
+        NOTE: The "Generate Assessment question" button (button4) has been removed 
+        as it was specific to a different workflow and is not handled by the current page's logic.
+      -->
+
+      <!-- Skip Button -->
+      <button type="button" class="create-job-post-footer-2-button5 button" (click)="skipClick.emit()">
         <span class="create-job-post-footer-2-text14">
-          <ng-container>
-            <ng-template #defaultButton12>
-              <div class="create-job-post-footer-2-fragment3">
-                <span class="create-job-post-footer-2-text18">Skip</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="button12 ? button12 : defaultButton12"
-            ></ng-container>
-          </ng-container>
+          <span class="create-job-post-footer-2-text18">Skip</span>
         </span>
       </button>
       
-      <!-- The 'Next' button, now with the [disabled] attribute binding -->
+      <!-- Next Button -->
       <button
         type="button"
         class="create-job-post-footer-2-button6 button"
         [disabled]="isNextDisabled"
+        (click)="nextClick.emit()"
       >
         <span class="create-job-post-footer-2-text15">
-          <ng-container>
-            <ng-template #defaultButton122>
-              <div class="create-job-post-footer-2-fragment4">
-                <span class="create-job-post-footer-2-text19">Next</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="button122 ? button122 : defaultButton122"
-            ></ng-container>
-          </ng-container>
+          <span class="create-job-post-footer-2-text19">Next</span>
         </span>
       </button>
     </div>

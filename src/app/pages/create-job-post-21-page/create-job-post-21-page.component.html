@@ -178,42 +178,11 @@
       <create-job-post-footer2
         rootClassName="create-job-post-footer2root-class-name1"
         [isNextDisabled]="!hasGenerated || isGenerating"
-      >
-        <!-- Slot #button for the leftmost button -->
-        <ng-template #button>
-          <div (click)="onSaveDraft()">
-            <!-- This will override the footer's default "Cancel" text -->
-            <span>Save Draft</span>
-          </div>
-        </ng-template>
-        
-        <!-- Slot #button2 for the "Previous" button -->
-        <ng-template #button2>
-           <div (click)="onPrevious()">
-            <span>Previous</span>
-          </div>
-        </ng-template>
-
-        <!-- Slot #button1 is for the "Save Draft" button in the right group. -->
-        <!-- We are using the leftmost button for "Save Draft", so this slot can be left empty -->
-        <!-- or repurposed if needed. -->
-        <ng-template #button1>
-        </ng-template>
-        
-        <!-- Slot #button12 for the "Skip" button -->
-        <ng-template #button12>
-           <div (click)="onSkip()">
-            <span>Skip</span>
-          </div>
-        </ng-template>
-        
-        <!-- Slot #button122 for the "Next" button -->
-        <ng-template #button122>
-          <div (click)="onNext()">
-            <span>Next</span>
-          </div>
-        </ng-template>
-
+        (cancelClick)="onCancel()"
+        (previousClick)="onPrevious()"
+        (skipClick)="onSkip()"
+        (nextClick)="onNext()"
+        (saveDraftClick)="onSaveDraft()">
       </create-job-post-footer2>
     </div>
   </div>

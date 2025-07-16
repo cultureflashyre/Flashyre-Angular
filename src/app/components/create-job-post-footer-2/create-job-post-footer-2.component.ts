@@ -1,4 +1,6 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+// src/app/components/create-job-post-footer-2/create-job-post-footer-2.component.ts
+
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'create-job-post-footer2',
@@ -6,34 +8,48 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['create-job-post-footer-2.component.css'],
 })
 export class CreateJobPostFooter2 {
-  @ContentChild('button2')
-  button2: TemplateRef<any>
-  
-  @ContentChild('button11')
-  button11: TemplateRef<any>
-  
-  @ContentChild('button12')
-  button12: TemplateRef<any>
-  
-  @ContentChild('button122')
-  button122: TemplateRef<any>
-  
+  /**
+   * Allows a custom class to be applied to the root element for styling overrides.
+   */
   @Input()
-  rootClassName: string = ''
-  
-  @ContentChild('button')
-  button: TemplateRef<any>
-  
-  @ContentChild('button1')
-  button1: TemplateRef<any>
+  rootClassName: string = '';
 
   /**
-   * This input receives the boolean state from the parent component
-   * to control whether the 'Next' button should be disabled.
-   * Defaults to 'false' (enabled).
+   * Receives the boolean state from the parent component.
+   * When true, the 'Next' button will be disabled.
    */
-  @Input() 
+  @Input()
   isNextDisabled: boolean = false;
+
+  /**
+   * Emits an event when the 'Cancel' button is clicked.
+   */
+  @Output()
+  cancelClick = new EventEmitter<void>();
+
+  /**
+   * Emits an event when the 'Previous' button is clicked.
+   */
+  @Output()
+  previousClick = new EventEmitter<void>();
+
+  /**
+   * Emits an event when the 'Save Draft' button is clicked.
+   */
+  @Output()
+  saveDraftClick = new EventEmitter<void>();
+
+  /**
+   * Emits an event when the 'Skip' button is clicked.
+   */
+  @Output()
+  skipClick = new EventEmitter<void>();
+
+  /**
+   * Emits an event when the 'Next' button is clicked.
+   */
+  @Output()
+  nextClick = new EventEmitter<void>();
 
   constructor() {}
 }

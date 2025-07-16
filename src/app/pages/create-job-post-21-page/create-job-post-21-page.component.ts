@@ -118,19 +118,25 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   /**
    * Handles the 'Previous' button click.
    */
+  onCancel(): void {
+    this.workflowService.clearWorkflow(); // End the workflow state
+    this.router.navigate(['/candidate-home']); // Navigates to candidate home page
+  }
+  
+  /**
+   * Requirement 3: Handles the 'Previous' button click.
+   */
   onPrevious(): void {
     // The workflow service retains the ID, so the first page can reload the data.
     this.router.navigate(['/create-job-post-1st-page']);
   }
   
   /**
-   * Handles the 'Skip' button click.
+   * Requirement 2: Handles the 'Skip' button click.
    */
   onSkip(): void {
-    if (this.jobUniqueId) {
-      // Navigate to the next major step
-      this.router.navigate(['/create-job-post-3rd-page']);
-    }
+    // Both Skip and Next now go to the same page from this step.
+    this.router.navigate(['/create-job-post-22-page']);
   }
 
   /**
@@ -143,7 +149,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles the 'Next' button click, which is enabled after a primary action is taken.
+   * Requirement 1: Handles the 'Next' button click, which is enabled after a primary action.
    */
   onNext(): void {
     if (this.jobUniqueId && this.hasGenerated) {
@@ -154,9 +160,6 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Cleans up subscriptions when the component is destroyed to prevent memory leaks.
-   */
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
