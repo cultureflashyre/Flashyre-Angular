@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/candidate.service';
 
 @Component({
   selector: 'candidate-job-for-you-card',
@@ -13,6 +13,10 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() matchingScore: number = 80;
   @Input() jobId: string;
   score: number = 0;
+
+  isDisliked: boolean = false;
+  isSaved: boolean = false;
+
 
   @ViewChild('desktopBar') desktopBar: ElementRef;
   @ViewChild('mobileLoader') mobileLoader: ElementRef;
@@ -29,19 +33,43 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() imageAlt: string = 'image';
   @ContentChild('text3') text3: TemplateRef<any>;
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.score = this.matchingScore;
     this.loadUserProfile();
+    this.loadJobIdFromCache();
   }
 
-  loadUserProfile(): void {
+loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
+      console.log('User profile loaded:', this.userProfile);
     } else {
       console.log("User Profile NOT fetched");
+    }
+  }
+
+  async loadJobIdFromCache(): Promise<void> {
+    if (!this.jobId) {
+      try {
+        const cache = await caches.open('job-cache');
+        const cachedResponse = await cache.match('job-data');
+        if (cachedResponse) {
+          const jobData = await cachedResponse.json();
+          this.jobId = jobData.job_id?.toString();
+          if (!this.jobId) {
+            console.error('job_id missing in cached job data:', jobData);
+          } else {
+            console.log('Job ID fetched from cache:', this.jobId);
+          }
+        } else {
+          console.error('No job data found in cache');
+        }
+      } catch (error) {
+        console.error('Error fetching job ID from cache:', error);
+      }
     }
   }
 
@@ -93,7 +121,6 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
   onCardClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    // Navigate only if click is outside Apply, Take Assessment, Dislike, and Save buttons/icons
     if (
       !target.closest('.candidate-job-for-you-card-button1') &&
       !target.closest('.candidate-job-for-you-card-button2') &&
@@ -107,44 +134,54 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   onApply(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent card navigation
+    event.stopPropagation();
     console.log('Apply button clicked for jobId:', this.jobId);
-    // Add custom Apply functionality here (e.g., API call, navigation, etc.)
+    // Add custom Apply functionality here
   }
 
   onTakeAssessment(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent card navigation
+    event.stopPropagation();
     console.log('Take Assessment button clicked for jobId:', this.jobId);
-    // Add custom Take Assessment functionality here (e.g., open assessment, etc.)
+    // Add custom Take Assessment functionality here
   }
 
   onDislike(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent card navigation
-    const userId = this.userProfile?.user_id;
+    event.stopPropagation();
+    const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
-      console.error('user_id or job_id missing for dislike action');
+      console.error('user_id or job_id missing for dislike action', { userId, jobId: this.jobId });
+      alert('Unable to dislike job: User or job information is missing.');
       return;
     }
-    this.http
-      .post('/api/job_disliked/dislike/', { user_id: userId, job_id: this.jobId })
-      .subscribe({
-        next: (response) => console.log('Job disliked successfully:', response),
-        error: (error) => console.error('Error disliking job:', error),
-      });
+    this.authService.dislikeJob(userId, this.jobId).subscribe({
+      next: (response) => {
+        console.log('Job disliked successfully:', response);
+        alert('Job disliked successfully!');
+      },
+      error: (error) => {
+        console.error('Error disliking job:', error);
+        alert('Failed to dislike job: ' + error.message);
+      },
+    });
   }
 
   onSave(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent card navigation
-    const userId = this.userProfile?.user_id;
+    event.stopPropagation();
+    const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
-      console.error('user_id or job_id missing for save action');
+      console.error('user_id or job_id missing for save action', { userId, jobId: this.jobId });
+      alert('Unable to save job: User or job information is missing.');
       return;
     }
-    this.http
-      .post('/api/job_saved/save/', { user_id: userId, job_id: this.jobId })
-      .subscribe({
-        next: (response) => console.log('Job saved successfully:', response),
-        error: (error) => console.error('Error saving job:', error),
-      });
+    this.authService.saveJob(userId, this.jobId).subscribe({
+      next: (response) => {
+        console.log('Job saved successfully:', response);
+        alert('Job saved successfully!');
+      },
+      error: (error) => {
+        console.error('Error saving job:', error);
+        alert('Failed to save job: ' + error.message);
+      },
+    });
   }
 }

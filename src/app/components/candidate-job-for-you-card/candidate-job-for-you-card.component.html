@@ -139,6 +139,7 @@
               height="24"
               viewBox="0 0 24 24"
               class="candidate-job-for-you-card-icon14"
+              [class.filled]="isDisliked"
               (click)="onDislike($event)"
             >
               <path
@@ -151,6 +152,7 @@
               height="24"
               viewBox="0 0 24 24"
               class="candidate-job-for-you-card-icon16"
+              [class.filled]="isSaved"
               (click)="onSave($event)"
             >
               <g fill="none" fill-rule="evenodd">

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CanActivate, Router } from '@angular/router';
-import { tap } from 'rxjs/operators'; // Import tap for side effects
+import { Router } from '@angular/router';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,8 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}login-candidate/`, { email, password }).pipe(
       tap(response => {
         if (response.token) {
-          localStorage.setItem('jwtToken', response.token); // Store token
+          localStorage.setItem('jwtToken', response.token);
+          localStorage.setItem('userProfile', JSON.stringify({ user_id: response.user_id, ...response.user }));
         }
       })
     );
@@ -37,6 +38,24 @@ export class AuthService {
 
   getAppliedJobs(): Observable<any> {
     return this.http.get(`${this.apiUrl}api/applied-jobs/`);
+  }
+
+  dislikeJob(userId: string, jobId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}api/job_disliked/dislike/`, { user_id: userId, job_id: jobId }).pipe(
+      catchError(error => {
+        console.error('Error in dislikeJob:', error);
+        return throwError(() => new Error('Failed to dislike job'));
+      })
+    );
+  }
+
+  saveJob(userId: string, jobId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}api/job_saved/save/`, { user_id: userId, job_id: jobId }).pipe(
+      catchError(error => {
+        console.error('Error in saveJob:', error);
+        return throwError(() => new Error('Failed to save job'));
+      })
+    );
   }
 
   getJWTToken(): string | null {
