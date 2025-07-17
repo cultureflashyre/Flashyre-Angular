@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 
@@ -17,7 +17,6 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   isDisliked: boolean = false;
   isSaved: boolean = false;
 
-
   @ViewChild('desktopBar') desktopBar: ElementRef;
   @ViewChild('mobileLoader') mobileLoader: ElementRef;
 
@@ -33,21 +32,48 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() imageAlt: string = 'image';
   @ContentChild('text3') text3: TemplateRef<any>;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.score = this.matchingScore;
     this.loadUserProfile();
-    this.loadJobIdFromCache();
+    await this.loadJobIdFromCache(); // Ensure jobId is loaded before fetching disliked jobs
+    const userId = localStorage.getItem('user_id');
+    if (userId && this.jobId) {
+      this.authService.getDislikedJobs(userId).subscribe({
+        next: (response: any) => {
+          const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
+          this.isDisliked = dislikedJobs.includes(this.jobId);
+          console.log('Disliked jobs fetched:', dislikedJobs, 'isDisliked:', this.isDisliked);
+          this.cdr.detectChanges(); // Force UI update after setting isDisliked
+        },
+        error: (error) => {
+          console.error('Error fetching disliked jobs:', error);
+          // Fallback to localStorage cache if API fails
+          const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
+          if (cachedDislikedJobs) {
+            const dislikedJobs = JSON.parse(cachedDislikedJobs);
+            this.isDisliked = dislikedJobs.includes(this.jobId);
+            this.cdr.detectChanges();
+          }
+        },
+      });
+    } else {
+      console.warn('user_id or jobId missing for fetching disliked jobs', { userId, jobId: this.jobId });
+    }
   }
 
-loadUserProfile(): void {
+  loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
       console.log('User profile loaded:', this.userProfile);
     } else {
-      console.log("User Profile NOT fetched");
+      console.log('User Profile NOT fetched');
     }
   }
 
@@ -134,7 +160,7 @@ loadUserProfile(): void {
   }
 
   onApply(event: MouseEvent): void {
-    event.stopPropagation();
+   [event.stopPropagation()];
     console.log('Apply button clicked for jobId:', this.jobId);
     // Add custom Apply functionality here
   }
@@ -153,16 +179,50 @@ loadUserProfile(): void {
       alert('Unable to dislike job: User or job information is missing.');
       return;
     }
-    this.authService.dislikeJob(userId, this.jobId).subscribe({
-      next: (response) => {
-        console.log('Job disliked successfully:', response);
-        alert('Job disliked successfully!');
-      },
-      error: (error) => {
-        console.error('Error disliking job:', error);
-        alert('Failed to dislike job: ' + error.message);
-      },
-    });
+
+    if (this.isDisliked) {
+      // Remove dislike
+      this.authService.removeDislikedJob(userId, this.jobId).subscribe({
+        next: (response) => {
+          this.isDisliked = false;
+          console.log('Job dislike removed successfully:', response);
+          alert('Job dislike removed successfully!');
+          this.cdr.detectChanges(); // Update UI after removing dislike
+          // Update localStorage cache
+          const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
+          if (cachedDislikedJobs) {
+            let dislikedJobs = JSON.parse(cachedDislikedJobs);
+            dislikedJobs = dislikedJobs.filter((id: string) => id !== this.jobId);
+            localStorage.setItem('disliked_jobs', JSON.stringify(dislikedJobs));
+          }
+        },
+        error: (error) => {
+          console.error('Error removing disliked job:', error);
+          alert('Failed to remove dislike: ' + error.message);
+        },
+      });
+    } else {
+      // Add dislike
+      this.authService.dislikeJob(userId, this.jobId).subscribe({
+        next: (response) => {
+          this.isDisliked = true;
+          console.log('Job disliked successfully:', response);
+          alert('Job disliked successfully!');
+          this.cdr.detectChanges(); // Update UI after adding dislike
+          // Update localStorage cache
+          const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
+          let dislikedJobs = cachedDislikedJobs ? JSON.parse(cachedDislikedJobs) : [];
+          if (!dislikedJobs.includes(this.jobId)) {
+            dislikedJobs.push(this.jobId);
+            localStorage.setItem('disliked_jobs', JSON.stringify(dislikedJobs));
+          }
+        },
+        error: (error) => {
+          console.error('Error disliking job:', error);
+          alert('Failed to dislike job: ' + error.message);
+        },
+      });
+    }
   }
 
   onSave(event: MouseEvent): void {

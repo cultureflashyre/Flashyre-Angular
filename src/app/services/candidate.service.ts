@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
@@ -12,6 +12,14 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getJWTToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token ? `Bearer ${token}` : ''
+    });
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}login-candidate/`, { email, password }).pipe(
@@ -33,15 +41,29 @@ export class AuthService {
   }
 
   applyForJob(jobId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/apply/`, { job_id: jobId });
+    return this.http.post(`${this.apiUrl}api/apply/`, { job_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in applyForJob:', error);
+        return throwError(() => new Error('Failed to apply for job'));
+      })
+    );
   }
 
   getAppliedJobs(): Observable<any> {
-    return this.http.get(`${this.apiUrl}api/applied-jobs/`);
+    return this.http.get(`${this.apiUrl}api/applied-jobs/`, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in getAppliedJobs:', error);
+        return throwError(() => new Error('Failed to fetch applied jobs'));
+      })
+    );
   }
 
   dislikeJob(userId: string, jobId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/job_disliked/dislike/`, { user_id: userId, job_id: jobId }).pipe(
+    return this.http.post(
+      `${this.apiUrl}api/job_disliked/dislike/`,
+      { user_id: userId, job_id: jobId },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
       catchError(error => {
         console.error('Error in dislikeJob:', error);
         return throwError(() => new Error('Failed to dislike job'));
@@ -49,8 +71,34 @@ export class AuthService {
     );
   }
 
+  removeDislikedJob(userId: string, jobId: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}api/job_disliked/remove-dislike/`,
+      { user_id: userId, job_id: jobId },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      catchError(error => {
+        console.error('Error in removeDislikedJob:', error);
+        return throwError(() => new Error('Failed to remove disliked job'));
+      })
+    );
+  }
+
+  getDislikedJobs(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}api/job_disliked/disliked/${userId}/`, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in getDislikedJobs:', error);
+        return throwError(() => new Error('Failed to fetch disliked jobs'));
+      })
+    );
+  }
+
   saveJob(userId: string, jobId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/job_saved/save/`, { user_id: userId, job_id: jobId }).pipe(
+    return this.http.post(
+      `${this.apiUrl}api/job_saved/save/`,
+      { user_id: userId, job_id: jobId },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
       catchError(error => {
         console.error('Error in saveJob:', error);
         return throwError(() => new Error('Failed to save job'));
