@@ -389,7 +389,8 @@ body {
 .apply-button {
   color: #FFFFFF;           /* Text color as specified */
   background-color: #41327B; /* Background color as specified */
-  padding: 10px 20px;       /* Padding for a comfortable click area */
+  min-width: 69px;
+  height: 40px;
   border: none;             /* Remove default border */
   border-radius: 5px;       /* Rounded corners */
   cursor: pointer;          /* Hand cursor on hover */
@@ -431,6 +432,17 @@ body {
   font-weight: bold;        /* Bold tick mark */
   font-size: 1.2em;         /* Slightly larger size */
   margin-right: 5px;        /* Space between tick and text */
+}
+
+.apply-button :hover{
+  cursor: pointer;
+  transition: all 0.8s;
+  transform: scale(1.05);
+}
+
+.apply-button :active{
+  transform: scale(0.90);
+  transition: all 0.7s;
 }
 
 /* Responsive styles */

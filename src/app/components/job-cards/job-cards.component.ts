@@ -29,15 +29,24 @@ export class JobCardsComponent implements OnInit {
     this.jobService.getJobs().subscribe({
       next: (jobs) => {
         this.jobs = jobs;
-        if (this.selectedJobId !== null && !this.jobs.some(job => job.job_id === this.selectedJobId)) {
-          if (this.jobs.length > 0) {
-            this.selectJob(this.jobs[0].job_id);
-          } else {
-            this.selectedJobId = null;
+
+        // Get jobId from query parameters (from candidate-home navigation)
+        const jobId = this.route.snapshot.queryParams['jobId'] ? +this.route.snapshot.queryParams['jobId'] : null;
+
+        if (jobId) {
+          // Find and move the selected job to the top of the list
+          const jobIndex = this.jobs.findIndex(job => job.job_id === jobId);
+          if (jobIndex !== -1) {
+            const selectedJob = this.jobs.splice(jobIndex, 1)[0];
+            this.jobs.unshift(selectedJob);
+            this.selectJob(jobId);
+          } else if (this.jobs.length > 0) {
+            this.selectJob(this.jobs[0].job_id); // Fallback to first job if jobId not found
           }
-        } else if (this.jobs.length > 0 && this.selectedJobId === null) {
-          this.selectJob(this.jobs[0].job_id);
+        } else if (this.jobs.length > 0) {
+          this.selectJob(this.jobs[0].job_id); // Default to first job if no jobId
         }
+
         this.loading = false;
       },
       error: (err) => {
@@ -47,31 +56,14 @@ export class JobCardsComponent implements OnInit {
       }
     });
 
-    this.route.queryParams.subscribe(params => {
-      const jobId = params['jobId'] ? +params['jobId'] : null;
-      if (jobId && this.jobs.length > 0) {
-        const jobIndex = this.jobs.findIndex(job => job.job_id === jobId);
-        if (jobIndex !== -1) {
-          this.selectJob(jobId);
-        }
-      }
-    });
-
+    // Remove separate queryParams subscription since we handle it synchronously with snapshot
     if (!this.jobService.areJobsCached()) {
       this.jobService.fetchJobs().subscribe();
     }
   }
 
   get displayedJobs(): any[] {
-    if (this.selectedJobId === null) {
-      return this.jobs;
-    }
-    const selectedJob = this.jobs.find(job => job.job_id === this.selectedJobId);
-    if (!selectedJob) {
-      return this.jobs;
-    }
-    const otherJobs = this.jobs.filter(job => job.job_id !== this.selectedJobId);
-    return [selectedJob, ...otherJobs];
+    return this.jobs; // Return jobs as is, no reordering on selection
   }
 
   selectJob(jobId: number): void {
