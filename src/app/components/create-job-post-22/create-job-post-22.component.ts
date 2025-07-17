@@ -280,6 +280,19 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       .reduce((acc, s) => acc.concat(s.questions), [] as McqQuestion[])
       .filter(q => q.isSelected)
       .map(q => q.mcq_item_id);
+    
+    let timeInMinutes = 0;
+    try {
+        const timeParts = formValue.timeLimit.split(':');
+        const hours = parseInt(timeParts[0], 10);
+        const minutes = parseInt(timeParts[1], 10);
+        timeInMinutes = (hours * 60) + minutes;
+    } catch (e) {
+        console.error("Could not parse time limit", formValue.timeLimit);
+        this.snackBar.open('Invalid time format. Please use HH:MM.', 'Close');
+        this.isSubmitting = false;
+        return;
+    }
 
 
     const payload = {
@@ -291,8 +304,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       shuffle_questions_overall: formValue.shuffleQuestions,
       selected_mcq_item_ids: selectedIds,
       difficulty: formValue.difficulty,
-      // FIX: Ensure time format is 'HH:MM:SS' for backend compatibility.
-      time_limit: `${formValue.timeLimit}:00`
+      time_limit: timeInMinutes,
     };
 
     console.log('--- Sending Assessment Payload to Backend ---');
