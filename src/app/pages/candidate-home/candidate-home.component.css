@@ -974,7 +974,6 @@
   cursor: pointer;
   transition: all 0.8s;
   transform: scale(1.05);
-  background-color: #FFFFFF;
 }
 
 .candidate-home-fragment36 :active{
