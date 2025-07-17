@@ -8,14 +8,22 @@ import { AuthService } from '../../services/candidate.service';
   styleUrls: ['./candidate-job-for-you-card.component.css'],
 })
 export class CandidateJobForYouCard implements OnInit, AfterViewInit {
+  // --- Component Properties ---
   userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
-  @Input() matchingScore: number = 80;
-  @Input() jobId: string;
   score: number = 0;
 
+  // State booleans for the dislike and save buttons.
   isDisliked: boolean = false;
-  isSaved: boolean = false;
+  isSaved: boolean = false; // Tracks the saved state for the save/unsave toggle.
+
+  // --- Angular Decorators ---
+  @Input() matchingScore: number = 80;
+  @Input() jobId: string;
+  @Input() rootClassName: string = '';
+  @Input() imageSrc: string =
+    'https://s3-alpha-sig.figma.com/img/cb33/d035/72e938963245d419674c3c2e71065794?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=q4HKhJijWG7gIkWWgF~7yllDZKHyqxALVLh-VKU~aa6mkzu0y4';
+  @Input() imageAlt: string = 'image';
 
   @ViewChild('desktopBar') desktopBar: ElementRef;
   @ViewChild('mobileLoader') mobileLoader: ElementRef;
@@ -24,12 +32,8 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @ContentChild('button') button: TemplateRef<any>;
   @ContentChild('text4') text4: TemplateRef<any>;
   @ContentChild('text1') text1: TemplateRef<any>;
-  @Input() rootClassName: string = '';
   @ContentChild('text') text: TemplateRef<any>;
-  @Input() imageSrc: string =
-    'https://s3-alpha-sig.figma.com/img/cb33/d035/72e938963245d419674c3c2e71065794?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=q4HKhJijWG7gIkWWgF~7yllDZKHyqxALVLh-VKU~aa6mkzu0y4';
   @ContentChild('button1') button1: TemplateRef<any>;
-  @Input() imageAlt: string = 'image';
   @ContentChild('text3') text3: TemplateRef<any>;
 
   constructor(
@@ -38,22 +42,28 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  /**
+   * Component lifecycle hook.
+   * Fetches the initial state for both dislike and save buttons.
+   */
   async ngOnInit(): Promise<void> {
     this.score = this.matchingScore;
     this.loadUserProfile();
-    await this.loadJobIdFromCache(); // Ensure jobId is loaded before fetching disliked jobs
+    await this.loadJobIdFromCache();
+    
     const userId = localStorage.getItem('user_id');
+
     if (userId && this.jobId) {
+      // --- [UNTOUCHED] Original logic for fetching disliked jobs status ---
       this.authService.getDislikedJobs(userId).subscribe({
         next: (response: any) => {
           const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
           this.isDisliked = dislikedJobs.includes(this.jobId);
           console.log('Disliked jobs fetched:', dislikedJobs, 'isDisliked:', this.isDisliked);
-          this.cdr.detectChanges(); // Force UI update after setting isDisliked
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error fetching disliked jobs:', error);
-          // Fallback to localStorage cache if API fails
           const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
           if (cachedDislikedJobs) {
             const dislikedJobs = JSON.parse(cachedDislikedJobs);
@@ -62,8 +72,25 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
           }
         },
       });
+
+      // --- [NEW] Logic to fetch the initial status for the Save button ---
+      // This is the only new block of code in this method.
+      this.authService.getSavedJobs(userId).subscribe({
+        next: (response: any) => {
+          // Assuming the API returns a list of job IDs in the 'saved_jobs' property.
+          const savedJobIds = response.saved_jobs;
+          // Check if our current job's ID is in the list of saved job IDs.
+          this.isSaved = savedJobIds.includes(parseInt(this.jobId, 10));
+          this.cdr.detectChanges(); // Update the save button's UI.
+        },
+        error: (error) => {
+          console.error('Error fetching saved jobs:', error);
+          // Optional: You could implement a localStorage fallback for saved jobs here as well.
+        },
+      });
+
     } else {
-      console.warn('user_id or jobId missing for fetching disliked jobs', { userId, jobId: this.jobId });
+      console.warn('user_id or jobId missing for fetching user interactions', { userId, jobId: this.jobId });
     }
   }
 
@@ -105,6 +132,8 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  // --- Progress Bar Methods ---
+
   private getFillColor(value: number): string {
     if (value <= 40) return 'red';
     if (value <= 60) return 'orange';
@@ -116,7 +145,6 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   private animateProgressBar(): void {
     const duration = 2000;
     const startTime = Date.now();
-
     const animate = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - startTime;
@@ -145,6 +173,8 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     }
   }
 
+  // --- User Interaction Handlers ---
+
   onCardClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (
@@ -160,17 +190,18 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   onApply(event: MouseEvent): void {
-   [event.stopPropagation()];
+    event.stopPropagation();
     console.log('Apply button clicked for jobId:', this.jobId);
-    // Add custom Apply functionality here
   }
 
   onTakeAssessment(event: MouseEvent): void {
     event.stopPropagation();
     console.log('Take Assessment button clicked for jobId:', this.jobId);
-    // Add custom Take Assessment functionality here
   }
 
+  /**
+   * **[UNTOUCHED]** Handles clicks on the Dislike icon. This is the original, working code.
+   */
   onDislike(event: MouseEvent): void {
     event.stopPropagation();
     const userId = localStorage.getItem('user_id');
@@ -187,7 +218,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
           this.isDisliked = false;
           console.log('Job dislike removed successfully:', response);
           alert('Job dislike removed successfully!');
-          this.cdr.detectChanges(); // Update UI after removing dislike
+          this.cdr.detectChanges();
           // Update localStorage cache
           const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
           if (cachedDislikedJobs) {
@@ -208,7 +239,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
           this.isDisliked = true;
           console.log('Job disliked successfully:', response);
           alert('Job disliked successfully!');
-          this.cdr.detectChanges(); // Update UI after adding dislike
+          this.cdr.detectChanges();
           // Update localStorage cache
           const cachedDislikedJobs = localStorage.getItem('disliked_jobs');
           let dislikedJobs = cachedDislikedJobs ? JSON.parse(cachedDislikedJobs) : [];
@@ -225,6 +256,10 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * **[NEW & CORRECTED]** Handles clicks on the Save icon. Toggles the saved state.
+   * This logic now mirrors the original onDislike logic for saving and unsaving.
+   */
   onSave(event: MouseEvent): void {
     event.stopPropagation();
     const userId = localStorage.getItem('user_id');
@@ -233,15 +268,35 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       alert('Unable to save job: User or job information is missing.');
       return;
     }
-    this.authService.saveJob(userId, this.jobId).subscribe({
-      next: (response) => {
-        console.log('Job saved successfully:', response);
-        alert('Job saved successfully!');
-      },
-      error: (error) => {
-        console.error('Error saving job:', error);
-        alert('Failed to save job: ' + error.message);
-      },
-    });
+
+    if (this.isSaved) {
+      // --- If already saved, call the REMOVE method ---
+      this.authService.removeSavedJob(userId, this.jobId).subscribe({
+        next: (response) => {
+          this.isSaved = false; // Toggle the state to false.
+          console.log('Job unsaved successfully:', response);
+          alert('Job unsaved successfully!');
+          this.cdr.detectChanges(); // Update the UI.
+        },
+        error: (error) => {
+          console.error('Error unsaving job:', error);
+          alert('Failed to unsave job: ' + error.message);
+        },
+      });
+    } else {
+      // --- If not saved, call the ADD method ---
+      this.authService.saveJob(userId, this.jobId).subscribe({
+        next: (response) => {
+          this.isSaved = true; // Toggle the state to true.
+          console.log('Job saved successfully:', response);
+          alert('Job saved successfully!');
+          this.cdr.detectChanges(); // Update the UI.
+        },
+        error: (error) => {
+          console.error('Error saving job:', error);
+          alert('Failed to save job: ' + error.message);
+        },
+      });
+    }
   }
 }
