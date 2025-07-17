@@ -122,18 +122,27 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private async cleanupResources(): Promise<void> {
+    console.log('cleanupResources called');
+
     if (this.isCleanedUp) return;
     this.isCleanedUp = true;
 
     try {
       if (this.timerSubscription) {
         this.timerSubscription.unsubscribe();
+        console.log('Unsubscribed timerSubscription');
       }
+      
       clearInterval(this.timerInterval);
-      clearInterval(this.sectionTimerInterval);
+
+      if (this.sectionTimerInterval) {
+        clearInterval(this.sectionTimerInterval);
+        console.log('Cleared sectionTimerInterval');
+      }
 
       // Await stopRecording to ensure video is stopped and path is retrieved
       this.videoPath = await this.videoRecorder.stopRecording();
+      console.log("Inside cleanupResources...Video PATH url: ", this.videoPath);
 
       this.proctoringService.stopMonitoring();
 
@@ -149,7 +158,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   if (this.violationSubscription) {
     this.violationSubscription.unsubscribe();
   }
-  this.cleanupResources();
+  // this.cleanupResources();
 }
 
   fetchAssessmentData(assessmentId: number): void {
@@ -423,7 +432,17 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private isTerminating = false;
+
   async terminateTest(isViolation = false): Promise<void> {
+    if (this.isTerminating) {
+        console.warn('terminateTest already called, ignoring duplicate call');
+        return; // Prevent multiple runs
+    }
+  
+    this.isTerminating = true;
+    console.log('terminateTest called, isViolation=', isViolation);
+
     try {
       // Await cleanup to ensure video recording stopped and videoPath obtained
       await this.cleanupResources();
