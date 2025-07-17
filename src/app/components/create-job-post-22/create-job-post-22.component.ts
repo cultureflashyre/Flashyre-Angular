@@ -75,44 +75,60 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   }
 
   /**
-   * Helper method to parse the raw question text from the backend into a structured object.
-   * This logic is now centralized here to be used for both initial fetch and AI generation.
+   * Processes raw MCQ items from the API.
+   * It determines if a question is AI-generated, cleans the question text by
+   * removing the '✨' artifact, and then parses it into a displayable format.
+   * @param mcqItems The array of MCQ items from the backend.
+   * @returns A processed array of McqQuestion objects for the component state.
+   */
+  private processMcqItems(mcqItems: IMcqItem[]): McqQuestion[] {
+    return mcqItems.map((item): McqQuestion => {
+      const isAiGenerated = item.question_text.includes('✨');
+      const cleanedText = item.question_text.replace(/✨/g, '').trim();
+      
+      return {
+        ...item,
+        isSelected: false,
+        isAiGenerated: isAiGenerated,
+        parsed: this.parseQuestionText(cleanedText)
+      };
+    });
+  }
+
+  /**
+   * Helper method to parse the raw question text into a structured object.
+   * This logic is centralized here to be used for both initial fetch and AI generation.
    */
   private parseQuestionText(rawText: string): ParsedDetails {
     const lines = rawText.split('\n').filter(line => line.trim() !== '');
     
-    // Default structure in case of parsing failure
     const defaultResult: ParsedDetails = {
       question: rawText,
       options: [],
       correctAnswer: '',
-      difficulty: 'Medium', // Default difficulty
+      difficulty: 'Medium',
     };
 
     try {
-      // Find the question line (usually the first line)
       let questionLine = lines.find(line => !/^[a-d]\)|Correct Answer:|easy|medium|hard/i.test(line.trim()));
       defaultResult.question = questionLine ? questionLine.replace(/^Q\d+\.?\s*/, '').trim() : 'Could not parse question.';
 
-      // Extract options
       const optionLines = lines.filter(line => /^[a-d]\)/i.test(line.trim()));
       defaultResult.options = optionLines.map(line => line.trim().substring(3).trim());
 
-      // Extract correct answer
       const answerLine = lines.find(line => /Correct Answer:/i.test(line));
       if (answerLine) {
         const match = answerLine.match(/Correct Answer:\s*([a-d])/i);
         if (match) defaultResult.correctAnswer = match[1].toLowerCase();
       }
       
-      // Determine difficulty
       if (rawText.toLowerCase().includes('easy')) defaultResult.difficulty = 'Easy';
       if (rawText.toLowerCase().includes('hard')) defaultResult.difficulty = 'Hard';
 
       return defaultResult;
     } catch (e) {
       console.error("Failed to parse question text:", rawText, e);
-      return defaultResult; // Return default on any error
+      return defaultResult;
     }
   }
 
@@ -123,7 +139,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       isProctored: [true],
       allowPhoneAccess: [true],
       allowVideoRecording: [true],
-      difficulty: [0.6], // Represents 60%
+      difficulty: [0.6],
       timeLimit: ['01:00', [Validators.required, Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)]],
     });
   }
@@ -144,12 +160,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
           const skillData = response.data;
           this.skillSections = Object.keys(skillData).map(skillName => {
             const sectionData = skillData[skillName];
-            const questions = sectionData.mcq_items.map((item): McqQuestion => ({
-              ...item,
-              isSelected: false,
-              isAiGenerated: item.question_text.includes('✨'),
-              parsed: this.parseQuestionText(item.question_text) // Parse each question
-            }));
+            const questions = this.processMcqItems(sectionData.mcq_items);
             return {
               skillName: skillName, questions: questions, totalCount: questions.length,
               selectedCount: 0, isAllSelected: false,
@@ -230,15 +241,10 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.jobService.generateMoreMcqsForSkill(this.jobUniqueId, activeSection.skillName, token).subscribe({
         next: (newMcqs) => {
-          const newQuestions: McqQuestion[] = newMcqs.map(item => ({
-            ...item, 
-            isSelected: false, // Default new questions to not selected
-            isAiGenerated: true,
-            parsed: this.parseQuestionText(item.question_text) // Parse new questions
-          }));
+          const newQuestions = this.processMcqItems(newMcqs);
           activeSection.questions.push(...newQuestions);
           activeSection.totalCount = activeSection.questions.length;
-          this.onQuestionSelectionChange(); // Update counts and select-all state
+          this.onQuestionSelectionChange();
           this.snackBar.open(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`, 'Close', { duration: 3000 });
           this.isSubmitting = false;
         },
@@ -285,11 +291,12 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       shuffle_questions_overall: formValue.shuffleQuestions,
       selected_mcq_item_ids: selectedIds,
       difficulty: formValue.difficulty,
-      time_limit: formValue.timeLimit
+      // FIX: Ensure time format is 'HH:MM:SS' for backend compatibility.
+      time_limit: `${formValue.timeLimit}:00`
     };
 
     console.log('--- Sending Assessment Payload to Backend ---');
-    console.log(JSON.stringify(payload, null, 2)); // Using JSON.stringify for a clean, readable output
+    console.log(JSON.stringify(payload, null, 2));
 
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -307,7 +314,10 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.snackBar.open(`Save failed: ${err.message}`, 'Close', { panelClass: ['error-snackbar'], duration: 5000 });
+          // ENHANCEMENT: Provide specific error details from the backend response.
+          const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
+          this.snackBar.open(`Save failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
+          console.error("Backend save error:", err);
         }
       })
     );

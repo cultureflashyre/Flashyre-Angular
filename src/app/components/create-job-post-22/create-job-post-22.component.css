@@ -854,11 +854,14 @@
  
 .create-job-post-22-languages-main-container {
   flex: 0 0 auto;
-  width: 724px;
-  height: 48px;
+  /* REMOVED: width: 724px; */
+  width: 100%; /* CHANGED: Make container responsive */
+  /* REMOVED: height: 48px; */
+  height: auto; /* CHANGED: Allow height to grow */
+  min-height: 48px; /* ADDED: Maintain a minimum height */
   display: flex;
   align-self: flex-start;
-  align-items: flex-start;
+  align-items: center; /* CHANGED: Better vertical alignment for content */
   border-color: #CBCBCB;
   border-width: 0px;
   padding-left: 8px;
@@ -1080,15 +1083,16 @@
  
 .create-job-post-22-questions-container {
   width: 100%;
-  height: 144PX;
+  /* REMOVED: height: 144PX; */
+  height: auto; /* CHANGED: Allow row to grow with content */
   display: flex;
-  align-items: flex-start;
-  padding-top: 8px;
+  align-items: flex-start; /* CHANGED: Align items to the top */
+  padding-top: 16px; /* Increased padding for better spacing */
   border-color: #D9D9D9;
   border-width: 0px;
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: 8px;
+  padding-bottom: 16px; /* Increased padding for better spacing */
   justify-content: space-between;
   background-color: #FFFFFF;
   border-bottom-width: 1px;
@@ -1120,10 +1124,12 @@
 }
  
 .create-job-post-22-question1-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 602px;
-  height: 128px;
+  gap: 12px; /* Increased gap */
+  /* REMOVED: flex: 0 0 auto; */
+  flex: 1; /* CHANGED: Allow this section to take available width */
+  /* REMOVED: width: 602px; */
+  /* REMOVED: height: 128px; */
+  height: auto; /* CHANGED: Allow container to grow vertically */
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -1131,19 +1137,22 @@
 }
  
 .create-job-post-22-questions-text2 {
-  height: 24px;
+  /* REMOVED: height: 24px; */
+  height: auto; /* CHANGED: Allow text to take up vertical space */
   display: flex;
   font-size: 14px;
   font-style: normal;
-  align-items: center;
+  align-items: flex-start; /* CHANGED: Align text to the top */
   font-weight: 500;
+  white-space: normal; /* ADDED: Ensure long question text wraps */
+  line-height: 1.4; /* ADDED: Improve readability of wrapped text */
 }
  
 .create-job-post-22-options-container {
-  gap: 16px;
+  gap: 8px;
   flex: 0 0 auto;
-  width: 72px;
-  height: 96px;
+  width: 100%;
+  height: auto;
   display: flex;
   align-items: flex-start;
   padding-top: 8px;
@@ -1154,8 +1163,8 @@
 .create-job-post-22-option1-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 64px;
-  height: 16px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: flex-start;
 }
@@ -1177,8 +1186,8 @@
 .create-job-post-22-option2-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 64px;
-  height: 16px;
+  width: 100%;
+  height: auto;
   display: flex;
   align-items: flex-start;
 }
@@ -1190,18 +1199,20 @@
 .create-job-post-22-option2-text {
   fill: #18191C;
   color: #18191C;
-  height: 16px;
+  height: auto;
   display: flex;
   font-size: 13px;
   align-self: center;
   align-items: center;
+  white-space: normal;
+  line-height: 1.4;
 }
  
 .create-job-post-22-option3-container {
   gap: 8px;
   flex: 0 0 auto;
   width: 100%;
-  height: 16px;
+  height: auto;
   display: flex;
   align-items: flex-start;
 }
