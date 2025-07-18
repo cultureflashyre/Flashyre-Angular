@@ -224,6 +224,32 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     this.activeSectionIndex = index;
   }
 
+  /**
+   * Requirement 3: Add new method to handle arrow clicks for navigation.
+   * This method calculates the next or previous index and loops around.
+   * @param direction - Determines whether to go to the 'next' or 'prev' section.
+   */
+  navigateSection(direction: 'prev' | 'next'): void {
+    // Guard against running if there are no sections
+    if (!this.skillSections || this.skillSections.length === 0) {
+      return;
+    }
+
+    const count = this.skillSections.length;
+    let newIndex: number;
+
+    if (direction === 'next') {
+      // The modulo operator provides clean, looping forward navigation
+      newIndex = (this.activeSectionIndex + 1) % count;
+    } else { // direction === 'prev'
+      // Adding the total count before the modulo handles the case where index is 0, preventing a negative result
+      newIndex = (this.activeSectionIndex - 1 + count) % count;
+    }
+    
+    // Reuse the existing method to update the active tab
+    this.selectSection(newIndex);
+  }
+  
   // --- Action Button Handlers ---
   addMoreAiQuestions(): void {
     if (this.isSubmitting) return;

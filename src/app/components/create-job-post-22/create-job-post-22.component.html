@@ -102,9 +102,15 @@
           <div id="language-questions-main-container" class="create-job-post-22-language-questions-main-container">
             <div id="languages-main-container" class="create-job-post-22-languages-main-container">
               <!-- Left Arrow Icon (can be implemented with a scroll function later if needed) -->
-              <div id="left-arrow-container" class="create-job-post-22-left-arrow-container">
-                <svg id="left-arrow-icon" viewBox="0 0 24 24" class="create-job-post-22-left-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
-              </div>
+              <div
+      id="left-arrow-container"
+      class="create-job-post-22-left-arrow-container arrow-container left-arrow-shadow"
+      (click)="navigateSection('prev')"
+    >
+      <svg viewBox="0 0 24 24" class="create-job-post-22-left-arrow-icon nav-arrow-icon">
+        <path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path>
+      </svg>
+    </div>
               <!-- Dynamic looping through skill sections -->
               <div class="create-job-post-22-container18">
                 <div *ngFor="let section of skillSections; let i = index" class="create-job-post-22-language-tab" [ngClass]="{'active-section': i === activeSectionIndex}" (click)="selectSection(i)">
@@ -112,8 +118,16 @@
                 </div>
               </div>
               <!-- Right Arrow Icon -->
-              <svg viewBox="0 0 24 24" class="create-job-post-22-icon18"><path d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z" fill="currentColor"></path></svg>
-            </div>
+              <div
+                    id="right-arrow-container"
+                    class="arrow-container right-arrow-shadow"
+                    (click)="navigateSection('next')"
+                  >
+                    <svg viewBox="0 0 24 24" class="nav-arrow-icon"> <!-- Re-uses the standard nav-arrow-icon class -->
+                      <path d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z" fill="currentColor"></path>
+                    </svg>
+                  </div>
+              </div>
 
             <!-- This container shows the questions for the currently active section -->
             <ng-container *ngIf="skillSections.length > 0 && skillSections[activeSectionIndex] as activeSection">

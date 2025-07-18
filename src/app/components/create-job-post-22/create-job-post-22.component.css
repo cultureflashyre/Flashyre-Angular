@@ -2,6 +2,51 @@
   display: contents; 
 }
 
+
+/* Requirement 1: Common class for both arrow icons to ensure size consistency */
+.nav-arrow-icon {
+  width: 24px;
+  height: 24px;
+  color: #ACACAD; /* Default color */
+  transition: color 0.2s ease-in-out;
+}
+
+/* Base styles for the arrow containers */
+.arrow-container {
+  position: relative;
+  z-index: 2; /* Ensure arrows are above the scrolling content */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 8px; /* Give some clickable space */
+  height: 100%;
+}
+
+/* Hover effect for better user feedback */
+.arrow-container:hover .nav-arrow-icon {
+  color: #41327B; /* Change color on hover to match active theme */
+}
+
+/* Requirement 2: Shadow/fade effect using a pseudo-element */
+.left-arrow-shadow::after,
+.right-arrow-shadow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 25px; /* Width of the fade effect */
+  pointer-events: none; /* IMPORTANT: Allows clicks to pass through to the skill tabs underneath */
+}
+
+.left-arrow-shadow::after {
+  right: -25px; /* Position the shadow just to the right of the left arrow */
+  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.right-arrow-shadow::after {
+  left: -25px; /* Position the shadow just to the left of the right arrow */
+  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
 /* src/app/components/create-job-post-22/create-job-post-22.component.css */
 
 /* --- All your original CSS rules from this file remain here --- */
@@ -890,12 +935,22 @@
   height: auto;
   display: flex;
   max-width: 620px;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   align-items: center;
   justify-content: flex-start;
   scroll-behavior: smooth;
-  scrollbar-width: none;
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.create-job-post-22-container18::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge */
+.create-job-post-22-container18 {
+  -ms-overflow-style: none; /* IE and Edge */
 }
  
 .create-job-post-22-language1-container {
