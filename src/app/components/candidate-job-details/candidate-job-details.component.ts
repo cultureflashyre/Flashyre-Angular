@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'candidate-job-details',
@@ -42,7 +43,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     contract_time: '',
     contract_type: '',
     external_id: '',
-    last_updated: ''
+    last_updated: '',
+    assessment: null // Added assessment_id
   };
   userProfile: any = {};
   loading: boolean = false;
@@ -62,6 +64,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   constructor(
     private jobService: JobsService,
     private sanitizer: DomSanitizer,
+    private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
@@ -91,6 +94,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     } else {
       this.fetchJobDetails();
     }
+  }
+
+  /**
+   * Navigate to assessment page
+   */
+  navigateToAssessment(assessment: number): void {
+    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -124,8 +134,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private fetchJobDetails(): void {
     this.loading = true;
     this.errorMessage = null;
-    this.successMessage = null; // Reset success message when fetching new job
-    this.isApplied = false; // Reset applied status for new job
+    this.successMessage = null;
+    this.isApplied = false;
     this.jobService.getJobById(this.jobId!).subscribe({
       next: (data) => {
         console.log('Job details response:', data);
@@ -146,7 +156,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           contract_time: data.contract_time || '',
           contract_type: data.contract_type || '',
           external_id: data.external_id || '',
-          last_updated: data.last_updated || ''
+          last_updated: data.last_updated || '',
+          assessment: data.assessment || null // Added assessment_id
         };
         this.matchingScore = data.matching_score || 80;
         this.updateProgressBar(this.matchingScore, this.progress);
@@ -179,7 +190,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       contract_time: '',
       contract_type: '',
       external_id: '',
-      last_updated: ''
+      last_updated: '',
+      assessment: null // Added assessment_id
     };
     this.matchingScore = 0;
     this.progress = 0;

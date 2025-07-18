@@ -1,4 +1,3 @@
-
 <div id="candidate-home" class="candidate-home-container1">
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
@@ -510,8 +509,8 @@
                 </div>
               </ng-template>
               <ng-template #button1>
-                <div class="candidate-home-fragment37">
-                  <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
+                <div class="candidate-home-fragment37" *ngIf="job.assessment!= null">
+                  <span class="candidate-home-text129" (click)="navigateToAssessment(job.assessment)">Take Assessment</span>
                 </div>
               </ng-template>
             </candidate-job-for-you-card>

@@ -187,7 +187,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }, 100);
   }
 
-  /**
+  /** 
    * Setup infinite scroll using Intersection Observer
    */
   private setupInfiniteScroll(): void {
@@ -237,8 +237,8 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Navigate to assessment page
    */
-  navigateToAssessment(jobId: number): void {
-    this.router.navigate(['/flashyre-assessment11', jobId]);
+  navigateToAssessment(assessment: number): void {
+    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
   }
 
   /**

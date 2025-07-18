@@ -8,7 +8,7 @@
     <span>{{ errorMessage }}</span>
   </div>
   <div *ngIf="successMessage" class="candidate-job-detailss-success">
-  <span>{{ successMessage }}</span>
+    <span>{{ successMessage }}</span>
   </div>
 
   <!-- Show job details if no error -->
@@ -95,20 +95,22 @@
         class="candidate-job-details-apply-take-assessment-button-container"
       >
         <button
-  [disabled]="isProcessing || isApplied"
-  [ngClass]="{'apply-button': true, 'applying': isProcessing, 'applied': isApplied}"
-  (click)="applyForJob()"
->
-  <span *ngIf="!isProcessing && !isApplied">Apply</span>
-  <span *ngIf="isProcessing && !isApplied">Applying...</span>
-  <span *ngIf="isApplied">  
-    <span class="tick-mark">✓</span> Applied Successfully
-  </span>
-</button>
+          [disabled]="isProcessing || isApplied"
+          [ngClass]="{'apply-button': true, 'applying': isProcessing, 'applied': isApplied}"
+          (click)="applyForJob()"
+        >
+          <span *ngIf="!isProcessing && !isApplied">Apply</span>
+          <span *ngIf="isProcessing && !isApplied">Applying...</span>
+          <span *ngIf="isApplied">  
+            <span class="tick-mark">✓</span> Applied Successfully
+          </span>
+        </button>
         <button
+          *ngIf="job.assessment != null"
           id="take-assessment-button"
           type="button"
           class="candidate-job-details-take-assessment-button button"
+          (click)="navigateToAssessment(job.assessment)"
         >
           <span
             id="take-assessment-text"
