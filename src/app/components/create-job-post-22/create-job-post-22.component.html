@@ -162,7 +162,9 @@
                       <div id="options-container" class="create-job-post-22-options-container">
                         <div *ngFor="let option of question.parsed.options; let j = index" class="create-job-post-22-option1-container">
                           <input type="radio" [id]="'q-' + question.mcq_item_id + '-option-' + j" [name]="'q-radio-' + question.mcq_item_id" class="create-job-post-22-radio-icon" [checked]="'abcd'[j] === question.parsed.correctAnswer" disabled />
-                          <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                          <div class="option-text-wrapper">
+                            <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                        </div>
                         </div>
                       </div>
                     </div>

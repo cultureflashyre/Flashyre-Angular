@@ -1196,8 +1196,8 @@
 }
  
 .create-job-post-22-container19 {
-  flex: 0 0 auto;
-  width: auto;
+  flex: 1;
+  min-width: 0;
   height: auto;
   display: flex;
   align-items: flex-start;
@@ -1221,53 +1221,63 @@
 }
  
 .create-job-post-22-question1-container {
-  gap: 12px; /* Increased gap */
-  /* REMOVED: flex: 0 0 auto; */
-  flex: 1; /* CHANGED: Allow this section to take available width */
-  /* REMOVED: width: 602px; */
-  /* REMOVED: height: 128px; */
-  height: auto; /* CHANGED: Allow container to grow vertically */
+  gap: 12px;
+  flex: 1; /* Allows it to take up available space */
+  height: auto;
+  width: 602px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
 }
+
+.question-text-wrapper {
+  width: 100%;
+}
  
 .create-job-post-22-questions-text2 {
-  /* REMOVED: height: 24px; */
-  height: auto; /* CHANGED: Allow text to take up vertical space */
-  display: flex;
+  height: auto;
   font-size: 14px;
   font-style: normal;
-  align-items: flex-start; /* CHANGED: Align text to the top */
   font-weight: 500;
-  white-space: normal; /* ADDED: Ensure long question text wraps */
-  line-height: 1.4; /* ADDED: Improve readability of wrapped text */
+  white-space: normal;
+  line-height: 1.4;
+  word-break: break-word; /* This forces long unbreakable words to wrap */
+  display: block;
 }
  
 .create-job-post-22-options-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 100%;
+  width: 600px;
   height: auto;
+  max-height: 140px;
   display: flex;
   align-items: flex-start;
   padding-top: 8px;
   flex-direction: column;
   padding-bottom: 8px;
 }
+
  
 .create-job-post-22-option1-container {
   gap: 8px;
-  flex: 0 0 auto;
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   align-items: flex-start;
 }
  
 .create-job-post-22-radio-icon {
   align-self: center;
+  flex-shrink: 0; /* Prevents the radio button from shrinking */
+  margin-top: 1px; /* Minor alignment adjustment */
+}
+
+.option-text-wrapper {
+  flex: 1;
+  width: 602px;
+  height: auto;
 }
  
 .create-job-post-22-option1-text {
