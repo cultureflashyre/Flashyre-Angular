@@ -1,6 +1,6 @@
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,9 +41,12 @@ interface SkillSection {
   templateUrl: 'create-job-post-22.component.html',
   styleUrls: ['create-job-post-22.component.css'],
 })
-export class CreateJobPost22 implements OnInit, OnDestroy {
+export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
   @Input() jobUniqueId: string;
   @Input() rootClassName: string = '';
+  
+  // MODIFICATION: Use @ViewChild to get a reference to the slider from the template
+  @ViewChild('difficultySlider') difficultySlider: ElementRef<HTMLInputElement>;
 
   private subscriptions = new Subscription();
 
@@ -74,13 +77,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Processes raw MCQ items from the API.
-   * It determines if a question is AI-generated, cleans the question text by
-   * removing the '✨' artifact, and then parses it into a displayable format.
-   * @param mcqItems The array of MCQ items from the backend.
-   * @returns A processed array of McqQuestion objects for the component state.
-   */
+  ngAfterViewInit(): void {
+    // MODIFICATION: Set the initial fill state of the slider after the view is ready.
+    this.updateSliderFill();
+  }
+
   private processMcqItems(mcqItems: IMcqItem[]): McqQuestion[] {
     return mcqItems.map((item): McqQuestion => {
       const isAiGenerated = item.question_text.includes('✨');
@@ -95,10 +96,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Helper method to parse the raw question text into a structured object.
-   * This logic is centralized here to be used for both initial fetch and AI generation.
-   */
   private parseQuestionText(rawText: string): ParsedDetails {
     const lines = rawText.split('\n').filter(line => line.trim() !== '');
     
@@ -176,10 +173,27 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     );
   }
 
-  // --- UI Event Handlers ---
   onDifficultyChange(event: Event): void {
     const value = (event.target as HTMLInputElement).valueAsNumber;
     this.assessmentForm.get('difficulty')?.setValue(value / 100);
+    // MODIFICATION: Call the update method whenever the slider value changes
+    this.updateSliderFill();
+  }
+
+  /**
+   * MODIFICATION: New method to update the CSS custom property for the slider's fill effect.
+   */
+  private updateSliderFill(): void {
+    if (this.difficultySlider && this.difficultySlider.nativeElement) {
+      const slider = this.difficultySlider.nativeElement;
+      const value = slider.valueAsNumber;
+      const min = parseInt(slider.min, 10);
+      const max = parseInt(slider.max, 10);
+      const percentage = ((value - min) / (max - min)) * 100;
+      
+      // Set the CSS variable on the slider element itself
+      slider.style.setProperty('--fill-percentage', `${percentage}%`);
+    }
   }
   
   get difficultyPercentage(): number {
@@ -210,11 +224,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     });
   }
 
-  // --- Getters for Template Binding ---
   get totalSelectedCount(): number {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.selectedCount, 0);
   }
+
   get totalQuestionCount(): number {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.totalCount, 0);
@@ -224,33 +238,20 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
     this.activeSectionIndex = index;
   }
 
-  /**
-   * Requirement 3: Add new method to handle arrow clicks for navigation.
-   * This method calculates the next or previous index and loops around.
-   * @param direction - Determines whether to go to the 'next' or 'prev' section.
-   */
   navigateSection(direction: 'prev' | 'next'): void {
-    // Guard against running if there are no sections
     if (!this.skillSections || this.skillSections.length === 0) {
       return;
     }
-
     const count = this.skillSections.length;
     let newIndex: number;
-
     if (direction === 'next') {
-      // The modulo operator provides clean, looping forward navigation
       newIndex = (this.activeSectionIndex + 1) % count;
-    } else { // direction === 'prev'
-      // Adding the total count before the modulo handles the case where index is 0, preventing a negative result
+    } else {
       newIndex = (this.activeSectionIndex - 1 + count) % count;
     }
-    
-    // Reuse the existing method to update the active tab
     this.selectSection(newIndex);
   }
-  
-  // --- Action Button Handlers ---
+
   addMoreAiQuestions(): void {
     if (this.isSubmitting) return;
     const activeSection = this.skillSections[this.activeSectionIndex];
@@ -283,7 +284,9 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
   }
 
   onPrevious(): void { this.router.navigate(['/create-job-post-21-page']); }
+
   onSkip(): void { this.router.navigate(['/create-job-post-3rd-page']); }
+
   onCancel(): void {
     this.workflowService.clearWorkflow();
     this.router.navigate(['/dashboard']);
@@ -320,7 +323,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
         return;
     }
 
-
     const payload = {
       job_unique_id: this.jobUniqueId,
       name: formValue.assessmentName,
@@ -332,9 +334,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
       difficulty: formValue.difficulty,
       time_limit: timeInMinutes,
     };
-
-    console.log('--- Sending Assessment Payload to Backend ---');
-    console.log(JSON.stringify(payload, null, 2));
 
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -352,7 +351,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isSubmitting = false;
-          // ENHANCEMENT: Provide specific error details from the backend response.
           const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
           this.snackBar.open(`Save failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
           console.error("Backend save error:", err);

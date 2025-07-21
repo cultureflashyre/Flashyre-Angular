@@ -2,6 +2,80 @@
   display: contents; 
 }
 
+/* src/app/components/create-job-post-22/create-job-post-22.component.css */
+
+/* ... (add these new styles to your existing CSS file) ... */
+
+/* 
+  =============================================================
+  === SLIDER STYLES ===========================================
+  =============================================================
+*/
+
+/* Container for the difficulty slider and its labels */
+.slider-container-angular {
+  /* 
+    ACTION: This is the property to adjust the slider's width.
+    Setting it to 100% makes it fill its parent container.
+    You can change this to a fixed value like '250px' or a different percentage
+    (e.g., '90%') to alter the length of the slider track.
+  */
+  width: 100%;
+  padding-top: 8px; /* Adds some space above the slider */
+}
+
+/* Flex container for the 'Easy' and 'Hard' labels */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+  padding: 0 2px; /* Small padding to align with the slider track ends */
+}
+
+/* Styling for the slider input itself */
+.difficulty-slider-input {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  outline: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  /* 
+    THIS IS THE DYNAMIC PART IN THE CSS:
+    The background is a gradient that uses a variable `--fill-percentage`.
+    The component's code will update this variable in real-time.
+  */
+  background: linear-gradient(to right, 
+    #41327B 0%, 
+    #41327B var(--fill-percentage, 60%),  /* The purple part ends at the variable's value */
+    #e9e9e9 var(--fill-percentage, 60%),  /* The grey part starts at the variable's value */
+    #e9e9e9 100%
+  );
+}
+
+/* Styling for the slider thumb (the draggable handle) */
+.difficulty-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #41327B; /* Primary theme color */
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.difficulty-slider-input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #41327B;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
 
 /* Requirement 1: Common class for both arrow icons to ensure size consistency */
 .nav-arrow-icon {
@@ -11,42 +85,6 @@
   transition: color 0.2s ease-in-out;
 }
 
-/* Base styles for the arrow containers */
-.arrow-container {
-  position: relative;
-  z-index: 2; /* Ensure arrows are above the scrolling content */
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0 8px; /* Give some clickable space */
-  height: 100%;
-}
-
-/* Hover effect for better user feedback */
-.arrow-container:hover .nav-arrow-icon {
-  color: #41327B; /* Change color on hover to match active theme */
-}
-
-/* Requirement 2: Shadow/fade effect using a pseudo-element */
-.left-arrow-shadow::after,
-.right-arrow-shadow::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 25px; /* Width of the fade effect */
-  pointer-events: none; /* IMPORTANT: Allows clicks to pass through to the skill tabs underneath */
-}
-
-.left-arrow-shadow::after {
-  right: -25px; /* Position the shadow just to the right of the left arrow */
-  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-.right-arrow-shadow::after {
-  left: -25px; /* Position the shadow just to the left of the right arrow */
-  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
 /* src/app/components/create-job-post-22/create-job-post-22.component.css */
 
 /* --- All your original CSS rules from this file remain here --- */
@@ -633,7 +671,7 @@
 .create-job-post-22-slide-bar-main-container2 {
   gap: 4px;
   flex: 0 0 auto;
-  width: 304px;
+  width: 100%;
   height: 76px;
   display: flex;
   align-items: flex-start;
@@ -646,6 +684,10 @@
   height: 24px;
   display: flex;
   align-items: center;
+}
+
+.difficulty-slider-input{
+  width: 100%;
 }
  
 .create-job-post-22-slide-bar-container2 {

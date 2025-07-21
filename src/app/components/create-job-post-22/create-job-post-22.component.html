@@ -53,8 +53,15 @@
               <span id="difficulty-level-text" class="create-job-post-22-difficulty-level-text2">Choose difficulty level ({{ difficultyPercentage | number:'1.0-0' }}%)</span>
               <div class="slider-container-angular">
                  <div class="slider-labels"><span>Easy</span><span>Hard</span></div>
-                 <input type="range" min="0" max="100" class="difficulty-slider-input" [value]="difficultyPercentage" (input)="onDifficultyChange($event)" />
-              </div>
+              <input 
+                  #difficultySlider
+                  type="range" 
+                  min="0" 
+                  max="100" 
+                  class="difficulty-slider-input" 
+                  [value]="difficultyPercentage" 
+                  (input)="onDifficultyChange($event)" 
+                />              </div>
             </div>
             <!-- Time Limit Input -->
             <div id="time-limit-container" class="create-job-post-22-time-limit-container2">
