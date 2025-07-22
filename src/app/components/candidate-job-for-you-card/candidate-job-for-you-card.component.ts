@@ -12,10 +12,11 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   score: number = 0;
+  isDisliked: boolean = false;
+  isSaved: boolean = false;
+  shouldRender: boolean = true; // Added to control rendering
 
   // State booleans for the dislike and save buttons.
-  isDisliked: boolean = false;
-  isSaved: boolean = false; // Tracks the saved state for the save/unsave toggle.
 
   // --- Angular Decorators ---
   @Input() matchingScore: number = 80;
@@ -44,7 +45,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
   /**
    * Component lifecycle hook.
-   * Fetches the initial state for both dislike and save buttons.
+   * Fetches the initial state for both dislike and save buttons, and sets shouldRender.
    */
   async ngOnInit(): Promise<void> {
     this.score = this.matchingScore;
@@ -54,12 +55,13 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     const userId = localStorage.getItem('user_id');
 
     if (userId && this.jobId) {
-      // --- [UNTOUCHED] Original logic for fetching disliked jobs status ---
+      // --- Fetch disliked jobs to set initial state ---
       this.authService.getDislikedJobs(userId).subscribe({
         next: (response: any) => {
           const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
           this.isDisliked = dislikedJobs.includes(this.jobId);
-          console.log('Disliked jobs fetched:', dislikedJobs, 'isDisliked:', this.isDisliked);
+          this.shouldRender = !this.isDisliked; // Set rendering based on initial dislike state
+          console.log('Disliked jobs fetched:', dislikedJobs, 'isDisliked:', this.isDisliked, 'shouldRender:', this.shouldRender);
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -68,24 +70,21 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
           if (cachedDislikedJobs) {
             const dislikedJobs = JSON.parse(cachedDislikedJobs);
             this.isDisliked = dislikedJobs.includes(this.jobId);
+            this.shouldRender = !this.isDisliked; // Use cached data for rendering
             this.cdr.detectChanges();
           }
         },
       });
 
-      // --- [NEW] Logic to fetch the initial status for the Save button ---
-      // This is the only new block of code in this method.
+      // --- Fetch saved jobs ---
       this.authService.getSavedJobs(userId).subscribe({
         next: (response: any) => {
-          // Assuming the API returns a list of job IDs in the 'saved_jobs' property.
           const savedJobIds = response.saved_jobs;
-          // Check if our current job's ID is in the list of saved job IDs.
           this.isSaved = savedJobIds.includes(parseInt(this.jobId, 10));
           this.cdr.detectChanges(); // Update the save button's UI.
         },
         error: (error) => {
           console.error('Error fetching saved jobs:', error);
-          // Optional: You could implement a localStorage fallback for saved jobs here as well.
         },
       });
 
@@ -200,7 +199,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   /**
-   * **[UNTOUCHED]** Handles clicks on the Dislike icon. This is the original, working code.
+   * Handles clicks on the Dislike icon.
    */
   onDislike(event: MouseEvent): void {
     event.stopPropagation();
@@ -257,8 +256,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   /**
-   * **[NEW & CORRECTED]** Handles clicks on the Save icon. Toggles the saved state.
-   * This logic now mirrors the original onDislike logic for saving and unsaving.
+   * Handles clicks on the Save icon. Toggles the saved state.
    */
   onSave(event: MouseEvent): void {
     event.stopPropagation();

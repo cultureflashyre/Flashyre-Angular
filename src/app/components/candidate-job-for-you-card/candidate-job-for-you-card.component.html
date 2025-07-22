@@ -1,4 +1,5 @@
 <div
+  *ngIf="shouldRender"
   class="candidate-job-for-you-card-container10"
   [ngClass]="rootClassName"
   (click)="onCardClick($event)"
