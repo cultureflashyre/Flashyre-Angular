@@ -85,6 +85,10 @@
   transition: color 0.2s ease-in-out;
 }
 
+.arrow-container:hover .nav-arrow-icon {
+  color: #41327B;
+}
+
 /* src/app/components/create-job-post-22/create-job-post-22.component.css */
 
 /* --- All your original CSS rules from this file remain here --- */
@@ -135,10 +139,22 @@
   border-bottom: 3px solid transparent;
   transition: border-color 0.2s ease-in-out;
   min-height: 48px;
-  max-width: 130px; /* Adjust this value to control when wrapping occurs */
+  width: 130px; /* Adjust this value to control when wrapping occurs */
   text-align: center;
   gap: 0.25em; /* Small space between name and count */
 }
+
+.arrow-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 8px;
+  height: 100%;
+}
+
+
 .skill-tab-name {
   color: #333;
   font-weight: 500;
@@ -976,21 +992,13 @@
 }
  
 .create-job-post-22-languages-main-container {
-  flex: 0 0 auto;
-  /* REMOVED: width: 724px; */
-  width: 100%; /* CHANGED: Make container responsive */
-  /* REMOVED: height: 48px; */
-  height: auto; /* CHANGED: Allow height to grow */
-  min-height: 48px; /* ADDED: Maintain a minimum height */
   display: flex;
-  align-self: flex-start;
-  align-items: center; /* CHANGED: Better vertical alignment for content */
-  border-color: #CBCBCB;
-  border-width: 0px;
-  padding-left: 8px;
-  padding-right: 8px;
-  justify-content: space-between;
-  border-bottom-width: 1px;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  border-bottom: 1px solid #CBCBCB;
+  padding: 0 8px;
 }
  
 .create-job-post-22-left-arrow-container {
@@ -1009,7 +1017,7 @@
 .create-job-post-22-container18 {
   gap: 16px;
   flex: 1;
-  width: auto;
+  width: 568px;
   height: auto;
   display: flex;
   max-width: 620px;
@@ -1725,6 +1733,12 @@
 }
  
 @media(max-width: 991px) {
+
+  .create-job-post-22-container18 {
+    /* (3 items * 130px) + (2 gaps * 16px) = 422px */
+    width: 422px;
+  }
+
   .create-job-post-22-create-job-post22-main-container {
     gap: 10px;
     width: 100%;
@@ -1831,6 +1845,11 @@
 }
  
 @media(max-width: 767px) {
+  .create-job-post-22-container18 {
+    /* (2 items * 130px) + (1 gap * 16px) = 276px */
+    width: 276px;
+  }
+  
   .create-job-post-22-create-job-post22-main-container {
     gap: 8px;
     height: auto;
