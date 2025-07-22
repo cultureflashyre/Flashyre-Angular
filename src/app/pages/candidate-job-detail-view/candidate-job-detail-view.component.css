@@ -538,6 +538,33 @@
   font-weight: 600;
   justify-content: center;
 }
+
+.candidate-job-detail-view-saved-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 190px;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 12px;
+  flex-direction: row;
+  padding-bottom: 12px;
+}
+
+.candidate-job-detail-view-saved-text {
+  color: #05356C;
+  width: 190px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+
+.candidate-job-detail-view-saved-container:hover {
+  cursor: pointer;
+}
  
 .candidate-job-detail-view-container4 {
   flex: 0 0 auto;
