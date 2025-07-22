@@ -1,6 +1,6 @@
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -45,8 +45,10 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
   @Input() jobUniqueId: string;
   @Input() rootClassName: string = '';
   
-  // MODIFICATION: Use @ViewChild to get a reference to the slider from the template
   @ViewChild('difficultySlider') difficultySlider: ElementRef<HTMLInputElement>;
+  // Add ViewChild decorators to get references to the carousel elements from the template
+  @ViewChild('skillViewport') skillViewport: ElementRef<HTMLDivElement>;
+  @ViewChild('skillTrack') skillTrack: ElementRef<HTMLDivElement>;
 
   private subscriptions = new Subscription();
 
@@ -57,6 +59,13 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
   isLoading: boolean = true;
   isSubmitting: boolean = false;
 
+  // Properties for carousel logic
+  currentScrollIndex = 0;
+  maxScrollIndex = 0;
+  private visibleItems = 4; // Default number of visible items
+  private readonly skillTabWidth = 130; // From CSS: width
+  private readonly skillTabGap = 16;   // From CSS: gap
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -64,8 +73,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
     private authService: CorporateAuthService,
     private mcqService: McqAssessmentService,
     private jobService: JobDescriptionService,
-    private workflowService: JobCreationWorkflowService
+    private workflowService: JobCreationWorkflowService,
+    private renderer: Renderer2 // Inject Renderer2 for safe DOM manipulation
   ) {}
+
+  // Add a HostListener to recalculate the carousel state on window resize for responsiveness
+  @HostListener('window:resize')
+  onResize(): void {
+    this.calculateCarouselState();
+    this.updateScrollPosition();
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -78,8 +95,10 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // MODIFICATION: Set the initial fill state of the slider after the view is ready.
+    // Set the initial fill state of the slider after the view is ready.
     this.updateSliderFill();
+    // Calculate the initial state of the carousel after the view is rendered.
+    this.calculateCarouselState();
   }
 
   private processMcqItems(mcqItems: IMcqItem[]): McqQuestion[] {
@@ -164,6 +183,8 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
             };
           });
           this.isLoading = false;
+          // Use setTimeout to ensure the view has updated before calculating carousel state
+          setTimeout(() => this.calculateCarouselState(), 0);
         },
         error: (err) => {
           this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
@@ -173,16 +194,54 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  private calculateCarouselState(): void {
+    if (!this.skillViewport || !this.skillTrack || this.skillSections.length === 0) {
+      this.maxScrollIndex = 0;
+      return;
+    }
+    const viewportWidth = this.skillViewport.nativeElement.offsetWidth;
+    const itemTotalWidth = this.skillTabWidth + this.skillTabGap;
+    
+    // Dynamically calculate how many items can fit
+    this.visibleItems = Math.floor((viewportWidth + this.skillTabGap) / itemTotalWidth);
+    if (this.visibleItems < 1) this.visibleItems = 1;
+
+    const totalItems = this.skillSections.length;
+    this.maxScrollIndex = Math.max(0, totalItems - this.visibleItems);
+
+    // Adjust scroll index if it's now out of bounds after resize
+    if (this.currentScrollIndex > this.maxScrollIndex) {
+      this.currentScrollIndex = this.maxScrollIndex;
+    }
+  }
+
+  private updateScrollPosition(): void {
+    if (this.skillTrack && this.skillTrack.nativeElement) {
+      const itemTotalWidth = this.skillTabWidth + this.skillTabGap;
+      const newX = -this.currentScrollIndex * itemTotalWidth;
+      this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(${newX}px)`);
+    }
+  }
+
+  navigateCarousel(direction: 'prev' | 'next'): void {
+    if (direction === 'next') {
+      if (this.currentScrollIndex < this.maxScrollIndex) {
+        this.currentScrollIndex++;
+      }
+    } else { // 'prev'
+      if (this.currentScrollIndex > 0) {
+        this.currentScrollIndex--;
+      }
+    }
+    this.updateScrollPosition();
+  }
+
   onDifficultyChange(event: Event): void {
     const value = (event.target as HTMLInputElement).valueAsNumber;
     this.assessmentForm.get('difficulty')?.setValue(value / 100);
-    // MODIFICATION: Call the update method whenever the slider value changes
     this.updateSliderFill();
   }
-
-  /**
-   * MODIFICATION: New method to update the CSS custom property for the slider's fill effect.
-   */
+  
   private updateSliderFill(): void {
     if (this.difficultySlider && this.difficultySlider.nativeElement) {
       const slider = this.difficultySlider.nativeElement;
@@ -191,7 +250,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
       const max = parseInt(slider.max, 10);
       const percentage = ((value - min) / (max - min)) * 100;
       
-      // Set the CSS variable on the slider element itself
       slider.style.setProperty('--fill-percentage', `${percentage}%`);
     }
   }
@@ -238,20 +296,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
     this.activeSectionIndex = index;
   }
 
-  navigateSection(direction: 'prev' | 'next'): void {
-    if (!this.skillSections || this.skillSections.length === 0) {
-      return;
-    }
-    const count = this.skillSections.length;
-    let newIndex: number;
-    if (direction === 'next') {
-      newIndex = (this.activeSectionIndex + 1) % count;
-    } else {
-      newIndex = (this.activeSectionIndex - 1 + count) % count;
-    }
-    this.selectSection(newIndex);
-  }
-
   addMoreAiQuestions(): void {
     if (this.isSubmitting) return;
     const activeSection = this.skillSections[this.activeSectionIndex];
@@ -272,6 +316,8 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit {
           activeSection.questions.push(...newQuestions);
           activeSection.totalCount = activeSection.questions.length;
           this.onQuestionSelectionChange();
+          // After adding questions, the total number of items might have changed, so recalculate.
+          setTimeout(() => this.calculateCarouselState(), 0);
           this.snackBar.open(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`, 'Close', { duration: 3000 });
           this.isSubmitting = false;
         },
