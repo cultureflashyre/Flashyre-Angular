@@ -1730,6 +1730,11 @@
   font-style: normal;
   font-weight: 600;
 }
+
+.candidate-home-text129.disabled {
+  color: grey;
+  cursor: not-allowed;
+}
  
 @media(max-width: 1200px) {
   .candidate-home-container1 {

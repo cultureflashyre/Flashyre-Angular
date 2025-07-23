@@ -44,7 +44,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     contract_type: '',
     external_id: '',
     last_updated: '',
-    assessment: null // Added assessment_id
+    assessment: null, // Added assessment_id
+    attempts_remaining: null // <-- ADDED: Initialize the new property
   };
   userProfile: any = {};
   loading: boolean = false;
@@ -157,7 +158,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           contract_type: data.contract_type || '',
           external_id: data.external_id || '',
           last_updated: data.last_updated || '',
-          assessment: data.assessment || null // Added assessment_id
+          assessment: data.assessment || null, // Added assessment_id
+          attempts_remaining: data.attempts_remaining || null // <-- ADDED: Map the property from the API response
         };
         this.matchingScore = data.matching_score || 80;
         this.updateProgressBar(this.matchingScore, this.progress);
@@ -191,7 +193,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       contract_type: '',
       external_id: '',
       last_updated: '',
-      assessment: null // Added assessment_id
+      assessment: null, // Added assessment_id
+      attempts_remaining: null // <-- ADDED: Reset the property
     };
     this.matchingScore = 0;
     this.progress = 0;
