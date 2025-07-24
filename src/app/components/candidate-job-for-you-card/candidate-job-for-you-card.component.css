@@ -207,12 +207,12 @@
   gap: 8px;
   flex: 0 0 auto;
   width: auto; /* Changed from 528px */
-  height: 40px;
+  height: auto;
   display: flex;
   align-items: center; /* Improved alignment */
 }
 
-.candidate-job-for-you-card-button1 {
+/* .candidate-job-for-you-card-button1 {
   width: 77px;
   height: 40px;
   border-color: #05356C;
@@ -235,7 +235,7 @@
   transform: scale(0.90);
   border-width: 0px;
   background-color: 022954;
-}
+} */
 
 .candidate-job-for-you-card-button2 {
   width: 169px;
@@ -586,10 +586,10 @@ svg {
     width: auto;
     height: 36px;
   }
-  .candidate-job-for-you-card-button1 {
+  /* .candidate-job-for-you-card-button1 {
     width: 70px;
     height: 36px;
-  }
+  } */
   .candidate-job-for-you-card-button2 {
     width: 160px;
     height: 36px;

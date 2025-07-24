@@ -8,6 +8,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class JobsService {
+  getNextJob() {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = environment.apiUrl + 'api/jobs/';
   private jobsSubject = new BehaviorSubject<any[]>([]);
   private jobsCache: any[] = [];

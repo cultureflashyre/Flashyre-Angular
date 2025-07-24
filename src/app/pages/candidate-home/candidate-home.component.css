@@ -907,56 +907,80 @@
   display: inline-block;
 }
  
-.candidate-home-fragment36 {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-top: 10px;
-  width: 100%;
+.apply-button {
+  color: #05356C;           /* Text color as specified */
+  background-color: #FFFFFF; /* Background color as specified */
+  padding: 10px 20px;       /* Padding for a comfortable click area */
+  border-width: 1px;             /* Remove default border */
+  border-radius: 5px;       /* Rounded corners */
+  cursor: pointer;          /* Hand cursor on hover */
+  font-size: 16px;          /* Readable font size */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+  outline: none;            /* Remove default outline */
+  font-weight: 600;
+  border-color: #05356C;
 }
-.candidate-home-fragment36 button {
-  margin: -88px -38px; /* Kept your existing margin */
-  border-radius: 4px;
-  color: #05356c;
-  border: none;
+
+/* Focus state for accessibility */
+.apply-button:focus {
+  outline: 2px solid #FFFFFF; /* White outline for visibility */
+  outline-offset: 2px;       /* Offset to avoid overlapping content */
+}
+
+/* Disabled state */
+.apply-button:disabled {
+  opacity: 0.5;             /* Semi-transparent to indicate disabled */
+  cursor: not-allowed;      /* Not-allowed cursor */
+}
+
+/* Applying state */
+.apply-button.applying {
+  background-color: #6C5B9E; /* Lighter purple to indicate processing */
+  color: #FFFFFF;
+}
+
+/* Applied state */
+.apply-button.applied {
+  background-color: #28A745; /* Green to indicate success */
+  color: #FFFFFF;
+}
+
+/* Styling for spans inside the button */
+.apply-button span {
+  display: inline-block;    /* Inline-block for proper alignment */
+  vertical-align: middle;   /* Vertically center the content */
+}
+
+/* Styling for the tick mark in the applied state */
+.tick-mark {
+  font-weight: bold;        /* Bold tick mark */
+  font-size: 1.2em;         /* Slightly larger size */
+  margin-right: 5px;        /* Space between tick and text */
+}
+
+/* .apply-button :hover{
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600; /* Changed to semi-bold */
-  min-width: 120px;
-  text-align: center;
-  position: relative; /* Added for positioning control */
-  top: -5px; /* Moves the button up slightly; adjust as needed */
-  padding: 8px 16px; /* Added padding to ensure text isn't cut off */
+  transition: all 0.8s;
+  transform: scale(1.05);
+  background-color: #FFFFFF;
 }
 
-.candidate-home-fragment36 button:hover:not(:disabled) {
-  /*background-color: #3a7ca8;*/
-  transform: translateY(-2px);
-  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+.apply-button :active{
+  transform: scale(0.90);
+  transition: all 0.7s;
+} */
+
+.candidate-home-fragment36 :hover{
+  cursor: pointer;
+  transition: all 0.8s;
+  transform: scale(1.05);
 }
 
-.candidate-home-fragment36 button:active:not(:disabled) {
-  transform: translateY(0);
+.candidate-home-fragment36 :active{
+  transform: scale(0.90);
+  transition: all 0.7s;
 }
 
-.candidate-home-fragment36 button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.candidate-home-fragment36 button.applying {
-  background-color: #F19000;
-}
-
-.candidate-home-fragment36 button.applied {
-  background-color: #1F882B;
-}
-
-.candidate-home-fragment36 .tick-mark {
-  font-weight: bold;
-  margin-right: 4px;
-}
- 
 .candidate-home-text128 {
   color: rgb(5, 53, 108);
   display: inline-block;
@@ -1705,6 +1729,11 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
+}
+
+.candidate-home-text129.disabled {
+  color: grey;
+  cursor: not-allowed;
 }
  
 @media(max-width: 1200px) {
