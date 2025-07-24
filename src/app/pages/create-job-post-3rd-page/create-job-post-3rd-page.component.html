@@ -285,25 +285,21 @@
               </div>
 
               <!-- 2. Date Picker -->
-            <div class="form-field-wrapper date-field">
-                <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
-                <div class="date-input-wrapper">
-                  <input 
-                    matInput 
-                    [matDatepicker]="picker" 
-                    [min]="minDate" 
-                    formControlName="stage_date"
-                    placeholder="MM/DD/YYYY"
-                    readonly
-                    [id]="'date-input-' + i">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <!-- The panelClass property applies our custom theme to the calendar popup -->
-                  <mat-datepicker #picker panelClass="compact-datepicker-theme"></mat-datepicker>
-                </div>
-                <div *ngIf="stageControl.get('stage_date')?.touched && stageControl.get('stage_date')?.errors?.required" class="field-error-message">
-                  Date is required.
-                </div>
-              </div>
+            <!-- 2. Date Picker -->
+<div class="form-field-wrapper date-field">
+  <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
+  <div class="compact-date-input-wrapper">
+    <input 
+      type="date" 
+      formControlName="stage_date"
+      [min]="minDateString"
+      [id]="'date-input-' + i"
+      class="compact-date-input">
+  </div>
+  <div *ngIf="stageControl.get('stage_date')?.touched && stageControl.get('stage_date')?.errors?.required" class="field-error-message">
+    Date is required.
+  </div>
+</div>
 
               <!-- 3. Mode Dropdown -->
               <div class="form-field-wrapper mode-field">
@@ -355,5 +351,16 @@
               </div>
       
     </div>
+    <create-job-post-footer2
+      [rootClassName]="'create-job-post-3rd-page-footer'"
+      [isNextDisabled]="isSubmitting || interviewForm.invalid"
+      (cancelClick)="onCancel()"
+      (previousClick)="onPrevious()"
+      (saveDraftClick)="onSaveDraft()"
+      (skipClick)="onSkip()"
+      (nextClick)="onNext()"
+    ></create-job-post-footer2>
+
   </div>
 </div>
+ 
