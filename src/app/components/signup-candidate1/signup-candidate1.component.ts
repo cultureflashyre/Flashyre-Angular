@@ -68,7 +68,8 @@ export class SignupCandidate1 implements OnInit {
           Validators.minLength(8),
           Validators.maxLength(15)
         ]],
-        confirm_password: ['', Validators.required],
+        confirm_password: ['', [Validators.required]],
+        user_type: ['candidate', Validators.required]  // default candidate or empty
       },
       { validator: this.passwordMatchValidator }
     );
@@ -138,9 +139,10 @@ export class SignupCandidate1 implements OnInit {
         phone_number: this.signupForm.get('phone_number').value,
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
+        user_type: 'candidate',
       };
 
-      this.http.post(`${this.baseUrl}signup-candidate/`, formData).subscribe(
+      this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe(
         (response: any) => {
           console.log('Signup successful', response);
           this.errorMessage = '';
@@ -149,6 +151,8 @@ export class SignupCandidate1 implements OnInit {
           // Store JWT token in local storage or session storage
           localStorage.setItem('jwtToken', response.access); // Store the access token
           localStorage.setItem('refreshToken', response.refresh);
+          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('userType', response.role);
 
           // Fetch user profile after successful login
           this.userProfileService.fetchUserProfile().subscribe(

@@ -42,6 +42,7 @@ export class LoginCandidate {
       localStorage.setItem('jwtToken', response.access); // Ensure token is stored
       // Store user_id in local storage
       localStorage.setItem('user_id', response.user_id);
+      localStorage.setItem('userType', response.role);
       
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {

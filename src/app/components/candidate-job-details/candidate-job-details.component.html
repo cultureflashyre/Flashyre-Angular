@@ -7,6 +7,9 @@
   <div *ngIf="errorMessage" class="candidate-job-details-error">
     <span>{{ errorMessage }}</span>
   </div>
+  <div *ngIf="successMessage" class="candidate-job-detailss-success">
+    <span>{{ successMessage }}</span>
+  </div>
 
   <!-- Show job details if no error -->
   <div
@@ -92,27 +95,26 @@
         class="candidate-job-details-apply-take-assessment-button-container"
       >
         <button
-          id="apply-button"
-          type="button"
-          class="candidate-job-details-apply-button button"
+          [disabled]="isProcessing || isApplied"
+          [ngClass]="{'apply-button': true, 'applying': isProcessing, 'applied': isApplied}"
           (click)="applyForJob()"
-          [disabled]="!job.url"
         >
-          <span id="apply-text" class="candidate-job-details-apply-text">
-            <ng-container>
-              <ng-template #defaultButton>
-                <div class="candidate-job-details-fragment1">
-                  <span class="candidate-job-details-text10">Apply</span>
-                </div>
-              </ng-template>
-              <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
-            </ng-container>
+          <span *ngIf="!isProcessing && !isApplied">Apply</span>
+          <span *ngIf="isProcessing && !isApplied">Applying...</span>
+          <span *ngIf="isApplied">  
+            <span class="tick-mark">✓</span> Applied Successfully
           </span>
         </button>
         <button
+          *ngIf="job.assessment != null"
           id="take-assessment-button"
           type="button"
           class="candidate-job-details-take-assessment-button button"
+          [disabled]="(job.attempts_remaining || 0) <= 0"
+          [ngClass]="{'disabled': (job.attempts_remaining || 0) <= 0}"
+          (click)="(job.attempts_remaining || 0) > 0 && navigateToAssessment(job.assessment)"
+          [title]="(job.attempts_remaining || 0) + ' ' + (job.attempts_remaining === 1 ? 'attempt' : 'attempts') + ' remaining'"
+
         >
           <span
             id="take-assessment-text"

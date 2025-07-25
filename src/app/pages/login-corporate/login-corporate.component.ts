@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { UserProfileService } from '../../services/user-profile.service';
 
 @Component({
   selector: 'login-corporate',
@@ -13,7 +15,9 @@ export class LoginCorporate {
   constructor(
     private title: Title,
     private meta: Meta,
-    private router: Router
+    private router: Router,
+    private userProfileService: UserProfileService,
+    private spinner: NgxSpinnerService,
   ) {
     this.title.setTitle('Login-Corporate - Flashyre');
     this.meta.addTags([
@@ -30,11 +34,30 @@ export class LoginCorporate {
   }
 
   onLoginSubmit(response: any) {
-    if (response.message === 'Login successful') {
-      this.errorMessage = '';
-      this.router.navigate(['/recruiter-view-3rd-page1']);
+    this.spinner.show();
+
+    if (response.message === 'Login successful' && response.access) {
+      console.log("Login response: ", response);
+      localStorage.setItem('jwtToken', response.access); // Ensure token is stored
+      // Store user_id in local storage
+      localStorage.setItem('user_id', response.user_id);
+      localStorage.setItem('userType', response.role);
+      
+      this.userProfileService.fetchUserProfile().subscribe({
+        next: () => {
+          this.errorMessage = '';
+          this.router.navigate(['/recruiter-view-3rd-page']);
+        },
+        error: (profileError) => {
+          console.error('Error fetching profile', profileError);
+          // Navigate anyway, but with a warning
+          this.router.navigate(['/recruiter-view-3rd-page']);
+        }
+      });
     } else {
       this.errorMessage = response.error || 'Login failed';
+      console.error('Login failed:', response);
     }
+    this.spinner.hide();
   }
 }

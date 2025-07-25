@@ -19,7 +19,7 @@ export class FlashyreAssessmentRulesCard implements OnInit {
   public assessmentTitle: string = '';
   public totalAssessmentDuration: number = 0;
   public isLoading: boolean = true;
-
+  
   constructor(
     private title: Title,
     private meta: Meta,

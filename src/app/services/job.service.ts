@@ -9,6 +9,9 @@ import { AuthService } from './candidate.service'; // <--- STEP 1: IMPORT THE AU
   providedIn: 'root'
 })
 export class JobsService {
+  getNextJob() {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = environment.apiUrl + 'api/jobs/';
 
   // --- Private State Management ---
