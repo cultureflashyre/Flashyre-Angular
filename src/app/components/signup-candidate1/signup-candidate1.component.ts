@@ -151,6 +151,8 @@ export class SignupCandidate1 implements OnInit {
           // Store JWT token in local storage or session storage
           localStorage.setItem('jwtToken', response.access); // Store the access token
           localStorage.setItem('refreshToken', response.refresh);
+          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('userType', response.role);
 
           // Fetch user profile after successful login
           this.userProfileService.fetchUserProfile().subscribe(

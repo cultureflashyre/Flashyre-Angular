@@ -8,23 +8,53 @@ import { AuthService } from '../services/candidate.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+
     console.log('AuthGuard#canActivate called');
     console.log('Trying to access route:', state.url);
 
-    const loggedIn = this.authService.isLoggedIn();
-    console.log('User logged in status:', loggedIn);
+    const token = localStorage.getItem('jwtToken');
+    const userType = localStorage.getItem('userType');  // Assume you store 'candidate' or 'recruiter'
 
-    if (loggedIn) {
-      console.log('Access granted to route:', state.url);
-      return true; // Allow access if user is logged in
+    // Check if user is logged in (token exists)
+    if (!token) {
+      // Not logged in, redirect to login (candidate or recruiter login as per your app)
+      this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } });
+      return false;
     }
 
-    console.warn('Access denied - User not logged in. Redirecting to /login-candidate');
-    this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } }); // Optionally pass returnUrl
-    return false;
+    // Check if current route expects roles
+    const expectedRoles: string[] = route.data['roles'];
+
+    if (expectedRoles && expectedRoles.length > 0) {
+      if (!userType || !expectedRoles.includes(userType)) {
+        // Role mismatch - you can redirect to a forbidden page or back to a suitable page
+        this.router.navigate(['/forbidden']);
+        return false;
+      }
+    }
+
+    // All checks passed
+    return true;
+
+    //////////////////////////////////////////////////////////////
+
+    //const loggedIn = this.authService.isLoggedIn();
+    //console.log('User logged in status:', loggedIn);
+
+    //if (loggedIn) {
+    //  console.log('Access granted to route:', state.url);
+    //  return true; // Allow access if user is logged in
+   // }
+
+    //console.warn('Access denied - User not logged in. Redirecting to /login-candidate');
+    //this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } }); // Optionally pass returnUrl
+    //return false;
   }
 }
 

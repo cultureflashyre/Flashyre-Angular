@@ -54,6 +54,8 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module'
       ).then((m) => m.RecruiterView3rdPageModule),
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
   },
   {
     path: 'signup-candidate',
@@ -96,7 +98,9 @@ const routes = [
       import(
         './pages/candidate-job-detail-view/candidate-job-detail-view.module'
       ).then((m) => m.CandidateJobDetailViewModule
-    ), canActivate: [AuthGuard],  // Protect this route
+    ), 
+    canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'login-candidate',
@@ -111,13 +115,17 @@ const routes = [
       import(
         './pages/recruiter-view-5th-page/recruiter-view-5th-page.module'
       ).then((m) => m.RecruiterView5thPageModule),
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
   },
   {
     path: 'candidate-home',
     loadChildren: () =>
       import('./pages/candidate-home/candidate-home.module').then(
         (m) => m.CandidateHomeModule
-      ), canActivate: [AuthGuard],  // Protect this route
+      ), 
+      canActivate: [AuthGuard],
+      data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'profile-certification-page',
@@ -153,7 +161,8 @@ const routes = [
       import(
         './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module'
       ).then((m) => m.FlashyreAssessmentRulesCardModule
-    ), canActivate: [AuthGuard],  // Protect this route
+    ),     canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
 
   {
@@ -161,7 +170,8 @@ const routes = [
     loadChildren: () =>
       import('./pages/candidate-dashboard/candidate-dashboard.module').then(
         (m) => m.CandidateDashboardModule
-      ), canActivate: [AuthGuard],  // Protect this route
+      ),     canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'error-system-requirement-failed',
@@ -176,7 +186,8 @@ const routes = [
       import('./pages/flashyre-assessment11/flashyre-assessment11.module').then(
         (m) => m.FlashyreAssessment11Module
       ),
-      canActivate: [AuthGuard],  // Protect this route
+          canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'profile-last-page1', // New route
@@ -191,7 +202,8 @@ const routes = [
       import('./pages/candidate-assessment/candidate-assessment.module').then(
         (m) => m.CandidateAssessmentModule
       ),
-      canActivate: [AuthGuard],  // Protect this route
+      canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'assessment-taken-page', // New route
@@ -199,6 +211,8 @@ const routes = [
       import('./pages/assessment-taken-page/assessment-taken-page.module').then(
         (m) => m.AssessmentTakenPageModule
       ),
+          canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },
   },
   {
     path: 'create-job-post-1st-page',
@@ -239,18 +253,24 @@ const routes = [
     loadChildren: () =>
       import( './pages/assessment-taken-page-2/assessment-taken-page-2.module'
       ).then((m) => m.AssessmentTakenPage2Module),
+          canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },
   },
       {
     path: 'assessment-taken-page-3',
     loadChildren: () =>
       import( './pages/assessment-taken-page-3/assessment-taken-page-3.module'
       ).then((m) => m.AssessmentTakenPage3Module),
+          canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },
   },
         {
     path: 'assessment-violation-message',
     loadChildren: () =>
       import( './pages/assessment-violation-message/assessment-violation-message.module'
       ).then((m) => m.AssessmentViolationMessageModule),
+          canActivate: [AuthGuard],
+    data: { roles: ['candidate'] },
   },
   {
     path: '**',

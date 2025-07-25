@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
+import { UserProfileService } from '../../services/user-profile.service';
 
 @Component({
   selector: 'signup-corporate1',
@@ -48,6 +49,7 @@ export class SignupCorporate1 implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private http: HttpClient,
+    private userProfileService: UserProfileService
   ) {  }
 
   ngOnInit() {
@@ -63,7 +65,7 @@ export class SignupCorporate1 implements OnInit {
           Validators.minLength(3),
           Validators.maxLength(10),
       ]],
-        company_name: ['', Validators.required], // keep simple for now or add validators if needed
+        // company_name: ['', Validators.required], // keep simple for now or add validators if needed
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
         password: ['', [Validators.required, 
@@ -147,23 +149,58 @@ export class SignupCorporate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
+      this.spinner.show(); // show spinner as in candidate signup
+
       const formData = { ...this.signupForm.value };
+      
+      // Remove confirm_password as backend does not need it
       delete formData.confirm_password;
-      this.corporateAuthService.signupCorporate(formData).subscribe({
-        next: (response) => {
+      
+      // Add explicit user_type for corporate (recruiter)
+      formData.user_type = 'recruiter';
+
+      // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
+      this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({
+        next: (response: any) => {
           this.showSuccessPopup = true;
           this.errorMessage = '';
+          
+          // Store JWT tokens in localStorage just like candidate signup
+          localStorage.setItem('jwtToken', response.access);
+          localStorage.setItem('refreshToken', response.refresh);
+          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('userType', response.role);
+          
+          // Fetch user profile
+          this.userProfileService.fetchUserProfile().subscribe(
+            () => {
+              this.router.navigate(['/profile-overview-page']);
+            },
+            (profileError) => {
+              console.error('Error fetching profile', profileError);
+              this.router.navigate(['/profile-overview-page']);
+            }
+          );
+
+          this.spinner.hide(); // hide spinner after all done
         },
         error: (error) => {
-          this.errorMessage = error.error?.error || 'An error occurred during signup.';
+          this.spinner.hide(); // hide spinner on error
+          if (error.status === 400 && error.error.email) {
+            this.errorMessage = 'Email already exists!';
+          } else if (error.status === 400 && error.error.phone_number) {
+            this.errorMessage = 'Phone number already exists!';
+          } else {
+            this.errorMessage = error.error?.error || 'Signup failed. Please try again.';
+          }
         }
       });
     } else {
       this.errorMessage = 'Please fill in all required fields correctly.';
-      // Mark all fields as touched to show error messages
       this.signupForm.markAllAsTouched();
     }
   }
+
 
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
