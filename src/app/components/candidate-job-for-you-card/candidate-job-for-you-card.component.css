@@ -2,6 +2,11 @@
   display: contents; 
 }
 
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .candidate-job-for-you-card-container10 {
   width: 100%;
   height: auto;
