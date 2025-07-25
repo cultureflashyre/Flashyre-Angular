@@ -466,7 +466,7 @@
  
 .candidate-home-job-title-text1 {
   color: rgb(116, 116, 116);
-  width: 149px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: center;
@@ -851,6 +851,7 @@
   height: 1200px;
   display: flex;
   overflow: scroll;
+  scrollbar-width: thin;
   margin-top: 0px;
   overflow-x: hidden;
   align-items: center;

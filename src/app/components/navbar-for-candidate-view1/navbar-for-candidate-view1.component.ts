@@ -8,8 +8,8 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 export class NavbarForCandidateView1 {
 
   userProfile: any = {}; // To store user profile data
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
-
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  
   @ContentChild('text5')
   text5: TemplateRef<any>
   @ContentChild('text31')
