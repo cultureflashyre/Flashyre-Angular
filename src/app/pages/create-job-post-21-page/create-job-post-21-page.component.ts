@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'create-job-post21-page',
@@ -35,7 +37,9 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
-    private workflowService: JobCreationWorkflowService
+    private workflowService: JobCreationWorkflowService,
+    private spinner: NgxSpinnerService // MODIFICATION: Inject the spinner service
+
   ) {}
 
   ngOnInit(): void {
@@ -89,9 +93,12 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     }
 
     this.isGenerating = true;
+    this.spinner.show('ai-spinner'); // MODIFICATION: Show the spinner by its name
+
     const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token).subscribe({
       next: (response) => {
         this.isGenerating = false;
+        this.spinner.hide('ai-spinner');
         this.hasGenerated = true; // Enable the 'Next' button
         this.snackBar.open(response.message || 'Assessment questions generated successfully!', 'Close', { duration: 3000 });
       },

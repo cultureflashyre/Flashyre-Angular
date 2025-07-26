@@ -2,6 +2,86 @@
   display: contents; 
 }
 
+.create-job-post-21-navigation-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.create-job-post-21-previous-button,
+.create-job-post-21-next-button,
+.create-job-post-21-cancel-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.create-job-post-21-next-button:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Style for the container holding the two buttons */
+.create-job-post-21-container3 {
+  gap: 24px; /* Space between buttons */
+  flex: 0 0 auto;
+  width: 100%;
+  /* Adjust height if needed, or let it be determined by content */
+  height: auto; /* Or a specific height like 104px if required */
+  display: flex;
+  align-items: flex-start; /* Align buttons to the top */
+  justify-content: flex-start; /* Align buttons to the left */
+  padding: 10px 0; /* Add some vertical padding if needed */
+}
+
+/* Apply disabled styles to both button containers */
+.create-job-post-21-container4.disabled,
+.create-job-post-21-container5.disabled {
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduce opacity to indicate disabled state */
+  /* Remove interactive effects */
+  transform: none !important;
+  box-shadow: none !important;
+  background-color: #f0f0f0 !important; /* Light grey background when disabled */
+}
+
+/* Ensure text inside disabled buttons also reflects the state */
+.create-job-post-21-container4.disabled .create-job-post-21-text11,
+.create-job-post-21-container5.disabled .create-job-post-21-text13 {
+  opacity: 0.6; /* Reduce text opacity */
+  background: none !important; /* Remove gradient if applied */
+  color: #666666 !important; /* Darker grey text when disabled */
+  -webkit-text-fill-color: #666666 !important; /* For gradient text */
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+}
+
+/* Ensure icon inside disabled upload button reflects the state */
+.create-job-post-21-container5.disabled .create-job-post-21-icon1 path {
+  fill: #666666 !important; /* Darker grey icon when disabled */
+}
+
+/* Style for the text inside the 'Generate with AI' button */
+.create-job-post-21-text11 {
+  color: transparent; /* Make base text color transparent */
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Apply the gradient as text fill */
+  background: linear-gradient(90deg, #E489A9, #6D68E7, #76A7DA);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600; /* Match original font weight if needed */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+
 .disabled-button {
   background-color: #cccccc !important; /* Light grey background */
   color: #666666 !important; /* Darker grey text */
@@ -10,9 +90,92 @@
 }
 
 /* Ensure the button containers are clickable */
-.create-job-post-21-container4, .create-job-post-21-container5 {
+.create-job-post-21-container4{
+  flex: 0 0 auto;
+  width: 248px;
+  height: 100px; /* Assuming parent sets height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Border styles matching original */
+  border-color: transparent;
+  /* Gradient border using border-image */
+  border-image: linear-gradient(to right, #E489A9, #6D68E7, #76A7DA) 1;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: #ffffff; /* Explicit background */
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  position: relative; /* Needed for potential pseudo-elements or absolute positioning */
+  overflow: hidden; /* Contain potential background effects */
+}
+
+/* Hover effect for 'Generate with AI' button */
+.create-job-post-21-container4:hover:not(.disabled) {
+  transform: scale(1.02); /* Slight scale up */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  /* Optional: Enhance gradient on hover if desired */
+  /* border-image: linear-gradient(to right, #e699b7, #7d77f0, #86b7e7) 1; */
+}
+
+/* Active/click effect for 'Generate with AI' button */
+.create-job-post-21-container4:active:not(.disabled) {
+  transform: scale(0.98); /* Slight scale down */
+}
+
+
+ .create-job-post-21-container5 {
+  gap: 8px; /* Space between icon and text */
+  flex: 0 0 auto;
+  width: 248px;
+  height: 100px; /* Assuming parent sets height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Border styles matching original */
+  border-color: #A7A7A7;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: #ffffff; /* Explicit background */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect for 'Upload Manually' button */
+.create-job-post-21-container5:hover:not(.disabled) {
+  background-color: #f5f5f5; /* Light grey background on hover */
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Active/click effect for 'Upload Manually' button */
+.create-job-post-21-container5:active:not(.disabled) {
+  transform: scale(0.98);
+  background-color: #e0e0e0; /* Slightly darker grey on active */
+}
+
+/* Style for the text inside the 'Upload Manually' button */
+.create-job-post-21-text13 {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #18191C; /* Text color matching original */
+  font-weight: 500; /* Adjust font weight as needed */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+/* Style for the icon inside the 'Upload Manually' button */
+.create-job-post-21-icon1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+  /* Icon color is set via SVG fill attribute */
 }
 
 .create-job-post-21-container4:hover, .create-job-post-21-container5:hover {
