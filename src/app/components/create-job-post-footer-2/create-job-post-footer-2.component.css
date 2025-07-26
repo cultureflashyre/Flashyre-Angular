@@ -1,6 +1,21 @@
 :host { 
   display: contents; 
 }
+
+.create-job-post-footer-2-button6:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #dcdcdc; /* Optional: a border for the disabled state */
+}
+
+/* Ensure hover and active effects are removed when disabled */
+.create-job-post-footer-2-button6:disabled:hover,
+.create-job-post-footer-2-button6:disabled:active {
+  transform: none; /* Prevent scaling effect */
+  background-color: #f0f0f0; /* Keep the disabled background color */
+  cursor: not-allowed; /* Show not-allowed cursor */
+}
  
 .create-job-post-footer-2-container1 {
   width: 100%;
