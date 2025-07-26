@@ -968,7 +968,7 @@
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 12px;
-  border-bottom-width: 2px;
+  border-bottom-width: 0px;
 }
  
 .create-job-post-22-uploaded-text {
@@ -1332,11 +1332,16 @@
 .create-job-post-22-option1-text {
   fill: #18191C;
   color: #18191C;
-  height: 16px;
-  display: flex;
+  /* height: 16px; */ /* REMOVED: Allows the element to grow */
+  /* display: flex; */ /* CHANGED: */
+  display: block; /* Use block display for text that wraps */
   font-size: 13px;
-  align-self: center;
-  align-items: center;
+  /* align-self: center; */ /* REMOVED/ADJUSTED: Let normal flow handle vertical alignment better */
+  /* align-items: center; */ /* REMOVED: Not applicable for display: block */
+  white-space: normal; /* ADD: Allows text to wrap onto multiple lines */
+  line-height: 1.4;   /* ADD: Provides better spacing between lines, matching question text */
+  word-break: break-word; /* ADD: Ensures long words break and wrap correctly */
+  /* Ensure padding/margins don't cause issues, inherited from parent .option-text-wrapper */
 }
  
 .create-job-post-22-option2-container {
