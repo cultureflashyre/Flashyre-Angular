@@ -428,8 +428,7 @@ gmp-place-autocomplete::part(input):focus {
     flex-direction: column;
     padding-bottom: 16px;
     justify-content: flex-start;
-    background-color: #F4F4F4;
-  }
+    }
   
   .create-job-post1st-page-fragment10 {
     display: contents;

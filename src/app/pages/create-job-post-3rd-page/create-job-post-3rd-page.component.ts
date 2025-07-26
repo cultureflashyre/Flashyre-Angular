@@ -98,13 +98,13 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     // Navigate back to dashboard or show confirmation dialog
     if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
       this.workflowService.clearWorkflow();
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/create-job-post-1st-page']);
     }
   }
 
   onPrevious(): void {
     // Navigate to the previous step in the job creation workflow
-    this.router.navigate(['/create-job-post-2nd-page']);
+    this.router.navigate(['/create-job-post-22-page']);
   }
 
   onSaveDraft(): void {
@@ -117,7 +117,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     if (confirm('Are you sure you want to skip the interview process? You can add it later.')) {
       this.snackBar.open('Interview process skipped. Job post created successfully!', 'Close', { duration: 3000 });
       this.workflowService.clearWorkflow();
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/create-job-post-1st-page']);
     }
   }
 
