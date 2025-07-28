@@ -5,12 +5,12 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-
 
 @Component({
   selector: 'create-job-post21-page',
@@ -21,8 +21,8 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   
   jobUniqueId: string | null = null;
   isGenerating: boolean = false;
-  hasGenerated: boolean = false; // Controls the 'Next' button
-  isLoading: boolean = true;
+  hasGenerated: boolean = false; // This now represents the state from the backend
+  isLoading: boolean = true; // Used for the initial page load check
   
   private subscriptions = new Subscription();
   
@@ -38,31 +38,10 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private workflowService: JobCreationWorkflowService,
-    private spinner: NgxSpinnerService // MODIFICATION: Inject the spinner service
-
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
-    this.isLoading = true;
-    
-    // Check for authentication session first
-    if (!this.corporateAuthService.isLoggedIn()) {
-      this.snackBar.open('Your session has expired. Please log in again.', 'Close', { duration: 5000 });
-      this.router.navigate(['/login-candidate']); // or your corporate login route
-      return;
-    }
-
-    // Get the unique ID from the workflow service
-    this.jobUniqueId = this.workflowService.getCurrentJobId();
-
-    // If there is no ID, the user should not be on this page. Redirect them to start the flow.
-    if (!this.jobUniqueId) {
-      this.snackBar.open('No active job creation flow found. Please start again.', 'Close', { duration: 4000 });
-      this.router.navigate(['/create-job-post-1st-page']);
-      return;
-    }
-
-    // Set page title and meta tags
     this.title.setTitle('Step 2: Generate Assessment - Flashyre');
     this.meta.addTags([
       {
@@ -75,14 +54,56 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ]);
-    this.isLoading = false;
+
+    if (!this.corporateAuthService.isLoggedIn()) {
+      this.snackBar.open('Your session has expired. Please log in again.', 'Close', { duration: 5000 });
+      this.router.navigate(['/login-corporate']);
+      return;
+    }
+
+    this.jobUniqueId = this.workflowService.getCurrentJobId();
+    if (!this.jobUniqueId) {
+      this.snackBar.open('No active job creation flow found. Please start again.', 'Close', { duration: 4000 });
+      this.router.navigate(['/create-job-post-1st-page']);
+      return;
+    }
+    
+    // Call the method to check the initial state from the backend
+    this.checkInitialMcqStatus();
   }
 
   /**
-   * Handles the 'Generate with AI' button click.
+   * Checks if MCQs exist for the current job when the page loads to set the initial UI state.
+   */
+  private checkInitialMcqStatus(): void {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!this.jobUniqueId || !token) {
+        this.isLoading = false;
+        return;
+    }
+
+    this.isLoading = true;
+    const sub = this.jobDescriptionService.checkMcqStatus(this.jobUniqueId, token)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          this.hasGenerated = response.has_mcqs;
+        },
+        error: (err) => {
+          // If the check fails for any reason, default to the "not generated" state.
+          this.hasGenerated = false;
+          console.error('Failed to check MCQ status:', err);
+        }
+      });
+    this.subscriptions.add(sub);
+  }
+
+  /**
+   * Handles the 'Generate with AI' / 'Regenerate' button click.
    */
   onGenerateAi(): void {
-    if (!this.jobUniqueId || this.isGenerating || this.hasGenerated) {
+    // Allow regeneration by removing hasGenerated from the guard
+    if (!this.jobUniqueId || this.isGenerating) {
       return;
     }
     const token = this.corporateAuthService.getJWTToken();
@@ -93,74 +114,74 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     }
 
     this.isGenerating = true;
-    this.spinner.show('ai-spinner'); // MODIFICATION: Show the spinner by its name
+    this.spinner.show('ai-spinner');
 
-    const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token).subscribe({
-      next: (response) => {
-        this.isGenerating = false;
-        this.spinner.hide('ai-spinner');
-        this.hasGenerated = true; // Enable the 'Next' button
-        this.snackBar.open(response.message || 'Assessment questions generated successfully!', 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        this.isGenerating = false;
-        this.snackBar.open(`Error: ${err.message || 'Could not generate questions.'}`, 'Close', { duration: 5000 });
-      }
+    const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
+      .pipe(
+        // Use the finalize operator to guarantee the spinner is hidden
+        // This block will run on success, error, or completion.
+        finalize(() => {
+          this.isGenerating = false;
+          this.spinner.hide('ai-spinner');
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          this.hasGenerated = true; // Set state to true after successful generation
+          this.snackBar.open(response.message || 'Assessment questions have been generated!', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          // isGenerating and spinner.hide() are handled by the finalize operator
+          this.snackBar.open(`Error: ${err.message || 'Could not generate questions.'}`, 'Close', { duration: 5000 });
+        }
     });
     this.subscriptions.add(generateSub);
   }
 
   /**
    * Handles the 'Upload Manually' button click.
-   * This action also satisfies the condition to proceed to the next step.
    */
   onUploadManually(): void {
-    // In a real scenario, this might open a dialog or navigate to another page.
-    // For now, it fulfills the requirement of enabling the "Next" button.
-    this.snackBar.open('Manual upload selected. You can now proceed.', 'Close', { duration: 3000 });
+    this.snackBar.open('Manual upload is not yet implemented. You can now proceed.', 'Close', { duration: 3000 });
     this.hasGenerated = true; // Enable the Next button
   }
 
-
   /**
-   * Handles the 'Previous' button click.
+   * Handles the 'Cancel' button click in the footer.
    */
   onCancel(): void {
-    this.workflowService.clearWorkflow(); // End the workflow state
-    this.router.navigate(['/candidate-home']); // Navigates to candidate home page
+    this.workflowService.clearWorkflow();
+    this.router.navigate(['/dashboard']);
   }
   
   /**
-   * Requirement 3: Handles the 'Previous' button click.
+   * Handles the 'Previous' button click in the footer.
    */
   onPrevious(): void {
-    // The workflow service retains the ID, so the first page can reload the data.
     this.router.navigate(['/create-job-post-1st-page']);
   }
   
   /**
-   * Requirement 2: Handles the 'Skip' button click.
+   * Handles the 'Skip' button click in the footer.
    */
   onSkip(): void {
-    // Both Skip and Next now go to the same page from this step.
     this.router.navigate(['/create-job-post-22-page']);
   }
 
   /**
-   * Handles the 'Save Draft' button click. Exits the flow.
+   * Handles the 'Save Draft' button click in the footer.
    */
   onSaveDraft(): void {
-    this.snackBar.open('Your draft has been saved. You can continue later from your dashboard.', 'Close', { duration: 3000 });
-    this.workflowService.clearWorkflow(); // End the workflow state
+    this.snackBar.open('Your draft has been saved.', 'Close', { duration: 3000 });
+    this.workflowService.clearWorkflow();
     this.router.navigate(['/dashboard']);
   }
 
   /**
-   * Requirement 1: Handles the 'Next' button click, which is enabled after a primary action.
+   * Handles the 'Next' button click in the footer.
    */
   onNext(): void {
     if (this.jobUniqueId && this.hasGenerated) {
-      // Navigate to the page for viewing/editing the generated questions.
       this.router.navigate(['/create-job-post-22-page']);
     } else if (!this.hasGenerated) {
         this.snackBar.open('Please generate or upload questions before proceeding.', 'Close', { duration: 3000});

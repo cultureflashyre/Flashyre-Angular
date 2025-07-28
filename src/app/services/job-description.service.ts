@@ -122,6 +122,25 @@ export class JobDescriptionService {
     );
   }
 
+  // ==============================================================================
+  // === NEW METHOD TO CHECK MCQ STATUS ===========================================
+  // ==============================================================================
+  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ has_mcqs: boolean }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    // The '/api/' prefix was missing, causing the 404 Not Found error.
+    const endpoint = `${this.apiUrl}/job-post/${jobUniqueId}/mcq-status/`;
+
+    return this.http.get<{ status: string; data: { has_mcqs: boolean } }>(endpoint, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Unexpected response structure when checking MCQ status.');
+      }),
+      catchError(error => this.handleError(error, 'checkMcqStatus'))
+    );
+  }
+
   /**
    * Retrieves all existing MCQs for a given job post.
    * @param uniqueId The unique ID of the job post.
