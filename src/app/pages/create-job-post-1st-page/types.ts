@@ -140,3 +140,32 @@ export interface MCQItem {
   question_number: number;
   question_text: string;    // The raw text including the question, options, and answer
 }
+
+interface SelectedMcqDetail {
+  id: number;
+  order_in_assessment: number;
+  mcq_item_details: {
+    id: number;
+    question_number: number;
+    question_text: string;
+  };
+}
+
+
+export interface AssessmentDetailResponse {
+  assessment_uuid: string;
+  name: string;
+  is_proctored: boolean;
+  has_video_recording: boolean;
+  allow_phone_access: boolean;
+  shuffle_questions_overall: boolean;
+  total_questions_to_present: number | null;
+  difficulty: number;
+  time_limit: number; // The backend sends this as total minutes
+  created_at: string;
+  updated_at: string;
+  is_deleted: boolean;
+  job_post_role: string;
+  user_email: string;
+  selected_mcqs: SelectedMcqDetail[]; // An array of the selected questions
+}

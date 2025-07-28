@@ -4,12 +4,14 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment'; // Adjust path if needed
+
 import {
   McqsBySkillResponse,
   AssessmentPayload,
   AssessmentSaveResponse,
   LegacyAssessmentPayload, // Import new type
-  LegacyAssessmentSaveResponse // Import new type
+  LegacyAssessmentSaveResponse,
+  AssessmentDetailResponse // Import new type
 } from '../pages/create-job-post-1st-page/types';
 
 @Injectable({
@@ -42,6 +44,8 @@ export class McqAssessmentService {
     );
   }
 
+  
+
   /**
    * Saves the assessment details to the new system.
    * @param payload The assessment data.
@@ -52,6 +56,9 @@ export class McqAssessmentService {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
+
+
+    
     // CORRECTED PATH: No leading slash
     const endpoint = `${this.apiUrl}api/mcq-assessments/create/`;
 
@@ -76,6 +83,22 @@ export class McqAssessmentService {
       }),
       catchError(this.handleError)
     );
+  }
+
+  getAssessmentDetails(assessmentId: string, token: string): Observable<AssessmentDetailResponse> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}/api/mcq-assessments/${assessmentId}/`;
+    return this.http.get<AssessmentDetailResponse>(endpoint, { headers });
+  }
+
+  updateAssessment(assessmentId: string, payload: AssessmentPayload, token: string): Observable<AssessmentDetailResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const endpoint = `${this.apiUrl}/api/mcq-assessments/${assessmentId}/`;
+    // Use PUT for a full replacement of data
+    return this.http.put<AssessmentDetailResponse>(endpoint, payload, { headers });
   }
 
   /**
