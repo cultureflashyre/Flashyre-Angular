@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
@@ -67,7 +68,9 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
     private skillService: SkillService,
-    private workflowService: JobCreationWorkflowService // <-- INJECT THE NEW SERVICE
+    private workflowService: JobCreationWorkflowService, // <-- INJECT THE NEW SERVICE
+    private spinner: NgxSpinnerService // MODIFICATION: Inject the spinner service
+
 
   ) {
     this.jobForm = this.fb.group({
@@ -324,12 +327,14 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
     this.isSubmitting = true;
     this.isFileUploadCompletedSuccessfully = false;
+    this.spinner.show('main-spinner'); // MODIFICATION: Show spinner
     const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
         this.jobData = response;
         this.populateForm(response);
         this.snackBar.open('File uploaded and processed successfully.', 'Close', { duration: 3000 });
         this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = true;
       },
       error: (error) => {
@@ -752,6 +757,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.isSubmitting = true;
+    this.spinner.show('main-spinner'); // MODIFICATION: Show spinner after validation passes
     const formValues = this.jobForm.getRawValue();
     const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
     const jobDetails: JobDetails = {
@@ -771,6 +777,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
          // <<< MODIFICATION IS HERE >>>
         // 1. Start the workflow with the new ID
         this.workflowService.startWorkflow(response.unique_id);
+        this.spinner.hide('main-spinner');
         
         // 2. Navigate to the next page with a clean URL
         this.router.navigate(['/create-job-post-21-page']); 

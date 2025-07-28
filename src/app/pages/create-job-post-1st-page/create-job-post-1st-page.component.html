@@ -1,3 +1,11 @@
+<ngx-spinner
+  name="main-spinner"
+  bdColor="rgba(51, 51, 51, 0.8)"
+  size="medium"
+  color="#fff"
+  type="line-scale"
+  [fullScreen]="true"
+></ngx-spinner>
 <div class="create-job-post1st-page-container10">
   <div
     id="create-job-post-main-container"
@@ -938,7 +946,7 @@
         [disabled]="isSubmitting"
       >
         <span id="submit-text" class="create-job-post1st-page-submit-text">
-          {{ isSubmitting ? 'Saving...' : 'Save & Next' }}
+          {{ isSubmitting ? 'Saving...' : 'Next' }}
         </span>
       </button>
     </div>
