@@ -1,3 +1,12 @@
+<div *ngIf="showSuccessPopup" class="success-popup-overlay">
+  <div class="success-popup-box">
+    <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+    <p class="success-message">Successfully Created!</p>
+  </div>
+</div>
 <div class="create-job-post3rd-page-container1">
   <div
     id="create-job-post-3rd-page-main-container"
@@ -354,6 +363,7 @@
     <create-job-post-footer2
       [rootClassName]="'create-job-post-3rd-page-footer'"
       [isNextDisabled]="isSubmitting || interviewForm.invalid"
+      [nextButtonText]="'Save'"
       (cancelClick)="onCancel()"
       (previousClick)="onPrevious()"
       (saveDraftClick)="onSaveDraft()"

@@ -21,6 +21,9 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   minDate = new Date(); // For the date picker
   minDateString: string; // For HTML5 date input
 
+  // MODIFICATION: Add a new property to control the popup's visibility
+  showSuccessPopup = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -151,11 +154,17 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     // MODIFICATION: Call the new finalizeJobPost service method
     this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
       next: () => {
-        this.snackBar.open('Job post has been published successfully!', 'Close', { duration: 4000 });
-        this.workflowService.clearWorkflow();
-        
-        // MODIFICATION: Navigate back to the first page as requested
-        this.router.navigate(['/create-job-post-1st-page']);
+        this.showSuccessPopup = true;
+
+        // 2. Set a 5-second timer to clear the workflow and navigate
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/create-job-post-1st-page']);
+          // Optional: hide the popup right before navigation
+          this.showSuccessPopup = false; 
+        }, 5000); // 5000 milliseconds = 5 seconds
+
+        // isSubmitting can be set to false immediately or after the timeout
         this.isSubmitting = false;
       },
       error: (err) => {

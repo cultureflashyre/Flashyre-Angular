@@ -22,6 +22,12 @@ export class CreateJobPostFooter2 {
   isNextDisabled: boolean = false;
 
   /**
+   * Text to display on the 'Next' button. Defaults to 'Next'.
+   */
+  @Input()
+  nextButtonText: string = 'Next';  // New input property
+
+  /**
    * Emits an event when the 'Cancel' button is clicked.
    */
   @Output()
