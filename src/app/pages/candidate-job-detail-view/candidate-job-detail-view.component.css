@@ -1,6 +1,29 @@
 :host { 
   display: contents; 
 }
+
+/* src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.css */
+
+/* ... (all your existing CSS) ... */
+
+/* [NEW] Styles for the active tab */
+.candidate-job-detail-view-job-recommended-container,
+.candidate-job-detail-view-saved-container {
+  cursor: pointer;
+  padding-bottom: 8px; /* Add some space for the border */
+  border-bottom: 3px solid transparent; /* Default transparent border */
+}
+
+.candidate-job-detail-view-job-recommended-container.active-tab,
+.candidate-job-detail-view-saved-container.active-tab {
+  border-bottom: 3px solid #007bff; /* Or your primary theme color */
+}
+
+.candidate-job-detail-view-job-recommended-container.active-tab .candidate-job-detail-view-job-recommended-text,
+.candidate-job-detail-view-saved-container.active-tab .candidate-job-detail-view-saved-text {
+  font-weight: bold;
+  color: #007bff; /* Or your primary theme color */
+}
  
 .candidate-job-detail-view-container1 {
   width: 100%;

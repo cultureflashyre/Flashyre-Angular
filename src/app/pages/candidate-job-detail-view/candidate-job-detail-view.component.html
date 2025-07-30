@@ -325,17 +325,15 @@
   id="job-recommended-preference-container"
   class="candidate-job-detail-view-job-recommended-preference-container"
 >
-  <div
-    id="job-recommended-container"
-    class="candidate-job-detail-view-job-recommended-container"
-  >
-    <span
-      id="job-recommended-text"
-      class="candidate-job-detail-view-job-recommended-text"
-    >
-      Jobs recommended (75)
-    </span>
-  </div>
+   <div 
+          id="job-recommended-container" 
+          class="candidate-job-detail-view-job-recommended-container"
+          (click)="selectRecommendedTab()" 
+          [class.active-tab]="activeTab === 'recommended'">
+          <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
+            Jobs recommended (75)
+          </span>
+        </div>
   <div
     id="preference-container"
     class="candidate-job-detail-view-preference-container"
@@ -347,21 +345,20 @@
       Preference (4)
     </span>
   </div>
-  <div
-    id="saved-container"
-    class="candidate-job-detail-view-saved-container"
-  >
-    <span
-      id="saved-text"
-      class="candidate-job-detail-view-saved-text"
-    >
-      Saved
-    </span>
-  </div>
+  <div 
+          id="saved-container" 
+          class="candidate-job-detail-view-saved-container"
+          (click)="selectSavedTab()"
+          [class.active-tab]="activeTab === 'saved'">
+          <span id="saved-text" class="candidate-job-detail-view-saved-text">
+            Saved
+          </span>
+        </div>  
 </div>
       <div class="candidate-job-detail-view-container4">
         <job-cards
           (jobSelected)="onJobSelected($event)"
+          [displayMode]="activeTab"
           rootClassName="job-cardsroot-class-name"
         ></job-cards>
         <div class="candidate-job-detail-view-container5">

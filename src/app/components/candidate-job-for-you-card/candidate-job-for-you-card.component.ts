@@ -16,7 +16,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   // State booleans for the dislike and save buttons.
   isDisliked: boolean = false;
   isSaved: boolean = false; // Tracks the saved state for the save/unsave toggle.
-  shouldRender: boolean = true; // Add this line here, after other properties
+  shouldRender: boolean = true;
 
 
   // --- Angular Decorators ---
@@ -56,12 +56,12 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     const userId = localStorage.getItem('user_id');
 
     if (userId && this.jobId) {
-      // --- [UNTOUCHED] Original logic for fetching disliked jobs status ---
+      // --- Original logic for fetching disliked jobs status ---
       this.authService.getDislikedJobs(userId).subscribe({
         next: (response: any) => {
           const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
           this.isDisliked = dislikedJobs.includes(this.jobId);
-          this.shouldRender = !this.isDisliked; // Set rendering based on initial dislike state
+          this.shouldRender = !this.isDisliked; 
 
           console.log('Disliked jobs fetched:', dislikedJobs, 'isDisliked:', this.isDisliked);
           this.cdr.detectChanges();
@@ -72,26 +72,22 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
           if (cachedDislikedJobs) {
             const dislikedJobs = JSON.parse(cachedDislikedJobs);
             this.isDisliked = dislikedJobs.includes(this.jobId);
-            this.shouldRender = !this.isDisliked; // Use cached data for rendering
+            this.shouldRender = !this.isDisliked;
 
             this.cdr.detectChanges();
           }
         },
       });
 
-      // --- [NEW] Logic to fetch the initial status for the Save button ---
-      // This is the only new block of code in this method.
+      // --- Logic to fetch the initial status for the Save button ---
       this.authService.getSavedJobs(userId).subscribe({
         next: (response: any) => {
-          // Assuming the API returns a list of job IDs in the 'saved_jobs' property.
           const savedJobIds = response.saved_jobs;
-          // Check if our current job's ID is in the list of saved job IDs.
           this.isSaved = savedJobIds.includes(parseInt(this.jobId, 10));
-          this.cdr.detectChanges(); // Update the save button's UI.
+          this.cdr.detectChanges(); 
         },
         error: (error) => {
           console.error('Error fetching saved jobs:', error);
-          // Optional: You could implement a localStorage fallback for saved jobs here as well.
         },
       });
 
@@ -206,10 +202,19 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   /**
-   * **[UNTOUCHED]** Handles clicks on the Dislike icon. This is the original, working code.
+   * **[MODIFIED]** Handles clicks on the Dislike icon. Prevents disliking a saved job.
    */
   onDislike(event: MouseEvent): void {
     event.stopPropagation();
+
+    // --- [NEW] Guard Clause ---
+    // Prevent action if the job is already saved.
+    if (this.isSaved) {
+      console.warn('Blocked attempt to dislike a saved job. Job ID:', this.jobId);
+      alert('You cannot dislike a job that is saved. Please unsave it first.');
+      return; // Exit the function
+    }
+    
     const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for dislike action', { userId, jobId: this.jobId });
@@ -263,11 +268,19 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   /**
-   * **[NEW & CORRECTED]** Handles clicks on the Save icon. Toggles the saved state.
-   * This logic now mirrors the original onDislike logic for saving and unsaving.
+   * **[MODIFIED]** Handles clicks on the Save icon. Toggles the saved state and prevents saving a disliked job.
    */
   onSave(event: MouseEvent): void {
     event.stopPropagation();
+
+    // --- [NEW] Guard Clause ---
+    // Prevent action if the job is already disliked.
+    if (this.isDisliked) {
+      console.warn('Blocked attempt to save a disliked job. Job ID:', this.jobId);
+      alert('You cannot save a job that is disliked. Please remove the dislike first.');
+      return; // Exit the function
+    }
+
     const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for save action', { userId, jobId: this.jobId });
@@ -279,10 +292,10 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       // --- If already saved, call the REMOVE method ---
       this.authService.removeSavedJob(userId, this.jobId).subscribe({
         next: (response) => {
-          this.isSaved = false; // Toggle the state to false.
+          this.isSaved = false;
           console.log('Job unsaved successfully:', response);
           alert('Job unsaved successfully!');
-          this.cdr.detectChanges(); // Update the UI.
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error unsaving job:', error);
@@ -293,10 +306,10 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       // --- If not saved, call the ADD method ---
       this.authService.saveJob(userId, this.jobId).subscribe({
         next: (response) => {
-          this.isSaved = true; // Toggle the state to true.
+          this.isSaved = true;
           console.log('Job saved successfully:', response);
           alert('Job saved successfully!');
-          this.cdr.detectChanges(); // Update the UI.
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error saving job:', error);

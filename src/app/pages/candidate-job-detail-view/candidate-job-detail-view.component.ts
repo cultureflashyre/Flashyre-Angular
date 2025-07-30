@@ -1,3 +1,5 @@
+// src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.ts
+
 import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 
@@ -8,6 +10,10 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateJobDetailView {
   selectedJobId: number | null = null;
+
+  // --- [NEW] State management for the job list tabs ---
+  // Default to 'recommended' when the page loads.
+  public activeTab: 'recommended' | 'saved' = 'recommended';
 
   constructor(private title: Title, private meta: Meta) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
@@ -27,5 +33,29 @@ export class CandidateJobDetailView {
   onJobSelected(jobId: number): void {
     console.log('Received jobId in parent:', jobId);
     this.selectedJobId = jobId;
+  }
+
+  // --- [NEW] Methods to handle tab clicks ---
+
+  /**
+   * Sets the active tab to 'recommended'.
+   * This will trigger the job-cards component to reload with recommended jobs.
+   */
+  selectRecommendedTab(): void {
+    if (this.activeTab !== 'recommended') {
+      console.log('Switching to Recommended tab');
+      this.activeTab = 'recommended';
+    }
+  }
+
+  /**
+   * Sets the active tab to 'saved'.
+   * This will trigger the job-cards component to reload with saved jobs.
+   */
+  selectSavedTab(): void {
+    if (this.activeTab !== 'saved') {
+      console.log('Switching to Saved tab');
+      this.activeTab = 'saved';
+    }
   }
 }
