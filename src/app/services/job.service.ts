@@ -145,7 +145,7 @@ export class JobsService {
   private handleError(error: HttpErrorResponse): Observable<never> {
     const errorMessage = `API Error (Status: ${error.status}, URL: ${error.url})`;
     console.error(`[JobsService] ${errorMessage}`, error);
-    return throwError(() => new Error(`Failed to communicate with the server. Please try again later. Error: ${error.status}`));
+    return throwError(() => new Error(`No jobs at the moment. Please try again later.`));
   }
 
   // --- Methods from your original service file to maintain compatibility ---

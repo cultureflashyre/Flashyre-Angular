@@ -1,5 +1,3 @@
-// src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.ts
-
 import { Component } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 
@@ -10,10 +8,12 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateJobDetailView {
   selectedJobId: number | null = null;
-
-  // --- [NEW] State management for the job list tabs ---
-  // Default to 'recommended' when the page loads.
   public activeTab: 'recommended' | 'saved' = 'recommended';
+
+  // --- [NEW] Properties to store the dynamic counts ---
+  // Initializing to null allows us to show nothing until the first count is received.
+  public recommendedJobCount: number | null = null;
+  public savedJobCount: number | null = null;
 
   constructor(private title: Title, private meta: Meta) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
@@ -21,11 +21,6 @@ export class CandidateJobDetailView {
       {
         property: 'og:title',
         content: 'Candidate-Job-Detail-View - Flashyre',
-      },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ]);
   }
@@ -35,12 +30,6 @@ export class CandidateJobDetailView {
     this.selectedJobId = jobId;
   }
 
-  // --- [NEW] Methods to handle tab clicks ---
-
-  /**
-   * Sets the active tab to 'recommended'.
-   * This will trigger the job-cards component to reload with recommended jobs.
-   */
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {
       console.log('Switching to Recommended tab');
@@ -48,14 +37,30 @@ export class CandidateJobDetailView {
     }
   }
 
-  /**
-   * Sets the active tab to 'saved'.
-   * This will trigger the job-cards component to reload with saved jobs.
-   */
   selectSavedTab(): void {
     if (this.activeTab !== 'saved') {
       console.log('Switching to Saved tab');
       this.activeTab = 'saved';
     }
+  }
+
+  // --- [NEW] Event handler methods for the counts ---
+
+  /**
+   * This method is called when the job-cards component emits the recommended job count.
+   * @param count The number of recommended jobs.
+   */
+  onRecommendedJobsCountChanged(count: number): void {
+    console.log(`Parent received recommended job count: ${count}`);
+    this.recommendedJobCount = count;
+  }
+
+  /**
+   * This method is called when the job-cards component emits the saved job count.
+   * @param count The number of saved jobs.
+   */
+  onSavedJobsCountChanged(count: number): void {
+    console.log(`Parent received saved job count: ${count}`);
+    this.savedJobCount = count;
   }
 }
