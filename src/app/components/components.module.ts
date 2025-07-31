@@ -2,6 +2,8 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// Import the module containing the pipes
+import { SharedPipesModule } from '../shared/shared-pipes.module';
 
 import {HeaderContainer} from './header-container/header-container.component'
 import { Navbar6 } from './navbar6/navbar6.component'
@@ -99,7 +101,7 @@ import { JobCardsComponent } from './job-cards/job-cards.component';
 import { CandidateJobDetailsComponent } from './candidate-job-details/candidate-job-details.component';
 import { AssessmentDetailedResults } from './assessment-detailed-results/assessment-detailed-results'
 import { AssessmentAttemptsListComponent } from './assessment-attempts-list/assessment-attempts-list'
-
+import { AssessmentWarningPopup } from './assessment-warning-popup/assessment-warning-popup.component';
 
 @NgModule({
   declarations: [
@@ -191,9 +193,10 @@ import { AssessmentAttemptsListComponent } from './assessment-attempts-list/asse
     CandidateJobDetailsComponent,
     JobCardsComponent,
     AssessmentDetailedResults,
-    AssessmentAttemptsListComponent
+    AssessmentAttemptsListComponent,
+    AssessmentWarningPopup
   ],
-  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
   exports: [
     HeaderContainer,
     Navbar6,
@@ -283,7 +286,8 @@ import { AssessmentAttemptsListComponent } from './assessment-attempts-list/asse
     CandidateJobDetailsComponent,
     JobCardsComponent,
     AssessmentDetailedResults,
-    AssessmentAttemptsListComponent
+    AssessmentAttemptsListComponent,
+    AssessmentWarningPopup
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

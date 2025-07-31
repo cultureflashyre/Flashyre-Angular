@@ -1,0 +1,791 @@
+<div class="assessment-warning-popup-container1">
+  <div
+    id="assessment-warning-popup-main-container"
+    class="assessment-warning-popup-assessment-warning-popup-main-container"
+  >
+    <div id="first-container" class="assessment-warning-popup-first-container">
+      <div
+        id="header-container"
+        class="assessment-warning-popup-header-container"
+      >
+        <div
+          id="finish-test-container"
+          class="assessment-warning-popup-finish-test-container"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            id="warning-icon1"
+            class="assessment-warning-popup-warning-icon1"
+          >
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path
+                d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
+              ></path>
+              <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
+            </g>
+          </svg>
+          <span
+            id="finish-test-text"
+            class="assessment-warning-popup-finish-test-text"
+          >
+            <ng-container>
+              <ng-template #defaultText>
+                <div class="assessment-warning-popup-fragment20">
+                  <span class="assessment-warning-popup-text21">
+                    Finish Test
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text ? text : defaultText"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <div
+          id="time-container"
+          class="assessment-warning-popup-time-container"
+        >
+          <div
+            id="timer-container"
+            class="assessment-warning-popup-timer-container"
+          >
+            <svg
+              viewBox="0 0 1024 1024"
+              id="timer-icon"
+              class="assessment-warning-popup-timer-icon"
+            >
+              <path
+                d="M512 896a320 320 0 1 0 0-640a320 320 0 0 0 0 640m0 64a384 384 0 1 1 0-768a384 384 0 0 1 0 768"
+                fill="currentColor"
+              ></path>
+              <path
+                d="M512 320a32 32 0 0 1 32 32l-.512 224a32 32 0 1 1-64 0L480 352a32 32 0 0 1 32-32"
+                fill="currentColor"
+              ></path>
+              <path
+                d="M448 576a64 64 0 1 0 128 0a64 64 0 1 0-128 0m96-448v128h-64V128h-96a32 32 0 0 1 0-64h256a32 32 0 1 1 0 64z"
+                fill="currentColor"
+              ></path>
+            </svg>
+            <div
+              id="remaining-time-container"
+              class="assessment-warning-popup-remaining-time-container"
+            >
+              <span
+                id="remaining-time-text"
+                class="assessment-warning-popup-remaining-time-text1"
+              >
+                <ng-container>
+                  <ng-template #defaultText1>
+                    <div class="assessment-warning-popup-fragment17">
+                      <span class="assessment-warning-popup-text18">
+                        Remaining Time: 
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <span id="time-text" class="assessment-warning-popup-time-text1">
+                <ng-container>
+                  <ng-template #defaultText8>
+                    <div class="assessment-warning-popup-fragment25">
+                      <span class="assessment-warning-popup-text26">
+                        00:11:14
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text8 ? text8 : defaultText8"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </div>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            id="close-icon"
+            (click)="goBackToTest()"
+            class="assessment-warning-popup-close-icon"
+          >
+            <g fill="currentColor" clip-rule="evenodd" fill-rule="evenodd">
+              <path
+                d="M5.47 5.47a.75.75 0 0 1 1.06 0l12 12a.75.75 0 1 1-1.06 1.06l-12-12a.75.75 0 0 1 0-1.06"
+              ></path>
+              <path
+                d="M18.53 5.47a.75.75 0 0 1 0 1.06l-12 12a.75.75 0 0 1-1.06-1.06l12-12a.75.75 0 0 1 1.06 0"
+              ></path>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div
+        id="test-summary-code-container"
+        class="assessment-warning-popup-test-summary-code-container"
+      >
+        <div class="assessment-warning-popup-container2">
+          <div class="assessment-warning-popup-container3">
+            
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Assessment Questions Chart</title>
+    <style>
+        body {
+           
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            padding: 10px;
+            gap: 48px;
+            background: white;
+            max-width: 800px;  
+            height: 350px;          
+        }
+
+        .chart-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+        }
+
+        .chart-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .total-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            margin: 0;
+        }
+
+        .total-label {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .legend {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .legend-color.blue {
+            background-color: #05356C;
+        }
+
+        .legend-color.orange {
+            background-color: #F19000;
+        }
+
+        .legend-color.grey {
+            background-color: #C0C0C0;
+        }
+
+        .legend-text {
+            font-weight: 500;
+            color: #18191C;
+        }
+
+        .legend-stats {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <!-- Donut Chart -->
+        <div class='chart-container'>
+            <svg class='chart-svg' width='240' height='240'>
+                <path id='attempted-path' fill='#05356C'></path>
+                <!-- <path id='marked-path' fill='#F19000'></path> -->
+                <path id='unattempted-path' fill='#C0C0C0'></path>
+            </svg>
+            
+            <!-- Center text -->
+            <div class='center-text'>
+                <div class='total-number'>{{ totalQuestions }}</div>
+                <div class='total-label'>Total Questions</div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class='legend'>
+            <h3 style='margin: 0 0 20px 0; font-size: 18px; font-weight: bold; color: #333;'>Your Test Summary</h3>
+            <div class='legend-item'>
+                <div class='legend-color blue'></div>
+                <span class='legend-text'>Attempted</span>
+                <span class='legend-stats'>({{ attemptedQuestions }} - {{ attemptedPercentage }})</span>
+            </div>
+            
+            <!-- <div class='legend-item'>
+                <div class='legend-color orange'></div>
+                <span class='legend-text'>Marked for Revisit</span>
+                <span class='legend-stats'>({{ markedForRevisit }} - {{ markedPercentage }})</span>
+            </div> -->
+            
+            <div class='legend-item'>
+                <div class='legend-color grey'></div>
+                <span class='legend-text'>Unattempted</span>
+                <span class='legend-stats'>({{ unattemptedQuestions }} - {{ unattemptedPercentage }})</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const data = {
+            attempted: 45,
+            markedForRevisit: 25,
+            unattempted: 30
+        };
+
+        const total = data.attempted + data.markedForRevisit + data.unattempted;
+
+        // Calculate angles
+        const attemptedAngle = (data.attempted / total) * 360;
+        const markedAngle = (data.markedForRevisit / total) * 360;
+        const unattemptedAngle = (data.unattempted / total) * 360;
+
+        // Helper function to convert polar coordinates to cartesian
+        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return {
+                x: centerX + (radius * Math.cos(angleInRadians)),
+                y: centerY + (radius * Math.sin(angleInRadians))
+            };
+        }
+
+        // Create SVG path for donut segment
+        function createPath(startAngle, endAngle, innerRadius = 60, outerRadius = 100) {
+            const centerX = 120;
+            const centerY = 120;
+            
+            const start = polarToCartesian(centerX, centerY, outerRadius, endAngle);
+            const end = polarToCartesian(centerX, centerY, outerRadius, startAngle);
+            const innerStart = polarToCartesian(centerX, centerY, innerRadius, endAngle);
+            const innerEnd = polarToCartesian(centerX, centerY, innerRadius, startAngle);
+            
+            const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+            
+            return [
+                'M', start.x, start.y, 
+                'A', outerRadius, outerRadius, 0, largeArcFlag, 0, end.x, end.y,
+                'L', innerEnd.x, innerEnd.y,
+                'A', innerRadius, innerRadius, 0, largeArcFlag, 1, innerStart.x, innerStart.y,
+                'Z'
+            ].join(' ');
+        }
+
+        // Generate paths for each segment
+        let currentAngle = 0;
+
+        // Attempted segment
+        const attemptedPath = createPath(currentAngle, currentAngle + attemptedAngle);
+        document.getElementById('attempted-path').setAttribute('d', attemptedPath);
+        currentAngle += attemptedAngle;
+
+        // Marked for revisit segment
+        const markedPath = createPath(currentAngle, currentAngle + markedAngle);
+        document.getElementById('marked-path').setAttribute('d', markedPath);
+        currentAngle += markedAngle;
+    
+        // Unattempted segment
+        const unattemptedPath = createPath(currentAngle, currentAngle + unattemptedAngle);
+        document.getElementById('unattempted-path').setAttribute('d', unattemptedPath);
+    </script>
+</body>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="second-container"
+      class="assessment-warning-popup-second-container"
+    >
+      <h1
+        id="section-summary-heading"
+        class="assessment-warning-popup-section-summary-heading"
+      >
+        <ng-container>
+          <ng-template #defaultHeading>
+            <div class="assessment-warning-popup-fragment16">
+              <span class="assessment-warning-popup-text17">
+                Section Summary
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="heading ? heading : defaultHeading"
+          ></ng-container>
+        </ng-container>
+      </h1>
+      <div
+        id="sections-main-container"
+        class="assessment-warning-popup-sections-main-container"
+      >
+        <div
+          id="sectons-table-header-container"
+          class="assessment-warning-popup-sectons-table-header-container"
+        >
+          <div
+            id="slno-container"
+            class="assessment-warning-popup-slno-container"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              id="slno-icon"
+              class="assessment-warning-popup-slno-icon"
+              fill="currentColor"
+            >
+              <path
+                d="m7.784 14l.42-4H4V8h4.415l.525-5h2.011l-.525 5h3.989l.525-5h2.011l-.525 5H20v2h-3.784l-.42 4H20v2h-4.415l-.525 5h-2.011l.525-5H9.585l-.525 5H7.049l.525-5H4v-2zm2.011 0h3.99l.42-4h-3.99z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+          <div
+            id="section-name-container"
+            class="assessment-warning-popup-section-name-container"
+          >
+            <span id="section-name-text">
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="assessment-warning-popup-fragment19">
+                    <span class="assessment-warning-popup-text20">
+                      SECTION NAME
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <div
+            id="status-container"
+            class="assessment-warning-popup-status-container"
+          >
+            <span id="status-text">
+              <ng-container>
+                <ng-template #defaultText3>
+                  <div class="assessment-warning-popup-fragment22">
+                    <span class="assessment-warning-popup-text23">STATUS</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              id="green-tick-icon"
+              class="assessment-warning-popup-green-tick-icon"
+            >
+              <path
+                d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
+                fill="currentColor"
+              ></path>
+              </svg>
+              <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              id="warning-icon2"
+              class="assessment-warning-popup-warning-icon2"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path
+                  d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
+                ></path>
+                <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div
+          id="sections-list-container"
+          class="assessment-warning-popup-sections-list-container"
+        >
+          <div
+            *ngFor="let section of sections; let i = index"
+            id="sections-container"
+            class="assessment-warning-popup-sections-container"
+          >
+            <div
+              id="num-container"
+              class="assessment-warning-popup-num-container"
+            >
+              <span id="num-text" class="assessment-warning-popup-num-text">
+                <ng-container>
+                  <ng-template #defaultText4>
+                    <div class="assessment-warning-popup-fragment21">
+                      <span class="assessment-warning-popup-text22">{{ i + 1 }}.</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+            <div
+              id="section-container"
+              class="assessment-warning-popup-section-container"
+            >
+              <div
+                id="section-num-container"
+                class="assessment-warning-popup-section-num-container"
+              >
+                <span
+                  id="section-num-text"
+                  class="assessment-warning-popup-section-num-text"
+                >
+                  <ng-container>
+                    <ng-template #defaultText5>
+                      <div class="assessment-warning-popup-fragment13">
+                        <span class="assessment-warning-popup-text14">
+                          {{ section.name }}
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text5 ? text5 : defaultText5"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="time-remaining-container"
+                class="assessment-warning-popup-time-remaining-container"
+              >
+                <span
+                  id="remaining-time-text"
+                  class="assessment-warning-popup-remaining-time-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText6>
+                      <div class="assessment-warning-popup-fragment12">
+                        <span class="assessment-warning-popup-text13">
+                          Remaining Time: 
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text6 ? text6 : defaultText6"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <span
+                  id="time-text"
+                  class="assessment-warning-popup-time-text2"
+                >
+                  <ng-container>
+                    <ng-template #defaultText9>
+                      <div class="assessment-warning-popup-fragment26">
+                        <span class="assessment-warning-popup-text27">
+                          {{ sectionTimers[section.section_id] | timerFormat }}
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text9 ? text9 : defaultText9"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+            <div
+              id="section-details-container"
+              class="assessment-warning-popup-section-details-container"
+            >
+              <div
+                id="question-numbers-main-container"
+                class="assessment-warning-popup-question-numbers-main-container"
+              >
+                <svg
+                  id="backward-arrow-icon"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                  class="assessment-warning-popup-backward-arrow-icon"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+                <div
+                  id="numbers-main-container"
+                  class="assessment-warning-popup-numbers-main-container"
+                >
+                  <button
+                    *ngFor="let question of section.questions; let j = index"
+                    id="question-number1-button"
+                    type="button"
+                    class="assessment-warning-popup-question-number1-button button"
+                    [class.answered]="hasAnswered(question.question_id)"
+                  >
+                    <span>
+                      <ng-container>
+                        <ng-template #defaultQuestionNumber1Button>
+                          <div class="assessment-warning-popup-fragment14">
+                            <span class="assessment-warning-popup-text15">
+                              {{ j + 1 }}
+                            </span>
+                          </div>
+                        </ng-template>
+                        <ng-container
+                          *ngTemplateOutlet="questionNumber1Button ? questionNumber1Button : defaultQuestionNumber1Button"
+                        ></ng-container>
+                      </ng-container>
+                    </span>
+                  </button>
+                </div>
+                <svg
+                  id="forward-arrow-icon"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                  class="assessment-warning-popup-forward-arrow-icon"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                id="section-details"
+                class="assessment-warning-popup-section-details"
+              >
+                <div
+                  id="section-warnings-container"
+                  class="assessment-warning-popup-section-warnings-container"
+                >
+                  <div
+                    *ngIf="!isSectionComplete(section)"
+                    id="unattempted-container"
+                    class="assessment-warning-popup-unattempted-container"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      id="warning-icon3"
+                      class="assessment-warning-popup-warning-icon3"
+                    >
+                      <g
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      >
+                        <path
+                          d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
+                        ></path>
+                        <path
+                          d="m12 17.01l.01-.011"
+                          stroke-linejoin="round"
+                        ></path>
+                      </g>
+                    </svg>
+                    <span
+                      id="unattempted-text"
+                      class="assessment-warning-popup-unattempted-text"
+                    >
+                      <ng-container>
+                        <ng-template #defaultText91>
+                          <div class="assessment-warning-popup-fragment23">
+                            <span class="assessment-warning-popup-text24">
+                              {{ getUnattemptedCount(section) }} Unattempted
+                            </span>
+                          </div>
+                        </ng-template>
+                        <ng-container
+                          *ngTemplateOutlet="text91 ? text91 : defaultText91"
+                        ></ng-container>
+                      </ng-container>
+                    </span>
+                  </div>
+                  <div
+                    *ngIf="isSectionComplete(section)"
+                    id="completed-container"
+                    class="assessment-warning-popup-completed-container"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      id="green-tick-icon2"
+                      class="assessment-warning-popup-green-tick-icon2"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                    <span
+                      id="completed-text"
+                      class="assessment-warning-popup-completed-text"
+                    >
+                      <ng-container>
+                        <ng-template #defaultText911>
+                          <div class="assessment-warning-popup-fragment11">
+                            <span class="assessment-warning-popup-text12">
+                              Completed
+                            </span>
+                          </div>
+                        </ng-template>
+                        <ng-container
+                          *ngTemplateOutlet="text911 ? text911 : defaultText911"
+                        ></ng-container>
+                      </ng-container>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  id="num-of-questions-container"
+                  class="assessment-warning-popup-num-of-questions-container"
+                >
+                  <span
+                    id="total-text"
+                    class="assessment-warning-popup-total-text"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText65>
+                        <div class="assessment-warning-popup-fragment24">
+                          <span class="assessment-warning-popup-text25">
+                            Total: 
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text65 ? text65 : defaultText65"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <span
+                    id="questions-text"
+                    class="assessment-warning-popup-questions-text"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText92>
+                        <div class="assessment-warning-popup-fragment10">
+                          <span class="assessment-warning-popup-text11">
+                            {{ section.questions.length }} Questions.
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text92 ? text92 : defaultText92"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="third-container" class="assessment-warning-popup-third-container">
+      <button
+        type="button"
+        id="end-test-button"
+        class="assessment-warning-popup-end-test-button button"
+        (click)="confirmEndTest()"
+      >
+        <span id="end-test-text">
+          <ng-container>
+            <ng-template #defaultButton>
+              <div class="assessment-warning-popup-fragment15">
+                <span class="assessment-warning-popup-text16">
+                  Yes, End Test!
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="button ? button : defaultButton"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </button>
+      <button
+        type="button"
+        id="back-to-test-button"
+        class="assessment-warning-popup-back-to-test-button button"
+        (click)="goBackToTest()"
+      >
+        <span id="back-to-test-text">
+          <ng-container>
+            <ng-template #defaultButton1>
+              <div class="assessment-warning-popup-fragment18">
+                <span class="assessment-warning-popup-text19">
+                  No, Back to Test
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="button1 ? button1 : defaultButton1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

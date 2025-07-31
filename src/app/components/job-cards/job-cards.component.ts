@@ -85,6 +85,16 @@ export class JobCardsComponent implements OnInit {
     });
   }
 
+  get selectedJobId(): number | null {
+  return this.clickedIndex !== null && this.jobs[this.clickedIndex] 
+    ? this.jobs[this.clickedIndex].job_id 
+    : null;
+}
+
+  get displayedJobs() {
+  return this.jobs;
+}
+
   /**
    * Handles the click event on a job card. It sets the highlight and emits the selected job ID to the parent.
    * @param jobId The ID of the job that was clicked.

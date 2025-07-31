@@ -1318,6 +1318,29 @@
   transform: scale(0.9);
   background-color: #7AD184;
 }
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Must be a high number to be on top of other content */
+}
+
+.flashyre-assessment11-previous-next-button-main-container1 button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
  
 @media(max-width: 1200px) {
   .flashyre-assessment11-header-container {
