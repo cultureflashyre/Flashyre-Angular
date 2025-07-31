@@ -12,6 +12,7 @@
 .progress-bar-2-code-container2 {
   width: 100%;
   height: 86px;
+  padding-left: 250px;
   display: flex;
   align-items: center;
   
@@ -19,6 +20,7 @@
  
 .progress-bar-2-code-container3 {
   display: contents;
+  width: 100%;
 }
  
 
