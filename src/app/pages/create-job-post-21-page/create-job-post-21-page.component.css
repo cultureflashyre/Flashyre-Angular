@@ -2,6 +2,34 @@
   display: contents; 
 }
 
+/* Modify the container5 class to include disabled state */
+.create-job-post-21-container5 {
+  /* ...existing code... */
+  pointer-events: none; /* This will disable all interactions */
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #f5f5f5;
+}
+
+/* Style for disabled upload button text */
+.create-job-post-21-container5 .create-job-post-21-text13 {
+  /* ...existing code... */
+  color: #666666;
+}
+
+/* Style for disabled upload button icon */
+.create-job-post-21-container5 .create-job-post-21-icon1 {
+  /* ...existing code... */
+  opacity: 0.5;
+}
+
+/* Remove hover effects when disabled */
+.create-job-post-21-container5:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: #f5f5f5;
+}
+
 .create-job-post-21-navigation-buttons {
   display: flex;
   gap: 10px;

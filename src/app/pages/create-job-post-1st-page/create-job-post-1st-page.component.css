@@ -1,6 +1,20 @@
   :host { 
     display: contents; 
   }
+
+.create-job-post1st-page-min-budget-input-field::-webkit-outer-spin-button,
+.create-job-post1st-page-min-budget-input-field::-webkit-inner-spin-button,
+.create-job-post1st-page-max-budget-input::-webkit-outer-spin-button,
+.create-job-post1st-page-max-budget-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.create-job-post1st-page-min-budget-input-field[type="number"],
+.create-job-post1st-page-max-budget-input[type="number"] {
+  -moz-appearance: textfield;
+}  
   
   /* Add these new styles to your CSS file for the multi-location input */
 

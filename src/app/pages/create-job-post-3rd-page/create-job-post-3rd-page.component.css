@@ -1000,6 +1000,7 @@
   border-radius: var(--dl-layout-radius-round);
   justify-content: center;
   background-color: #F10400;
+  margin-top: 30px;
 }
  
 .create-job-post3rd-page-remove-icon:hover {
