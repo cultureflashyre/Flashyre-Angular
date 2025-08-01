@@ -1,6 +1,11 @@
 :host { 
   display: contents; 
 }
+
+.ai-marker {
+  /* Adds a little space between the emoji and the question text */
+  margin-right: 4px; 
+}
  
 .create-job-post22-page-container {
   width: 100%;
