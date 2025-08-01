@@ -1,6 +1,18 @@
 :host { 
   display: contents; 
 }
+
+/* Keyframe animation for sliding in from left */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
  
 .assessment-warning-popup-container1 {
   width: 100%;
@@ -9,24 +21,26 @@
   position: relative;
   align-items: flex-end;
   flex-direction: column;
+  animation: slideInRight 0.5s ease-out;
 }
  
 .assessment-warning-popup-assessment-warning-popup-main-container {
-  gap: 0;
+  gap: 16px;
   width: 50%;
-  height: 900px;
+  height: auto;
   display: flex;
   box-shadow: 5px 5px 10px 0px #b3b3b3;
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
   background-color: #FFFFFF;
+  gap: 16px;
 }
  
 .assessment-warning-popup-first-container {
   flex: 0 0 auto;
   width: 100%;
-  height: 35%;
+  height: 40%;
   display: flex;
   align-items: center;
   border-color: #E6E2E6;
@@ -63,12 +77,12 @@
 .assessment-warning-popup-warning-icon1 {
   fill: #F10400;
   color: #F10400;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
  
 .assessment-warning-popup-finish-test-text {
-  font-size: 24px;
+  font-size: 20px;
   align-self: center;
 }
  
@@ -92,8 +106,8 @@
 }
  
 .assessment-warning-popup-timer-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
  
 .assessment-warning-popup-remaining-time-container {
@@ -106,11 +120,11 @@
 }
  
 .assessment-warning-popup-remaining-time-text1 {
-  font-size: 20px;
+  font-size: 16px;
 }
  
 .assessment-warning-popup-time-text1 {
-  font-size: 20px;
+  font-size: 16px;
 }
  
 .assessment-warning-popup-close-icon {
@@ -119,7 +133,7 @@
  
 .assessment-warning-popup-test-summary-code-container {
   width: 100%;
-  height: 444px;
+  height: 350px;
   display: flex;
   padding: 0px;
   align-items: center;
@@ -135,11 +149,12 @@
 }
  
 .assessment-warning-popup-second-container {
-  gap: 16px;
+  gap: 12px;
   width: 100%;
-  height: 457px;
+  height: auto;
   display: flex;
-  padding: var(--dl-layout-space-twounits);
+  padding-left: 16px;
+  padding-right: 16px;
   border-color: #E6E2E6;
   border-width: 1px;
   flex-direction: column;
@@ -147,7 +162,7 @@
   border-top-width: 0px;
   border-left-width: 0px;
   border-right-width: 0px;
-  border-bottom-width: 1px;
+  border-bottom-width: 0px;
 }
  
 .assessment-warning-popup-section-summary-heading {
@@ -162,7 +177,7 @@
  
 .assessment-warning-popup-sections-main-container {
   width: 100%;
-  height: 404px;
+  height: 280px;
   display: flex;
   align-items: flex-start;
   border-color: #E6E2E6;
@@ -201,13 +216,13 @@
 }
  
 .assessment-warning-popup-slno-icon {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
  
 .assessment-warning-popup-section-name-container {
   flex: 0 0 auto;
-  width: 30%;
+  width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -217,7 +232,7 @@
 .assessment-warning-popup-status-container {
   gap: 16px;
   flex: 0 0 auto;
-  width: 55%;
+  width: 45%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -252,7 +267,7 @@
 .assessment-warning-popup-sections-container {
   flex: 0 0 auto;
   width: 100%;
-  height: 33.33%;
+  height: 80px;
   display: flex;
   align-items: flex-start;
   border-color: #E6E2E6;
@@ -278,7 +293,7 @@
 }
  
 .assessment-warning-popup-section-container {
-  gap: 16px;
+  gap: 8px;
   flex: 0 0 auto;
   width: 30%;
   height: 100%;
@@ -331,8 +346,9 @@
  
 .assessment-warning-popup-question-numbers-main-container {
   flex: 0 0 auto;
-  width: 100%;
-  height: 36px;
+  width: 80%;
+  align-self: flex-end;
+  height: 28px;
   display: flex;
   align-items: flex-start;
   border-color: #E0E0E0;
@@ -347,10 +363,11 @@
 }
  
 .assessment-warning-popup-numbers-main-container {
-  gap: 8px;
+  gap: 4px;
   flex: nowrap;
-  width: 350px;
+  width: 300px;
   height: 100%;
+  padding-left: 4px;
   display: flex;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -397,10 +414,11 @@
  
 .assessment-warning-popup-section-details {
   flex: 0 0 auto;
-  width: 100%;
+  width: 80%;
   height: auto;
   display: flex;
   align-items: flex-start;
+  align-self: flex-end;
   justify-content: space-between;
 }
  
@@ -474,7 +492,7 @@
   gap: 24px;
   flex: 0 0 auto;
   width: 100%;
-  height: 80px;
+  height: 40px;
   display: flex;
   align-items: center;
   padding-left: var(--dl-layout-space-twounits);
@@ -532,15 +550,19 @@
  
 .assessment-warning-popup-text14 {
   display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
 }
  
 .assessment-warning-popup-fragment14 {
   display: contents;
+  height: 100%;
 }
  
 .assessment-warning-popup-text15 {
   display: inline-block;
   padding: 16px;
+  font-size: 14px;
 }
  
 .assessment-warning-popup-fragment15 {
@@ -560,9 +582,9 @@
  
 .assessment-warning-popup-text17 {
   display: inline-block;
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
 }
  
 .assessment-warning-popup-fragment17 {
@@ -608,7 +630,7 @@
  
 .assessment-warning-popup-text22 {
   display: inline-block;
-  font-size: 24px;
+  font-size: 16px;
 }
  
 .assessment-warning-popup-fragment22 {
@@ -686,6 +708,90 @@
   transition: all 0.8s;
   background-color: #05356C;
 }
+
+.container {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 48px;
+    background: white;
+    max-width: 800px;  
+    height: 350px;          
+}
+
+.chart-container {
+    position: relative;
+    width: 240px;
+    height: 240px;
+}
+
+.chart-svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.total-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+}
+
+.total-label {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.legend {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+}
+
+.legend-color.blue {
+    background-color: #05356C;  
+}
+
+.legend-color.orange {
+    background-color: #F19000;
+}
+
+.legend-color.grey {
+    background-color: #C0C0C0;
+}
+
+.legend-text {
+    font-weight: 500;
+    color: #18191C;
+    font-size: 14px;
+}
+
+.legend-stats {
+    color: #666;
+}
  
 @media(max-width: 1200px) {
   .assessment-warning-popup-assessment-warning-popup-main-container {
@@ -697,10 +803,7 @@
   .assessment-warning-popup-assessment-warning-popup-main-container {
     width: 100%;
   }
-  .assessment-warning-popup-question-numbers-main-container {
-    width: 100%;
-    height: 35px;
-  }
+  
   .assessment-warning-popup-backward-arrow-icon {
     width: 35px;
     height: 35px;

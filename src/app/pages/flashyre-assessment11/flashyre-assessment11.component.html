@@ -7,6 +7,7 @@
       [sectionTimers]="sectionTimers"
       (endTestConfirmed)="terminateTest()"
       (closePopup)="handleCloseWarningPopup()"
+      (questionNavigate)="handleQuestionNavigation($event)"
     ></assessment-warning-popup>
   </div>
 
@@ -178,7 +179,7 @@ class="flashyre-assessment11-previous-next-button-main-container1"
   <button
     id="submit-button"
     type="button"
-    (click)="terminateTest()"
+    (click)="showEndTestWarning()"
     class="flashyre-assessment11-submit-button1 button"
   >
     Submit

@@ -4,7 +4,6 @@
 
 .flashyre-assessment11-previous-next-button-main-container1 button {
   display: inline-block;
-  padding: 10px 20px;
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
@@ -85,7 +84,7 @@
 }
  
 .flashyre-assessment11-logo {
-  width: 350px;
+  width: 200px;
   height: auto;
   object-fit: cover;
 }
@@ -95,14 +94,15 @@
   width: 200px;
   height: 48px;
   display: flex;
-  font-size: 48px;
+  font-weight: 500;
+  font-size: 32px;
   align-items: center;
   justify-content: center;
 }
  
 .flashyre-assessment11-end-test-button {
-  width: 250px;
-  height: 55px;
+  width: 150px;
+  height: 40px;
   padding: 0px;
   transition: 0.3s;
   border-width: 0px;
@@ -154,7 +154,7 @@
   cursor: pointer;
   display: inline-block;
   position: relative;
-  border-radius: var(--dl-layout-radius-radius2);
+  border-radius: 4px;
 }
  
 .flashyre-assessment11-dropdown-toggle1 {
@@ -331,22 +331,18 @@
   flex: 0 0 auto;
   width: 360px;
   display: flex;
-  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  height: 32px;
   align-items: flex-start;
   border-color: #E0E0E0;
   border-width: 1px;
   border-radius: 2px;
-
-  align-items: center;
-  border: 1px solid #E0E0E0;
-  padding: 0 10px; /* Add horizontal padding */
-  box-sizing: border-box;
+  justify-content: space-between;
 }
  
 .flashyre-assessment11-backward-arrow-icon,
 .flashyre-assessment11-forward-arrow-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 100%;
   flex-shrink: 0; /* Prevent shrinking */
   cursor: pointer;
   margin: 0 5px; /* Add margin so arrows don't touch numbers */
@@ -356,12 +352,12 @@
   gap: 8px;
   /* flex: nowrap; */
   width: 200px;
-  height: auto;
+  height: 100%;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
-  align-items: flex-start;
-  white-space: nowrap;
+  align-items: center;
+  /* white-space: nowrap; */
   scroll-behavior: smooth;
   scrollbar-width: none;
 
@@ -375,11 +371,11 @@
 }
  
 .flashyre-assessment11-question-number1-button10 {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 100%;
   display: flex;
   padding: var(--dl-layout-space-unit);
-  font-size: 24px;
+  font-size: 16px;
   box-shadow: 2px 2px 10px 0px #d4d4d4;
   transition: 0.3s;
   align-items: center;
@@ -400,8 +396,7 @@
 .flashyre-assessment11-question-number1-button10.active {
   background-color: #05356C !important; /* Use !important to override */
   color: #FFFFFF !important;
-  box-shadow: 0 0 10px #05356C !important;
-  transform: scale(1.1);
+  transform: scale(1.0);
   transition: all 0.3s ease;
 }
  
@@ -667,8 +662,8 @@
 }
  
 .flashyre-assessment11-forward-arrow-icon {
-  width: 60px;
-  height: 40px;
+  width: 32px;
+  height: 100%;
 }
  
 .flashyre-assessment11-previous-next-button-main-container1 {
@@ -785,11 +780,12 @@
  
 .flashyre-assessment11-question-answer-container {
   width: 100%;
-  height: 625px;
+  height: 550px;
   display: flex;
   align-items: flex-start;
   border-color: #E0E0E0;
-  border-width: 1px;
+  border-width: 2px;
+  border-radius: 8px;
 }
  
 .flashyre-assessment11-questions-container {
@@ -802,7 +798,7 @@
   position: relative;
   align-items: flex-start;
   border-color: #E0E0E0;
-  border-width: 1px;
+  border-width: 2px;
   flex-direction: column;
   border-top-width: 0px;
   border-left-width: 0px;
@@ -978,7 +974,7 @@
   padding-top: var(--dl-layout-space-halfunit);
   border-color: #E0E0E0;
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   padding-left: var(--dl-layout-space-unit);
   border-radius: 4px;
   padding-right: var(--dl-layout-space-unit);
@@ -1334,7 +1330,6 @@
 
 .flashyre-assessment11-previous-next-button-main-container1 button {
   display: inline-block;
-  padding: 10px 20px;
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
@@ -1354,7 +1349,7 @@
   }
   .flashyre-assessment11-timer {
     color: rgb(241, 4, 0);
-    font-size: 36px;
+    font-size: 26px;
     font-style: normal;
     font-weight: 500;
   }
@@ -1677,7 +1672,7 @@
   }
   .flashyre-assessment11-timer {
     width: auto;
-    font-size: 24px;
+    font-size: 20px;
   }
   .flashyre-assessment11-end-test-button {
     width: 100px;

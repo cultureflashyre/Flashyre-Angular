@@ -512,4 +512,21 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   handleImageError(event: Event): void {
     (event.target as HTMLImageElement).style.display = 'none';
   }
+
+  handleQuestionNavigation(event: {section: any, questionIndex: number}): void {
+  const { section, questionIndex } = event;
+  
+  // Check if we need to switch to a different section
+  if (this.currentSection !== section) {
+    // Switch to the selected section
+    this.currentSection = section;
+    // Update current questions array to match the new section
+    this.currentQuestions = section.questions;
+  }
+
+  // Navigate to the specific question within the section
+  this.currentQuestionIndex = questionIndex;
+  this.markQuestionAsVisited(questionIndex);
+  this.updateCurrentQuestion();
+}
 }

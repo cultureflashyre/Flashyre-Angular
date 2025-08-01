@@ -1,15 +1,17 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'assessment-warning-popup',
   templateUrl: 'assessment-warning-popup.component.html',
   styleUrls: ['assessment-warning-popup.component.css'],
 })
-export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
-  
+export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit, OnDestroy {
+  @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
   // --- Element Refs for Donut Chart ---
   @ViewChild('attemptedPath') attemptedPath: ElementRef;
   @ViewChild('unattemptedPath') unattemptedPath: ElementRef;
+  @ViewChild('markedPath') markedPath: ElementRef;
 
   // --- Inputs & Outputs ---
   @Input() sections: any[] = [];
@@ -17,6 +19,7 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   @Input() sectionTimers: { [section_id: number]: number } = {};
   @Output() endTestConfirmed = new EventEmitter<void>();
   @Output() closePopup = new EventEmitter<void>();
+  @Output() questionNavigate = new EventEmitter<{section: any, questionIndex: number}>();
 
   // --- Properties for Test Summary ---
   totalQuestions = 0;
@@ -24,8 +27,8 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   unattemptedQuestions = 0;
   attemptedPercentage = '0.0%';
   unattemptedPercentage = '0.0%';
-  
-  // Note: Marked for Revisit is not tracked in the current logic, so it's set to 0.
+
+  // Marked for Revisit is not tracked in the current logic, so it's set to 0
   markedForRevisit = 0;
   markedPercentage = '0.0%';
 
@@ -48,15 +51,22 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   @Input() button1: TemplateRef<any>;
   @Input() questionNumber1Button: TemplateRef<any>;
 
+  private timerSubscription: Subscription;
+
   constructor() {}
 
-  // Lifecycle hook to initialize the component
+  ngOnInit(): void {
+    // Start countdown timer every second
+    this.timerSubscription = interval(1000).subscribe(() => {
+      this.countdownTimers();
+    });
+  }
+
   ngAfterViewInit(): void {
     this.calculateSummary();
     this.drawChart();
   }
 
-  // Lifecycle hook to update on input changes
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sections'] || changes['userResponses']) {
       this.calculateSummary();
@@ -64,7 +74,30 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
     }
   }
 
-  // Calculate test summary based on sections and user responses
+  ngOnDestroy(): void {
+    // Cleanup timer subscription to avoid memory leaks
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+  }
+
+  // Decrease each section timer by 1 second if above 0
+  countdownTimers(): void {
+    if (!this.sectionTimers) return;
+
+    let updated = false;
+    Object.keys(this.sectionTimers).forEach(sectionId => {
+      if (this.sectionTimers[sectionId] > 0) {
+        this.sectionTimers[sectionId] = this.sectionTimers[sectionId] - 1;
+        updated = true;
+      }
+    });
+
+    // If timers changed, optionally trigger change detection or other logic here
+    // Angular's binding will update the displayed time because sectionTimers are updated
+  }
+
+  // --- Existing methods below ---
   calculateSummary(): void {
     if (!this.sections || this.sections.length === 0) return;
 
@@ -73,7 +106,7 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
 
     this.sections.forEach(sec => {
       total += sec.questions.length;
-      sec.questions.forEach(q => {
+      sec.questions.forEach((q: { question_id: PropertyKey }) => {
         if (this.userResponses.hasOwnProperty(q.question_id)) {
           attempted++;
         }
@@ -90,7 +123,6 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
     }
   }
 
-  // Draw the donut chart using SVG paths
   drawChart(): void {
     if (!this.attemptedPath || !this.unattemptedPath || this.totalQuestions === 0) {
       return;
@@ -98,23 +130,28 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
 
     const data = {
       attempted: this.attemptedQuestions,
-      markedForRevisit: 0, // Not implemented, so set to 0
+      markedForRevisit: this.markedForRevisit, // Currently 0
       unattempted: this.unattemptedQuestions,
     };
 
     const total = data.attempted + data.markedForRevisit + data.unattempted;
 
     const attemptedAngle = (data.attempted / total) * 360;
-    const unattemptedAngle = 360 - attemptedAngle;
+    const markedAngle = (data.markedForRevisit / total) * 360;
+    const unattemptedAngle = (data.unattempted / total) * 360;
 
-    const attemptedPathD = this.createPath(0, attemptedAngle);
+    let currentAngle = 0;
+
+    const attemptedPathD = this.createPath(currentAngle, currentAngle + attemptedAngle);
     this.attemptedPath.nativeElement.setAttribute('d', attemptedPathD);
+    currentAngle += attemptedAngle;
 
-    const unattemptedPathD = this.createPath(attemptedAngle, 360);
+    currentAngle += markedAngle; // No change since markedAngle is 0
+
+    const unattemptedPathD = this.createPath(currentAngle, currentAngle + unattemptedAngle);
     this.unattemptedPath.nativeElement.setAttribute('d', unattemptedPathD);
   }
 
-  // Helper function to create SVG donut segment paths
   createPath(startAngle: number, endAngle: number, innerRadius = 60, outerRadius = 100): string {
     const centerX = 120;
     const centerY = 120;
@@ -122,8 +159,8 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
     const polarToCartesian = (angle: number, radius: number) => {
       const angleInRadians = (angle - 90) * Math.PI / 180.0;
       return {
-        x: centerX + (radius * Math.cos(angleInRadians)),
-        y: centerY + (radius * Math.sin(angleInRadians)),
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians),
       };
     };
 
@@ -147,29 +184,70 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
     ].join(' ');
   }
 
-  // Check if a question has been answered
   hasAnswered(questionId: string): boolean {
     return this.userResponses.hasOwnProperty(questionId);
   }
 
-  // Get the number of unattempted questions in a section
   getUnattemptedCount(section: any): number {
     if (!section || !section.questions) return 0;
-    return section.questions.filter(q => !this.hasAnswered(q.question_id)).length;
+    return section.questions.filter((q: { question_id: string }) => !this.hasAnswered(q.question_id)).length;
   }
 
-  // Check if a section is fully completed
   isSectionComplete(section: any): boolean {
     return this.getUnattemptedCount(section) === 0;
   }
 
-  // Emit event to confirm ending the test
   confirmEndTest(): void {
     this.endTestConfirmed.emit();
   }
 
-  // Emit event to close the popup and return to the test
   goBackToTest(): void {
     this.closePopup.emit();
   }
+
+  scrollLeft(event: Event): void {
+  const clickedElement = event.target as HTMLElement;
+  const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
+  const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
+  
+  if (numbersContainer) {
+    numbersContainer.scrollBy({
+      left: -100,
+      behavior: 'smooth'
+    });
+  }
+}
+
+scrollRight(event: Event): void {
+  const clickedElement = event.target as HTMLElement;
+  const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
+  const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
+  
+  if (numbersContainer) {
+    numbersContainer.scrollBy({
+      left: 100,
+      behavior: 'smooth'
+    });
+  }
+}
+
+ navigateToSectionQuestion(selectedSection: any, questionIndex: number): void {
+    // Validate the section and question index
+    if (!selectedSection || !selectedSection.questions || questionIndex < 0 || questionIndex >= selectedSection.questions.length) {
+      console.error('Invalid section or question index');
+      return;
+    }
+
+    // Emit the navigation event to parent component
+    this.questionNavigate.emit({
+      section: selectedSection,
+      questionIndex: questionIndex
+    });
+
+    // Optional: Close the popup after navigation
+    // this.closePopup(); // Uncomment if you have a close popup method
+    this.closePopup.emit(); // Make sure you have this method in your component
+
+  }
+
 }

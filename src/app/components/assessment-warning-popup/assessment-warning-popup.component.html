@@ -100,8 +100,8 @@
                 <ng-container>
                   <ng-template #defaultText8>
                     <div class="assessment-warning-popup-fragment25">
-                      <span class="assessment-warning-popup-text26">
-                        00:11:14
+                      <span class="assessment-warning-popup-time-text1">
+                        {{ sections.length > 0 ? (sectionTimers[sections[0].section_id] | timerFormat) : '--:--' }}
                       </span>
                     </div>
                   </ng-template>
@@ -138,108 +138,13 @@
         <div class="assessment-warning-popup-container2">
           <div class="assessment-warning-popup-container3">
             
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Assessment Questions Chart</title>
-    <style>
-        body {
-           
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: row;
-            padding: 10px;
-            gap: 48px;
-            background: white;
-            max-width: 800px;  
-            height: 350px;          
-        }
-
-        .chart-container {
-            position: relative;
-            width: 240px;
-            height: 240px;
-        }
-
-        .chart-svg {
-            transform: rotate(-90deg);
-            width: 100%;
-            height: 100%;
-        }
-
-        .center-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .total-number {
-            font-size: 32px;
-            font-weight: bold;
-            color: #000;
-            margin: 0;
-        }
-
-        .total-label {
-            font-size: 14px;
-            color: #666;
-            margin: 0;
-        }
-
-        .legend {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 2px;
-        }
-
-        .legend-color.blue {
-            background-color: #05356C;
-        }
-
-        .legend-color.orange {
-            background-color: #F19000;
-        }
-
-        .legend-color.grey {
-            background-color: #C0C0C0;
-        }
-
-        .legend-text {
-            font-weight: 500;
-            color: #18191C;
-        }
-
-        .legend-stats {
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <div class='container'>
+            <div class='container'>
         <!-- Donut Chart -->
         <div class='chart-container'>
             <svg class='chart-svg' width='240' height='240'>
-                <path id='attempted-path' fill='#05356C'></path>
-                <!-- <path id='marked-path' fill='#F19000'></path> -->
-                <path id='unattempted-path' fill='#C0C0C0'></path>
+              <path #attemptedPath id='attempted-path' fill='#05356C'></path>
+              <path #markedPath id='marked-path' fill='#F19000'></path>
+              <path #unattemptedPath id='unattempted-path' fill='#C0C0C0'></path>
             </svg>
             
             <!-- Center text -->
@@ -251,7 +156,7 @@
 
         <!-- Legend -->
         <div class='legend'>
-            <h3 style='margin: 0 0 20px 0; font-size: 18px; font-weight: bold; color: #333;'>Your Test Summary</h3>
+            <h3 style='margin: 0 0 14px 0; font-size: 16px; font-weight: bold; color: #333;'>Your Test Summary</h3>
             <div class='legend-item'>
                 <div class='legend-color blue'></div>
                 <span class='legend-text'>Attempted</span>
@@ -271,70 +176,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Data
-        const data = {
-            attempted: 45,
-            markedForRevisit: 25,
-            unattempted: 30
-        };
-
-        const total = data.attempted + data.markedForRevisit + data.unattempted;
-
-        // Calculate angles
-        const attemptedAngle = (data.attempted / total) * 360;
-        const markedAngle = (data.markedForRevisit / total) * 360;
-        const unattemptedAngle = (data.unattempted / total) * 360;
-
-        // Helper function to convert polar coordinates to cartesian
-        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-            return {
-                x: centerX + (radius * Math.cos(angleInRadians)),
-                y: centerY + (radius * Math.sin(angleInRadians))
-            };
-        }
-
-        // Create SVG path for donut segment
-        function createPath(startAngle, endAngle, innerRadius = 60, outerRadius = 100) {
-            const centerX = 120;
-            const centerY = 120;
-            
-            const start = polarToCartesian(centerX, centerY, outerRadius, endAngle);
-            const end = polarToCartesian(centerX, centerY, outerRadius, startAngle);
-            const innerStart = polarToCartesian(centerX, centerY, innerRadius, endAngle);
-            const innerEnd = polarToCartesian(centerX, centerY, innerRadius, startAngle);
-            
-            const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-            
-            return [
-                'M', start.x, start.y, 
-                'A', outerRadius, outerRadius, 0, largeArcFlag, 0, end.x, end.y,
-                'L', innerEnd.x, innerEnd.y,
-                'A', innerRadius, innerRadius, 0, largeArcFlag, 1, innerStart.x, innerStart.y,
-                'Z'
-            ].join(' ');
-        }
-
-        // Generate paths for each segment
-        let currentAngle = 0;
-
-        // Attempted segment
-        const attemptedPath = createPath(currentAngle, currentAngle + attemptedAngle);
-        document.getElementById('attempted-path').setAttribute('d', attemptedPath);
-        currentAngle += attemptedAngle;
-
-        // Marked for revisit segment
-        const markedPath = createPath(currentAngle, currentAngle + markedAngle);
-        document.getElementById('marked-path').setAttribute('d', markedPath);
-        currentAngle += markedAngle;
-    
-        // Unattempted segment
-        const unattemptedPath = createPath(currentAngle, currentAngle + unattemptedAngle);
-        document.getElementById('unattempted-path').setAttribute('d', unattemptedPath);
-    </script>
-</body>
           </div>
         </div>
       </div>
@@ -351,7 +192,7 @@
           <ng-template #defaultHeading>
             <div class="assessment-warning-popup-fragment16">
               <span class="assessment-warning-popup-text17">
-                Section Summary
+                  Section Summary : 
               </span>
             </div>
           </ng-template>
@@ -421,7 +262,7 @@
                 ></ng-container>
               </ng-container>
             </span>
-            <svg
+            <!-- <svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -451,7 +292,7 @@
                 ></path>
                 <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
               </g>
-            </svg>
+            </svg> -->
           </div>
         </div>
         <div
@@ -555,13 +396,14 @@
                 class="assessment-warning-popup-question-numbers-main-container"
               >
                 <svg
-                  id="backward-arrow-icon"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  class="assessment-warning-popup-backward-arrow-icon"
-                  fill="currentColor"
-                >
+  id="backward-arrow-icon"
+  width="32"
+  height="32"
+  viewBox="0 0 32 32"
+  class="assessment-warning-popup-backward-arrow-icon"
+  fill="currentColor"
+  (click)="scrollLeft($event)"
+>
                   <path
                     d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"
                     fill="currentColor"
@@ -570,38 +412,41 @@
                 <div
                   id="numbers-main-container"
                   class="assessment-warning-popup-numbers-main-container"
+                  #numbersContainer
                 >
                   <button
-                    *ngFor="let question of section.questions; let j = index"
-                    id="question-number1-button"
-                    type="button"
-                    class="assessment-warning-popup-question-number1-button button"
-                    [class.answered]="hasAnswered(question.question_id)"
-                  >
-                    <span>
-                      <ng-container>
-                        <ng-template #defaultQuestionNumber1Button>
-                          <div class="assessment-warning-popup-fragment14">
-                            <span class="assessment-warning-popup-text15">
-                              {{ j + 1 }}
-                            </span>
-                          </div>
-                        </ng-template>
-                        <ng-container
-                          *ngTemplateOutlet="questionNumber1Button ? questionNumber1Button : defaultQuestionNumber1Button"
-                        ></ng-container>
-                      </ng-container>
-                    </span>
-                  </button>
+  *ngFor="let question of section.questions; let j = index"
+  id="question-number1-button"
+  type="button"
+  class="assessment-warning-popup-question-number1-button button"
+  [class.answered]="hasAnswered(question.question_id)"
+  (click)="navigateToSectionQuestion(section, j)"
+>
+  <span>
+    <ng-container>
+      <ng-template #defaultQuestionNumber1Button>
+        <div class="assessment-warning-popup-fragment14">
+          <span class="assessment-warning-popup-text15">
+            {{ j + 1 }}
+          </span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="questionNumber1Button ? questionNumber1Button : defaultQuestionNumber1Button"
+      ></ng-container>
+    </ng-container>
+  </span>
+</button>
                 </div>
                 <svg
-                  id="forward-arrow-icon"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  class="assessment-warning-popup-forward-arrow-icon"
-                  fill="currentColor"
-                >
+  id="forward-arrow-icon"
+  width="32"
+  height="32"
+  viewBox="0 0 32 32"
+  class="assessment-warning-popup-forward-arrow-icon"
+  fill="currentColor"
+  (click)="scrollRight($event)"
+>
                   <path
                     d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"
                     fill="currentColor"
@@ -727,7 +572,7 @@
                       <ng-template #defaultText92>
                         <div class="assessment-warning-popup-fragment10">
                           <span class="assessment-warning-popup-text11">
-                            {{ section.questions.length }} Questions.
+                            {{ section.questions.length }} Questions
                           </span>
                         </div>
                       </ng-template>
