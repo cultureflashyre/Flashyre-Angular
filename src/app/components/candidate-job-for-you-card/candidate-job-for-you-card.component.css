@@ -2,6 +2,75 @@
   display: contents; 
 }
 
+/* --- [NEW] Custom Tooltip Styles --- */
+
+/* 
+  The wrapper container for the icon. 
+  It's positioned relatively so the absolute tooltip is positioned relative to it.
+*/
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Ensures the cursor changes to a pointer on hover */
+}
+
+/* 
+  The tooltip text itself. Hidden by default.
+*/
+.tooltip-text {
+  visibility: hidden;
+  width: 160px; /* Adjust width as needed */
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  margin-left: -80px; /* Use half of the width to center it */
+
+  /* Fade-in transition */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 
+  An optional arrow for the tooltip.
+*/
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* 
+  The magic: Show the tooltip when hovering over the icon-wrapper.
+*/
+.icon-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 
+  When an icon is disabled, we don't want to show a tooltip or change the cursor.
+*/
+.icon-wrapper .disabled + .tooltip-text {
+  display: none;
+}
+
+.icon-wrapper .disabled {
+   cursor: not-allowed;
+}
+
 .candidate-job-for-you-card-container10 {
   width: 100%;
   height: auto;

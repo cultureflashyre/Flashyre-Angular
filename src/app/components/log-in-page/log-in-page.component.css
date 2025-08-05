@@ -1,6 +1,10 @@
 :host { 
   display: contents; 
 }
+
+input[type="password"]::-ms-reveal {
+  display: none !important;
+}
  
 .log-in-page-container1 {
   width: 100%;
