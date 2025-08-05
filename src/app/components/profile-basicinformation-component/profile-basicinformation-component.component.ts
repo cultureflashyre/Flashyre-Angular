@@ -161,33 +161,74 @@ export class ProfileBasicinformationComponent implements OnInit {
     return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
-  saveProfile(): Promise<boolean> {
-    return new Promise((resolve) => {
-      if (!this.resume) {
-        alert('Recommended to upload a Resume before saving.');
-        resolve(false);
-        return;
-      }
-  
-      const formData = new FormData();
+  saveProfile(): Promise<{ success: boolean; rateLimited: boolean; message: string; }> {
+  return new Promise((resolve) => {
+    if (!this.resume) {
+      // If only a profile picture is being saved
       if (this.profilePicture) {
+        const formData = new FormData();
         formData.append('profile_picture', this.profilePicture);
+        
+        this.profileService.saveProfile(formData).subscribe(
+          (response) => {
+            console.log('Profile picture saved successfully', response);
+            resolve({ 
+              success: true, 
+              rateLimited: response.rate_limited || false, 
+              message: response.message || 'Profile picture saved successfully'
+            });
+          },
+          (error) => {
+            console.error('Error saving profile picture', error);
+            alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+            resolve({ 
+              success: false, 
+              rateLimited: false, 
+              message: 'Error saving profile picture' 
+            });
+          }
+        );
+      } else {
+        alert('Recommended to upload a Resume before saving.');
+        resolve({ 
+          success: false, 
+          rateLimited: false, 
+          message: 'No resume or profile picture selected' 
+        });
       }
-      formData.append('resume', this.resume);
-  
-      this.profileService.saveProfile(formData).subscribe(
-        (response) => {
-          console.log('Profile saved successfully', response);
-          resolve(true);
-        },
-        (error) => {
-          console.error('Error saving profile', error);
-          alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
-          resolve(false);
-        }
-      );
-    });
-  }
+      return;
+    }
+
+    const formData = new FormData();
+    if (this.profilePicture) {
+      formData.append('profile_picture', this.profilePicture);
+    }
+    formData.append('resume', this.resume);
+
+    this.profileService.saveProfile(formData).subscribe(
+      (response) => {
+        console.log('Profile saved successfully', response);
+        // Resolve with the detailed object from the backend
+        resolve({ 
+          success: true, 
+          rateLimited: response.rate_limited || false, 
+          message: response.message || 'Profile saved successfully'
+        });
+      },
+      (error) => {
+        console.error('Error saving profile', error);
+        alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+        // Resolve with a consistent error object
+        resolve({ 
+          success: false, 
+          rateLimited: false, 
+          message: 'Error saving profile' 
+        });
+      }
+    );
+  });
+}
+
 
   skip() {
     this.router.navigate(['/profile-employment-page']);

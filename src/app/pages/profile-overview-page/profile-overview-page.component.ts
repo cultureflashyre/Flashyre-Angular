@@ -22,7 +22,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   isSaving: boolean = false;
   showPopup: boolean = false;
   popupMessage: string = '';
-  popupType: 'success' | 'error' = 'success';
+  popupType: 'success' | 'error' | 'warning' = 'success';
 
   // Basic Information
   firstName: string = '';
@@ -110,11 +110,21 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
   }
 
-  showErrorPopup() {
-    this.popupMessage = 'Failed to upload';
+  showErrorPopup(message?: string) {
+    this.popupMessage = message || 'Failed to upload';
     this.popupType = 'error';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
+  }
+
+  
+
+  // New method for the rate-limit warning
+  showRateLimitWarningPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'warning';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000);
   }
 
   closePopup() {
@@ -122,78 +132,98 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     this.popupMessage = '';
   }
 
-  // --- Navigation ---
+  // --- Navigation (Enhanced with Rate Limiting) ---
   async onSaveAndNext() {
+    if (this.isSaving) return;
     console.log('onSaveAndNext called, currentStep:', this.currentStep);
     this.isSaving = true;
     let success = false;
-
-    // Move to next step immediately
-    if (this.currentStep < 6) {
-      const previousStep = this.currentStep;
-      this.currentStep++;
-      if (this.currentStep === 4) {
-        console.log('Skipping step 4 as per logic.');
-        this.currentStep = 5; // Skip step 4
-      }
-      console.log('Navigated to step:', this.currentStep);
-
-      // Save data in the background
-      try {
-        switch (previousStep) {
-          case 1:
-            console.log('Saving profile information...');
-            success = await this.profileComponent.saveProfile();
-            console.log('Profile save result:', success);
-            break;
-          case 2:
-            console.log('Saving employment information...');
-            success = await this.employmentComponent.saveEmployment();
-            console.log('Employment save result:', success);
-            break;
-          case 3:
-            console.log('Saving education information...');
-            success = await this.educationComponent.saveEducation();
-            console.log('Education save result:', success);
-            break;
-          case 5:
-            console.log('Saving certifications information...');
-            success = await this.certificationComponent.saveCertifications();
-            console.log('Certifications save result:', success);
-
-            if (success) {
-              this.showSuccessPopup();
+    
+    try {
+      // --- LOGIC IS NOW ISOLATED BY STEP ---
+      switch (this.currentStep) {
+        
+        case 1: { // Special handling for Basic Information
+          console.log('Saving profile information...');
+          const result = await this.profileComponent.saveProfile();
+          success = result.success;
+          if (result.success) {
+            if (result.rateLimited) {
+              // Show rate-limit warning only for step 1
+              this.showRateLimitWarningPopup(result.message);
             } else {
-              this.showErrorPopup();
+              // Show standard success for step 1
+              this.showSuccessPopup();
             }
-
-            // Redirect to 'candidate-home' after 5 seconds regardless of success or failure
-            setTimeout(() => {
-              this.router.navigate(['candidate-home']);
-            }, 3000);
-            break;
-          default:
-            console.warn('Invalid step encountered:', previousStep);
-            this.showErrorPopup();
-            this.isSaving = false;
-            return;
+          } else {
+            this.showErrorPopup(result.message || 'Failed to save profile.');
+          }
+          break;
         }
-
-        if (success) {
-          console.log(`Step ${previousStep} saved successfully.`);
-          this.showSuccessPopup();
-        } else {
-          console.warn(`Saving step ${previousStep} failed.`);
-          this.showErrorPopup();
+        
+        case 2: { // Standard handling for Employment
+          console.log('Saving employment information...');
+          success = await this.employmentComponent.saveEmployment();
+          if (success) {
+            this.showSuccessPopup();
+          } else {
+            this.showErrorPopup('Failed to save employment details.');
+          }
+          break;
         }
-      } catch (error) {
-        console.error(`Exception caught during save at step ${previousStep}:`, error);
-        this.showErrorPopup();
-      } finally {
-        this.isSaving = false;
-        console.log('onSaveAndNext completed, isSaving set to false');
+        
+        case 3: { // Standard handling for Education
+          console.log('Saving education information...');
+          success = await this.educationComponent.saveEducation();
+          if (success) {
+            this.showSuccessPopup();
+          } else {
+            this.showErrorPopup('Failed to save education details.');
+          }
+          break;
+        }
+          
+        case 5: { // Standard handling for Certifications
+          console.log('Saving certifications information...');
+          success = await this.certificationComponent.saveCertifications();
+          if (success) {
+            this.showSuccessPopup();
+          } else {
+            this.showErrorPopup('Failed to save certification details.');
+          }
+          break;
+        }
+        
+        default:
+          console.warn('No save action for this step, proceeding.');
+          success = true; // Allow navigation if no save action is defined
       }
-    } else {
+      
+      // --- COMMON NAVIGATION LOGIC ---
+      // This part runs if ANY step reported success.
+      if (success) {
+        // Navigate immediately for a better user experience,
+        // the popup will show over the new component for 3 seconds.
+        if (this.currentStep < 6) {
+          this.currentStep++;
+          if (this.currentStep === 4) {
+            console.log('Skipping step 4 as per logic.');
+            this.currentStep = 5; // Skip step 4
+          }
+        }
+        
+        // After the final save on step 5, navigate to the home page.
+        if (this.currentStep === 6 || (this.currentStep > 5 && this.currentStep !== 5)) {
+          // Use a timeout here so the user can see the final "Success" message
+          setTimeout(() => {
+            this.router.navigate(['/candidate-home']);
+          }, 3000);
+        }
+      }
+    } catch (error) {
+      console.error(`Exception caught during save at step ${this.currentStep}:`, error);
+      this.showErrorPopup();
+    } finally {
       this.isSaving = false;
     }
   }
