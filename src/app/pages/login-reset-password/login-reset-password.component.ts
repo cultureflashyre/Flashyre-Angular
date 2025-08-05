@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ResetService } from '../../services/reset.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './login-reset-password.component.html',
   styleUrls: ['./login-reset-password.component.css'],
 })
-export class LoginResetPasswordComponent implements OnInit {
+export class LoginResetPasswordComponent implements OnInit, OnDestroy {
   email: string | null = null;
   otp: string = '';
   password: string = '';
@@ -16,6 +16,10 @@ export class LoginResetPasswordComponent implements OnInit {
   error: string = '';
   loading: boolean = false;
   isOTPVerified: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  countdown: number = 60;
+  private countdownInterval: any;
 
   constructor(
     private resetService: ResetService,
@@ -48,12 +52,61 @@ export class LoginResetPasswordComponent implements OnInit {
         console.log('No email found in state, query params, or local storage');
         this.error = 'Email is missing. Redirecting to Forgot Password page...';
         setTimeout(() => {
-          window.location.href = '/login-forgot-password'; // Fallback navigation
+          window.location.href = '/login-forgot-password';
         }, 3000);
       } else {
         localStorage.setItem('resetEmail', this.email);
         console.log('Email retrieved successfully, rendering form');
+        this.startCountdown();
       }
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clear countdown interval to prevent memory leaks
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  startCountdown(): void {
+    this.countdown = 60;
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+    this.countdownInterval = setInterval(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        clearInterval(this.countdownInterval);
+      }
+    }, 1000);
+  }
+
+  resendOTP(): void {
+    if (!this.email) {
+      this.error = 'Email is required to resend OTP.';
+      console.log('resendOTP failed: missing email');
+      return;
+    }
+
+    this.loading = true;
+    this.message = '';
+    this.error = '';
+    this.otp = ''; // Clear previous OTP
+
+    this.resetService.forgotPassword(this.email).subscribe({
+      next: (response) => {
+        console.log('Resend OTP response:', response);
+        this.message = response.message || 'New OTP sent successfully.';
+        this.loading = false;
+        this.startCountdown();
+      },
+      error: (err) => {
+        console.error('Resend OTP error:', err);
+        this.error = err.message || 'Failed to resend OTP. Please try again.';
+        this.loading = false;
+      },
     });
   }
 
@@ -75,6 +128,7 @@ export class LoginResetPasswordComponent implements OnInit {
         this.message = response.message || 'OTP verified successfully.';
         this.isOTPVerified = true;
         this.loading = false;
+        clearInterval(this.countdownInterval); // Stop countdown on successful verification
       },
       error: (err) => {
         console.error('Verify OTP error:', err);
@@ -114,7 +168,7 @@ export class LoginResetPasswordComponent implements OnInit {
         this.loading = false;
         localStorage.removeItem('resetEmail');
         setTimeout(() => {
-          window.location.href = '/login-candidate'; // Adjusted to candidate login
+          window.location.href = '/login-candidate';
         }, 2000);
       },
       error: (err) => {
@@ -144,5 +198,24 @@ export class LoginResetPasswordComponent implements OnInit {
 
   getButtonAriaLabel(): string {
     return this.getButtonText();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onKeydown(event: KeyboardEvent, field: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (field === 'password') {
+        this.togglePasswordVisibility();
+      } else if (field === 'confirmPassword') {
+        this.toggleConfirmPasswordVisibility();
+      }
+    }
   }
 }
