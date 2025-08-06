@@ -7,6 +7,7 @@
   height: auto;
   display: flex;
   position: relative;
+  background-color: #ffffff;
 }
  
 .progress-bar-2-code-container2 {
@@ -15,7 +16,10 @@
   padding-left: 250px;
   display: flex;
   align-items: center;
-  
+  background-color: #ffffff;
+}
+.progress-bar{
+  background-color: #ffffff;
 }
  
 .progress-bar-2-code-container3 {
