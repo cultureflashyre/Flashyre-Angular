@@ -216,6 +216,10 @@
   width: 24px;
   height: 24px;
 }
+
+.back-button {
+  padding: 0px;
+}
  
 .assessment-taken-page2-cloud-architecture-text {
   height: 32px;
