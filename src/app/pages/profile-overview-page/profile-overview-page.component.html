@@ -61,7 +61,8 @@
       </navbar-for-candidate-view1>
   
       <!-- Popup Message -->
-      <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      <div class="alert" *ngIf="showPopup" 
+           [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error', 'warning': popupType === 'warning'}">
         <span class="closebtn" (click)="closePopup()">×</span>
         <span *ngIf="popupType === 'success'" class="tick">✔</span>
         {{ popupMessage }}

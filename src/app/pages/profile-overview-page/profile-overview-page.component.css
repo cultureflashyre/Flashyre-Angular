@@ -1,6 +1,12 @@
 :host { 
     display: contents; 
   }
+
+  .alert.warning {
+  background-color: #ffc107; /* A standard Bootstrap warning yellow */
+  color: #212529; /* Dark text for better contrast on yellow */
+  border-color: #ffc107;
+}
    
   .profile-overview-page-container1 {
     width: 100%;
