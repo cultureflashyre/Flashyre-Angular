@@ -1,0 +1,896 @@
+:host { 
+  display: contents; 
+}
+ 
+.admin-page1-component-container {
+  gap: 16px;
+  width: 100%;
+  height: 470px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  border-color: #CBCBCB;
+  border-width: 1px;
+  border-radius: 4px;
+  flex-direction: column;
+  border-left-width: 1px;
+  border-right-width: 1px;
+}
+ 
+.admin-page1-component-date-selector-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  padding-left: 8px;
+  padding-right: 8px;
+  justify-content: space-between;
+}
+ 
+.admin-page1-component-left-arrow-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.admin-page1-component-left-arrow-icon {
+  color: #ACACAD;
+  width: 24px;
+  transition: 0.3s;
+}
+ 
+.admin-page1-component-left-arrow-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-left-arrow-icon:active {
+  transform: scale(1.05);
+}
+ 
+.admin-page1-component-date-selector-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 90%;
+  height: 100%;
+  display: flex;
+  max-width: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  align-items: center;
+  padding-left: var(--dl-layout-space-unit);
+  padding-right: var(--dl-layout-space-unit);
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.admin-page1-component-date-selector1st-container {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 75%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  flex-direction: column;
+  justify-content: center;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: #05356C;
+  border-bottom-width: 2px;
+}
+ 
+.admin-page1-component-date-selector1st-container:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-date-selector1st-container:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: #05356C;
+  border-bottom-width: 2px;
+}
+ 
+.admin-page1-component-day-text {
+  fill: #05356C;
+  color: #05356C;
+  font-size: 16px;
+}
+ 
+.admin-page1-component-day-and-time-container1 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 75%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.admin-page1-component-day-and-time-container1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-day-and-time-container1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: #05356C;
+  border-bottom-width: 2px;
+}
+ 
+.admin-page1-component-day-text11 {
+  color: #05356C;
+  font-size: 16px;
+}
+ 
+.admin-page1-component-time-text1 {
+  fill: #ACACAD;
+  color: #ACACAD;
+  font-size: 12px;
+  align-self: center;
+}
+ 
+.admin-page1-component-day-and-time-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 75%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.admin-page1-component-day-and-time-container2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-day-and-time-container2:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: #05356C;
+  border-bottom-width: 2px;
+}
+ 
+.admin-page1-component-day-text12 {
+  color: #05356C;
+  font-size: 16px;
+}
+ 
+.admin-page1-component-time-text2 {
+  fill: #ACACAD;
+  color: #ACACAD;
+  font-size: 12px;
+  align-self: center;
+}
+ 
+.admin-page1-component-day-time-last-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 75%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.admin-page1-component-day-time-last-container:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-day-time-last-container:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: #05356C;
+  border-bottom-width: 2px;
+}
+ 
+.admin-page1-component-date-month-year-text {
+  color: #05356C;
+  font-size: 16px;
+}
+ 
+.admin-page1-component-time-last-text {
+  fill: #ACACAD;
+  color: #ACACAD;
+  font-size: 12px;
+  align-self: center;
+}
+ 
+.admin-page1-component-right-arrow-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.admin-page1-component-right-arrow-icon {
+  fill: #ACACAD;
+  color: #ACACAD;
+  align-self: center;
+  transition: 0.3s;
+}
+ 
+.admin-page1-component-right-arrow-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-right-arrow-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-candidate-profiles-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: flex-start;
+  border-color: #CBCBCB;
+  border-width: 1px;
+  flex-direction: column;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+ 
+.admin-page1-component-select-process-remove-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 15%;
+  display: flex;
+  align-items: flex-start;
+  border-color: #CBCBCB;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-oneandhalfunits);
+  padding-right: var(--dl-layout-space-oneandhalfunits);
+  justify-content: space-between;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+ 
+.admin-page1-component-select-all-main-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-page1-component-select-checkbox {
+  width: 20px;
+  height: 20px;
+}
+ 
+.admin-page1-component-select-all-text {
+  font-size: 16px;
+}
+ 
+.admin-page1-component-start-process-remove-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.admin-page1-component-start-process-button {
+  fill: #05356C;
+  color: #05356C;
+  width: auto;
+  height: 75%;
+  font-size: 20px;
+  transition: 0.3s;
+  border-color: rgb(65, 50, 123);
+  border-width: 1px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.admin-page1-component-start-process-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-start-process-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-start-process-text {
+  fill: #05356C;
+  color: #05356C;
+  font-size: 16px;
+}
+ 
+.admin-page1-component-remove-button {
+  color: #f10400;
+  width: auto;
+  height: 75%;
+  font-size: 20px;
+  transition: 0.3s;
+  border-color: #F10400;
+  border-width: 1px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.admin-page1-component-remove-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-remove-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-remove-text {
+  font-size: 16px;
+}
+ 
+.admin-page1-component-candidates-name-view-cv-main-container {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  max-height: 351px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: flex-start;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+ 
+.admin-page1-component-candidates-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  align-items: flex-start;
+  border-color: #CBCBCB;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-oneandhalfunits);
+  padding-right: var(--dl-layout-space-oneandhalfunits);
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+}
+ 
+.admin-page1-component-candidate-name-check-box-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-page1-component-candidate-checkbox {
+  width: 20px;
+  height: 20px;
+}
+ 
+.admin-page1-component-candidate-name-text {
+  font-size: 16px;
+}
+ 
+.admin-page1-component-cv-main-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 27%;
+  height: 100%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.admin-page1-component-cv-main-container:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-cv-main-container:active {
+  color: rgb(65, 50, 123);
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-eye-icon {
+  width: 24px;
+  height: 24px;
+}
+ 
+.admin-page1-component-view-cv-text {
+  font-size: 16px;
+}
+ 
+.admin-page1-component-warning-green-tick-remove-icon-container {
+  flex: 0 0 auto;
+  width: 27%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.admin-page1-component-warning-green-tick-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.admin-page1-component-warning-icon {
+  fill: #F10400;
+  color: #F10400;
+  width: 30px;
+  height: 30px;
+}
+ 
+.admin-page1-component-green-tick-icon {
+  fill: #1F882B;
+  color: #1F882B;
+  width: 30px;
+  height: 30px;
+}
+ 
+.admin-page1-component-remove-icon {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-self: center;
+  transition: 0.3s;
+  align-items: center;
+  border-radius: var(--dl-layout-radius-round);
+  justify-content: center;
+  background-color: #F10400;
+}
+ 
+.admin-page1-component-remove-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-remove-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.admin-page1-component-fragment10 {
+  display: contents;
+}
+ 
+.admin-page1-component-text10 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment11 {
+  display: contents;
+}
+ 
+.admin-page1-component-text11 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment12 {
+  display: contents;
+}
+ 
+.admin-page1-component-text12 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment13 {
+  display: contents;
+}
+ 
+.admin-page1-component-text13 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment14 {
+  display: contents;
+}
+ 
+.admin-page1-component-text14 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment15 {
+  display: contents;
+}
+ 
+.admin-page1-component-text15 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment16 {
+  display: contents;
+}
+ 
+.admin-page1-component-text16 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment17 {
+  display: contents;
+}
+ 
+.admin-page1-component-text17 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment18 {
+  display: contents;
+}
+ 
+.admin-page1-component-text18 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment19 {
+  display: contents;
+}
+ 
+.admin-page1-component-text19 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment20 {
+  display: contents;
+}
+ 
+.admin-page1-component-text20 {
+  display: inline-block;
+}
+ 
+.admin-page1-component-fragment21 {
+  display: contents;
+}
+ 
+.admin-page1-component-text21 {
+  display: inline-block;
+}
+ 
+
+ 
+@media(max-width: 991px) {
+  .admin-page1-component-container {
+    height: auto;
+  }
+  .admin-page1-component-date-selector-main-container {
+    gap: 12px;
+    width: 100%;
+    height: 44px;
+    border-width: 0px;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .admin-page1-component-date-selector-container {
+    gap: 12px;
+    width: 90%;
+    max-width: auto;
+    justify-content: flex-start;
+  }
+  .admin-page1-component-date-selector1st-container {
+    width: 80px;
+  }
+  .admin-page1-component-day-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-day-and-time-container1 {
+    gap: 4px;
+    width: auto;
+  }
+  .admin-page1-component-day-text11 {
+    font-size: 14px;
+  }
+  .admin-page1-component-time-text1 {
+    font-size: 10px;
+  }
+  .admin-page1-component-day-and-time-container2 {
+    gap: 4px;
+    width: auto;
+  }
+  .admin-page1-component-day-text12 {
+    font-size: 14px;
+  }
+  .admin-page1-component-time-text2 {
+    font-size: 10px;
+  }
+  .admin-page1-component-day-time-last-container {
+    gap: 4px;
+    width: auto;
+  }
+  .admin-page1-component-date-month-year-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-time-last-text {
+    font-size: 10px;
+  }
+  .admin-page1-component-candidate-profiles-main-container {
+    height: 286px;
+  }
+  .admin-page1-component-select-process-remove-main-container {
+    height: 15%;
+  }
+  .admin-page1-component-select-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-select-all-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-start-process-button {
+    padding-top: 0px;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+    padding-bottom: 0px;
+  }
+  .admin-page1-component-start-process-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-remove-button {
+    font-size: 14px;
+    padding-top: 0px;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+    padding-bottom: 0px;
+  }
+  .admin-page1-component-remove-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-candidates-main-container {
+    height: 20%;
+  }
+  .admin-page1-component-candidate-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-candidate-name-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-eye-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .admin-page1-component-view-cv-text {
+    font-size: 14px;
+  }
+  .admin-page1-component-warning-icon {
+    width: 26px;
+    height: 26px;
+  }
+  .admin-page1-component-green-tick-icon {
+    width: 26px;
+    height: 26px;
+  }
+  .admin-page1-component-remove-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .admin-page1-component-date-selector-main-container {
+    justify-content: space-between;
+  }
+  .admin-page1-component-date-selector-container {
+    left: 0px;
+    right: 0px;
+    width: 90%;
+    position: relative;
+    max-width: auto;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .admin-page1-component-remove-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .admin-page1-component-container {
+    gap: 8px;
+    height: 240px;
+  }
+  .admin-page1-component-date-selector-main-container {
+    width: 100%;
+    height: 36px;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+    justify-content: space-between;
+  }
+  .admin-page1-component-left-arrow-container {
+    width: auto;
+    height: auto;
+  }
+  .admin-page1-component-left-arrow-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-date-selector-container {
+    width: 85%;
+    height: 100%;
+    max-width: auto;
+    align-self: center;
+    align-items: center;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .admin-page1-component-day-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-day-and-time-container1 {
+    gap: 2px;
+    align-items: center;
+  }
+  .admin-page1-component-day-text11 {
+    font-size: 12px;
+  }
+  .admin-page1-component-time-text1 {
+    display: flex;
+    font-size: 8px;
+    align-self: flex-end;
+    align-items: center;
+  }
+  .admin-page1-component-day-and-time-container2 {
+    gap: 2px;
+  }
+  .admin-page1-component-day-text12 {
+    font-size: 12px;
+  }
+  .admin-page1-component-time-text2 {
+    display: flex;
+    font-size: 8px;
+    align-items: center;
+  }
+  .admin-page1-component-day-time-last-container {
+    gap: 2px;
+  }
+  .admin-page1-component-date-month-year-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-time-last-text {
+    display: flex;
+    font-size: 8px;
+    align-items: center;
+  }
+  .admin-page1-component-right-arrow-container {
+    width: auto;
+    height: auto;
+  }
+  .admin-page1-component-right-arrow-icon {
+    fill: #ACACAD;
+    color: #ACACAD;
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-candidate-profiles-main-container {
+    height: auto;
+  }
+  .admin-page1-component-select-process-remove-main-container {
+    height: 15%;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .admin-page1-component-select-checkbox {
+    width: 14px;
+    height: 14px;
+  }
+  .admin-page1-component-select-all-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-start-process-remove-container {
+    gap: 8px;
+  }
+  .admin-page1-component-start-process-button {
+    width: 100px;
+    padding: 0px;
+  }
+  .admin-page1-component-start-process-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-remove-button {
+    width: 80px;
+    padding: 0px;
+  }
+  .admin-page1-component-remove-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-candidates-name-view-cv-main-container {
+    height: 180px;
+  }
+  .admin-page1-component-candidates-main-container {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .admin-page1-component-candidate-checkbox {
+    width: 14px;
+    height: 14px;
+  }
+  .admin-page1-component-candidate-name-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-cv-main-container {
+    gap: 4px;
+    width: 27%;
+  }
+  .admin-page1-component-eye-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-view-cv-text {
+    font-size: 12px;
+  }
+  .admin-page1-component-warning-green-tick-remove-icon-container {
+    width: 27%;
+  }
+  .admin-page1-component-warning-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-green-tick-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .admin-page1-component-remove-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+  }
+}

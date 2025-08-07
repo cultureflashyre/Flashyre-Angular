@@ -260,6 +260,7 @@ const routes = [
         './pages/create-job-post-21-page/create-job-post-21-page.module'
       ).then((m) => m.CreateJobPost21PageModule),
   },
+  
   {
     path: 'create-job-post-22-page',
     loadChildren: () =>
@@ -278,6 +279,13 @@ const routes = [
     loadChildren: () =>
       import( './pages/assessment-violation-message/assessment-violation-message.module'
       ).then((m) => m.AssessmentViolationMessageModule),
+  },
+  {
+    path: 'admin-page1',
+    loadChildren: () =>
+      import('./pages/admin-page1/admin-page1.module').then(
+        (m) => m.AdminPage1Module
+      ),
   },
   {
     path: '**',
