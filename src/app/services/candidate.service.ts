@@ -39,6 +39,14 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}api/applied-jobs/`);
   }
 
+  
+  
+  getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {
+    const url = `${this.apiUrl}api/jobs/get-match-scores/`;
+    // The backend expects an object with a 'job_ids' key
+    return this.http.post<{[key: number]: number}>(url, { job_ids: jobIds });
+  }
+
   getJWTToken(): string | null {
     return localStorage.getItem('jwtToken');
   }
@@ -65,3 +73,4 @@ export class AuthService {
     return !!token;
   }
 }
+

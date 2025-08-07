@@ -4,10 +4,15 @@ import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 
 import { AuthService } from '../../services/candidate.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
+// --- ADDED: Interface for clarity ---
+interface AppliedJobsResponse {
+  applied_job_ids: number[];
+}
 
 @Component({
   selector: 'candidate-home',
@@ -19,6 +24,9 @@ export class CandidateHome implements OnInit {
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
 
   jobs: any[] = [];
+  
+  // --- ADDED: Missing jobScores property ---
+  jobScores: { [key: number]: number } = {};
 
   appliedJobIds: number[] = [];
 
@@ -72,7 +80,7 @@ export class CandidateHome implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadJobsAndFilterApplied();
+    this.loadJobsAndScores();
     this.loadUserProfile();
   }
 
@@ -85,32 +93,47 @@ export class CandidateHome implements OnInit {
     }
   }
 
-  loadJobsAndFilterApplied(): void {
+  // --- UPDATED AND REFACTORED METHOD ---
+  loadJobsAndScores(): void {
     this.isLoading = true;
     
-    // Get both jobs and applied job IDs in parallel
     forkJoin({
       jobs: this.http.get<any[]>(this.apiUrl),
-      appliedJobs: this.authService.getAppliedJobs()
-    }).subscribe(
-      (results) => {
-        // Store applied job IDs
+      appliedJobs: this.authService.getAppliedJobs().pipe(catchError(() => of({ applied_job_ids: [] })))
+    }).subscribe({
+      next: (results) => {
         this.appliedJobIds = results.appliedJobs.applied_job_ids || [];
-        
-        // Filter out jobs that the user has already applied for
-        this.jobs = results.jobs.filter(job => 
-          !this.appliedJobIds.includes(job.job_id)
-        );
-        
-        this.isLoading = false;
+        this.jobs = results.jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+
+        // After jobs are filtered, fetch their scores
+        if (this.jobs.length > 0) {
+          this.fetchMatchScores();
+        } else {
+          this.isLoading = false; // No jobs to score, stop loading
+        }
       },
-      (error) => {
-        console.error('Error loading data:', error);
-        // If error occurs, still try to load jobs
-        this.fetchJobs();
+      error: (error) => {
+        console.error('Error loading initial job data:', error);
         this.isLoading = false;
       }
-    );
+    });
+  }
+
+  // --- NEW METHOD TO FETCH SCORES ---
+  fetchMatchScores(): void {
+    const jobIdsToScore = this.jobs.map(job => job.job_id);
+
+    this.authService.getMatchScores(jobIdsToScore).subscribe({
+      next: (scores) => {
+        console.log('Received scores:', scores);
+        this.jobScores = scores;
+        this.isLoading = false; // All data is loaded, stop loading
+      },
+      error: (error) => {
+        console.error('Error fetching job match scores:', error);
+        this.isLoading = false; // Stop loading even if scores fail
+      }
+    });
   }
 
   fetchJobs(): void {
@@ -131,8 +154,8 @@ export class CandidateHome implements OnInit {
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
     
-    this.authService.applyForJob(jobId).subscribe(
-      (response) => {
+    this.authService.applyForJob(jobId).subscribe({
+      next: (response) => {
         console.log('Application successful:', response);
         this.applicationSuccess[jobId] = true;
         
@@ -144,11 +167,15 @@ export class CandidateHome implements OnInit {
           this.jobs = this.jobs.filter(job => job.job_id !== jobId);
         }, 2000);
       },
-      (error) => {
+      error: (error) => {
         console.error('Application failed:', error);
         this.processingApplications[jobId] = false;
         alert(error.error?.error || 'Failed to apply for this job');
+      },
+      // --- ADDED: Complete handler to reset processing state ---
+      complete: () => {
+        this.processingApplications[jobId] = false;
       }
-    );
+    });
   }
 }

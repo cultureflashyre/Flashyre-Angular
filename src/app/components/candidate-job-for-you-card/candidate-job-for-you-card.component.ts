@@ -1,17 +1,24 @@
-import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'candidate-job-for-you-card',
   templateUrl: 'candidate-job-for-you-card.component.html',
   styleUrls: ['candidate-job-for-you-card.component.css'],
 })
-export class CandidateJobForYouCard implements OnInit, AfterViewInit {
-  userProfile: any = {}; // To store user profile data
+export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges {
+  // --- Component Properties ---
+  userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
-  @Input() matchingScore: number = 80; // Default value
+  
+  // This is the main input that receives the score from the parent component.
+  // The hardcoded default is removed.
+  @Input() matchingScore: number;
+  
+  // This internal 'score' property is used in the template for display.
   score: number = 0;
   
-  // Use ViewChild to get direct references to the elements
+  // --- View and Content Children ---
+  // These allow direct access to elements in the component's template for manipulation.
   @ViewChild('desktopBar') desktopBar: ElementRef;
   @ViewChild('mobileLoader') mobileLoader: ElementRef;
 
@@ -29,9 +36,12 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
   constructor() {}
 
+  // --- Lifecycle Hooks ---
+
   ngOnInit(): void {
-    // Initialize the score from the input property
-    this.score = this.matchingScore;
+    // On initialization, set the internal score from the input property,
+    // defaulting to 0 if it's not provided yet.
+    this.score = this.matchingScore || 0;
     this.loadUserProfile();
   }
 
@@ -40,71 +50,93 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
     } else {
-      console.log("User Profile NOT fetched");
+      console.log("User Profile NOT fetched in job card");
     }
   }
 
   ngAfterViewInit(): void {
-    // Begin the animation after the view is initialized and references are available
+    // Begin the animation after the view is initialized and UI elements are available.
+    // A small timeout ensures the browser has rendered the elements before we try to animate them.
     setTimeout(() => {
       this.animateProgressBar();
-    }, 0);
+    }, 100);
   }
 
-  // Function to determine the fill color based on the percentage
+  // This hook is crucial for handling data that arrives asynchronously.
+  // It fires every time an @Input() property (like matchingScore) changes.
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['matchingScore'] && !changes['matchingScore'].firstChange) {
+      // If the matchingScore input has changed (i.e., the data has arrived from the API),
+      // update the internal score and restart the animation with the new value.
+      this.score = this.matchingScore || 0;
+      this.animateProgressBar();
+    }
+  }
+
+  // --- Private Helper Functions ---
+
+  /**
+   * Determines the color of the progress bar based on the score value.
+   * @param value The current percentage (0-100).
+   * @returns A CSS color string.
+   */
   private getFillColor(value: number): string {
-    if (value <= 40) return 'red';
-    if (value <= 60) return 'orange';
-    if (value <= 75) return '#4D91C6'; // Ampere color
-    if (value <= 84) return 'lightgreen';
-    return 'darkgreen';
+    if (value <= 40) return '#F44336'; // Red
+    if (value <= 60) return '#FF9800'; // Orange
+    if (value <= 75) return '#2196F3'; // Blue
+    if (value <= 84) return '#8BC34A'; // Light Green
+    return '#4CAF50'; // Dark Green
   }
 
-  // Function to animate the progress bar
+  /**
+   * Controls the animation of the progress bar from 0 to the final score.
+   */
   private animateProgressBar(): void {
-    const duration = 2000; // Animation duration in milliseconds
+    const duration = 1500; // Animation duration in milliseconds
     const startTime = Date.now();
 
     const animate = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1); // Progress between 0 and 1
+      const progress = Math.min(elapsedTime / duration, 1); // Value from 0 to 1
 
-      // Calculate the current percentage based on animation progress
-      // Now correctly animates up to the actual score value instead of always filling to 100%
-      const currentPercentage = progress * this.score;
+      // Calculate the current percentage value to display during the animation
+      const currentPercentage = Math.round(progress * this.score);
 
-      // Update the progress bar
+      // Update the visual state of the progress bar
       this.updateProgressBar(currentPercentage);
 
-      // Continue animation until duration is complete
+      // Continue the animation until the duration is complete
       if (progress < 1) {
         requestAnimationFrame(animate);
       }
     };
 
-    // Start the animation
-    animate();
+    // Start the animation loop
+    requestAnimationFrame(animate);
   }
 
-  // Function to update the progress bar width and color
+  /**
+   * Updates the style properties of the desktop and mobile progress bars.
+   * @param percentage The current percentage to display.
+   */
   private updateProgressBar(percentage: number): void {
-    // Calculate the actual percentage to display (capped by matchingScore)
+    // Ensure the percentage doesn't exceed the final target score during animation
     const actualPercentage = Math.min(percentage, this.score);
     
-    // Update desktop progress bar using ViewChild reference
+    // Update desktop progress bar (the straight line)
     if (this.desktopBar && this.desktopBar.nativeElement) {
       this.desktopBar.nativeElement.style.width = `${actualPercentage}%`;
       this.desktopBar.nativeElement.style.backgroundColor = this.getFillColor(actualPercentage);
     }
 
-    // Update mobile SVG progress bar using ViewChild reference
+    // Update mobile SVG progress bar (the semi-circle)
     if (this.mobileLoader && this.mobileLoader.nativeElement) {
-      const radius = 4; // Radius of the SVG circle
-      const circumference = 2 * Math.PI * radius;
-      const strokeLength = (actualPercentage / 134) * circumference;
+      const radius = 4; // As defined in the SVG path 'A 4 4...'
+      const circumference = Math.PI * radius; // Circumference of a semi-circle
+      const strokeLength = (actualPercentage / 100) * circumference;
       
-      this.mobileLoader.nativeElement.style.strokeDasharray = `${strokeLength} ${circumference - strokeLength}`;
+      this.mobileLoader.nativeElement.style.strokeDasharray = `${strokeLength}, ${circumference}`;
       this.mobileLoader.nativeElement.style.stroke = this.getFillColor(actualPercentage);
     }
   }

@@ -524,6 +524,7 @@
                 [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
                 [imageSrc]="job.logo"
                 [imageAlt]="job.company_name + ' logo'"
+                [matchingScore]="jobScores[job.job_id] || 0"
             >
                 <ng-template #text>
                     <div class="candidate-home-fragment31">
