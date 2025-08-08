@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'admin-page2-component',
@@ -6,17 +6,20 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['admin-page2-component.component.css'],
 })
 export class AdminPage2Component {
-  @ContentChild('text2')
-  text2: TemplateRef<any>
   @Input()
-  rootClassName: string = ''
-  @ContentChild('text')
-  text: TemplateRef<any>
-  @ContentChild('button')
-  button: TemplateRef<any>
-  @ContentChild('text1')
-  text1: TemplateRef<any>
-  @ContentChild('text3')
-  text3: TemplateRef<any>
+  rootClassName: string = '';
+
+  // State to control which view is active
+  public activeView: 'jd' | 'candidates' = 'jd';
+
   constructor() {}
+
+  // Methods to switch the view
+  showJdView(): void {
+    this.activeView = 'jd';
+  }
+
+  showCandidatesView(): void {
+    this.activeView = 'candidates';
+  }
 }

@@ -16,28 +16,32 @@
           id="cv-jd-upload-container"
           class="admin-page1cvjd-upload-container"
         >
-           <div id="cv-upload-button-container" class="admin-page1cv-upload-button-container" 
-               (click)="triggerFileUpload()"
-               [class.disabled]="isUploading">
-            <span id="cv-upload-text" class="admin-page1cv-upload-text">
-              <span *ngIf="!isUploading">CV Bulk Upload</span>
-              <span *ngIf="isUploading">Processing...</span>
-            </span>
-          </div>
-          <div
-            id="jd-upload-button-container"
-            class="admin-page1jd-upload-button-container"
+           <div
+            id="cv-upload-button-container"
+            class="admin-page1cv-upload-button-container"
+            (click)="triggerCvUpload()"
+            [class.disabled]="isCvUploading"
           >
-            <span id="jd-upload-text" class="admin-page1jd-upload-text">
-              JD Upload
+            <span id="cv-upload-text" class="admin-page1cv-upload-text">
+              <span *ngIf="!isCvUploading">CV Bulk Upload</span>
+              <span *ngIf="isCvUploading">Processing...</span>
             </span>
           </div>
+          <!-- JD UPLOAD BUTTON (NEW) -->
+  <div id="jd-upload-button-container" (click)="triggerJdUpload()" [class.disabled]="isJdUploading">
+    <span id="jd-upload-text" class="admin-page1jd-upload-text">
+      <span *ngIf="!isJdUploading">JD Upload</span>
+      <span *ngIf="isJdUploading">Processing...</span>
+    </span>
+  </div>
+</div>
            <!-- Add a message area for upload status -->
         <div *ngIf="uploadMessage" class="upload-status-message">
           {{ uploadMessage }}
         </div>
         <!-- Add hidden file input -->
-        <input type="file" #fileInput hidden multiple (change)="onFilesSelected($event)" accept=".pdf,.doc,.docx"/>
+      <input type="file" #cvFileInput hidden multiple (change)="onCvFilesSelected($event)" accept=".pdf,.doc,.docx"/>
+        <input type="file" #jdFileInput hidden (change)="onJdFileSelected($event)" accept=".pdf,.doc,.docx"/>
         </div>
         <admin-page1-component
           rootClassName="admin-page1-componentroot-class-name"
@@ -105,34 +109,8 @@
         </admin-page1-component>
         <admin-page2-component
           rootClassName="admin-page2-componentroot-class-name"
-        >
-          <ng-template #text>
-            <div class="admin-page1-fragment22">
-              <span class="admin-page1-text22">Candidate Sourced</span>
-            </div>
-          </ng-template>
-          <ng-template #text1>
-            <div class="admin-page1-fragment23">
-              <span class="admin-page1-text23">Sub-menu Item</span>
-            </div>
-          </ng-template>
-          <ng-template #text2>
-            <div class="admin-page1-fragment24">
-              <span class="admin-page1-text24">Sub-menu Item</span>
-            </div>
-          </ng-template>
-          <ng-template #text3>
-            <div class="admin-page1-fragment25">
-              <span class="admin-page1-text25">Sub-menu Item</span>
-            </div>
-          </ng-template>
-          <ng-template #button>
-            <div class="admin-page1-fragment26">
-              <span class="admin-page1-text26">JD Extended</span>
-            </div>
-          </ng-template>
-        </admin-page2-component>
+        ></admin-page2-component>
       </div>
     </div>
   </div>
-</div>
+
