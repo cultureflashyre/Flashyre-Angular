@@ -1,57 +1,58 @@
 <!-- 
-  This entire component's content will only be displayed if there is an active JD.
+  This is the main container for the component. 
+  It will only be displayed if there is an active JD loaded.
   If not, the 'noJd' template at the bottom is shown.
 -->
 <div
   *ngIf="activeJd; else noJd"
-  id="admin-page1-component"
   class="admin-candidate-sourced-component-admin-candidate-sourced-component"
   [ngClass]="rootClassName"
 >
+  <!-- This container holds the header and the scrollable list -->
   <div
-    id="candidate-profiles-main-container"
     class="admin-candidate-sourced-component-candidate-profiles-main-container"
   >
     <!-- Top bar for Sorting and Downloading the Report -->
     <div
-      id="select-filter-sort-download-zip-main-container"
       class="admin-candidate-sourced-component-select-filter-sort-download-zip-main-container"
     >
-      <!-- This container is kept for layout consistency but its content (checkbox) is removed as per the plan. -->
+      <!-- Left side of the header. Kept for layout but content is removed as per plan. -->
       <div
-        id="select-all-main-container"
         class="admin-candidate-sourced-component-select-all-main-container"
       ></div>
 
-      <!-- Container for Sort and Download actions -->
+      <!-- Right side of the header, containing actions -->
       <div
-        id="filter-sort-download-zip-container"
         class="admin-candidate-sourced-component-filter-sort-download-zip-container"
       >
-        <!-- The static "Filtered By" button is removed. -->
-
         <!-- Dynamic Sort Dropdown -->
-        <div
-          class="admin-candidate-sourced-component-sort-dropdown list-item"
-        >
-          <select class="sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
-            <option *ngFor="let option of sortOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
+        <div class="admin-candidate-sourced-component-sort-dropdown">
+          <!-- 
+            Using a native <select> for functionality, styled to fit the container.
+            The CSS for dropdown-toggle1 is applied to the wrapper div.
+          -->
+          <div class="admin-candidate-sourced-component-dropdown-toggle1">
+            <select
+              class="sort-select"
+              [(ngModel)]="sortBy"
+              (change)="onSortChange()"
+            >
+              <option *ngFor="let option of sortOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <!-- Download Report Button -->
         <div
-          id="download-zip-container"
           class="admin-candidate-sourced-component-download-zip-container"
           (click)="downloadReport()"
           title="Download full candidate report as Excel"
         >
           <svg
-            id="download-icon"
-            viewBox="0 0 48 48"
             class="admin-candidate-sourced-component-download-icon1"
+            viewBox="0 0 48 48"
           >
             <path
               d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
@@ -63,7 +64,6 @@
             ></path>
           </svg>
           <span
-            id="download-zip-text"
             class="admin-candidate-sourced-component-download-zip-text"
           >
             Download Report
@@ -83,37 +83,31 @@
       No candidates found to match against this Job Description.
     </div>
 
-    <!-- Dynamic list of Sourced Candidates, rendered with *ngFor -->
+    <!-- Scrollable container for the dynamic list of Sourced Candidates -->
     <div
-      *ngFor="let candidate of candidates; let i = index"
-      id="candidate-details-download-cv-main-container"
+      *ngIf="!isLoading && candidates.length > 0"
       class="admin-candidate-sourced-component-candidate-details-download-cv-main-container"
     >
+      <!-- This inner container is the element that will be repeated by *ngFor -->
       <div
-        id="candidate-details-download-cv-container"
+        *ngFor="let candidate of candidates; let i = index"
         class="admin-candidate-sourced-component-candidate-details-download-cv-container"
       >
         <!-- Candidate Name -->
         <div
-          id="candidate-name-container"
           class="admin-candidate-sourced-component-candidate-name-container"
         >
-          <!-- The checkbox is removed as per the plan -->
           <span
-            id="candidate-name-text"
             class="admin-candidate-sourced-component-candidate-name-text"
+            >{{ candidate.full_name || "N/A" }}</span
           >
-            {{ candidate.full_name || "N/A" }}
-          </span>
         </div>
 
-        <!-- Job Matching Score (replaces the static "Title 1") -->
+        <!-- Job Matching Score -->
         <div
-          id="job-title-container"
           class="admin-candidate-sourced-component-job-title-container"
         >
           <span
-            id="job-title-text"
             class="admin-candidate-sourced-component-job-title-text score"
           >
             Score: {{ candidate.job_match_score }}%
@@ -122,23 +116,20 @@
 
         <!-- View CV Action -->
         <div
-          id="view-cv-container"
           class="admin-candidate-sourced-component-view-cv-container"
           (click)="viewCv(candidate.cv_file_path)"
           title="View CV in a new tab"
         >
           <svg
-            id="eye-icon"
-            viewBox="0 0 1024 1024"
             class="admin-candidate-sourced-component-eye-icon"
+            viewBox="0 0 1024 1024"
           >
             <path
-              d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112"
+              d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112-112"
               fill="currentColor"
             ></path>
           </svg>
           <span
-            id="view-cv-text"
             class="admin-candidate-sourced-component-view-cv-text"
           >
             View CV
@@ -147,11 +138,10 @@
 
         <!-- Download Single CV Action -->
         <svg
-          id="download-icon"
-          viewBox="0 0 48 48"
           class="admin-candidate-sourced-component-download-icon2"
           (click)="downloadCv(candidate.cv_file_path, candidate.full_name)"
           title="Download this candidate's CV"
+          viewBox="0 0 48 48"
         >
           <path
             d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
