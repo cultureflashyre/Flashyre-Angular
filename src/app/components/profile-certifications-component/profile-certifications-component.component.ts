@@ -1,3 +1,5 @@
+// profile-certifications-component.component.ts
+
 import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -53,12 +55,13 @@ export class ProfileCertificationsComponent implements OnInit {
   }
 
   createCertificationGroup(): FormGroup {
+    // MODIFIED: Removed Validators.required from issued_date and credentials
     return this.fb.group({
       certificate_name: ['', Validators.required],
       issuing_institute: ['', Validators.required],
-      issued_date: ['', Validators.required],
+      issued_date: [''], // Was ['', Validators.required]
       renewal_date: [''],
-      credentials: ['', Validators.required],
+      credentials: [''], // Was ['', Validators.required]
     });
   }
 
@@ -113,7 +116,17 @@ export class ProfileCertificationsComponent implements OnInit {
   saveCertifications(): Promise<boolean> {
     return new Promise(async (resolve) => {
       if (this.certificationForm.valid) {
-        const data = this.certificationForm.value.certifications;
+        // MODIFICATION: Filter out empty optional fields before sending to the backend.
+        // This prevents sending empty strings for date fields, which the backend
+        // might reject. Sending `null` or omitting the key is safer.
+        const formValue = this.certificationForm.value.certifications;
+        const data = formValue.map((cert: any) => ({
+          ...cert,
+          issued_date: cert.issued_date || null,
+          renewal_date: cert.renewal_date || null,
+          credentials: cert.credentials || null,
+        }));
+
         const requests = data.map((cert: any) => 
           this.certificationService.saveCertification(cert)
         );
@@ -141,6 +154,4 @@ export class ProfileCertificationsComponent implements OnInit {
       }
     });
   }
-  
-
 }

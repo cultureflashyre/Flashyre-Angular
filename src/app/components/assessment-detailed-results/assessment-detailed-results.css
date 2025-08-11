@@ -187,7 +187,7 @@
 .assessment-taken-page3-text-id-attempts-container {
   flex: 0 0 auto;
   width: 100%;
-  height: auto;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -200,14 +200,12 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  margin-bottom: 30px;
 }
  
 .assessment-taken-page3-cloud-architecture-text-container {
-  gap: 16px;
   flex: 0 0 auto;
   width: auto;
-  height: 32px;
+  height: 48px;
   display: flex;
   align-items: center;
 }
@@ -218,7 +216,7 @@
 }
  
 .assessment-taken-page3-cloud-architecture-text {
-  height: 32px;
+  height: 48px;
   display: flex;
   font-size: 24px;
   font-style: normal;
@@ -255,6 +253,7 @@
  
 .assessment-taken-page3-id-attempts-container {
   gap: 24px;
+  height: 100%;
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
@@ -266,7 +265,7 @@
 
 .assessment-taken-page2-score-board-text {
   height: 24px;
-  display: flex;
+  /*display: flex;*/
   align-items: center;
 }
 
@@ -288,6 +287,7 @@
   flex-direction: column;
   align-items: flex-start; /* or center, as needed */
   gap: 12px; /* space between text and button */
+  padding-top: 15px ;
 }
  
 .assessment-taken-page3-re-attempt-container {

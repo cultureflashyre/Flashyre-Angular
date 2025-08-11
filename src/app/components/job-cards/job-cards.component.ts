@@ -129,6 +129,7 @@ export class JobCardsComponent implements OnInit, OnChanges {
     });
   }
 
+
   get selectedJobId(): number | null {
   return this.clickedIndex !== null && this.jobs[this.clickedIndex] 
     ? this.jobs[this.clickedIndex].job_id 
@@ -144,7 +145,7 @@ export class JobCardsComponent implements OnInit, OnChanges {
    * @param jobId The ID of the job that was clicked.
    */
 
-  public selectJob(jobId: number): void {
+public selectJob(jobId: number): void {
     console.log(`[JobCardsComponent] selectJob: Job card with ID ${jobId} was clicked.`);
     const clickedJobIndex = this.jobs.findIndex(job => job.job_id === jobId);
     if (clickedJobIndex !== -1) {
