@@ -196,10 +196,11 @@
 .assessment-taken-page3-container11 {
   flex: 0 0 auto;
   width: auto;
-  height: auto;
+  height: 100%;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  margin-bottom: 30px;
 }
  
 .assessment-taken-page3-cloud-architecture-text-container {

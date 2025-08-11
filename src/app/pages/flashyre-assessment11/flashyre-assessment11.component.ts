@@ -34,6 +34,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   logoAlt: string = 'image';
 
+  // New property to control popup visibility
+  showWarningPopup = false;
+
   ngAfterViewInit(): void {
     // Scroll to active question on init
     this.scrollToActiveQuestion();
@@ -62,6 +65,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
+  
+  // New property to store remaining time for each section
+  sectionTimers: { [section_id: number]: number } = {};
 
   private timerSubscription: Subscription;
   private sectionTimerInterval: any;
@@ -237,13 +243,23 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectSection(section: any): void {
+    // Before switching, save the remaining time of the current section
+    if (this.currentSection) {
+      this.sectionTimers[this.currentSection.section_id] = this.sectionTimer;
+    }
+
     this.currentSection = section;
     this.currentSectionIndex = this.sections.indexOf(section);
     this.currentQuestions = section.questions;
     this.currentQuestionIndex = 0;
-    this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
+    this.updateCurrentQuestion();
     this.totalQuestionsInSection = this.currentQuestions.length;
-    this.sectionTimer = section.duration * 60;
+
+    // Set the timer for the new section
+    this.sectionTimer = this.sectionTimers[section.section_id] !== undefined 
+      ? this.sectionTimers[section.section_id] 
+      : section.duration * 60;
+
     clearInterval(this.sectionTimerInterval);
     this.startSectionTimer();
   }
@@ -253,13 +269,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
       this.updateCurrentOptions();
       this.checkIfLastQuestionInSection();
-      this.scrollToActiveQuestion();  // <-- Add this line
+      this.scrollToActiveQuestion();
     } else {
       this.currentQuestion = { question: 'No questions available' };
       this.currentOptions = [];
     }
   }
-
+  
   scrollLeft(): void {
     if (this.numbersContainer) {
       this.numbersContainer.nativeElement.scrollBy({
@@ -277,7 +293,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-
+  
   scrollToActiveQuestion(): void {
     if (!this.numbersContainer) return;
 
@@ -285,18 +301,15 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     const activeButton = container.querySelector('.active') as HTMLElement;
 
     if (activeButton) {
-      // Calculate the visible boundaries of the container
       const containerRect = container.getBoundingClientRect();
       const activeRect = activeButton.getBoundingClientRect();
 
-      // If active button is out of view on the left, scroll left
       if (activeRect.left < containerRect.left) {
         container.scrollBy({
-          left: activeRect.left - containerRect.left - 8, // 8px gap
+          left: activeRect.left - containerRect.left - 8,
           behavior: 'smooth'
         });
       }
-      // If active button is out of view on the right, scroll right
       else if (activeRect.right > containerRect.right) {
         container.scrollBy({
           left: activeRect.right - containerRect.right + 8,
@@ -315,21 +328,17 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateCurrentSection(): void {
-    // Update section data, reset totalQuestionsInSection, etc.
     this.totalQuestionsInSection = this.currentQuestions.length;
   }
 
   checkIfLastQuestionInSection(): void {
     if (this.currentQuestions && this.currentQuestionIndex !== undefined) {
       this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
-      console.log('Is last question in section:', this.isLastQuestionInSection);
-      console.log('Current index:', this.currentQuestionIndex);
-      console.log('Total questions:', this.currentQuestions.length);
     } else {
       this.isLastQuestionInSection = false;
     }
   }
-
+  
   getOptions(question: any): any[] {
     if (!question || !question.options) return [];
     const options = [];
@@ -346,29 +355,27 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
     return options;
   }
-
+  
   markQuestionAsVisited(index: number): void {
     if (!this.questionStates[index]) {
       this.questionStates[index] = 'visited';
     }
   }
-
+  
   markQuestionAsAnswered(index: number): void {
     if (this.questionStates[index] === 'visited') {
       this.questionStates[index] = 'answered';
     }
   }
-
+  
   navigateToQuestion(index: number): void {
-    console.log('Navigating to question index:', index);
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
       this.markQuestionAsVisited(index);
-      this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
+      this.updateCurrentQuestion();
     }
   }
-  
-  // Method referenced in template
+
   goToQuestion(index: number): void {
     this.navigateToQuestion(index);
   }
@@ -382,50 +389,30 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onOptionSelected(questionId: number, sectionId: number, answer: string): void {
-    console.log("Question ID:", questionId);
-    console.log("Section ID:", sectionId);
-    console.log("Selected answer (key):", answer);
-    
-    // Find the full option object to get its value
     const currentQuestion = this.currentQuestions.find(q => q.question_id === questionId);
     if (currentQuestion) {
-    // The answer is in the format "option1", "option2", etc.
-    // Get the actual text value from the question options
-    const optionText = currentQuestion.options[answer];
-    
-    console.log("Selected option in object format:", answer);
-    console.log("Option text value:", optionText);
-      
-  // Store both key and text value
-  this.selectedAnswers[questionId] = {
-    answer: answer,
-    answerValue: optionText, // Store the text value
-    section_id: sectionId,
-  };
-  } else {
-  console.log("Question not found!");
-  this.selectedAnswers[questionId] = {
-    answer: answer,
-    section_id: sectionId,
-  };
-  }
-    
-    console.log("Updated selectedAnswers object:", this.selectedAnswers);
+      const optionText = currentQuestion.options[answer];
+      this.selectedAnswers[questionId] = {
+        answer: answer,
+        answerValue: optionText,
+        section_id: sectionId,
+      };
+    } else {
+      this.selectedAnswers[questionId] = {
+        answer: answer,
+        section_id: sectionId,
+      };
+    }
     this.markQuestionAsAnswered(this.currentQuestionIndex);
   }
 
   clearResponse(questionId: number): void {
-    // Clear the response from userResponses (bound to UI via ngModel)
     if (this.userResponses.hasOwnProperty(questionId)) {
       delete this.userResponses[questionId];
     }
-  
-    // Clear the response from selectedAnswers (used for submission)
     if (this.selectedAnswers.hasOwnProperty(questionId)) {
       delete this.selectedAnswers[questionId];
     }
-  
-    // Optional: Update question state (e.g., from 'answered' to 'visited')
     const questionIndex = this.currentQuestions.findIndex(q => q.question_id === questionId);
     if (questionIndex !== -1 && this.questionStates[questionIndex] === 'answered') {
       this.questionStates[questionIndex] = 'visited';
@@ -436,44 +423,41 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
   async terminateTest(isViolation = false): Promise<void> {
     if (this.isTerminating) {
-        console.warn('terminateTest already called, ignoring duplicate call');
-        return; // Prevent multiple runs
+        return;
     }
-  
     this.isTerminating = true;
-    console.log('terminateTest called, isViolation=', isViolation);
 
     try {
-      // Await cleanup to ensure video recording stopped and videoPath obtained
       await this.cleanupResources();
-
-      // Prepare submission data including the videoPath obtained from cleanupResources
       const responses = this.prepareSubmissionData();
-
-      // Await the submission observable converted to a promise
       const response = await lastValueFrom(this.trialassessmentService.submitAssessment(responses));
-
       console.log('Assessment submitted successfully:', response);
 
       if (isViolation) {
-        console.log('Assessment Violation detected:');
         this.router.navigate(['/assessment-violation-message'], {
           state: { message: "Test submitted automatically due to screen/app switching" }
         });
       } else {
         this.router.navigate(['/assessment-taken-page']);
       }
-
     } catch (error) {
       console.error('Termination failed:', error);
-      // You may want to differentiate fatal vs less fatal errors here
       this.router.navigate(['/assessment-error']);
     }
   }
-  
-  // Method referenced in template
-  endTest(): void {
-    this.terminateTest();
+
+  // New method to show the warning popup
+  showEndTestWarning(): void {
+    // Store the final time for the current section before showing the popup
+    if (this.currentSection) {
+      this.sectionTimers[this.currentSection.section_id] = this.sectionTimer;
+    }
+    this.showWarningPopup = true;
+  }
+
+  // New method to handle closing the popup
+  handleCloseWarningPopup(): void {
+    this.showWarningPopup = false;
   }
 
   prepareSubmissionData(): any {
@@ -495,16 +479,16 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
-      this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
+      this.updateCurrentQuestion();
     }
   }
 
   nextQuestion(): void {
-  if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
-    this.currentQuestionIndex++;
-    this.updateCurrentQuestion(); // This will call checkIfLastQuestionInSection
+    if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
+      this.currentQuestionIndex++;
+      this.updateCurrentQuestion();
+    }
   }
-}
   
   nextSection(): void {
     if (this.currentSectionIndex < this.totalSections - 1) {
@@ -512,23 +496,37 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.selectSection(this.sections[this.currentSectionIndex]);
     }
   }
-  
-  // Helper method to check if question has an image
+
   hasQuestionImage(question: any): boolean {
     return question && question.question_image && question.question_image.trim() !== '';
   }
   
-  // Helper method to check if option has an image
   hasOptionImage(option: any): boolean {
     return option && option.image && option.image.trim() !== '';
   }
 
   isValidImage(url: string): boolean {
     return url && (url.startsWith('http://') || url.startsWith('https://'));
-}
+  }
 
   handleImageError(event: Event): void {
-    console.warn('Image failed to load:', (event.target as HTMLImageElement).src);
-    (event.target as HTMLImageElement).style.display = 'none'; // Hide broken image
+    (event.target as HTMLImageElement).style.display = 'none';
+  }
+
+  handleQuestionNavigation(event: {section: any, questionIndex: number}): void {
+  const { section, questionIndex } = event;
+  
+  // Check if we need to switch to a different section
+  if (this.currentSection !== section) {
+    // Switch to the selected section
+    this.currentSection = section;
+    // Update current questions array to match the new section
+    this.currentQuestions = section.questions;
+  }
+
+  // Navigate to the specific question within the section
+  this.currentQuestionIndex = questionIndex;
+  this.markQuestionAsVisited(questionIndex);
+  this.updateCurrentQuestion();
 }
 }
