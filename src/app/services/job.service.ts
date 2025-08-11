@@ -1,98 +1,124 @@
+// src/app/services/job.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
- 
+import { AuthService } from './candidate.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class JobsService {
-  getNextJob() {
-    throw new Error('Method not implemented.');
-  }
   private apiUrl = environment.apiUrl + 'api/jobs/';
+  // [NEW] API URL for the job_saved app
+  private savedJobsApiUrl = environment.apiUrl + 'api/job_saved/';
+
+
+  // --- Private State Management ---
   private jobsSubject = new BehaviorSubject<any[]>([]);
   private jobsCache: any[] = [];
   private jobDetailsCache: { [key: number]: any } = {};
-  private isJobsFetched = false;
   private isFetchingJobs = false;
- 
-  jobs$ = this.jobsSubject.asObservable();
- 
-  constructor(private http: HttpClient) {}
- 
+
+  /**
+   * Public observable stream for components to subscribe to the jobs list.
+   */
+  public jobs$ = this.jobsSubject.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  /**
+   * Constructs the authorization headers for authenticated API requests.
+   */
   private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getJWTToken();
+
+    if (!token) {
+      console.warn('[JobsService] getAuthHeaders: No auth token found via AuthService. Request will be anonymous.');
+      return new HttpHeaders({ 'Content-Type': 'application/json' });
+    }
+
     return new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     });
   }
- 
+
   /**
-   * Fetch all jobs (with caching and reactive stream)
+   * Fetches the list of all recommended jobs from the backend. This list is pre-filtered
+   * by the backend for authenticated users (excluding applied and disliked jobs).
    */
-  fetchJobs(): Observable<any[]> {
-    if (this.isJobsFetched && this.jobsCache.length > 0) {
-      console.log('[fetchJobs] Returning from cache');
+  public fetchJobs(): Observable<any[]> {
+    if (this.jobsCache.length > 0) {
+      console.log(`[JobsService] fetchJobs: Returning ${this.jobsCache.length} jobs from cache.`);
       return of(this.jobsCache);
     }
- 
+
     if (this.isFetchingJobs) {
-      console.log('[fetchJobs] Already fetching');
+      console.log('[JobsService] fetchJobs: Fetch already in progress. Returning observable.');
       return this.jobs$;
     }
- 
+
     this.isFetchingJobs = true;
-    console.log('[fetchJobs] Fetching from API...');
- 
+    console.log('%c[JobsService] fetchJobs: Cache is empty. Fetching fresh recommended jobs from API...', 'color: blue; font-weight: bold;');
+
     return this.http.get<any>(this.apiUrl, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => {
-        const jobs = response.results || response;
-        console.log('[fetchJobs] Jobs fetched:', jobs);
+      map(response => Array.isArray(response) ? response : (response.results || [])),
+      tap(jobs => {
+        console.log(`%c[JobsService] fetchJobs: API call successful. Received ${jobs.length} recommended jobs.`, 'color: green;');
         this.jobsCache = jobs;
-        this.isJobsFetched = true;
+        this.jobsSubject.next([...this.jobsCache]);
         this.isFetchingJobs = false;
-        this.jobsSubject.next(jobs);
       }),
       catchError(error => {
+        console.error('[JobsService] fetchJobs: API call failed.');
         this.isFetchingJobs = false;
         return this.handleError(error);
       })
     );
   }
- 
-  /**
-   * Get observable stream of jobs (reactive)
-   */
-  getJobs(): Observable<any[]> {
-    return this.jobs$;
-  }
- 
-  /**
-   * Get cached jobs synchronously
-   */
-  getCachedJobs(): any[] {
-    return this.jobsCache;
-  }
-
-  areJobsCached(): boolean {
-    return this.isJobsFetched && this.jobsCache.length > 0;
-  }
-  
-  clearCache_refresh(): void {
-    this.jobsCache = [];
-    this.isJobsFetched = false;
-    this.jobsSubject.next([]);
-  }
 
   /**
-   * Get job by ID with caching
+   * [NEW] Fetches the details of all jobs a user has saved.
+   * This calls the new dedicated endpoint in the job_saved Django app.
+   * @param userId The ID of the user whose saved jobs are to be fetched.
+   * @returns An observable with an array of full job objects.
    */
-  getJobById(jobId: number): Observable<any> {
+  public fetchSavedJobs(userId: string): Observable<any[]> {
+    if (!userId) {
+      console.error('[JobsService] fetchSavedJobs: userId is missing. Cannot fetch saved jobs.');
+      return of([]); // Return an empty array if there's no user ID.
+    }
+
+    const url = `${this.savedJobsApiUrl}details/${userId}/`;
+    console.log('%c[JobsService] fetchSavedJobs: Fetching saved jobs from API...', 'color: blue; font-weight: bold;');
+    
+    // Always fetch saved jobs fresh, don't cache them here to ensure the list is always up-to-date.
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
+      tap(jobs => {
+        console.log(`%c[JobsService] fetchSavedJobs: API call successful. Received ${jobs.length} saved jobs.`, 'color: green;');
+      }),
+      catchError(error => {
+        console.error('[JobsService] fetchSavedJobs: API call failed.');
+        return this.handleError(error);
+      })
+    );
+  }
+
+
+  /**
+   * Retrieves a single job by its ID, using a cache.
+   */
+  public getJobById(jobId: number): Observable<any> {
     if (this.jobDetailsCache[jobId]) {
       return of(this.jobDetailsCache[jobId]);
     }
- 
+
     const url = `${this.apiUrl}${jobId}/`;
     return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
       tap(job => {
@@ -101,57 +127,46 @@ export class JobsService {
       catchError(this.handleError)
     );
   }
- 
+
   /**
-   * Update a specific job in cache
+   * Clears all cached data for recommended jobs.
    */
-  updateJobInCache(jobId: number, updates: any): void {
+  public clearCache(): void {
+    console.log('%c[JobsService] clearCache: Clearing all job and detail caches.', 'color: red; font-weight: bold;');
+    this.jobsCache = [];
+    this.jobDetailsCache = {};
+    this.jobsSubject.next([]);
+    this.isFetchingJobs = false;
+  }
+
+  /**
+   * Centralized error handler for all HTTP requests in this service.
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    const errorMessage = `API Error (Status: ${error.status}, URL: ${error.url})`;
+    console.error(`[JobsService] ${errorMessage}`, error);
+    return throwError(() => new Error(`No jobs at the moment. Please try again later.`));
+  }
+
+  // --- Methods from your original service file to maintain compatibility ---
+  public getJobs(): Observable<any[]> { return this.jobs$; }
+  public getCachedJobs(): any[] { return this.jobsCache; }
+  public areJobsCached(): boolean { return this.jobsCache.length > 0; }
+  public clearCache_refresh(): void { this.clearCache(); }
+  public updateJobInCache(jobId: number, updates: any): void {
     const index = this.jobsCache.findIndex(job => job.job_id === jobId);
     if (index !== -1) {
       this.jobsCache[index] = { ...this.jobsCache[index], ...updates };
-      this.jobsSubject.next(this.jobsCache);
+      this.jobsSubject.next([...this.jobsCache]);
     }
- 
     if (this.jobDetailsCache[jobId]) {
       this.jobDetailsCache[jobId] = { ...this.jobDetailsCache[jobId], ...updates };
     }
   }
- 
-  /**
-   * Remove job from cache
-   */
-  removeJobFromCache(jobId: number): void {
+  public removeJobFromCache(jobId: number): void {
     this.jobsCache = this.jobsCache.filter(job => job.job_id !== jobId);
     delete this.jobDetailsCache[jobId];
-    this.jobsSubject.next(this.jobsCache);
-  }
- 
-  /**
-   * Clear all cached data
-   */
-  clearCache(): void {
-    this.jobsCache = [];
-    this.jobDetailsCache = {};
-    this.isJobsFetched = false;
-    this.jobsSubject.next([]);
-    console.log('Cache cleared');
-  }
-  
-  /**
-   * Handle API error and format it properly
-   */
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred';
-    if (error.status === 401) {
-      errorMessage = 'Unauthorized: Please log in or provide a valid token';
-    } else if (error.status === 404) {
-      errorMessage = `Job not found: ${error.url}`;
-    } else if (error.status === 0) {
-      errorMessage = `Network error: Cannot reach server at ${error.url}`;
-    } else {
-      errorMessage = `Error ${error.status}: ${error.message}`;
-    }
-    console.error('API error:', errorMessage, error);
-    return throwError(() => new Error(errorMessage));
+    this.jobsSubject.next([...this.jobsCache]);
   }
 }
+
