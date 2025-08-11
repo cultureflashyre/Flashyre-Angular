@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from './candidate.service';
 
@@ -49,6 +50,7 @@ export class JobsService {
     });
   }
 
+
   /**
    * Fetches the list of all recommended jobs from the backend. This list is pre-filtered
    * by the backend for authenticated users (excluding applied and disliked jobs).
@@ -56,13 +58,19 @@ export class JobsService {
   public fetchJobs(): Observable<any[]> {
     if (this.jobsCache.length > 0) {
       console.log(`[JobsService] fetchJobs: Returning ${this.jobsCache.length} jobs from cache.`);
+  public fetchJobs(): Observable<any[]> {
+    if (this.jobsCache.length > 0) {
+      console.log(`[JobsService] fetchJobs: Returning ${this.jobsCache.length} jobs from cache.`);
       return of(this.jobsCache);
     }
 
+
     if (this.isFetchingJobs) {
+      console.log('[JobsService] fetchJobs: Fetch already in progress. Returning observable.');
       console.log('[JobsService] fetchJobs: Fetch already in progress. Returning observable.');
       return this.jobs$;
     }
+
 
     this.isFetchingJobs = true;
     console.log('%c[JobsService] fetchJobs: Cache is empty. Fetching fresh recommended jobs from API...', 'color: blue; font-weight: bold;');
@@ -73,15 +81,18 @@ export class JobsService {
         console.log(`%c[JobsService] fetchJobs: API call successful. Received ${jobs.length} recommended jobs.`, 'color: green;');
         this.jobsCache = jobs;
         this.jobsSubject.next([...this.jobsCache]);
+        this.jobsSubject.next([...this.jobsCache]);
         this.isFetchingJobs = false;
       }),
       catchError(error => {
+        console.error('[JobsService] fetchJobs: API call failed.');
         console.error('[JobsService] fetchJobs: API call failed.');
         this.isFetchingJobs = false;
         return this.handleError(error);
       })
     );
   }
+
 
   /**
    * [NEW] Fetches the details of all jobs a user has saved.
@@ -119,6 +130,7 @@ export class JobsService {
       return of(this.jobDetailsCache[jobId]);
     }
 
+
     const url = `${this.apiUrl}${jobId}/`;
     return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
       tap(job => {
@@ -127,6 +139,7 @@ export class JobsService {
       catchError(this.handleError)
     );
   }
+
 
   /**
    * Clears all cached data for recommended jobs.
@@ -158,11 +171,13 @@ export class JobsService {
     if (index !== -1) {
       this.jobsCache[index] = { ...this.jobsCache[index], ...updates };
       this.jobsSubject.next([...this.jobsCache]);
+      this.jobsSubject.next([...this.jobsCache]);
     }
     if (this.jobDetailsCache[jobId]) {
       this.jobDetailsCache[jobId] = { ...this.jobDetailsCache[jobId], ...updates };
     }
   }
+  public removeJobFromCache(jobId: number): void {
   public removeJobFromCache(jobId: number): void {
     this.jobsCache = this.jobsCache.filter(job => job.job_id !== jobId);
     delete this.jobDetailsCache[jobId];
