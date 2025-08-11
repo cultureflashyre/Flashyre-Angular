@@ -3,19 +3,19 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 
 import { ComponentsModule } from '../../components/components.module'
-import { CandidateJobDetailViewComponent } from './candidate-job-detail-view.component'
+import { CandidateJobDetailView } from './candidate-job-detail-view.component'
 
 const routes = [
   {
     path: '',
-    component: CandidateJobDetailViewComponent,
+    component: CandidateJobDetailView,
   },
 ]
 
 @NgModule({
-  declarations: [CandidateJobDetailViewComponent],
+  declarations: [CandidateJobDetailView],
   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
-  exports: [CandidateJobDetailViewComponent],
+  exports: [CandidateJobDetailView],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CandidateJobDetailViewModule {}

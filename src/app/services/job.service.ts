@@ -1,18 +1,20 @@
+// src/app/services/job.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { AuthService } from './candidate.service'; // <--- STEP 1: IMPORT THE AUTH SERVICE
+import { AuthService } from './candidate.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobsService {
-  getNextJob() {
-    throw new Error('Method not implemented.');
-  }
   private apiUrl = environment.apiUrl + 'api/jobs/';
+  // [NEW] API URL for the job_saved app
+  private savedJobsApiUrl = environment.apiUrl + 'api/job_saved/';
+
 
   // --- Private State Management ---
   private jobsSubject = new BehaviorSubject<any[]>([]);
@@ -25,7 +27,6 @@ export class JobsService {
    */
   public jobs$ = this.jobsSubject.asObservable();
 
-  // --- STEP 2: INJECT THE AUTH SERVICE IN THE CONSTRUCTOR ---
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -33,10 +34,8 @@ export class JobsService {
 
   /**
    * Constructs the authorization headers for authenticated API requests.
-   * This now uses the injected AuthService to get the token.
    */
   private getAuthHeaders(): HttpHeaders {
-    // --- STEP 3: USE THE AUTH SERVICE'S METHOD TO GET THE TOKEN ---
     const token = this.authService.getJWTToken();
 
     if (!token) {
@@ -44,16 +43,15 @@ export class JobsService {
       return new HttpHeaders({ 'Content-Type': 'application/json' });
     }
 
-    console.log('[JobsService] getAuthHeaders: Auth token found via AuthService. Attaching to headers.');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` // Assuming your backend expects a 'Bearer' token
+      'Authorization': `Bearer ${token}`
     });
   }
 
   /**
-   * Fetches the list of jobs from the backend. This list is pre-filtered
-   * by the backend for authenticated users.
+   * Fetches the list of all recommended jobs from the backend. This list is pre-filtered
+   * by the backend for authenticated users (excluding applied and disliked jobs).
    */
   public fetchJobs(): Observable<any[]> {
     if (this.jobsCache.length > 0) {
@@ -67,12 +65,12 @@ export class JobsService {
     }
 
     this.isFetchingJobs = true;
-    console.log('%c[JobsService] fetchJobs: Cache is empty. Fetching fresh jobs from API...', 'color: blue; font-weight: bold;');
+    console.log('%c[JobsService] fetchJobs: Cache is empty. Fetching fresh recommended jobs from API...', 'color: blue; font-weight: bold;');
 
     return this.http.get<any>(this.apiUrl, { headers: this.getAuthHeaders() }).pipe(
       map(response => Array.isArray(response) ? response : (response.results || [])),
       tap(jobs => {
-        console.log(`%c[JobsService] fetchJobs: API call successful. Received ${jobs.length} jobs.`, 'color: green;');
+        console.log(`%c[JobsService] fetchJobs: API call successful. Received ${jobs.length} recommended jobs.`, 'color: green;');
         this.jobsCache = jobs;
         this.jobsSubject.next([...this.jobsCache]);
         this.isFetchingJobs = false;
@@ -86,8 +84,35 @@ export class JobsService {
   }
 
   /**
+   * [NEW] Fetches the details of all jobs a user has saved.
+   * This calls the new dedicated endpoint in the job_saved Django app.
+   * @param userId The ID of the user whose saved jobs are to be fetched.
+   * @returns An observable with an array of full job objects.
+   */
+  public fetchSavedJobs(userId: string): Observable<any[]> {
+    if (!userId) {
+      console.error('[JobsService] fetchSavedJobs: userId is missing. Cannot fetch saved jobs.');
+      return of([]); // Return an empty array if there's no user ID.
+    }
+
+    const url = `${this.savedJobsApiUrl}details/${userId}/`;
+    console.log('%c[JobsService] fetchSavedJobs: Fetching saved jobs from API...', 'color: blue; font-weight: bold;');
+    
+    // Always fetch saved jobs fresh, don't cache them here to ensure the list is always up-to-date.
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
+      tap(jobs => {
+        console.log(`%c[JobsService] fetchSavedJobs: API call successful. Received ${jobs.length} saved jobs.`, 'color: green;');
+      }),
+      catchError(error => {
+        console.error('[JobsService] fetchSavedJobs: API call failed.');
+        return this.handleError(error);
+      })
+    );
+  }
+
+
+  /**
    * Retrieves a single job by its ID, using a cache.
-   * @param jobId The ID of the job to retrieve.
    */
   public getJobById(jobId: number): Observable<any> {
     if (this.jobDetailsCache[jobId]) {
@@ -104,7 +129,7 @@ export class JobsService {
   }
 
   /**
-   * Clears all cached data.
+   * Clears all cached data for recommended jobs.
    */
   public clearCache(): void {
     console.log('%c[JobsService] clearCache: Clearing all job and detail caches.', 'color: red; font-weight: bold;');
@@ -116,12 +141,11 @@ export class JobsService {
 
   /**
    * Centralized error handler for all HTTP requests in this service.
-   * @param error The HttpErrorResponse object.
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
     const errorMessage = `API Error (Status: ${error.status}, URL: ${error.url})`;
     console.error(`[JobsService] ${errorMessage}`, error);
-    return throwError(() => new Error(`Failed to communicate with the server. Please try again later. Error: ${error.status}`));
+    return throwError(() => new Error(`No jobs at the moment. Please try again later.`));
   }
 
   // --- Methods from your original service file to maintain compatibility ---
