@@ -1,7 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/candidate.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'candidate-job-details',
@@ -39,9 +43,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     contract_time: '',
     contract_type: '',
     external_id: '',
-    last_updated: ''
+    last_updated: '',
+    assessment: null, // Added assessment_id
+    attempts_remaining: null // <-- ADDED: Initialize the new property
   };
-  userProfile: any = {}; // To store user profile data
+  userProfile: any = {};
   loading: boolean = false;
   errorMessage: string | null = null;
   progress: number = 0;
@@ -51,11 +57,17 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   matchingScoreStrokeDasharray: string = '0 25.12';
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   isMobile: boolean = window.innerWidth < 767;
+  isProcessing: boolean = false;
+  isApplied: boolean = false;
+  successMessage: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private jobService: JobsService,
     private sanitizer: DomSanitizer,
-    private route: ActivatedRoute
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth < 767;
@@ -63,31 +75,34 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
   }
 
- ngOnInit() {
-  // Get jobId from URL query parameters
-  this.route.queryParams.subscribe(params => {
-    const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
-    if (jobIdFromUrl) {
-      this.jobId = jobIdFromUrl;
-      this.fetchJobDetails();
-    }
-  });
-  this.progress = 56.5;
-  // Remove hardcoded matchingScore
-  this.loadUserProfile();
-}
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
+      if (jobIdFromUrl) {
+        this.jobId = jobIdFromUrl;
+        this.fetchJobDetails();
+      }
+    });
+    this.progress = 100.0;
+    this.loadUserProfile();
+  }
 
   ngAfterViewInit() {
-  // Ensure matchingScore is set before animation starts
-  if (this.matchingScore > 0) {
-    setTimeout(() => {
-      this.animateProgressBar();
-    }, 0);
-  } else {
-    // Fetch job details again if matchingScore is 0
-    this.fetchJobDetails();
+    if (this.matchingScore > 0) {
+      setTimeout(() => {
+        this.animateProgressBar();
+      }, 0);
+    } else {
+      this.fetchJobDetails();
+    }
   }
-}
+
+  /**
+   * Navigate to assessment page
+   */
+  navigateToAssessment(assessment: number): void {
+    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['jobId'] && this.jobId !== null && changes['jobId'].currentValue !== changes['jobId'].previousValue) {
@@ -118,42 +133,46 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private fetchJobDetails(): void {
-  this.loading = true;
-  this.errorMessage = null;
-  this.jobService.getJobById(this.jobId!).subscribe({
-    next: (data) => {
-      console.log('Job details response:', data);
-      this.job = {
-        job_id: data.job_id || null,
-        company_name: data.company_name || '',
-        logo: data.logo || '',
-        title: data.title || '',
-        location: data.location || '',
-        job_type: data.job_type || '',
-        created_at: data.created_at || '',
-        description: data.description || '',
-        requirements: data.requirements || '',
-        salary: data.salary || null,
-        url: data.url || null,
-        source: data.source || '',
-        tag: data.tag || '',
-        contract_time: data.contract_time || '',
-        contract_type: data.contract_type || '',
-        external_id: data.external_id || '',
-        last_updated: data.last_updated || ''
-      };
-      this.matchingScore = data.matching_score || 80; // Use same default as candidate-job-for-you-card
-      this.updateProgressBar(this.matchingScore, this.progress); // Update UI immediately
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error('Error fetching job details:', err);
-      this.resetJob();
-      this.errorMessage = err.message || `Job with ID ${this.jobId} not found. Please select another job.`;
-      this.loading = false;
-    }
-  });
-}
+    this.loading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+    this.isApplied = false;
+    this.jobService.getJobById(this.jobId!).subscribe({
+      next: (data) => {
+        console.log('Job details response:', data);
+        this.job = {
+          job_id: data.job_id || null,
+          company_name: data.company_name || '',
+          logo: data.logo || '',
+          title: data.title || '',
+          location: data.location || '',
+          job_type: data.job_type || '',
+          created_at: data.created_at || '',
+          description: data.description || '',
+          requirements: data.requirements || '',
+          salary: data.salary || null,
+          url: data.url || null,
+          source: data.source || '',
+          tag: data.tag || '',
+          contract_time: data.contract_time || '',
+          contract_type: data.contract_type || '',
+          external_id: data.external_id || '',
+          last_updated: data.last_updated || '',
+          assessment: data.assessment || null, // Added assessment_id
+          attempts_remaining: data.attempts_remaining || null // <-- ADDED: Map the property from the API response
+        };
+        this.matchingScore = data.matching_score || 80;
+        this.updateProgressBar(this.matchingScore, this.progress);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching job details:', err);
+        this.resetJob();
+        this.errorMessage = err.message || `Job with ID ${this.jobId} not found. Please select another job.`;
+        this.loading = false;
+      }
+    });
+  }
 
   private resetJob(): void {
     this.job = {
@@ -173,18 +192,45 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       contract_time: '',
       contract_type: '',
       external_id: '',
-      last_updated: ''
+      last_updated: '',
+      assessment: null, // Added assessment_id
+      attempts_remaining: null // <-- ADDED: Reset the property
     };
     this.matchingScore = 0;
     this.progress = 0;
   }
 
   applyForJob(): void {
-    if (this.job.url) {
-      window.open(this.job.url, '_blank');
-    } else {
-      console.warn('No application URL provided for this job.');
+    if (this.isApplied || !this.job.job_id) {
+      return;
     }
+    this.isProcessing = true;
+
+    this.authService.applyForJob(this.job.job_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (response) => {
+          console.log('Yay! Application worked:', response);
+          this.isApplied = true;
+          this.isProcessing = false;
+
+          setTimeout(() => {
+            this.jobService.removeJobFromCache(this.job.job_id);
+            this.job = null;
+            this.successMessage = 'You have successfully applied for this job!';
+          }, 2000);
+        },
+        (error) => {
+          console.error('Oops! Something went wrong:', error);
+          this.isProcessing = false;
+          alert(error.error?.error || 'Failed to apply for this job');
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   handleImageError(event: Event): void {
@@ -202,25 +248,24 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private animateProgressBar(): void {
-  const duration = 2000;
-  const startTime = Date.now();
+    const duration = 2000;
+    const startTime = Date.now();
 
-  const animate = () => {
-    const currentTime = Date.now();
-    const elapsedTime = currentTime - startTime;
-    const progress = Math.min(elapsedTime / duration, 1);
-    const currentMatchingScore = progress * this.matchingScore;
-    const currentCompanyProgress = progress * this.progress;
-    this.updateProgressBar(currentMatchingScore, currentCompanyProgress);
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      // Ensure final value is set correctly
-      this.updateProgressBar(this.matchingScore, this.progress);
-    }
-  };
-  requestAnimationFrame(animate);
-}
+    const animate = () => {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const currentMatchingScore = progress * this.matchingScore;
+      const currentCompanyProgress = progress * this.progress;
+      this.updateProgressBar(currentMatchingScore, currentCompanyProgress);
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        this.updateProgressBar(this.matchingScore, this.progress);
+      }
+    };
+    requestAnimationFrame(animate);
+  }
 
   private updateProgressBar(percentage: number, companyPercentage: number): void {
     const actualMatchingScore = Math.min(percentage, 100);

@@ -17,7 +17,6 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   isDisliked: boolean = false;
   isSaved: boolean = false; // Tracks the saved state for the save/unsave toggle.
   shouldRender: boolean = true;
-
   // --- [NEW] Name for the disliked jobs cache ---
   private dislikedCacheName = 'disliked-jobs-cache-v1';
 
@@ -323,6 +322,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   }
 
   /**
+
    * Handles clicks on the Save icon. (Unchanged)
    */
   onSave(event: MouseEvent): void {
@@ -332,6 +332,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       console.warn('Blocked attempt to save a disliked job. Job ID:', this.jobId);
       alert('You cannot save a job that is disliked. Please remove the dislike first.');
       return;
+
     }
 
     const userId = localStorage.getItem('user_id');

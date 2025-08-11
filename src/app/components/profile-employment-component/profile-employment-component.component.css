@@ -4,20 +4,21 @@
 
 .profile-employment-component-container {
   width: 720px;
-  height: 443px;
+  height: 350px;
   display: flex;
   position: relative;
   align-items: flex-start;
   flex-direction: column;
   background-color: #FFFFFF;
   z-index: 1000;
-  overflow-y: scroll; /* Ensure the container is scrollable */
+  border-radius: 8px;
+  scrollbar-width: none;
 }
 
 .profile-employment-component-profile-employment-container {
   gap: 24px;
   width: 720px;
-  height: 443px;
+  height: 420px;
   display: flex;
   padding: var(--dl-space-space-oneandhalfunits);
   align-items: center;

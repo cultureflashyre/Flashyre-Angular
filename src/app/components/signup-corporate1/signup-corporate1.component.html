@@ -30,10 +30,12 @@
             placeholder="Enter First Name"
             class="signup-corporate1-first-name-input input"
           />
-          <span *ngIf="signupForm.get('first_name')?.invalid && signupForm.get('first_name')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            First Name is required.
-          </span>
+          <div *ngIf="signupForm.get('first_name').invalid && signupForm.get('first_name').touched" class="error-text">
+            <span *ngIf="signupForm.get('first_name').errors?.required">First name is required.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.pattern">Only letters and spaces are allowed.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.minlength">First name must be at least 3 characters long.</span>
+            <span *ngIf="signupForm.get('first_name').errors?.maxlength">First name cannot exceed 10 characters.</span>
+          </div>
         </div>
         <div id="last-name-container" class="signup-corporate1-last-name-container1">
           <span id="signup-last-name" class="signup-corporate1-last-name-text1">
@@ -53,10 +55,12 @@
             placeholder="Enter Last Name"
             class="signup-corporate1-last-name-input1 input"
           />
-          <span *ngIf="signupForm.get('last_name')?.invalid && signupForm.get('last_name')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            Last Name is required.
-          </span>
+          <div *ngIf="signupForm.get('last_name').invalid && signupForm.get('last_name').touched" class="error-text">
+            <span *ngIf="signupForm.get('last_name').errors?.required">Last name is required.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.pattern">Only letters and spaces are allowed.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.minlength">Last name must be at least 3 characters long.</span>
+            <span *ngIf="signupForm.get('last_name').errors?.maxlength">Last name cannot exceed 10 characters.</span>
+          </div>
         </div>
         <div id="company-name-container" class="signup-corporate1-last-name-container2">
           <span id="signup-company-name" class="signup-corporate1-last-name-text2">
@@ -98,11 +102,16 @@
             formControlName="phone_number"
             placeholder="Enter Phone Number"
             class="signup-corporate1-last-name-input3 input"
+            maxlength="10"
+            (input)="sanitizePhoneNumber($event)"
           />
-          <span *ngIf="signupForm.get('phone_number')?.invalid && signupForm.get('phone_number')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            Phone Number is required.
-          </span>
+          <div *ngIf="signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched" class="error-text">
+            <span *ngIf="signupForm.get('phone_number').errors?.required">Phone number is required.</span>
+            <span *ngIf="signupForm.get('phone_number').errors?.pattern">Phone number must be exactly 10 digits.</span>
+          </div>
+          <div *ngIf="signupForm.get('phone_number').errors?.phoneExists" class="error-text">
+            Phone number already exists.
+          </div>
         </div>
         <div id="email-container" class="signup-corporate1-email-container">
           <span id="signup-email" class="signup-corporate1-email-text">
@@ -122,10 +131,13 @@
             placeholder="Enter Email Id"
             class="signup-corporate1-email-input input"
           />
-          <span *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            Email is required.
-          </span>
+          <div *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched" class="error-text">
+            <span *ngIf="signupForm.get('email').errors?.required">Email is required.</span>
+            <span *ngIf="signupForm.get('email').errors?.email">Please enter a valid email.</span>
+          </div>
+          <div *ngIf="signupForm.get('email').errors?.emailExists" class="error-text">
+            Email already exists.
+          </div>
         </div>
         <div id="password-container" class="signup-corporate1-password-container1">
           <div id="password" class="signup-corporate1-password1">
@@ -136,7 +148,12 @@
                     <span class="signup-corporate1-text20">Password</span>
                   </div>
                 </ng-template>
-                <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
+                  <span
+                    class="signup-corporate1-show-text1 button"
+                    (click)="togglePasswordVisibility()"
+                  >
+                    {{ passwordType === 'password' ? 'Show' : 'Hide' }}
+                  </span>
               </ng-container>
             </span>
             <input
@@ -146,18 +163,17 @@
               placeholder="Enter Password"
               class="signup-corporate1-password-input1 input"
             />
-            <span
-              (click)="togglePasswordVisibility()"
-              id="signup-password-show-button"
-              class="signup-corporate1-show-text1 button"
-            >
-              {{ passwordButtonText }}
-            </span>
           </div>
-          <span *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            Password is required.
-          </span>
+          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+              <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
+              <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
+              <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
+              <span *ngIf="signupForm.get('password').errors?.uppercase">Password must include at least one uppercase letter.</span>
+              <span *ngIf="signupForm.get('password').errors?.lowercase">Password must include at least one lowercase letter.</span>
+              <span *ngIf="signupForm.get('password').errors?.number">Password must include at least one number.</span>
+              <span *ngIf="signupForm.get('password').errors?.specialChar">Password must include at least one special character.</span>
+              <span *ngIf="signupForm.get('password').errors?.alphabet">Password must include at least one alphabet.</span>
+            </div>
         </div>
         <div id="confirm-password-container" class="signup-corporate1-password-container2">
           <div id="password" class="signup-corporate1-password2">
@@ -168,7 +184,12 @@
                     <span class="signup-corporate1-text13">Confirm Password</span>
                   </div>
                 </ng-template>
-                <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>
+                  <span
+                    class="signup-corporate1-show-text2 button"
+                    (click)="toggleConfirmPasswordVisibility()"
+                  >
+                    {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
+                  </span>
               </ng-container>
             </span>
             <input
@@ -178,21 +199,17 @@
               placeholder="Confirm Password"
               class="signup-corporate1-password-input2 input"
             />
-            <span
-              (click)="toggleConfirmPasswordVisibility()"
-              id="signup-password-show-button"
-              class="signup-corporate1-show-text2 button"
-            >
-              {{ confirmPasswordButtonText }}
-            </span>
           </div>
-          <span *ngIf="signupForm.get('confirm_password')?.invalid && signupForm.get('confirm_password')?.touched" 
-                class="error-message" style="color: red; font-size: 12px;">
-            Confirm Password is required.
-          </span>
+          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
+              Passwords do not match.
+            </div>
         </div>
         <div id="signup-signin-container" class="signup-corporate1-signup-and-signin-container">
-          <button id="signup-button" type="submit" class="signup-corporate1-signup-button button">
+          <button 
+          id="signup-button" 
+          type="submit" 
+          [disabled]="signupForm.invalid"
+          class="signup-corporate1-signup-button button">
             <span id="signup" class="signup-corporate1-signup-text">
               <ng-container>
                 <ng-template #defaultButton>
@@ -204,9 +221,15 @@
               </ng-container>
             </span>
           </button>
-          <div class="signup-corporate1-error-signup-container">
-            <span *ngIf="errorMessage" id="error-message-signup" class="signup-corporate1-error-message-signup">
+          <div *ngIf="errorMessage" class="signup-corporate1-error-signup-container">
+            <span id="error-message-signup" class="signup-corporate1-error-message-signup">
               {{ errorMessage }}
+            </span>
+          </div>
+                    <!-- Add this after the error message div -->
+          <div *ngIf="successMessage" class="signup-corporate1-success-signup-container">
+            <span class="signup-corporate1-success-message-signup">
+              {{ successMessage }}
             </span>
           </div>
           <div id="signin-container" class="signup-corporate1-signin-container">
@@ -221,7 +244,7 @@
               </ng-container>
             </span>
             <span
-              (click)="navigateToLogin()"
+              routerLink="/login-corporate"
               id="signin-button"
               class="signup-corporate1-signin-text button"
             >

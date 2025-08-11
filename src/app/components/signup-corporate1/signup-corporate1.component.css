@@ -1,7 +1,13 @@
 :host { 
   display: contents; 
 }
- 
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .signup-corporate1-container {
   width: 100%;
   height: auto;
@@ -11,6 +17,16 @@
   flex-direction: column;
   padding-bottom: 20px;
   justify-content: center;
+}
+
+.signup-corporate1-success-signup-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-corporate1-success-message-signup {
+  color: #28a745;
+  font-weight: bold;
 }
  
 .signup-corporate1-signup-container {

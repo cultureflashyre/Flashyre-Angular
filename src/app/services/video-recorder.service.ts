@@ -2,7 +2,8 @@
  
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
- 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Injectable({ providedIn: 'root' })
 export class VideoRecorderService {
 
@@ -10,7 +11,12 @@ export class VideoRecorderService {
   private assessmentId!: string;
   private videoId!: string;
  
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private spinner: NgxSpinnerService
+  ) {
+    console.log('VideoRecorderService instantiated');
+   }
  
   private apiUrl = 'http://localhost:8000/trial_assessments';
  
@@ -40,6 +46,12 @@ export class VideoRecorderService {
   }
  
   async startRecording(userId: string, assessmentId: string, videoId?: string): Promise<void> {
+    if(this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+    console.warn('MediaRecorder already recording, ignoring startRecording.');
+    return;
+  }
+  console.log('startRecording called');
+    
     this.userId = userId;
     this.assessmentId = assessmentId;
     this.videoId = videoId ?? this.generateUniqueVideoId();
@@ -47,6 +59,8 @@ export class VideoRecorderService {
     this.videoPath = null;
 
     try {
+      this.spinner.show(); // Show spinner while preparing media devices and starting
+
       this.stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
@@ -88,6 +102,8 @@ export class VideoRecorderService {
     } catch (error) {
       console.error('Error accessing media devices:', error);
       throw error;
+    } finally {
+      this.spinner.hide(); // Hide spinner regardless of success/fail in starting recording
     }
   }
 
@@ -101,26 +117,30 @@ export class VideoRecorderService {
     const formData = new FormData();
     formData.append('video_chunk', chunk);
     formData.append('timestamp', new Date().toISOString());
-
     // Pass IDs separately
     formData.append('user_id', this.userId);
     formData.append('assessment_id', this.assessmentId);
     formData.append('video_id', this.videoId);
 
+    this.spinner.show(); // Show spinner on chunk upload start
+
     this.http.post(`${this.apiUrl}/save-video/`, formData).subscribe({
       next: (response: any) => {
         if (response.videoPath) {
+          console.log("Inside videoRecorder Service...video URL:", response.videoPath);
           this.videoPath = response.videoPath;
         }
         if (isLastChunk && this.stopRecordingResolve) {
           this.stopRecordingResolve(this.videoPath);
         }
+        this.spinner.hide(); // Hide spinner after successful upload
       },
       error: (error) => {
         console.error('Chunk upload failed:', error);
         if (isLastChunk && this.stopRecordingResolve) {
           this.stopRecordingResolve(this.videoPath);
         }
+        this.spinner.hide(); // Hide spinner on upload error as well
       }
     });
   }

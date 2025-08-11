@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { forkJoin } from 'rxjs';
 import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
 import { environment } from '../../../environments/environment';
@@ -49,12 +48,14 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     'src/assets/temp-jobs-icon/8.png'
   ];
 
+  // NOTE: This apiUrl is no longer used for fetching jobs directly in this component,
+  // which was the source of the error. All calls now go through services.
   private apiUrl = environment.apiUrl + 'api/jobs/';
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private http: HttpClient,
+    private http: HttpClient, // Kept for other potential uses, though not for the job fetch here.
     private router: Router,
     private authService: AuthService,
     private jobService: JobsService
@@ -92,7 +93,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   private initializeJobs(): void {
     this.isLoading = true;
     
-    // Check if jobs are already cached
     if (this.jobService.areJobsCached()) {
       console.log('Loading jobs from cache...');
       this.loadJobsFromCache();
@@ -110,6 +110,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(jobs => {
         if (jobs.length > 0) {
+          // Pass the cached jobs to be filtered
           this.filterAndDisplayJobs(jobs);
         }
       });
@@ -123,6 +124,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         jobs => {
+          // Pass the newly fetched jobs to be filtered
           this.filterAndDisplayJobs(jobs);
         },
         error => {
@@ -133,23 +135,34 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Filter jobs and set up initial display
+   * =================================================================
+   * REFACTORED AND CORRECTED FUNCTION
+   * =================================================================
+   * This function no longer makes a redundant API call to fetch jobs.
+   * It now uses the `jobs` array passed to it (which was already fetched securely)
+   * and only fetches the list of applied job IDs to perform the filtering.
    */
   private filterAndDisplayJobs(jobs: any[]): void {
-    forkJoin({
-      jobs: this.http.get<any[]>(this.apiUrl),
-      appliedJobs: this.authService.getAppliedJobs()
-    }).subscribe(
-      (results) => {
-        this.appliedJobIds = results.appliedJobs.applied_job_ids || [];
-        this.jobs = results.jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+    // 1. Only fetch the list of applied jobs. This request is authenticated by the HttpInterceptor.
+    this.authService.getAppliedJobs().subscribe(
+      (appliedJobsResponse) => {
+        // 2. Get the array of applied job IDs from the response.
+        this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
+
+        // 3. Filter the *existing* jobs array to exclude those the user has already applied to.
+        this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+        
+        // 4. Reset pagination and load the first page of the filtered jobs.
         this.currentPage = 0;
         this.displayedJobs = [];
         this.loadNextPage();
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error fetching data:', error);
+        // This error handler is for the getAppliedJobs call.
+        console.error('Error fetching applied jobs, proceeding without filtering:', error);
+
+        // Fallback: If we can't get the applied jobs list, show all jobs.
         this.jobs = jobs;
         this.currentPage = 0;
         this.displayedJobs = [];
@@ -158,6 +171,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       }
     );
   }
+
 
   /**
    * Load the next page of jobs
@@ -181,13 +195,12 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     
     this.isLoadingMore = false;
     
-    // Re-setup intersection observer after DOM updates
     setTimeout(() => {
       this.setupInfiniteScroll();
     }, 100);
   }
 
-  /**
+  /** 
    * Setup infinite scroll using Intersection Observer
    */
   private setupInfiniteScroll(): void {
@@ -215,16 +228,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.observer.observe(loadMoreElement);
   }
 
-  /**
-   * Load more jobs
-   */
   loadMoreJobs(): void {
     this.loadNextPage();
   }
 
-  /**
-   * Load user profile from localStorage
-   */
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
@@ -234,16 +241,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Navigate to assessment page
-   */
-  navigateToAssessment(jobId: number): void {
-    this.router.navigate(['/flashyre-assessment11', jobId]);
+  navigateToAssessment(assessment: number): void {
+    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
   }
 
-  /**
-   * Apply for a job
-   */
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
     
@@ -255,7 +256,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
           this.applicationSuccess[jobId] = true;
           this.appliedJobIds.push(jobId);
           
-          // Remove job from cache and display after 2 seconds
           setTimeout(() => {
             this.jobService.removeJobFromCache(jobId);
             this.jobs = this.jobs.filter(job => job.job_id !== jobId);
@@ -270,46 +270,28 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  /**
-   * Get random image for jobs without logos
-   */
   getRandomImage(): string {
     const randomIndex = Math.floor(Math.random() * this.images.length);
     return this.images[randomIndex];
   }
 
-  /**
-   * Refresh jobs (force fetch from API)
-   */
   refreshJobs(): void {
     this.jobService.clearCache_refresh();
     this.initializeJobs();
   }
 
-  /**
-   * Get loading state for more jobs
-   */
   get isLoadingMoreJobs(): boolean {
     return this.isLoadingMore;
   }
 
-  /**
-   * Check if there are more jobs to load
-   */
   get hasMoreJobs(): boolean {
     return this.displayedJobs.length < this.jobs.length;
   }
 
-  /**
-   * TrackBy function for job list
-   */
   trackByJobId(index: number, job: any): number {
     return job.job_id;
   }
 
-  /**
-   * Check if user has scrolled to bottom manually (fallback for intersection observer)
-   */
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(event: any): void {
     if (!this.observer) {
@@ -323,25 +305,16 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Retry fetching jobs in case of network error
-   */
   retryFetchJobs(): void {
     this.isLoading = true;
     this.fetchJobsFromAPI();
   }
 
-  /**
-   * Get job loading progress percentage
-   */
   getLoadingProgress(): number {
     if (this.jobs.length === 0) return 0;
     return Math.round((this.displayedJobs.length / this.jobs.length) * 100);
   }
 
-  /**
-   * Scroll to top of job list
-   */
   scrollToTop(): void {
     const jobContainer = document.getElementById('job-container');
     if (jobContainer) {
@@ -349,9 +322,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Debug method to check cache status
-   */
   checkCacheStatus(): void {
     console.log('Cache Status:', {
       isCached: this.jobService.areJobsCached(),

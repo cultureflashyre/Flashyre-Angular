@@ -35,9 +35,8 @@ export class AuthService {
    * @returns An Observable with the server's response, including the token.
    */
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}login-candidate/`, { email, password }).pipe(
-      tap((response: any) => {
-        // On successful login, store token and user profile in localStorage.
+    return this.http.post(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
+      tap(response => {
         if (response.token) {
           localStorage.setItem('jwtToken', response.token);
           // Assuming the user object might be nested, adjust as needed.
