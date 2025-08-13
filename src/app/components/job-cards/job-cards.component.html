@@ -9,15 +9,15 @@
       <span>{{ errorMessage }}</span>
     </div>
     <!-- No jobs state -->
-    <div *ngIf aided="!loading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
+    <div *ngIf="!loading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
       <span>No jobs available at the moment.</span>
     </div>
     <!-- Job cards -->
     <div
-      *ngFor="let job of displayedJobs; index as i"
+      *ngFor="let job of jobs; index as i"
       (click)="selectJob(job.job_id)"
       class="job-cards-job-cards-first-container"
-      [ngClass]="{'clicked': job.job_id === selectedJobId}"
+      [ngClass]="{'clicked': clickedIndex === i}"
     >
       <div class="job-cards-job-card-job-details-container">
         <div class="job-cards-company-logo-container">
