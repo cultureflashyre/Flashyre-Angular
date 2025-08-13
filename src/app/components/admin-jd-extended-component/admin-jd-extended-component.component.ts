@@ -1,31 +1,36 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { AdminService, JobDescription } from '../../services/admin.service';
-import { Subscription } from 'rxjs';
+import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 
 @Component({
   selector: 'admin-jd-extended-component',
   templateUrl: 'admin-jd-extended-component.component.html',
   styleUrls: ['admin-jd-extended-component.component.css'],
 })
-export class AdminJdExtendedComponent implements OnInit, OnDestroy {
-  @Input() rootClassName: string = '';
-  
-  public jd: JobDescription | null = null;
-  private jdSubscription: Subscription;
-
-  // We no longer need placeholders or @Input for text here
-  
-  constructor(private adminService: AdminService) {}
-
-  ngOnInit(): void {
-    this.jdSubscription = this.adminService.activeJd$.subscribe(latestJd => {
-      this.jd = latestJd;
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.jdSubscription) {
-      this.jdSubscription.unsubscribe();
-    }
-  }
+export class AdminJdExtendedComponent {
+  @Input()
+  noticePeriodInputFiledPlaceholder: string = 'Enter Notice Period'
+  @ContentChild('skillText')
+  skillText: TemplateRef<any>
+  @ContentChild('noticePeriodStarText')
+  noticePeriodStarText: TemplateRef<any>
+  @ContentChild('relevantExperienceText')
+  relevantExperienceText: TemplateRef<any>
+  @ContentChild('totalExperienceText')
+  totalExperienceText: TemplateRef<any>
+  @Input()
+  roleInputFieldPlaceholder: string = 'Enter Role'
+  @ContentChild('locationText')
+  locationText: TemplateRef<any>
+  @ContentChild('locationStarText')
+  locationStarText: TemplateRef<any>
+  @Input()
+  rootClassName: string = ''
+  @ContentChild('universityInstituteText')
+  universityInstituteText: TemplateRef<any>
+  @ContentChild('roleText')
+  roleText: TemplateRef<any>
+  @ContentChild('roleStarText')
+  roleStarText: TemplateRef<any>
+  @ContentChild('skillStarText')
+  skillStarText: TemplateRef<any>
+  constructor() {}
 }

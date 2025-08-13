@@ -134,7 +134,6 @@
   border-width: 1px;
   border-radius: 4px;
   background-color: #FFFFFF;
-  display: none;
 }
  
 .admin-candidate-sourced-component-dropdown-toggle1:hover {
@@ -293,9 +292,6 @@
   font-weight: 500;
 }
  
-/* ==========================================================================
-   START OF MODIFIED CODE BLOCK
-   ========================================================================== */
 .admin-candidate-sourced-component-download-zip-container {
   gap: 8px;
   flex: 0 0 auto;
@@ -306,11 +302,9 @@
   align-items: center;
   border-color: #05356C;
   border-width: 1px;
-  /* MODIFIED: Changed padding to match other buttons */
-  padding-left: var(--dl-layout-space-unit); 
+  padding-left: var(--dl-layout-space-halfunit);
   border-radius: 4px;
-  /* MODIFIED: Changed padding to match other buttons */
-  padding-right: var(--dl-layout-space-unit); 
+  padding-right: var(--dl-layout-space-halfunit);
   justify-content: center;
   background-color: #FFFFFF;
 }
@@ -327,23 +321,17 @@
 }
  
 .admin-candidate-sourced-component-download-icon1 {
-  /* MODIFIED: Changed fill and color to inherit for consistency */
-  fill: #05356c;
-  color: #05356c;
-  /* MODIFIED: Reduced icon size to be more compact */
-  width: 20px;
-  height: 20px;
+  fill: #05356C;
+  color: #05356C;
+  width: 24px;
+  height: 24px;
 }
  
 .admin-candidate-sourced-component-download-zip-text {
-  /* MODIFIED: Changed fill to match text color */
-  fill: #05356c;
+  fill: #05356C;
   color: rgb(5, 53, 108);
   font-size: 16px;
 }
-/* ==========================================================================
-   END OF MODIFIED CODE BLOCK
-   ========================================================================== */
  
 .admin-candidate-sourced-component-candidate-details-download-cv-main-container {
   width: 100%;

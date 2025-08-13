@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AdminService, Candidate } from '../../services/admin.service';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { AdminService, Candidate } from '../../services/admin.service'; // Adjust path if needed
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'admin-page1-component',
@@ -9,185 +8,148 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['admin-page1-component.component.css'],
 })
 export class AdminPage1Component implements OnInit {
-  // ==============================================================================
-  // CLASS PROPERTIES
-  // ==============================================================================
+  @Input() rootClassName: string = '';
 
-  /** The root CSS class name passed from the parent component. */
-  @Input()
-  rootClassName: string = '';
-
-  /** The array of candidate objects to be displayed in the template. */
+  // --- NEW: Component State ---
   public candidates: Candidate[] = [];
-
-  /** A flag to show a loading indicator while fetching data. */
-  public isLoading = true;
-
-  /** The state of the master "Select All" checkbox, bound with ngModel. */
-  public selectAllState = false;
-
-  // ==============================================================================
-  // CONSTRUCTOR & LIFECYCLE HOOKS
-  // ==============================================================================
+  public isLoading: boolean = false;
+  public isAllSelected: boolean = false;
+  public activeFilter: string = 'today';
 
   constructor(private adminService: AdminService) {}
 
-  /**
-   * A lifecycle hook that is called after Angular has initialized all data-bound properties.
-   * Used here to perform the initial data load.
-   */
   ngOnInit(): void {
-    this.loadCandidates();
+    this.fetchCandidates();
   }
 
-  // ==============================================================================
-  // DATA FETCHING METHODS
-  // ==============================================================================
-
-  /**
-   * Fetches the list of candidates from the backend using the AdminService.
-   * This is the primary method for populating the component's data.
-   */
-  public loadCandidates(): void {
+  // --- NEW: Data Fetching and Filtering ---
+  public fetchCandidates(dateFilter?: string): void {
     this.isLoading = true;
-    // Defaulting to today's date for the filter. This can be made dynamic later.
-    const today = new Date().toISOString().split('T')[0];
-
-    this.adminService.getCandidates(today).subscribe({
+    this.adminService.getCandidates(dateFilter).subscribe({
       next: (data) => {
-        // Add a 'selected' property to each candidate for UI checkbox binding.
+        // Initialize each candidate with a 'selected' property for checkbox binding
         this.candidates = data.map(c => ({ ...c, selected: false }));
-        this.isLoading = false;
-        this.updateSelectAllState(); // Ensure 'Select All' is correctly unchecked.
+        this.isAllSelected = false; // Reset selection state on new data
       },
       error: (err) => {
-        console.error("Failed to load candidates", err);
+        console.error('Failed to fetch candidates:', err);
+        alert('Could not load candidate data.');
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });
   }
 
-  // ==============================================================================
-  // USER ACTION METHODS
-  // ==============================================================================
+  public applyFilter(filter: string, date?: string): void {
+    this.activeFilter = filter;
+    let dateString: string | undefined;
 
-  /**
-   * Opens the candidate's CV file in a new browser tab.
-   * @param cvUrl The URL of the CV file to open.
-   */
-  viewCv(cvUrl: string): void {
-    if (cvUrl) {
-      window.open(cvUrl, '_blank');
+    if (filter === 'today') {
+      dateString = this.getFormattedDate(new Date());
+    } else if (filter === 'yesterday') {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      dateString = this.getFormattedDate(yesterday);
+    } else if (filter === 'custom' && date) {
+      // Logic for a custom date picker would go here
+      // For now, we assume 'date' is a valid 'YYYY-MM-DD' string
+      dateString = date;
     }
+    
+    this.fetchCandidates(dateString);
   }
 
-  /**
-   * Deletes a single candidate after a confirmation prompt.
-   * @param candidateId The ID of the candidate to delete.
-   * @param index The index of the candidate in the local array for quick removal from the UI.
-   */
-  removeCandidate(candidateId: number, index: number): void {
-    if (confirm('Are you sure you want to remove this candidate?')) {
-      this.adminService.deleteCandidate(candidateId).subscribe({
+  private getFormattedDate(d: Date): string {
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+
+  // --- NEW: Selection Logic ---
+  public toggleSelectAll(): void {
+    this.candidates.forEach(c => c.selected = this.isAllSelected);
+  }
+
+  public updateSelectAllState(): void {
+    this.isAllSelected = this.candidates.length > 0 && this.candidates.every(c => c.selected);
+  }
+
+  // --- NEW: Action Handlers ---
+  public removeCandidate(id: number, index: number): void {
+    if (confirm('Are you sure you want to remove this candidate? This action cannot be undone.')) {
+      this.adminService.deleteCandidate(id).subscribe({
         next: () => {
-          this.candidates.splice(index, 1); // Remove from UI on success
+          this.candidates.splice(index, 1);
           this.updateSelectAllState();
+          alert('Candidate removed successfully.');
         },
         error: (err) => {
-          alert('Failed to remove candidate. Please try again.');
-          console.error(err);
+          alert(`Failed to remove candidate: ${err.error?.detail || 'Server error'}`);
         }
       });
     }
   }
-  
-  /**
-   * Deletes all currently selected candidates after a confirmation prompt.
-   * Uses forkJoin to handle multiple API requests in parallel.
-   */
-  removeSelected(): void {
-    const selectedCandidates = this.candidates.filter(c => c.selected);
-    if (selectedCandidates.length === 0) {
+
+  public removeSelected(): void {
+    const selectedIds = this.candidates.filter(c => c.selected).map(c => c.candidate_id);
+    if (selectedIds.length === 0) {
       alert('Please select at least one candidate to remove.');
       return;
     }
 
-    if (confirm(`Are you sure you want to remove ${selectedCandidates.length} selected candidate(s)?`)) {
-      const deleteObservables = selectedCandidates.map(candidate =>
-        this.adminService.deleteCandidate(candidate.candidate_id).pipe(
-          catchError(error => {
-            console.error(`Failed to delete candidate ID ${candidate.candidate_id}`, error);
-            // On failure, return the candidate object so we know which one failed.
-            return of(candidate); 
-          })
-        )
-      );
-
-      // Explicitly type 'results' as 'any[]' to prevent the compilation error.
-      forkJoin(deleteObservables).subscribe((results: any[]) => {
-        // Filter out candidates whose IDs are NOT in the error results.
-        const successfullyDeletedIds = selectedCandidates
-          .filter(c => !results.some(res => res && res.candidate_id === c.candidate_id))
-          .map(c => c.candidate_id);
-
-        this.candidates = this.candidates.filter(
-          c => !successfullyDeletedIds.includes(c.candidate_id)
-        );
-        
-        if (results.length > successfullyDeletedIds.length) {
-          alert('Some candidates could not be removed. Please check the console for details.');
+    if (confirm(`Are you sure you want to permanently delete ${selectedIds.length} candidate(s)?`)) {
+      const deleteObservables = selectedIds.map(id => this.adminService.deleteCandidate(id));
+      forkJoin(deleteObservables).subscribe({
+        next: () => {
+          alert('Selected candidates removed successfully.');
+          // Refresh the list from the server to get the clean state
+          this.applyFilter(this.activeFilter);
+        },
+        error: (err) => {
+          alert(`An error occurred while removing candidates: ${err.message}`);
         }
-
-        this.updateSelectAllState();
       });
     }
   }
 
-  /**
-   * Sends registration emails to selected candidates who do not yet have an account.
-   */
-  startProcess(): void {
-    const idsToSend = this.candidates
-      .filter(c => c.selected && c.has_account === 'No' && c.account_creation_email_sent === 'No')
+  public startProcess(): void {
+    const selectedCandidates = this.candidates.filter(c => c.selected);
+    if (selectedCandidates.length === 0) {
+      alert('Please select at least one candidate to start the process.');
+      return;
+    }
+
+    const unregisteredIds = selectedCandidates
+      .filter(c => c.has_account !== 'Yes')
       .map(c => c.candidate_id);
 
-    if (idsToSend.length === 0) {
-      alert('Please select one or more new candidates (with a warning icon) to start the process.');
+    const hasRegistered = selectedCandidates.some(c => c.has_account === 'Yes');
+
+    if (unregisteredIds.length === 0) {
+      alert('All selected candidates are already registered.');
       return;
     }
 
-    this.adminService.sendRegistrationInvites(idsToSend).subscribe({
-      next: (response) => {
-        alert(response.message || 'Invitations sent successfully!');
-        this.loadCandidates(); // Refresh to show updated status.
-      },
-      error: (err) => {
-        alert('Failed to send invitations. Please try again.');
-        console.error(err);
-      }
-    });
-  }
-
-  // ==============================================================================
-  // UI STATE HELPER METHODS
-  // ==============================================================================
-
-  /**
-   * Toggles the 'selected' state of all candidates based on the master checkbox.
-   */
-  toggleSelectAll(): void {
-    this.candidates.forEach(c => c.selected = this.selectAllState);
-  }
-
-  /**
-   * Updates the state of the master 'Select All' checkbox. It should be checked
-   * only if all individual candidate checkboxes are checked.
-   */
-  updateSelectAllState(): void {
-    if (this.candidates.length === 0) {
-      this.selectAllState = false;
-      return;
+    let confirmationMessage = `This will send registration invites to ${unregisteredIds.length} unregistered candidate(s). Proceed?`;
+    if (hasRegistered) {
+      confirmationMessage = 'Some selected candidates are already registered. ' + confirmationMessage;
     }
-    this.selectAllState = this.candidates.every(c => c.selected);
+
+    if (confirm(confirmationMessage)) {
+      this.adminService.sendRegistrationInvites(unregisteredIds).subscribe({
+        next: (response) => {
+          alert(response.message);
+          // Optionally, refresh to show updated email sent status
+          this.applyFilter(this.activeFilter);
+        },
+        error: (err) => {
+          alert(`Failed to send invites: ${err.error?.message || 'Server error'}`);
+        }
+      });
+    }
   }
 }

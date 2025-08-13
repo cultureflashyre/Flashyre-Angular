@@ -1,6 +1,58 @@
 :host { 
   display: contents; 
 }
+
+/* Style for the tab buttons for better user interaction */
+.tab-button {
+  cursor: pointer;
+  padding: 12px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+/* Style for the currently active tab */
+.tab-button.active-tab .admin-page1-job-recommended-text,
+.tab-button.active-tab .admin-page1-preference-text {
+  color: #05356C; /* Ensure text is the active color */
+}
+
+.tab-button.active-tab {
+  border-bottom: 2px solid #05356C;
+}
+
+/* Loading overlay for uploads */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
  
 .admin-page1-container {
   width: 100vw;
@@ -32,97 +84,122 @@
 }
  
 .admin-page1cvjd-upload-candidate-details-container {
-  gap: 40px;
+  gap: 24px;
   flex: 0 0 auto;
   width: 100%;
   height: auto;
   display: flex;
+  align-self: center;
   align-items: flex-start;
   border-radius: var(--dl-layout-radius-radius4);
   flex-direction: column;
 }
  
+.admin-page1-job-recommended-preference-container {
+  gap: 32px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.admin-page1-job-recommended-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 12px;
+  flex-direction: row;
+  padding-bottom: 12px;
+}
+ 
+.admin-page1-job-recommended-text {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  width: auto;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.admin-page1-preference-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.admin-page1-preference-text {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  width: auto;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
 .admin-page1cvjd-upload-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 50%;
-  height: 104px;
+  width: auto;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
  
-.admin-page1cv-upload-button-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 48%;
-  height: 100%;
+.admin-page1-add-questions-with-ai-button1 {
+  width: 200px;
+  height: 40px;
   display: flex;
-  transition: 0.3s;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
   align-items: center;
-  border-color: #A7A7A7;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 4px;
+  border-width: 0px;
   justify-content: center;
+  background-color: transparent;
 }
  
-.admin-page1cv-upload-button-container:hover {
-  cursor: pointer;
-  transform: scale(0.90);
-  transition: all 0.7s;
-}
- 
-.admin-page1cv-upload-button-container:active {
-  transform: scale(1.05);
-  transition: all 0.7s;
-  background-color: #D7DFE7;
-}
- 
-.admin-page1cv-upload-text {
-  color: #1819c;
+.admin-page1-add-questions-with-ai-text1 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
   width: auto;
-  height: 24px;
-  display: flex;
-  font-size: 20px;
-  align-items: center;
+  font-style: normal;
+  font-weight: 600;
 }
  
-.admin-page1jd-upload-button-container {
-  gap: 8px;
-  flex: 0 0 auto;
-  width: 48%;
-  height: 100%;
+.admin-page1-add-questions-with-ai-button2 {
+  width: 200px;
+  height: 40px;
   display: flex;
-  transition: 0.3s;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
   align-items: center;
-  border-color: #A7A7A7;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 4px;
+  border-width: 0px;
   justify-content: center;
+  background-color: transparent;
 }
  
-.admin-page1jd-upload-button-container:hover {
-  cursor: pointer;
-  transform: scale(0.90);
-  transition: all 0.7s;
-}
- 
-.admin-page1jd-upload-button-container:active {
-  transform: scale(1.05);
-  transition: all 0.7s;
-  background-color: #D7DFE7;
-}
- 
-.admin-page1jd-upload-text {
-  fill: #1819c;
-  color: #1819c;
+.admin-page1-add-questions-with-ai-text2 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
   width: auto;
-  height: 24px;
-  display: flex;
-  font-size: 20px;
-  align-items: center;
+  font-style: normal;
+  font-weight: 600;
 }
  
 .admin-page1-fragment10 {
@@ -277,23 +354,34 @@
     width: 100%;
     padding: var(--dl-layout-space-unit);
   }
+  .admin-page1-job-recommended-preference-container {
+    width: 100%;
+  }
   .admin-page1cvjd-upload-container {
     width: 50%;
     height: 90px;
   }
-  .admin-page1cv-upload-button-container {
-    width: 48%;
-    padding: 16px;
+  .admin-page1-add-questions-with-ai-button1 {
+    height: 36px;
+    display: flex;
+    align-items: center;
   }
-  .admin-page1cv-upload-text {
+  .admin-page1-add-questions-with-ai-text1 {
+    display: flex;
     font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
   }
-  .admin-page1jd-upload-button-container {
-    width: 48%;
-    padding: 16px;
+  .admin-page1-add-questions-with-ai-button2 {
+    height: 36px;
+    display: flex;
+    align-items: center;
   }
-  .admin-page1jd-upload-text {
+  .admin-page1-add-questions-with-ai-text2 {
+    display: flex;
     font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
   }
 }
  
@@ -304,20 +392,33 @@
   .admin-page1cv-upload-jd-upload-candidate-details-main-container {
     width: 100%;
   }
+  .admin-page1-job-recommended-preference-container {
+    width: auto;
+  }
   .admin-page1cvjd-upload-container {
     height: 60px;
   }
-  .admin-page1cv-upload-button-container {
-    width: 47%;
+  .admin-page1-add-questions-with-ai-button1 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
   }
-  .admin-page1cv-upload-text {
-    font-size: 12px;
+  .admin-page1-add-questions-with-ai-text1 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
   }
-  .admin-page1jd-upload-button-container {
-    width: 47%;
+  .admin-page1-add-questions-with-ai-button2 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
   }
-  .admin-page1jd-upload-text {
-    font-size: 12px;
+  .admin-page1-add-questions-with-ai-text2 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
   }
 }
  
