@@ -1,6 +1,43 @@
 :host { 
   display: contents; 
 }
+
+
+/* --- Add these new styles to the top --- */
+.active-tab {
+  border-bottom-color: #05356C !important;
+  border-bottom-width: 2px !important;
+  border-radius: 0;
+}
+
+.admin-page2-component-dropdown-toggle2,
+.admin-page2-component-dropdown-toggle3,
+.admin-page2-component-dropdown-toggle4 {
+  padding: 10px 15px;
+  background-color: #fff;
+}
+
+.admin-page2-component-dropdown-toggle2:hover,
+.admin-page2-component-dropdown-toggle3:hover,
+.admin-page2-component-dropdown-toggle4:hover {
+    background-color: #f0f0f0;
+    color: #05356C;
+}
+
+.info-container {
+  width: 100%;
+  padding: 40px 20px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+/* --- End of new styles --- */
+
+
+/* (The rest of your existing CSS follows here) */
  
 .admin-page2-component-admin-page2-component {
   gap: 16px;
