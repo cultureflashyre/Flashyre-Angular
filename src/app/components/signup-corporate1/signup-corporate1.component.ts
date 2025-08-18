@@ -174,11 +174,11 @@ export class SignupCorporate1 implements OnInit {
           // Fetch user profile
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
-              this.router.navigate(['/profile-overview-page']);
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
             },
             (profileError) => {
               console.error('Error fetching profile', profileError);
-              this.router.navigate(['/profile-overview-page']);
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
             }
           );
 

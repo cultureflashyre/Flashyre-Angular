@@ -35,6 +35,8 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   imageSrc: string = '';
   defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
   
+  navigationSource: 'candidate' | 'recruiter' = 'candidate'; // default
+
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
 
@@ -67,6 +69,19 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     console.log('ngOnInit called');
+
+     // Get userType from localStorage instead of navigation state
+    const storedUserType = localStorage.getItem('userType');
+
+    if (storedUserType === 'candidate' || storedUserType === 'recruiter') {
+      this.navigationSource = storedUserType;
+      console.log('Navigating from userType stored locally:', this.navigationSource);
+    } else {
+      // fallback or default value
+      this.navigationSource = 'candidate';
+      console.log('No userType found in localStorage, defaulting to:', this.navigationSource);
+    }
+
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       try {
@@ -110,11 +125,19 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
   }
 
-  showErrorPopup() {
-    this.popupMessage = 'Failed to upload';
+  showErrorPopup(message?: string) {
+    this.popupMessage = message || 'Failed to upload';
     this.popupType = 'error';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
+  }
+
+    // New method for the rate-limit warning
+  showRateLimitWarningPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000);
   }
 
   closePopup() {
@@ -143,18 +166,38 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         switch (previousStep) {
           case 1:
             console.log('Saving profile information...');
-            success = await this.profileComponent.saveProfile();
-            console.log('Profile save result:', success);
+            const result = await this.profileComponent.saveProfile();
+            success = result.success;
+            if (result.success) {
+              if (result.rateLimited) {
+                // Show rate-limit warning only for step 1
+                this.showRateLimitWarningPopup(result.message);
+              } else {
+                // Show standard success for step 1
+                this.showSuccessPopup();
+              }
+            } else {
+              this.showErrorPopup(result.message || 'Failed to save profile.');
+            }
             break;
           case 2:
             console.log('Saving employment information...');
             success = await this.employmentComponent.saveEmployment();
-            console.log('Employment save result:', success);
+            if (success) {
+              this.showSuccessPopup();
+            } else {
+              this.showErrorPopup('Failed to save employment details.');
+            }
             break;
+
           case 3:
             console.log('Saving education information...');
             success = await this.educationComponent.saveEducation();
-            console.log('Education save result:', success);
+            if (success) {
+              this.showSuccessPopup();
+            } else {
+              this.showErrorPopup('Failed to save education details.');
+            }
             break;
           case 5:
             console.log('Saving certifications information...');
@@ -169,7 +212,12 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
             // Redirect to 'candidate-home' after 5 seconds regardless of success or failure
             setTimeout(() => {
-              this.router.navigate(['candidate-home']);
+              console.log("Navigating to page: ", this.navigationSource);
+              if (this.navigationSource === 'recruiter') {
+                this.router.navigate(['corporate-home']);
+              } else {
+                this.router.navigate(['candidate-home']);
+              }
             }, 3000);
             break;
           default:
@@ -221,9 +269,14 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
     // If user has reached or passed the last step, navigate to candidate-home
     if (this.currentStep >= 6) {
-      console.log('All steps skipped or completed, navigating to candidate-home');
+      console.log('All steps skipped or completed, navigating to', this.navigationSource);
       setTimeout(() => {
-        this.router.navigate(['candidate-home']);
+        console.log("Navigating to page: ", this.navigationSource);
+        if (this.navigationSource === 'recruiter') {
+          this.router.navigate(['corporate-home']);
+        } else {
+          this.router.navigate(['candidate-home']);
+        }
       }, 3000);
     }
   }

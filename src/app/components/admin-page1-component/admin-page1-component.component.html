@@ -1,0 +1,199 @@
+<div
+  id="admin-page1-component"
+  class="admin-page1-component-container"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="date-selector-main-container"
+    class="admin-page1-component-date-selector-main-container"
+  >
+    <div
+      id="left-arrow-container"
+      class="admin-page1-component-left-arrow-container"
+    >
+      <svg
+        id="left-arrow-icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        class="admin-page1-component-left-arrow-icon"
+      >
+        <path
+          d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </div>
+    <div
+      id="date-selector-container"
+      class="admin-page1-component-date-selector-container"
+    >
+      <div
+        id="date-selector-1st-container"
+        class="admin-page1-component-date-selector1st-container"
+      >
+        <span id="day-text" class="admin-page1-component-day-text">
+          <ng-container>
+            <ng-template #defaultText>
+              <div class="admin-page1-component-fragment15">
+                <span class="admin-page1-component-text15">Today</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+      </div>
+      <div
+        id="day-and-time-container"
+        class="admin-page1-component-day-and-time-container1"
+      >
+        <span id="day-text-1" class="admin-page1-component-day-text11">
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="admin-page1-component-fragment10">
+                <span class="admin-page1-component-text10">Today</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+        <span id="time-text" class="admin-page1-component-time-text1">
+          <ng-container>
+            <ng-template #defaultText2>
+              <div class="admin-page1-component-fragment16">
+                <span class="admin-page1-component-text16">05:00 PM</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+      </div>
+      <div
+        id="day-and-time-container"
+        class="admin-page1-component-day-and-time-container2"
+      >
+        <span id="day-text-1" class="admin-page1-component-day-text12">
+          <ng-container>
+            <ng-template #defaultText110>
+              <div class="admin-page1-component-fragment11">
+                <span class="admin-page1-component-text11">Yesterday</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+        <span id="time-text" class="admin-page1-component-time-text2">
+          <ng-container>
+            <ng-template #defaultText28>
+              <div class="admin-page1-component-fragment14">
+                <span class="admin-page1-component-text14">05:00 PM</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+      </div>
+      <div
+        id="day-time-last-container"
+        class="admin-page1-component-day-time-last-container"
+      >
+        <span
+          id="date-month-year-text"
+          class="admin-page1-component-date-month-year-text"
+        >
+          <ng-container>
+            <ng-template #defaultText7>
+              <div class="admin-page1-component-fragment17">
+                <span class="admin-page1-component-text17">DD:MM:YY</span>
+              </div>
+            </ng-template>
+            <
+          </ng-container>
+        </span>
+        <span id="time-last-text" class="admin-page1-component-time-last-text">
+          <ng-container>
+            <ng-template #defaultText8>
+              <div class="admin-page1-component-fragment12">
+                <span class="admin-page1-component-text12">HH:MM</span>
+              </div>
+            </ng-template>
+            
+          </ng-container>
+        </span>
+      </div>
+    </div>
+    <div
+      id="right-arrow-container"
+      class="admin-page1-component-right-arrow-container"
+    >
+      <svg
+        id="right-arrow-icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        class="admin-page1-component-right-arrow-icon"
+      >
+        <path
+          d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  <div id="candidate-profiles-main-container" class="admin-page1-component-candidate-profiles-main-container">
+  <div id="select-process-remove-main-container" class="admin-page1-component-select-process-remove-main-container">
+    <div id="select-all-main-container" class="admin-page1-component-select-all-main-container">
+      <input type="checkbox" id="select-checkbox" class="admin-page1-component-select-checkbox"
+             [(ngModel)]="selectAllState" 
+             (change)="toggleSelectAll()" />
+      <span id="select-all-text" class="admin-page1-component-select-all-text">Select All</span>
+    </div>
+    <div id="start-process-remove-container" class="admin-page1-component-start-process-remove-container">
+      <button id="start-process-button" type="button" class="admin-page1-component-start-process-button button"
+              (click)="startProcess()">
+        <span id="start-process-text" class="admin-page1-component-start-process-text">Start Process</span>
+      </button>
+      <button id="remove-button" type="button" class="admin-page1-component-remove-button button"
+              (click)="removeSelected()">
+        <span id="remove-text" class="admin-page1-component-remove-text">Remove</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="loading-indicator">Loading candidates...</div>
+  <div *ngIf="!isLoading && candidates.length === 0" class="no-candidates-message">
+    No candidates found for the selected date. Try uploading some CVs.
+  </div>
+  <div id="candidates-name-view-cv-main-container" class="admin-page1-component-candidates-name-view-cv-main-container">
+    <div *ngFor="let candidate of candidates; let i = index" id="candidates-main-container-{{i}}" class="admin-page1-component-candidates-main-container">
+      <div id="candidate-name-check-box-container-{{i}}" class="admin-page1-component-candidate-name-check-box-container">
+        <input type="checkbox" id="candidate-checkbox-{{i}}" class="admin-page1-component-candidate-checkbox"
+               [(ngModel)]="candidate.selected"
+               (ngModelChange)="updateSelectAllState()" />
+        <span id="candidate-name-text-{{i}}" class="admin-page1-component-candidate-name-text">{{ candidate.full_name }}</span>
+      </div>
+      <div id="cv-main-container-{{i}}" class="admin-page1-component-cv-main-container" (click)="viewCv(candidate.cv_file_path)">
+        <svg id="eye-icon-{{i}}" width="1024" height="1024" viewBox="0 0 1024 1024" class="admin-page1-component-eye-icon">
+          <path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112" fill="currentColor"></path>
+        </svg>
+        <span id="view-cv-text-{{i}}" class="admin-page1-component-view-cv-text">View CV</span>
+      </div>
+      <div id="warning-green-tick-remove-icon-container-{{i}}" class="admin-page1-component-warning-green-tick-remove-icon-container">
+        <div id="warning-green-tick-container-{{i}}" class="admin-page1-component-warning-green-tick-container">
+          <svg *ngIf="candidate.has_account === 'No'" id="warning-icon-{{i}}" width="24" height="24" viewBox="0 0 24 24" class="admin-page1-component-warning-icon">
+            <g fill="none" stroke="orange" stroke-width="1.5" stroke-linecap="round">
+              <path d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"></path>
+              <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
+            </g>
+          </svg>
+          <svg *ngIf="candidate.has_account === 'Yes'" id="green-tick-icon-{{i}}" width="24" height="24" viewBox="0 0 24 24" class="admin-page1-component-green-tick-icon">
+            <path d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z" fill="green"></path>
+          </svg>
+        </div>
+        <svg id="remove-icon-{{i}}" width="24" height="24" viewBox="0 0 24 24" class="admin-page1-component-remove-icon" (click)="removeCandidate(candidate.candidate_id, i)">
+          <path d="M19 13H5v-2h14z" fill="red"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 
@@ -29,8 +29,8 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     'https://s3-alpha-sig.figma.com/img/cb33/d035/72e938963245d419674c3c2e71065794?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=q4HKhJijWG7gIkWWgF~7yllDZKHyqxALVLh-VKU~aa6mkzu0y4';
   @Input() imageAlt: string = 'image';
 
-  @ViewChild('desktopBar') desktopBar: ElementRef;
-  @ViewChild('mobileLoader') mobileLoader: ElementRef;
+  @ViewChild('desktopBar', { static: false }) desktopBar: ElementRef;
+  @ViewChild('mobileLoader', { static: false }) mobileLoader: ElementRef;
 
   @ContentChild('text2') text2: TemplateRef<any>;
   @ContentChild('button') button: TemplateRef<any>;
@@ -52,7 +52,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
    * Fetches disliked and saved job statuses, prioritizing Cache API over direct API calls.
    */
   async ngOnInit(): Promise<void> {
-    this.score = this.matchingScore;
+    this.score = this.matchingScore || 0;
     this.loadUserProfile();
     await this.loadJobIdFromCache();
     
@@ -102,6 +102,13 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
     } else {
       console.warn('user_id or jobId missing for fetching user interactions', { userId, jobId: this.jobId });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['matchingScore'] && !changes['matchingScore'].firstChange) {
+      this.score = this.matchingScore || 0;
+      this.animateProgressBar();
     }
   }
 
@@ -222,7 +229,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
         requestAnimationFrame(animate);
       }
     };
-    animate();
+    requestAnimationFrame(animate);
   }
 
   private updateProgressBar(percentage: number): void {

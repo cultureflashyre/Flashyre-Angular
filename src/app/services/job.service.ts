@@ -13,7 +13,7 @@ import { AuthService } from './candidate.service';
 export class JobsService {
   private apiUrl = environment.apiUrl + 'api/jobs/';
   // [NEW] API URL for the job_saved app
-  private savedJobsApiUrl = environment.apiUrl + 'api/job_saved/';
+  private savedJobsApiUrl = environment.apiUrl;
 
 
   // --- Private State Management ---

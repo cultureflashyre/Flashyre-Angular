@@ -57,6 +57,12 @@ export class AuthService {
     this.router.navigate(['/login-candidate']);
   }
 
+  getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {
+    const url = `${this.apiUrl}api/jobs/get-match-scores/`;
+    // The backend expects an object with a 'job_ids' key
+    return this.http.post<{[key: number]: number}>(url, { job_ids: jobIds });
+  }
+
   // --- JOB APPLICATION METHODS ---
 
   /**
@@ -96,7 +102,7 @@ export class AuthService {
    */
   dislikeJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}api/job_disliked/dislike/`,
+      `${this.apiUrl}dislike/`,
       { user_id: userId, job_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -115,7 +121,7 @@ export class AuthService {
    */
   removeDislikedJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}api/job_disliked/remove-dislike/`,
+      `${this.apiUrl}remove-dislike/`,
       { user_id: userId, job_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -133,7 +139,7 @@ export class AuthService {
    * @returns An Observable containing the list of disliked jobs.
    */
   getDislikedJobs(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}api/job_disliked/disliked/${userId}/`, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.get(`${this.apiUrl}disliked/${userId}/`, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error('Error in getDislikedJobs:', error);
         return throwError(() => new Error('Failed to fetch disliked jobs'));
@@ -152,7 +158,7 @@ export class AuthService {
    */
   saveJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}api/job_saved/save/`,
+      `${this.apiUrl}save/`,
       { user_id: userId, job_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -172,7 +178,7 @@ export class AuthService {
    */
   removeSavedJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
-      `${this.apiUrl}api/job_saved/remove-saved/`,
+      `${this.apiUrl}remove-saved/`,
       { user_id: userId, job_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -190,7 +196,7 @@ export class AuthService {
    * @returns An Observable containing the list of saved jobs.
    */
   getSavedJobs(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}api/job_saved/saved/${userId}/`, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.get(`${this.apiUrl}saved/${userId}/`, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error('Error in getSavedJobs:', error);
         return throwError(() => new Error('Failed to fetch saved jobs'));

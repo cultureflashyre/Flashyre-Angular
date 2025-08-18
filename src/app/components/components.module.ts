@@ -103,6 +103,16 @@ import { AssessmentDetailedResults } from './assessment-detailed-results/assessm
 import { AssessmentAttemptsListComponent } from './assessment-attempts-list/assessment-attempts-list'
 import { AssessmentWarningPopup } from './assessment-warning-popup/assessment-warning-popup.component';
 
+import { CreateJobPost22 } from './create-job-post-22/create-job-post-22.component'
+import { CreateJobPost21 } from './create-job-post-21/create-job-post-21.component'
+import { CreateJobPostFooter2 } from './create-job-post-footer-2/create-job-post-footer-2.component'
+import { ProgressBar2Code } from './progress-bar-2-code/progress-bar-2-code.component'
+import { AdminCandidateSourcedComponent } from './admin-candidate-sourced-component/admin-candidate-sourced-component.component'
+import { AdminNavbar } from './admin-navbar/admin-navbar.component'
+import { AdminPage1Component } from './admin-page1-component/admin-page1-component.component'
+import { AdminPage2Component } from './admin-page2-component/admin-page2-component.component'
+import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd-extended-component.component'
+
 @NgModule({
   declarations: [
     HeaderContainer,
@@ -194,7 +204,16 @@ import { AssessmentWarningPopup } from './assessment-warning-popup/assessment-wa
     JobCardsComponent,
     AssessmentDetailedResults,
     AssessmentAttemptsListComponent,
-    AssessmentWarningPopup
+    AssessmentWarningPopup,
+    CreateJobPost22,
+    CreateJobPost21,
+    CreateJobPostFooter2,
+    ProgressBar2Code,
+    AdminCandidateSourcedComponent,
+    AdminNavbar,
+    AdminPage1Component,
+    AdminPage2Component,
+    AdminJdExtendedComponent
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
   exports: [
@@ -287,7 +306,16 @@ import { AssessmentWarningPopup } from './assessment-warning-popup/assessment-wa
     JobCardsComponent,
     AssessmentDetailedResults,
     AssessmentAttemptsListComponent,
-    AssessmentWarningPopup
+    AssessmentWarningPopup,
+    CreateJobPost22,
+    CreateJobPost21,
+    CreateJobPostFooter2,
+    ProgressBar2Code,
+    AdminCandidateSourcedComponent,
+    AdminNavbar,
+    AdminPage1Component,
+    AdminPage2Component,
+    AdminJdExtendedComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

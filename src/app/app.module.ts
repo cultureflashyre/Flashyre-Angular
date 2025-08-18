@@ -273,6 +273,15 @@ const routes = [
     data: { roles: ['candidate'] },
   },
   {
+    path: 'admin-page1',
+    loadChildren: () =>
+      import('./pages/admin-page1/admin-page1.module').then(
+        (m) => m.AdminPage1Module
+      ),
+    canActivate: [AuthGuard],
+    data: { roles: ['admin'] },
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(

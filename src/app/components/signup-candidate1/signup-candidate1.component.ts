@@ -158,12 +158,12 @@ export class SignupCandidate1 implements OnInit {
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
               this.errorMessage = '';
-              this.router.navigate(['/profile-overview-page']);
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'candidate' } });
             },
             (profileError) => {
               console.error('Error fetching profile', profileError);
               // Navigate anyway, but with a warning
-              this.router.navigate(['/profile-overview-page']);
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'candidate' } });
             }
           );
           // Hide overlay before navigation

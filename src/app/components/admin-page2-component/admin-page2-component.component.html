@@ -1,0 +1,26 @@
+<div
+  class="admin-page2-component-admin-page2-component"
+  [ngClass]="rootClassName"
+>
+  <div class="admin-page2-component-container">
+    <button type="button" class="admin-page2-component-button button" 
+            (click)="showJdView()"
+            [class.active]="activeView === 'jd'">
+      JD Extracted
+    </button>
+    <button type="button" class="admin-page2-component-button button" 
+            (click)="showCandidatesView()"
+            [class.active]="activeView === 'candidates'">
+      Candidate Sourced
+    </button>
+  </div>
+  
+  <div *ngIf="activeView === 'jd'">
+    <admin-jd-extended-component rootClassName="admin-jd-extended-componentroot-class-name">
+    </admin-jd-extended-component>
+  </div>
+  <div *ngIf="activeView === 'candidates'">
+    <admin-candidate-sourced-component rootClassName="admin-candidate-sourced-componentroot-class-name">
+    </admin-candidate-sourced-component>
+  </div>
+</div>
