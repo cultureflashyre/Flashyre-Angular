@@ -1,6 +1,29 @@
 :host { 
   display: contents; 
 }
+
+/* src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.css */
+
+/* ... (all your existing CSS) ... */
+
+/* [NEW] Styles for the active tab */
+.candidate-job-detail-view-job-recommended-container,
+.candidate-job-detail-view-saved-container {
+  cursor: pointer;
+  padding-bottom: 8px; /* Add some space for the border */
+  border-bottom: 3px solid transparent; /* Default transparent border */
+}
+
+.candidate-job-detail-view-job-recommended-container.active-tab,
+.candidate-job-detail-view-saved-container.active-tab {
+  border-bottom: 3px solid #41327B; /* Or your primary theme color */
+}
+
+.candidate-job-detail-view-job-recommended-container.active-tab .candidate-job-detail-view-job-recommended-text,
+.candidate-job-detail-view-saved-container.active-tab .candidate-job-detail-view-saved-text {
+  font-weight: bold;
+  color: #41327B; /* Or your primary theme color */
+}
  
 .candidate-job-detail-view-container1 {
   width: 100%;
@@ -487,7 +510,7 @@
 .candidate-job-detail-view-job-recommended-preference-container {
   gap: 32px;
   flex: 0 0 auto;
-  width: 350px;
+  width: 100%;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -497,7 +520,7 @@
 .candidate-job-detail-view-job-recommended-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 190px;
+  width: auto;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -509,7 +532,7 @@
 .candidate-job-detail-view-job-recommended-text {
   fill: #05356C;
   color: #05356C;
-  width: 190px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;

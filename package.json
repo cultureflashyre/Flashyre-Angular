@@ -22,6 +22,7 @@
     "@angular/router": "^14.3.0",
     "@auth0/angular-jwt": "^5.2.0",
     "@googlemaps/js-api-loader": "^1.16.8",
+    "chart.js": "^4.5.0",
     "core-js": "~3.0.1",
     "next": "^12.1.10",
     "ngx-device-detector": "^4.0.1",
