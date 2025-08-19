@@ -222,6 +222,21 @@ const routes = [
       ).then((m) => m.CreateJobPost1stPageModule),
   },
   {
+    path: 'create-job-post-21-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-21-page/create-job-post-21-page.module'
+      ).then((m) => m.CreateJobPost21PageModule),
+  },
+  
+  {
+    path: 'create-job-post-22-page',
+    loadChildren: () =>
+      import(
+        './pages/create-job-post-22-page/create-job-post-22-page.module'
+      ).then((m) => m.CreateJobPost22PageModule),
+  },
+  {
     path: 'create-job-post-2nd-page',
     loadChildren: () =>
       import(

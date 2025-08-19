@@ -110,7 +110,8 @@
       </ng-template>
     </navbar-for-recruiter-view>
 
-    <div *ngIf="currentStep === 'jobPost'">
+    <!-- This container is now always visible and contains only the job post form -->
+    <div>
       <form [formGroup]="jobForm">
         <div
           id="create-job-post-container"
@@ -166,7 +167,7 @@
                 type="file"
                 id="upload-file-input"
                 #fileInput
-                class="create-job-post1st-page-upload-file-input" 
+                class="create-job-post1st-page-upload-file-input"
                 (change)="onFileSelected($event)"
                 accept=".pdf,.docx,.doc,.txt,.xml,.csv"
               />
@@ -266,65 +267,65 @@
               </div>
             </div>
             <div
-    id="location-container"
-    class="create-job-post1st-page-location-container"
-  >
-    <div
-      id="location-text-container"
-      class="create-job-post1st-page-location-text-container"
-    >
-      <span
-        id="location-text"
-        class="create-job-post1st-page-location-text"
-      >
-        Location(s)
-      </span>
-      <span
-        id="location-star-text"
-        class="create-job-post1st-page-location-star-text"
-      >
-        *
-      </span>
-    </div>
-    <div
-      id="location-input-container"
-      class="create-job-post1st-page-location-input-container"
-    >
-      <!-- Main container for chips and the live input -->
-      <div class="location-tag-container" (click)="locationInput.focus()">
-        <!-- Loop through and display selected locations as chips -->
-        <div *ngFor="let loc of jobForm.get('location')?.value; let i = index" class="location-tag">
-          <span>{{ loc }}</span>
-          <button type="button" class="remove-tag-btn" (click)="removeLocation(i)">×</button>
-        </div>
-        <!-- The live input field for typing the next location -->
-        <input
-          #locationInput
-          type="text"
-          class="location-live-input"
-          placeholder="Type a location..."
-          (input)="onLocationInput($event)"
-          (keydown)="onLocationInputKeydown($event)"
-        />
-      </div>
+              id="location-container"
+              class="create-job-post1st-page-location-container"
+            >
+              <div
+                id="location-text-container"
+                class="create-job-post1st-page-location-text-container"
+              >
+                <span
+                  id="location-text"
+                  class="create-job-post1st-page-location-text"
+                >
+                  Location(s)
+                </span>
+                <span
+                  id="location-star-text"
+                  class="create-job-post1st-page-location-star-text"
+                >
+                  *
+                </span>
+              </div>
+              <div
+                id="location-input-container"
+                class="create-job-post1st-page-location-input-container"
+              >
+                <!-- Main container for chips and the live input -->
+                <div class="location-tag-container" (click)="locationInput.focus()">
+                  <!-- Loop through and display selected locations as chips -->
+                  <div *ngFor="let loc of jobForm.get('location')?.value; let i = index" class="location-tag">
+                    <span>{{ loc }}</span>
+                    <button type="button" class="remove-tag-btn" (click)="removeLocation(i)">×</button>
+                  </div>
+                  <!-- The live input field for typing the next location -->
+                  <input
+                    #locationInput
+                    type="text"
+                    class="location-live-input"
+                    placeholder="Type a location..."
+                    (input)="onLocationInput($event)"
+                    (keydown)="onLocationInputKeydown($event)"
+                  />
+                </div>
 
-      <!-- Dropdown for showing Google Places suggestions -->
-      <div *ngIf="showLocationSuggestions" class="location-suggestions-list">
-        <div *ngIf="isLoadingLocations" class="suggestion-item">Loading...</div>
-        <div *ngFor="let suggestion of locationSuggestions" class="suggestion-item" (click)="selectLocationSuggestion(suggestion)">
-          {{ suggestion.description }}
-        </div>
-        <div *ngIf="!isLoadingLocations && locationSuggestions.length === 0" class="suggestion-item">
-          No matches found.
-        </div>
-      </div>
+                <!-- Dropdown for showing Google Places suggestions -->
+                <div *ngIf="showLocationSuggestions" class="location-suggestions-list">
+                  <div *ngIf="isLoadingLocations" class="suggestion-item">Loading...</div>
+                  <div *ngFor="let suggestion of locationSuggestions" class="suggestion-item" (click)="selectLocationSuggestion(suggestion)">
+                    {{ suggestion.description }}
+                  </div>
+                  <div *ngIf="!isLoadingLocations && locationSuggestions.length === 0" class="suggestion-item">
+                    No matches found.
+                  </div>
+                </div>
 
-      <!-- Validation Error Message -->
-      <div *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.required" class="field-error-message">
-        Please enter at least one location.
-      </div>
-    </div>
-  </div>
+                <!-- Validation Error Message -->
+                <div *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.required" class="field-error-message">
+                  Please enter at least one location.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             id="jobtype-workplace-container"
@@ -580,7 +581,6 @@
                 </div>
               </div>
             </div>
-
           </div>
           <div
             id="budget-container"
@@ -717,7 +717,6 @@
               id="max-budget-container"
               class="create-job-post1st-page-max-budget-container"
             >
-
               <div
                 id="max-budget-text-container"
                 class="create-job-post1st-page-max-budget-text-container"
@@ -767,42 +766,47 @@
             </div>
           </div>
           <div
-            id="notice-period-container"
-            class="create-job-post1st-page-notice-period-container"
-          >
-            <div
-              id="notice-period-text-container"
-              class="create-job-post1st-page-notice-period-text-container"
-            >
-              <span
-                id="university-institute-text"
-                class="create-job-post1st-page-university-institute-text"
-              >
-                Notice Period
-              </span>
-              <span
-                id="notice-period-star-text"
-                class="create-job-post1st-page-notice-period-star-text"
-              >
-                *
-              </span>
-            </div>
-            <div
-              id="notice-period-input-container"
-              class="create-job-post1st-page-notice-period-input-container"
-            >
-              <input
-                type="text"
-                id="notice-period-input-filed"
-                placeholder="Enter Notice Period"
-                class="create-job-post1st-page-notice-period-input-filed input"
-                formControlName="notice_period"
-              />
-              <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
-            Enter Notice Period
-          </div>
-            </div>
-          </div>
+  id="notice-period-container"
+  class="create-job-post1st-page-notice-period-container"
+>
+  <div
+    id="notice-period-text-container"
+    class="create-job-post1st-page-notice-period-text-container"
+  >
+    <span
+      id="university-institute-text"
+      class="create-job-post1st-page-university-institute-text"
+    >
+      Notice Period
+    </span>
+    <span
+      id="notice-period-star-text"
+      class="create-job-post1st-page-notice-period-star-text"
+    >
+      *
+    </span>
+  </div>
+              <div
+    id="notice-period-input-container"
+    class="create-job-post1st-page-notice-period-input-container"
+  >
+    <select
+      id="notice-period-select-field"
+      class="create-job-post1st-page-notice-period-input-filed input"
+      formControlName="notice_period"
+    >
+      <option value="" disabled>Select Notice Period</option>
+      <option value="Immediate">Immediate</option>
+      <option value="Less than 15 Days">Less than 15 Days</option>
+      <option value="30 Days">30 Days</option>
+      <option value="60 Days">60 Days</option>
+      <option value="90 Days">90 Days</option>
+    </select>
+    <div *ngIf="jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors?.required" class="field-error-message">
+      Enter Notice Period
+    </div>
+  </div>
+</div>
           <div
             id="skills-container"
             class="create-job-post1st-page-skills-container"
@@ -837,7 +841,7 @@
                   .suggestions { position: absolute; border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; background-color: white; max-height: 150px; overflow-y: auto; width: auto; min-width: 200px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; }
                   .suggestions div { padding: 8px 12px; cursor: pointer; }
                   .suggestions div:hover { background-color: #f5f5f5; }
-                  .suggestion-item.active-suggestion { background-color: #e0e0e0; } /* Style for active skill suggestion */
+                  .suggestion-item.active-suggestion { background-color: #e0e0e0; }
                 </style>
                 <div class="tag-container" id="tagContainer">
                   <input
@@ -852,8 +856,8 @@
               </div>
             </div>
             <div *ngIf="jobForm.get('skills')?.touched && jobForm.get('skills')?.errors?.required" class="field-error-message">
-          Enter Skills Required for the Job 
-        </div> 
+          Enter Skills Required for the Job
+        </div>
           </div>
           <div
             id="job-description-container"
@@ -863,7 +867,7 @@
               <div class="create-job-post1st-page-container22">
                  <style>
                 * { box-sizing: border-box; font-family: Arial, sans-serif; }
-                body { margin: 0; background-color: #f9f9f9; }
+                body { margin: 0; background-color: #ffffff; }
                 .container { max-width: 100%; margin: 0 auto; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; }
                 .job-title { padding: 15px; font-size: 20px; color: #333; border-bottom: 1px solid #eee; }
                 .toolbar { display: flex; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd; align-items: center; }
@@ -883,8 +887,6 @@
                   Job description <span class="required-asterisk">*</span>
                 </div>
                 <div class="toolbar">
-                  <!-- IMPORTANT: Remove onclick attributes for these buttons. Implement their functionality via Angular if needed. -->
-                  <!-- For now, they are non-functional to avoid further errors. -->
                   <button id="bold-btn" class="format-btn" title="Bold">B</button>
                   <button id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
                   <button id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
@@ -914,11 +916,9 @@
           </div>
         </div>
       </form>
-    </div>
+    
 
-    <div *ngIf="currentStep === 'assessment'">
-      <assessment-questions-main-container></assessment-questions-main-container>
-    </div>
+    <!-- The assessment-questions-main-container is REMOVED from this file -->
 
     <div
       id="submit-cancel-buttons-container"
@@ -946,9 +946,10 @@
         [disabled]="isSubmitting"
       >
         <span id="submit-text" class="create-job-post1st-page-submit-text">
-          {{ isSubmitting && currentStep === 'jobPost' ? 'Saving...' : (currentStep === 'assessment' ? 'Submit Assessment' : 'Save & Next') }}
+          {{ isSubmitting ? 'Saving...' : 'Next' }}
         </span>
       </button>
+    </div>
     </div>
   </div>
 </div>

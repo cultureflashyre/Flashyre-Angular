@@ -1,21 +1,21 @@
   :host { 
     display: contents; 
   }
+
+.create-job-post1st-page-min-budget-input-field::-webkit-outer-spin-button,
+.create-job-post1st-page-min-budget-input-field::-webkit-inner-spin-button,
+.create-job-post1st-page-max-budget-input::-webkit-outer-spin-button,
+.create-job-post1st-page-max-budget-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.create-job-post1st-page-min-budget-input-field[type="number"],
+.create-job-post1st-page-max-budget-input[type="number"] {
+  -moz-appearance: textfield;
+}  
   
-  .create-job-post1st-page-min-budget-input-field::-webkit-outer-spin-button,
-  .create-job-post1st-page-min-budget-input-field::-webkit-inner-spin-button,
-  .create-job-post1st-page-max-budget-input::-webkit-outer-spin-button,
-  .create-job-post1st-page-max-budget-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* For Firefox */
-  .create-job-post1st-page-min-budget-input-field[type="number"],
-  .create-job-post1st-page-max-budget-input[type="number"] {
-    -moz-appearance: textfield;
-  }  
-
   /* Add these new styles to your CSS file for the multi-location input */
 
 .location-tag-container {
@@ -25,7 +25,9 @@
   gap: 8px; /* Adds spacing between chips. */
   
   width: 100%;
-  min-height: 48px;
+  min-height: 48px; /* Ensures it has a standard height when empty. */
+  /* DO NOT set a fixed 'height' property here, as that would prevent it from growing. */
+
   padding: 8px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -440,8 +442,7 @@ gmp-place-autocomplete::part(input):focus {
     flex-direction: column;
     padding-bottom: 16px;
     justify-content: flex-start;
-    background-color: #F4F4F4;
-  }
+    }
   
   .create-job-post1st-page-fragment10 {
     display: contents;
@@ -605,7 +606,6 @@ gmp-place-autocomplete::part(input):focus {
     display: flex;
     padding: 24px;
     z-index: 999;
-    margin-top: 100px;
     align-items: flex-start;
     border-radius: 8px;
     flex-direction: column;
