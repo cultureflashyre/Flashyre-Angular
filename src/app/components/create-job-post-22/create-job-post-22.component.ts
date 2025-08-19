@@ -670,3 +670,4 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.subscriptions.unsubscribe();
   }
 }
+

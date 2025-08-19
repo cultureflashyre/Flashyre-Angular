@@ -1,3 +1,12 @@
+<div *ngIf="showSuccessPopup" class="success-popup-overlay">
+  <div class="success-popup-box">
+    <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+    <p class="success-message">Successfully Created!</p>
+  </div>
+</div>
 <div class="create-job-post3rd-page-container1">
   <div
     id="create-job-post-3rd-page-main-container"
@@ -115,8 +124,7 @@
         >
           <div class="create-job-post3rd-page-container2">
             <div class="create-job-post3rd-page-container3">
-              <dangerous-html
-                html="<!DOCTYPE html>
+              <!DOCTYPE html>
 <html lang='en'>
 <head>
   <meta charset='UTF-8'>
@@ -129,10 +137,12 @@
       overflow: visible;
       justify-content: space-between;
       align-items: center;
-      width: 80%;
-      max-width: 600px;
+      width: 500px;
+      max-width: auto;
       margin: 20px auto;
       font-family: Inter, sans-serif;
+      margin-left: 400px;
+      background-color: white;
     }
 
     /* Style for each step */
@@ -240,8 +250,7 @@
   </div>
 </body>
 </html>
-"
-              ></dangerous-html>
+
             </div>
           </div>
         </div>
@@ -256,223 +265,114 @@
         >
           Interview Process
         </span>
-        <div
-          id="different-stages-container"
-          class="create-job-post3rd-page-different-stages-container"
-        >
-          <div
-            id="different-stage-container"
-            class="create-job-post3rd-page-different-stage-container"
-          >
-            <div
-              data-thq="thq-dropdown"
-              class="create-job-post3rd-page-select-stage-dropdown list-item"
-            >
-              <div
-                data-thq="thq-dropdown-toggle"
-                class="create-job-post3rd-page-dropdown-toggle10"
-              >
-                <span class="create-job-post3rd-page-text31">Select Stage</span>
-                <div
-                  data-thq="thq-dropdown-arrow"
-                  class="create-job-post3rd-page-dropdown-arrow1"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 32 32"
-                    class="create-job-post3rd-page-icon1"
-                  >
-                    <path
-                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
+        <!-- Form binds to the main FormGroup in the component -->
+        <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
+          <!-- Container binds to the 'stages' FormArray -->
+          <div formArrayName="stages" class="create-job-post3rd-page-different-stages-container">
+            
+            <!-- This div will be repeated for each stage in the FormArray -->
+            <div *ngFor="let stageControl of stages.controls; let i = index" [formGroupName]="i" class="create-job-post3rd-page-different-stage-container">
+              
+              <!-- 1. Stage Name (Conditional Dropdown/Input) -->
+              <div class="form-field-wrapper stage-field">
+                <label [for]="'stage-name-' + i">Interview Stage <span class="required-asterisk">*</span></label>
+                
+                <!-- Show dropdown if 'Customize' is NOT selected -->
+                <select *ngIf="stageControl.get('stage_name')?.value !== 'Customize'" formControlName="stage_name" [id]="'stage-name-' + i">
+                  <option value="Screening">Screening</option>
+                  <option value="Technical interview - 1">Technical interview - 1</option>
+                  <option value="Technical interview - 2">Technical interview - 2</option>
+                  <option value="HR interview">HR interview</option>
+                  <option value="Customize">Customize</option>
+                </select>
+
+                <!-- Show text input ONLY if 'Customize' is selected -->
+                <input *ngIf="stageControl.get('stage_name')?.value === 'Customize'" type="text" formControlName="custom_stage_name" placeholder="Enter Custom Stage Name" [id]="'custom-stage-name-' + i">
+                
+                <!-- Validation Message -->
+                <div *ngIf="stageControl.get('custom_stage_name')?.touched && stageControl.get('custom_stage_name')?.errors?.required" class="field-error-message">
+                  Custom name is required.
                 </div>
               </div>
-              <ul
-                data-thq="thq-dropdown-list"
-                class="create-job-post3rd-page-dropdown-list1"
-              >
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown1 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle11"
-                  >
-                    <span class="create-job-post3rd-page-resume-screening">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown2 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle12"
-                  >
-                    <span class="create-job-post3rd-page-text32">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown3 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle13"
-                  >
-                    <span class="create-job-post3rd-page-text33">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown4 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle14"
-                  >
-                    <span class="create-job-post3rd-page-text34">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown5 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle15"
-                  >
-                    <span class="create-job-post3rd-page-text35">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <input
-              type="text"
-              id="date-input"
-              placeholder="Enter Date"
-              class="create-job-post3rd-page-date-input input"
-            />
-            <div
-              data-thq="thq-dropdown"
-              class="create-job-post3rd-page-select-mode-dropdown list-item"
-            >
-              <div
-                data-thq="thq-dropdown-toggle"
-                class="create-job-post3rd-page-dropdown-toggle16"
-              >
-                <span class="create-job-post3rd-page-text36">Select Mode</span>
-                <div
-                  data-thq="thq-dropdown-arrow"
-                  class="create-job-post3rd-page-dropdown-arrow2"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 32 32"
-                    class="create-job-post3rd-page-icon3"
-                  >
-                    <path
-                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
-              <ul
-                data-thq="thq-dropdown-list"
-                class="create-job-post3rd-page-dropdown-list2"
-              >
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown6 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle17"
-                  >
-                    <span class="create-job-post3rd-page-text37">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown7 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle18"
-                  >
-                    <span class="create-job-post3rd-page-text38">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="create-job-post3rd-page-dropdown8 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="create-job-post3rd-page-dropdown-toggle19"
-                  >
-                    <span class="create-job-post3rd-page-text39">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <input
-              type="text"
-              id="assigned-to-input"
-              placeholder="Assigned To"
-              class="create-job-post3rd-page-assigned-to-input input"
-            />
-            <svg
-              id="remove-icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              class="create-job-post3rd-page-remove-icon"
-            >
-              <path d="M19 13H5v-2h14z" fill="currentColor"></path>
-            </svg>
-          </div>
-        </div>
-        <div
-          id="add-section-container"
-          class="create-job-post3rd-page-add-section-container"
-        >
-          <span
-            id="add-section-text"
-            class="create-job-post3rd-page-add-section-text button"
-          >
-            + Add Section
-          </span>
-          <span
-            id="remove-section-text"
-            class="create-job-post3rd-page-remove-section-text button"
-          >
-            - Remove Section
-          </span>
-        </div>
-      </div>
-    </div>
+
+              <!-- 2. Date Picker -->
+            <!-- 2. Date Picker -->
+<div class="form-field-wrapper date-field">
+  <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
+  <div class="compact-date-input-wrapper">
+    <input 
+      type="date" 
+      formControlName="stage_date"
+      [min]="minDateString"
+      [id]="'date-input-' + i"
+      class="compact-date-input">
+  </div>
+  <div *ngIf="stageControl.get('stage_date')?.touched && stageControl.get('stage_date')?.errors?.required" class="field-error-message">
+    Date is required.
   </div>
 </div>
+
+              <!-- 3. Mode Dropdown -->
+              <div class="form-field-wrapper mode-field">
+                <label [for]="'mode-select-' + i">Interview Mode <span class="required-asterisk">*</span></label>
+                <select formControlName="mode" [id]="'mode-select-' + i">
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                </select>
+              </div>
+
+              <!-- 4. Assigned To Input -->
+              <div class="form-field-wrapper assigned-to-field">
+                <label [for]="'assigned-to-' + i">Assigned To <span class="required-asterisk">*</span></label>
+                <input type="email" formControlName="assigned_to" placeholder="interviewer@company.com" [id]="'assigned-to-' + i">
+                <!-- Validation Messages -->
+                <div *ngIf="stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.required" class="field-error-message">
+                  Email is required.
+                </div>
+                <div *ngIf="stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.email" class="field-error-message">
+                  Please enter a valid email.
+                </div>
+              </div>
+
+              <!-- 5. Remove Button -->
+              <div class="remove-icon-wrapper">
+                <svg 
+                  (click)="removeStage(i)"
+                  id="remove-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="create-job-post3rd-page-remove-icon"
+                  title="Remove Stage">
+                  <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 6. Add Stage Button -->
+          <div id="add-section-container" class="create-job-post3rd-page-add-section-container">
+            <button type="button" (click)="addStage()" class="create-job-post3rd-page-add-section-text button">
+              + Add Stage
+            </button>
+          </div>
+
+        </form>
+              </div>
+      
+    </div>
+    <create-job-post-footer2
+      [rootClassName]="'create-job-post-3rd-page-footer'"
+      [isNextDisabled]="isSubmitting || interviewForm.invalid"
+      [nextButtonText]="'Save'"
+      (cancelClick)="onCancel()"
+      (previousClick)="onPrevious()"
+      (saveDraftClick)="onSaveDraft()"
+      (skipClick)="onSkip()"
+      (nextClick)="onNext()"
+    ></create-job-post-footer2>
+
+  </div>
+</div>
+ 

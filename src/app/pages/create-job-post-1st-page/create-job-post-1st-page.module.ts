@@ -6,6 +6,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from '../../components/components.module';
 import { CreateJobPost1stPageComponent } from './create-job-post-1st-page.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // Define routes for the module
 const routes = [
@@ -24,7 +25,8 @@ const routes = [
     MatSnackBarModule,
     HttpClientModule,
     ComponentsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NgxSpinnerModule // Importing NgxSpinnerModule for loading spinner functionality
   ],
   exports: [CreateJobPost1stPageComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
