@@ -148,8 +148,11 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
       mode: stage.mode,
       assigned_to: stage.assigned_to,
-      order: index + 1
+      order: index + 1,
+      user_id: localStorage.getItem('user_id')
     }));
+
+    console.log("payload: ", payload);
 
     // MODIFICATION: Call the new finalizeJobPost service method
     this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({

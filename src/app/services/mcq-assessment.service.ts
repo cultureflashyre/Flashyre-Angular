@@ -87,7 +87,7 @@ export class McqAssessmentService {
 
   getAssessmentDetails(assessmentId: string, token: string): Observable<AssessmentDetailResponse> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    const endpoint = `${this.apiUrl}/api/mcq-assessments/${assessmentId}/`;
+    const endpoint = `${this.apiUrl}api/mcq-assessments/${assessmentId}/`;
     return this.http.get<AssessmentDetailResponse>(endpoint, { headers });
   }
 
@@ -96,7 +96,7 @@ export class McqAssessmentService {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    const endpoint = `${this.apiUrl}/api/mcq-assessments/${assessmentId}/`;
+    const endpoint = `${this.apiUrl}api/mcq-assessments/${assessmentId}/`;
     // Use PUT for a full replacement of data
     return this.http.put<AssessmentDetailResponse>(endpoint, payload, { headers });
   }
@@ -116,7 +116,7 @@ export class McqAssessmentService {
     // === THE FIX IS HERE ===
     // 1. Path changed from '/api/mcq-assessment/...' to '/api/mcq-assessments/...' (plural)
     // 2. Removed the leading slash to prevent the double-slash issue.
-    const endpoint = `${this.apiUrl}/api/mcq-assessments/legacy/create/`;
+    const endpoint = `${this.apiUrl}api/mcq-assessments/legacy/create/`;
 
     return this.http.post<{ status: string; data: LegacyAssessmentSaveResponse }>(endpoint, payload, { headers }).pipe(
         map(response => {

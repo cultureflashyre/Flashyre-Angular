@@ -39,7 +39,7 @@ export class InterviewService {
     });
     
     // This endpoint orchestrates the finalization of the job post on the backend.
-    const endpoint = `${this.apiUrl}/api/job-post/${jobUniqueId}/finalize/`;
+    const endpoint = `${this.apiUrl}api/job-post/${jobUniqueId}/finalize/`;
     
     return this.http.post(endpoint, stages, { headers });
   }
