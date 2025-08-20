@@ -185,13 +185,27 @@ export class AdminService {
    * @param sortBy The sorting preference (e.g., 'score_desc', 'name_asc').
    * @returns An Observable array of SourcedCandidate objects.
    */
-  getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
+ getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
     const params = new HttpParams()
       .set('job_id', jobId.toString())
       .set('sort_by', sortBy);
     return this.http.get<SourcedCandidate[]>(`${this.apiUrl}/candidates/sourced/`, { params });
   }
 
+  // --- NEW: Method to get a secure, short-lived URL for a CV download ---
+  getSecureCvUrl(candidateId: number): Observable<{ url: string }> {
+    return this.http.get<{ url: string }>(`${this.apiUrl}/candidates/${candidateId}/generate-cv-url/`);
+  }
+  
+  // --- NEW: Method to download an Excel report for specifically selected candidates ---
+  downloadSelectedReport(jobId: number, candidateIds: number[]): Observable<Blob> {
+    const payload = {
+      job_id: jobId,
+      candidate_ids: candidateIds
+    };
+    // The endpoint is the same, but we use POST to send a body
+    return this.http.post(`${this.apiUrl}/report/download/`, payload, { responseType: 'blob' });
+  }
   /**
    * Downloads the Excel report for a given Job Description.
    * @param jobId The ID of the job for which to generate the report.

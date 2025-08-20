@@ -108,21 +108,18 @@
     NEW: This container uses the async pipe to subscribe to the latestJd$ observable.
     If a JD exists, it unwraps it into the 'jd' variable and makes it available to child components.
   -->
-  <ng-container *ngIf="latestJd$ | async as jd">
+  <ng-container *ngIf="activeJobId">
     <!-- The JD form is only shown if the view is 'jd' and a JD has been loaded. -->
     <admin-jd-extended-component
-      *ngIf="activeView === 'jd'"
+      *ngIf="activeView === 'jd' && (latestJd$ | async) as jd"
       [jobData]="jd"
-      rootClassName="admin-jd-extended-componentroot-class-name"
+      [isReadOnly]="true"
     ></admin-jd-extended-component>
-    
     <!-- The candidate list is only shown if the view is 'candidates' and a JD has been loaded. -->
     <!-- It receives the job_id and the selected filter as inputs. -->
     <admin-candidate-sourced-component
       *ngIf="activeView === 'candidates'"
-      [jobId]="jd.job_id"
-      [filter]="candidateFilter"
-      rootClassName="admin-candidate-sourced-componentroot-class-name"
+      [jobId]="activeJobId"
     ></admin-candidate-sourced-component>
   </ng-container>
 
@@ -130,10 +127,7 @@
     NEW: These are placeholder messages that appear if no Job Description has been uploaded yet.
     They are shown conditionally based on the active view.
   -->
-  <div *ngIf="!(latestJd$ | async) && activeView === 'jd'" class="info-container">
-    Please upload a Job Description first to see the extracted details.
-  </div>
-   <div *ngIf="!(latestJd$ | async) && activeView === 'candidates'" class="info-container">
-    Please upload a Job Description first to source candidates against it.
+   <div *ngIf="!(latestJd$ | async)" class="info-container">
+    Please upload a Job Description first to see details and sourced candidates.
   </div>
 </div>

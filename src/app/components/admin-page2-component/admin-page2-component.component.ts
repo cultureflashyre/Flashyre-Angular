@@ -1,31 +1,48 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AdminService, JobDescription } from '../../services/admin.service'; // Adjust path if needed
+// src/app/components/admin-page2-component/admin-page2-component.ts
+
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+// --- FIX 1: Import RxJS operators from the correct path ---
+import { takeUntil } from 'rxjs/operators';
+// --- END FIX 1 ---
+import { AdminService, JobDescription } from '../../services/admin.service';
 
 @Component({
   selector: 'admin-page2-component',
   templateUrl: 'admin-page2-component.component.html',
   styleUrls: ['admin-page2-component.component.css'],
 })
-export class AdminPage2Component implements OnInit {
-  // --- NEW: Component State ---
-  public activeView: 'jd' | 'candidates' = 'jd'; // Default to 'JD Extracted'
-  public candidateFilter: string = 'all'; // Default filter for candidates
-  public candidateFilterDisplay: string = 'All Candidates'; // Text to show on the dropdown button
+export class AdminPage2Component implements OnInit, OnDestroy {
+  public activeView: 'jd' | 'candidates' = 'jd';
+  public candidateFilter: string = 'all';
+  public candidateFilterDisplay: string = 'Candidate Sourced';
   public latestJd$: Observable<JobDescription | null>;
-
-  // Kept for template compatibility if needed, but logic is handled by new state
+  
+  public activeJobId: number | null = null;
+  
   @Input() rootClassName: string = '';
+
+  private destroy$ = new Subject<void>();
 
   constructor(private adminService: AdminService) {
     this.latestJd$ = this.adminService.activeJd$;
   }
 
   ngOnInit(): void {
-    // Service constructor already calls getLatestJd, so the data will be available via the activeJd$ observable.
+    this.latestJd$.pipe(
+      takeUntil(this.destroy$)
+    // --- FIX 2: Explicitly type the 'jd' parameter to guide the compiler ---
+    ).subscribe((jd: JobDescription | null) => {
+    // --- END FIX 2 ---
+        if (jd) {
+            // The type guard now works as expected, and 'jd.job_id' is safe to access.
+            this.activeJobId = jd.job_id;
+        } else {
+            this.activeJobId = null;
+        }
+    });
   }
 
-  // --- NEW: Methods to control the view and filters ---
   public showJdView(): void {
     this.activeView = 'jd';
   }
@@ -34,5 +51,10 @@ export class AdminPage2Component implements OnInit {
     this.activeView = 'candidates';
     this.candidateFilter = filter;
     this.candidateFilterDisplay = filterDisplay;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

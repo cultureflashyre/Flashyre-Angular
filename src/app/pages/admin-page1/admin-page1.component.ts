@@ -1,34 +1,33 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+// src/app/pages/admin-page1/admin-page1.component.ts
+
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { AdminService } from '../../services/admin.service'; // Assuming your service is in a services folder
+import { AdminService } from '../../services/admin.service';
 import { AdminPage1Component as AdminPage1ChildComponent } from '../../components/admin-page1-component/admin-page1-component.component';
+
+// --- NEW: Key for session storage to persist the active job context across page loads ---
+const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
 
 @Component({
   selector: 'admin-page1',
   templateUrl: 'admin-page1.component.html',
   styleUrls: ['admin-page1.component.css'],
 })
-export class AdminPage1 {
-  // --- NEW ---
-  // View management property
+export class AdminPage1 implements OnInit {
+  // --- Component State Properties ---
   public activeView: 'resumes' | 'jobDescription' = 'resumes';
-
-  // Loading state management for uploads
   public isUploadingCVs: boolean = false;
   public isUploadingJd: boolean = false;
 
-  // ViewChild to get a reference to the child component to call its methods
+  // --- ViewChild Decorators to access child components and template elements ---
   @ViewChild(AdminPage1ChildComponent) adminPage1Component!: AdminPage1ChildComponent;
-
-  // ViewChild to access the hidden file input elements
   @ViewChild('cvUploader') cvUploader!: ElementRef;
   @ViewChild('jdUploader') jdUploader!: ElementRef;
-  // --- END NEW ---
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private adminService: AdminService // --- NEW: Injected AdminService ---
+    private adminService: AdminService
   ) {
     this.title.setTitle('Admin-Page1 - Flashyre');
     this.meta.addTags([
@@ -44,7 +43,17 @@ export class AdminPage1 {
     ]);
   }
 
-  // --- NEW: Method to handle CV file selection and upload ---
+  // --- MODIFIED: Implements OnInit for stateful behavior ---
+  ngOnInit(): void {
+    // Check session storage on initialization. If a job ID exists, it means the user
+    // recently uploaded a JD, so we should default to the "Job Description" tab.
+    const activeJobId = sessionStorage.getItem(ACTIVE_JOB_ID_KEY);
+    if (activeJobId) {
+      this.activeView = 'jobDescription';
+    }
+  }
+
+  // --- Method to handle CV file selection and upload (Unchanged) ---
   onCvFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) {
@@ -68,7 +77,6 @@ export class AdminPage1 {
       this.adminService.uploadCVs(validFiles).subscribe({
         next: (response) => {
           alert(`Successfully uploaded ${response.processed_files.length} CV(s). The list will now refresh.`);
-          // Refresh the child component's data
           if (this.adminPage1Component) {
             this.adminPage1Component.fetchCandidates();
           }
@@ -76,7 +84,6 @@ export class AdminPage1 {
         error: (err) => {
           console.error('CV upload failed:', err);
           alert(`CV upload failed: ${err.error?.error || 'Please try again.'}`);
-          this.isUploadingCVs = false;
         },
         complete: () => {
           this.isUploadingCVs = false;
@@ -84,11 +91,11 @@ export class AdminPage1 {
       });
     }
 
-    // Reset the file input
+    // Reset the file input to allow re-uploading the same file
     this.cvUploader.nativeElement.value = '';
   }
 
-  // --- NEW: Method to handle JD file selection and upload ---
+  // --- MODIFIED: Method to handle JD file selection with enhanced UX and statefulness ---
   onJdFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) {
@@ -98,22 +105,31 @@ export class AdminPage1 {
     const file = input.files[0];
     this.isUploadingJd = true;
 
+    // The API call is synchronous and blocking. The UI will show a loading overlay
+    // while waiting for the backend to complete the entire scoring process.
     this.adminService.uploadJd(file).subscribe({
       next: (response) => {
         alert(`Successfully uploaded and processed JD for role: ${response.role}. The view will now switch.`);
-        this.activeView = 'jobDescription'; // Switch view on success
+        
+        // --- NEW: Save the job ID to session storage for state persistence ---
+        // This allows the app to remember the context even if the user reloads the page.
+        sessionStorage.setItem(ACTIVE_JOB_ID_KEY, response.job_id.toString());
+        
+        // Switch view on success to show the results
+        this.activeView = 'jobDescription';
       },
       error: (err) => {
         console.error('JD upload failed:', err);
-        alert(`JD upload failed: ${err.error?.error || 'Please try again.'}`);
-        this.isUploadingJd = false;
+        // Provide more specific feedback from the backend if available
+        const errorMessage = err.error?.error || 'An unknown server error occurred. Please try again.';
+        alert(`JD upload failed: ${errorMessage}`);
       },
       complete: () => {
         this.isUploadingJd = false;
       }
     });
 
-    // Reset the file input
+    // Reset the file input to allow re-uploading the same file
     this.jdUploader.nativeElement.value = '';
   }
 }
