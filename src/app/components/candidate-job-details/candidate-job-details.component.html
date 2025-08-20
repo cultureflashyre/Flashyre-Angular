@@ -114,7 +114,7 @@
           [ngClass]="{'disabled': (job.attempts_remaining || 0) <= 0}"
           (click)="(job.attempts_remaining || 0) > 0 && navigateToAssessment(job.assessment)"
           [title]="(job.attempts_remaining || 0) + ' ' + (job.attempts_remaining === 1 ? 'attempt' : 'attempts') + ' remaining'"
-
+        
         >
           <span
             id="take-assessment-text"
