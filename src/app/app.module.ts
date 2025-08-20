@@ -293,8 +293,7 @@ const routes = [
       import('./pages/admin-page1/admin-page1.module').then(
         (m) => m.AdminPage1Module
       ),
-    canActivate: [AuthGuard],
-    data: { roles: ['admin'] },
+    
   },
   {
     path: '**',
