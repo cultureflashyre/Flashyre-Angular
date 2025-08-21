@@ -70,7 +70,7 @@ export class JobCardsComponent implements OnInit, OnChanges {
     let jobObservable: Observable<any[]>;
 
     if (this.displayMode === 'saved') {
-      const userId = localStorage.getItem('user_id');
+      const userId = localStorage.getItem('userID');
       if (userId) {
         jobObservable = this.jobService.fetchSavedJobs(userId);
       } else {

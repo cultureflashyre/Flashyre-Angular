@@ -149,7 +149,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       mode: stage.mode,
       assigned_to: stage.assigned_to,
       order: index + 1,
-      user_id: localStorage.getItem('user_id')
+      user_id: localStorage.getItem('userID')
     }));
 
     console.log("payload: ", payload);

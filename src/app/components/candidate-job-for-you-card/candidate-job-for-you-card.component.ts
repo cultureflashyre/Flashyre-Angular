@@ -56,7 +56,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     this.loadUserProfile();
     await this.loadJobIdFromCache();
     
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem('userID');
 
     if (userId && this.jobId) {
       // --- [MODIFIED] Logic to fetch disliked jobs status using Cache API ---
@@ -286,7 +286,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       return;
     }
     
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem('userID');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for dislike action', { userId, jobId: this.jobId });
       alert('Unable to dislike job: User or job information is missing.');
@@ -342,7 +342,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
     }
 
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem('userID');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for save action', { userId, jobId: this.jobId });
       alert('Unable to save job: User or job information is missing.');
