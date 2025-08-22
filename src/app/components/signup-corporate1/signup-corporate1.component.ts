@@ -65,7 +65,7 @@ export class SignupCorporate1 implements OnInit {
           Validators.minLength(3),
           Validators.maxLength(10),
       ]],
-        // company_name: ['', Validators.required], // keep simple for now or add validators if needed
+        company_name: ['', Validators.required], // keep simple for now or add validators if needed
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
         password: ['', [Validators.required, 
@@ -83,7 +83,7 @@ export class SignupCorporate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -94,7 +94,7 @@ export class SignupCorporate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`${this.baseUrl}check-email/?email=${email}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );
@@ -149,49 +149,62 @@ export class SignupCorporate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.spinner.show(); // show spinner as in candidate signup
+      this.spinner.show();
+      this.errorMessage = ''; // Clear previous errors
 
+      // FIX: Create a flat formData object directly from the form values.
       const formData = { ...this.signupForm.value };
-      
-      // Remove confirm_password as backend does not need it
+
+      // Remove the confirm_password field as it's not needed by the backend.
       delete formData.confirm_password;
       
-      // Add explicit user_type for corporate (recruiter)
-      formData.user_type = 'recruiter';
+      // Add the role field, ensuring the key matches the backend's expectation.
+      formData.role = 'recruiter';
 
-      // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({
         next: (response: any) => {
+          this.spinner.hide();
           this.showSuccessPopup = true;
-          this.errorMessage = '';
           
-          // Store JWT tokens in localStorage just like candidate signup
           localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('userID', response.user_id);
           localStorage.setItem('userType', response.role);
           
-          // Fetch user profile
-          this.userProfileService.fetchUserProfile().subscribe(
-            () => {
-              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
+          this.userProfileService.fetchUserProfile().subscribe({
+            next: () => {
+              this.router.navigate(['/create-job-post-1st-page'], { state: { source: 'recruiter' } });
             },
-            (profileError) => {
+            error: (profileError) => {
               console.error('Error fetching profile', profileError);
-              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
+              this.router.navigate(['/create-job-post-1st-page'], { state: { source: 'recruiter' } });
             }
-          );
-
-          this.spinner.hide(); // hide spinner after all done
+          });
         },
         error: (error) => {
-          this.spinner.hide(); // hide spinner on error
-          if (error.status === 400 && error.error.email) {
-            this.errorMessage = 'Email already exists!';
-          } else if (error.status === 400 && error.error.phone_number) {
-            this.errorMessage = 'Phone number already exists!';
+          this.spinner.hide();
+          console.error('Signup failed:', error.error); 
+
+          if (error.status === 400 && error.error) {
+            // Keep the robust error handling to display specific messages
+            let errorMessages = [];
+            const errorData = error.error;
+
+            for (const key in errorData) {
+              if (Array.isArray(errorData[key])) {
+                // Example: "email: user with this email already exists."
+                errorMessages.push(`${key.replace('_', ' ')}: ${errorData[key][0]}`);
+              }
+            }
+            
+            if (errorMessages.length > 0) {
+              this.errorMessage = errorMessages.join(' | ');
+            } else {
+              this.errorMessage = 'An unknown validation error occurred. Please check your input.';
+            }
+
           } else {
-            this.errorMessage = error.error?.error || 'Signup failed. Please try again.';
+            this.errorMessage = 'An unexpected error occurred. Please try again later.';
           }
         }
       });

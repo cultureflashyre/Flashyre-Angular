@@ -499,8 +499,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const minPos = (clampedMin / maxYears) * effectiveWidth;
     const maxPos = (clampedMax / maxYears) * effectiveWidth;
     markerLeft.style.left = `${minPos}px`; markerRight.style.left = `${maxPos}px`;
-    labelLeft.style.left = `${minPos + markerWidth / 2}px`; labelLeft.textContent = `${clampedMin}yrs`;
-    labelRight.style.left = `${maxPos + markerWidth / 2}px`; labelRight.textContent = `${clampedMax}yrs`;
+    labelLeft.style.left = `${minPos + markerWidth / 2}px`; labelLeft.textContent = `${clampedMin}`;
+    labelRight.style.left = `${maxPos + markerWidth / 2}px`; labelRight.textContent = `${clampedMax}`;
     filledSegment.style.left = `${minPos + markerWidth / 2}px`;
     filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
   }
