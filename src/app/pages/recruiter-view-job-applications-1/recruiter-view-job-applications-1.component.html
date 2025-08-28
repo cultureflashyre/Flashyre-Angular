@@ -1,0 +1,339 @@
+<div class="recruiter-view-job-applications1-container">
+  <div
+    id="recruiter-view-job-applicatins-1-main-container"
+    class="recruiter-view-job-applications1-recruiter-view-job-applicatins1-main-container"
+  >
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name7"
+    >
+      <!-- Keep navbar as is, or update if needed -->
+    </navbar-for-recruiter-view>
+    <div
+      id="recruiter-view-job-application-first-container"
+      class="recruiter-view-job-applications1-recruiter-view-job-application-first-container"
+    >
+      <div
+        id="job-details-main-container"
+        class="recruiter-view-job-applications1-job-details-main-container1"
+      >
+        <div
+          id="arrow-icon-container"
+          class="recruiter-view-job-applications1-arrow-icon-container"
+        >
+          <svg
+            id="arrow-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            class="recruiter-view-job-applications1-arrow-icon"
+          >
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12H3.5" stroke-dasharray="20" stroke-dashoffset="20">
+                <animate
+                  dur="0.3s"
+                  fill="freeze"
+                  values="20;0"
+                  attributeName="stroke-dashoffset"
+                ></animate>
+              </path>
+              <path
+                d="M3 12L10 19M3 12L10 5"
+                stroke-dasharray="12"
+                stroke-dashoffset="12"
+              >
+                <animate
+                  dur="0.2s"
+                  fill="freeze"
+                  begin="0.3s"
+                  values="12;0"
+                  attributeName="stroke-dashoffset"
+                ></animate>
+              </path>
+            </g>
+          </svg>
+        </div>
+        <span
+          id="job-detail-text"
+          class="recruiter-view-job-applications1-job-detail-text"
+        >
+          Job Detail
+        </span>
+      </div>
+      <div
+        id="job-details-main-container"
+        class="recruiter-view-job-applications1-job-details-main-container2"
+      >
+        <recruiter-flow-large-card
+          rootClassName="recruiter-flow-large-cardroot-class-name3"
+          [imageSrc]="job?.logo"
+          imageAlt="Company Logo"
+          [text]="companyNameTemplate"
+          [text1]="jobTitleTemplate"
+          [text2]="locationDateTemplate"
+          [text21]="candidatesAppliedTemplate"
+        >
+          <ng-template #companyNameTemplate>
+            <div class="recruiter-view-job-applications1-fragment28">
+              <span class="recruiter-view-job-applications1-text31">
+                {{ job?.company_name }}
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #jobTitleTemplate>
+            <div class="recruiter-view-job-applications1-fragment29">
+              <span class="recruiter-view-job-applications1-text32">
+                {{ job?.title }}
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #locationDateTemplate>
+            <div class="recruiter-view-job-applications1-fragment30">
+              <span class="recruiter-view-job-applications1-text33">
+                {{ job?.location }} · {{ job?.posted_ago }}
+              </span>
+            </div>
+          </ng-template>
+          <ng-template #candidatesAppliedTemplate>
+            <div class="recruiter-view-job-applications1-fragment31">
+              <span class="recruiter-view-job-applications1-text34">
+                {{ job?.num_applied_display }}
+              </span>
+            </div>
+          </ng-template>
+        </recruiter-flow-large-card>
+        <div
+          id="candidates-applied-job-title-screening-main-container"
+          class="recruiter-view-job-applications1-candidates-applied-job-title-screening-main-container"
+        >
+          <div
+            id="applied-sourced-selected-main-container"
+            class="recruiter-view-job-applications1-applied-sourced-selected-main-container"
+          >
+            <div
+              id="applied-sourced-selected-container"
+              class="recruiter-view-job-applications1-applied-sourced-selected-container"
+            >
+              <div
+                id="applied-container"
+                class="recruiter-view-job-applications1-applied-container"
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'applied'}"
+                (click)="changeTab('applied')"
+              >
+                <span
+                  id="applied-text"
+                  class="recruiter-view-job-applications1-applied-text"
+                >
+                  Applied ({{ appliedCount }})
+                </span>
+              </div>
+              <div
+                id="sourced-button-container"
+                class="recruiter-view-job-applications1-sourced-button-container"
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'sourced'}"
+                (click)="changeTab('sourced')"
+              >
+                <span
+                  id="sourced-text"
+                  class="recruiter-view-job-applications1-sourced-text"
+                >
+                  Sourced ({{ sourcedCount }})
+                </span>
+              </div>
+              <div
+                id="selected-button-container"
+                class="recruiter-view-job-applications1-selected-button-container"
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'selected'}"
+                (click)="changeTab('selected')"
+              >
+                <span class="recruiter-view-job-applications1-text35">
+                  Selected ({{ selectedCount }})
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            id="candidate-details-main-container"
+            class="recruiter-view-job-applications1-candidate-details-main-container"
+          >
+            <div
+              id="name-designation-matching-score-status-container"
+              class="recruiter-view-job-applications1-name-designation-matching-score-status-container"
+            >
+              <div
+                id="checkbox-container"
+                class="recruiter-view-job-applications1-checkbox-container"
+              >
+                <input
+                  type="checkbox"
+                  id="checkbox-icon"
+                  class="recruiter-view-job-applications1-checkbox-icon"
+                />
+              </div>
+              <div
+                id="name-container"
+                class="recruiter-view-job-applications1-name-container"
+              >
+                <span
+                  id="name-text"
+                  class="recruiter-view-job-applications1-name-text"
+                >
+                  Name
+                </span>
+              </div>
+              <div
+                id="designation-container"
+                class="recruiter-view-job-applications1-designation-container"
+              >
+                <span
+                  id="designation-text"
+                  class="recruiter-view-job-applications1-designation-text"
+                >
+                  Designation
+                </span>
+              </div>
+              <div
+                id="job-matching-score-container"
+                class="recruiter-view-job-applications1-job-matching-score-container"
+              >
+                <span
+                  id="job-matching-score-text"
+                  class="recruiter-view-job-applications1-job-matching-score-text"
+                >
+                  Job matching Score
+                </span>
+              </div>
+              <div
+                id="status-container"
+                class="recruiter-view-job-applications1-status-container"
+              >
+                <span class="recruiter-view-job-applications1-text36">
+                  Status
+                </span>
+              </div>
+            </div>
+            <div
+              id="candidate-details-container"
+              class="recruiter-view-job-applications1-candidate-details-container"
+            >
+              <div
+                *ngFor="let candidate of candidates"
+                id="candidate-details-container-1"
+                class="recruiter-view-job-applications1-candidate-details-container1"
+              >
+                <div
+                  id="check-box-container"
+                  class="recruiter-view-job-applications1-check-box-container"
+                >
+                  <input
+                    type="checkbox"
+                    id="check-box"
+                    [checked]="candidate.status === 'selected'"
+                    (change)="updateCandidateStatus(candidate.application_id, $event.target.checked ? 'selected' : 'applied')"
+                    class="recruiter-view-job-applications1-check-box"
+                  />
+                </div>
+                <div
+                  id="candidate-name-container"
+                  class="recruiter-view-job-applications1-candidate-name-container"
+                >
+                  <div
+                    id="candidate-profile-icon-container"
+                    class="recruiter-view-job-applications1-candidate-profile-icon-container"
+                  >
+                    <svg
+                      id="candidate-profile-icon"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      class="recruiter-view-job-applications1-candidate-profile-icon"
+                    >
+                      <path
+                        d="M18.685 19.097A9.72 9.72 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.72 9.72 0 0 0 3.065 7.097A9.72 9.72 0 0 0 12 21.75a9.72 9.72 0 0 0 6.685-2.653m-12.54-1.285A7.49 7.49 0 0 1 12 15a7.49 7.49 0 0 1 5.855 2.812A8.22 8.22 0 0 1 12 20.25a8.22 8.22 0 0 1-5.855-2.438M15.75 9a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 0 1 7.5 0"
+                        fill="currentColor"
+                        clip-rule="evenodd"
+                        fill-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span
+                    id="candidate-name-text"
+                    class="recruiter-view-job-applications1-candidate-name-text"
+                  >
+                    {{ candidate.user.full_name }}
+                  </span>
+                </div>
+                <div
+                  id="candidate-designation-company-name-container"
+                  class="recruiter-view-job-applications1-candidate-designation-company-name-container"
+                >
+                  <span
+                    id="candidate-designation-company-name-text"
+                    class="recruiter-view-job-applications1-candidate-designation-company-text"
+                  >
+                    <!-- Placeholder: Update when profile_employment model is provided -->
+                    Candidate @ Company
+                  </span>
+                </div>
+                <div
+                  id="matching-score-container"
+                  class="recruiter-view-job-applications1-matching-score-container"
+                >
+                  <span
+                    id="matching-score-percentage-text"
+                    class="recruiter-view-job-applications1-matching-score-percentage-text"
+                  >
+                    {{ candidate.matching_score }}
+                  </span>
+                </div>
+                <div
+                  id="candidate-work-status-container"
+                  class="recruiter-view-job-applications1-candidate-work-status-container"
+                >
+                  <span
+                    id="candidate-work-status-text"
+                    class="recruiter-view-job-applications1-candidate-work-status-text"
+                  >
+                    {{ candidate.status | titlecase }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <span
+              *ngIf="moreCandidatesCount > 0"
+              id="more-candidates-text"
+              class="recruiter-view-job-applications1-more-candidates-text"
+              (click)="loadMoreCandidates()"
+            >
+              View {{ moreCandidatesCount }} more candidates
+            </span>
+          </div>
+          <span
+            id="job-description-text"
+            class="recruiter-view-job-applications1-job-description-text"
+          >
+            <span class="recruiter-view-job-applications1-text37">
+              About the job
+            </span>
+            <br />
+            <span>
+              {{ job?.description }}
+            </span>
+            <br />
+            <br />
+            <span>Minimum qualifications:</span>
+            <br />
+            <span>
+              {{ job?.requirements }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
