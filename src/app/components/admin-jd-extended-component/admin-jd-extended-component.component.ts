@@ -1,9 +1,12 @@
-import { Component, Input, TemplateRef, ContentChild, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, OnDestroy, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+// src/app/components/admin-jd-extended-component/admin-jd-extended-component.ts
+
+import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, HostListener, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { JobDescription } from '../../services/admin.service'; // Ensure correct path
 
-// Mock Interfaces and Services for demonstration
+// Interface for managing the state of a range slider instance
 interface RangeSliderState {
   isDragging: boolean;
   currentMarker: HTMLElement | null;
@@ -20,91 +23,153 @@ interface RangeSliderState {
   templateUrl: 'admin-jd-extended-component.component.html',
   styleUrls: ['admin-jd-extended-component.component.css'],
 })
-export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Inputs and ContentChildren remain the same
+export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+  // --- NEW: Inputs to control the component's mode and data ---
+  @Input() jobData: JobDescription | null = null;
+  @Input() isReadOnly: boolean = false;
+  // --- END NEW ---
+
+  // --- Input properties for placeholders ---
   @Input() noticePeriodInputFiledPlaceholder: string = 'Enter Notice Period';
   @Input() roleInputFieldPlaceholder: string = 'Enter Role';
   @Input() rootClassName: string = '';
-  @ContentChild('skillText') skillText: TemplateRef<any>;
-  @ContentChild('noticePeriodStarText') noticePeriodStarText: TemplateRef<any>;
-  // ... other ContentChild decorators
 
-  // --- Form Definition ---
+  // --- Component State and Form Properties ---
   jdForm: FormGroup;
-
-  // --- Location Autocomplete Properties ---
   isLocationLoading = false;
   locationSuggestions: string[] = [];
   private allLocations = ['Multiple', 'New York, NY, USA', 'Los Angeles, CA, USA', 'Chicago, IL, USA', 'Houston, TX, USA', 'Phoenix, AZ, USA', 'Philadelphia, PA, USA', 'San Antonio, TX, USA', 'San Diego, CA, USA', 'Dallas, TX, USA', 'San Jose, CA, USA', 'London, UK', 'Paris, France', 'Tokyo, Japan', 'Sydney, Australia', 'Toronto, Canada'];
   
-  // --- Skills (Tag) Input Properties ---
   selectedSkills: string[] = [];
   skillSuggestions: string[] = [];
   activeSkillSuggestionIndex = -1;
   private allSkills = ['JavaScript', 'HTML', 'CSS', 'React', 'Vue', 'Angular', 'Node.js', 'TypeScript', 'Python', 'Java', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Go', 'Rust', 'C#', 'C++', 'MongoDB', 'MySQL', 'PostgreSQL', 'Redis', 'GraphQL', 'REST API'];
-  @ViewChild('skillInput') skillInput: ElementRef<HTMLInputElement>;
   
-  // --- Range Slider Properties ---
-  @ViewChild('totalExperienceContainer') totalExperienceContainer: ElementRef;
-  @ViewChild('totalMarkerLeft') totalMarkerLeft: ElementRef;
-  @ViewChild('totalMarkerRight') totalMarkerRight: ElementRef;
-  @ViewChild('totalLabelLeft') totalLabelLeft: ElementRef;
-  @ViewChild('totalLabelRight') totalLabelRight: ElementRef;
-  @ViewChild('totalFilledSegment') totalFilledSegment: ElementRef;
+  // --- ViewChild Decorators for DOM element access ---
+  @ViewChild('skillInput') skillInput!: ElementRef<HTMLInputElement>;
+  
+  @ViewChild('totalExperienceContainer') totalExperienceContainer!: ElementRef;
+  @ViewChild('totalMarkerLeft') totalMarkerLeft!: ElementRef;
+  @ViewChild('totalMarkerRight') totalMarkerRight!: ElementRef;
+  @ViewChild('totalLabelLeft') totalLabelLeft!: ElementRef;
+  @ViewChild('totalLabelRight') totalLabelRight!: ElementRef;
+  @ViewChild('totalFilledSegment') totalFilledSegment!: ElementRef;
 
-  @ViewChild('relevantExperienceContainer') relevantExperienceContainer: ElementRef;
-  @ViewChild('relevantMarkerLeft') relevantMarkerLeft: ElementRef;
-  @ViewChild('relevantMarkerRight') relevantMarkerRight: ElementRef;
-  @ViewChild('relevantLabelLeft') relevantLabelLeft: ElementRef;
-  @ViewChild('relevantLabelRight') relevantLabelRight: ElementRef;
-  @ViewChild('relevantFilledSegment') relevantFilledSegment: ElementRef;
+  @ViewChild('relevantExperienceContainer') relevantExperienceContainer!: ElementRef;
+  @ViewChild('relevantMarkerLeft') relevantMarkerLeft!: ElementRef;
+  @ViewChild('relevantMarkerRight') relevantMarkerRight!: ElementRef;
+  @ViewChild('relevantLabelLeft') relevantLabelLeft!: ElementRef;
+  @ViewChild('relevantLabelRight') relevantLabelRight!: ElementRef;
+  @ViewChild('relevantFilledSegment') relevantFilledSegment!: ElementRef;
 
-  private totalSliderState: RangeSliderState;
-  private relevantSliderState: RangeSliderState;
+  private totalSliderState!: RangeSliderState;
+  private relevantSliderState!: RangeSliderState;
   private activeSlider: 'total' | 'relevant' | null = null;
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private renderer: Renderer2) {}
-
-  ngOnInit(): void {
-    // Initialize the main form group
+  constructor(private fb: FormBuilder, private renderer: Renderer2) {
+    // Initialize the form in the constructor
     this.jdForm = this.fb.group({
       role: [''],
       location: [''],
       noticePeriod: [''],
       skillInput: [''],
-      // You can add more controls for the slider values here if needed
     });
+  }
 
+  ngOnInit(): void {
     this.setupLocationAutocomplete();
     this.setupSkillsAutocomplete();
   }
 
   ngAfterViewInit(): void {
-    // Setup slider states after the view has been initialized
+    // Setup slider states after the view has been initialized and DOM elements are available
     this.totalSliderState = this.initSliderState('total');
     this.relevantSliderState = this.initSliderState('relevant');
 
-    // Set initial positions and labels
-    this.updateSliderUI(this.totalSliderState, 55, 175);
-    this.updateSliderUI(this.relevantSliderState, 55, 175);
+    // If data was already passed in before AfterViewInit, populate sliders now
+    if (this.jobData) {
+      this._positionSlidersFromData(this.jobData);
+    } else {
+      // Set initial default positions and labels if no data
+      this.updateSliderUI(this.totalSliderState, 55, 175);
+      this.updateSliderUI(this.relevantSliderState, 55, 175);
+    }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  ngOnChanges(changes: SimpleChanges): void {
+    // React to changes in input properties
+    if (changes['jobData'] && this.jobData) {
+      this._populateForm(this.jobData);
+    }
+    if (changes['isReadOnly']) {
+      if (this.isReadOnly) {
+        this.jdForm.disable();
+      } else {
+        this.jdForm.enable();
+      }
+    }
   }
 
-  // --- Location Autocomplete Logic ---
+  private _populateForm(data: JobDescription): void {
+    this.jdForm.patchValue({
+      role: data.role,
+      location: data.location,
+      noticePeriod: data.notice_period,
+    });
+    
+    this.selectedSkills = [
+      ...(data.must_have_skills || []),
+      ...(data.good_to_have_skills || [])
+    ];
+    
+    // Ensure sliders are positioned only after the view is ready
+    if (this.totalSliderState && this.relevantSliderState) {
+      this._positionSlidersFromData(data);
+    }
+  }
+  
+  private _positionSlidersFromData(data: JobDescription): void {
+    const maxYears = 20; // The maximum value of our slider range
+
+    const parseExp = (exp: string | null | undefined): number => {
+      if (!exp) return 0;
+      const parsed = parseInt(exp, 10);
+      return isNaN(parsed) ? 0 : parsed;
+    };
+
+    const totalMin = parseExp(data.total_experience_min);
+    const totalMax = parseExp(data.total_experience_max);
+    const relevantMin = parseExp(data.relevant_experience_min);
+    const relevantMax = parseExp(data.relevant_experience_max);
+
+    const calculatePosition = (container: HTMLElement, value: number): number => {
+      if (!container) return 0;
+      const containerWidth = container.offsetWidth;
+      const markerWidth = 14;
+      const trackWidth = containerWidth - markerWidth;
+      return (Math.min(value, maxYears) / maxYears) * trackWidth;
+    };
+    
+    if (this.totalSliderState?.container?.nativeElement) {
+      const leftPos = calculatePosition(this.totalSliderState.container.nativeElement, totalMin);
+      const rightPos = calculatePosition(this.totalSliderState.container.nativeElement, totalMax);
+      this.updateSliderUI(this.totalSliderState, leftPos, rightPos);
+    }
+    
+    if (this.relevantSliderState?.container?.nativeElement) {
+      const leftPos = calculatePosition(this.relevantSliderState.container.nativeElement, relevantMin);
+      const rightPos = calculatePosition(this.relevantSliderState.container.nativeElement, relevantMax);
+      this.updateSliderUI(this.relevantSliderState, leftPos, rightPos);
+    }
+  }
+
   private setupLocationAutocomplete(): void {
-    this.jdForm.get('location').valueChanges.pipe(
+    this.jdForm.get('location')!.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      tap(() => {
-        this.isLocationLoading = true;
-        this.locationSuggestions = [];
-      }),
+      tap(() => { this.isLocationLoading = true; this.locationSuggestions = []; }),
       switchMap(query => this.fetchLocationSuggestions(query)),
       takeUntil(this.destroy$)
     ).subscribe(suggestions => {
@@ -116,24 +181,20 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
   private fetchLocationSuggestions(query: string): Promise<string[]> {
     return new Promise(resolve => {
       setTimeout(() => {
-        if (!query) {
-          resolve([]);
-          return;
-        }
+        if (!query) { resolve([]); return; }
         const queryLower = query.toLowerCase();
         resolve(this.allLocations.filter(loc => loc.toLowerCase().includes(queryLower)));
-      }, 500); // Simulate API delay
+      }, 500);
     });
   }
 
   selectLocation(location: string): void {
-    this.jdForm.get('location').setValue(location, { emitEvent: false });
+    this.jdForm.get('location')!.setValue(location, { emitEvent: false });
     this.locationSuggestions = [];
   }
 
-  // --- Skills (Tag) Input Logic ---
   private setupSkillsAutocomplete(): void {
-    this.jdForm.get('skillInput').valueChanges.pipe(
+    this.jdForm.get('skillInput')!.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (value) {
@@ -152,7 +213,7 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
     if (skill && !this.selectedSkills.includes(skill)) {
       this.selectedSkills.push(skill);
     }
-    this.jdForm.get('skillInput').setValue('');
+    this.jdForm.get('skillInput')!.setValue('');
     this.skillSuggestions = [];
   }
 
@@ -164,14 +225,14 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
     switch (event.key) {
       case 'Enter':
         event.preventDefault();
-        if (this.activeSkillSuggestionIndex > -1) {
+        if (this.activeSkillSuggestionIndex > -1 && this.skillSuggestions[this.activeSkillSuggestionIndex]) {
           this.addSkill(this.skillSuggestions[this.activeSkillSuggestionIndex]);
         } else {
-          this.addSkill(this.jdForm.get('skillInput').value.trim());
+          this.addSkill(this.jdForm.get('skillInput')!.value.trim());
         }
         break;
       case 'Backspace':
-        if (!this.jdForm.get('skillInput').value && this.selectedSkills.length > 0) {
+        if (!this.jdForm.get('skillInput')!.value && this.selectedSkills.length > 0) {
           this.removeSkill(this.selectedSkills[this.selectedSkills.length - 1]);
         }
         break;
@@ -189,7 +250,6 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  // --- Reusable Range Slider Logic ---
   private initSliderState(type: 'total' | 'relevant'): RangeSliderState {
     return {
       isDragging: false,
@@ -204,6 +264,7 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
   }
   
   onMouseDown(event: MouseEvent, sliderType: 'total' | 'relevant'): void {
+    if (this.isReadOnly) { event.preventDefault(); return; }
     event.preventDefault();
     this.activeSlider = sliderType;
     const state = this.activeSlider === 'total' ? this.totalSliderState : this.relevantSliderState;
@@ -215,7 +276,7 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
   onMouseMove(event: MouseEvent): void {
     if (!this.activeSlider) return;
     const state = this.activeSlider === 'total' ? this.totalSliderState : this.relevantSliderState;
-    if (!state.isDragging) return;
+    if (!state.isDragging || !state.currentMarker) return;
 
     const rect = state.container.nativeElement.getBoundingClientRect();
     let newLeft = event.clientX - rect.left;
@@ -255,18 +316,21 @@ export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnDestro
     if (left !== undefined) this.renderer.setStyle(state.markerLeft.nativeElement, 'left', `${leftPos}px`);
     if (right !== undefined) this.renderer.setStyle(state.markerRight.nativeElement, 'left', `${rightPos}px`);
 
-    // Update filled segment
     this.renderer.setStyle(state.filledSegment.nativeElement, 'left', `${leftPos + (markerWidth / 2)}px`);
     this.renderer.setStyle(state.filledSegment.nativeElement, 'width', `${rightPos - leftPos}px`);
 
-    // Update labels (example conversion, adjust as needed)
-    const containerWidth = state.container.nativeElement.offsetWidth;
-    const leftValue = Math.round((leftPos / containerWidth) * 20); // Max 20 years
+    const containerWidth = state.container.nativeElement.offsetWidth - markerWidth;
+    const leftValue = Math.round((leftPos / containerWidth) * 20);
     const rightValue = Math.round((rightPos / containerWidth) * 20);
 
     state.labelLeft.nativeElement.innerText = `${leftValue}yrs`;
     state.labelRight.nativeElement.innerText = `${rightValue}yrs`;
-    this.renderer.setStyle(state.labelLeft.nativeElement, 'left', `${leftPos + (markerWidth / 2)}px`);
-    this.renderer.setStyle(state.labelRight.nativeElement, 'left', `${rightPos + (markerWidth / 2)}px`);
+    this.renderer.setStyle(state.labelLeft.nativeElement, 'left', `${leftPos}px`);
+    this.renderer.setStyle(state.labelRight.nativeElement, 'left', `${rightPos}px`);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
