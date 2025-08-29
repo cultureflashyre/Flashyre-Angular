@@ -6,7 +6,112 @@
     <navbar-for-recruiter-view
       rootClassName="navbar-for-recruiter-viewroot-class-name7"
     >
-      <!-- Keep navbar as is, or update if needed -->
+      <ng-template #text>
+        <div class="recruiter-view-job-applications1-fragment10">
+          <span class="recruiter-view-job-applications1-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="recruiter-view-job-applications1-fragment11">
+          <span class="recruiter-view-job-applications1-text11">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="recruiter-view-job-applications1-fragment12">
+          <span class="recruiter-view-job-applications1-text12">
+            Job Posted
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="recruiter-view-job-applications1-fragment13">
+          <span class="recruiter-view-job-applications1-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="recruiter-view-job-applications1-fragment14">
+          <span class="recruiter-view-job-applications1-text14">
+            Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="recruiter-view-job-applications1-fragment15">
+          <span class="recruiter-view-job-applications1-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="recruiter-view-job-applications1-fragment16">
+          <span class="recruiter-view-job-applications1-text16">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="recruiter-view-job-applications1-fragment17">
+          <span class="recruiter-view-job-applications1-text17">
+            Notifications
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="recruiter-view-job-applications1-fragment18">
+          <span class="recruiter-view-job-applications1-text18">
+            Jobs Posted
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="recruiter-view-job-applications1-fragment19">
+          <span class="recruiter-view-job-applications1-text19">
+            Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="recruiter-view-job-applications1-fragment20">
+          <span class="recruiter-view-job-applications1-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="recruiter-view-job-applications1-fragment21">
+          <span class="recruiter-view-job-applications1-text21">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="recruiter-view-job-applications1-fragment22">
+          <span class="recruiter-view-job-applications1-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text15>
+        <div class="recruiter-view-job-applications1-fragment23">
+          <span class="recruiter-view-job-applications1-text23">
+            Leslie Alexander
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="recruiter-view-job-applications1-fragment24">
+          <span class="recruiter-view-job-applications1-text24">Google</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="recruiter-view-job-applications1-fragment25">
+          <span class="recruiter-view-job-applications1-text25">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text32>
+        <div class="recruiter-view-job-applications1-fragment26">
+          <span class="recruiter-view-job-applications1-text26">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="recruiter-view-job-applications1-fragment27">
+          <span class="recruiter-view-job-applications1-text30">2</span>
+        </div>
+      </ng-template>
     </navbar-for-recruiter-view>
     <div
       id="recruiter-view-job-application-first-container"
@@ -73,33 +178,29 @@
           rootClassName="recruiter-flow-large-cardroot-class-name3"
           [imageSrc]="job?.logo"
           imageAlt="Company Logo"
-          [text]="companyNameTemplate"
-          [text1]="jobTitleTemplate"
-          [text2]="locationDateTemplate"
-          [text21]="candidatesAppliedTemplate"
         >
-          <ng-template #companyNameTemplate>
+          <ng-template #text>
             <div class="recruiter-view-job-applications1-fragment28">
               <span class="recruiter-view-job-applications1-text31">
                 {{ job?.company_name }}
               </span>
             </div>
           </ng-template>
-          <ng-template #jobTitleTemplate>
+          <ng-template #text1>
             <div class="recruiter-view-job-applications1-fragment29">
               <span class="recruiter-view-job-applications1-text32">
                 {{ job?.title }}
               </span>
             </div>
           </ng-template>
-          <ng-template #locationDateTemplate>
+          <ng-template #text2>
             <div class="recruiter-view-job-applications1-fragment30">
               <span class="recruiter-view-job-applications1-text33">
                 {{ job?.location }} · {{ job?.posted_ago }}
               </span>
             </div>
           </ng-template>
-          <ng-template #candidatesAppliedTemplate>
+          <ng-template #text21>
             <div class="recruiter-view-job-applications1-fragment31">
               <span class="recruiter-view-job-applications1-text34">
                 {{ job?.num_applied_display }}
@@ -125,12 +226,17 @@
                 [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'applied'}"
                 (click)="changeTab('applied')"
               >
-                <span
-                  id="applied-text"
-                  class="recruiter-view-job-applications1-applied-text"
+                <div
+                  id="applied-button-container"
+                  class="recruiter-view-job-applications1-applied-button-container"
                 >
-                  Applied ({{ appliedCount }})
-                </span>
+                  <span
+                    id="applied-text"
+                    class="recruiter-view-job-applications1-applied-text"
+                  >
+                   Applied ({{ appliedCount }})
+                  </span>
+                </div>
               </div>
               <div
                 id="sourced-button-container"
@@ -158,6 +264,155 @@
             </div>
           </div>
           <div
+            id="job-title-location-experience-main-container"
+            class="recruiter-view-job-applications1-job-title-location-experience-main-container"
+          >
+            <div
+              id="job-title-container"
+              class="recruiter-view-job-applications1-job-title-container"
+            >
+              <div
+                id="search-icon-container"
+                class="recruiter-view-job-applications1-search-icon-container"
+              >
+                <svg
+                  id="search-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="recruiter-view-job-applications1-search-icon"
+                >
+                  <g fill="none" fill-rule="evenodd">
+                    <path
+                      d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+                    ></path>
+                    <path
+                      d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3"
+                      fill="currentColor"
+                    ></path>
+                  </g>
+                </svg>
+              </div>
+              <span
+                id="job-title-keyword-text"
+                class="recruiter-view-job-applications1-job-title-keyword-text"
+              >
+                Job tittle, Keyword...
+              </span>
+            </div>
+            <div
+              id="location-container"
+              class="recruiter-view-job-applications1-location-container"
+            >
+              <div
+                id="location-icon-container"
+                class="recruiter-view-job-applications1-location-icon-container"
+              >
+                <svg
+                  id="location-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="recruiter-view-job-applications1-location-icon"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12.56 20.82a.96.96 0 0 1-1.12 0C6.611 17.378 1.486 10.298 6.667 5.182A7.6 7.6 0 0 1 12 3c2 0 3.919.785 5.333 2.181c5.181 5.116.056 12.196-4.773 15.64"
+                    ></path>
+                    <path d="M12 12a2 2 0 1 0 0-4a2 2 0 0 0 0 4"></path>
+                  </g>
+                </svg>
+              </div>
+              <span
+                id="location-text"
+                class="recruiter-view-job-applications1-location-text"
+              >
+                Location
+              </span>
+            </div>
+            <div
+              id="experience-container"
+              class="recruiter-view-job-applications1-experience-container"
+            >
+              <div
+                id="briefcase-icon-container"
+                class="recruiter-view-job-applications1-briefcase-icon-container"
+              >
+                <svg
+                  viewBox="0 0 256 256"
+                  class="recruiter-view-job-applications1-briefcase-icon"
+                >
+                  <path
+                    d="M216.008 66H174V56a22.025 22.025 0 0 0-22-22h-48a22.025 22.025 0 0 0-22 22v10H40.008a14.016 14.016 0 0 0-14 14v128a14.016 14.016 0 0 0 14 14h176a14.016 14.016 0 0 0 14-14V80a14.016 14.016 0 0 0-14-14zM94 56a10.011 10.011 0 0 1 10-10h48a10.011 10.011 0 0 1 10 10v10H94zm124.008 152a2.003 2.003 0 0 1-2 2h-176a2.003 2.003 0 0 1-2-2V80a2.003 2.003 0 0 1 2-2h176a2.003 2.003 0 0 1 2 2z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+              <span
+                id="experience-text"
+                class="recruiter-view-job-applications1-experience-text"
+              >
+                Experience
+              </span>
+            </div>
+            <div
+              id="filter-icon-container"
+              class="recruiter-view-job-applications1-filter-icon-container"
+            >
+              <svg
+                id="filter-icon"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                class="recruiter-view-job-applications1-filter-icon"
+              >
+                <path
+                  d="M30 8h-4.1c-.5-2.3-2.5-4-4.9-4s-4.4 1.7-4.9 4H2v2h14.1c.5 2.3 2.5 4 4.9 4s4.4-1.7 4.9-4H30zm-9 4c-1.7 0-3-1.3-3-3s1.3-3 3-3s3 1.3 3 3s-1.3 3-3 3M2 24h4.1c.5 2.3 2.5 4 4.9 4s4.4-1.7 4.9-4H30v-2H15.9c-.5-2.3-2.5-4-4.9-4s-4.4 1.7-4.9 4H2zm9-4c1.7 0 3 1.3 3 3s-1.3 3-3 3s-3-1.3-3-3s1.3-3 3-3"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <button
+              id="search-button"
+              type="button"
+              class="recruiter-view-job-applications1-search-button button"
+            >
+              Search
+            </button>
+          </div>
+          <div
+            id="screening-assessment-interview-main-container"
+            class="recruiter-view-job-applications1-screening-assessment-interview-main-container"
+          >
+            <button
+              id="screening-call-invite-button"
+              type="button"
+              class="recruiter-view-job-applications1-screening-call-invite-button button"
+            >
+              Screening Call Invite
+            </button>
+            <button
+              id="assessment-invite-button"
+              type="button"
+              class="recruiter-view-job-applications1-assessment-invite-button button"
+            >
+              Assessment Invite
+            </button>
+            <button
+              id="interview-invite-button"
+              type="button"
+              class="recruiter-view-job-applications1-interview-invite-button button"
+            >
+              Interview Invite
+            </button>
+          </div>
+          <div
             id="candidate-details-main-container"
             class="recruiter-view-job-applications1-candidate-details-main-container"
           >
@@ -173,6 +428,7 @@
                   type="checkbox"
                   id="checkbox-icon"
                   class="recruiter-view-job-applications1-checkbox-icon"
+                  [checked]="masterChecked" (change)="toggleAll($event.target.checked)"
                 />
               </div>
               <div
@@ -276,8 +532,7 @@
                     id="candidate-designation-company-name-text"
                     class="recruiter-view-job-applications1-candidate-designation-company-text"
                   >
-                    <!-- Placeholder: Update when profile_employment model is provided -->
-                    Candidate @ Company
+                    {{ candidate.designation }}
                   </span>
                 </div>
                 <div
@@ -304,35 +559,36 @@
                 </div>
               </div>
             </div>
-            <span
-              *ngIf="moreCandidatesCount > 0"
-              id="more-candidates-text"
-              class="recruiter-view-job-applications1-more-candidates-text"
-              (click)="loadMoreCandidates()"
-            >
-              View {{ moreCandidatesCount }} more candidates
-            </span>
           </div>
           <span
-            id="job-description-text"
-            class="recruiter-view-job-applications1-job-description-text"
+            *ngIf="moreCandidatesCount > 0"
+            id="more-candidates-text"
+            class="recruiter-view-job-applications1-more-candidates-text"
+            (click)="loadMoreCandidates()"
           >
-            <span class="recruiter-view-job-applications1-text37">
-              About the job
-            </span>
-            <br />
-            <span>
-              {{ job?.description }}
-            </span>
-            <br />
-            <br />
-            <span>Minimum qualifications:</span>
-            <br />
-            <span>
-              {{ job?.requirements }}
-            </span>
+            View {{ moreCandidatesCount }} more candidates
           </span>
         </div>
+        <span
+          id="job-description-text"
+          class="recruiter-view-job-applications1-job-description-text"
+        >
+          <span class="recruiter-view-job-applications1-text37">
+            About the job
+          </span>
+          <br class="recruiter-view-job-applications1-text38" />
+          <span>
+            {{ job?.description }}
+          </span>
+          <br />
+          <br />
+          <span>Minimum qualifications:</span>
+          <br />
+          <span>
+            {{ job?.requirements }}
+          </span>
+          <br />
+        </span>
       </div>
     </div>
   </div>

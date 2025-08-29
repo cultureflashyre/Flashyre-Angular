@@ -186,7 +186,6 @@
   padding: 24px;
   z-index: 999;
   align-self: center;
-  margin-top: 100px;
   align-items: flex-start;
   border-radius: 8px;
   flex-direction: column;
@@ -316,32 +315,37 @@
   align-items: flex-start;
   flex-direction: row;
 }
+
+.recruiter-view-job-applications1-applied-button-container-active,
+.recruiter-view-job-applications1-sourced-button-container-active,
+.recruiter-view-job-applications1-selected-button-container-active{
+  border-bottom: 2px solid;
+  border-color: #41327B;
+  border-bottom-width: 2px;
+}
+
+
  
 .recruiter-view-job-applications1-applied-container {
   flex: 0 0 auto;
-  width: 115px;
+  width: auto;
   height: 48px;
   display: flex;
   align-items: flex-start;
-  border-radius: 4px;
 }
  
 .recruiter-view-job-applications1-applied-button-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 115px;
+  width: auto;
   height: 48px;
   display: flex;
   transition: 0.3s;
   align-items: flex-start;
-  padding-top: 12px;
-  border-color: #41327B;
+  align-self: center;
+  padding: 12px;
   border-width: 0px;
-  padding-left: 16px;
-  padding-right: 16px;
   flex-direction: column;
-  padding-bottom: 12px;
-  border-bottom-width: 2px;
 }
  
 .recruiter-view-job-applications1-applied-button-container:hover {
@@ -358,7 +362,7 @@
 .recruiter-view-job-applications1-applied-text {
   fill: #41327B;
   color: #41327B;
-  width: 83px;
+  width: auto;
   height: 24px;
   display: flex;
   font-size: 14px;
@@ -370,13 +374,12 @@
 .recruiter-view-job-applications1-sourced-button-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 81px;
+  width: auto;
   height: 48px;
   display: flex;
   transition: 0.3s;
   align-items: center;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px;
 }
  
 .recruiter-view-job-applications1-sourced-button-container:hover {
@@ -405,14 +408,13 @@
 .recruiter-view-job-applications1-selected-button-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 83px;
+  width: auto;
   height: 48px;
   display: flex;
   align-self: center;
   transition: 0.3s;
   align-items: center;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px;
 }
  
 .recruiter-view-job-applications1-selected-button-container:hover {
@@ -1056,7 +1058,6 @@
   }
   .recruiter-view-job-applications1-recruiter-view-job-application-first-container {
     width: 100%;
-    margin-top: 80px;
   }
   .recruiter-view-job-applications1-arrow-icon {
     width: 22px;

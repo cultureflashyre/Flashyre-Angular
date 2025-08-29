@@ -17,6 +17,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
   appliedCount: number = 0;
   sourcedCount: number = 0;
   selectedCount: number = 0;
+  masterChecked: boolean;
 
   constructor(
     private title: Title,
@@ -78,6 +79,22 @@ export class RecruiterViewJobApplications1 implements OnInit {
       (candidate) => candidate.status === tab
     ).length - this.candidates.length;
   }
+   
+  toggleAll(checked: boolean) {
+  this.masterChecked = checked;
+  const newStatus = checked ? 'selected' : 'applied';
+  this.candidates.forEach(candidate => {
+    this.updateCandidateStatus(candidate.application_id, newStatus);
+  });
+  // Refresh tab when unchecking in Selected view
+  if (!checked && this.selectedTab === 'selected') {
+    this.changeTab(this.selectedTab);
+  }
+}
+
+updateMasterChecked() {
+  this.masterChecked = this.candidates.every(candidate => candidate.status === 'selected');
+}
 
   loadMoreCandidates() {
     // Load all candidates for the current tab
@@ -88,23 +105,25 @@ export class RecruiterViewJobApplications1 implements OnInit {
   }
 
   updateCandidateStatus(applicationId: string, newStatus: string) {
-    // For now, just update locally (later, we can add API call)
-    const candidate = this.allCandidates.find(
-      (c) => c.application_id === applicationId
-    );
-    if (candidate) {
-      candidate.status = newStatus;
-      this.changeTab(this.selectedTab); // Refresh tab
-      // Update counts
-      this.appliedCount = this.allCandidates.filter(
-        (c) => c.status === 'applied'
-      ).length;
-      this.sourcedCount = this.allCandidates.filter(
-        (c) => c.status === 'sourced'
-      ).length;
-      this.selectedCount = this.allCandidates.filter(
-        (c) => c.status === 'selected'
-      ).length;
+  const candidate = this.allCandidates.find(
+    (c) => c.application_id === applicationId
+  );
+  if (candidate) {
+    candidate.status = newStatus;
+    this.appliedCount = this.allCandidates.filter(
+      (c) => c.status === 'applied'
+    ).length;
+    this.sourcedCount = this.allCandidates.filter(
+      (c) => c.status === 'sourced'
+    ).length;
+    this.selectedCount = this.allCandidates.filter(
+      (c) => c.status === 'selected'
+    ).length;
+    this.updateMasterChecked();
+    // Refresh tab only in Selected view when status changes to non-selected
+    if (this.selectedTab === 'selected' && newStatus !== 'selected') {
+      this.changeTab(this.selectedTab);
     }
   }
+}
 }

@@ -25,7 +25,7 @@
 .recruiter-flow-large-card-company-name-logo-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
-  width: 88px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: flex-start;
@@ -38,7 +38,7 @@
 }
  
 .recruiter-flow-large-card-company-name {
-  width: 55px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: center;
