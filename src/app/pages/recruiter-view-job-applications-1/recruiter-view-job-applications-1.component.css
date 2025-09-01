@@ -431,7 +431,7 @@
 .recruiter-view-job-applications1-text35 {
   fill: #41327B;
   color: #41327B;
-  width: 83px;
+  width: auto;
   height: 24px;
   display: flex;
   font-size: 14px;
@@ -938,6 +938,7 @@
   gap: 16px;
   flex: 0 0 auto;
   width: 380px;
+  justify-content: space-between;
   height: 45px;
   display: flex;
   padding: 8px;
@@ -1021,6 +1022,10 @@
   border-bottom-width: 1px;
 }
  
+.recruiter-view-job-applications1-more-candidates-text:hover {
+  cursor: pointer;
+}
+
 .recruiter-view-job-applications1-job-description-text {
   color: rgb(107, 108, 109);
   width: 1028px;
@@ -1035,6 +1040,33 @@
 .recruiter-view-job-applications1-text38 {
   font-style: normal;
   font-weight: 700;
+}
+
+.recruiter-view-job-applications1-view-cv-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.recruiter-view-job-applications1-eye-icon {
+  width: 16px;
+  height: 16px;
+  color: #18191c;
+}
+
+.recruiter-view-job-applications1-view-cv-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #18191c;
+}
+
+.recruiter-view-job-applications1-view-cv-container:hover .recruiter-view-job-applications1-view-cv-text {
+  color: #2563EB;
+}
+
+.recruiter-view-job-applications1-view-cv-container:hover .recruiter-view-job-applications1-eye-icon {
+  color: #2563EB;
 }
  
 @media(max-width: 1200px) {

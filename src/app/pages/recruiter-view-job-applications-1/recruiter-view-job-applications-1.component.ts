@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RecruiterViewJobApplications1 implements OnInit {
   job: any = null; // Store job data
-  candidates: any[] = []; // Store first 5 candidates
+  candidates: any[] = []; // Store displayed candidates (initially 5 per tab)
   allCandidates: any[] = []; // Store all candidates
   moreCandidatesCount: number = 0; // Count of more candidates
   selectedTab: string = 'applied'; // Default tab
@@ -52,12 +52,11 @@ export class RecruiterViewJobApplications1 implements OnInit {
         .subscribe(
           (data: any) => {
             this.job = data;
-            this.candidates = data.applications; // First 5 candidates
-            this.allCandidates = data.applications; // All candidates
-            this.moreCandidatesCount = data.more_candidates;
-            this.appliedCount = data.applied_count;
+            this.allCandidates = data.applications; // All applications now
+            this.appliedCount = data.applied_count + data.selected_count; // Adjusted for applied + selected
             this.sourcedCount = data.sourced_count;
             this.selectedCount = data.selected_count;
+            this.changeTab('applied'); // Initialize display
           },
           (error) => {
             console.error('Error fetching job details:', error);
@@ -68,62 +67,92 @@ export class RecruiterViewJobApplications1 implements OnInit {
 
   changeTab(tab: string) {
     this.selectedTab = tab;
-    // Filter candidates based on tab
-    this.candidates = this.allCandidates.filter(
-      (candidate) => candidate.status === tab
-    );
-    // Show first 5 for the selected tab
-    this.candidates = this.candidates.slice(0, 5);
-    // Update more candidates count
-    this.moreCandidatesCount = this.allCandidates.filter(
-      (candidate) => candidate.status === tab
-    ).length - this.candidates.length;
+    let filtered: any[] = [];
+    if (tab === 'applied') {
+      filtered = this.allCandidates.filter(
+        (candidate) => candidate.status === 'applied' || candidate.status === 'selected'
+      );
+    } else {
+      filtered = this.allCandidates.filter((candidate) => candidate.status === tab);
+    }
+    this.candidates = filtered.slice(0, 5);
+    this.moreCandidatesCount = filtered.length - this.candidates.length;
   }
-   
-  toggleAll(checked: boolean) {
-  this.masterChecked = checked;
-  const newStatus = checked ? 'selected' : 'applied';
-  this.candidates.forEach(candidate => {
-    this.updateCandidateStatus(candidate.application_id, newStatus);
-  });
-  // Refresh tab when unchecking in Selected view
-  if (!checked && this.selectedTab === 'selected') {
-    this.changeTab(this.selectedTab);
-  }
-}
 
-updateMasterChecked() {
-  this.masterChecked = this.candidates.every(candidate => candidate.status === 'selected');
-}
+  toggleAll(checked: boolean) {
+    this.masterChecked = checked;
+    const newStatus = checked ? 'selected' : 'applied';
+    this.candidates.forEach(candidate => {
+      this.updateCandidateStatus(candidate.application_id, newStatus);
+    });
+    // Refresh tab when unchecking in Selected view
+    if (!checked && this.selectedTab === 'selected') {
+      this.changeTab(this.selectedTab);
+    }
+  }
+
+  updateMasterChecked() {
+    this.masterChecked = this.candidates.every(candidate => candidate.status === 'selected');
+  }
 
   loadMoreCandidates() {
-    // Load all candidates for the current tab
-    this.candidates = this.allCandidates.filter(
-      (candidate) => candidate.status === this.selectedTab
-    );
+    let filtered: any[] = [];
+    if (this.selectedTab === 'applied') {
+      filtered = this.allCandidates.filter(
+        (candidate) => candidate.status === 'applied' || candidate.status === 'selected'
+      );
+    } else {
+      filtered = this.allCandidates.filter((candidate) => candidate.status === this.selectedTab);
+    }
+    this.candidates = filtered;
     this.moreCandidatesCount = 0; // No more to load
   }
 
   updateCandidateStatus(applicationId: string, newStatus: string) {
-  const candidate = this.allCandidates.find(
-    (c) => c.application_id === applicationId
-  );
-  if (candidate) {
-    candidate.status = newStatus;
-    this.appliedCount = this.allCandidates.filter(
-      (c) => c.status === 'applied'
-    ).length;
-    this.sourcedCount = this.allCandidates.filter(
-      (c) => c.status === 'sourced'
-    ).length;
-    this.selectedCount = this.allCandidates.filter(
-      (c) => c.status === 'selected'
-    ).length;
-    this.updateMasterChecked();
-    // Refresh tab only in Selected view when status changes to non-selected
-    if (this.selectedTab === 'selected' && newStatus !== 'selected') {
-      this.changeTab(this.selectedTab);
-    }
+    const jobId = this.route.snapshot.paramMap.get('jobId');
+    this.http
+      .patch(`http://127.0.0.1:8000/api/recruiter/jobs/${jobId}/applications/`, {
+        application_id: applicationId,
+        status: newStatus,
+      })
+      .subscribe(
+        (response) => {
+          console.log('Status updated successfully');
+          // Proceed with local update on success
+          const candidate = this.allCandidates.find(
+            (c) => c.application_id === applicationId
+          );
+          if (candidate) {
+            candidate.status = newStatus;
+            // Update counts with adjusted applied
+            this.appliedCount = this.allCandidates.filter(
+              (c) => c.status === 'applied' || c.status === 'selected'
+            ).length;
+            this.sourcedCount = this.allCandidates.filter(
+              (c) => c.status === 'sourced'
+            ).length;
+            this.selectedCount = this.allCandidates.filter(
+              (c) => c.status === 'selected'
+            ).length;
+            this.updateMasterChecked();
+            // Refresh tab only in Selected view when status changes to non-selected
+            if (this.selectedTab === 'selected' && newStatus !== 'selected') {
+              this.changeTab(this.selectedTab);
+            }
+          }
+        },
+        (error) => {
+          console.error('Error updating status:', error);
+          // Optionally, alert user or revert
+        }
+      );
+  }
+
+  openCV(url: string): void {
+  if (url) {
+    window.open(url, '_blank');
+  } else {
+    alert('No CV available for this candidate.');
   }
 }
 }
