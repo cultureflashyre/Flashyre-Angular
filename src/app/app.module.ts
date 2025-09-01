@@ -54,8 +54,6 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module'
       ).then((m) => m.RecruiterView3rdPageModule),
-      canActivate: [AuthGuard],
-      data: { roles: ['recruiter'] },
   },
   {
     path: 'signup-candidate',
