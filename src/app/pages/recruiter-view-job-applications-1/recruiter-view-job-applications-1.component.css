@@ -919,8 +919,10 @@
  
 .recruiter-view-job-applications1-candidate-profile-icon {
   color: #C0C0C0;
-  width: 40px;
-  height: auto;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
 }
  
 .recruiter-view-job-applications1-candidate-name-text {

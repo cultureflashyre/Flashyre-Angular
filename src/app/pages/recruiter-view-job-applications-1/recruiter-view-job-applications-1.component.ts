@@ -10,8 +10,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RecruiterViewJobApplications1 implements OnInit {
   job: any = null; // Store job data
-  candidates: any[] = []; // Store displayed candidates (initially 5 per tab)
-  allCandidates: any[] = []; // Store all candidates
+  candidates: any[] = [];  // Or define an interface if preferred
+  allCandidates: any[] = [];
   moreCandidatesCount: number = 0; // Count of more candidates
   selectedTab: string = 'applied'; // Default tab
   appliedCount: number = 0;
@@ -53,9 +53,18 @@ export class RecruiterViewJobApplications1 implements OnInit {
           (data: any) => {
             this.job = data;
             this.allCandidates = data.applications; // All applications now
-            this.appliedCount = data.applied_count + data.selected_count; // Adjusted for applied + selected
-            this.sourcedCount = data.sourced_count;
-            this.selectedCount = data.selected_count;
+            // Calculate counts based on candidate statuses
+            this.appliedCount = this.allCandidates.filter(
+              (c) => c.status === 'applied' || c.status === 'selected' ||
+              c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
+              c.status === 'Interview Invite sent'
+            ).length;
+            this.sourcedCount = this.allCandidates.filter(
+              (c) => c.status === 'sourced'
+            ).length;
+            this.selectedCount = this.allCandidates.filter(
+              (c) => c.status === 'selected'
+            ).length;
             this.changeTab('applied'); // Initialize display
           },
           (error) => {
@@ -70,7 +79,9 @@ export class RecruiterViewJobApplications1 implements OnInit {
     let filtered: any[] = [];
     if (tab === 'applied') {
       filtered = this.allCandidates.filter(
-        (candidate) => candidate.status === 'applied' || candidate.status === 'selected'
+        (candidate) => candidate.status === 'applied' || candidate.status === 'selected' ||
+        candidate.status === 'Screening Invite sent' || candidate.status === 'Assessment Invite sent' ||
+        candidate.status === 'Interview Invite sent'
       );
     } else {
       filtered = this.allCandidates.filter((candidate) => candidate.status === tab);
@@ -99,7 +110,9 @@ export class RecruiterViewJobApplications1 implements OnInit {
     let filtered: any[] = [];
     if (this.selectedTab === 'applied') {
       filtered = this.allCandidates.filter(
-        (candidate) => candidate.status === 'applied' || candidate.status === 'selected'
+        (candidate) => candidate.status === 'applied' || candidate.status === 'selected' ||
+        candidate.status === 'Screening Invite sent' || candidate.status === 'Assessment Invite sent' ||
+        candidate.status === 'Interview Invite sent'
       );
     } else {
       filtered = this.allCandidates.filter((candidate) => candidate.status === this.selectedTab);
@@ -126,7 +139,9 @@ export class RecruiterViewJobApplications1 implements OnInit {
             candidate.status = newStatus;
             // Update counts with adjusted applied
             this.appliedCount = this.allCandidates.filter(
-              (c) => c.status === 'applied' || c.status === 'selected'
+              (c) => c.status === 'applied' || c.status === 'selected' ||
+              c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
+              c.status === 'Interview Invite sent'
             ).length;
             this.sourcedCount = this.allCandidates.filter(
               (c) => c.status === 'sourced'
@@ -143,16 +158,81 @@ export class RecruiterViewJobApplications1 implements OnInit {
         },
         (error) => {
           console.error('Error updating status:', error);
-          // Optionally, alert user or revert
+          alert('Failed to update candidate status. Please try again.');
+        }
+      );
+  }
+
+  sendInvite(inviteType: 'screening' | 'assessment' | 'interview') {
+    const jobId = this.route.snapshot.paramMap.get('jobId');
+    const selectedCandidates = this.allCandidates.filter(
+      (candidate) => candidate.status === 'selected'
+    );
+
+    if (selectedCandidates.length === 0) {
+      alert('Please select at least one candidate.');
+      return;
+    }
+
+    const applicationIds = selectedCandidates.map(
+      (candidate) => candidate.application_id
+    );
+
+    let statusText: string;
+    switch (inviteType) {
+      case 'screening':
+        statusText = 'Screening Invite sent';
+        break;
+      case 'assessment':
+        statusText = 'Assessment Invite sent';
+        break;
+      case 'interview':
+        statusText = 'Interview Invite sent';
+        break;
+      default:
+        statusText = '';
+    }
+
+    this.http
+      .post(`http://127.0.0.1:8000/api/recruiter/jobs/${jobId}/send-invites/`, {
+        application_ids: applicationIds,
+        invite_type: inviteType,
+        status: statusText,
+      })
+      .subscribe(
+        (response) => {
+          console.log(`${inviteType} invites sent successfully`);
+          // Update local candidate statuses without removing them
+          selectedCandidates.forEach((candidate) => {
+            candidate.status = statusText;
+          });
+          // Update counts
+          this.appliedCount = this.allCandidates.filter(
+            (c) => c.status === 'applied' || c.status === 'selected' ||
+            c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
+            c.status === 'Interview Invite sent'
+          ).length;
+          this.sourcedCount = this.allCandidates.filter(
+            (c) => c.status === 'sourced'
+          ).length;
+          this.selectedCount = this.allCandidates.filter(
+            (c) => c.status === 'selected'
+          ).length;
+          this.changeTab(this.selectedTab); // Refresh tab to show updated statuses
+          alert(`${inviteType.charAt(0).toUpperCase() + inviteType.slice(1)} invites sent successfully.`);
+        },
+        (error) => {
+          console.error(`Error sending ${inviteType} invites:`, error);
+          alert(`Failed to send ${inviteType} invites. Please try again.`);
         }
       );
   }
 
   openCV(url: string): void {
-  if (url) {
-    window.open(url, '_blank');
-  } else {
-    alert('No CV available for this candidate.');
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      alert('No CV available for this candidate.');
+    }
   }
-}
 }

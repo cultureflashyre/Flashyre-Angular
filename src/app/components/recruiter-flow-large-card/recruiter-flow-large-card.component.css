@@ -82,7 +82,7 @@
   width: 24px;
   height: 24px;
   object-fit: cover;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-image2 {
@@ -94,7 +94,7 @@
   object-fit: cover;
   border-color: #FFFFFF;
   border-width: 1px;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-number-of-candidates-applied {

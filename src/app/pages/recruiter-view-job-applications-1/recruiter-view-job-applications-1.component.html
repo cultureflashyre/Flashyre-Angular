@@ -177,7 +177,11 @@
         <recruiter-flow-large-card
           rootClassName="recruiter-flow-large-cardroot-class-name3"
           [imageSrc]="job?.logo"
-          imageAlt="Company Logo"
+          image Alt="Company Logo"
+          [imageSrc5]="candidates[0]?.profile_picture_url || 'https://s3-alpha-sig.figma.com/img/8254/7737/b3eefffb9d9234e6fe8609789fdf7c00?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jNmjxko0T1JxAaxAQ4~VMsPHjMdFsJAVP8h0taNQhb2~mkXOp--KmftiZtXcqkM5VQ0nm8oHRDmx97aeqi3V8mkGcEPpBI2npi4mGaMxm6pkG~adNCWWQ1SNWJ9xWUQjjX94BcDwcl-LxTEe9vKRK3SabpcqhF9nYqdK7j-QRoJBffY6uoEr1WQJyAEzmDB~GkRdHeQf7pLUGDJZQ0oq1tqw1Lds~lssM7~4Sx3uUJtNRs3W7PeczCfu7eya~Gy0751GrR7UmgIUqPG6DZz3bEPj5Wd9azxcqHVFAEfHtuDT1Gl2X1UjShDZKvIFyqUvRBYcr8tpxdi69cPMRhRLg__'"
+          [imageSrc6]="candidates[1]?.profile_picture_url || 'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=mzV95~Di8P6dzRNgufJKyH68f3UqvlGYcYMjXkzOgwT0pBb5Qw6In072uR9jkN6BFmw4HrkP70x9BHfkVwkZbMVRvPL0e2pHMRXGFTFsMq6sQWythHaBlVtJ5blJ9DP6B-HyJP92sgZ3sxxqAVrISABTQtBM-uOBpA~2S0PUg8vNy-3QqVNsez9U24Zf5NwIh98cE0RiTjQN2DIpluEvto4KkxU6DIq4y2nHpSUDc8SgIWt2bigDd5XALKxvLTTDzOEpwcAEx6Ul8Ld1CxHUnx90pKn2Yi~TytFDg7jvqtHA9OcTU1M3SA1ImRyh42bGA5MJ4HwCvUteyteOVv181w__'"
+          imageAlt5="Candidate Profile Picture"
+          imageAlt6="Candidate Profile Picture"
         >
           <ng-template #text>
             <div class="recruiter-view-job-applications1-fragment28">
@@ -394,6 +398,7 @@
               id="screening-call-invite-button"
               type="button"
               class="recruiter-view-job-applications1-screening-call-invite-button button"
+              (click)="sendInvite('screening')"
             >
               Screening Call Invite
             </button>
@@ -401,6 +406,7 @@
               id="assessment-invite-button"
               type="button"
               class="recruiter-view-job-applications1-assessment-invite-button button"
+              (click)="sendInvite('assessment')"
             >
               Assessment Invite
             </button>
@@ -408,6 +414,7 @@
               id="interview-invite-button"
               type="button"
               class="recruiter-view-job-applications1-interview-invite-button button"
+              (click)="sendInvite('interview')"
             >
               Interview Invite
             </button>
@@ -502,7 +509,17 @@
                     id="candidate-profile-icon-container"
                     class="recruiter-view-job-applications1-candidate-profile-icon-container"
                   >
+                    <img
+                      *ngIf="candidate.profile_picture_url"
+                      id="candidate-profile-icon"
+                      [src]="candidate.profile_picture_url"
+                      width="24"
+                      height="24"
+                      class="recruiter-view-job-applications1-candidate-profile-icon"
+                      alt="Candidate Profile Picture"
+                    />
                     <svg
+                      *ngIf="!candidate.profile_picture_url"
                       id="candidate-profile-icon"
                       width="24"
                       height="24"
