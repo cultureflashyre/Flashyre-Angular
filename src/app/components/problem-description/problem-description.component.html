@@ -1,0 +1,34 @@
+<mat-card class="problem-card" *ngIf="problem">
+  <mat-card-header>
+    <mat-card-title>{{problem.title}}</mat-card-title>
+    <mat-card-subtitle>
+      <mat-chip [color]="getDifficultyColor(problem.difficulty)" selected>
+        {{problem.difficulty}}
+      </mat-chip>
+      <span class="limits">
+        Time: {{problem.time_limit}}s | Memory: {{problem.memory_limit}}KB
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <div class="description" [innerHTML]="problem.description"></div>
+    
+    <div class="sample-cases" *ngIf="problem.sample_test_cases?.length">
+      <h3>Sample Test Cases</h3>
+      <div *ngFor="let testCase of problem.sample_test_cases; let i = index" class="test-case">
+        <h4>Example {{i + 1}}</h4>
+        <div class="test-case-content">
+          <div class="input-section">
+            <strong>Input:</strong>
+            <pre>{{testCase.input_data}}</pre>
+          </div>
+          <div class="output-section">
+            <strong>Expected Output:</strong>
+            <pre>{{testCase.expected_output}}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

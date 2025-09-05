@@ -1,0 +1,32 @@
+<div class="editor-container">
+  <div class="editor-header">
+    <mat-form-field appearance="fill">
+      <mat-label>Language</mat-label>
+      <mat-select [(value)]="selectedLanguage" (selectionChange)="onLanguageChange()">
+        <mat-option *ngFor="let lang of languages" [value]="lang">
+          {{lang.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <div class="editor-actions">
+      <button mat-raised-button color="primary" (click)="runCode()" [disabled]="!code.trim()">
+        <mat-icon>play_arrow</mat-icon>
+        Run Code
+      </button>
+      <button mat-raised-button color="accent" (click)="submitCode()" [disabled]="!code.trim()">
+        <mat-icon>send</mat-icon>
+        Submit
+      </button>
+    </div>
+  </div>
+  
+  <div class="editor-content">
+    <ngx-codemirror
+      [(ngModel)]="code"
+      [options]="editorOptions"
+      (ngModelChange)="onCodeChange()"
+      class="code-editor">
+    </ngx-codemirror>
+  </div>
+</div>

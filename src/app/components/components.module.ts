@@ -112,6 +112,9 @@ import { AdminNavbar } from './admin-navbar/admin-navbar.component'
 import { AdminPage1Component } from './admin-page1-component/admin-page1-component.component'
 import { AdminPage2Component } from './admin-page2-component/admin-page2-component.component'
 import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd-extended-component.component'
+import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { ProblemDescriptionComponent } from './problem-description/problem-description.component';
+import { TestResultsComponent } from './coding-test-results/coding-test-results.component';
 
 @NgModule({
   declarations: [
@@ -213,7 +216,10 @@ import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd
     AdminNavbar,
     AdminPage1Component,
     AdminPage2Component,
-    AdminJdExtendedComponent
+    AdminJdExtendedComponent,
+    CodeEditorComponent,
+    ProblemDescriptionComponent,
+    TestResultsComponent,
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
   exports: [
@@ -315,7 +321,11 @@ import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd
     AdminNavbar,
     AdminPage1Component,
     AdminPage2Component,
-    AdminJdExtendedComponent
+    AdminJdExtendedComponent,
+     CodeEditorComponent,
+    ProblemDescriptionComponent,
+    TestResultsComponent,
+    
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

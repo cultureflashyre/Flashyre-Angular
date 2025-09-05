@@ -13,6 +13,7 @@ import { BufferService } from './services/buffer.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes = [
   {
@@ -293,7 +294,13 @@ const routes = [
       import('./pages/admin-page1/admin-page1.module').then(
         (m) => m.AdminPage1Module
       ),
-    
+  },
+  {
+    path: 'coding-assessment',
+    loadChildren: () =>
+      import('./pages/coding-assessment/coding-assessment.module').then(
+        (m) => m.CodingAssessmentModule
+      ),
   },
   {
     path: '**',
@@ -307,7 +314,7 @@ const routes = [
 @NgModule({
   declarations: [AppComponent],
   imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule, MatSnackBarModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
   ],
