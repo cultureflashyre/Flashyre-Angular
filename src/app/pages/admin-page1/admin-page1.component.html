@@ -1,3 +1,13 @@
+<!-- NEW: Loading overlay for uploads. It covers the entire screen when active. -->
+<div *ngIf="isUploadingCVs || isUploadingJd" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>{{ isUploadingJd ? 'Processing JD, this may take a moment...' : 'Uploading CVs...' }}</p>
+</div>
+
+<!-- NEW: Hidden file inputs, triggered by the buttons below. -->
+<input type="file" #cvUploader multiple (change)="onCvFilesSelected($event)" accept=".pdf,.doc,.docx" style="display: none;">
+<input type="file" #jdUploader (change)="onJdFileSelected($event)" accept=".pdf,.doc,.docx" style="display: none;">
+
 <div id="admin-page1" class="admin-page1-container">
   <div
     id="admin-page-main-container"
@@ -13,103 +23,174 @@
         class="admin-page1cvjd-upload-candidate-details-container"
       >
         <div
+          id="job-recommended-preference-container"
+          class="admin-page1-job-recommended-preference-container"
+        >
+          <!-- MODIFIED: Added click handler and ngClass for active state -->
+          <div
+            id="job-recommended-container"
+            class="admin-page1-job-recommended-container tab-button"
+            (click)="activeView = 'resumes'"
+            [ngClass]="{'active-tab': activeView === 'resumes'}"
+          >
+            <span
+              id="job-recommended-text"
+              class="admin-page1-job-recommended-text"
+            >
+              Resumes
+            </span>
+          </div>
+          <!-- MODIFIED: Added click handler and ngClass for active state -->
+          <div
+            id="preference-container"
+            class="admin-page1-preference-container tab-button"
+            (click)="activeView = 'jobDescription'"
+            [ngClass]="{'active-tab': activeView === 'jobDescription'}"
+          >
+            <span id="preference-text" class="admin-page1-preference-text">
+              Job Description
+            </span>
+          </div>
+        </div>
+        <div
           id="cv-jd-upload-container"
           class="admin-page1cvjd-upload-container"
         >
-           <div
-            id="cv-upload-button-container"
-            class="admin-page1cv-upload-button-container"
-            (click)="triggerCvUpload()"
-            [class.disabled]="isCvUploading"
+          <!-- MODIFIED: Added click handler and disabled binding -->
+          <button
+            id="add-questions-with-ai-button"
+            type="button"
+            class="admin-page1-add-questions-with-ai-button1 button"
+            (click)="cvUploader.click()"
+            [disabled]="isUploadingCVs || isUploadingJd"
           >
-            <span id="cv-upload-text" class="admin-page1cv-upload-text">
-              <span *ngIf="!isCvUploading">CV Bulk Upload</span>
-              <span *ngIf="isCvUploading">Processing...</span>
+            <span
+              id="add-questions-with-ai-text"
+              class="admin-page1-add-questions-with-ai-text1"
+            >
+              CV Bulk Upload
             </span>
-          </div>
-          <!-- JD UPLOAD BUTTON (NEW) -->
-  <div id="jd-upload-button-container" (click)="triggerJdUpload()" [class.disabled]="isJdUploading">
-    <span id="jd-upload-text" class="admin-page1jd-upload-text">
-      <span *ngIf="!isJdUploading">JD Upload</span>
-      <span *ngIf="isJdUploading">Processing...</span>
-    </span>
-  </div>
-</div>
-           <!-- Add a message area for upload status -->
-        <div *ngIf="uploadMessage" class="upload-status-message">
-          {{ uploadMessage }}
+          </button>
+          <!-- MODIFIED: Added click handler and disabled binding -->
+          <button
+            id="add-questions-with-ai-button"
+            type="button"
+            class="admin-page1-add-questions-with-ai-button2 button"
+            (click)="jdUploader.click()"
+            [disabled]="isUploadingCVs || isUploadingJd"
+          >
+            <span
+              id="add-questions-with-ai-text"
+              class="admin-page1-add-questions-with-ai-text2"
+            >
+              JD Upload
+            </span>
+          </button>
         </div>
-        <!-- Add hidden file input -->
-      <input type="file" #cvFileInput hidden multiple (change)="onCvFilesSelected($event)" accept=".pdf,.doc,.docx"/>
-        <input type="file" #jdFileInput hidden (change)="onJdFileSelected($event)" accept=".pdf,.doc,.docx"/>
-        </div>
-        <admin-page1-component
-          rootClassName="admin-page1-componentroot-class-name"
-        >
-          <ng-template #text>
-            <div class="admin-page1-fragment10">
-              <span class="admin-page1-text10">Today</span>
-            </div>
-          </ng-template>
-          <ng-template #text1>
-            <div class="admin-page1-fragment11">
-              <span class="admin-page1-text11">Today</span>
-            </div>
-          </ng-template>
-          <ng-template #text2>
-            <div class="admin-page1-fragment12">
-              <span class="admin-page1-text12">05:00 PM</span>
-            </div>
-          </ng-template>
-          <ng-template #text7>
-            <div class="admin-page1-fragment13">
-              <span class="admin-page1-text13">DD:MM:YY</span>
-            </div>
-          </ng-template>
-          <ng-template #text8>
-            <div class="admin-page1-fragment14">
-              <span class="admin-page1-text14">HH:MM</span>
-            </div>
-          </ng-template>
-          <ng-template #text9>
-            <div class="admin-page1-fragment15">
-              <span class="admin-page1-text15">Select All</span>
-            </div>
-          </ng-template>
-          <ng-template #button>
-            <div class="admin-page1-fragment16">
-              <span class="admin-page1-text16">Start Process</span>
-            </div>
-          </ng-template>
-          <ng-template #text10>
-            <div class="admin-page1-fragment17">
-              <span class="admin-page1-text17">Prashanth </span>
-            </div>
-          </ng-template>
-          <ng-template #text11>
-            <div class="admin-page1-fragment18">
-              <span class="admin-page1-text18">View CV</span>
-            </div>
-          </ng-template>
-          <ng-template #text28>
-            <div class="admin-page1-fragment19">
-              <span class="admin-page1-text19">05:00 PM</span>
-            </div>
-          </ng-template>
-          <ng-template #button1>
-            <div class="admin-page1-fragment20">
-              <span class="admin-page1-text20">Remove</span>
-            </div>
-          </ng-template>
-          <ng-template #text110>
-            <div class="admin-page1-fragment21">
-              <span class="admin-page1-text21">Yesterday</span>
-            </div>
-          </ng-template>
-        </admin-page1-component>
-        <admin-page2-component
-          rootClassName="admin-page2-componentroot-class-name"
-        ></admin-page2-component>
+        
+        <!-- MODIFIED: Conditionally render components based on activeView -->
+        <ng-container *ngIf="activeView === 'resumes'">
+          <admin-page1-component
+            rootClassName="admin-page1-componentroot-class-name"
+          >
+            <!-- All original ng-template projections are preserved -->
+            <ng-template #text>
+              <div class="admin-page1-fragment10">
+                <span class="admin-page1-text10">Today</span>
+              </div>
+            </ng-template>
+            <ng-template #text1>
+              <div class="admin-page1-fragment11">
+                <span class="admin-page1-text11">Today</span>
+              </div>
+            </ng-template>
+            <ng-template #text2>
+              <div class="admin-page1-fragment12">
+                <span class="admin-page1-text12">05:00 PM</span>
+              </div>
+            </ng-template>
+            <ng-template #text7>
+              <div class="admin-page1-fragment13">
+                <span class="admin-page1-text13">DD:MM:YY</span>
+              </div>
+            </ng-template>
+            <ng-template #text8>
+              <div class="admin-page1-fragment14">
+                <span class="admin-page1-text14">HH:MM</span>
+              </div>
+            </ng-template>
+            <ng-template #text9>
+              <div class="admin-page1-fragment15">
+                <span class="admin-page1-text15">Select All</span>
+              </div>
+            </ng-template>
+            <ng-template #button>
+              <div class="admin-page1-fragment16">
+                <span class="admin-page1-text16">Start Process</span>
+              </div>
+            </ng-template>
+            <ng-template #text10>
+              <div class="admin-page1-fragment17">
+                <span class="admin-page1-text17">Prashanth&nbsp;</span>
+              </div>
+            </ng-template>
+            <ng-template #text11>
+              <div class="admin-page1-fragment18">
+                <span class="admin-page1-text18">View CV</span>
+              </div>
+            </ng-template>
+            <ng-template #text28>
+              <div class="admin-page1-fragment19">
+                <span class="admin-page1-text19">05:00 PM</span>
+              </div>
+            </ng-template>
+            <ng-template #button1>
+              <div class="admin-page1-fragment20">
+                <span class="admin-page1-text20">Remove</span>
+              </div>
+            </ng-template>
+            <ng-template #text110>
+              <div class="admin-page1-fragment21">
+                <span class="admin-page1-text21">Yesterday</span>
+              </div>
+            </ng-template>
+          </admin-page1-component>
+        </ng-container>
+
+        <ng-container *ngIf="activeView === 'jobDescription'">
+          <admin-page2-component
+            rootClassName="admin-page2-componentroot-class-name"
+          >
+            <!-- All original ng-template projections are preserved -->
+            <ng-template #text>
+              <div class="admin-page1-fragment22">
+                <span class="admin-page1-text22">Candidate Sourced</span>
+              </div>
+            </ng-template>
+            <ng-template #text1>
+              <div class="admin-page1-fragment23">
+                <span class="admin-page1-text23">Sub-menu Item</span>
+              </div>
+            </ng-template>
+            <ng-template #text2>
+              <div class="admin-page1-fragment24">
+                <span class="admin-page1-text24">Sub-menu Item</span>
+              </div>
+            </ng-template>
+            <ng-template #text3>
+              <div class="admin-page1-fragment25">
+                <span class="admin-page1-text25">Sub-menu Item</span>
+              </div>
+            </ng-template>
+            <ng-template #button>
+              <div class="admin-page1-fragment26">
+                <span class="admin-page1-text26">JD Extended</span>
+              </div>
+            </ng-template>
+          </admin-page2-component>
+        </ng-container>
+        <!-- End of conditional rendering -->
       </div>
     </div>
   </div>
+</div>

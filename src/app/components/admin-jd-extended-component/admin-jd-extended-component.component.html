@@ -1,218 +1,113 @@
+<!-- src/app/components/admin-jd-extended-component/admin-jd-extended-component.html -->
+
 <!-- 
-  This entire container will only be displayed if the 'jd' object exists in the component.
-  If 'jd' is null, the ng-template with the #noJd reference at the bottom will be displayed instead.
+  --- FIX: Added the <form> tag with the [formGroup]="jdForm" directive. ---
+  This is the critical link that connects this entire HTML template to the 'jdForm' FormGroup
+  object in the component's TypeScript file. Without this, formControlName has no effect on displaying data.
 -->
-<div
-  *ngIf="jd; else noJd"
-  class="admin-jd-extended-component-container1"
-  [ngClass]="rootClassName"
->
-  <!-- Role & Location Section -->
-  <div
-    id="Role-Location-Container"
-    class="admin-jd-extended-component-role-location-container"
-  >
-    <!-- Role Field -->
-    <div id="role-container" class="admin-jd-extended-component-role-container">
-      <div
-        id="role-text-container"
-        class="admin-jd-extended-component-role-text-container"
-      >
-        <span id="role-text" class="admin-jd-extended-component-role-text">
-          Role
-          <span class="admin-jd-extended-component-role-star-text">*</span>
-        </span>
-      </div>
-      <div
-        id="role-input-container"
-        class="admin-jd-extended-component-role-input-container"
-      >
-        <input
-          type="text"
-          id="Role-Input-Field"
-          [value]="jd.role"
-          class="admin-jd-extended-component-role-input-field input"
-          readonly
-        />
-      </div>
-    </div>
-    <!-- Location Field -->
-    <div
-      id="location-container"
-      class="admin-jd-extended-component-location-container"
-    >
-      <div
-        id="location-text-container"
-        class="admin-jd-extended-component-location-text-container"
-      >
-        <span
-          id="location-text"
-          class="admin-jd-extended-component-location-text"
-        >
-          Location
-          <span
-            id="location-star-text"
-            class="admin-jd-extended-component-location-star-text"
-            >*</span
-          >
-        </span>
-      </div>
-      <div
-        id="location-input-container"
-        class="admin-jd-extended-component-location-input-container"
-      >
-        <!-- The complex static location component is replaced with a simple readonly input -->
-        <input
-          type="text"
-          [value]="jd.location"
-          class="input"
-          readonly
-        />
-      </div>
+<form [formGroup]="jdForm" class="admin-jd-extended-component-container1" [ngClass]="rootClassName">
+  <div id="role-container" class="admin-jd-extended-component-role-container">
+    <label for="Role-Input-Field" class="admin-jd-extended-component-role-text-container">
+      <span class="admin-jd-extended-component-role-text">Role</span>
+      <span class="admin-jd-extended-component-role-star-text">*</span>
+    </label>
+    <div class="admin-jd-extended-component-role-input-container">
+      <input type="text" id="Role-Input-Field" formControlName="role" [placeholder]="roleInputFieldPlaceholder" class="admin-jd-extended-component-role-input-field input" />
     </div>
   </div>
 
-  <!-- Experience Section -->
-  <div
-    id="total-and-relevant-experience-container"
-    class="admin-jd-extended-component-total-and-relevant-experience-container"
-  >
-    <!-- Total Experience Field -->
-    <div
-      id="total-experience-container"
-      class="admin-jd-extended-component-total-experience-container"
-    >
-      <div
-        id="total-experience-text-container"
-        class="admin-jd-extended-component-total-experience-text-container"
-      >
-        <span
-          id="total-experience-text"
-          class="admin-jd-extended-component-total-experience-text"
-        >
-          Total Experience
-        </span>
-      </div>
-      <div
-        id="total-experience-code-container"
-        class="admin-jd-extended-component-total-experience-code-container"
-      >
-        <!-- The static slider is replaced with a readonly input displaying the range -->
-        <input
-          type="text"
-          [value]="(jd.total_experience_min || 'N/A') + ' - ' + (jd.total_experience_max || 'N/A')"
-          class="input"
-          readonly
-        />
-      </div>
-    </div>
-    <!-- Relevant Experience Field -->
-    <div
-      id="relevant-experience-container"
-      class="admin-jd-extended-component-relevant-experience-container"
-    >
-      <div
-        id="relevant-experience-text-container"
-        class="admin-jd-extended-component-relevant-experience-text-container"
-      >
-        <span
-          id="relevant-experience-text"
-          class="admin-jd-extended-component-relevant-experience-text"
-        >
-          Relevant Experience
-        </span>
-      </div>
-      <div
-        id="relevant-experience-code-container"
-        class="admin-jd-extended-component-relevant-experience-code-container"
-      >
-        <!-- The static slider is replaced with a readonly input displaying the range -->
-        <input
-          type="text"
-          [value]="(jd.relevant_experience_min || 'N/A') + ' - ' + (jd.relevant_experience_max || 'N/A')"
-          class="input"
-          readonly
-        />
+  <!-- Location Autocomplete Widget -->
+  <div id="location-container" class="admin-jd-extended-component-location-container">
+    <label for="location" class="admin-jd-extended-component-location-text-container">
+      <span class="admin-jd-extended-component-location-text">Location</span>
+      <span class="admin-jd-extended-component-location-star-text">*</span>
+    </label>
+    <div id="location-input-container" class="admin-jd-extended-component-location-input-container">
+      <div class="location-widget-wrapper">
+        <div class="input-wrapper">
+          <input type="text" id="location" class="location-input" placeholder="Enter your location" autocomplete="off" formControlName="location" />
+          <div class="loading" *ngIf="isLocationLoading"></div>
+          <svg class="location-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="suggestions" *ngIf="locationSuggestions.length > 0">
+          <div class="suggestion-item" *ngFor="let suggestion of locationSuggestions" (click)="selectLocation(suggestion)">
+            {{ suggestion }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- Notice Period Section -->
-  <div
-    id="notice-period-container"
-    class="admin-jd-extended-component-notice-period-container"
-  >
-    <div
-      id="notice-period-text-container"
-      class="admin-jd-extended-component-notice-period-text-container"
-    >
-      <span
-        id="university-institute-text"
-        class="admin-jd-extended-component-university-institute-text"
-      >
-        Notice Period
-        <span
-          id="notice-period-star-text"
-          class="admin-jd-extended-component-notice-period-star-text"
-          >*</span
-        >
-      </span>
+  <div id="total-and-relevant-experience-container" class="admin-jd-extended-component-total-and-relevant-experience-container">
+    <!-- Total Experience Slider -->
+    <div id="total-experience-container" class="admin-jd-extended-component-total-experience-container">
+      <div class="admin-jd-extended-component-total-experience-text-container">
+        <span class="admin-jd-extended-component-total-experience-text">Total Experience</span>
+      </div>
+      <div #totalExperienceSlider class="admin-jd-extended-component-total-experience-code-container experience-range-slider">
+        <div class="range-indicator" #totalExperienceContainer>
+          <div class="line"></div>
+          <div class="filled-segment" #totalFilledSegment></div>
+          <div class="marker" #totalMarkerLeft (mousedown)="onMouseDown($event, 'total')"></div>
+          <div class="marker" #totalMarkerRight (mousedown)="onMouseDown($event, 'total')"></div>
+          <div class="label" #totalLabelLeft></div>
+          <div class="label" #totalLabelRight></div>
+        </div>
+      </div>
     </div>
-    <div
-      id="notice-period-input-container"
-      class="admin-jd-extended-component-notice-period-input-container"
-    >
-      <input
-        type="text"
-        id="notice-period-input-filed"
-        [value]="jd.notice_period"
-        class="admin-jd-extended-component-notice-period-input-filed input"
-        readonly
-      />
+    <!-- Relevant Experience Slider -->
+    <div id="relevant-experience-container" class="admin-jd-extended-component-relevant-experience-container">
+      <div class="admin-jd-extended-component-relevant-experience-text-container">
+        <span class="admin-jd-extended-component-relevant-experience-text">Relevant Experience</span>
+      </div>
+      <div #relevantExperienceSlider class="admin-jd-extended-component-relevant-experience-code-container experience-range-slider">
+        <div class="range-indicator" #relevantExperienceContainer>
+          <div class="line"></div>
+          <div class="filled-segment" #relevantFilledSegment></div>
+          <div class="marker" #relevantMarkerLeft (mousedown)="onMouseDown($event, 'relevant')"></div>
+          <div class="marker" #relevantMarkerRight (mousedown)="onMouseDown($event, 'relevant')"></div>
+          <div class="label" #relevantLabelLeft></div>
+          <div class="label" #relevantLabelRight></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="notice-period-container" class="admin-jd-extended-component-notice-period-container">
+    <label for="notice-period-input-field" class="admin-jd-extended-component-notice-period-text-container">
+      <span class="admin-jd-extended-component-university-institute-text">Notice Period</span>
+      <span class="admin-jd-extended-component-notice-period-star-text">*</span>
+    </label>
+    <div class="admin-jd-extended-component-notice-period-input-container">
+      <input type="text" id="notice-period-input-field" formControlName="noticePeriod" [placeholder]="noticePeriodInputFiledPlaceholder" class="admin-jd-extended-component-notice-period-input-filed input" />
     </div>
   </div>
 
-  <!-- Skills Section -->
   <div
     id="skills-container"
     class="admin-jd-extended-component-skills-container"
   >
-    <div
-      id="skill-text-container"
-      class="admin-jd-extended-component-skill-text-container"
-    >
-      <span id="skill-text" class="admin-jd-extended-component-skill-text">
-        Skills
-        <span
-          id="skill-star-text"
-          class="admin-jd-extended-component-skill-star-text"
-          >*</span
-        >
-      </span>
+    <div class="admin-jd-extended-component-skill-text-container">
+      <span class="admin-jd-extended-component-skill-text">Skills</span>
+      <span class="admin-jd-extended-component-skill-star-text">*</span>
     </div>
-    <div
-      id="skills-input-container"
-      class="admin-jd-extended-component-skills-input-container"
-    >
-      <!-- The static tag component is replaced with a dynamic list of tags -->
-      <div class="tag-container">
-        <div class="tag" *ngFor="let skill of jd.must_have_skills">
-          <span>{{ skill }}</span>
+    <div id="skills-input-container" class="admin-jd-extended-component-skills-input-container">
+      <div class="skills-widget-wrapper">
+        <div class="tag-container" (click)="skillInput.focus()">
+          <div *ngFor="let tag of selectedSkills" class="tag">
+            <span>{{ tag }}</span>
+            <!-- Added type="button" to prevent form submission -->
+            <button type="button" (click)="removeSkill(tag)">&times;</button>
+          </div>
+          <input #skillInput type="text" class="tag-input" formControlName="skillInput" placeholder="Type to add Skills..." (keydown)="onSkillInputKeyDown($event)" />
         </div>
-        <div *ngIf="!jd.must_have_skills || jd.must_have_skills.length === 0">
-          No skills specified.
+        <div class="suggestions" *ngIf="skillSuggestions.length > 0">
+          <div *ngFor="let suggestion of skillSuggestions; let i = index" class="suggestion-item" [class.active-suggestion]="i === activeSkillSuggestionIndex" (click)="addSkill(suggestion)">
+            {{ suggestion }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- 
-  This template is displayed when the 'jd' object is null.
-  It provides a helpful message to the user.
--->
-<ng-template #noJd>
-  <div class="no-jd-active-message">
-    Please upload a Job Description to view its extracted details.
-  </div>
-</ng-template>
+</form> <!-- --- FIX: Closed the form tag --- -->
