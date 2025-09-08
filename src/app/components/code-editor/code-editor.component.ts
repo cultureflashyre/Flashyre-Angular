@@ -1,92 +1,34 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ProgrammingLanguage } from '../../pages/coding-assessment/models';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-code-editor',
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })
-export class CodeEditorComponent implements OnInit {
-  @Input() languages: ProgrammingLanguage[] = [];
-  @Input() initialCode: string = '';
-  @Input() initialLanguage!: string;
-  @Output() codeChange = new EventEmitter<string>();
-  @Output() languageChange = new EventEmitter<ProgrammingLanguage>();
-  @Output() runCodeEvent = new EventEmitter<{code: string, language: ProgrammingLanguage}>();
-  @Output() submitCodeEvent = new EventEmitter<{code: string, language: ProgrammingLanguage}>();
+export class CodeEditorComponent {
+  @Input() problemId: number = 0;
+  @Output() runCode = new EventEmitter<{ source_code: string, language_id: number }>();
+  @Output() submitCode = new EventEmitter<{ source_code: string, language_id: number }>();
 
-  selectedLanguage: ProgrammingLanguage | null = null;
-  code: string = '';
-  
-  editorOptions = {
-    theme: 'material',
-    mode: 'javascript',
-    lineNumbers: true,
-    lineWrapping: true,
-    foldGutter: true,
-    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-    autoCloseBrackets: true,
-    matchBrackets: true,
-    indentUnit: 2,
-    tabSize: 2,
-  };
-
-  ngOnInit() {
-    if (this.languages.length > 0) {
-      this.selectedLanguage = this.languages[0];
-      this.code = this.selectedLanguage.template_code;
-      this.updateEditorMode();
-    }
-  }
+  languages = [
+    { name: 'C++', id: 54, mode: 'c_cpp' },
+    { name: 'Java', id: 62, mode: 'java' },
+    { name: 'Python', id: 71, mode: 'python' },
+    { name: 'JavaScript', id: 63, mode: 'javascript' }
+  ];
+  selectedLanguage = this.languages[0];
+  code = '// Write your code here';
+  editorOptions = { theme: 'ace/theme/monokai', mode: this.selectedLanguage.mode };
 
   onLanguageChange() {
-    if (this.selectedLanguage) {
-      this.code = this.selectedLanguage.template_code;
-      this.updateEditorMode();
-      this.languageChange.emit(this.selectedLanguage);
-    }
+    this.editorOptions = { ...this.editorOptions, mode: this.selectedLanguage.mode };
   }
 
-  onCodeChange() {
-    this.codeChange.emit(this.code);
+  run() {
+    this.runCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
   }
 
-  updateEditorMode() {
-    if (this.selectedLanguage) {
-      switch (this.selectedLanguage.name.toLowerCase()) {
-        case 'python 3':
-          this.editorOptions.mode = 'python';
-          break;
-        case 'java':
-          this.editorOptions.mode = 'text/x-java';
-          break;
-        case 'c++':
-          this.editorOptions.mode = 'text/x-c++src';
-          break;
-        case 'javascript':
-          this.editorOptions.mode = 'javascript';
-          break;
-        default:
-          this.editorOptions.mode = 'text/plain';
-      }
-    }
-  }
-
-  runCode() {
-    if (this.selectedLanguage && this.code.trim()) {
-      this.runCodeEvent.emit({
-        code: this.code,
-        language: this.selectedLanguage
-      });
-    }
-  }
-
-  submitCode() {
-    if (this.selectedLanguage && this.code.trim()) {
-      this.submitCodeEvent.emit({
-        code: this.code,
-        language: this.selectedLanguage
-      });
-    }
+  submit() {
+    this.submitCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
   }
 }

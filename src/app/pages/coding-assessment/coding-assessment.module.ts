@@ -1,50 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { ProblemDescriptionComponent } from '../../components/problem-description/problem-description.component';
-import { CodeEditorComponent } from '../../components/code-editor/code-editor.component';
-import { TestResultsComponent } from '../../components/coding-test-results/coding-test-results.component';
-import { CodingAssessmentComponent } from './coding-assessment.component';
-import { AssessmentService } from '../../services/coding-assessment.service';
-import { ApiService } from '../../services/api.service';
-import { ComponentsModule } from 'src/app/components/components.module';
+import { FormsModule } from '@angular/forms';
+import { AceModule } from 'ngx-ace-wrapper';
+import { ComponentsModule } from '../../components/components.module';
+import { RouterModule, Routes } from '@angular/router';
+import { CodingAssessment } from './coding-assessment.component';
 
-const routes = [
-  {
-    path: '',
-    component: CodingAssessmentComponent,
-  },
+const routes: Routes = [
+  { path: '', component: CodingAssessment } // Map empty path to CodingAssessment
 ];
 
 @NgModule({
-  declarations: [
-    CodingAssessmentComponent
-  ],
+  declarations: [CodingAssessment],
   imports: [
     CommonModule,
-    RouterModule,
-    HttpClientModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatFormFieldModule,
-    MatSelectModule,
+    FormsModule,
+    AceModule,
     ComponentsModule,
-    RouterModule.forChild(routes),
-    
+    RouterModule.forChild(routes) // Use forChild for lazy-loaded module
   ],
-  providers: [
-    AssessmentService,
-    ApiService
-  ],
-  exports: [CodingAssessmentComponent]
+  exports: [CodingAssessment]
 })
 export class CodingAssessmentModule {}

@@ -296,12 +296,12 @@ const routes = [
       ),
   },
   {
-    path: 'coding-assessment',
-    loadChildren: () =>
-      import('./pages/coding-assessment/coding-assessment.module').then(
-        (m) => m.CodingAssessmentModule
-      ),
-  },
+  path: 'coding-assessment',
+  loadChildren: () =>
+    import('./pages/coding-assessment/coding-assessment.module').then(
+      (m) => m.CodingAssessmentModule
+    ),
+},
   {
     path: '**',
     loadChildren: () =>

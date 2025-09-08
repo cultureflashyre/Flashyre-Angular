@@ -1,32 +1,23 @@
 .editor-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
-
-.editor-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+.form-group {
+  margin-bottom: 10px;
 }
-
-.editor-actions {
-  display: flex;
-  gap: 10px;
+.button-group {
+  margin-top: 10px;
 }
-
-.editor-content {
-  flex: 1;
-  overflow: hidden;
+button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
-
-.code-editor {
-  height: 100%;
-}
-
-::ng-deep .CodeMirror {
-  height: 100%;
-  font-size: 14px;
+button:hover {
+  background-color: #0056b3;
 }

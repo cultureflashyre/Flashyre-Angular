@@ -1,48 +1,9 @@
-<div class="assessment-container">
-  <mat-toolbar color="primary">
-    <span>{{ assessment?.title || 'Coding Assessment' }}</span>
-    <span class="spacer"></span>
-    <span *ngIf="remainingTime > 0">Time Remaining: {{ remainingTime | date:'mm:ss' }}</span>
-    <button mat-button color="warn" (click)="completeAssessment()">Submit Assessment</button>
-  </mat-toolbar>
-
-  <mat-spinner *ngIf="isLoading" class="spinner"></mat-spinner>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-
-  <div *ngIf="!isLoading && !errorMessage" class="content">
-    <!-- Problem Selector -->
-    <mat-form-field appearance="fill" class="problem-selector">
-      <mat-label>Select Problem</mat-label>
-      <mat-select [(value)]="selectedProblemIndex" (selectionChange)="selectProblem($event.value)">
-        <mat-option *ngFor="let problem of problems; let i = index" [value]="i">
-          {{ problem.title }} ({{ problem.difficulty }})
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div class="main-grid">
-      <!-- Problem Description -->
-      <div class="problem-description">
-        <app-problem-description [problem]="currentProblem"></app-problem-description>
-      </div>
-
-      <!-- Code Editor -->
-      <div class="code-editor">
-        <app-code-editor
-          [languages]="languages"
-          [initialCode]="code"
-          [initialLanguage]="selectedLanguage"
-          (codeChange)="onCodeChange($event)"
-          (languageChange)="onLanguageChange($event)"
-          (runCodeEvent)="runCode()"
-          (submitCodeEvent)="submitCode()"
-        ></app-code-editor>
-      </div>
-    </div>
-
-    <!-- Test Results -->
-    <div class="test-results" *ngIf="showResults">
-      <app-test-results [testResults]="testResults"></app-test-results>
-    </div>
-  </div>
+<div class="page-container">
+  <h1>Coding Assessment Test</h1>
+</div>
+<div class="page-container">
+  <div *ngIf="isLoading">Loading problem...</div>
+  <app-problem-description [problem]="problem"></app-problem-description>
+  <app-code-editor [problemId]="problemId" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+  <app-test-results [results]="results"></app-test-results>
 </div>

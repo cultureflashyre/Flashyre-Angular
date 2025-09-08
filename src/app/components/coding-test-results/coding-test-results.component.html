@@ -1,41 +1,11 @@
-<mat-card class="results-card">
-  <mat-card-header>
-    <mat-card-title>Test Results</mat-card-title>
-    <mat-card-subtitle *ngIf="testResults.length">
-      Passed: {{getPassedCount()}} / {{testResults.length}}
-    </mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div *ngIf="!testResults.length" class="no-results">
-      <mat-icon>info</mat-icon>
-      <p>No test results available</p>
-    </div>
-    
-    <div *ngFor="let result of testResults; let i = index" class="test-result">
-      <div class="result-header">
-        <span class="test-case-number">Test Case {{i + 1}}</span>
-        <mat-chip [color]="result.passed ? 'primary' : 'warn'" selected>
-          <mat-icon>{{result.passed ? 'check' : 'close'}}</mat-icon>
-          {{result.passed ? 'PASSED' : 'FAILED'}}
-        </mat-chip>
-      </div>
-      
-      <div class="result-details" *ngIf="!result.passed">
-        <div class="detail-section">
-          <strong>Expected Output:</strong>
-          <pre>{{result.test_case.expected_output}}</pre>
-        </div>
-        <div class="detail-section">
-          <strong>Actual Output:</strong>
-          <pre>{{result.actual_output}}</pre>
-        </div>
-      </div>
-      
-      <div class="execution-stats" *ngIf="result.execution_time || result.memory_used">
-        <span *ngIf="result.execution_time">Time: {{result.execution_time}}ms</span>
-        <span *ngIf="result.memory_used">Memory: {{result.memory_used}}KB</span>
-      </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+<div class="results-container" [ngClass]="{ minimized: isMinimized }">
+  <div class="header">
+    <h3>Test Results</h3>
+    <button (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
+  </div>
+  <div *ngIf="!isMinimized" class="results-content">
+    <ul>
+      <li *ngFor="let result of results">{{ result }}</li>
+    </ul>
+  </div>
+</div>

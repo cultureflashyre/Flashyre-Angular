@@ -1,53 +1,28 @@
-.results-card {
-  height: 100%;
-  overflow-y: auto;
+.results-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  margin-top: 20px;
 }
-
-.no-results {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
-
-.test-result {
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-}
-
-.result-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
-
-.test-case-number {
-  font-weight: bold;
-}
-
-.result-details {
+.results-content {
   margin-top: 10px;
 }
-
-.detail-section {
-  margin-bottom: 10px;
+.minimized .results-content {
+  display: none;
 }
-
-pre {
-  background-color: #f5f5f5;
-  padding: 8px;
-  border-radius: 4px;
-  margin: 5px 0;
-  white-space: pre-wrap;
-  font-family: 'Courier New', monospace;
+button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
-
-.execution-stats {
-  display: flex;
-  gap: 20px;
-  font-size: 12px;
-  color: #666;
-  margin-top: 10px;
+button:hover {
+  background-color: #218838;
 }

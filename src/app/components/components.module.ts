@@ -112,9 +112,10 @@ import { AdminNavbar } from './admin-navbar/admin-navbar.component'
 import { AdminPage1Component } from './admin-page1-component/admin-page1-component.component'
 import { AdminPage2Component } from './admin-page2-component/admin-page2-component.component'
 import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd-extended-component.component'
+import { AceModule } from 'ngx-ace-wrapper';
 import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { ProblemDescriptionComponent } from './problem-description/problem-description.component';
-import { TestResultsComponent } from './coding-test-results/coding-test-results.component';
+import { CodingTestResultsComponent } from './coding-test-results/coding-test-results.component';
 
 @NgModule({
   declarations: [
@@ -219,9 +220,9 @@ import { TestResultsComponent } from './coding-test-results/coding-test-results.
     AdminJdExtendedComponent,
     CodeEditorComponent,
     ProblemDescriptionComponent,
-    TestResultsComponent,
+    CodingTestResultsComponent,
   ],
-  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
+  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule, AceModule],
   exports: [
     HeaderContainer,
     Navbar6,
@@ -322,9 +323,9 @@ import { TestResultsComponent } from './coding-test-results/coding-test-results.
     AdminPage1Component,
     AdminPage2Component,
     AdminJdExtendedComponent,
-     CodeEditorComponent,
+    CodeEditorComponent,
     ProblemDescriptionComponent,
-    TestResultsComponent,
+    CodingTestResultsComponent,
     
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

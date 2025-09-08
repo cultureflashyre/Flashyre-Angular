@@ -1,32 +1,13 @@
 <div class="editor-container">
-  <div class="editor-header">
-    <mat-form-field appearance="fill">
-      <mat-label>Language</mat-label>
-      <mat-select [(value)]="selectedLanguage" (selectionChange)="onLanguageChange()">
-        <mat-option *ngFor="let lang of languages" [value]="lang">
-          {{lang.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    
-    <div class="editor-actions">
-      <button mat-raised-button color="primary" (click)="runCode()" [disabled]="!code.trim()">
-        <mat-icon>play_arrow</mat-icon>
-        Run Code
-      </button>
-      <button mat-raised-button color="accent" (click)="submitCode()" [disabled]="!code.trim()">
-        <mat-icon>send</mat-icon>
-        Submit
-      </button>
-    </div>
+  <div class="form-group">
+    <label for="language">Select Language:</label>
+    <select id="language" [(ngModel)]="selectedLanguage" (change)="onLanguageChange()">
+      <option *ngFor="let lang of languages" [ngValue]="lang">{{ lang.name }}</option>
+    </select>
   </div>
-  
-  <div class="editor-content">
-    <ngx-codemirror
-      [(ngModel)]="code"
-      [options]="editorOptions"
-      (ngModelChange)="onCodeChange()"
-      class="code-editor">
-    </ngx-codemirror>
+  <textarea [(ngModel)]="code" style="height: 400px; width: 100%;"></textarea>
+  <div class="button-group">
+    <button (click)="run()">Run Code</button>
+    <button (click)="submit()">Submit</button>
   </div>
 </div>

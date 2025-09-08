@@ -1,15 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { TestResult } from '../../pages/coding-assessment/models';
 
 @Component({
   selector: 'app-test-results',
   templateUrl: './coding-test-results.component.html',
   styleUrls: ['./coding-test-results.component.css']
 })
-export class TestResultsComponent {
-  @Input() testResults: TestResult[] = [];
+export class CodingTestResultsComponent {
+  @Input() results: string[] = [];
+  isVisible = true; // Set to true for initial visibility
+  isMinimized = false;
 
-  getPassedCount(): number {
-    return this.testResults.filter(result => result.passed).length;
+  toggleVisibility() {
+    this.isVisible = !this.isVisible;
+  }
+
+  toggleMinimize() {
+    this.isMinimized = !this.isMinimized;
   }
 }
