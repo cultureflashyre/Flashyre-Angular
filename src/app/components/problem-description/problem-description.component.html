@@ -1,23 +1,35 @@
 <div class="problem-container">
-  <h2>{{ problem.title }}</h2>
-  <div class="section">
-    <h3>Description</h3>
-    <p>{{ problem.description }}</p>
-  </div>
-  <div class="section">
-    <h3>Input Format</h3>
-    <p>{{ problem.input_format }}</p>
-  </div>
-  <div class="section">
-    <h3>Output Format</h3>
-    <p>{{ problem.output_format }}</p>
-  </div>
-  <div class="section">
-    <h3>Constraints</h3>
-    <p>{{ problem.constraints }}</p>
-  </div>
-  <div class="section">
-    <h3>Example</h3>
-    <pre>{{ problem.example }}</pre>
-  </div>
+    <div class="problem-header">
+        <div class="problem-title">{{ problem.title }}</div>
+    </div>
+    <div class="section">
+        <div class="section-title">Problem Statement</div>
+        <div class="section-content">
+            <p>{{ problem.description }}</p>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title">Input Format</div>
+        <div class="section-content">
+            <p>{{ problem.input_format }}</p>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title">Output Format</div>
+        <div class="section-content">
+            <p>{{ problem.output_format }}</p>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title">Constraints</div>
+        <div class="constraints">
+            <p>{{ problem.constraints }}</p>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-title">Example</div>
+        <div class="section-content">
+            <div class="code-block">{{ problem.example }}</div>
+        </div>
+    </div>
 </div>

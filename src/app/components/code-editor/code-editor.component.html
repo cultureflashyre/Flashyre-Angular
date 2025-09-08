@@ -1,13 +1,13 @@
 <div class="editor-container">
-  <div class="form-group">
-    <label for="language">Select Language:</label>
-    <select id="language" [(ngModel)]="selectedLanguage" (change)="onLanguageChange()">
-      <option *ngFor="let lang of languages" [ngValue]="lang">{{ lang.name }}</option>
-    </select>
-  </div>
-  <textarea [(ngModel)]="code" style="height: 400px; width: 100%;"></textarea>
-  <div class="button-group">
-    <button (click)="run()">Run Code</button>
-    <button (click)="submit()">Submit</button>
-  </div>
+    <div class="form-group">
+        <label for="language">Select Language:</label>
+        <select id="language" class="language-selector" [(ngModel)]="selectedLanguage" (change)="onLanguageChange()">
+            <option *ngFor="let lang of languages" [ngValue]="lang">{{ lang.name }}</option>
+        </select>
+    </div>
+    <textarea class="code-editor" [(ngModel)]="code" placeholder="// Write your code here"></textarea>
+    <div class="button-group">
+        <button class="btn btn-primary" (click)="run()">Run Code</button>
+        <button class="btn btn-secondary" (click)="submit()">Submit</button>
+    </div>
 </div>

@@ -1,9 +1,8 @@
 <div class="page-container">
-  <h1>Coding Assessment Test</h1>
-</div>
-<div class="page-container">
-  <div *ngIf="isLoading">Loading problem...</div>
-  <app-problem-description [problem]="problem"></app-problem-description>
-  <app-code-editor [problemId]="problemId" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
-  <app-test-results [results]="results"></app-test-results>
+    <div *ngIf="isLoading" class="loading">Loading problem...</div>
+    <app-problem-description [problem]="problem"></app-problem-description>
+    <div>
+        <app-code-editor [problemId]="problemId" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+        <app-test-results [results]="results"></app-test-results>
+    </div>
 </div>

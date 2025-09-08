@@ -1,12 +1,40 @@
 .page-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: block;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    min-height: calc(100vh - 65px);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.page-container > * {
+    width: 50%;
+    border-right: 1px solid #e1e4e8;
+}
+
+app-code-editor, app-test-results {
+    border-right: none;
 }
 
 .loading {
-  padding: 20px;
-  font-size: 16px;
-  color: #555;
+    padding: 40px;
+    font-size: 14px;
+    color: #6a737d;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .page-container {
+        flex-direction: column;
+    }
+    
+    .page-container > * {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    
+    app-problem-description {
+        max-height: 50vh;
+        overflow-y: auto;
+    }
 }

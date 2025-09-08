@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class CodingTestResultsComponent {
   @Input() results: string[] = [];
-  isVisible = true; // Set to true for initial visibility
+  isVisible = true;
   isMinimized = false;
 
   toggleVisibility() {

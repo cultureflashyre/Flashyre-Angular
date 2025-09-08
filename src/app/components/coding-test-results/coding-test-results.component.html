@@ -1,11 +1,24 @@
 <div class="results-container" [ngClass]="{ minimized: isMinimized }">
-  <div class="header">
-    <h3>Test Results</h3>
-    <button (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
-  </div>
-  <div *ngIf="!isMinimized" class="results-content">
-    <ul>
-      <li *ngFor="let result of results">{{ result }}</li>
-    </ul>
-  </div>
+    <div class="header">
+        <div class="results-title">Test Results</div>
+        <button class="btn" (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
+    </div>
+    <div *ngIf="!isMinimized" class="results-content">
+        <div *ngIf="results.length === 0" class="empty-results">
+            No results available. Run your code to see test case results.
+        </div>
+        <div *ngFor="let result of results">
+            <div *ngIf="result.includes('Accepted')" class="test-case passed">
+                <div class="status-icon passed">✓</div>
+                <div>{{ result }}</div>
+            </div>
+            <div *ngIf="result.includes('Wrong Answer') || result.includes('Compilation Error') || result.includes('Runtime Error') || result.includes('Time Limit Exceeded')" class="test-case failed">
+                <div class="status-icon failed">✗</div>
+                <div>{{ result }}</div>
+            </div>
+            <div *ngIf="result.includes('Judge0 API Error') || result.includes('Network Error')" class="error-message">
+                {{ result }}
+            </div>
+        </div>
+    </div>
 </div>

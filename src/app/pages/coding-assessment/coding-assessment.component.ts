@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CodingAssessmentService } from '../../services/coding-assessment.service';
-import { CodingTestResultsComponent } from '../../components/coding-test-results/coding-test-results.component'; // Updated path
+import { CodingTestResultsComponent } from '../../components/coding-test-results/coding-test-results.component';
 
 @Component({
   selector: 'app-coding-assessment',
@@ -38,7 +38,7 @@ export class CodingAssessment implements OnInit {
   }
 
   onRunCode(data: { source_code: string, language_id: number }) {
-    this.codingService.submitCode({ problem_id: this.problemId, ...data }).subscribe({
+    this.codingService.submitCode({ problem_id: this.problemId, source_code: data.source_code, language_id: data.language_id }).subscribe({
       next: (response) => {
         this.results = response.results || ['No results available'];
         if (this.testResultsComponent) this.testResultsComponent.toggleVisibility();
@@ -51,7 +51,7 @@ export class CodingAssessment implements OnInit {
   }
 
   onSubmitCode(data: { source_code: string, language_id: number }) {
-    this.codingService.submitCode({ problem_id: this.problemId, ...data }).subscribe({
+    this.codingService.submitCode({ problem_id: this.problemId, source_code: data.source_code, language_id: data.language_id }).subscribe({
       next: (response) => {
         this.results = response.results || ['No results available'];
         alert(`Submission saved! Score: ${response.score || 0}%`);
