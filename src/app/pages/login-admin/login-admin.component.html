@@ -1,0 +1,59 @@
+<div id="login-candidate" class="login-candidate-container">
+  <div id="main-container" class="login-candidate-main-container">
+    <login-page-navbar
+      rootClassName="login-page-navbarroot-class-name"
+    ></login-page-navbar>
+    <log-in-page 
+      userType="admin"
+      rootClassName="log-in-pageroot-class-name" 
+      (loginSubmit)="onLoginSubmit($event)" 
+      [errorMessage]="errorMessage"
+    >
+      <ng-template #text1>
+        <div class="login-candidate-fragment1">
+          <span class="login-candidate-text1">Email</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="login-candidate-fragment2">
+          <span class="login-candidate-text2">Show</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="login-candidate-fragment3">
+          <span class="login-candidate-text3">Don’t have an account?</span>
+        </div>
+      </ng-template>
+      <ng-template #text4>
+        <div class="login-candidate-fragment4">
+          <span class="login-candidate-text4">Sign up</span>
+        </div>
+      </ng-template>
+      <ng-template #button>
+        <div class="login-candidate-fragment5">
+          <span class="login-candidate-text5">Login</span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="login-candidate-fragment6">
+          <span class="login-candidate-text6">Password</span>
+        </div>
+      </ng-template>
+      <ng-template #text71>
+        <div class="login-candidate-fragment7">
+          <span class="login-candidate-text7">invalid Email or Password</span>
+        </div>
+      </ng-template>
+      <ng-template #heading>
+        <div class="login-candidate-fragment8">
+          <span class="login-candidate-text8">Welcome to Flashyre</span>
+        </div>
+      </ng-template>
+      <ng-template #forgotPassword>
+        <div class="login-candidate-fragment9">
+          <span class="login-candidate-text9">Forgot Password</span>
+        </div>
+      </ng-template>
+    </log-in-page>
+  </div>
+</div>
