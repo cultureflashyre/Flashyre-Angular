@@ -243,26 +243,36 @@
                 </div>
               </div>
               <div
-                id="sourced-button-container"
-                class="recruiter-view-job-applications1-sourced-button-container"
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'sourced'}"
-                (click)="changeTab('sourced')"
+                id="screening-button-container" 
+                class="recruiter-view-job-applications1-sourced-button-container" 
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'screening'}"
+                (click)="changeTab('screening')"
               >
                 <span
-                  id="sourced-text"
+                  id="screening-text"
                   class="recruiter-view-job-applications1-sourced-text"
                 >
-                  Sourced ({{ sourcedCount }})
+                  Screening ({{ screeningCount }})
                 </span>
               </div>
               <div
-                id="selected-button-container"
+                id="assessment-button-container"
                 class="recruiter-view-job-applications1-selected-button-container"
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'selected'}"
-                (click)="changeTab('selected')"
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'assessment'}"
+                (click)="changeTab('assessment')"
               >
                 <span class="recruiter-view-job-applications1-text35">
-                  Selected ({{ selectedCount }})
+                  Assessment ({{ assessmentCount }})
+                </span>
+              </div>
+              <div
+                id="interview-button-container"
+                class="recruiter-view-job-applications1-selected-button-container"
+                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'interview'}"
+                (click)="changeTab('interview')"
+              >
+                <span class="recruiter-view-job-applications1-text35">
+                  Interview ({{ interviewCount }})
                 </span>
               </div>
             </div>
@@ -395,26 +405,29 @@
             class="recruiter-view-job-applications1-screening-assessment-interview-main-container"
           >
             <button
+              *ngIf="selectedTab === 'applied'"
               id="screening-call-invite-button"
               type="button"
               class="recruiter-view-job-applications1-screening-call-invite-button button"
-              (click)="sendInvite('screening')"
+              (click)="sendInvite()"
             >
               Screening Call Invite
             </button>
             <button
+              *ngIf="selectedTab === 'screening'"
               id="assessment-invite-button"
               type="button"
               class="recruiter-view-job-applications1-assessment-invite-button button"
-              (click)="sendInvite('assessment')"
+              (click)="sendInvite()"
             >
               Assessment Invite
             </button>
             <button
+              *ngIf="selectedTab === 'assessment'"
               id="interview-invite-button"
               type="button"
               class="recruiter-view-job-applications1-interview-invite-button button"
-              (click)="sendInvite('interview')"
+              (click)="sendInvite()"
             >
               Interview Invite
             </button>
@@ -435,7 +448,8 @@
                   type="checkbox"
                   id="checkbox-icon"
                   class="recruiter-view-job-applications1-checkbox-icon"
-                  [checked]="masterChecked" (change)="toggleAll($event.target.checked)"
+                  [checked]="masterChecked" 
+                  (change)="toggleAll($event.target.checked)"
                 />
               </div>
               <div
@@ -496,8 +510,8 @@
                   <input
                     type="checkbox"
                     id="check-box"
-                    [checked]="candidate.status === 'selected'"
-                    (change)="updateCandidateStatus(candidate.application_id, $event.target.checked ? 'selected' : 'applied')"
+                    [checked]="candidate.isSelected"
+                    (change)="onCheckboxChange(candidate, $event.target.checked)"
                     class="recruiter-view-job-applications1-check-box"
                   />
                 </div>
@@ -577,7 +591,7 @@
                     id="candidate-work-status-text"
                     class="recruiter-view-job-applications1-candidate-work-status-text"
                   >
-                    {{ candidate.status | titlecase }}
+                    {{ candidate.status.replace('_', ' ') | titlecase }}
                   </span>
                 </div>
               </div>
