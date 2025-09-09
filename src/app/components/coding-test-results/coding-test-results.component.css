@@ -122,3 +122,68 @@
     background: #0256cc;
     border-color: #0256cc;
 }
+
+.results-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.results-container.minimized {
+  height: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.results-content {
+  margin-top: 10px;
+}
+
+.empty-results {
+  color: #888;
+}
+
+.test-case {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.test-case.passed {
+  color: green;
+}
+
+.test-case.failed {
+  color: red;
+}
+
+.test-case.language-mismatch {
+  color: #ff8c00; /* Orange for language mismatch */
+  font-weight: bold;
+}
+
+.status-icon {
+  margin-right: 10px;
+}
+
+.status-icon.passed {
+  color: green;
+}
+
+.status-icon.failed {
+  color: red;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}

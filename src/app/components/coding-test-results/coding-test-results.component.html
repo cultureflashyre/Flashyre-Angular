@@ -1,13 +1,14 @@
-<div class="results-container" [ngClass]="{ minimized: isMinimized }">
+<div class="results-container" [ngClass]="{ minimized: isMinimized }" *ngIf="isVisible">
     <div class="header">
         <div class="results-title">Test Results</div>
         <button class="btn" (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
+        <button class="btn" (click)="toggleVisibility()">Hide</button>
     </div>
     <div *ngIf="!isMinimized" class="results-content">
         <div *ngIf="results.length === 0" class="empty-results">
             No results available. Run your code to see test case results.
         </div>
-        <div *ngFor="let result of results">
+        <div *ngFor="let result of results; let i = index">
             <div *ngIf="result.includes('Accepted')" class="test-case passed">
                 <div class="status-icon passed">✓</div>
                 <div>{{ result }}</div>
@@ -16,8 +17,17 @@
                 <div class="status-icon failed">✗</div>
                 <div>{{ result }}</div>
             </div>
-            <div *ngIf="result.includes('Judge0 API Error') || result.includes('Network Error')" class="error-message">
-                {{ result }}
+            <div *ngIf="result.includes('Language Mismatch')" class="test-case language-mismatch">
+                <div class="status-icon failed">⚠</div>
+                <div>{{ result }}</div>
+            </div>
+            <div *ngIf="result.includes('Judge0 API Error') || result.includes('Network Error') || result.includes('Submission Failed') || result.includes('User does not exist') || result.includes('endpoint not found')" class="error-message">
+                <div class="status-icon failed">⚠</div>
+                <div>{{ result }}</div>
+            </div>
+            <div *ngIf="!result.includes('Accepted') && !result.includes('Wrong Answer') && !result.includes('Compilation Error') && !result.includes('Runtime Error') && !result.includes('Time Limit Exceeded') && !result.includes('Language Mismatch') && !result.includes('Judge0 API Error') && !result.includes('Network Error') && !result.includes('Submission Failed') && !result.includes('User does not exist') && !result.includes('endpoint not found')" class="error-message">
+                <div class="status-icon failed">⚠</div>
+                <div>{{ result }}</div>
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@ export class CodingAssessmentService {
     return this.http.get(`${this.apiUrl}/problems/${problemId}`);
   }
 
-  submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
+  submitCode(data: { problem_id: number, source_code: string, language_id: number, user_id: number }): Observable<any> {
     return this.http.post(`${this.apiUrl}/submissions`, data);
   }
 }
