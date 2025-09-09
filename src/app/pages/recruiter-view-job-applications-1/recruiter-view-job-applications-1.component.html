@@ -307,12 +307,12 @@
                   </g>
                 </svg>
               </div>
-              <span
-                id="job-title-keyword-text"
+              <input 
+                type="text" 
+                [(ngModel)]="searchJobTitle" 
+                placeholder="Job title, Keyword..." 
                 class="recruiter-view-job-applications1-job-title-keyword-text"
-              >
-                Job tittle, Keyword...
-              </span>
+              />
             </div>
             <div
               id="location-container"
@@ -343,12 +343,13 @@
                   </g>
                 </svg>
               </div>
-              <span
-                id="location-text"
+              <input 
+                type="text" 
+                [(ngModel)]="searchLocation" 
+                placeholder="Location" 
                 class="recruiter-view-job-applications1-location-text"
-              >
-                Location
-              </span>
+                disabled
+              />
             </div>
             <div
               id="experience-container"
@@ -368,12 +369,13 @@
                   ></path>
                 </svg>
               </div>
-              <span
-                id="experience-text"
+              <input 
+                type="text" 
+                [(ngModel)]="searchExperience" 
+                placeholder="Experience" 
                 class="recruiter-view-job-applications1-experience-text"
-              >
-                Experience
-              </span>
+                disabled
+              />
             </div>
             <div
               id="filter-icon-container"
@@ -396,6 +398,7 @@
               id="search-button"
               type="button"
               class="recruiter-view-job-applications1-search-button button"
+              (click)="onSearchClick()"
             >
               Search
             </button>
@@ -455,12 +458,14 @@
               <div
                 id="name-container"
                 class="recruiter-view-job-applications1-name-container"
+                (click)="sortData('name')" style="cursor: pointer;"
               >
                 <span
                   id="name-text"
                   class="recruiter-view-job-applications1-name-text"
                 >
                   Name
+                  <span *ngIf="sortColumn === 'name'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
               <div
@@ -477,20 +482,24 @@
               <div
                 id="job-matching-score-container"
                 class="recruiter-view-job-applications1-job-matching-score-container"
+                (click)="sortData('score')" style="cursor: pointer;"
               >
                 <span
                   id="job-matching-score-text"
                   class="recruiter-view-job-applications1-job-matching-score-text"
                 >
                   Job matching Score
+                  <span *ngIf="sortColumn === 'score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
               <div
                 id="status-container"
                 class="recruiter-view-job-applications1-status-container"
+                (click)="sortData('status')" style="cursor: pointer;"
               >
                 <span class="recruiter-view-job-applications1-text36">
                   Status
+                  <span *ngIf="sortColumn === 'status'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
             </div>

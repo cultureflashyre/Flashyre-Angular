@@ -12,6 +12,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
   job: any = null;
   candidates: any[] = [];
   allCandidates: any[] = [];
+  filteredAndSortedCandidates: any[] = [];
   moreCandidatesCount: number = 0;
   selectedTab: string = 'applied';
   masterChecked: boolean = false;
@@ -21,6 +22,13 @@ export class RecruiterViewJobApplications1 implements OnInit {
   screeningCount: number = 0;
   assessmentCount: number = 0;
   interviewCount: number = 0;
+
+  sortColumn: string = 'name';
+  sortDirection: string = 'asc';
+
+  searchJobTitle: string = '';
+  searchLocation: string = '';
+  searchExperience: string = '';
 
   constructor(
     private title: Title,
@@ -61,7 +69,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
             this.assessmentCount = data.assessment_count;
             this.interviewCount = data.interview_count;
             
-            this.changeTab(this.selectedTab);
+            this.applyFiltersAndSorting();
             this.masterChecked = false;
           },
           (error) => {
@@ -74,27 +82,73 @@ export class RecruiterViewJobApplications1 implements OnInit {
   changeTab(tab: string) {
     this.selectedTab = tab;
     this.masterChecked = false;
-    let statusFilter: string;
+    this.applyFiltersAndSorting();
+  }
 
-    switch (tab) {
-        case 'screening':
-            statusFilter = 'Screening';
-            break;
-        case 'assessment':
-            statusFilter = 'Assessment';
-            break;
-        case 'interview':
-            statusFilter = 'Interview';
-            break;
-        default:
-            statusFilter = 'applied';
-            break;
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.applyFiltersAndSorting();
+  }
+
+  onSearchClick() {
+    this.applyFiltersAndSorting();
+  }
+
+  applyFiltersAndSorting() {
+    let results = [...this.allCandidates];
+
+    // 1. Apply Search Filters
+    if (this.searchJobTitle.trim()) {
+      const searchTerm = this.searchJobTitle.toLowerCase().trim();
+      results = results.filter(candidate =>
+        candidate.designation && candidate.designation.toLowerCase().includes(searchTerm)
+      );
     }
 
-    const filtered = this.allCandidates.filter(candidate => candidate.status === statusFilter);
-    
-    this.candidates = filtered.slice(0, 5);
-    this.moreCandidatesCount = filtered.length - this.candidates.length;
+    // 2. Filter based on the selected tab
+    let tabFilteredResults = results;
+    if (this.selectedTab !== 'applied') {
+        let statusFilter: string;
+        switch (this.selectedTab) {
+            case 'screening': statusFilter = 'Screening'; break;
+            case 'assessment': statusFilter = 'Assessment'; break;
+            case 'interview': statusFilter = 'Interview'; break;
+        }
+        tabFilteredResults = results.filter(c => c.status === statusFilter);
+    }
+
+    // 3. Sort the filtered list
+    tabFilteredResults.sort((a, b) => {
+      const isAsc = this.sortDirection === 'asc';
+      let comparison = 0;
+
+      switch (this.sortColumn) {
+        case 'name':
+          comparison = a.user.full_name.localeCompare(b.user.full_name);
+          break;
+        case 'score':
+          comparison = a.matching_score - b.matching_score;
+          break;
+        case 'status':
+          const statusOrder = { 'applied': 1, 'Screening': 2, 'Assessment': 3, 'Interview': 4 };
+          const orderA = statusOrder[a.status] || 99;
+          const orderB = statusOrder[b.status] || 99;
+          comparison = orderA - orderB;
+          break;
+      }
+      return comparison * (isAsc ? 1 : -1);
+    });
+
+    this.filteredAndSortedCandidates = tabFilteredResults;
+
+    // 4. Apply pagination
+    this.candidates = this.filteredAndSortedCandidates.slice(0, 5);
+    this.moreCandidatesCount = this.filteredAndSortedCandidates.length - this.candidates.length;
   }
 
   toggleAll(checked: boolean) {
@@ -116,23 +170,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
   }
 
   loadMoreCandidates() {
-    let statusFilter: string;
-    switch (this.selectedTab) {
-        case 'screening':
-            statusFilter = 'Screening';
-            break;
-        case 'assessment':
-            statusFilter = 'Assessment';
-            break;
-        case 'interview':
-            statusFilter = 'Interview';
-            break;
-        default:
-            statusFilter = 'applied';
-            break;
-    }
-    const filtered = this.allCandidates.filter(candidate => candidate.status === statusFilter);
-    this.candidates = filtered;
+    this.candidates = this.filteredAndSortedCandidates;
     this.moreCandidatesCount = 0;
   }
 
@@ -169,32 +207,24 @@ export class RecruiterViewJobApplications1 implements OnInit {
       })
       .subscribe(
         (response: any) => {
-          // Update tab counts
           this.appliedCount = response.applied_count;
           this.screeningCount = response.screening_count;
           this.assessmentCount = response.assessment_count;
           this.interviewCount = response.interview_count;
 
-          // Update candidate statuses in allCandidates
           selectedCandidates.forEach(candidate => {
-            candidate.status = {
-              'screening': 'Screening',
-              'assessment': 'Assessment',
-              'interview': 'Interview'
-            }[inviteType];
-            candidate.isSelected = false; // Reset checkbox
+            const found = this.allCandidates.find(c => c.application_id === candidate.application_id);
+            if (found) {
+                found.status = {
+                  'screening': 'Screening',
+                  'assessment': 'Assessment',
+                  'interview': 'Interview'
+                }[inviteType];
+                found.isSelected = false;
+            }
           });
 
-          // Switch to the next tab
-          const nextTab = {
-            'applied': 'screening',
-            'screening': 'assessment',
-            'assessment': 'interview'
-          }[this.selectedTab];
-          if (nextTab) {
-            this.changeTab(nextTab);
-          }
-
+          this.applyFiltersAndSorting();
           this.masterChecked = false;
           alert(`${inviteType.charAt(0).toUpperCase() + inviteType.slice(1)} invites sent successfully.`);
         },

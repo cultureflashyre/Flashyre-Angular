@@ -177,12 +177,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-job-title-input"
                         class="candidate-home-job-title-text1"
-                      >
-                        Job tittle, Keyword...
-                      </span>
+                        placeholder="Job title, Keyword..."
+                        [(ngModel)]="searchJobTitle"
+                      />
                     </div>
                     <div
                       id="location-container"
@@ -204,12 +205,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-location-input"
                         class="candidate-home-your-location-text1"
-                      >
-                        Your Location
-                      </span>
+                        placeholder="Your Location"
+                        [(ngModel)]="searchLocation"
+                      />
                     </div>
                     <div
                       id="experience-search-container"
@@ -226,12 +228,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-experience-input"
                         class="candidate-home-experience-text1"
-                      >
-                        Experience
-                      </span>
+                        placeholder="Experience"
+                        [(ngModel)]="searchExperience"
+                      />
                     </div>
                   </div>
                 </nav>
@@ -257,6 +260,7 @@
                     id="search-button"
                     type="button"
                     class="candidate-home-search-button1 button"
+                    (click)="onSearch()"
                   >
                     <span id="search-text" class="candidate-home-search-text1">
                       Search
@@ -534,7 +538,7 @@
                 <p>Loading more jobs...</p>
               </div>
               <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
-                <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
+                <p style="color: #666; font-size: 14px;">"No results found. Try broadening your search criteria"</p>
               </div>
             </div>
             

@@ -528,9 +528,10 @@
 }
  
 .recruiter-view-job-applications1-location-text {
-  fill: #747474;
+  /* fill: #747474; */
   color: #747474;
-  width: 66px;
+  background-color: #FFFFFF;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
@@ -568,9 +569,10 @@
 }
  
 .recruiter-view-job-applications1-experience-text {
-  fill: #747474;
+  /* fill: #747474; */
   color: #747474;
-  width: 84px;
+  background-color: #FFFFFF;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;

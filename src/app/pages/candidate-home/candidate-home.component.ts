@@ -18,9 +18,15 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   
   // Job related properties
-  jobs: any[] = [];
-  displayedJobs: any[] = [];
+  jobs: any[] = []; // Master list of jobs
+  filteredJobs: any[] = []; // Jobs after search filters are applied
+  displayedJobs: any[] = []; // Paginated jobs for the view
   appliedJobIds: number[] = [];
+  
+  // Search model properties
+  searchJobTitle: string = '';
+  searchLocation: string = '';
+  searchExperience: string = '';
   
   // Pagination properties
   private currentPage = 0;
@@ -48,14 +54,12 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     'src/assets/temp-jobs-icon/8.png'
   ];
 
-  // NOTE: This apiUrl is no longer used for fetching jobs directly in this component,
-  // which was the source of the error. All calls now go through services.
   private apiUrl = environment.apiUrl + 'api/jobs/';
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private http: HttpClient, // Kept for other potential uses, though not for the job fetch here.
+    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
     private jobService: JobsService
@@ -73,7 +77,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // Initialize intersection observer after view is ready
     setTimeout(() => {
       this.setupInfiniteScroll();
     }, 100);
@@ -88,43 +91,76 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Initialize jobs - check cache first, then fetch if needed
+   * Method called when the search button is clicked
    */
+  onSearch(): void {
+    let tempJobs = [...this.jobs];
+
+    // Filter by Job Title / Keyword from the main search bar
+    if (this.searchJobTitle.trim()) {
+      const searchTerm = this.searchJobTitle.toLowerCase().trim();
+      tempJobs = tempJobs.filter(job => {
+        // Check multiple fields for the search term
+        return (job.title && job.title.toLowerCase().includes(searchTerm)) ||
+               (job.company_name && job.company_name.toLowerCase().includes(searchTerm)) ||
+               (job.location && job.location.toLowerCase().includes(searchTerm)) ||
+               (job.job_type && job.job_type.toLowerCase().includes(searchTerm)) ||
+               (job.description && job.description.toLowerCase().includes(searchTerm));
+      });
+    }
+
+    // Filter by Location
+    if (this.searchLocation.trim()) {
+      const searchTerm = this.searchLocation.toLowerCase().trim();
+      tempJobs = tempJobs.filter(job => 
+        job.location && job.location.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Filter by Experience
+    if (this.searchExperience.trim()) {
+      const searchExp = parseInt(this.searchExperience, 10);
+      if (!isNaN(searchExp)) {
+        tempJobs = tempJobs.filter(job => 
+          job.experience_required != null && job.experience_required >= searchExp
+        );
+      }
+    }
+
+    this.filteredJobs = tempJobs;
+    
+    // Reset pagination and display results
+    this.currentPage = 0;
+    this.displayedJobs = [];
+    this.loadNextPage();
+    this.setupInfiniteScroll();
+  }
+
   private initializeJobs(): void {
     this.isLoading = true;
     
     if (this.jobService.areJobsCached()) {
-      console.log('Loading jobs from cache...');
       this.loadJobsFromCache();
     } else {
-      console.log('Fetching jobs from API...');
       this.fetchJobsFromAPI();
     }
   }
 
-  /**
-   * Load jobs from cache
-   */
   private loadJobsFromCache(): void {
     this.jobService.getJobs()
       .pipe(takeUntil(this.destroy$))
       .subscribe(jobs => {
         if (jobs.length > 0) {
-          // Pass the cached jobs to be filtered
           this.filterAndDisplayJobs(jobs);
         }
       });
   }
 
-  /**
-   * Fetch jobs from API
-   */
   private fetchJobsFromAPI(): void {
     this.jobService.fetchJobs()
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         jobs => {
-          // Pass the newly fetched jobs to be filtered
           this.filterAndDisplayJobs(jobs);
         },
         error => {
@@ -134,36 +170,23 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  /**
-   * =================================================================
-   * REFACTORED AND CORRECTED FUNCTION
-   * =================================================================
-   * This function no longer makes a redundant API call to fetch jobs.
-   * It now uses the `jobs` array passed to it (which was already fetched securely)
-   * and only fetches the list of applied job IDs to perform the filtering.
-   */
   private filterAndDisplayJobs(jobs: any[]): void {
-    // 1. Only fetch the list of applied jobs. This request is authenticated by the HttpInterceptor.
     this.authService.getAppliedJobs().subscribe(
       (appliedJobsResponse) => {
-        // 2. Get the array of applied job IDs from the response.
         this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
-
-        // 3. Filter the *existing* jobs array to exclude those the user has already applied to.
         this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+        this.filteredJobs = [...this.jobs]; // Initialize filtered list
         
-        // 4. Reset pagination and load the first page of the filtered jobs.
         this.currentPage = 0;
         this.displayedJobs = [];
         this.loadNextPage();
         this.isLoading = false;
       },
       (error) => {
-        // This error handler is for the getAppliedJobs call.
         console.error('Error fetching applied jobs, proceeding without filtering:', error);
-
-        // Fallback: If we can't get the applied jobs list, show all jobs.
         this.jobs = jobs;
+        this.filteredJobs = [...this.jobs]; // Initialize filtered list
+        
         this.currentPage = 0;
         this.displayedJobs = [];
         this.loadNextPage();
@@ -172,12 +195,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-
-  /**
-   * Load the next page of jobs
-   */
   private loadNextPage(): void {
-    if (this.isLoadingMore || this.displayedJobs.length >= this.jobs.length) {
+    // Logic now works on the filteredJobs array
+    if (this.isLoadingMore || this.displayedJobs.length >= this.filteredJobs.length) {
       return;
     }
 
@@ -185,12 +205,11 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     
     const startIndex = this.currentPage * this.jobsPerPage;
     const endIndex = startIndex + this.jobsPerPage;
-    const nextJobs = this.jobs.slice(startIndex, endIndex);
+    const nextJobs = this.filteredJobs.slice(startIndex, endIndex);
     
     if (nextJobs.length > 0) {
       this.displayedJobs = [...this.displayedJobs, ...nextJobs];
       this.currentPage++;
-      console.log(`Loaded page ${this.currentPage}, showing ${this.displayedJobs.length} of ${this.jobs.length} jobs`);
     }
     
     this.isLoadingMore = false;
@@ -200,24 +219,17 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }, 100);
   }
 
-  /** 
-   * Setup infinite scroll using Intersection Observer
-   */
   private setupInfiniteScroll(): void {
     if (this.observer) {
       this.observer.disconnect();
     }
 
     const loadMoreElement = document.getElementById('load-more');
-    if (!loadMoreElement || this.displayedJobs.length >= this.jobs.length) {
+    if (!loadMoreElement || !this.hasMoreJobs) {
       return;
     }
 
-    const options = {
-      root: null,
-      rootMargin: '100px',
-      threshold: 0.1
-    };
+    const options = { root: null, rootMargin: '100px', threshold: 0.1 };
 
     this.observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !this.isLoadingMore) {
@@ -228,16 +240,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.observer.observe(loadMoreElement);
   }
 
-  loadMoreJobs(): void {
-    this.loadNextPage();
-  }
-
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
-    } else {
-      console.log("User Profile NOT fetched");
     }
   }
 
