@@ -1,19 +1,19 @@
-<div id="signup-page" class="signup-candidate1-container" [ngClass]="rootClassName">
-  <div id="signup-container" class="signup-candidate1-signup-container">
-    <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">
+<div id="signup-page" class="signup-admin1-container" [ngClass]="rootClassName">
+  <div id="signup-container" class="signup-admin1-signup-container">
+    <h2 id="heading" class="signup-admin1-welcome-to-flashyre">
       <span>Welcome to Flashyre</span>
     </h2>
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-      <div id="details" class="signup-candidate1-details-container">
+      <div id="details" class="signup-admin1-details-container">
         <!-- First Name -->
-        <div id="first-name-container" class="signup-candidate1-first-name-container">
-          <span class="signup-candidate1-first-name-text">First Name</span>
+        <div id="first-name-container" class="signup-admin1-first-name-container">
+          <span class="signup-admin1-first-name-text">First Name</span>
           <input
             type="text"
             id="signup-first-name-input"
             placeholder="Enter First Name"
             formControlName="first_name"
-            class="signup-candidate1-first-name-input input"
+            class="signup-admin1-first-name-input input"
           />
           <div *ngIf="signupForm.get('first_name').invalid && signupForm.get('first_name').touched" class="error-text">
             <span *ngIf="signupForm.get('first_name').errors?.required">First name is required.</span>
@@ -24,14 +24,14 @@
         </div>
 
         <!-- Last Name -->
-        <div id="last-name-container" class="signup-candidate1-last-name-container1">
-          <span class="signup-candidate1-last-name-text1">Last Name</span>
+        <div id="last-name-container" class="signup-admin1-last-name-container1">
+          <span class="signup-admin1-last-name-text1">Last Name</span>
           <input
             type="text"
             id="signup-last-name-input"
             placeholder="Enter Last Name"
             formControlName="last_name"
-            class="signup-candidate1-last-name-input1 input"
+            class="signup-admin1-last-name-input1 input"
           />
           <div *ngIf="signupForm.get('last_name').invalid && signupForm.get('last_name').touched" class="error-text">
             <span *ngIf="signupForm.get('last_name').errors?.required">Last name is required.</span>
@@ -42,14 +42,14 @@
         </div>
 
         <!-- Phone Number -->
-        <div id="phone-container" class="signup-candidate1-last-name-container2">
-          <span class="signup-candidate1-last-name-text2">Phone Number</span>
+        <div id="phone-container" class="signup-admin1-last-name-container2">
+          <span class="signup-admin1-last-name-text2">Phone Number</span>
           <input
             type="text"
             id="signup-phone-number-input"
             placeholder="Enter Phone Number"
             formControlName="phone_number"
-            class="signup-candidate1-last-name-input2 input"
+            class="signup-admin1-last-name-input2 input"
             maxlength="10"
             (input)="sanitizePhoneNumber($event)"
           />
@@ -63,14 +63,14 @@
         </div>
 
         <!-- Email -->
-        <div id="email-container" class="signup-candidate1-email-container">
-          <span class="signup-candidate1-email-text">Email Id</span>
+        <div id="email-container" class="signup-admin1-email-container">
+          <span class="signup-admin1-email-text">Email Id</span>
           <input
             type="email"
             id="signup-email-input"
             placeholder="Enter Email Id"
             formControlName="email"
-            class="signup-candidate1-email-input input"
+            class="signup-admin1-email-input input"
           />
           <div *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched" class="error-text">
             <span *ngIf="signupForm.get('email').errors?.required">Email is required.</span>
@@ -82,11 +82,11 @@
         </div>
 
         <!-- Password -->
-        <div id="password-container" class="signup-candidate1-password-container1">
-          <div class="signup-candidate1-password1">
-            <span class="signup-candidate1-password-text1">Password</span>
+        <div id="password-container" class="signup-admin1-password-container1">
+          <div class="signup-admin1-password1">
+            <span class="signup-admin1-password-text1">Password</span>
             <span
-              class="signup-candidate1-show-text1 button"
+              class="signup-admin1-show-text1 button"
               (click)="togglePasswordVisibility()"
             >
               {{ passwordType === 'password' ? 'Show' : 'Hide' }}
@@ -96,7 +96,7 @@
               id="signup-password-input"
               placeholder="Enter Password"
               formControlName="password"
-              class="signup-candidate1-password-input1 input"
+              class="signup-admin1-password-input1 input"
             />
             
           </div>
@@ -113,11 +113,11 @@
         </div>
 
         <!-- Confirm Password -->
-        <div id="password-container" class="signup-candidate1-password-container2">
-          <div class="signup-candidate1-password2">
-            <span class="signup-candidate1-password-text2">Confirm Password</span>
+        <div id="password-container" class="signup-admin1-password-container2">
+          <div class="signup-admin1-password2">
+            <span class="signup-admin1-password-text2">Confirm Password</span>
             <span
-              class="signup-candidate1-show-text2 button"
+              class="signup-admin1-show-text2 button"
               (click)="toggleConfirmPasswordVisibility()"
             >
               {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
@@ -127,7 +127,7 @@
               id="signup-confirm-password-input"
               placeholder="Confirm Password"
               formControlName="confirm_password"
-              class="signup-candidate1-password-input2 input"
+              class="signup-admin1-password-input2 input"
             />
             
           </div>
@@ -137,30 +137,30 @@
         </div>
 
         <!-- Signup Button and Error Message -->
-        <div class="signup-candidate1-signup-and-signin-container">
+        <div class="signup-admin1-signup-and-signin-container">
           <button
             id="signup-button"
             type="submit"
             [disabled]="signupForm.invalid"
-            class="signup-candidate1-signup-button button"
+            class="signup-admin1-signup-button button"
           >
             Sign Up
           </button>
-          <div *ngIf="errorMessage" class="signup-candidate1-error-signup-container">
-            <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
+          <div *ngIf="errorMessage" class="signup-admin1-error-signup-container">
+            <span class="signup-admin1-error-message-signup">{{ errorMessage }}</span>
           </div>
 
           <!-- Add this after the error message div -->
-          <div *ngIf="successMessage" class="signup-candidate1-success-signup-container">
-          <span class="signup-candidate1-success-message-signup">{{ successMessage }}</span>
+          <div *ngIf="successMessage" class="signup-admin1-success-signup-container">
+          <span class="signup-admin1-success-message-signup">{{ successMessage }}</span>
           </div>
 
           <!-- Sign In Link -->
-          <div class="signup-candidate1-signin-container">
-            <span class="signup-candidate1-already-have-an-account-text">
+          <div class="signup-admin1-signin-container">
+            <span class="signup-admin1-already-have-an-account-text">
               Already have an account?
             </span>
-            <span class="signup-candidate1-signin-text button" routerLink="/login-admin">
+            <span class="signup-admin1-signin-text button" routerLink="/login-admin">
               Sign In
             </span>
           </div>

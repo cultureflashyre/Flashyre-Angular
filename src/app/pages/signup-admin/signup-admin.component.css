@@ -2,7 +2,7 @@
   display: contents; 
 }
  
-.signup-candidate-container {
+.signup-admin-container {
   width: 100%;
   display: flex;
   min-height: 100vh;
@@ -10,7 +10,7 @@
   flex-direction: column;
 }
  
-.signup-candidate-main-container {
+.signup-admin-main-container {
   flex: 0 0 auto;
   width: 100%;
   display: flex;
@@ -19,120 +19,120 @@
   justify-content: flex-start;
 }
  
-.signup-candidate-fragment10 {
+.signup-admin-fragment10 {
   display: contents;
 }
  
-.signup-candidate-text10 {
+.signup-admin-text10 {
   display: inline-block;
 }
  
-.signup-candidate-fragment11 {
+.signup-admin-fragment11 {
   display: contents;
 }
  
-.signup-candidate-text11 {
+.signup-admin-text11 {
   display: inline-block;
 }
  
-.signup-candidate-fragment12 {
+.signup-admin-fragment12 {
   display: contents;
 }
  
-.signup-candidate-text12 {
+.signup-admin-text12 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
  
-.signup-candidate-fragment13 {
+.signup-admin-fragment13 {
   display: contents;
 }
  
-.signup-candidate-text13 {
+.signup-admin-text13 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 500;
 }
  
-.signup-candidate-fragment14 {
+.signup-admin-fragment14 {
   display: contents;
 }
  
-.signup-candidate-text14 {
+.signup-admin-text14 {
   display: inline-block;
 }
  
-.signup-candidate-fragment15 {
+.signup-admin-fragment15 {
   display: contents;
 }
  
-.signup-candidate-text15 {
+.signup-admin-text15 {
   display: inline-block;
 }
  
-.signup-candidate-fragment16 {
+.signup-admin-fragment16 {
   display: contents;
 }
  
-.signup-candidate-text16 {
+.signup-admin-text16 {
   display: inline-block;
 }
  
-.signup-candidate-fragment17 {
+.signup-admin-fragment17 {
   display: contents;
 }
  
-.signup-candidate-text17 {
+.signup-admin-text17 {
   display: inline-block;
 }
  
-.signup-candidate-fragment18 {
+.signup-admin-fragment18 {
   display: contents;
 }
  
-.signup-candidate-text18 {
+.signup-admin-text18 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
  
-.signup-candidate-fragment19 {
+.signup-admin-fragment19 {
   display: contents;
 }
  
-.signup-candidate-text19 {
+.signup-admin-text19 {
   color: #ffffff;
   display: inline-block;
   background-color: rgb(246, 94, 92);
 }
  
-.signup-candidate-fragment20 {
+.signup-admin-fragment20 {
   display: contents;
 }
  
-.signup-candidate-text20 {
+.signup-admin-text20 {
   color: #18191c;
   display: inline-block;
 }
  
-.signup-candidate-fragment21 {
+.signup-admin-fragment21 {
   display: contents;
 }
  
-.signup-candidate-text21 {
+.signup-admin-text21 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
  
-.signup-candidate-fragment22 {
+.signup-admin-fragment22 {
   display: contents;
 }
  
-.signup-candidate-text22 {
+.signup-admin-text22 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }

@@ -2,7 +2,7 @@
   display: contents; 
 }
  
-.signup-candidate1-container {
+.signup-admin1-container {
   width: 100%;
   height: auto;
   display: flex;
@@ -13,20 +13,19 @@
   flex-direction: column;
   padding-bottom: 20px;
   justify-content: center;
-  background-color: red; /* Change this to your desired color */
 }
 
-.signup-candidate1-success-signup-container {
+.signup-admin1-success-signup-container {
   margin-top: 10px;
   text-align: center;
 }
 
-.signup-candidate1-success-message-signup {
+.signup-admin1-success-message-signup {
   color: #28a745;
   font-weight: bold;
 }
  
-.signup-candidate1-signup-container {
+.signup-admin1-signup-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 368px;
@@ -37,9 +36,10 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;
+  padding-top: 10 0px;
 }
  
-.signup-candidate1-welcome-to-flashyre {
+.signup-admin1-welcome-to-flashyre {
   width: 211px;
   height: 24px;
   display: flex;
@@ -50,7 +50,7 @@
   justify-content: center;
 }
  
-.signup-candidate1-details-container {
+.signup-admin1-details-container {
   gap: var(--dl-space-space-oneandhalfunits);
   flex: 0 0 auto;
   width: 368px;
@@ -63,7 +63,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-first-name-container {
+.signup-admin1-first-name-container {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -72,7 +72,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-first-name-text {
+.signup-admin1-first-name-text {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -84,7 +84,7 @@
   font-family: "Inter";
 }
  
-.signup-candidate1-first-name-input {
+.signup-admin1-first-name-input {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -93,7 +93,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-last-name-container1 {
+.signup-admin1-last-name-container1 {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -102,7 +102,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-last-name-text1 {
+.signup-admin1-last-name-text1 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -114,7 +114,7 @@
   font-family: "Inter";
 }
  
-.signup-candidate1-last-name-input1 {
+.signup-admin1-last-name-input1 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -123,7 +123,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-last-name-container2 {
+.signup-admin1-last-name-container2 {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -132,7 +132,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-last-name-text2 {
+.signup-admin1-last-name-text2 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -144,7 +144,7 @@
   font-family: "Inter";
 }
  
-.signup-candidate1-last-name-input2 {
+.signup-admin1-last-name-input2 {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -153,7 +153,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-email-container {
+.signup-admin1-email-container {
   flex: 0 0 auto;
   width: 320px;
   height: auto;
@@ -162,7 +162,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-email-text {
+.signup-admin1-email-text {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -174,7 +174,7 @@
   font-family: "Inter";
 }
  
-.signup-candidate1-email-input {
+.signup-admin1-email-input {
   fill: #18191C;
   color: #18191C;
   width: 320px;
@@ -183,7 +183,7 @@
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-password-container1 {
+.signup-admin1-password-container1 {
   flex: 0 0 auto;
   width: 324px;
   height: auto;
@@ -192,7 +192,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-password1 {
+.signup-admin1-password1 {
   flex: 0 0 auto;
   width: 320px;
   height: 76PX;
@@ -202,14 +202,14 @@
   flex-direction: column;
 }
  
-.signup-candidate1-password-text1 {
+.signup-admin1-password-text1 {
   width: 320px;
   height: 24px;
   display: flex;
   align-items: center;
 }
  
-.signup-candidate1-show-text1 {
+.signup-admin1-show-text1 {
   right: var(--dl-space-space-halfunit);
   width: 44px;
   bottom: var(--dl-space-space-unit);
@@ -228,27 +228,27 @@
   font-weight: 600;
 }
  
-.signup-candidate1-show-text1:hover {
+.signup-admin1-show-text1:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
  
-.signup-candidate1-show-text1:active {
+.signup-admin1-show-text1:active {
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
  
-.signup-candidate1-password-input1 {
+.signup-admin1-password-input1 {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-password-container2 {
+.signup-admin1-password-container2 {
   flex: 0 0 auto;
   width: 324px;
   height: 76px;
@@ -257,7 +257,7 @@
   flex-direction: column;
 }
  
-.signup-candidate1-password2 {
+.signup-admin1-password2 {
   flex: 0 0 auto;
   width: 320px;
   height: 76px;
@@ -267,14 +267,14 @@
   flex-direction: column;
 }
  
-.signup-candidate1-password-text2 {
+.signup-admin1-password-text2 {
   width: 320px;
   height: 24px;
   display: flex;
   align-items: center;
 }
  
-.signup-candidate1-show-text2 {
+.signup-admin1-show-text2 {
   right: var(--dl-space-space-halfunit);
   width: 44px;
   bottom: var(--dl-space-space-unit);
@@ -293,27 +293,27 @@
   color: rgb(5, 53, 108);
 }
  
-.signup-candidate1-show-text2:hover {
+.signup-admin1-show-text2:hover {
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
  
-.signup-candidate1-show-text2:active {
+.signup-admin1-show-text2:active {
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
  
-.signup-candidate1-password-input2 {
+.signup-admin1-password-input2 {
   width: 320px;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;
 }
  
-.signup-candidate1-signup-and-signin-container {
+.signup-admin1-signup-and-signin-container {
   flex: 0 0 auto;
   width: 100%;
   height: auto;
@@ -323,7 +323,7 @@
   font-weight: 600;
 }
  
-.signup-candidate1-signup-button {
+.signup-admin1-signup-button {
   gap: 4px;
   width: 320px;
   height: 48px;
@@ -339,27 +339,27 @@
   font-weight: 600;
 }
  
-.signup-candidate1-signup-button:hover {
+.signup-admin1-signup-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: all 0.8s;
   background-color: 0A4992;
 }
  
-.signup-candidate1-signup-button:active {
+.signup-admin1-signup-button:active {
   transform: scale(0.90);
   border-width: 0px;
   background-color: 022954;
 }
  
-.signup-candidate1-signup-text {
+.signup-admin1-signup-text {
   fill: #FFFFFF;
   color: #FFFFFF;
   width: 53px;
   height: 24px;
 }
  
-.signup-candidate1-error-signup-container {
+.signup-admin1-error-signup-container {
   flex: 0 0 auto;
   width: auto;
   height: auto;
@@ -368,7 +368,7 @@
   align-items: flex-start;
 }
  
-.signup-candidate1-error-message-signup {
+.signup-admin1-error-message-signup {
   fill: #FFFFFF;
   color: #FFFFFF;
   font-style: normal;
@@ -378,7 +378,7 @@
   background-color: #F65E5C;
 }
  
-.signup-candidate1-signin-container {
+.signup-admin1-signin-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
   display: flex;
@@ -393,13 +393,13 @@
 }
 
  
-.signup-candidate1-already-have-an-account-text {
+.signup-admin1-already-have-an-account-text {
   display: flex;
   align-self: center;
   align-items: center;
 }
  
-.signup-candidate1-signin-text {
+.signup-admin1-signin-text {
   display: flex;
   transition: 0.3s;
   align-items: center;
@@ -409,139 +409,139 @@
   color: #05356C;
 }
  
-.signup-candidate1-signin-text:hover {
+.signup-admin1-signin-text:hover {
   color: FFFFFF;
   cursor: pointer;
   transform: scale(0.90);
   transition: all 0.7s;
 }
  
-.signup-candidate1-signin-text:active {
+.signup-admin1-signin-text:active {
   color: FFFFFF;
   transform: scale(1.05);
   transition: all 0.7s;
   background-color: #D7DFE7;
 }
  
-.signup-candidate1-fragment10 {
+.signup-admin1-fragment10 {
   display: contents;
 }
  
-.signup-candidate1-text10 {
+.signup-admin1-text10 {
   color: #ffffff;
   display: inline-block;
   background-color: rgb(246, 94, 92);
 }
  
-.signup-candidate1-fragment11 {
+.signup-admin1-fragment11 {
   display: contents;
 }
  
-.signup-candidate1-text11 {
+.signup-admin1-text11 {
   display: inline-block;
 }
  
-.signup-candidate1-fragment12 {
+.signup-admin1-fragment12 {
   display: contents;
 }
  
-.signup-candidate1-text12 {
+.signup-admin1-text12 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
  
-.signup-candidate1-fragment13 {
+.signup-admin1-fragment13 {
   display: contents;
 }
  
-.signup-candidate1-text13 {
+.signup-admin1-text13 {
   display: inline-block;
 }
  
-.signup-candidate1-fragment14 {
+.signup-admin1-fragment14 {
   display: contents;
 }
  
-.signup-candidate1-text14 {
+.signup-admin1-text14 {
   display: inline-block;
 }
  
-.signup-candidate1-fragment15 {
+.signup-admin1-fragment15 {
   display: contents;
 }
  
-.signup-candidate1-text15 {
+.signup-admin1-text15 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
  
-.signup-candidate1-fragment16 {
+.signup-admin1-fragment16 {
   display: contents;
 }
  
-.signup-candidate1-text16 {
+.signup-admin1-text16 {
   color: rgb(24, 25, 28);
   display: inline-block;
 }
  
-.signup-candidate1-fragment17 {
+.signup-admin1-fragment17 {
   display: contents;
 }
  
-.signup-candidate1-text17 {
+.signup-admin1-text17 {
   color: #18191c;
   display: inline-block;
 }
  
-.signup-candidate1-fragment18 {
+.signup-admin1-fragment18 {
   display: contents;
 }
  
-.signup-candidate1-text18 {
+.signup-admin1-text18 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 600;
 }
  
-.signup-candidate1-fragment19 {
+.signup-admin1-fragment19 {
   display: contents;
 }
  
-.signup-candidate1-text19 {
+.signup-admin1-text19 {
   display: inline-block;
 }
  
-.signup-candidate1-fragment20 {
+.signup-admin1-fragment20 {
   display: contents;
 }
  
-.signup-candidate1-text20 {
+.signup-admin1-text20 {
   color: rgb(5, 53, 108);
   display: inline-block;
   font-style: normal;
   font-weight: 500;
 }
  
-.signup-candidate1-fragment21 {
+.signup-admin1-fragment21 {
   display: contents;
 }
  
-.signup-candidate1-text21 {
+.signup-admin1-text21 {
   display: inline-block;
 }
  
-.signup-candidate1-fragment22 {
+.signup-admin1-fragment22 {
   display: contents;
 }
  
-.signup-candidate1-text22 {
+.signup-admin1-text22 {
   display: inline-block;
 }
  
-.signup-candidate1root-class-name {
+.signup-admin1root-class-name {
   height: auto;
   position: static;
   align-self: center;
@@ -549,7 +549,7 @@
   background-color: #F4F4F4;
 }
  
-.signup-candidate1root-class-name1 {
+.signup-admin1root-class-name1 {
   top: 100px;
   left: 0px;
   height: auto;

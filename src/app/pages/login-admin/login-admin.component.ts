@@ -21,11 +21,11 @@ export class LoginAdmin {
     private router: Router,
     private spinner: NgxSpinnerService,
   ) {
-    this.title.setTitle('Login-Candidate - Flashyre');
+    this.title.setTitle('Login-admin - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Login-Candidate - Flashyre',
+        content: 'Login-admin - Flashyre',
       },
       {
         property: 'og:image',

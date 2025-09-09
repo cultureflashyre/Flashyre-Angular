@@ -4,12 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
+import { AdminAuthService } from '../../services/admin-auth.service'; // Using the dedicated service
 
 @Component({
-  selector: 'signup-candidate1',
+  selector: 'signup-admin1',
   templateUrl: './signup-admin.component.html',
   styleUrls: ['./signup-admin.component.css'],
 })
@@ -46,80 +47,80 @@ export class Signupadmin implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
+    private adminAuthService: AdminAuthService // Inject the dedicated service
   ) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group(
       {
-        first_name: ['', [Validators.required, 
+        first_name: ['', [
+          Validators.required, 
           Validators.pattern(/^[a-zA-Z ]+$/), 
           Validators.minLength(3),
           Validators.maxLength(10),
         ]],
-        last_name: ['', [Validators.required, 
+        last_name: ['', [
+          Validators.required, 
           Validators.pattern(/^[a-zA-Z ]+$/), 
           Validators.minLength(3),
           Validators.maxLength(10),
-      ]],
+        ]],
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
-        password: ['', [Validators.required, 
+        password: ['', [
+          Validators.required, 
           this.passwordComplexityValidator(), 
           Validators.minLength(8),
           Validators.maxLength(15)
         ]],
         confirm_password: ['', [Validators.required]],
-        user_type: ['admin', Validators.required]  // default candidate or empty
+        // ----- THIS IS THE CORRECTED LINE THAT FIXES THE ISSUE -----
+        user_type:  ['admin', Validators.required]
       },
       { validator: this.passwordMatchValidator }
     );
   }
 
-  passwordMatchValidator(form: FormGroup) {
+  passwordMatchValidator(form: FormGroup): ValidationErrors | null {
     return form.get('password').value === form.get('confirm_password').value
       ? null
       : { mismatch: true };
   }
 
   passwordComplexityValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value || '';
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value || '';
+      if (!value) {
+        return null; // Let required validator handle empty case
+      }
+      const errors: ValidationErrors = {};
+      if (value.length < 8) {
+        errors.minlength = { requiredLength: 8, actualLength: value.length };
+      }
+      if (!/[A-Z]/.test(value)) {
+        errors.uppercase = true;
+      }
+      if (!/[a-z]/.test(value)) {
+        errors.lowercase = true;
+      }
+      if (!/[0-9]/.test(value)) {
+        errors.number = true;
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+        errors.specialChar = true;
+      }
+      if (!/[a-zA-Z]/.test(value)) {
+        errors.alphabet = true;
+      }
+      return Object.keys(errors).length ? errors : null;
+    };
+  }
 
-    if (!value) {
-      return null; // Let required validator handle empty case
-    }
-
-    const errors: ValidationErrors = {};
-
-    if (value.length < 8) {
-      errors.minlength = { requiredLength: 8, actualLength: value.length };
-    }
-    if (!/[A-Z]/.test(value)) {
-      errors.uppercase = true;
-    }
-    if (!/[a-z]/.test(value)) {
-      errors.lowercase = true;
-    }
-    if (!/[0-9]/.test(value)) {
-      errors.number = true;
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      errors.specialChar = true;
-    }
-    // At least one alphabet is covered by uppercase or lowercase, but if you want to explicitly check:
-    if (!/[a-zA-Z]/.test(value)) {
-      errors.alphabet = true;
-    }
-
-    return Object.keys(errors).length ? errors : null;
-  };
-}
-
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
 
-  toggleConfirmPasswordVisibility() {
+  toggleConfirmPasswordVisibility(): void {
     this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
   }
 
@@ -129,51 +130,41 @@ export class Signupadmin implements OnInit {
     this.signupForm.get('phone_number').setValue(sanitizedValue, { emitEvent: false });
   }
 
-  onSubmit() {
+  onSubmit(): void {
+    // --- Detailed logging block for debugging ---
+    console.log('--- [Frontend Log] Admin Signup Initiated ---');
+    console.log('Form validity:', this.signupForm.valid);
+    console.log('Form data to be sent:', JSON.stringify(this.signupForm.value, null, 2));
+
     if (this.signupForm.valid) {
-      this.spinner.show(); // Show spinner only when request starts
+      this.spinner.show();
 
-      const formData = {
-        first_name: this.signupForm.get('first_name').value,
-        last_name: this.signupForm.get('last_name').value,
-        phone_number: this.signupForm.get('phone_number').value,
-        email: this.signupForm.get('email').value,
-        password: this.signupForm.get('password').value,
-        user_type: 'admin',
-      };
-
-      this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe(
-        (response: any) => {
-          console.log('Signup successful', response);
+      this.adminAuthService.signupAdmin(this.signupForm.value).subscribe({
+        next: (response: any) => {
+          console.log('--- [Frontend Log] Admin Signup SUCCESS ---', response);
           this.errorMessage = '';
           this.successMessage = response.message || 'Successfully Signed up';
           
-          // Store JWT token in local storage or session storage
-          localStorage.setItem('jwtToken', response.access); // Store the access token
+          localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('userID', response.user_id);
           localStorage.setItem('userType', response.role);
 
-          // Fetch user profile after successful login
-          this.userProfileService.fetchUserProfile().subscribe(
-            () => {
-              this.errorMessage = '';
+          this.userProfileService.fetchUserProfile().subscribe({
+            next: () => {
               this.router.navigate(['/admin-page1'], { state: { source: 'admin' } });
+              this.spinner.hide();
             },
-            (profileError) => {
+            error: (profileError) => {
               console.error('Error fetching profile', profileError);
-              // Navigate anyway, but with a warning
               this.router.navigate(['/admin-page1'], { state: { source: 'admin' } });
+              this.spinner.hide();
             }
-          );
-          // Hide overlay before navigation
-          this.spinner.hide();
+          });
         },
-        (error) => {
-          console.log('Error response:', error);
+        error: (error) => {
+          console.error('--- [Frontend Log] Admin Signup FAILED ---', error);
           this.successMessage = '';
-
-          // Hide overlay on error
           this.spinner.hide();
 
           if (error.status === 400 && error.error.email) {
@@ -183,9 +174,10 @@ export class Signupadmin implements OnInit {
           } else {
             this.errorMessage = 'Signup failed. Please try again.';
           }
-          console.log('Error message set to:', this.errorMessage);
         }
-      );
+      });
+    } else {
+      console.error('--- [Frontend Log] Form is invalid. Submission blocked. ---');
     }
   }
 
