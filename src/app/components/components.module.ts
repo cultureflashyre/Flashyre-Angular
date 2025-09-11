@@ -112,6 +112,9 @@ import { AdminNavbar } from './admin-navbar/admin-navbar.component'
 import { AdminPage1Component } from './admin-page1-component/admin-page1-component.component'
 import { AdminPage2Component } from './admin-page2-component/admin-page2-component.component'
 import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd-extended-component.component'
+import { MoreFiltersAndPreferenceComponent } from './more-filters-and-preference-component/more-filters-and-preference-component.component'
+import { Morefilterscomponent1 } from './morefilterscomponent1/morefilterscomponent1.component'
+import { PreferenceComponent } from './preference-component/preference-component.component';
 
 @NgModule({
   declarations: [
@@ -213,7 +216,10 @@ import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd
     AdminNavbar,
     AdminPage1Component,
     AdminPage2Component,
-    AdminJdExtendedComponent
+    AdminJdExtendedComponent,
+    MoreFiltersAndPreferenceComponent,
+    Morefilterscomponent1,
+    PreferenceComponent
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
   exports: [
@@ -315,7 +321,10 @@ import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd
     AdminNavbar,
     AdminPage1Component,
     AdminPage2Component,
-    AdminJdExtendedComponent
+    AdminJdExtendedComponent,
+    MoreFiltersAndPreferenceComponent,
+    Morefilterscomponent1,
+    PreferenceComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
