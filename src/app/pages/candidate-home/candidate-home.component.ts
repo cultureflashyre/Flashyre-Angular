@@ -16,22 +16,22 @@ import { environment } from '../../../environments/environment';
 export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
-  
+
   // Job related properties
   jobs: any[] = [];
   displayedJobs: any[] = [];
   appliedJobIds: number[] = [];
-  
+
   // Pagination properties
   private currentPage = 0;
   private jobsPerPage = 30;
   private isLoadingMore = false;
-  
+
   // Application state
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
   isLoading: boolean = true;
-  
+
   // Intersection Observer
   private observer: IntersectionObserver | null = null;
   private destroy$ = new Subject<void>();
@@ -92,7 +92,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    */
   private initializeJobs(): void {
     this.isLoading = true;
-    
+
     if (this.jobService.areJobsCached()) {
       console.log('Loading jobs from cache...');
       this.loadJobsFromCache();
@@ -135,12 +135,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * =================================================================
-   * REFACTORED AND CORRECTED FUNCTION
-   * =================================================================
-   * This function no longer makes a redundant API call to fetch jobs.
-   * It now uses the `jobs` array passed to it (which was already fetched securely)
-   * and only fetches the list of applied job IDs to perform the filtering.
+   * Filters out applied-for jobs and then fetches matching scores.
    */
   private filterAndDisplayJobs(jobs: any[]): void {
     // 1. Only fetch the list of applied jobs. This request is authenticated by the HttpInterceptor.
@@ -151,8 +146,11 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
         // 3. Filter the *existing* jobs array to exclude those the user has already applied to.
         this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
-        
-        // 4. Reset pagination and load the first page of the filtered jobs.
+
+        // 4. After filtering, fetch the matching scores for the remaining jobs.
+        this.fetchAndMergeMatchScores();
+
+        // 5. Reset pagination and load the first page of the filtered jobs.
         this.currentPage = 0;
         this.displayedJobs = [];
         this.loadNextPage();
@@ -164,6 +162,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
         // Fallback: If we can't get the applied jobs list, show all jobs.
         this.jobs = jobs;
+
+        // Also fetch scores in the error case.
+        this.fetchAndMergeMatchScores();
+
         this.currentPage = 0;
         this.displayedJobs = [];
         this.loadNextPage();
@@ -172,6 +174,40 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  /**
+   * Extracts job IDs, fetches their match scores, and merges them back into the main job objects.
+   */
+  private fetchAndMergeMatchScores(): void {
+    // 1. Check if there are any jobs to score.
+    if (!this.jobs || this.jobs.length === 0) {
+      return; // Nothing to do.
+    }
+
+    // 2. Extract all job IDs into a new array.
+    const jobIds = this.jobs.map(job => job.job_id);
+
+    // 3. Call the service to get the scores.
+    this.authService.getMatchScores(jobIds)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (scores) => {
+          // 4. Merge the returned scores into the corresponding job objects.
+          this.jobs.forEach(job => {
+            if (scores[job.job_id] !== undefined) {
+              job.matching_score = scores[job.job_id];
+            } else {
+              job.matching_score = 0; // Default to 0 if no score is returned
+            }
+          });
+          console.log('Successfully fetched and merged match scores.');
+        },
+        error: (err) => {
+          console.error('Could not fetch match scores:', err);
+          // Optional: Set a default score for all jobs on error
+          this.jobs.forEach(job => job.matching_score = 0);
+        }
+      });
+  }
 
   /**
    * Load the next page of jobs
@@ -182,25 +218,25 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.isLoadingMore = true;
-    
+
     const startIndex = this.currentPage * this.jobsPerPage;
     const endIndex = startIndex + this.jobsPerPage;
     const nextJobs = this.jobs.slice(startIndex, endIndex);
-    
+
     if (nextJobs.length > 0) {
       this.displayedJobs = [...this.displayedJobs, ...nextJobs];
       this.currentPage++;
       console.log(`Loaded page ${this.currentPage}, showing ${this.displayedJobs.length} of ${this.jobs.length} jobs`);
     }
-    
+
     this.isLoadingMore = false;
-    
+
     setTimeout(() => {
       this.setupInfiniteScroll();
     }, 100);
   }
 
-  /** 
+  /**
    * Setup infinite scroll using Intersection Observer
    */
   private setupInfiniteScroll(): void {
@@ -247,7 +283,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
-    
+
     this.authService.applyForJob(jobId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -255,7 +291,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
           console.log('Application successful:', response);
           this.applicationSuccess[jobId] = true;
           this.appliedJobIds.push(jobId);
-          
+
           setTimeout(() => {
             this.jobService.removeJobFromCache(jobId);
             this.jobs = this.jobs.filter(job => job.job_id !== jobId);
@@ -298,7 +334,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight;
       const clientHeight = window.innerHeight;
-      
+
       if ((scrollTop + clientHeight >= scrollHeight - 100) && this.hasMoreJobs && !this.isLoadingMoreJobs) {
         this.loadNextPage();
       }
