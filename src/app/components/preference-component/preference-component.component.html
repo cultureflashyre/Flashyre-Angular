@@ -1,6 +1,7 @@
 <div
   id="preference-component"
   class="preference-component-container10"
+  *ngIf="preferences"
 >
   <div class="preference-component-container11">
     <span class="preference-component-text10">
@@ -82,7 +83,7 @@
                 <ng-template #defaultText2>
                   <div class="preference-component-fragment22">
                     <span class="preference-component-text36">
-                      Senior UX Designer
+                      {{ preferences?.role || 'N/A' }}
                     </span>
                   </div>
                 </ng-template>
@@ -95,7 +96,7 @@
               <ng-container>
                 <ng-template #defaultText21>
                   <div class="preference-component-fragment17">
-                    <span class="preference-component-text31">Bengaluru</span>
+                    <span class="preference-component-text31">{{ preferences?.location || 'N/A' }}</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -107,7 +108,7 @@
               <ng-container>
                 <ng-template #defaultText211>
                   <div class="preference-component-fragment10">
-                    <span class="preference-component-text24">8 years</span>
+                    <span class="preference-component-text24">{{ preferences?.experience_level || 'N/A' }}</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -163,7 +164,7 @@
               <ng-container>
                 <ng-template #defaultText22>
                   <div class="preference-component-fragment16">
-                    <span class="preference-component-text30">12/7/2025</span>
+                    <span class="preference-component-text30">{{ preferences?.date_posted || 'N/A' }}</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -175,7 +176,7 @@
               <ng-container>
                 <ng-template #defaultText212>
                   <div class="preference-component-fragment15">
-                    <span class="preference-component-text29">Bengaluru</span>
+                    <span class="preference-component-text29">{{ preferences?.company_name || 'N/A' }}</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -187,7 +188,7 @@
               <ng-container>
                 <ng-template #defaultText2111>
                   <div class="preference-component-fragment11">
-                    <span class="preference-component-text25">Permanent</span>
+                    <span class="preference-component-text25">{{ preferences?.job_type || 'N/A' }}</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -222,4 +223,7 @@
       ></path>
     </svg>
   </div>
+  <div *ngIf="!preferences">
+    <p>No preferences saved yet.</p>
+</div>
 </div>

@@ -6,14 +6,14 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['preference-component.component.css'],
 })
 export class PreferenceComponent {
+  @Input() preferences: any;
+  @Input() rootClassName: string = ''
   @ContentChild('text211')
   text211: TemplateRef<any>
   @ContentChild('text2111')
   text2111: TemplateRef<any>
   @ContentChild('button2')
   button2: TemplateRef<any>
-  @Input()
-  rootClassName: string = ''
   @ContentChild('text1211')
   text1211: TemplateRef<any>
   @ContentChild('text114')
