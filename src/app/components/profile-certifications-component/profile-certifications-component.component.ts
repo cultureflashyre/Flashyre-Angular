@@ -35,7 +35,8 @@ export class ProfileCertificationsComponent implements OnInit {
   todayDate: string;
 
   constructor(private fb: FormBuilder, 
-    private http: HttpClient, private spinner: NgxSpinnerService,
+    private http: HttpClient, 
+    private spinner: NgxSpinnerService,
     private certificationService: CertificationService,
   ) {
     this.certificationForm = this.fb.group({
@@ -46,6 +47,39 @@ export class ProfileCertificationsComponent implements OnInit {
   ngOnInit() {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
+
+    this.loadCertificationsFromLocalStorage();
+
+  }
+
+  loadCertificationsFromLocalStorage(): void {
+    const userProfileString = localStorage.getItem('userProfile');
+    if (userProfileString) {
+      try {
+        const userProfile = JSON.parse(userProfileString);
+        if (userProfile.certifications && Array.isArray(userProfile.certifications) && userProfile.certifications.length > 0) {
+          // Clear existing forms
+          this.certifications.clear();
+
+          userProfile.certifications.forEach((cert: any) => {
+            const formGroup = this.createCertificationGroup();
+            formGroup.patchValue({
+              certificate_name: cert.certificate_name || '',
+              issuing_institute: cert.issuing_institute || '',
+              issued_date: cert.issued_date || '',
+              renewal_date: cert.renewal_date || '',
+              credentials: cert.credentials || ''
+            });
+            this.certifications.push(formGroup);
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing userProfile from localStorage in certification component', error);
+      }
+    }
+    // No saved data: log and keep one empty form
+    console.warn('No saved certifications found in localStorage.');
   }
 
   get certifications() {
@@ -141,6 +175,5 @@ export class ProfileCertificationsComponent implements OnInit {
       }
     });
   }
-  
 
 }

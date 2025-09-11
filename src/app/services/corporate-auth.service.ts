@@ -34,7 +34,7 @@ export class CorporateAuthService {
   constructor(private http: HttpClient) {}
 
 loginCorporate(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}login-corporate/`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}login/`, { email, password }).pipe(
       tap((response: AuthResponse) => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);
@@ -45,7 +45,7 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
 
   signupCorporate(data: CorporateSignupData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}signup-corporate/`, data).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}signup/`, data).pipe(
       tap((response: AuthResponse) => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);

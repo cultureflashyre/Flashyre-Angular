@@ -94,7 +94,7 @@ export class SignupCandidate1 implements OnInit {
         password: this.signupForm.get('password').value,
       };
 
-      this.http.post(`${this.baseUrl}signup-candidate/`, formData).subscribe(
+      this.http.post(`${this.baseUrl}signup/`, formData).subscribe(
         (response: any) => {
           console.log('Signup successful', response);
           this.errorMessage = '';

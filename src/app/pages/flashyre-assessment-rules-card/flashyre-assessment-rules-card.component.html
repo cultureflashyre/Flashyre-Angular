@@ -1,5 +1,5 @@
 <div class="flashyre-assessment-rules-card-container">
-  <flashyre-assessment-rules
+  <flashyre-assessment-rules [assessmentData]="assessmentData"
     rootClassName="flashyre-assessment-rulesroot-class-name"
   >
     <ng-template #text2>
@@ -18,7 +18,7 @@
     <ng-template #text1>
       <div class="flashyre-assessment-rules-card-fragment12">
         <span class="flashyre-assessment-rules-card-text14">
-          Rules for the Corporate Skill-Based Assessment 
+          Rules for the {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }} 
         </span>
       </div>
     </ng-template>
@@ -30,10 +30,9 @@
       </div>
     </ng-template>
     <ng-template #text9>
-      <div class="flashyre-assessment-rules-card-fragment14">
+      <div *ngIf="showVideoRecordingRule" class="flashyre-assessment-rules-card-fragment14">
         <span class="flashyre-assessment-rules-card-text16">
-          2. This assessment session is being video recorded for monitoring and
-          evaluation purpose.
+          {{ videoRecordingRuleNumber }}. This assessment session is being video recorded for monitoring and evaluation purpose.
         </span>
       </div>
     </ng-template>
@@ -48,7 +47,7 @@
     <ng-template #text3111>
       <div class="flashyre-assessment-rules-card-fragment16">
         <span class="flashyre-assessment-rules-card-text20">
-          The test will auto-submit after 10 minutes, regardless of whether you
+          The test will auto-submit after {{ assessmentData?.total_duration || 'Unknown' }} minutes, regardless of whether you
           have answered all the questions or not.
         </span>
       </div>
@@ -57,7 +56,7 @@
       <div class="flashyre-assessment-rules-card-fragment17">
         <span class="flashyre-assessment-rules-card-text21">
           <span>
-            Once the 10-minute time limit is up, the test will automatically
+            Once the {{ assessmentData?.total_duration || 'Unknown' }}-minute time limit is up, the test will automatically
             submit, even if you have not answered all the questions.
           </span>
           <br />
@@ -67,15 +66,14 @@
     <ng-template #text>
       <div class="flashyre-assessment-rules-card-fragment18">
         <span class="flashyre-assessment-rules-card-text24">
-          Corporate Skill-Based Assessment 
+          {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }} 
         </span>
       </div>
     </ng-template>
     <ng-template #text8>
-      <div class="flashyre-assessment-rules-card-fragment19">
+      <div *ngIf="showProctoredRule" class="flashyre-assessment-rules-card-fragment19">
         <span class="flashyre-assessment-rules-card-text25">
-          1. Switching tabs or move to different application will lead to
-          auto-submittion of this assessment.
+          {{ proctoredRuleNumber }}. Switching tabs or move to different application will lead to auto-submission of this assessment.
         </span>
       </div>
     </ng-template>
@@ -100,7 +98,7 @@
     <ng-template #text3>
       <div class="flashyre-assessment-rules-card-fragment22">
         <span class="flashyre-assessment-rules-card-text30">
-          The test consist of 5 multiple choice questions based on the
+          The test consist of {{ assessmentData?.total_questions }} multiple choice questions based on the
           Assessment skill.
         </span>
       </div>
@@ -130,7 +128,7 @@
     <ng-template #text31>
       <div class="flashyre-assessment-rules-card-fragment27">
         <span class="flashyre-assessment-rules-card-text35">
-          You must answer all 5 questions within the 10-minute time limit.
+          You must answer all {{ assessmentData?.total_questions }} questions within the {{ assessmentData?.total_duration || 'Unknown' }}-minute time limit.
         </span>
       </div>
     </ng-template>
@@ -144,7 +142,7 @@
     <ng-template #text4>
       <div class="flashyre-assessment-rules-card-fragment29">
         <span class="flashyre-assessment-rules-card-text37">
-          The time limit for the test is 10 minutes.
+          The time limit for the test is {{ assessmentData?.total_duration || 'Unknown' }} minutes.
         </span>
       </div>
     </ng-template>

@@ -12,6 +12,9 @@ import { ProctoringService } from '../../services/proctoring.service';
 export class FlashyreAssessmentRulesCard implements OnInit {
   assessmentId: number | null = null;
 
+  // Declare assessmentData of appropriate type, e.g. any or a typed interface
+  assessmentData: any = null;
+
   constructor(
     private title: Title, 
     private meta: Meta, 
@@ -34,14 +37,26 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     ])
   }
 
+  //ngOnInit() {
+   // this.route.queryParams.subscribe(params => {
+   //   const id = params['id'];
+  //    if (id) {
+   //     this.assessmentId = +id;
+   //   }
+   // });
+  //}
+
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.assessmentId = +id;
+  this.route.queryParams.subscribe(params => {
+    if (params['data']) {
+      try {
+        this.assessmentData = JSON.parse(params['data']);
+      } catch (e) {
+        console.error('Error parsing assessment data', e);
       }
-    });
-  }
+    }
+  });
+}
 
   async startAssessment() {
     if (this.assessmentId) {
@@ -49,6 +64,24 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     } else {
       alert('Assessment ID is missing!');
     }
+  }
+
+  get showProctoredRule(): boolean {
+    return this.assessmentData?.proctored?.toUpperCase() === 'YES';
+  }
+
+  get showVideoRecordingRule(): boolean {
+    return this.assessmentData?.video_recording?.toUpperCase() === 'YES';
+  }
+
+  get proctoredRuleNumber(): number {
+    // If video recording rule is shown before, proctored is #2 else #1
+    return this.showVideoRecordingRule ? 1 : 2;
+  }
+
+  get videoRecordingRuleNumber(): number {
+    // If proctored rule shown before, video recording is #2 else #1
+    return this.showProctoredRule ? 2 : 1;
   }
 
 }

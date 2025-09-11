@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}login-candidate/`, { email, password }).pipe(
+    return this.http.post(`${this.apiUrl}login/`, { email, password }).pipe(
       tap(response => {
         if (response.token) {
           localStorage.setItem('jwtToken', response.token); // Store token
