@@ -7,9 +7,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class CodeEditorComponent {
   @Input() problemId: number = 0;
-  @Input() userId: number = 1; // Default user_id for testing; replace with actual user_id
-  @Output() runCode = new EventEmitter<{ source_code: string, language_id: number, user_id: number }>();
-  @Output() submitCode = new EventEmitter<{ source_code: string, language_id: number, user_id: number }>();
+  @Output() runCode = new EventEmitter<{ source_code: string, language_id: number }>();
+  @Output() submitCode = new EventEmitter<{ source_code: string, language_id: number }>();
 
   languages = [
     { name: 'C++', id: 54, mode: 'c_cpp' },
@@ -26,10 +25,10 @@ export class CodeEditorComponent {
   }
 
   run() {
-    this.runCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id, user_id: this.userId });
+    this.runCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
   }
 
   submit() {
-    this.submitCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id, user_id: this.userId });
+    this.submitCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
   }
 }

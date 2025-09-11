@@ -1,18 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .page-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    min-height: calc(100vh - 120px);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    align-items: start;
+}
+
+.left-section, .right-section {
     display: flex;
-    min-height: calc(100vh - 65px);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.page-container > * {
-    width: 50%;
-    border-right: 1px solid #e1e4e8;
+.problem-selector {
+    padding: 1rem;
 }
 
-app-code-editor, app-test-results {
-    border-right: none;
+.problem-selector label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-right: 0.5rem;
+}
+
+.problem-selector select {
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.problem-selector select option {
+    background: #334155;
+    color: white;
+}
+
+.timer-display {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: red;
+    padding: 1rem;
+    background: #fffbeb;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid red;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .loading {
@@ -20,21 +64,45 @@ app-code-editor, app-test-results {
     font-size: 14px;
     color: #6a737d;
     text-align: center;
+    grid-column: 1 / -1;
 }
 
-@media (max-width: 1024px) {
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+@media (max-width: 1200px) {
     .page-container {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
-    .page-container > * {
+    .left-section, .right-section {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e1e4e8;
     }
     
     app-problem-description {
         max-height: 50vh;
         overflow-y: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
     }
 }

@@ -1,6 +1,6 @@
 <div class="editor-container">
     <div class="form-group">
-        <label for="language">Select Language:</label>
+        <label for="language">Code Editor</label>
         <select id="language" class="language-selector" [(ngModel)]="selectedLanguage" (change)="onLanguageChange()">
             <option *ngFor="let lang of languages" [ngValue]="lang">{{ lang.name }}</option>
         </select>

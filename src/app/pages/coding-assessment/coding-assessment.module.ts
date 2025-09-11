@@ -7,7 +7,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { CodingAssessment } from './coding-assessment.component';
 
 const routes: Routes = [
-  { path: '', component: CodingAssessment } // Map empty path to CodingAssessment
+  { path: '', component: CodingAssessment }, // Default: list problems
+  { path: ':id', component: CodingAssessment } // Specific problem
 ];
 
 @NgModule({
@@ -17,7 +18,7 @@ const routes: Routes = [
     FormsModule,
     AceModule,
     ComponentsModule,
-    RouterModule.forChild(routes) // Use forChild for lazy-loaded module
+    RouterModule.forChild(routes)
   ],
   exports: [CodingAssessment]
 })
