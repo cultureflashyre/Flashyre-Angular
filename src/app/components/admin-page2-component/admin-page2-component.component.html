@@ -3,24 +3,131 @@
   [ngClass]="rootClassName"
 >
   <div class="admin-page2-component-container">
-    <button type="button" class="admin-page2-component-button button" 
-            (click)="showJdView()"
-            [class.active]="activeView === 'jd'">
-      JD Extracted
+    <!-- MODIFIED: "JD Extracted" is now a button that sets the active view. -->
+    <!-- It has an ngClass binding to apply a style when it is the active tab. -->
+    <button
+      type="button"
+      class="admin-page2-component-button button"
+      (click)="showJdView()"
+      [ngClass]="{'active-tab': activeView === 'jd'}"
+    >
+      <span class="admin-page2-component-text10">
+        JD Extracted
+      </span>
     </button>
-    <button type="button" class="admin-page2-component-button button" 
-            (click)="showCandidatesView()"
-            [class.active]="activeView === 'candidates'">
-      Candidate Sourced
-    </button>
+    
+    <!-- MODIFIED: "Candidate Sourced" is now a dropdown menu controlling the view and filter. -->
+    <div
+      data-thq="thq-dropdown"
+      class="admin-page2-component-thq-dropdown list-item"
+    >
+      <div
+        data-thq="thq-dropdown-toggle"
+        class="admin-page2-component-dropdown-toggle1"
+        [ngClass]="{'active-tab': activeView === 'candidates'}"
+      >
+        <!-- The text of the dropdown button is now dynamic, showing the current filter. -->
+        <span class="admin-page2-component-text11">
+          {{ candidateFilterDisplay }}
+        </span>
+        <div
+          data-thq="thq-dropdown-arrow"
+          class="admin-page2-component-dropdown-arrow"
+        >
+          <svg viewBox="0 0 1024 1024" class="admin-page2-component-icon1">
+            <path d="M426 726v-428l214 214z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- The dropdown list with different filtering options. Each item calls showCandidatesView on click. -->
+      <ul
+        data-thq="thq-dropdown-list"
+        class="admin-page2-component-dropdown-list"
+      >
+        <li
+          data-thq="thq-dropdown"
+          class="admin-page2-component-dropdown1 list-item"
+          (click)="showCandidatesView('all', 'All Candidates')"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="admin-page2-component-dropdown-toggle2"
+          >
+            <span class="admin-page2-component-text12">
+              All Candidates
+            </span>
+          </div>
+        </li>
+        <li
+          data-thq="thq-dropdown"
+          class="admin-page2-component-dropdown2 list-item"
+          (click)="showCandidatesView('today', 'Today uploaded candidates')"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="admin-page2-component-dropdown-toggle3"
+          >
+            <span class="admin-page2-component-text13">
+              Today uploaded candidates
+            </span>
+          </div>
+        </li>
+        <li
+          data-thq="thq-dropdown"
+          class="admin-page2-component-dropdown3 list-item"
+          (click)="showCandidatesView('yesterday', 'Yesterday Uploaded candidates')"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="admin-page2-component-dropdown-toggle4"
+          >
+            <span class="admin-page2-component-text14">
+              Yesterday Uploaded candidates
+            </span>
+          </div>
+        </li>
+        <li
+          data-thq="thq-dropdown"
+          class="admin-page2-component-dropdown3 list-item"
+          (click)="showCandidatesView('custom', 'Custom date uploaded candidates')"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="admin-page2-component-dropdown-toggle4"
+          >
+            <span class="admin-page2-component-text14">
+              Custom date uploaded candidates
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  
-  <div *ngIf="activeView === 'jd'">
-    <admin-jd-extended-component rootClassName="admin-jd-extended-componentroot-class-name">
-    </admin-jd-extended-component>
-  </div>
-  <div *ngIf="activeView === 'candidates'">
-    <admin-candidate-sourced-component rootClassName="admin-candidate-sourced-componentroot-class-name">
-    </admin-candidate-sourced-component>
+
+  <!-- 
+    NEW: This container uses the async pipe to subscribe to the latestJd$ observable.
+    If a JD exists, it unwraps it into the 'jd' variable and makes it available to child components.
+  -->
+  <ng-container *ngIf="activeJobId">
+    <!-- The JD form is only shown if the view is 'jd' and a JD has been loaded. -->
+    <admin-jd-extended-component
+      *ngIf="activeView === 'jd' && (latestJd$ | async) as jd"
+      [jobData]="jd"
+      [isReadOnly]="true"
+    ></admin-jd-extended-component>
+    <!-- The candidate list is only shown if the view is 'candidates' and a JD has been loaded. -->
+    <!-- It receives the job_id and the selected filter as inputs. -->
+    <admin-candidate-sourced-component
+      *ngIf="activeView === 'candidates'"
+      [jobId]="activeJobId"
+    ></admin-candidate-sourced-component>
+  </ng-container>
+
+  <!-- 
+    NEW: These are placeholder messages that appear if no Job Description has been uploaded yet.
+    They are shown conditionally based on the active view.
+  -->
+   <div *ngIf="!(latestJd$ | async)" class="info-container">
+    Please upload a Job Description first to see details and sourced candidates.
   </div>
 </div>
