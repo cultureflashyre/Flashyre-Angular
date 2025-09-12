@@ -2,20 +2,21 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 
+
 import { ComponentsModule } from '../../components/components.module'
-import { AdminPage1 } from './admin-page1.component'
+import { SignupAdmin } from './signup-admin.component'
 
 const routes = [
   {
     path: '',
-    component: AdminPage1,
+    component: SignupAdmin,
   },
 ]
 
 @NgModule({
-  declarations: [AdminPage1],
+  declarations: [SignupAdmin],
   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
-  exports: [AdminPage1],
+  exports: [SignupAdmin],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AdminPage1Module {}
+export class SignupAdminModule {}
