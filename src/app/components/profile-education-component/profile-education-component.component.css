@@ -35,17 +35,24 @@
   scrollbar-width: none;
 }
 
+.profile-education-dates-container {
+   width: 100%;
+   height: 48px;
+   gap: 24px;
+   display: flex;
+  flex-direction: row;
+}
+
 .profile-education-component-education-text1 {
   gap: 24px;
-  width: 672px;
+  width: 100%;
   height: 24px;
   display: flex-start;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
   /* padding-left: 30px;
-  margin-top: 25px; */
-  
+  margin-top: 25px; */ 
 }
 
 .profile-education-component-duration-container1 {
@@ -61,7 +68,7 @@
 
 .profile-education-component-duration-container2 {
   flex: 0 0 auto;
-  width: 324px;
+  width: 100%;
   height: 76px;
   display: flex;
   position: relative;
@@ -74,34 +81,36 @@
   height: 24px;
   display: flex;
   align-items: center;
-  padding-left: 15px;
 }
 
 .profile-education-component-form1 {
+  width: 324px;
   height: 48px;
   display: flex;
-  align-self: stretch;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
+  align-self: center;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 0px;
+  padding-right: 0px;
   padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  padding-top: 0px;
 }
 
 .profile-education-component-select-year-text {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 100%;
+  align-self: center;  
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .profile-education-component-drop-down-icon1 {
-  fill: var(--dl-color-theme-neutral-dark);
-  color: var(--dl-color-theme-neutral-dark);
+  /* fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark); */
   width: auto;
   display: flex;
   margin-top: -28px;
@@ -110,30 +119,36 @@
 }
 
 .profile-education-component-form2 {
-  right: 0px;
   width: 324px;
-  bottom: 4px;
   height: 48px;
   display: flex;
-  position: absolute;
-  align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  border-radius: 4px;
-  padding-right: 10px;
+  align-self: flex-end;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 0px;
+  padding-right: 0px;
   padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  padding-top: 0px;
 }
 
 .profile-education-component-select-month-text {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 100%;
+  align-self: center;  
+  border: none;
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.profile-education-component-select {
+  color: #747474;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-width: 0px;
 }
 
 .profile-education-component-drop-down-icon2 {
@@ -168,7 +183,6 @@
 .profile-education-component-university-institute-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
 
 .profile-education-component-container2 {
@@ -186,22 +200,22 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .profile-education-component-select-text1 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 100%;
+  align-self: center;  
+  border: none;
+  padding: 0px;
 }
 
 .profile-education-component-drop-down-icon3 {
@@ -226,7 +240,6 @@
 .profile-education-component-education-text2 {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
 
 .profile-education-component-education-select-container {
@@ -244,22 +257,22 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .profile-education-component-select-text2 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 100%;
+  align-self: center;  
+  border: none;
+  padding: 0px;
 }
 
 .profile-education-component-drop-down-icon4 {
@@ -293,7 +306,6 @@
 .profile-education-component-course-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
 
 .profile-education-component-select-container1 {
@@ -311,22 +323,22 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .profile-education-component-select-text3 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+   width: 100%;
+  height: 100%;
+  align-self: center;  
+  border: none;
+  padding: 0px;
 }
 
 .profile-education-component-drop-down-icon5 {
@@ -351,7 +363,6 @@
 .profile-education-component-specialisation-text {
   width: 324px;
   height: 24px;
-  padding-left: 15px;
 }
 
 .profile-education-component-select-container2 {
@@ -369,22 +380,22 @@
   height: 48px;
   display: flex;
   align-self: center;
-  align-items: flex-end;
-  padding-top: 0px;
-  border: none;
-  padding-right: 10px;
+  align-items: space-between;
+  border-color: #A7A7A7;
   flex-direction: column;
-  padding-bottom: 0px;
-  justify-content: center;
-  background-color: #FFFFFF;
+  justify-content: space-between;
+  color: #747474;
+  background-color: white;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .profile-education-component-select-text4 {
-  fill: #69737E;
-  color: #69737E;
-  align-self: flex-start;
-  margin-top: var(--dl-space-space-halfunit);
-  margin-bottom: var(--dl-space-space-halfunit);
+   width: 100%;
+  height: 100%;
+  align-self: center;  
+  border: none;
+  padding: 0px;
 }
 
 .profile-education-component-drop-down-icon6 {
@@ -415,8 +426,6 @@
   border-width: 0px;
   justify-content: center;
   background-color: transparent;
-   margin-left: 20px;
-  margin-bottom: 10px; 
 }
 
 /* .profile-education-component-add-education-text:hover {
@@ -434,8 +443,7 @@
 
 .profile-education-component-select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
+  height: 100%;
   border-radius: 4px;
 }
 
@@ -447,22 +455,21 @@
   margin-right: 10px;
 }
 
-/* .education-form-instance {
-  padding: 15px;
-  margin-bottom: 15px;
+.education-form-instance {
   border-radius: 4px;
   background-color: #FFFFFF;
-} */
+}
 
 .remove-button {
   margin-top: 10px;
   padding: 5px 10px;
   background-color: transparent;
-  color: #ff4d4d;
+  color: #f10400;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-left: 495px;
+  font-weight: 500;
 }
 
 .remove-button:hover {
@@ -631,56 +638,64 @@
 }
 
 @media(max-width: 479px) {
+  .remove-button {
+   margin-left: 200px;  
+  }
+  .profile-education-dates-container {
+    width: 100%;
+  }
+
   .profile-education-component-container1 {
     width: 100%;
-    height: 686px;
-    padding-top: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    background-color: transparent;
+    height: 580px;
+    padding: 0px;
+    background-color: #FFFFFF;
   }
    .profile-education-component-profile-education-container {
-    gap: var(--dl-space-space-twounits);
-    width: 95%;
-    height: 100%;
-    padding: var(--dl-space-space-twounits);
+    gap: 16px;
+    width: 100%;
+    height: 580px;
     align-self: center;
     align-items: center;
     justify-content: flex-start;
-    background-color: #FFFFFF;
+    padding: 16px;
+    
   } 
+  .profile-education-container {
+    height: auto;
+  }
   .profile-education-component-education-text1 {
     width: 100%;
   }
   .profile-education-component-duration-container1 {
     width: 100%;
     justify-content: space-between;
+    margin-bottom: 16px;
+    height: auto;
   }
   .profile-education-component-duration-container2 {
-    width: 47%;
+    width: 100%;
   }
   .profile-education-component-duration-text {
     width: 100%;
   }
   .profile-education-component-form1 {
-    width: auto;
-    padding-left: var(--dl-space-space-halfunit);
-    padding-right: var(--dl-space-space-halfunit);
+    width: 100%;
   }
   .profile-education-component-form2 {
-    width: 48%;
+    width: 100%;
     position: relative;
     align-self: flex-end;
     padding-left: var(--dl-space-space-halfunit);
     padding-right: var(--dl-space-space-halfunit);
   }
   .profile-education-component-university-institute-education-container {
-    gap: var(--dl-space-space-twounits);
+    gap: 16px;
     width: 100%;
-    height: 183px;
+    height: auto;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 16px;
   }
   .profile-education-component-university-institute-container {
     width: 100%;
@@ -707,11 +722,12 @@
     width: 100%;
   }
   .profile-education-component-container3 {
-    gap: var(--dl-space-space-twounits);
+    gap: 16px;
     width: 100%;
-    height: 177px;
+    height: auto;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 16px;
   }
   .profile-education-component-course-container {
     width: 100%;
