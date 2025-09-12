@@ -466,7 +466,7 @@
  
 .candidate-home-job-title-text1 {
   color: rgb(116, 116, 116);
-  width: auto;
+  width: 150px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -476,7 +476,7 @@
 .candidate-home-location-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: 192px;
+  width: 180px;
   height: 56px;
   display: flex;
   align-items: center;
@@ -507,7 +507,7 @@
 .candidate-home-experience-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: 118px;
+  width: auto;
   height: 56px;
   display: flex;
   align-items: center;
@@ -516,7 +516,7 @@
  
 .candidate-home-experience-text1 {
   color: rgb(116, 116, 116);
-  width: 65px;
+  width: 95px;
   height: 24px;
   display: flex;
   align-items: center;

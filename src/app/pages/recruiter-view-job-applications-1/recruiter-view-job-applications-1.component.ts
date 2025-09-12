@@ -9,15 +9,26 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./recruiter-view-job-applications-1.component.css'],
 })
 export class RecruiterViewJobApplications1 implements OnInit {
-  job: any = null; // Store job data
-  candidates: any[] = [];  // Or define an interface if preferred
+  job: any = null;
+  candidates: any[] = [];
   allCandidates: any[] = [];
-  moreCandidatesCount: number = 0; // Count of more candidates
-  selectedTab: string = 'applied'; // Default tab
+  filteredAndSortedCandidates: any[] = [];
+  moreCandidatesCount: number = 0;
+  selectedTab: string = 'applied';
+  masterChecked: boolean = false;
+  jobId: string | null;
+
   appliedCount: number = 0;
-  sourcedCount: number = 0;
-  selectedCount: number = 0;
-  masterChecked: boolean;
+  screeningCount: number = 0;
+  assessmentCount: number = 0;
+  interviewCount: number = 0;
+
+  sortColumn: string = 'name';
+  sortDirection: string = 'asc';
+
+  searchJobTitle: string = '';
+  searchLocation: string = '';
+  searchExperience: string = '';
 
   constructor(
     private title: Title,
@@ -40,32 +51,26 @@ export class RecruiterViewJobApplications1 implements OnInit {
   }
 
   ngOnInit() {
-    // Get job_id from URL (like /jobs/1)
-    const jobId = this.route.snapshot.paramMap.get('jobId');
-    this.fetchJobDetails(jobId);
+    this.jobId = this.route.snapshot.paramMap.get('jobId');
+    this.fetchJobDetails();
   }
 
-  fetchJobDetails(jobId: string | null) {
-    if (jobId) {
+  fetchJobDetails() {
+    if (this.jobId) {
       this.http
-        .get(`http://127.0.0.1:8000/api/recruiter/jobs/${jobId}/applications/`)
+        .get(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/applications/`)
         .subscribe(
           (data: any) => {
             this.job = data;
-            this.allCandidates = data.applications; // All applications now
-            // Calculate counts based on candidate statuses
-            this.appliedCount = this.allCandidates.filter(
-              (c) => c.status === 'applied' || c.status === 'selected' ||
-              c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
-              c.status === 'Interview Invite sent'
-            ).length;
-            this.sourcedCount = this.allCandidates.filter(
-              (c) => c.status === 'sourced'
-            ).length;
-            this.selectedCount = this.allCandidates.filter(
-              (c) => c.status === 'selected'
-            ).length;
-            this.changeTab('applied'); // Initialize display
+            this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
+            
+            this.appliedCount = data.applied_count;
+            this.screeningCount = data.screening_count;
+            this.assessmentCount = data.assessment_count;
+            this.interviewCount = data.interview_count;
+            
+            this.applyFiltersAndSorting();
+            this.masterChecked = false;
           },
           (error) => {
             console.error('Error fetching job details:', error);
@@ -76,149 +81,151 @@ export class RecruiterViewJobApplications1 implements OnInit {
 
   changeTab(tab: string) {
     this.selectedTab = tab;
-    let filtered: any[] = [];
-    if (tab === 'applied') {
-      filtered = this.allCandidates.filter(
-        (candidate) => candidate.status === 'applied' || candidate.status === 'selected' ||
-        candidate.status === 'Screening Invite sent' || candidate.status === 'Assessment Invite sent' ||
-        candidate.status === 'Interview Invite sent'
-      );
+    this.masterChecked = false;
+    this.applyFiltersAndSorting();
+  }
+
+  sortData(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      filtered = this.allCandidates.filter((candidate) => candidate.status === tab);
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
     }
-    this.candidates = filtered.slice(0, 5);
-    this.moreCandidatesCount = filtered.length - this.candidates.length;
+    this.applyFiltersAndSorting();
+  }
+
+  onSearchClick() {
+    this.applyFiltersAndSorting();
+  }
+
+  applyFiltersAndSorting() {
+    let results = [...this.allCandidates];
+
+    // 1. Apply Search Filters
+    if (this.searchJobTitle.trim()) {
+      const searchTerm = this.searchJobTitle.toLowerCase().trim();
+      results = results.filter(candidate =>
+        candidate.designation && candidate.designation.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // 2. Filter based on the selected tab
+    let tabFilteredResults = results;
+    if (this.selectedTab !== 'applied') {
+        let statusFilter: string;
+        switch (this.selectedTab) {
+            case 'screening': statusFilter = 'Screening'; break;
+            case 'assessment': statusFilter = 'Assessment'; break;
+            case 'interview': statusFilter = 'Interview'; break;
+        }
+        tabFilteredResults = results.filter(c => c.status === statusFilter);
+    }
+
+    // 3. Sort the filtered list
+    tabFilteredResults.sort((a, b) => {
+      const isAsc = this.sortDirection === 'asc';
+      let comparison = 0;
+
+      switch (this.sortColumn) {
+        case 'name':
+          comparison = a.user.full_name.localeCompare(b.user.full_name);
+          break;
+        case 'score':
+          comparison = a.matching_score - b.matching_score;
+          break;
+        case 'status':
+          const statusOrder = { 'applied': 1, 'Screening': 2, 'Assessment': 3, 'Interview': 4 };
+          const orderA = statusOrder[a.status] || 99;
+          const orderB = statusOrder[b.status] || 99;
+          comparison = orderA - orderB;
+          break;
+      }
+      return comparison * (isAsc ? 1 : -1);
+    });
+
+    this.filteredAndSortedCandidates = tabFilteredResults;
+
+    // 4. Apply pagination
+    this.candidates = this.filteredAndSortedCandidates.slice(0, 5);
+    this.moreCandidatesCount = this.filteredAndSortedCandidates.length - this.candidates.length;
   }
 
   toggleAll(checked: boolean) {
     this.masterChecked = checked;
-    const newStatus = checked ? 'selected' : 'applied';
-    this.candidates.forEach(candidate => {
-      this.updateCandidateStatus(candidate.application_id, newStatus);
-    });
-    // Refresh tab when unchecking in Selected view
-    if (!checked && this.selectedTab === 'selected') {
-      this.changeTab(this.selectedTab);
-    }
+    this.candidates.forEach(candidate => candidate.isSelected = checked);
+  }
+
+  onCheckboxChange(candidate: any, isChecked: boolean) {
+    candidate.isSelected = isChecked;
+    this.updateMasterChecked();
   }
 
   updateMasterChecked() {
-    this.masterChecked = this.candidates.every(candidate => candidate.status === 'selected');
+    if (this.candidates.length === 0) {
+        this.masterChecked = false;
+    } else {
+        this.masterChecked = this.candidates.every(c => c.isSelected);
+    }
   }
 
   loadMoreCandidates() {
-    let filtered: any[] = [];
-    if (this.selectedTab === 'applied') {
-      filtered = this.allCandidates.filter(
-        (candidate) => candidate.status === 'applied' || candidate.status === 'selected' ||
-        candidate.status === 'Screening Invite sent' || candidate.status === 'Assessment Invite sent' ||
-        candidate.status === 'Interview Invite sent'
-      );
-    } else {
-      filtered = this.allCandidates.filter((candidate) => candidate.status === this.selectedTab);
-    }
-    this.candidates = filtered;
-    this.moreCandidatesCount = 0; // No more to load
+    this.candidates = this.filteredAndSortedCandidates;
+    this.moreCandidatesCount = 0;
   }
 
-  updateCandidateStatus(applicationId: string, newStatus: string) {
-    const jobId = this.route.snapshot.paramMap.get('jobId');
-    this.http
-      .patch(`http://127.0.0.1:8000/api/recruiter/jobs/${jobId}/applications/`, {
-        application_id: applicationId,
-        status: newStatus,
-      })
-      .subscribe(
-        (response) => {
-          console.log('Status updated successfully');
-          // Proceed with local update on success
-          const candidate = this.allCandidates.find(
-            (c) => c.application_id === applicationId
-          );
-          if (candidate) {
-            candidate.status = newStatus;
-            // Update counts with adjusted applied
-            this.appliedCount = this.allCandidates.filter(
-              (c) => c.status === 'applied' || c.status === 'selected' ||
-              c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
-              c.status === 'Interview Invite sent'
-            ).length;
-            this.sourcedCount = this.allCandidates.filter(
-              (c) => c.status === 'sourced'
-            ).length;
-            this.selectedCount = this.allCandidates.filter(
-              (c) => c.status === 'selected'
-            ).length;
-            this.updateMasterChecked();
-            // Refresh tab only in Selected view when status changes to non-selected
-            if (this.selectedTab === 'selected' && newStatus !== 'selected') {
-              this.changeTab(this.selectedTab);
-            }
-          }
-        },
-        (error) => {
-          console.error('Error updating status:', error);
-          alert('Failed to update candidate status. Please try again.');
-        }
-      );
-  }
-
-  sendInvite(inviteType: 'screening' | 'assessment' | 'interview') {
-    const jobId = this.route.snapshot.paramMap.get('jobId');
-    const selectedCandidates = this.allCandidates.filter(
-      (candidate) => candidate.status === 'selected'
-    );
+  sendInvite() {
+    const selectedCandidates = this.allCandidates.filter(c => c.isSelected);
 
     if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate.');
+      alert('Please select at least one candidate to send an invite.');
       return;
     }
 
-    const applicationIds = selectedCandidates.map(
-      (candidate) => candidate.application_id
-    );
+    const applicationIds = selectedCandidates.map(c => c.application_id);
+    let inviteType: string;
 
-    let statusText: string;
-    switch (inviteType) {
+    switch (this.selectedTab) {
+      case 'applied':
+        inviteType = 'screening';
+        break;
       case 'screening':
-        statusText = 'Screening Invite sent';
+        inviteType = 'assessment';
         break;
       case 'assessment':
-        statusText = 'Assessment Invite sent';
-        break;
-      case 'interview':
-        statusText = 'Interview Invite sent';
+        inviteType = 'interview';
         break;
       default:
-        statusText = '';
+        console.error('No invite action for this tab.');
+        return;
     }
 
     this.http
-      .post(`http://127.0.0.1:8000/api/recruiter/jobs/${jobId}/send-invites/`, {
+      .post(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/send-invites/`, {
         application_ids: applicationIds,
         invite_type: inviteType,
-        status: statusText,
       })
       .subscribe(
-        (response) => {
-          console.log(`${inviteType} invites sent successfully`);
-          // Update local candidate statuses without removing them
-          selectedCandidates.forEach((candidate) => {
-            candidate.status = statusText;
+        (response: any) => {
+          this.appliedCount = response.applied_count;
+          this.screeningCount = response.screening_count;
+          this.assessmentCount = response.assessment_count;
+          this.interviewCount = response.interview_count;
+
+          selectedCandidates.forEach(candidate => {
+            const found = this.allCandidates.find(c => c.application_id === candidate.application_id);
+            if (found) {
+                found.status = {
+                  'screening': 'Screening',
+                  'assessment': 'Assessment',
+                  'interview': 'Interview'
+                }[inviteType];
+                found.isSelected = false;
+            }
           });
-          // Update counts
-          this.appliedCount = this.allCandidates.filter(
-            (c) => c.status === 'applied' || c.status === 'selected' ||
-            c.status === 'Screening Invite sent' || c.status === 'Assessment Invite sent' ||
-            c.status === 'Interview Invite sent'
-          ).length;
-          this.sourcedCount = this.allCandidates.filter(
-            (c) => c.status === 'sourced'
-          ).length;
-          this.selectedCount = this.allCandidates.filter(
-            (c) => c.status === 'selected'
-          ).length;
-          this.changeTab(this.selectedTab); // Refresh tab to show updated statuses
+
+          this.applyFiltersAndSorting();
+          this.masterChecked = false;
           alert(`${inviteType.charAt(0).toUpperCase() + inviteType.slice(1)} invites sent successfully.`);
         },
         (error) => {

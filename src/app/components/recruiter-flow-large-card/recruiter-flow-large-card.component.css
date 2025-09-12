@@ -46,7 +46,7 @@
 }
  
 .recruiter-flow-large-card-job-role {
-  width: 296px;
+  width: auto;
   height: 32px;
   display: flex;
   align-items: center;
