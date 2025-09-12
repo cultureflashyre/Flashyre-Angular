@@ -65,6 +65,13 @@ const routes = [
       ),
   },
   {
+    path: 'signup-admin',
+    loadChildren: () =>
+      import('./pages/signup-admin/signup-admin.module').then(
+        (m) => m.SignupAdminModule
+      ),
+  },
+  {
     path: 'signup-corporate',
     loadChildren: () =>
       import('./pages/signup-corporate/signup-corporate.module').then(
@@ -107,6 +114,13 @@ const routes = [
     loadChildren: () =>
       import('./pages/login-candidate/login-candidate.module').then(
         (m) => m.LoginCandidateModule
+      ),
+  },
+  {
+    path: 'login-admin',
+    loadChildren: () =>
+      import('./pages/login-admin/login-admin.module').then(
+        (m) => m.LoginAdminModule
       ),
   },
   {
