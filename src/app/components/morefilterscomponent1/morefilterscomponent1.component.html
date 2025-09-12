@@ -1,0 +1,772 @@
+<div
+  id="More_Filters_Container"
+  class="morefilterscomponent1-morefilterscontainer"
+  [ngClass]="rootClassName"
+>
+  <span
+    id="more-filters-header"
+    class="morefilterscomponent1-more-filters-header"
+  >
+    <ng-container>
+      <ng-template #defaultText>
+        <div class="morefilterscomponent1-fragment30">
+          <span class="morefilterscomponent1-text46">More Filters</span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="text ? text : defaultText"
+      ></ng-container>
+    </ng-container>
+  </span>
+  <div id="filters-container" class="morefilterscomponent1-filters-container">
+    <div
+      id="date-experience-container"
+      class="morefilterscomponent1-data-experience-container"
+    >
+      <div
+        id="date-posted-container"
+        class="morefilterscomponent1-date-posted-container"
+      >
+        <div
+          id="date-posted-main-container"
+          class="morefilterscomponent1-date-posted-main-container"
+        >
+          <span
+            id="date-posted-text"
+            class="morefilterscomponent1-date-posted-text"
+          >
+            <ng-container>
+              <ng-template #defaultText11>
+                <div class="morefilterscomponent1-fragment11">
+                  <span class="morefilterscomponent1-text11">
+                    <span>Date Posted</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text11 ? text11 : defaultText11"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-1"
+            class="morefilterscomponent1-select-container1"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form10 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text10"
+              >
+                <ng-container>
+                  <ng-template #defaultText31>
+                    <div class="morefilterscomponent1-fragment19">
+                      <select class="morefilterscomponent1-text23" [(ngModel)]="filterDatePosted" name="filterDatePosted">
+                        <option value="">Select</option>
+                        <option value="24h">Last 24 hours</option>
+                        <option value="week">Last week</option>
+                        <option value="month">Last month</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text31 ? text31 : defaultText31"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon10"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="Experience level-container"
+        class="morefilterscomponent1-experience-level-container"
+      >
+        <div
+          id="experoence-level-main-container"
+          class="morefilterscomponent1-experoence-level-main-container"
+        >
+          <span
+            id="experence-level-text"
+            class="morefilterscomponent1-experence-level-text"
+          >
+            <ng-container>
+              <ng-template #defaultText114>
+                <div class="morefilterscomponent1-fragment24">
+                  <span class="morefilterscomponent1-text34">
+                    <span>Experieance Level</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text114 ? text114 : defaultText114"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-2"
+            class="morefilterscomponent1-select-container2"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form11 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text11"
+              >
+                <ng-container>
+                  <ng-template #defaultText314>
+                    <div class="morefilterscomponent1-fragment14">
+                      <select class="morefilterscomponent1-text16" [(ngModel)]="filterExperienceLevel" name="filterExperienceLevel">
+                        <option value="">Select</option>
+                        <option value="entry">Entry Level</option>
+                        <option value="mid">Mid Level</option>
+                        <option value="senior">Senior Level</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text314 ? text314 : defaultText314"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon11"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="company-job-container"
+      class="morefilterscomponent1-company-job-container"
+    >
+      <div
+        id="company-container"
+        class="morefilterscomponent1-company-container"
+      >
+        <div
+          id="company-main-container"
+          class="morefilterscomponent1-company-main-container"
+        >
+          <span
+            id="company-name-text"
+            class="morefilterscomponent1-company-name-text"
+          >
+            <ng-container>
+              <ng-template #defaultText118>
+                <div class="morefilterscomponent1-fragment17">
+                  <span class="morefilterscomponent1-text19">
+                    <span>Company Name</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text118 ? text118 : defaultText118"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-3"
+            class="morefilterscomponent1-select-container3"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form12 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text12"
+              >
+                <ng-container>
+                  <ng-template #defaultText318>
+                    <div class="morefilterscomponent1-fragment26">
+                      <input class="morefilterscomponent1-text40" type="text" [(ngModel)]="filterCompanyName" name="filterCompanyName" placeholder="Enter company name">
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text318 ? text318 : defaultText318"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon12"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="job-type-container"
+        class="morefilterscomponent1-job-type-container"
+      >
+        <div id="job-container" class="morefilterscomponent1-job-container">
+          <span id="job-type-text" class="morefilterscomponent1-job-type-text">
+            <ng-container>
+              <ng-template #defaultText1144>
+                <div class="morefilterscomponent1-fragment25">
+                  <span class="morefilterscomponent1-text37">
+                    <span>Job Type</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1144 ? text1144 : defaultText1144"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-4"
+            class="morefilterscomponent1-select-container4"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form13 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text13"
+              >
+                <ng-container>
+                  <ng-template #defaultText3144>
+                    <div class="morefilterscomponent1-fragment10">
+                      <select class="morefilterscomponent1-text10" [(ngModel)]="filterJobType" name="filterJobType">
+                        <option value="">Select</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text3144 ? text3144 : defaultText3144"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon13"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="location-role-container"
+      class="morefilterscomponent1-location-role-container"
+    >
+      <div
+        id="location-container"
+        class="morefilterscomponent1-location-container"
+      >
+        <div
+          id="location-main-container"
+          class="morefilterscomponent1-location-main-container"
+        >
+          <span id="location-text" class="morefilterscomponent1-location-text">
+            <ng-container>
+              <ng-template #defaultText117>
+                <div class="morefilterscomponent1-fragment33">
+                  <span class="morefilterscomponent1-text51">
+                    <span>Location</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text117 ? text117 : defaultText117"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-5"
+            class="morefilterscomponent1-select-container5"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form14 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text14"
+              >
+                <ng-container>
+                  <ng-template #defaultText317>
+                    <div class="morefilterscomponent1-fragment31">
+                      <input class="morefilterscomponent1-text47" type="text" [(ngModel)]="filterLocation" name="filterLocation" placeholder="Enter location">
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text317 ? text317 : defaultText317"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon14"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="role-container" class="morefilterscomponent1-role-container">
+        <div
+          id="role-main-container"
+          class="morefilterscomponent1-role-main-container"
+        >
+          <span id="role-text" class="morefilterscomponent1-role-text">
+            <ng-container>
+              <ng-template #defaultText1143>
+                <div class="morefilterscomponent1-fragment20">
+                  <span class="morefilterscomponent1-text24">
+                    <span>Role</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1143 ? text1143 : defaultText1143"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-6"
+            class="morefilterscomponent1-select-container6"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form15 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text15"
+              >
+                <ng-container>
+                  <ng-template #defaultText3143>
+                    <div class="morefilterscomponent1-fragment16">
+                      <select class="morefilterscomponent1-text18" [(ngModel)]="filterRole" name="filterRole">
+                        <option value="">Select</option>
+                        <option value="developer">Developer</option>
+                        <option value="designer">Designer</option>
+                        <option value="manager">Manager</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text3143 ? text3143 : defaultText3143"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon15"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="salary-work-mode-container"
+      class="morefilterscomponent1-salary-work-mode-container"
+    >
+      <div id="salary-container" class="morefilterscomponent1-salary-container">
+        <div
+          id="salary-main-container"
+          class="morefilterscomponent1-salary-main-container"
+        >
+          <span id="salary-text" class="morefilterscomponent1-salary-text">
+            <ng-container>
+              <ng-template #defaultText116>
+                <div class="morefilterscomponent1-fragment22">
+                  <span class="morefilterscomponent1-text28">
+                    <span>Salary</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text116 ? text116 : defaultText116"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-7"
+            class="morefilterscomponent1-select-container7"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form16 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text16"
+              >
+                <ng-container>
+                  <ng-template #defaultText316>
+                    <div class="morefilterscomponent1-fragment12">
+                      <select class="morefilterscomponent1-text14" [(ngModel)]="filterSalary" name="filterSalary">
+                        <option value="">Select</option>
+                        <option value="0-5">0-5 LPA</option>
+                        <option value="5-10">5-10 LPA</option>
+                        <option value="10+">10+ LPA</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text316 ? text316 : defaultText316"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon16"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="work-mode-container"
+        class="morefilterscomponent1-work-mode-container"
+      >
+        <div
+          id="work-mode-main-container"
+          class="morefilterscomponent1-work-mode-main-container"
+        >
+          <span
+            id="work-mode-text"
+            class="morefilterscomponent1-work-mode-text"
+          >
+            <ng-container>
+              <ng-template #defaultText1142>
+                <div class="morefilterscomponent1-fragment23">
+                  <span class="morefilterscomponent1-text31">
+                    <span>Work Mode</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1142 ? text1142 : defaultText1142"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-8"
+            class="morefilterscomponent1-select-container8"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form17 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text17"
+              >
+                <ng-container>
+                  <ng-template #defaultText3142>
+                    <div class="morefilterscomponent1-fragment13">
+                      <select class="morefilterscomponent1-text15" [(ngModel)]="filterWorkMode" name="filterWorkMode">
+                        <option value="">Select</option>
+                        <option value="remote">Remote</option>
+                        <option value="hybrid">Hybrid</option>
+                        <option value="onsite">Onsite</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text3142 ? text3142 : defaultText3142"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon17"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="department-industries-container"
+      class="morefilterscomponent1-department-industries-container"
+    >
+      <div
+        id="department-container"
+        class="morefilterscomponent1-department-container"
+      >
+        <div
+          id="department-main-container"
+          class="morefilterscomponent1-department-main-container"
+        >
+          <span
+            id="department-text"
+            class="morefilterscomponent1-department-text"
+          >
+            <ng-container>
+              <ng-template #defaultText115>
+                <div class="morefilterscomponent1-fragment27">
+                  <span class="morefilterscomponent1-text41">
+                    <span>Department</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text115 ? text115 : defaultText115"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-9"
+            class="morefilterscomponent1-select-container9"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form18 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text18"
+              >
+                <ng-container>
+                  <ng-template #defaultText315>
+                    <div class="morefilterscomponent1-fragment28">
+                      <select class="morefilterscomponent1-text44" [(ngModel)]="filterDepartment" name="filterDepartment">
+                        <option value="">Select</option>
+                        <option value="it">IT</option>
+                        <option value="hr">HR</option>
+                        <option value="finance">Finance</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text315 ? text315 : defaultText315"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon18"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="industries-container"
+        class="morefilterscomponent1-industries-container"
+      >
+        <div
+          id="industries-main-container"
+          class="morefilterscomponent1-industries-main-container"
+        >
+          <span
+            id="industries-text"
+            class="morefilterscomponent1-industries-text"
+          >
+            <ng-container>
+              <ng-template #defaultText1141>
+                <div class="morefilterscomponent1-fragment32">
+                  <span class="morefilterscomponent1-text48">
+                    <span>Industries</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1141 ? text1141 : defaultText1141"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container-10"
+            class="morefilterscomponent1-select-container10"
+          >
+            <form
+              id="date-posted-dropdown"
+              class="morefilterscomponent1-form19 input"
+            >
+              <span
+                id="select-text"
+                class="morefilterscomponent1-select-text19"
+              >
+                <ng-container>
+                  <ng-template #defaultText3141>
+                    <div class="morefilterscomponent1-fragment29">
+                      <select class="morefilterscomponent1-text45" [(ngModel)]="filterIndustries" name="filterIndustries">
+                        <option value="">Select</option>
+                        <option value="tech">Tech</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="finance">Finance</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text3141 ? text3141 : defaultText3141"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                class="morefilterscomponent1-down-down-icon19"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="buttons-container" class="morefilterscomponent1-buttons-container">
+    <button
+      id="reset-button"
+      type="button"
+      class="morefilterscomponent1-reset-button button"
+      (click)="resetFilters()"
+    >
+      <span id="reset-text" class="morefilterscomponent1-reset-text">
+        <ng-container>
+          <ng-template #defaultButton>
+            <div class="morefilterscomponent1-fragment15">
+              <span class="morefilterscomponent1-text17">Reset</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="button ? button : defaultButton"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <button
+      id="apply-filters-button"
+      type="button"
+      class="morefilterscomponent1-apply-filters-button button"
+      (click)="applyFilters()"
+    >
+      <span
+        id="apply-filter-text"
+        class="morefilterscomponent1-apply-filters-text"
+      >
+        <ng-container>
+          <ng-template #defaultButton1>
+            <div class="morefilterscomponent1-fragment18">
+              <span class="morefilterscomponent1-text22">Apply Filters</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="button1 ? button1 : defaultButton1"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <button
+      id="save-preference-button"
+      type="button"
+      class="morefilterscomponent1-save-preference-button button"
+      (click)="savePreference()"
+    >
+      <span
+        id="save-preference-text"
+        class="morefilterscomponent1-save-preference-text"
+      >
+        <ng-container>
+          <ng-template #defaultButton2>
+            <div class="morefilterscomponent1-fragment21">
+              <span class="morefilterscomponent1-text27">Save Preference</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="button2 ? button2 : defaultButton2"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+  </div>
+</div>
