@@ -54,8 +54,14 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module'
       ).then((m) => m.RecruiterView3rdPageModule),
-      canActivate: [AuthGuard],
-      data: { roles: ['recruiter'] },
+      
+  },
+  {
+    path: 'recruiter-view-job-applications-1',
+    loadChildren: () =>
+      import(
+        './pages/recruiter-view-job-applications-1/recruiter-view-job-applications-1.module'
+      ).then((m) => m.RecruiterViewJobApplications1Module),
   },
   {
     path: 'signup-candidate',
@@ -320,7 +326,7 @@ const routes = [
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
+  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
     ReactiveFormsModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor

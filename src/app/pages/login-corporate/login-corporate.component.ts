@@ -46,12 +46,12 @@ export class LoginCorporate {
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {
           this.errorMessage = '';
-          this.router.navigate(['/create-job-post-1st-page']);
+          this.router.navigate(['/recruiter-view-job-applications-1']);
         },
         error: (profileError) => {
           console.error('Error fetching profile', profileError);
           // Navigate anyway, but with a warning
-          this.router.navigate(['/create-job-post-1st-page']);
+          this.router.navigate(['/recruiter-view-job-applications-1']);
         }
       });
     } else {
