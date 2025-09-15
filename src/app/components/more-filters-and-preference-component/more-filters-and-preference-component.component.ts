@@ -15,6 +15,7 @@ export class MoreFiltersAndPreferenceComponent {
   @Output() applyFiltersEvent: EventEmitter<any> = new EventEmitter<any>(); // Keep this for upward emission
 
   activeTab: string = 'filters'; // Default to filters
+  public selectedPreferenceData: any = null;
 
   constructor() {}
 
@@ -34,6 +35,12 @@ export class MoreFiltersAndPreferenceComponent {
 
   // Optional: If you added savePreferenceEvent in sub
   onSavePreference(filters: any): void {
-    // Implement as needed, e.g., save to preferences
+    this.setTab('preferences');
   }
+
+  onApplyPreference(preferenceData: any): void {
+    this.selectedPreferenceData = preferenceData;
+    this.setTab('filters');
+  }
+
 }

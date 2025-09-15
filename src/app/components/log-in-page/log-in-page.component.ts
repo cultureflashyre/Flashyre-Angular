@@ -75,7 +75,7 @@ export class LogInPage implements OnInit {
       next: (response: any) => {
         console.log(`${this.userType} login successful:`, response);
         this.errorMessage = '';
-        localStorage.setItem('jwtToken', response.access);
+        localStorage.setItem('auth_token', response.access);
         this.loginSubmit.emit(response);
         this.cdr.detectChanges();
       },
