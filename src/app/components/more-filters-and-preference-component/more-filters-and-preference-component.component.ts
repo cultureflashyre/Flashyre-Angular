@@ -1,11 +1,11 @@
-import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
   selector: 'more-filters-and-preference-component',
   templateUrl: 'more-filters-and-preference-component.component.html',
   styleUrls: ['more-filters-and-preference-component.component.css'],
 })
-export class MoreFiltersAndPreferenceComponent {
+export class MoreFiltersAndPreferenceComponent implements OnInit {
   @ContentChild('preferenceText')
   preferenceText: TemplateRef<any>
   @ContentChild('jobRecommendedText')
@@ -14,6 +14,7 @@ export class MoreFiltersAndPreferenceComponent {
   @Output() closeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() applyFiltersEvent: EventEmitter<any> = new EventEmitter<any>(); // Keep this for upward emission
 
+  @Input() initialTab: 'filters' | 'preferences' = 'filters';
   activeTab: string = 'filters'; // Default to filters
   public selectedPreferenceData: any = null;
 
@@ -41,6 +42,11 @@ export class MoreFiltersAndPreferenceComponent {
   onApplyPreference(preferenceData: any): void {
     this.selectedPreferenceData = preferenceData;
     this.setTab('filters');
+  }
+
+  ngOnInit(): void {
+    // When the component loads, set the active tab based on the input
+    this.activeTab = this.initialTab;
   }
 
 }
