@@ -1,115 +1,138 @@
+/* Editor container with a clean, professional look */
 .editor-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    position: relative;
+    background: #f9fafb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
     min-height: 500px;
     resize: vertical;
     overflow-y: auto;
+    transition: box-shadow 0.2s ease;
 }
 
+.editor-container:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Form group for language selector */
 .form-group {
-    background: #f8fafc;
-    padding: 1rem 1.5rem;
+    background: #f3f4f6;
+    padding: 1.25rem 1.75rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e5e7eb;
 }
 
+/* Label with consistent typography */
 .form-group label {
     font-weight: 600;
-    color: #1e293b;
-    font-size: 0.9rem;
+    color: #1f2a44;
+    font-size: 0.95rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Language selector with modern styling */
 .language-selector {
-    background: white;
+    background: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    color: #374151;
-    font-size: 0.9rem;
+    border-radius: 8px;
+    padding: 0.6rem 1.25rem;
+    color: #1f2a44;
+    font-size: 0.95rem;
     cursor: pointer;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .language-selector:focus {
     outline: none;
     border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-.code-editor {
+/* Ace editor container */
+.ace-editor {
     flex: 1;
     min-height: 400px;
-    padding: 1.5rem;
-    border: none;
-    outline: none;
-    resize: none;
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    background: #ffffff;
-    color: #374151;
     width: 100%;
 }
 
+/* Contextual note for Java */
+.java-note {
+    background: #fefce8;
+    border-left: 4px solid #f4d03f;
+    padding: 1rem 1.75rem;
+    font-size: 0.9rem;
+    color: #78350f;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Button group with consistent spacing */
 .button-group {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 1rem 1.5rem;
-    background: #f8fafc;
-    gap: 0.75rem;
-    border-top: 1px solid #e2e8f0;
+    padding: 1.25rem 1.75rem;
+    background: #f3f4f6;
+    gap: 1rem;
+    border-top: 1px solid #e5e7eb;
 }
 
+/* Base button styles */
 .btn {
-    padding: 0.7rem 1.5rem;
+    padding: 0.75rem 1.75rem;
     border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease, transform 0.1s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Primary button (Run) */
 .btn-primary {
     background: #10b981;
-    color: white;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
     background: #059669;
 }
 
+/* Secondary button (Submit) */
 .btn-secondary {
     background: #3b82f6;
-    color: white;
+    color: #ffffff;
 }
 
 .btn-secondary:hover {
     background: #2563eb;
 }
 
+/* Scrollbar styling */
 .editor-container::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .editor-container::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #f3f4f6;
 }
 
 .editor-container::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 3px;
+    background: #d1d5db;
+    border-radius: 4px;
 }
 
 .editor-container::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
+    background: #9ca3af;
 }
