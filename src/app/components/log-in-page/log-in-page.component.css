@@ -97,7 +97,7 @@ input[type="password"]::-ms-reveal {
 .log-in-page-password-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  height:  auto;
   margin-bottom: 16px;
   display: flex;
   align-items: flex-start;

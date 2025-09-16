@@ -257,6 +257,7 @@
   justify-content: center;
   background-color: transparent;
   color: #05356C;
+  font-weight: 600;
 }
  
 .signup-corporate1-show-text1:hover {
@@ -321,6 +322,8 @@
   justify-content: center;
   background-color: transparent;
   color: #05356C;
+  font-weight: 600;
+
 }
  
 .signup-corporate1-show-text2:hover {
