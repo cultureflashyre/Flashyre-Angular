@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { finalize, switchMap, tap, catchError } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../environments/environment';
+import { UserProfileService } from './user-profile.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,44 +12,39 @@ import { environment } from '../../environments/environment';
 export class EmploymentService {
   private apiUrl = environment.apiUrl+'api/employment/';
 
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
+  constructor(
+    private http: HttpClient, 
+    private spinner: NgxSpinnerService,
+    private userProfileService: UserProfileService
+) {}
 
-  saveEmployment(positions: any[]): Observable<any> {
-    const requests = positions.map((position) =>
-      this.http.post(this.apiUrl, {
-        job_title: position.jobTitle,
-        company_name: position.companyName,
-        start_date: position.startDate,
-        end_date: position.endDate || null,
-        job_details: position.jobDetails,
-      })
-    );
+saveEmployment(positions: any[]): Observable<any> {
+  this.spinner.show();
 
-    // Show spinner before making requests
-    this.spinner.show();
+  const requests = positions.map(position =>
+    this.http.post(this.apiUrl, {
+      job_title: position.jobTitle,
+      company_name: position.companyName,
+      start_date: position.startDate,
+      end_date: position.endDate || null,
+      job_details: position.jobDetails,
+    })
+  );
 
-
-
-    return new Observable((observer) => {
-      let completed = 0;
-      requests.forEach((request, index) => {
-        request.subscribe(
-          (response) => {
-            completed++;
-            if (completed === requests.length) {
-              this.spinner.hide();
-
-              observer.next(response);
-              observer.complete();
-            }
-          },
-          (error) => {
-            // Hide spinner on error
-            this.spinner.hide();
-            observer.error(error);
-          }
-        );
+  return forkJoin(requests).pipe(
+    tap(() => {
+      // After all saves succeed, refresh profile asynchronously
+      this.userProfileService.refreshUserProfileValues().subscribe({
+        next: () => console.log('User profile refreshed after employment save'),
+        error: err => console.error('Error refreshing user profile', err),
       });
-    });
-  }
+    }),
+    finalize(() => this.spinner.hide()),
+    catchError(error => {
+      this.spinner.hide();
+      throw error;
+    })
+  );
+}
+
 }

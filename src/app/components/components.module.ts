@@ -224,7 +224,7 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
 
     MoreFiltersAndPreferenceComponent,
     Morefilterscomponent1,
-    PreferenceComponent
+    PreferenceComponent,
 
     Signupadmin
 
@@ -332,7 +332,7 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
     AdminJdExtendedComponent,
     MoreFiltersAndPreferenceComponent,
     Morefilterscomponent1,
-    PreferenceComponent
+    PreferenceComponent,
 
     Signupadmin
 

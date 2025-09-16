@@ -18,7 +18,7 @@ export class FlashyreAssessmentRulesCard implements OnInit {
   public attemptsRemaining: number = 0;
   public assessmentTitle: string = '';
   public totalAssessmentDuration: number = 0;
-  public isLoading: boolean = true;
+  public isLoading: boolean = false;
   
   constructor(
     private title: Title,
@@ -43,18 +43,28 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     ]);
   }
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.assessmentId = +id;
-        //this.fetchAssessmentData(this.assessmentId);
-      } else {
-        console.error('Rules Card: No assessment ID was found. Redirecting.');
+  ngOnInit() {
+  this.route.queryParams.subscribe(params => {
+    if (params['data']) {
+      try {
+        this.assessmentData = JSON.parse(params['data']);
+
+        // Extract and assign assessment_id to assessmentId variable
+        if (this.assessmentData && this.assessmentData.assessment_id) {
+          this.assessmentId = this.assessmentData.assessment_id;
+        }
+
+      } catch (e) {
+        console.error('Error parsing assessment data', e);
         this.router.navigate(['/candidate-assessment']);
       }
-    });
-  }
+    } else {
+      console.error('Rules Card: No assessment data was found. Redirecting.');
+      this.router.navigate(['/candidate-assessment']);
+    }
+  });
+}
+
 
   fetchAssessmentData(assessmentId: number): void {
     this.isLoading = true;
@@ -120,5 +130,23 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     }
 
     this.isLoading = false;
+  }
+
+  get showProctoredRule(): boolean {
+    return this.assessmentData?.proctored?.toUpperCase() === 'YES';
+  }
+
+  get showVideoRecordingRule(): boolean {
+    return this.assessmentData?.video_recording?.toUpperCase() === 'YES';
+  }
+
+  get proctoredRuleNumber(): number {
+    // If video recording rule is shown before, proctored is #2 else #1
+    return this.showVideoRecordingRule ? 1 : 2;
+  }
+
+  get videoRecordingRuleNumber(): number {
+    // If proctored rule shown before, video recording is #2 else #1
+    return this.showProctoredRule ? 2 : 1;
   }
 }

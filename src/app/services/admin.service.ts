@@ -105,11 +105,12 @@ export class AdminService {
    * @returns An Observable with the backend's success or error response.
    */
   uploadCVs(files: File[]): Observable<any> {
+    console.log("Inside ADMIN SERVICE...uploadCVs() called...");
     const formData = new FormData();
     files.forEach(file => {
       formData.append('files', file, file.name);
     });
-    return this.http.post(`${this.apiUrl}/candidates/upload-cvs/`, formData);
+    return this.http.post(`${this.apiUrl}candidates/upload-cvs/`, formData);
   }
 
   /**
@@ -119,11 +120,12 @@ export class AdminService {
    * @returns An Observable array of Candidate objects.
    */
   getCandidates(filterDate?: string): Observable<Candidate[]> {
+    console.log("Inside ADMIN SERVICE...getCandidates() called...");
     let params = new HttpParams();
     if (filterDate) {
       params = params.set('batch_date', filterDate);
     }
-    return this.http.get<Candidate[]>(`${this.apiUrl}/candidates/draft/`, { params });
+    return this.http.get<Candidate[]>(`${this.apiUrl}candidates/draft/`, { params });
   }
 
   /**
@@ -133,7 +135,8 @@ export class AdminService {
    * @returns An Observable with the backend response.
    */
   deleteCandidate(candidateId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/candidates/draft/${candidateId}/`);
+    console.log("Inside ADMIN SERVICE...deleteCandidate() called...");
+    return this.http.delete(`${this.apiUrl}candidates/draft/${candidateId}/`);
   }
 
   /**
@@ -143,7 +146,8 @@ export class AdminService {
    * @returns An Observable with the backend response.
    */
   sendRegistrationInvites(candidateIds: number[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/candidates/send-invites/`, { candidate_ids: candidateIds });
+    console.log("Inside ADMIN SERVICE...sendRegistrationInvites() called...");
+    return this.http.post(`${this.apiUrl}candidates/send-invites/`, { candidate_ids: candidateIds });
   }
 
   // ==============================================================================
@@ -156,7 +160,8 @@ export class AdminService {
    * @returns An Observable containing the latest JobDescription.
    */
   getLatestJd(): Observable<JobDescription> {
-    return this.http.get<JobDescription>(`${this.apiUrl}/jd/latest/`).pipe(
+    console.log("Inside ADMIN SERVICE...getLatestJd() called...");
+    return this.http.get<JobDescription>(`${this.apiUrl}jd/latest/`).pipe(
       tap(jd => this.activeJdSubject.next(jd))
     );
   }
@@ -168,9 +173,10 @@ export class AdminService {
    * @returns An Observable containing the newly processed JobDescription.
    */
   uploadJd(file: File): Observable<JobDescription> {
+    console.log("Inside ADMIN SERVICE...uploadJd() called...");
     const formData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post<JobDescription>(`${this.apiUrl}/jd/upload/`, formData).pipe(
+    return this.http.post<JobDescription>(`${this.apiUrl}jd/upload/`, formData).pipe(
       tap(newJd => this.activeJdSubject.next(newJd))
     );
   }
@@ -186,25 +192,28 @@ export class AdminService {
    * @returns An Observable array of SourcedCandidate objects.
    */
  getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
+  console.log("Inside ADMIN SERVICE...getSourcedCandidates() called...");
     const params = new HttpParams()
       .set('job_id', jobId.toString())
       .set('sort_by', sortBy);
-    return this.http.get<SourcedCandidate[]>(`${this.apiUrl}/candidates/sourced/`, { params });
+    return this.http.get<SourcedCandidate[]>(`${this.apiUrl}candidates/sourced/`, { params });
   }
 
   // --- NEW: Method to get a secure, short-lived URL for a CV download ---
   getSecureCvUrl(candidateId: number): Observable<{ url: string }> {
-    return this.http.get<{ url: string }>(`${this.apiUrl}/candidates/${candidateId}/generate-cv-url/`);
+    console.log("Inside ADMIN SERVICE...getSecureCvUrl() called...");
+    return this.http.get<{ url: string }>(`${this.apiUrl}candidates/${candidateId}/generate-cv-url/`);
   }
   
   // --- NEW: Method to download an Excel report for specifically selected candidates ---
   downloadSelectedReport(jobId: number, candidateIds: number[]): Observable<Blob> {
+    console.log("Inside ADMIN SERVICE...downloadSelectedReport() called...");
     const payload = {
       job_id: jobId,
       candidate_ids: candidateIds
     };
     // The endpoint is the same, but we use POST to send a body
-    return this.http.post(`${this.apiUrl}/report/download/`, payload, { responseType: 'blob' });
+    return this.http.post(`${this.apiUrl}report/download/`, payload, { responseType: 'blob' });
   }
   /**
    * Downloads the Excel report for a given Job Description.
@@ -212,7 +221,8 @@ export class AdminService {
    * @returns An Observable containing the file data as a Blob.
    */
   downloadCandidateReport(jobId: number): Observable<Blob> {
+    console.log("Inside ADMIN SERVICE...downloadCandidateReport() called...");
     const params = new HttpParams().set('job_id', jobId.toString());
-    return this.http.get(`${this.apiUrl}/report/download/`, { params, responseType: 'blob' });
+    return this.http.get(`${this.apiUrl}report/download/`, { params, responseType: 'blob' });
   }
 }

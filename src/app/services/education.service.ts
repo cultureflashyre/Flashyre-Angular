@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, finalize, retry } from 'rxjs/operators';
+import { catchError, finalize, retry, tap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../environments/environment';
+import { UserProfileService } from './user-profile.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class EducationService {
 
   constructor(
     private http: HttpClient,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private userProfileService: UserProfileService
   ) {}
 
   private getAuthHeaders(): HttpHeaders {
@@ -24,18 +26,27 @@ export class EducationService {
     });
   }
 
-  addEducation(educationData: any): Observable<any> {
+addEducation(educationData: any): Observable<any> {
   this.spinner.show();
+
   return this.http.post(this.apiUrl, educationData, { headers: this.getAuthHeaders() }).pipe(
     retry(1),
+    tap(() => {
+      // Asynchronously refresh user profile after successful save
+      this.userProfileService.refreshUserProfileValues().subscribe({
+        next: () => console.log('User profile refreshed after adding education'),
+        error: err => console.error('Error refreshing user profile', err),
+      });
+    }),
     catchError(error => {
-      console.error('Full backend error:', error); // Log the entire error object
+      console.error('Full backend error:', error);
       const errorMessage = error.error || 'Failed to save education';
       return throwError(() => new Error(JSON.stringify(errorMessage)));
     }),
     finalize(() => this.spinner.hide())
   );
 }
+
 
   getReferenceData(): Observable<any> {
     this.spinner.show();

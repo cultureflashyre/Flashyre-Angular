@@ -45,7 +45,7 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
 
   signupCorporate(data: CorporateSignupData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}signup-corporate/`, data).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/signup/`, data).pipe(
       tap((response: AuthResponse) => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);
