@@ -1,3 +1,5 @@
+// src/app/services/admin.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -30,12 +32,13 @@ export interface JobDescription {
 }
 
 /**
- * Represents a candidate object returned by the original CV list component.
- * This interface is kept for backwards compatibility with admin-page1-component.
+ * --- MODIFIED ---
+ * Represents a candidate object. Added the new `batch_date` property.
  */
 export interface Candidate {
   candidate_id: number;
   batch_id: number;
+  batch_date?: string; // --- NEW: To hold the upload date of the batch ---
   full_name: string;
   email: string;
   phone: string;
@@ -56,7 +59,6 @@ export interface Candidate {
 
 /**
  * Represents a candidate object after being scored against a JD.
- * This is used in the "Candidate Sourced" component.
  */
 export interface SourcedCandidate {
   candidate_id: number;
@@ -71,39 +73,27 @@ export interface SourcedCandidate {
   providedIn: 'root'
 })
 export class AdminService {
-  /**
-   * The base URL for the Django API. Using a relative path is best practice,
-   * relying on a proxy.conf.json file for local development to avoid CORS issues.
-   */
   private apiUrl = environment.apiUrl;
-
-  /**
-   * A private BehaviorSubject that holds the currently active JobDescription.
-   * Components can subscribe to its public observable counterpart.
-   */
   private activeJdSubject = new BehaviorSubject<JobDescription | null>(null);
-
-  /**
-   * The public observable that components will subscribe to in order to get
-   * updates on the latest active Job Description.
-   */
   public activeJd$ = this.activeJdSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    // When the application starts, immediately try to fetch the latest JD
-    // to populate the initial state.
     this.getLatestJd().subscribe();
   }
 
   // ==============================================================================
-  // CV WORKFLOW METHODS (Includes legacy methods for compatibility)
+  // CV WORKFLOW METHODS
   // ==============================================================================
 
   /**
-   * Uploads an array of CV files to the backend for processing.
-   * @param files The array of CV files to upload.
-   * @returns An Observable with the backend's success or error response.
+   * --- NEW: Fetches the distinct dates of all CV upload batches.
+   * @returns An Observable array of date strings (YYYY-MM-DD).
    */
+  getBatchDates(): Observable<string[]> {
+    console.log("Inside ADMIN SERVICE...getBatchDates() called...");
+    return this.http.get<string[]>(`${this.apiUrl}candidates/batch-dates/`);
+  }
+
   uploadCVs(files: File[]): Observable<any> {
     console.log("Inside ADMIN SERVICE...uploadCVs() called...");
     const formData = new FormData();
@@ -113,12 +103,6 @@ export class AdminService {
     return this.http.post(`${this.apiUrl}candidates/upload-cvs/`, formData);
   }
 
-  /**
-   * [LEGACY] Fetches a list of raw, unscored candidates.
-   * Kept for compatibility with the admin-page1-component.
-   * @param filterDate Optional date string (YYYY-MM-DD) to filter by.
-   * @returns An Observable array of Candidate objects.
-   */
   getCandidates(filterDate?: string): Observable<Candidate[]> {
     console.log("Inside ADMIN SERVICE...getCandidates() called...");
     let params = new HttpParams();
@@ -128,23 +112,11 @@ export class AdminService {
     return this.http.get<Candidate[]>(`${this.apiUrl}candidates/draft/`, { params });
   }
 
-  /**
-   * [LEGACY] Deletes a single candidate from the draft list.
-   * Kept for compatibility with the admin-page1-component.
-   * @param candidateId The ID of the candidate to delete.
-   * @returns An Observable with the backend response.
-   */
   deleteCandidate(candidateId: number): Observable<any> {
     console.log("Inside ADMIN SERVICE...deleteCandidate() called...");
     return this.http.delete(`${this.apiUrl}candidates/draft/${candidateId}/`);
   }
 
-  /**
-   * [LEGACY] Sends registration invites to a list of candidates.
-   * Kept for compatibility with the admin-page1-component.
-   * @param candidateIds An array of candidate IDs.
-   * @returns An Observable with the backend response.
-   */
   sendRegistrationInvites(candidateIds: number[]): Observable<any> {
     console.log("Inside ADMIN SERVICE...sendRegistrationInvites() called...");
     return this.http.post(`${this.apiUrl}candidates/send-invites/`, { candidate_ids: candidateIds });
@@ -154,11 +126,6 @@ export class AdminService {
   // JOB DESCRIPTION (JD) WORKFLOW METHODS
   // ==============================================================================
 
-  /**
-   * Fetches the most recently processed Job Description from the backend.
-   * On success, it updates the activeJd$ observable.
-   * @returns An Observable containing the latest JobDescription.
-   */
   getLatestJd(): Observable<JobDescription> {
     console.log("Inside ADMIN SERVICE...getLatestJd() called...");
     return this.http.get<JobDescription>(`${this.apiUrl}jd/latest/`).pipe(
@@ -166,12 +133,6 @@ export class AdminService {
     );
   }
 
-  /**
-   * Uploads a single Job Description file to the backend for processing.
-   * On success, it updates the activeJd$ observable with the new JD data.
-   * @param file The JD file to upload.
-   * @returns An Observable containing the newly processed JobDescription.
-   */
   uploadJd(file: File): Observable<JobDescription> {
     console.log("Inside ADMIN SERVICE...uploadJd() called...");
     const formData = new FormData();
@@ -185,41 +146,28 @@ export class AdminService {
   // CANDIDATE SOURCING & REPORTING METHODS
   // ==============================================================================
 
-  /**
-   * Fetches the list of candidates scored against a specific Job Description.
-   * @param jobId The ID of the job to match against.
-   * @param sortBy The sorting preference (e.g., 'score_desc', 'name_asc').
-   * @returns An Observable array of SourcedCandidate objects.
-   */
- getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
-  console.log("Inside ADMIN SERVICE...getSourcedCandidates() called...");
+  getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
+    console.log("Inside ADMIN SERVICE...getSourcedCandidates() called...");
     const params = new HttpParams()
       .set('job_id', jobId.toString())
       .set('sort_by', sortBy);
     return this.http.get<SourcedCandidate[]>(`${this.apiUrl}candidates/sourced/`, { params });
   }
 
-  // --- NEW: Method to get a secure, short-lived URL for a CV download ---
   getSecureCvUrl(candidateId: number): Observable<{ url: string }> {
     console.log("Inside ADMIN SERVICE...getSecureCvUrl() called...");
     return this.http.get<{ url: string }>(`${this.apiUrl}candidates/${candidateId}/generate-cv-url/`);
   }
   
-  // --- NEW: Method to download an Excel report for specifically selected candidates ---
   downloadSelectedReport(jobId: number, candidateIds: number[]): Observable<Blob> {
     console.log("Inside ADMIN SERVICE...downloadSelectedReport() called...");
     const payload = {
       job_id: jobId,
       candidate_ids: candidateIds
     };
-    // The endpoint is the same, but we use POST to send a body
     return this.http.post(`${this.apiUrl}report/download/`, payload, { responseType: 'blob' });
   }
-  /**
-   * Downloads the Excel report for a given Job Description.
-   * @param jobId The ID of the job for which to generate the report.
-   * @returns An Observable containing the file data as a Blob.
-   */
+  
   downloadCandidateReport(jobId: number): Observable<Blob> {
     console.log("Inside ADMIN SERVICE...downloadCandidateReport() called...");
     const params = new HttpParams().set('job_id', jobId.toString());
