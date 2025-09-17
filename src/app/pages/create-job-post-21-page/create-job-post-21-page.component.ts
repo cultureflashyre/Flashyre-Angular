@@ -102,7 +102,6 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
    * Handles the 'Generate with AI' / 'Regenerate' button click.
    */
   onGenerateAi(): void {
-    // Allow regeneration by removing hasGenerated from the guard
     if (!this.jobUniqueId || this.isGenerating) {
       return;
     }
@@ -118,21 +117,31 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
 
     const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
       .pipe(
-        // Use the finalize operator to guarantee the spinner is hidden
-        // This block will run on success, error, or completion.
         finalize(() => {
           this.isGenerating = false;
           this.spinner.hide('ai-spinner');
         })
       )
       .subscribe({
-        next: (response) => {
-          this.hasGenerated = true; // Set state to true after successful generation
-          this.snackBar.open(response.message || 'Assessment questions have been generated!', 'Close', { duration: 3000 });
+        next: (response: any) => {
+          // This now handles logical failures where the server returns a 200 OK response
+          // but indicates failure in the response body (a common API pattern).
+          // We check for a `success: false` property in the response.
+          if (response && response.success === false) {
+            this.hasGenerated = false; // Ensure UI state reflects failure
+            this.snackBar.open('Unable to generate at moment please try again later', 'Close', { duration: 5000 });
+          } else {
+            // This is the original success path, executed when the API call is successful
+            // and does not explicitly state a failure.
+            this.hasGenerated = true;
+            this.snackBar.open(response.message || 'Assessment questions have been generated!', 'Close', { duration: 3000 });
+          }
         },
         error: (err) => {
-          // isGenerating and spinner.hide() are handled by the finalize operator
-          this.snackBar.open(`Error: ${err.message || 'Could not generate questions.'}`, 'Close', { duration: 5000 });
+          // This handles HTTP-level errors (e.g., 500, 404, network issues).
+          // It now displays the requested popup message.
+          this.hasGenerated = false; // Ensure UI state reflects failure
+          this.snackBar.open('Unable to generate at moment please try again later', 'Close', { duration: 5000 });
         }
     });
     this.subscriptions.add(generateSub);
