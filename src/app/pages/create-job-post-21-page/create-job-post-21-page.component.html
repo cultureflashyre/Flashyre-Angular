@@ -110,6 +110,14 @@
       </ng-template>
     </navbar-for-recruiter-view>
 
+    <!-- Popup Message -->
+    <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      <span *ngIf="popupType === 'success'" class="tick">✔</span>
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> × </span>
+
+    </div>
+
     <!-- Main Content Container -->
     <div class="create-job-post21-page-container3">
       <div class="create-job-post21-page-container4">

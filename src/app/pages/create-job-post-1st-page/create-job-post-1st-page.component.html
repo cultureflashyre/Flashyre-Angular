@@ -110,6 +110,14 @@
       </ng-template>
     </navbar-for-recruiter-view>
 
+    <!-- Popup Message -->
+    <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      
+      <span *ngIf="popupType === 'success'" class="tick">✔</span>
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> ×</span>
+    </div>
+
     <!-- This container is now always visible and contains only the job post form -->
     <div>
       <form [formGroup]="jobForm">
@@ -169,7 +177,7 @@
                 #fileInput
                 class="create-job-post1st-page-upload-file-input"
                 (change)="onFileSelected($event)"
-                accept=".pdf,.docx,.doc,.txt,.xml,.csv"
+                accept=".pdf,.docx,.doc,.txt,"
               />
               <div class="file-display-area">
                 <span *ngIf="displayedFileName; else noFileSelectedPlaceholder" class="selected-file-name-text">
@@ -214,7 +222,7 @@
               id="note-for-file"
               class="create-job-post1st-page-note-for-file"
             >
-              Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
+              Note: Please upload job description files only in PDF or DOCX format. Maximum file size allowed is 5 MB.
             </span>
           </div>
           <div
@@ -655,116 +663,122 @@
           Enter the Budget Type
         </div>
           </div>
-          <div
-            id="min-max-budget-container"
-            class="create-job-post1st-page-min-max-budget-container"
-          >
-            <div
-              id="min-budget-container"
-              class="create-job-post1st-page-min-budget-container"
-            >
-              <div
-                id="min-budget-text-container"
-                class="create-job-post1st-page-min-budget-text-container"
-              >
-                <span
-                  id="min-budget-text"
-                  class="create-job-post1st-page-min-budget-text"
-                >
-                  Min Budget <span class="required-asterisk">*</span>
-                </span>
-              </div>
-              <div
-                id="min-budget-input-container"
-                class="create-job-post1st-page-min-budget-input-container"
-              >
-                <div
-                  id="min-budget-form"
-                  class="create-job-post1st-page-min-budget-form input"
-                >
-                  <span id="inr-min" class="create-job-post1st-page-inr-min">
-                    INR
-                  </span>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 32 32"
-                    id="drop-down-icon-min"
-                    class="create-job-post1st-page-drop-down-icon-min"
-                  >
-                    <path
-                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                </div>
-                <input
-                  type="number"
-                  id="min-budget-input-field"
-                  placeholder="Min"
-                  class="create-job-post1st-page-min-budget-input-field input"
-                  formControlName="min_budget"
-                />
-              </div>
-              <div *ngIf="jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors?.required" class="field-error-message">
-              Enter your Minimum Budget
-            </div>
-            <div *ngIf="jobForm.errors?.invalidBudgetRange && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)" class="field-error-message min-max-budget-error">
-            Min budget cannot exceed Max budget.
-          </div>
-            </div>
-            <div
-              id="max-budget-container"
-              class="create-job-post1st-page-max-budget-container"
-            >
-              <div
-                id="max-budget-text-container"
-                class="create-job-post1st-page-max-budget-text-container"
-              >
-                <span
-                  id="max-budget-text"
-                  class="create-job-post1st-page-max-budget-text"
-                >
-                  Max Budget <span class="required-asterisk">*</span>
-                </span>
-              </div>
-              <div
-                id="max-budget-input-container"
-                class="create-job-post1st-page-max-budget-input-container"
-              >
-                <div
-                  id="max-budget-form"
-                  class="create-job-post1st-page-max-budget-form input"
-                >
-                  <span id="inr-max" class="create-job-post1st-page-inr-max">
-                    INR
-                  </span>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 32 32"
-                    id="drop-down-icon-max"
-                    class="create-job-post1st-page-drop-down-icon-max"
-                  >
-                    <path
-                      d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                </div>
-                <input
-                  type="number"
-                  id="max-budget-input"
-                  placeholder="Max"
-                  class="create-job-post1st-page-max-budget-input input"
-                  formControlName="max_budget"
-                />
-              </div>
-              <div *ngIf="jobForm.get('max_budget')?.touched && jobForm.get('max_budget')?.errors?.required" class="field-error-message min-max-budget-error">
-            Enter your Maximum Budget
-          </div>
-            </div>
-          </div>
+         <div
+  id="min-max-budget-container"
+  class="create-job-post1st-page-min-max-budget-container"
+>
+  <div
+    id="min-budget-container"
+    class="create-job-post1st-page-min-budget-container"
+  >
+    <div
+      id="min-budget-text-container"
+      class="create-job-post1st-page-min-budget-text-container"
+    >
+      <span
+        id="min-budget-text"
+        class="create-job-post1st-page-min-budget-text"
+      >
+        Min Budget <span class="required-asterisk">*</span>
+      </span>
+    </div>
+    <div
+      id="min-budget-input-container"
+      class="create-job-post1st-page-min-budget-input-container"
+    >
+      <div
+        id="min-budget-form"
+        class="create-job-post1st-page-min-budget-form input"
+      >
+        <span id="inr-min" class="create-job-post1st-page-inr-min">
+          INR
+        </span>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 32 32"
+          id="drop-down-icon-min"
+          class="create-job-post1st-page-drop-down-icon-min"
+        >
+          <path
+            d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+      <input
+        type="text"
+        id="min-budget-input-field"
+        placeholder="Min (e.g., 99000000000)"
+        class="create-job-post1st-page-min-budget-input-field input"
+        formControlName="min_budget"
+      />
+    </div>
+    <div *ngIf="jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors?.required" class="field-error-message">
+      Enter your Minimum Budget
+    </div>
+    <div *ngIf="jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors?.invalidNumber" class="field-error-message">
+      Please enter a valid positive number (e.g., 99000000000 or 99e9)
+    </div>
+    <div *ngIf="jobForm.errors?.invalidBudgetRange && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)" class="field-error-message min-max-budget-error">
+      Min budget cannot exceed Max budget.
+    </div>
+  </div>
+  <div
+    id="max-budget-container"
+    class="create-job-post1st-page-max-budget-container"
+  >
+    <div
+      id="max-budget-text-container"
+      class="create-job-post1st-page-max-budget-text-container"
+    >
+      <span
+        id="max-budget-text"
+        class="create-job-post1st-page-max-budget-text"
+      >
+        Max Budget <span class="required-asterisk">*</span>
+      </span>
+    </div>
+    <div
+      id="max-budget-input-container"
+      class="create-job-post1st-page-max-budget-input-container"
+    >
+      <div
+        id="max-budget-form"
+        class="create-job-post1st-page-max-budget-form input"
+      >
+        <span id="inr-max" class="create-job-post1st-page-inr-max">
+          INR
+        </span>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 32 32"
+          id="drop-down-icon-max"
+          class="create-job-post1st-page-drop-down-icon-max"
+        >
+          <path
+            d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+      <input
+        type="text"
+        id="max-budget-input"
+        placeholder="Max (e.g., 100000000000)"
+        class="create-job-post1st-page-max-budget-input input"
+        formControlName="max_budget"
+      />
+    </div>
+    <div *ngIf="jobForm.get('max_budget')?.touched && jobForm.get('max_budget')?.errors?.required" class="field-error-message min-max-budget-error">
+      Enter your Maximum Budget
+    </div>
+    <div *ngIf="jobForm.get('max_budget')?.touched && jobForm.get('max_budget')?.errors?.invalidNumber" class="field-error-message min-max-budget-error">
+      Please enter a valid positive number (e.g., 100000000000 or 100e9)
+    </div>
+  </div>
+</div>
           <div
   id="notice-period-container"
   class="create-job-post1st-page-notice-period-container"

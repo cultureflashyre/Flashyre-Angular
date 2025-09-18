@@ -2,6 +2,14 @@
 
 <!-- The ng-container handles the loading state without adding an extra element to the DOM -->
 <ng-container *ngIf="!isLoading; else loadingTemplate">
+  
+  <!-- Popup Message -->
+  <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+  </div>
+
   <!-- The form tag wraps the entire component to manage settings with ReactiveFormsModule -->
   <form [formGroup]="assessmentForm" class="create-job-post-22-container10" [ngClass]="rootClassName">
     <div id="create-job-post-2.2-main-container" class="create-job-post-22-create-job-post22-main-container">
