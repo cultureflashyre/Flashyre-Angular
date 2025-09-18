@@ -1,63 +1,49 @@
-// src/app/guards/auth.guard.ts
-
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/candidate.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private authService: AuthService, 
-    private router: Router
-  ) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router
+  ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    console.log('AuthGuard#canActivate called');
+    console.log('Attempting to access route URL:', state.url);
 
-    console.log('AuthGuard#canActivate called');
-    console.log('Trying to access route:', state.url);
+    const token = localStorage.getItem('jwtToken');
+    const userType = localStorage.getItem('userType');  // e.g., 'candidate', 'admin', 'corporate'
 
-    const token = localStorage.getItem('jwtToken');
-    const userType = localStorage.getItem('userType');  // Assume you store 'candidate' or 'recruiter'
+    console.log('Stored token:', token);
+    console.log('Stored userType:', userType);
 
-    // Check if user is logged in (token exists)
-    if (!token) {
-      // Not logged in, redirect to login (candidate or recruiter login as per your app)
-      this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } });
-      return false;
-    }
+    const expectedRoles: string[] = route.data['roles'];
+    console.log('Expected roles for this route:', expectedRoles);
 
-    // Check if current route expects roles
-    const expectedRoles: string[] = route.data['roles'];
+    if (!token) {
+      console.log('No token found, user is not logged in.');
 
-    if (expectedRoles && expectedRoles.length > 0) {
-      if (!userType || !expectedRoles.includes(userType)) {
-        // Role mismatch - you can redirect to a forbidden page or back to a suitable page
-        this.router.navigate(['/forbidden']);
-        return false;
-      }
-    }
+      if (expectedRoles && expectedRoles.length === 1) {
+        console.log(`Redirecting to login page for role: login-${expectedRoles[0]} with returnUrl: ${state.url}`);
+        this.router.navigate([`/login-${expectedRoles[0]}`], { queryParams: { returnUrl: state.url } });
+      } else {
+        console.log(`Redirecting to default candidate login with returnUrl: ${state.url}`);
+        this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } });
+      }
+      return false;
+    }
 
-    // All checks passed
-    return true;
+    if (expectedRoles && !expectedRoles.includes(userType)) {
+      console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to /forbidden.`);
+      this.router.navigate(['/forbidden']);
+      return false;
+    }
 
-    //////////////////////////////////////////////////////////////
-
-    //const loggedIn = this.authService.isLoggedIn();
-    //console.log('User logged in status:', loggedIn);
-
-    //if (loggedIn) {
-    //  console.log('Access granted to route:', state.url);
-    //  return true; // Allow access if user is logged in
-   // }
-
-    //console.warn('Access denied - User not logged in. Redirecting to /login-candidate');
-    //this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } }); // Optionally pass returnUrl
-    //return false;
-  }
+    console.log('All checks passed. Route access granted.');
+    return true;
+  }
 }
-
-
-
-

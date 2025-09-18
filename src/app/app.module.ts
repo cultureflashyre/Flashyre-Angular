@@ -240,6 +240,8 @@ const routes = [
       import(
         './pages/create-job-post-1st-page/create-job-post-1st-page.module'
       ).then((m) => m.CreateJobPost1stPageModule),
+                canActivate: [AuthGuard],
+    data: { roles: ['recruiter'] },
   },
   {
     path: 'create-job-post-21-page',
@@ -311,9 +313,9 @@ const routes = [
     path: 'admin-page1',
     loadChildren: () =>
       import('./pages/admin-page1/admin-page1.module').then(
-        (m) => m.AdminPage1Module
-      ),
-    
+        (m) => m.AdminPage1Module),
+                  canActivate: [AuthGuard],
+    data: { roles: ['admin'] },
   },
   {
     path: '**',

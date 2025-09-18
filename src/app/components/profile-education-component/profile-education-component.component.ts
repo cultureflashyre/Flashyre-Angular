@@ -50,9 +50,56 @@ export class ProfileEducationComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.loadReferenceData();
+ngOnInit(): void {
+  this.isLoading = true;
+  this.errorMessage = null;
+
+  const userProfileString = localStorage.getItem('userProfile');
+  if (userProfileString) {
+    try {
+      const userProfile = JSON.parse(userProfileString);
+      if (userProfile.educations && Array.isArray(userProfile.educations) && userProfile.educations.length > 0) {
+        // Load reference data first
+        this.educationService.getReferenceData().subscribe({
+          next: (data: ReferenceData) => {
+            this.universities = data.colleges;
+            this.educationLevels = data.education_levels;
+            this.courses = data.courses;
+            this.specializations = data.specializations;
+
+            this.educationForms = []; // reset
+
+            userProfile.educations.forEach((edu: any) => {
+              const form = this.createEducationForm();
+              form.patchValue({
+                startDate: edu.start_date || '',
+                endDate: edu.end_date || '',
+                university: this.getDropdownIdByName(this.universities, edu.university),
+                educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
+                course: this.getDropdownIdByName(this.courses, edu.course),
+                specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
+              });
+              this.educationForms.push(form);
+            });
+
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.errorMessage = 'Failed to load dropdown data';
+            this.addNewForm();
+            this.isLoading = false;
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      console.warn('Error parsing userProfile from localStorage', e);
+    }
   }
+
+  // Fallback for no localStorage data or errors
+  this.loadReferenceData();
+}
 
   loadReferenceData(): void {
     this.isLoading = true;
@@ -65,6 +112,7 @@ export class ProfileEducationComponent implements OnInit {
         this.educationLevels = data.education_levels;
         this.courses = data.courses;
         this.specializations = data.specializations;
+
         this.addNewForm();
       }),
       catchError(error => {
@@ -76,6 +124,12 @@ export class ProfileEducationComponent implements OnInit {
       complete: () => (this.isLoading = false)
     });
   }
+
+private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | '' {
+  if (!name) return '';
+  const item = dropdownList.find(d => d.name === name);
+  return item ? item.id : '';
+}
 
   private createEducationForm(): FormGroup {
     return this.fb.group({
@@ -203,3 +257,6 @@ export class ProfileEducationComponent implements OnInit {
     return item.id || index;
   }
 }
+
+
+

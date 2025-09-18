@@ -1,75 +1,115 @@
+// src/app/components/admin-page1-component/admin-page1-component.component.ts
+
 import { Component, Input, OnInit } from '@angular/core';
-import { AdminService, Candidate } from '../../services/admin.service'; // Adjust path if needed
+import { DatePipe } from '@angular/common';
+import { AdminService, Candidate } from '../../services/admin.service';
 import { forkJoin } from 'rxjs';
+
+export interface DateFilter {
+  label: string; 
+  value: string; 
+}
 
 @Component({
   selector: 'admin-page1-component',
   templateUrl: 'admin-page1-component.component.html',
   styleUrls: ['admin-page1-component.component.css'],
+  providers: [DatePipe] 
 })
 export class AdminPage1Component implements OnInit {
   @Input() rootClassName: string = '';
 
-  // --- NEW: Component State ---
   public candidates: Candidate[] = [];
-  public isLoading: boolean = false;
+  public isLoading: boolean = true; 
   public isAllSelected: boolean = false;
-  public activeFilter: string = 'today';
+  
+  public dateFilters: DateFilter[] = [];
+  public activeFilter: string | null = null; 
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private datePipe: DatePipe 
+  ) {}
 
   ngOnInit(): void {
-    this.fetchCandidates();
+    // Call the public method on initialization
+    this.refreshFiltersAndLoadLatest();
   }
 
-  // --- NEW: Data Fetching and Filtering ---
-  public fetchCandidates(dateFilter?: string): void {
+  // --- MODIFIED: Renamed from 'initializeFiltersAndLoadData' to be a clear, public API method ---
+  /**
+   * This public method is the new entry point for loading or refreshing this component's data.
+   * It fetches the latest batch dates, rebuilds the filter UI, and loads the candidates for the most recent date.
+   * It can be safely called from parent components.
+   */
+  public refreshFiltersAndLoadLatest(): void {
+    this.isLoading = true;
+    this.adminService.getBatchDates().subscribe({
+      next: (dates) => {
+        if (dates && dates.length > 0) {
+          this.generateDateFilters(dates);
+          // Automatically apply the first filter (most recent date)
+          this.applyFilter(this.dateFilters[0].value);
+        } else {
+          // Handle case where no CVs have ever been uploaded
+          this.dateFilters = [];
+          this.candidates = [];
+          this.isLoading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch batch dates:', err);
+        alert('Could not load batch date information.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // This method remains private as it's an internal implementation detail
+  private generateDateFilters(dates: string[]): void {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const todayStr = this.datePipe.transform(today, 'yyyy-MM-dd')!;
+    const yesterdayStr = this.datePipe.transform(yesterday, 'yyyy-MM-dd')!;
+
+    this.dateFilters = dates.map(dateStr => {
+      let label = '';
+      if (dateStr === todayStr) {
+        label = 'Today';
+      } else if (dateStr === yesterdayStr) {
+        label = 'Yesterday';
+      } else {
+        label = this.datePipe.transform(dateStr, 'dd:MM:yy', 'UTC')!;
+      }
+      return { label: label, value: dateStr };
+    });
+  }
+
+  // This should remain public as it's called from the template
+  public fetchCandidates(dateFilter: string): void {
     this.isLoading = true;
     this.adminService.getCandidates(dateFilter).subscribe({
       next: (data) => {
-        // Initialize each candidate with a 'selected' property for checkbox binding
         this.candidates = data.map(c => ({ ...c, selected: false }));
-        this.isAllSelected = false; // Reset selection state on new data
+        this.isAllSelected = false;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Failed to fetch candidates:', err);
         alert('Could not load candidate data.');
         this.isLoading = false;
       },
-      complete: () => {
-        this.isLoading = false;
-      }
     });
   }
 
-  public applyFilter(filter: string, date?: string): void {
-    this.activeFilter = filter;
-    let dateString: string | undefined;
-
-    if (filter === 'today') {
-      dateString = this.getFormattedDate(new Date());
-    } else if (filter === 'yesterday') {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      dateString = this.getFormattedDate(yesterday);
-    } else if (filter === 'custom' && date) {
-      // Logic for a custom date picker would go here
-      // For now, we assume 'date' is a valid 'YYYY-MM-DD' string
-      dateString = date;
-    }
-    
-    this.fetchCandidates(dateString);
+  // This should remain public as it's called from the template
+  public applyFilter(filterValue: string): void {
+    this.activeFilter = filterValue;
+    this.fetchCandidates(filterValue);
   }
 
-  private getFormattedDate(d: Date): string {
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-
-  // --- NEW: Selection Logic ---
   public toggleSelectAll(): void {
     this.candidates.forEach(c => c.selected = this.isAllSelected);
   }
@@ -78,7 +118,6 @@ export class AdminPage1Component implements OnInit {
     this.isAllSelected = this.candidates.length > 0 && this.candidates.every(c => c.selected);
   }
 
-  // --- NEW: Action Handlers ---
   public removeCandidate(id: number, index: number): void {
     if (confirm('Are you sure you want to remove this candidate? This action cannot be undone.')) {
       this.adminService.deleteCandidate(id).subscribe({
@@ -106,8 +145,9 @@ export class AdminPage1Component implements OnInit {
       forkJoin(deleteObservables).subscribe({
         next: () => {
           alert('Selected candidates removed successfully.');
-          // Refresh the list from the server to get the clean state
-          this.applyFilter(this.activeFilter);
+          if(this.activeFilter) {
+            this.applyFilter(this.activeFilter);
+          }
         },
         error: (err) => {
           alert(`An error occurred while removing candidates: ${err.message}`);
@@ -143,8 +183,9 @@ export class AdminPage1Component implements OnInit {
       this.adminService.sendRegistrationInvites(unregisteredIds).subscribe({
         next: (response) => {
           alert(response.message);
-          // Optionally, refresh to show updated email sent status
-          this.applyFilter(this.activeFilter);
+          if(this.activeFilter) {
+            this.applyFilter(this.activeFilter);
+          }
         },
         error: (err) => {
           alert(`Failed to send invites: ${err.error?.message || 'Server error'}`);

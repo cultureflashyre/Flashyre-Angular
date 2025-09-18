@@ -110,7 +110,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
     // Extract assessmentId from query parameters
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
-    this.userId = localStorage.getItem('userID');
+    this.userId = localStorage.getItem('user_id');
     
     if (assessmentId && this.userId) {   // <-- Ensure both are present
     this.fetchAssessmentData(+assessmentId);

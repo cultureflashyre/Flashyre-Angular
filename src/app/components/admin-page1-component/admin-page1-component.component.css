@@ -84,8 +84,20 @@
   border-top-width: 0px;
   border-left-width: 0px;
   border-right-width: 0px;
-  border-bottom-color: #05356C;
+  border-bottom-color: transparent;
   border-bottom-width: 2px;
+}
+
+.active-date-filter {
+  border-bottom-color: #05356C;
+}
+
+.no-batches-message {
+  color: #888888;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  align-self: center;
 }
  
 .admin-page1-component-date-selector1st-container:hover {

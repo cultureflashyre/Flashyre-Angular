@@ -88,9 +88,27 @@ export class CandidateAssessment {
   }
 
   // Navigate to assessment page (dynamic based on assessment ID)
+  //startAssessment(assessmentId: number): void {
+   // this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessmentId } });
+  //}
+
   startAssessment(assessmentId: number): void {
-    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessmentId } });
+    // Find the full assessment object for the selected id
+    const selectedAssessment = this.assessments.find(a => a.assessment_id === assessmentId);
+    if (!selectedAssessment) {
+      console.error("Assessment not found for id", assessmentId);
+      return;
+    }
+
+    // Serialize the object to JSON string to send as query param or use router state
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // Navigate with serialized object as query param (or use state)
+    this.router.navigate(['/flashyre-assessment-rules-card'], 
+      { queryParams: { data: assessmentDataString } });
   }
+
+
 
   ngOnInit(): void {
     this.loadUserProfile();

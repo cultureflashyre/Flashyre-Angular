@@ -1,5 +1,3 @@
-// profile-certifications-component.component.ts
-
 import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -37,7 +35,8 @@ export class ProfileCertificationsComponent implements OnInit {
   todayDate: string;
 
   constructor(private fb: FormBuilder, 
-    private http: HttpClient, private spinner: NgxSpinnerService,
+    private http: HttpClient, 
+    private spinner: NgxSpinnerService,
     private certificationService: CertificationService,
   ) {
     this.certificationForm = this.fb.group({
@@ -48,6 +47,39 @@ export class ProfileCertificationsComponent implements OnInit {
   ngOnInit() {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
+
+    this.loadCertificationsFromLocalStorage();
+
+  }
+
+  loadCertificationsFromLocalStorage(): void {
+    const userProfileString = localStorage.getItem('userProfile');
+    if (userProfileString) {
+      try {
+        const userProfile = JSON.parse(userProfileString);
+        if (userProfile.certifications && Array.isArray(userProfile.certifications) && userProfile.certifications.length > 0) {
+          // Clear existing forms
+          this.certifications.clear();
+
+          userProfile.certifications.forEach((cert: any) => {
+            const formGroup = this.createCertificationGroup();
+            formGroup.patchValue({
+              certificate_name: cert.certificate_name || '',
+              issuing_institute: cert.issuing_institute || '',
+              issued_date: cert.issued_date || '',
+              renewal_date: cert.renewal_date || '',
+              credentials: cert.credentials || ''
+            });
+            this.certifications.push(formGroup);
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing userProfile from localStorage in certification component', error);
+      }
+    }
+    // No saved data: log and keep one empty form
+    console.warn('No saved certifications found in localStorage.');
   }
 
   get certifications() {
@@ -55,13 +87,12 @@ export class ProfileCertificationsComponent implements OnInit {
   }
 
   createCertificationGroup(): FormGroup {
-    // MODIFIED: Removed Validators.required from issued_date and credentials
     return this.fb.group({
       certificate_name: ['', Validators.required],
       issuing_institute: ['', Validators.required],
-      issued_date: [''], // Was ['', Validators.required]
+      issued_date: ['', Validators.required],
       renewal_date: [''],
-      credentials: [''], // Was ['', Validators.required]
+      credentials: ['', Validators.required],
     });
   }
 
@@ -116,17 +147,7 @@ export class ProfileCertificationsComponent implements OnInit {
   saveCertifications(): Promise<boolean> {
     return new Promise(async (resolve) => {
       if (this.certificationForm.valid) {
-        // MODIFICATION: Filter out empty optional fields before sending to the backend.
-        // This prevents sending empty strings for date fields, which the backend
-        // might reject. Sending `null` or omitting the key is safer.
-        const formValue = this.certificationForm.value.certifications;
-        const data = formValue.map((cert: any) => ({
-          ...cert,
-          issued_date: cert.issued_date || null,
-          renewal_date: cert.renewal_date || null,
-          credentials: cert.credentials || null,
-        }));
-
+        const data = this.certificationForm.value.certifications;
         const requests = data.map((cert: any) => 
           this.certificationService.saveCertification(cert)
         );
@@ -154,4 +175,5 @@ export class ProfileCertificationsComponent implements OnInit {
       }
     });
   }
+
 }
