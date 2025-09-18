@@ -63,7 +63,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     const stageGroup = this.fb.group({
       stage_name: ['Screening', Validators.required],
       custom_stage_name: [''], // Hidden by default
-      stage_date: [null, Validators.required],
+       stage_date: [null, Validators.required],
       mode: ['Online', Validators.required],
       assigned_to: ['', [Validators.required, Validators.email]]
     });
@@ -95,6 +95,27 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       this.snackBar.open('You must have at least one interview stage.', 'Close', { duration: 3000 });
     }
   }
+
+  validateDateInput(event: Event, stageControl: AbstractControl) {
+    const inputElement = event.target as HTMLInputElement;
+    const dateControl = stageControl.get('stage_date');
+
+    if (!dateControl) {
+      return;
+    }
+
+    // The browser's `validity.badInput` is true for malformed/invalid values
+    if (inputElement.validity.badInput) {
+      // Manually set a custom error to distinguish from a simple 'required' error
+      dateControl.setErrors({ 'invalidDate': true });
+    } else if (dateControl.hasError('invalidDate')) {
+      // If the input is no longer bad (e.g., user corrected it or deleted it),
+      // we must clear our custom error to let other validators work correctly.
+      dateControl.setErrors(null);
+      dateControl.updateValueAndValidity(); // Re-run other validators like 'required'
+    }
+  }
+
 
   // Footer Event Handlers
   onCancel(): void {

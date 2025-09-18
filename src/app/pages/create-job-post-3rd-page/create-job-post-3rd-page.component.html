@@ -124,9 +124,9 @@
         >
           <div class="create-job-post3rd-page-container2">
             <div class="create-job-post3rd-page-container3">
-              <!DOCTYPE html>
+              <!-- <!DOCTYPE html>
 <html lang='en'>
-<head>
+<head> -->
   <meta charset='UTF-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Responsive Progress Bar</title>
@@ -139,10 +139,8 @@
       align-items: center;
       width: 500px;
       max-width: auto;
-      margin: 20px auto;
       font-family: Inter, sans-serif;
-      margin-left: 400px;
-      background-color: white;
+      background-color: #FFFFFF;
     }
 
     /* Style for each step */
@@ -211,7 +209,7 @@
         width: 32px;
         height: 32px;
         font-size: 0.8rem;
-        font-weig: 400;
+        font-weight: 400;
       }
 
       .step span {
@@ -232,7 +230,7 @@
       }
     }
   </style>
-</head>
+<!-- </head> -->
 <body>
   <div class='progress-bar'>
     <div class='step'>
@@ -249,7 +247,7 @@
     </div>
   </div>
 </body>
-</html>
+<!-- </html> -->
 
             </div>
           </div>
@@ -297,6 +295,7 @@
 
               <!-- 2. Date Picker -->
             <!-- 2. Date Picker -->
+<!-- 2. Date Picker (Corrected) -->
 <div class="form-field-wrapper date-field">
   <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
   <div class="compact-date-input-wrapper">
@@ -305,10 +304,19 @@
       formControlName="stage_date"
       [min]="minDateString"
       [id]="'date-input-' + i"
-      class="compact-date-input">
+      class="compact-date-input"
+      (input)="validateDateInput($event, stageControl)"
+      >
   </div>
-  <div *ngIf="stageControl.get('stage_date')?.touched && stageControl.get('stage_date')?.errors?.required" class="field-error-message">
-    Date is required.
+
+  <!-- Error for invalid format (High Priority) -->
+  <div *ngIf="stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched" class="field-error-message">
+    A valid date is required.
+  </div>
+
+  <!-- Error for empty field (Low Priority) -->
+  <div *ngIf="stageControl.get('stage_date')?.hasError('required') && !stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched" class="field-error-message">
+    Date is Required
   </div>
 </div>
 

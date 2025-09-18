@@ -887,12 +887,12 @@
                   Job description <span class="required-asterisk">*</span>
                 </div>
                 <div class="toolbar">
-                  <button id="bold-btn" class="format-btn" title="Bold">B</button>
-                  <button id="italic-btn" class="format-btn" title="Italic"><i>I</i></button>
-                  <button id="underline-btn" class="format-btn" title="Underline"><u>U</u></button>
-                  <button id="list-btn" class="format-btn" title="List">≡</button>
+                  <button id="bold-btn" class="format-btn" title="Bold" (click)="formatText('bold')">B</button>
+                  <button id="italic-btn" class="format-btn" title="Italic" (click)="formatText('italic')"><i>I</i></button>
+                  <button id="underline-btn" class="format-btn" title="Underline" (click)="formatText('underline')"><u>U</u></button>
+                  <button id="list-btn" class="format-btn" title="List" (click)="formatText('insertUnorderedList')">≡</button>
                   <div class="separator1"></div>
-                  <button id="highlight-btn" class="format-btn" title="Highlight">H</button>
+                  <button id="highlight-btn" class="format-btn" title="Highlight" (click)="formatText('hiliteColor', 'yellow')">H</button>
                   <div class="separator2"></div>
                 </div>
                 <div class="editor-content">

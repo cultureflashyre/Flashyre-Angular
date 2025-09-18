@@ -424,6 +424,21 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       job_description_url: job_description_url_val, 
       unique_id: unique_id_val
     });
+
+    if (job_description_url_val) {
+      try {
+        const url = new URL(job_description_url_val);
+        const pathnameParts = url.pathname.split('/');
+        this.displayedFileName = decodeURIComponent(pathnameParts[pathnameParts.length - 1]);
+      } catch (e) {
+        const pathParts = job_description_url_val.split('/');
+        this.displayedFileName = pathParts[pathParts.length - 1];
+      }
+      this.isFileUploadCompletedSuccessfully = true; // <-- THIS LINE IS ADDED
+    } else {
+      this.isFileUploadCompletedSuccessfully = false; // <-- ADD THIS FOR SAFETY
+    }
+
     
     if (this.isViewInitialized) {
         this.populateSkills(skills);
@@ -843,5 +858,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.sessionToken = undefined;
     
 
+  }
+
+  formatText(command: string, value: string | null = null): void {
+    const editor = this.document.getElementById('editor');
+    if (editor && this.document.queryCommandSupported(command)) {
+      this.document.execCommand(command, false, value);
+      editor.focus();
+    }
   }
 }
