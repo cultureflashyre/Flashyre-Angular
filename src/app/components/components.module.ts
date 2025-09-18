@@ -115,7 +115,7 @@ import { AdminJdExtendedComponent } from './admin-jd-extended-component/admin-jd
 
 import { MoreFiltersAndPreferenceComponent } from './more-filters-and-preference-component/more-filters-and-preference-component.component'
 import { Morefilterscomponent1 } from './morefilterscomponent1/morefilterscomponent1.component'
-import { PreferenceComponent } from './preference-component/preference-component.component';
+import { PreferenceComponent } from './preference-component/preference-component.component'
 
 import{Signupadmin} from './signup-admin/signup-admin.component'
 
@@ -181,7 +181,7 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-   WriteAJobPostForRecruiter,
+    WriteAJobPostForRecruiter,
     CTA26,
     ProfileEmploymentComponent,
     NavbarForCandidateView860721,
