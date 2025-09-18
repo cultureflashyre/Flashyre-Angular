@@ -28,33 +28,20 @@
       id="date-selector-container"
       class="admin-page1-component-date-selector-container"
     >
-      <!-- MODIFIED: Added click handlers and active class binding for filters -->
+      <!-- Loop through the dynamically generated filters -->
       <div
+        *ngFor="let filter of dateFilters"
         class="admin-page1-component-date-selector1st-container"
-        [ngClass]="{'active-date-filter': activeFilter === 'today'}"
-        (click)="applyFilter('today')"
+        [ngClass]="{'active-date-filter': activeFilter === filter.value}"
+        (click)="applyFilter(filter.value)"
       >
-        <span class="admin-page1-component-day-text">Today</span>
+        <!-- The text is now bound to the filter's label -->
+        <span class="admin-page1-component-day-text">{{ filter.label }}</span>
       </div>
-      <div
-        class="admin-page1-component-day-and-time-container1"
-        [ngClass]="{'active-date-filter': activeFilter === 'yesterday'}"
-        (click)="applyFilter('yesterday')"
-      >
-        <span class="admin-page1-component-day-text11">Yesterday</span>
-      </div>
-      <!-- Note: Custom date input is simplified. A real date picker would replace this. -->
-      <div
-        class="admin-page1-component-day-time-last-container"
-        [ngClass]="{'active-date-filter': activeFilter === 'custom'}"
-        (click)="applyFilter('custom', '2025-08-11')"
-      >
-        <span
-          class="admin-page1-component-date-month-year-text"
-        >
-          DD:MM:YY
-        </span>
-        <span class="admin-page1-component-time-last-text">HH:MM</span>
+
+      <!-- NEW: Show a message if no CVs have been uploaded yet -->
+      <div *ngIf="!isLoading && dateFilters.length === 0" class="no-batches-message">
+        No CV batches have been uploaded.
       </div>
     </div>
     <div

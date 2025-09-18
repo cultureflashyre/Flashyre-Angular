@@ -129,7 +129,6 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
    * Handles the 'Generate with AI' / 'Regenerate' button click.
    */
   onGenerateAi(): void {
-    // Allow regeneration by removing hasGenerated from the guard
     if (!this.jobUniqueId || this.isGenerating) {
       return;
     }
@@ -146,8 +145,6 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
 
     const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
       .pipe(
-        // Use the finalize operator to guarantee the spinner is hidden
-        // This block will run on success, error, or completion.
         finalize(() => {
           this.isGenerating = false;
           this.spinner.hide('ai-spinner');

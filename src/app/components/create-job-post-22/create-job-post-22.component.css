@@ -1770,8 +1770,20 @@
 .create-job-post-22-text42 {
   display: inline-block;
 }
- 
 
+.create-job-post-22-add-questions-with-ai-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+
+.create-job-post-22-add-questions-with-ai-button:active {
+  transform: scale(0.90);
+}
+ 
+.field-error-message{
+  color: #F10400;
+}
  
 @media(max-width: 1200px) {
   .create-job-post-22-languages-main-container {

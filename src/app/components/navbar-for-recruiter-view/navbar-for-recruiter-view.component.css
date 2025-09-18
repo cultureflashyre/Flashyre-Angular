@@ -37,6 +37,7 @@
 .navbar-for-recruiter-view-flashyre-image {
   width: 200px;
   object-fit: cover;
+  margin-top: 2px;
 }
  
 .navbar-for-recruiter-view-desktop-menu {

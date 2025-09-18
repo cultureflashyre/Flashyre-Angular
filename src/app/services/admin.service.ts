@@ -1,3 +1,5 @@
+// src/app/services/admin.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -31,11 +33,12 @@ export interface JobDescription {
 
 /**
  * Represents a candidate object returned by the original CV list component.
- * This interface is kept for backwards compatibility with admin-page1-component.
+ * This interface now includes the batch_date for dynamic filtering.
  */
 export interface Candidate {
   candidate_id: number;
   batch_id: number;
+  batch_date?: string; // The upload date of the batch
   full_name: string;
   email: string;
   phone: string;
@@ -96,8 +99,18 @@ export class AdminService {
   }
 
   // ==============================================================================
-  // CV WORKFLOW METHODS (Includes legacy methods for compatibility)
+  // CV WORKFLOW METHODS
   // ==============================================================================
+  
+  /**
+   * Fetches the distinct dates of all CV upload batches.
+   * Used to dynamically generate date filter buttons in the UI.
+   * @returns An Observable array of date strings (YYYY-MM-DD).
+   */
+  getBatchDates(): Observable<string[]> {
+    console.log("Inside ADMIN SERVICE...getBatchDates() called...");
+    return this.http.get<string[]>(`${this.apiUrl}candidates/batch-dates/`);
+  }
 
   /**
    * Uploads an array of CV files to the backend for processing.
@@ -114,8 +127,7 @@ export class AdminService {
   }
 
   /**
-   * [LEGACY] Fetches a list of raw, unscored candidates.
-   * Kept for compatibility with the admin-page1-component.
+   * Fetches a list of raw, unscored candidates for the "Resumes" tab.
    * @param filterDate Optional date string (YYYY-MM-DD) to filter by.
    * @returns An Observable array of Candidate objects.
    */
@@ -129,8 +141,7 @@ export class AdminService {
   }
 
   /**
-   * [LEGACY] Deletes a single candidate from the draft list.
-   * Kept for compatibility with the admin-page1-component.
+   * Deletes a single candidate from the draft list.
    * @param candidateId The ID of the candidate to delete.
    * @returns An Observable with the backend response.
    */
@@ -140,8 +151,7 @@ export class AdminService {
   }
 
   /**
-   * [LEGACY] Sends registration invites to a list of candidates.
-   * Kept for compatibility with the admin-page1-component.
+   * Sends registration invites to a list of candidates.
    * @param candidateIds An array of candidate IDs.
    * @returns An Observable with the backend response.
    */
@@ -187,36 +197,54 @@ export class AdminService {
 
   /**
    * Fetches the list of candidates scored against a specific Job Description.
+   * Can be optionally filtered by the CV upload date.
    * @param jobId The ID of the job to match against.
    * @param sortBy The sorting preference (e.g., 'score_desc', 'name_asc').
+   * @param batchDate Optional date string (e.g., '2025-09-16') or 'all' to filter by.
    * @returns An Observable array of SourcedCandidate objects.
    */
- getSourcedCandidates(jobId: number, sortBy: string): Observable<SourcedCandidate[]> {
-  console.log("Inside ADMIN SERVICE...getSourcedCandidates() called...");
-    const params = new HttpParams()
+  getSourcedCandidates(jobId: number, sortBy: string, batchDate?: string | null): Observable<SourcedCandidate[]> {
+    console.log(`Inside ADMIN SERVICE...getSourcedCandidates() called with jobId: ${jobId}, sortBy: ${sortBy}, batchDate: ${batchDate}`);
+    
+    let params = new HttpParams()
       .set('job_id', jobId.toString())
       .set('sort_by', sortBy);
+
+    // Conditionally add the batch_date parameter to the request if it is provided and not 'all'
+    if (batchDate && batchDate !== 'all') {
+      params = params.set('batch_date', batchDate);
+    }
+
     return this.http.get<SourcedCandidate[]>(`${this.apiUrl}candidates/sourced/`, { params });
   }
 
-  // --- NEW: Method to get a secure, short-lived URL for a CV download ---
+  /**
+   * Fetches a secure, short-lived URL for a CV download from the backend.
+   * @param candidateId The ID of the candidate whose CV is to be downloaded.
+   * @returns An Observable containing an object with the secure URL.
+   */
   getSecureCvUrl(candidateId: number): Observable<{ url: string }> {
     console.log("Inside ADMIN SERVICE...getSecureCvUrl() called...");
     return this.http.get<{ url: string }>(`${this.apiUrl}candidates/${candidateId}/generate-cv-url/`);
   }
   
-  // --- NEW: Method to download an Excel report for specifically selected candidates ---
+  /**
+   * Downloads an Excel report for specifically selected candidates.
+   * @param jobId The ID of the job the report is for.
+   * @param candidateIds An array of selected candidate IDs to include in the report.
+   * @returns An Observable containing the file data as a Blob.
+   */
   downloadSelectedReport(jobId: number, candidateIds: number[]): Observable<Blob> {
     console.log("Inside ADMIN SERVICE...downloadSelectedReport() called...");
     const payload = {
       job_id: jobId,
       candidate_ids: candidateIds
     };
-    // The endpoint is the same, but we use POST to send a body
     return this.http.post(`${this.apiUrl}report/download/`, payload, { responseType: 'blob' });
   }
+
   /**
-   * Downloads the Excel report for a given Job Description.
+   * Downloads a full Excel report for all candidates sourced for a given Job Description.
    * @param jobId The ID of the job for which to generate the report.
    * @returns An Observable containing the file data as a Blob.
    */

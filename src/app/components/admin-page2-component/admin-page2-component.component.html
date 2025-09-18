@@ -3,7 +3,7 @@
   [ngClass]="rootClassName"
 >
   <div class="admin-page2-component-container">
-    <!-- MODIFIED: "JD Extracted" is now a button that sets the active view. -->
+    <!-- "JD Extracted" is a button that sets the active view to 'jd'. -->
     <!-- It has an ngClass binding to apply a style when it is the active tab. -->
     <button
       type="button"
@@ -16,7 +16,7 @@
       </span>
     </button>
     
-    <!-- MODIFIED: "Candidate Sourced" is now a dropdown menu controlling the view and filter. -->
+    <!-- "Candidate Sourced" is a dropdown menu controlling the view and filter. -->
     <div
       data-thq="thq-dropdown"
       class="admin-page2-component-thq-dropdown list-item"
@@ -26,7 +26,7 @@
         class="admin-page2-component-dropdown-toggle1"
         [ngClass]="{'active-tab': activeView === 'candidates'}"
       >
-        <!-- The text of the dropdown button is now dynamic, showing the current filter. -->
+        <!-- The text of the dropdown button is now dynamic, showing the current filter's display label. -->
         <span class="admin-page2-component-text11">
           {{ candidateFilterDisplay }}
         </span>
@@ -39,64 +39,28 @@
           </svg>
         </div>
       </div>
-      <!-- The dropdown list with different filtering options. Each item calls showCandidatesView on click. -->
+      <!-- 
+        This dropdown list is now rendered dynamically using *ngFor. It iterates over the
+        'candidateFilters' array, which is generated in the component's TypeScript.
+      -->
       <ul
         data-thq="thq-dropdown-list"
         class="admin-page2-component-dropdown-list"
       >
+        <!-- This single <li> block is a template that gets repeated for each filter option. -->
         <li
+          *ngFor="let filter of candidateFilters"
           data-thq="thq-dropdown"
           class="admin-page2-component-dropdown1 list-item"
-          (click)="showCandidatesView('all', 'All Candidates')"
+          (click)="showCandidatesView(filter.value, filter.label)"
         >
           <div
             data-thq="thq-dropdown-toggle"
             class="admin-page2-component-dropdown-toggle2"
           >
+            <!-- The text for each dropdown item is bound to the filter's 'label' property. -->
             <span class="admin-page2-component-text12">
-              All Candidates
-            </span>
-          </div>
-        </li>
-        <li
-          data-thq="thq-dropdown"
-          class="admin-page2-component-dropdown2 list-item"
-          (click)="showCandidatesView('today', 'Today uploaded candidates')"
-        >
-          <div
-            data-thq="thq-dropdown-toggle"
-            class="admin-page2-component-dropdown-toggle3"
-          >
-            <span class="admin-page2-component-text13">
-              Today uploaded candidates
-            </span>
-          </div>
-        </li>
-        <li
-          data-thq="thq-dropdown"
-          class="admin-page2-component-dropdown3 list-item"
-          (click)="showCandidatesView('yesterday', 'Yesterday Uploaded candidates')"
-        >
-          <div
-            data-thq="thq-dropdown-toggle"
-            class="admin-page2-component-dropdown-toggle4"
-          >
-            <span class="admin-page2-component-text14">
-              Yesterday Uploaded candidates
-            </span>
-          </div>
-        </li>
-        <li
-          data-thq="thq-dropdown"
-          class="admin-page2-component-dropdown3 list-item"
-          (click)="showCandidatesView('custom', 'Custom date uploaded candidates')"
-        >
-          <div
-            data-thq="thq-dropdown-toggle"
-            class="admin-page2-component-dropdown-toggle4"
-          >
-            <span class="admin-page2-component-text14">
-              Custom date uploaded candidates
+              {{ filter.label }}
             </span>
           </div>
         </li>
@@ -105,8 +69,8 @@
   </div>
 
   <!-- 
-    NEW: This container uses the async pipe to subscribe to the latestJd$ observable.
-    If a JD exists, it unwraps it into the 'jd' variable and makes it available to child components.
+    This container uses the async pipe to subscribe to the latestJd$ observable.
+    If a JD exists, it unwraps it and makes the activeJobId available for child components.
   -->
   <ng-container *ngIf="activeJobId">
     <!-- The JD form is only shown if the view is 'jd' and a JD has been loaded. -->
@@ -115,17 +79,19 @@
       [jobData]="jd"
       [isReadOnly]="true"
     ></admin-jd-extended-component>
-    <!-- The candidate list is only shown if the view is 'candidates' and a JD has been loaded. -->
-    <!-- It receives the job_id and the selected filter as inputs. -->
+    
+    <!-- The candidate list is only shown if the view is 'candidates'. -->
+    <!-- It receives the job_id and the selected filter value as inputs. -->
     <admin-candidate-sourced-component
       *ngIf="activeView === 'candidates'"
       [jobId]="activeJobId"
+      [filterByDate]="candidateFilterValue"
     ></admin-candidate-sourced-component>
   </ng-container>
 
   <!-- 
-    NEW: These are placeholder messages that appear if no Job Description has been uploaded yet.
-    They are shown conditionally based on the active view.
+    This is a placeholder message that appears if no Job Description has been uploaded yet.
+    It is shown conditionally by checking if the latestJd$ observable has emitted a null value.
   -->
    <div *ngIf="!(latestJd$ | async)" class="info-container">
     Please upload a Job Description first to see details and sourced candidates.

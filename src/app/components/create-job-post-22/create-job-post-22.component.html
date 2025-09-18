@@ -19,11 +19,14 @@
         <!-- Assessment Name Input -->
         <div id="assessment-container" class="create-job-post-22-assessment-container">
           <span id="assessment-text" class="create-job-post-22-assessment-text">Assessment Name *</span>
-          <input type="text" id="enter-name-input" placeholder="Enter Name" class="create-job-post-22-enter-name-input input" formControlName="assessmentName" />
+          <input type="text" id="enter-name-input" placeholder="Enter Name" class="create-job-post-22-enter-name-input input" formControlName="assessmentName" maxlength="50"/>
         </div>
         <!-- Validation message for Assessment Name -->
         <div class="field-error-message" *ngIf="assessmentForm.get('assessmentName')?.touched && assessmentForm.get('assessmentName')?.errors?.required">
           Assessment Name is required.
+        </div>
+        <div class="field-error-message" *ngIf="assessmentForm.get('assessmentName')?.touched && assessmentForm.get('assessmentName')?.errors?.pattern">
+          please enter correct Assessment name.
         </div>
         
         <!-- This container holds all the settings checkboxes, slider, and time limit -->

@@ -235,7 +235,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    */
   private initializeForm(): void {
     this.assessmentForm = this.fb.group({
-      assessmentName: ['', Validators.required],
+      assessmentName: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$')
+      ]],
       shuffleQuestions: [true],
       isProctored: [true],
       allowPhoneAccess: [true],
