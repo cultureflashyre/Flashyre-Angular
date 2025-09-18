@@ -1,9 +1,7 @@
-
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { McqAssessmentService } from '../../services/mcq-assessment.service';
 import { JobDescriptionService } from '../../services/job-description.service';
@@ -69,6 +67,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   isLoading: boolean = true;
   isSubmitting: boolean = false;
 
+  // Properties for the custom alert popup
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupType: 'success' | 'error' = 'success';
+
   // Properties for the horizontal skill tab carousel logic
   currentScrollIndex = 0;
   maxScrollIndex = 0;
@@ -80,7 +83,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    * Constructor for dependency injection
    * @param fb FormBuilder for creating reactive forms
    * @param router Router for navigation
-   * @param snackBar MatSnackBar for displaying notifications
    * @param authService CorporateAuthService for handling authentication
    * @param mcqService McqAssessmentService for assessment-related API calls
    * @param jobService JobDescriptionService for job-related API calls
@@ -90,7 +92,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar,
     private authService: CorporateAuthService,
     private mcqService: McqAssessmentService,
     private jobService: JobDescriptionService,
@@ -126,7 +127,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
 
     // Ensure job context is available
     if (!this.jobUniqueId) {
-      this.snackBar.open('Error: Job context is missing.', 'Close', { duration: 5000 });
+      this.showErrorPopup('Error: Job context is missing.');
       this.isLoading = false;
       return;
     }
@@ -150,6 +151,25 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.calculateCarouselState();
   }
 
+  // --- Popup Handling Methods ---
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'success';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
+  }
+
+  showErrorPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 5000); // Auto-close after 5 seconds
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.popupMessage = '';
+  }
 
   /**
    * Processes raw MCQ items from the API into the internal McqQuestion format.
@@ -234,7 +254,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isLoading = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.showErrorPopup('Authentication error. Please log in again.');
       this.router.navigate(['/login-corporate']);
       this.isLoading = false;
       return;
@@ -289,7 +309,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
                  setTimeout(() => this.calculateCarouselState(), 0);
             },
             error: (err) => {
-              this.snackBar.open(`Failed to load assessment details: ${err.message}`, 'Close', { duration: 5000 });
+              this.showErrorPopup(`Failed to load assessment details: ${err.message}`);
               this.isLoading = false;
               // Even if loading details fails, we have the MCQ list, so maybe don't navigate away?
               // Or navigate back? Depends on desired UX.
@@ -297,7 +317,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
         }));
       },
       error: (err) => {
-        this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
+        this.showErrorPopup(`Failed to load questions: ${err.message}`);
         this.isLoading = false;
       }
     }));
@@ -312,7 +332,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isLoading = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.showErrorPopup('Authentication error. Please log in again.');
       this.router.navigate(['/login-corporate']);
       this.isLoading = false;
       return;
@@ -334,7 +354,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
            setTimeout(() => this.calculateCarouselState(), 0);
         },
         error: (err) => {
-          this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.showErrorPopup(`Failed to load questions: ${err.message}`);
           this.isLoading = false;
         }
       })
@@ -508,7 +528,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isSubmitting = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.showErrorPopup('Authentication error. Please log in again.');
         this.isSubmitting = false;
         return;
     }
@@ -521,11 +541,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
           this.onQuestionSelectionChange(); // Re-evaluate section selection state
           // After adding questions, the total number of items might have changed, so recalculate.
           setTimeout(() => this.calculateCarouselState(), 0);
-          this.snackBar.open(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`, 'Close', { duration: 3000 });
+          this.showSuccessPopup(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`);
           this.isSubmitting = false;
         },
         error: (err) => {
-          this.snackBar.open(`Failed to generate more questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.showErrorPopup(`Failed to generate more questions: ${err.message}`);
           this.isSubmitting = false;
         }
       })
@@ -547,7 +567,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    */
   onCancel(): void {
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/dashboard']);
+    this.showSuccessPopup('Job post creation cancelled.');
+    // Added delay for navigation
+    setTimeout(() => {
+        this.router.navigate(['/dashboard']);
+    }, 3000);
   }
 
   /**
@@ -568,17 +592,17 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   onNext(): void {
     this.assessmentForm.markAllAsTouched(); // Mark fields as touched to show validation errors
     if (this.assessmentForm.invalid) {
-      this.snackBar.open('Please fill in all required settings (e.g., Assessment Name).', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      this.showErrorPopup('Please fill in all required settings (e.g., Assessment Name).');
       return;
     }
     if (this.totalSelectedCount === 0) {
-      this.snackBar.open('Please select at least one question to proceed.', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      this.showErrorPopup('Please select at least one question to proceed.');
       return;
     }
 
     const token = this.authService.getJWTToken();
     if (!token) {
-        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.showErrorPopup('Authentication error. Please log in again.');
         return;
     }
 
@@ -599,7 +623,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
         timeInMinutes = (hours * 60) + minutes;
     } catch (e) {
         console.error("Could not parse time limit", this.assessmentForm.get('timeLimit')?.value);
-        this.snackBar.open('Invalid time format. Please use HH:MM.', 'Close');
+        this.showErrorPopup('Invalid time format. Please use HH:MM.');
         this.isSubmitting = false;
         return;
     }
@@ -625,13 +649,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
             this.mcqService.updateAssessment(this.currentAssessmentId, payload, token).subscribe({
                 next: () => {
                     this.isSubmitting = false;
-                    this.snackBar.open('Assessment updated successfully!', 'Close', { duration: 3000 });
-                    this.router.navigate(['/create-job-post-3rd-page']);
+                    this.showSuccessPopup('Assessment updated successfully!');
+                    // SOLUTION: Delay navigation to allow the user to see the message.
+                    setTimeout(() => {
+                      this.router.navigate(['/create-job-post-3rd-page']);
+                    }, 3000);
                 },
                 error: (err) => {
                   this.isSubmitting = false;
                   const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
-                  this.snackBar.open(`Update failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
+                  this.showErrorPopup(`Update failed: ${errorDetail}`);
                   console.error("Backend update error:", err);
                 }
             })
@@ -643,18 +670,19 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
                 next: (response) => {
                     this.isSubmitting = false;
                     // CRITICAL: Save the new assessment ID to the workflow
-                    // Assuming the response contains the UUID as `assessment_uuid` or similar.
-                    // Adjust the property name based on your actual API response.
                     if (response && response.assessment_uuid) {
                        this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
                     }
-                    this.snackBar.open('Assessment saved successfully!', 'Close', { duration: 3000 });
-                    this.router.navigate(['/create-job-post-3rd-page']);
+                    this.showSuccessPopup('Assessment saved successfully!');
+                    // SOLUTION: Delay navigation to allow the user to see the message.
+                    setTimeout(() => {
+                      this.router.navigate(['/create-job-post-3rd-page']);
+                    }, 3000);
                 },
                 error: (err) => {
                   this.isSubmitting = false;
                   const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
-                  this.snackBar.open(`Save failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
+                  this.showErrorPopup(`Save failed: ${errorDetail}`);
                   console.error("Backend save error:", err);
                 }
             })
@@ -670,4 +698,3 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.subscriptions.unsubscribe();
   }
 }
-
