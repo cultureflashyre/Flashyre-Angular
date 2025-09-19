@@ -68,7 +68,7 @@ export class SignupCorporate1 implements OnInit {
           Validators.minLength(3),
           Validators.maxLength(10),
       ]],
-        // company_name: ['', Validators.required], // keep simple for now or add validators if needed
+        //company_name: ['', Validators.required], // keep simple for now or add validators if needed
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
         password: ['', [Validators.required, 
