@@ -100,6 +100,7 @@
 
       </div>
       <div class="assessment-taken-page3-qa-details-container">
+        <div *ngIf="assessmentData?.detailed_questions?.length > 0"></div>
         <div *ngFor="let question of assessmentData?.detailed_questions; let i = index"
          class="assessment-taken-page3-qa-container1">
           <div class="assessment-taken-page3-question-number-container1">
@@ -153,6 +154,10 @@
                 </span>
               </div>
             </div>
+        </div>
+        
+        <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0" class="no-questions-message">
+          No questions attended.
         </div>
       </div>
     </div>

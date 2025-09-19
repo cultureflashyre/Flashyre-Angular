@@ -62,6 +62,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   currentOptions: any[] = [];
 
   isLastQuestionInSection = false;
+  hasQuestions: boolean = false;
 
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
@@ -265,16 +266,19 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateCurrentQuestion(): void {
-    if (this.currentQuestions && this.currentQuestions.length > 0) {
-      this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
-      this.updateCurrentOptions();
-      this.checkIfLastQuestionInSection();
-      this.scrollToActiveQuestion();
-    } else {
-      this.currentQuestion = { question: 'No questions available' };
-      this.currentOptions = [];
-    }
+  if (this.currentQuestions && this.currentQuestions.length > 0) {
+    this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
+    this.updateCurrentOptions();
+    this.checkIfLastQuestionInSection();
+    this.scrollToActiveQuestion();
+    this.hasQuestions = true; // Set to true when questions are available
+  } else {
+    this.currentQuestion = { question: 'No questions available' };
+    this.currentOptions = [];
+    this.hasQuestions = false; // Set to false when no questions are available
   }
+}
+
   
   scrollLeft(): void {
     if (this.numbersContainer) {
