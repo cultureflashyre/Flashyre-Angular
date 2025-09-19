@@ -34,6 +34,21 @@
   width: 104px;
   height: 104px;
 }
+
+.avatar-icon {
+  width: 104px;
+  height: 104px;
+  /*background-color: #6c757d;  or any preferred color */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
  
 .candidate-profile-short-candidate-details-container {
   gap: 3px;
@@ -185,6 +200,11 @@
     width: 94px;
     height: 94px;
   }
+  .avatar-icon {
+  width: 94px;
+  height: 94px;
+  font-size: 20px;
+  }
   .candidate-profile-short-name-of-the-candidate {
     font-size: 14px;
   }
@@ -222,6 +242,11 @@
   .candidate-profile-short-candidate-image {
     width: 74px;
     height: 74px;
+  }
+  .avatar-icon {
+  width: 74px;
+  height: 74px;
+  font-size: 18px;
   }
   .candidate-profile-short-name-of-the-candidate {
     font-size: 12px;

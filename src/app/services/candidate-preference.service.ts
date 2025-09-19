@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CandidatePreferenceService {
-  private apiUrl = 'http://localhost:8000/api/candidate/preferences/';
+  private apiUrl = environment.apiUrl+'api/candidate/preferences/';
 
   constructor(private http: HttpClient) { }
 
@@ -33,11 +34,11 @@ export class CandidatePreferenceService {
   }
 
   savePreference(preferenceData: any): Observable<any> {
-    return this.http.post(this.apiUrl, preferenceData, { headers: this.getHeaders(), withCredentials: true });
+    return this.http.post(this.apiUrl, preferenceData, { headers: this.getHeaders()});
   }
   
   updatePreference(id: number, preferenceData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}${id}/`, preferenceData, { headers: this.getHeaders(), withCredentials: true });
+    return this.http.put(`${this.apiUrl}${id}/`, preferenceData, { headers: this.getHeaders()});
   }
 
   // ADD THIS NEW FUNCTION for deleting a preference

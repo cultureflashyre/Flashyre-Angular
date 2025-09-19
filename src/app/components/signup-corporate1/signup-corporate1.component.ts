@@ -8,6 +8,8 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
+import { ThumbnailService } from '../../services/thumbnail.service';  // Import ThumbnailService
+
 
 @Component({
   selector: 'signup-corporate1',
@@ -49,7 +51,8 @@ export class SignupCorporate1 implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private http: HttpClient,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private thumbnailService: ThumbnailService  // Inject ThumbnailService
   ) {  }
 
   ngOnInit() {
@@ -151,6 +154,10 @@ export class SignupCorporate1 implements OnInit {
     if (this.signupForm.valid) {
       this.spinner.show(); // show spinner as in candidate signup
 
+      const firstName = this.signupForm.get('first_name').value;
+      const lastName = this.signupForm.get('last_name').value;
+      const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+
       const formData = { ...this.signupForm.value };
       
       // Remove confirm_password as backend does not need it
@@ -158,6 +165,7 @@ export class SignupCorporate1 implements OnInit {
       
       // Add explicit user_type for corporate (recruiter)
       formData.user_type = 'recruiter';
+      formData.initials = initials;  // Add initials here
 
       // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({

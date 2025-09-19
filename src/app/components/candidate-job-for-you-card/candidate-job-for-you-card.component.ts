@@ -12,6 +12,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   score: number = 0;
+  public avatarBgColor: string = '#6c757d'; // default fallback color
 
   // State booleans for the dislike and save buttons.
   isDisliked: boolean = false;
@@ -105,6 +106,23 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     }
   }
 
+  getColorFromString(str: string): string {
+    const colors = [
+      '#1abc9c', '#3498db', '#9b59b6', '#e67e22', '#e74c3c',
+      '#2ecc71', '#34495e', '#16a085', '#27ae60', '#2980b9',
+      '#8e44ad', '#d35400', '#c0392b', '#7f8c8d',
+      '#474748', '#30B63F', '#F6B85C'
+    ];
+
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['matchingScore'] && !changes['matchingScore'].firstChange) {
       this.score = this.matchingScore || 0;
@@ -116,9 +134,11 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
-      console.log('User profile loaded:', this.userProfile);
+      if (this.userProfile.initials) {
+        this.avatarBgColor = this.getColorFromString(this.userProfile.initials);
+      }
     } else {
-      console.log('User Profile NOT fetched');
+      console.log("User Profile NOT fetched");
     }
   }
 

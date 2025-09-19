@@ -5,11 +5,17 @@
 >
   <div id="candidate-profile-card" class="candidate-profile-short-container2">
     <img
+      *ngIf="userProfile.profile_picture_url; else showInitials"
       id="candidate-profile-picture"
       [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
       [attr.alt]="placeholderImageAlt"
       class="candidate-profile-short-candidate-image thq-img-ratio-1-1 thq-img-round"
     />
+    <ng-template #showInitials>
+      <div class="avatar-icon thq-img-ratio-1-1 thq-img-round" [style.background-color]="avatarBgColor">
+        {{ userProfile.initials }}
+      </div>
+    </ng-template>
     <div
       id="candidate-details-container"
       class="candidate-profile-short-candidate-details-container"

@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { AdminAuthService } from '../../services/admin-auth.service'; // Using the dedicated service
+import { ThumbnailService } from '../../services/thumbnail.service'; // Import your thumbnail service
 
 @Component({
   selector: 'signup-admin1',
@@ -47,7 +48,8 @@ export class Signupadmin implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
-    private adminAuthService: AdminAuthService // Inject the dedicated service
+    private adminAuthService: AdminAuthService, // Inject the dedicated service
+    private thumbnailService: ThumbnailService // Inject ThumbnailService
   ) {}
 
   ngOnInit() {
@@ -139,7 +141,19 @@ export class Signupadmin implements OnInit {
     if (this.signupForm.valid) {
       this.spinner.show();
 
-      this.adminAuthService.signupAdmin(this.signupForm.value).subscribe({
+      // Get the full name by combining first and last name
+      const fullName = `${this.signupForm.value.first_name} ${this.signupForm.value.last_name}`;
+
+      // Use ThumbnailService to get initials
+      const initials = this.thumbnailService.getUserInitials(fullName);
+
+      // Create the payload with initials added
+      const signupData = {
+        ...this.signupForm.value,
+        initials: initials  // add initials here
+      };
+
+      this.adminAuthService.signupAdmin(signupData).subscribe({
         next: (response: any) => {
           console.log('--- [Frontend Log] Admin Signup SUCCESS ---', response);
           this.errorMessage = '';

@@ -95,7 +95,7 @@
         <span
           id="login-signup-button"
           class="log-in-page-signup-text button"
-          [routerLink]="userType === 'corporate' ? '/signup-corporate' : '/signup-candidate'"
+          [routerLink]="userType === 'corporate' ? '/signup-corporate' : userType === 'admin' ? '/signup-admin' : '/signup-candidate'"
         >
           <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
           <ng-template #defaultText4>

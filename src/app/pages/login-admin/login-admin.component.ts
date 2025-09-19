@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AuthService } from '../../services/candidate.service';
 import { UserProfileService } from '../../services/user-profile.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -10,8 +10,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: 'login-admin.component.html',
   styleUrls: ['login-admin.component.css'],
 })
-export class LoginAdmin {
+export class LoginAdmin implements OnInit {
   errorMessage: string = '';
+  returnUrl: string;
 
   constructor(
     private title: Title,
@@ -19,6 +20,7 @@ export class LoginAdmin {
     private authService: AuthService,
     private userProfileService: UserProfileService,
     private router: Router,
+    private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
   ) {
     this.title.setTitle('Login-admin - Flashyre');
@@ -32,6 +34,11 @@ export class LoginAdmin {
         content: 'your-og-image-url',
       },
     ]);
+  }
+
+  ngOnInit() {
+    // Capture returnUrl query param or default to candidate login page
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login-admin';
   }
 
   onLoginSubmit(response: any) {

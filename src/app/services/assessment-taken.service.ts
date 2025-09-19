@@ -29,12 +29,12 @@ export class AssessmentTakenService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get(`${this.baseUrl}assessment/get_all_assessment_scores/`, {withCredentials: true});
+    return this.http.get(`${this.baseUrl}assessment/get_all_assessment_scores/`);
   }
 
 fetchAssessmentScore(assessmentId: string): Observable<any> {
   const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
-  return this.http.get(url, { withCredentials: true });
+  return this.http.get(url);
 }
 
 
