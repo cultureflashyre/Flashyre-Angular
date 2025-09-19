@@ -499,7 +499,7 @@
               [jobId]="job.job_id.toString()"
               [imageSrc]="job.logo || getRandomImage()"
               [imageAlt]="job.company_name + ' logo'"
-              [matchingScore]="job.matching_score || 80"
+              [matchingScore]="job.matching_score || 0"
             >
               <ng-template #text>
                 <div class="candidate-home-fragment31">

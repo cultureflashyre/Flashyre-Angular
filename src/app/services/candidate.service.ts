@@ -57,10 +57,31 @@ export class AuthService {
     this.router.navigate(['/login-candidate']);
   }
 
-  getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {
+  /**
+   * --- [MODIFIED] Renamed from getMatchScores to clarify its purpose, now specific to the resume_analyzer app. ---
+   * --- [DEPRECATED] This method is no longer used by the frontend as scoring is now on-the-fly.
+   * Kept for potential future use or if other parts of the system rely on it.
+   */
+  getMatchScores_DEPRECATED(jobIds: number[]): Observable<{[key: number]: number}> {
     const url = `${this.apiUrl}api/jobs/get-match-scores/`;
     // The backend expects an object with a 'job_ids' key
     return this.http.post<{[key: number]: number}>(url, { job_ids: jobIds });
+  }
+
+  /**
+   * --- [NEW] Fetches on-the-fly job match scores for the logged-in user. ---
+   * This is the primary method used by the candidate home page.
+   * @param jobIds An array of job IDs to get scores for.
+   * @returns An Observable mapping job IDs to their match scores.
+   */
+  getMatchScores(jobIds: number[]): Observable<{ [key: number]: number }>{
+    const url = `${this.apiUrl}api/jobs/get-match-scores/`;
+    return this.http.post<{ [key: number]: number }>(url, { job_ids: jobIds }, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in getMatchScores:', error);
+        return throwError(() => new Error('Failed to fetch job match scores'));
+      })
+    );
   }
 
   // --- JOB APPLICATION METHODS ---

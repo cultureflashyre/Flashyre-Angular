@@ -40,8 +40,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   
   // Job related properties
-  jobs: any[] = []; // Master list of jobs from the API
-  filteredJobs: any[] = []; // Jobs after any search filters are applied
+  // --- MODIFIED: Job objects will now have an optional 'matching_score' property
+  jobs: any[] = []; // Master list of jobs
+  filteredJobs: any[] = []; // Jobs after search filters are applied
   displayedJobs: any[] = []; // Paginated jobs for the view
   appliedJobIds: number[] = [];
   
@@ -115,8 +116,26 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.setupInfiniteScroll();
-      this.updateFilterPosition();
+
+      this.updateFilterPosition(); // Call to get initial position
     }, 100);
+  }
+
+  updateFilterPosition(): void {
+    if (this.filterIcon && this.filterIcon.nativeElement) {
+      const rect = this.filterIcon.nativeElement.getBoundingClientRect();
+      this.filterPosition = {
+        top: rect.bottom + window.scrollY + 10, // 10px below icon (adjust if needed)
+        left: rect.left + window.scrollX + (rect.width / 2) - 450 // Center modal (460px width / 2 = 230px)
+      };
+    }
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:resize', ['$event'])
+  onWindowScrollOrResize(): void {
+    this.updateFilterPosition();
+
   }
 
   ngOnDestroy(): void {
@@ -222,22 +241,53 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     if (this.searchDatePosted) {
       const now = new Date();
       let cutoff: Date;
-      if (this.searchDatePosted === '24h') { cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000); } 
-      else if (this.searchDatePosted === 'week') { cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); } 
-      else if (this.searchDatePosted === 'month') { cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); } 
-      else { cutoff = new Date(0); }
+      if (this.searchDatePosted === '24h') {
+        cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      } else if (this.searchDatePosted === 'week') {
+        cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      } else if (this.searchDatePosted === 'month') {
+        cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      } else {
+        cutoff = new Date(0); // Any
+      }
       tempJobs = tempJobs.filter(job => new Date(job.posted_date) > cutoff);
     }
-    if (this.searchExperienceLevel) { tempJobs = tempJobs.filter(j => (j.experience_level || '').toLowerCase() === this.searchExperienceLevel.toLowerCase()); }
-    if (this.searchDepartment) { tempJobs = tempJobs.filter(j => (j.department || '').toLowerCase().includes(this.searchDepartment.toLowerCase())); }
-    if (this.searchSalary) { tempJobs = tempJobs.filter(j => j.salary_range === this.searchSalary); }
-    if (this.searchCompanyName) { tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(this.searchCompanyName.toLowerCase().trim())); }
-    if (this.searchIndustries) { tempJobs = tempJobs.filter(j => (j.industries || []).includes(this.searchIndustries)); }
-    if (this.searchWorkMode) { tempJobs = tempJobs.filter(j => (j.work_mode || '').toLowerCase() === this.searchWorkMode.toLowerCase()); }
-    if (this.searchRole) { tempJobs = tempJobs.filter(j => (j.role || '').toLowerCase().includes(this.searchRole.toLowerCase())); }
-    if (this.searchJobType) { tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase()); }
 
-    // --- Final Step: Update the view with the filtered results ---
+    if (this.searchExperienceLevel) {
+      tempJobs = tempJobs.filter(job => job.experience_level?.toLowerCase() === this.searchExperienceLevel.toLowerCase());
+    }
+
+    if (this.searchDepartment) {
+      tempJobs = tempJobs.filter(job => job.department?.toLowerCase().includes(this.searchDepartment.toLowerCase()));
+    }
+
+    if (this.searchSalary) {
+      // Assume salary_range like '0-5', parse and filter
+      tempJobs = tempJobs.filter(job => job.salary_range === this.searchSalary);
+    }
+
+    if (this.searchCompanyName?.trim()) {
+      const searchTerm = this.searchCompanyName.toLowerCase().trim();
+      tempJobs = tempJobs.filter(job => job.company_name?.toLowerCase().includes(searchTerm));
+    }
+
+    if (this.searchIndustries) {
+      tempJobs = tempJobs.filter(job => job.industries?.includes(this.searchIndustries));
+    }
+
+    if (this.searchWorkMode) {
+      tempJobs = tempJobs.filter(job => job.work_mode?.toLowerCase() === this.searchWorkMode.toLowerCase());
+    }
+
+    if (this.searchRole) {
+      tempJobs = tempJobs.filter(job => job.role?.toLowerCase().includes(this.searchRole.toLowerCase()));
+    }
+
+    // Existing job_type filter if needed
+    if (this.searchJobTitle) {
+      tempJobs = tempJobs.filter(job => job.job_type?.toLowerCase() === this.searchJobTitle.toLowerCase());
+    }
+
     this.filteredJobs = tempJobs;
     this.currentPage = 0;
     this.displayedJobs = [];
@@ -290,6 +340,21 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
+  onApplyFilters(filters: any): void {
+    this.searchDatePosted = filters.datePosted;
+    this.searchExperienceLevel = filters.experienceLevel;
+    this.searchDepartment = filters.department;
+    this.searchSalary = filters.salary;
+    this.searchLocation = filters.location; // Override main search if filled
+    this.searchCompanyName = filters.companyName;
+    this.searchIndustries = filters.industries;
+    this.searchWorkMode = filters.workMode;
+    this.searchRole = filters.role;
+    // this.searchExperience already exists, but can add level if different
+    this.onSearch();
+    this.showMoreFilters = false; // Close modal after apply
+  }
+
   private filterAndDisplayJobs(jobs: any[]): void {
     // Diagnostic log to help debug data mismatches
     if (jobs && jobs.length > 0) {
@@ -303,7 +368,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         this.filteredJobs = [...this.jobs];
         this.currentPage = 0;
         this.displayedJobs = [];
-        this.loadNextPage();
+        this.loadNextPage(); // This will now also trigger score fetching for the first page
         this.isLoading = false;
       },
       (error) => {
@@ -312,7 +377,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         this.filteredJobs = [...this.jobs];
         this.currentPage = 0;
         this.displayedJobs = [];
-        this.loadNextPage();
+        this.loadNextPage(); // This will now also trigger score fetching for the first page
         this.isLoading = false;
       }
     );
@@ -330,9 +395,43 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     if (nextJobs.length > 0) {
       this.displayedJobs = [...this.displayedJobs, ...nextJobs];
       this.currentPage++;
+      // --- [NEW] Fetch scores for the newly loaded jobs ---
+      this.fetchAndAssignMatchScores(nextJobs);
     }
     this.isLoadingMore = false;
     setTimeout(() => this.setupInfiniteScroll(), 100);
+  }
+
+  /**
+   * --- [NEW] Fetches scores for a batch of jobs and assigns them to the objects in the displayedJobs array. ---
+   * @param jobsToScore The array of job objects for which to fetch scores.
+   */
+  private fetchAndAssignMatchScores(jobsToScore: any[]): void {
+    const jobIds = jobsToScore.map(job => job.job_id).filter(id => id != null);
+
+    if (jobIds.length === 0) {
+      return; // No jobs to score
+    }
+
+    this.authService.getMatchScores(jobIds)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (scoresMap) => {
+          // Create a map for efficient lookup
+          const scores = new Map(Object.entries(scoresMap).map(([k, v]) => [parseInt(k, 10), v]));
+
+          // Assign scores to the jobs in the main displayedJobs array
+          this.displayedJobs.forEach(job => {
+            if (scores.has(job.job_id)) {
+              job.matching_score = scores.get(job.job_id);
+            }
+          });
+        },
+        (error) => {
+          console.error('Failed to fetch match scores for jobs:', error);
+          // Gracefully handle the error, jobs will just show a 0% score.
+        }
+      );
   }
 
   private setupInfiniteScroll(): void {
