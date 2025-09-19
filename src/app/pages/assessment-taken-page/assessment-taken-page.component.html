@@ -104,7 +104,7 @@
     <span id="total-assessments-taken-text" class="assessment-taken-page-total-assessments-taken-text">
       All Assessment Taken
     </span>
-    <div id="job-title-container" class="assessment-taken-page-job-title-container input">
+    <div *ngIf="assessments?.length > 0" id="job-title-container" class="assessment-taken-page-job-title-container input">
       <input type="text" placeholder="Search assessments..." [(ngModel)]="searchQuery" class="assessment-taken-page-job-title-keyword-text" />
       <div id="search-icon-container" class="assessment-taken-page-search-icon-container">
         <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
@@ -116,7 +116,7 @@
       </div>
     </div>
   </div>
-  <div id="assessments-container" class="assessment-taken-page-assessments-container">
+  <div id="assessments-container" class="assessment-taken-page-assessments-container" (scroll)="onScroll($event)">
     <!-- Show the assessment list only if no assessment is selected -->
     <div *ngIf="selectedAssessmentId === null">
       <!-- Show message if assessments array is empty -->
@@ -125,7 +125,7 @@
       </div>
       <!-- Show assessments if array is not empty -->
       <div *ngIf="assessments?.length > 0">
-        <div *ngFor="let assessment of getFilteredAssessments()">
+        <div *ngFor="let assessment of getDisplayedAssessments()">
           <div class="assessment-taken-page-first-assessment-container">
             <div class="assessment-taken-page-assessment-details-container">
               <img [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'" alt="image" class="assessment-taken-page-assessment-image1" />
@@ -142,8 +142,7 @@
                 </div>
               </div>
             </div>
-            <div class="assessment-taken-page-score-container">
-              <div class="assessment-taken-page-score-board-container">
+            <div class="assessment-taken-page-score-board-container">
                 <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
                 <div class="assessment-taken-page-score-code-container">
                   <div class="assessment-taken-page-container20">
@@ -158,6 +157,8 @@
                   </div>
                 </div>
               </div>
+            <div class="assessment-taken-page-score-container">
+              
               <div class="assessment-taken-page-attempts-remaining-container">
                 <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
                 <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
@@ -182,6 +183,9 @@
               </svg>
             </div>
           </div>
+        </div>
+        <div *ngIf="getFilteredAssessments().length === 0" class="no-assessments-message">
+          No assessment found.
         </div>
         <!-- <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span> -->
       </div>
