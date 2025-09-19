@@ -207,10 +207,16 @@
               </svg>
               <div class="progress-content">
                 <img
+                  *ngIf="userProfile.profile_picture_url; else showInitials"
                   [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   alt="Icon"
                   class="progress-icon"
                 />
+                    <ng-template #showInitials>
+                      <div class="avatar-icon progress-icon" [style.background-color]="avatarBgColor">
+                        {{ userProfile.initials }}
+                      </div>
+                    </ng-template>
                 <div class="progress-label">{{ score }}%</div>
               </div>
               <div class="progress-description">Job matching score</div>

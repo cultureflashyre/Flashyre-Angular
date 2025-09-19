@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
+import { ThumbnailService } from '../../services/thumbnail.service'; // Import thumbnail service
 
 @Component({
   selector: 'signup-candidate1',
@@ -46,6 +47,7 @@ export class SignupCandidate1 implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
+    private thumbnailService: ThumbnailService // Inject ThumbnailService here
   ) {}
 
   ngOnInit() {
@@ -133,6 +135,10 @@ export class SignupCandidate1 implements OnInit {
     if (this.signupForm.valid) {
       this.spinner.show(); // Show spinner only when request starts
 
+      const firstName = this.signupForm.get('first_name').value;
+      const lastName = this.signupForm.get('last_name').value;
+      const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+
       const formData = {
         first_name: this.signupForm.get('first_name').value,
         last_name: this.signupForm.get('last_name').value,
@@ -140,6 +146,7 @@ export class SignupCandidate1 implements OnInit {
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
         user_type: 'candidate',
+        initials: initials  // Include initials here
       };
 
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe(

@@ -516,6 +516,18 @@ svg {
   border-radius: 50%;
 }
 
+.avatar-icon {
+  /*background-color: #6c757d;  or any preferred color */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
 .progress-label {
   font-family: Arial, sans-serif;
   font-size: 1.2rem;

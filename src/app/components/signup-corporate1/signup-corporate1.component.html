@@ -139,71 +139,69 @@
             Email already exists.
           </div>
         </div>
-        <div id="password-container" class="signup-corporate1-password-container1">
-          <div id="password" class="signup-corporate1-password1">
-            <span id="signup-Password" class="signup-corporate1-password-text1">
-              <ng-container>
-                <ng-template #defaultText111>
-                  <div class="signup-corporate1-fragment20">
-                    <span class="signup-corporate1-text20">Password</span>
-                  </div>
-                </ng-template>
-                  <span
-                    class="signup-corporate1-show-text1 button"
-                    (click)="togglePasswordVisibility()"
-                  >
-                    {{ passwordType === 'password' ? 'Show' : 'Hide' }}
-                  </span>
-              </ng-container>
-            </span>
-            <input
-              [type]="passwordType"
-              id="signup-password-input"
-              formControlName="password"
-              placeholder="Enter Password"
-              class="signup-corporate1-password-input1 input"
-            />
-          </div>
-          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
-              <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
-              <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
-              <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
-              <span *ngIf="signupForm.get('password').errors?.uppercase">Password must include at least one uppercase letter.</span>
-              <span *ngIf="signupForm.get('password').errors?.lowercase">Password must include at least one lowercase letter.</span>
-              <span *ngIf="signupForm.get('password').errors?.number">Password must include at least one number.</span>
-              <span *ngIf="signupForm.get('password').errors?.specialChar">Password must include at least one special character.</span>
-              <span *ngIf="signupForm.get('password').errors?.alphabet">Password must include at least one alphabet.</span>
-            </div>
+<div id="password-container" class="signup-corporate1-password-container1">
+  <div id="password" class="signup-corporate1-password1">
+    <span id="signup-Password" class="signup-corporate1-password-text1">
+      <ng-container *ngTemplateOutlet="defaultText111"></ng-container>
+      <ng-template #defaultText111>
+        <div class="signup-corporate1-fragment20">
+          <span class="signup-corporate1-text20">Password</span>
         </div>
-        <div id="confirm-password-container" class="signup-corporate1-password-container2">
-          <div id="password" class="signup-corporate1-password2">
-            <span id="signup-confirm-password" class="signup-corporate1-password-text2">
-              <ng-container>
-                <ng-template #defaultText1111>
-                  <div class="signup-corporate1-fragment13">
-                    <span class="signup-corporate1-text13">Confirm Password</span>
-                  </div>
-                </ng-template>
-                  <span
-                    class="signup-corporate1-show-text2 button"
-                    (click)="toggleConfirmPasswordVisibility()"
-                  >
-                    {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
-                  </span>
-              </ng-container>
-            </span>
-            <input
-              [type]="confirmPasswordType"
-              id="signup-confirm-password-input"
-              formControlName="confirm_password"
-              placeholder="Confirm Password"
-              class="signup-corporate1-password-input2 input"
-            />
-          </div>
-          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
-              Passwords do not match.
-            </div>
+      </ng-template>
+      <span
+        class="signup-corporate1-show-text1 button"
+        (click)="togglePasswordVisibility()"
+      >
+        {{ passwordType === 'password' ? 'Show' : 'Hide' }}
+      </span>
+    </span>
+    <input
+      [type]="passwordType"
+      id="signup-password-input"
+      formControlName="password"
+      placeholder="Enter Password"
+      class="signup-corporate1-password-input1 input"
+    />
+  </div>
+  <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+    <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
+    <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
+    <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
+    <span *ngIf="signupForm.get('password').errors?.uppercase">Password must include at least one uppercase letter.</span>
+    <span *ngIf="signupForm.get('password').errors?.lowercase">Password must include at least one lowercase letter.</span>
+    <span *ngIf="signupForm.get('password').errors?.number">Password must include at least one number.</span>
+    <span *ngIf="signupForm.get('password').errors?.specialChar">Password must include at least one special character.</span>
+    <span *ngIf="signupForm.get('password').errors?.alphabet">Password must include at least one alphabet.</span>
+  </div>
+</div>
+<div id="confirm-password-container" class="signup-corporate1-password-container2">
+  <div id="password" class="signup-corporate1-password2">
+    <span id="signup-confirm-password" class="signup-corporate1-password-text2">
+      <ng-container *ngTemplateOutlet="defaultText1111"></ng-container>
+      <ng-template #defaultText1111>
+        <div class="signup-corporate1-fragment13">
+          <span class="signup-corporate1-text13">Confirm Password</span>
         </div>
+      </ng-template>
+      <span
+        class="signup-corporate1-show-text2 button"
+        (click)="toggleConfirmPasswordVisibility()"
+      >
+        {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
+      </span>
+    </span>
+    <input
+      [type]="confirmPasswordType"
+      id="signup-confirm-password-input"
+      formControlName="confirm_password"
+      placeholder="Confirm Password"
+      class="signup-corporate1-password-input2 input"
+    />
+  </div>
+  <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
+    Passwords do not match.
+  </div>
+</div>
         <div id="signup-signin-container" class="signup-corporate1-signup-and-signin-container">
           <button 
           id="signup-button" 

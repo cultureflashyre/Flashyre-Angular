@@ -5,8 +5,8 @@
 .preference-component-container10 {
   gap: 16px;
   flex: 0 0 auto;
-  width: auto;
-  height: 480px;
+  width: 100%;
+  height: auto;
   display: flex;
   padding: 0px;
   position: relative;
@@ -425,6 +425,19 @@
 .preference-componentroot-class-name {
   width: 100%;
   display: none;
+}
+
+.preference-component-icon3 {
+  transition: transform 0.3s;
+}
+
+.preference-component-icon3.expanded {
+  transform: rotate(180deg);
+}
+
+.preference-component-container13 {
+  overflow: hidden;
+  transition: height 0.3s;
 }
  
 @media(max-width: 991px) {

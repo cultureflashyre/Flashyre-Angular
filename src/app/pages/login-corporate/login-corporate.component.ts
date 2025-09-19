@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UserProfileService } from '../../services/user-profile.service';
 
@@ -9,13 +9,15 @@ import { UserProfileService } from '../../services/user-profile.service';
   templateUrl: './login-corporate.component.html',
   styleUrls: ['./login-corporate.component.css']
 })
-export class LoginCorporate {
+export class LoginCorporate implements OnInit {
   errorMessage: string = '';
+  returnUrl: string;
 
   constructor(
     private title: Title,
     private meta: Meta,
     private router: Router,
+    private route: ActivatedRoute,
     private userProfileService: UserProfileService,
     private spinner: NgxSpinnerService,
   ) {
@@ -31,6 +33,11 @@ export class LoginCorporate {
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
       }
     ]);
+  }
+
+  ngOnInit() {
+    // Capture returnUrl query param or default to candidate login page
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login-corporate';
   }
 
   onLoginSubmit(response: any) {

@@ -107,11 +107,17 @@
           class="navbar-for-candidate-view-dropdown-toggle1"
         >
           <img
+            *ngIf="userProfile.profile_picture_url; else showInitials"
             id="user-image"
             [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             [attr.alt]="imageAlt3"
             class="navbar-for-candidate-view-user-image1"
           />
+              <ng-template #showInitials>
+                <div class="avatar-icon navbar-for-candidate-view-user-image1" [style.background-color]="avatarBgColor">
+                  {{ userProfile.initials }}
+                </div>
+              </ng-template>
           <div
             data-thq="thq-dropdown-arrow"
             class="navbar-for-candidate-view-dropdown-arrow"

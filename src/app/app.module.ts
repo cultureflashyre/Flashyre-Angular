@@ -240,8 +240,9 @@ const routes = [
       import(
         './pages/create-job-post-1st-page/create-job-post-1st-page.module'
       ).then((m) => m.CreateJobPost1stPageModule),
-                canActivate: [AuthGuard],
-    data: { roles: ['recruiter'] },
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
+          
   },
   {
     path: 'create-job-post-21-page',

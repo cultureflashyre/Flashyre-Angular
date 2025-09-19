@@ -14,6 +14,7 @@ export interface UserProfile {
   university: string | null;
   education_level: string | null;
   specialization: string | null;
+  initials?: string; // Add initials as optional property
 }
 
 @Injectable({

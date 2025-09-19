@@ -2,6 +2,7 @@ import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, Chan
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'log-in-page',
@@ -36,7 +37,7 @@ export class LogInPage implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)]]
     });
   }
 

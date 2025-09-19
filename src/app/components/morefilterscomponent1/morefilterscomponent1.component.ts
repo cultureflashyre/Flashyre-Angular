@@ -1,11 +1,11 @@
-import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 
 @Component({
   selector: 'app-morefilterscomponent1',
   templateUrl: 'morefilterscomponent1.component.html',
   styleUrls: ['morefilterscomponent1.component.css'],
 })
-export class Morefilterscomponent1 {
+export class Morefilterscomponent1 implements OnChanges {
   // ContentChild for labels and button texts
   @ContentChild('text') text: TemplateRef<any>; // Header text
   @ContentChild('text11') text11: TemplateRef<any>; // Date Posted label
@@ -35,6 +35,7 @@ export class Morefilterscomponent1 {
   @ContentChild('text3141') text3141: TemplateRef<any>; // Industries select
 
   @Input() rootClassName: string = '';
+  @Input() preferenceToLoad: any;
 
   // Filter properties
   filterDatePosted: string = '';
@@ -52,7 +53,26 @@ export class Morefilterscomponent1 {
   @Output() applyFiltersEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() savePreferenceEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() {}
+  constructor(private preferenceService: CandidatePreferenceService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Check if the 'preferenceToLoad' input has changed and has a value
+    if (changes.preferenceToLoad && changes.preferenceToLoad.currentValue) {
+      const data = changes.preferenceToLoad.currentValue;
+      
+      // Populate all the filter fields with data from the preference
+      this.filterDatePosted = data.date_posted || '';
+      this.filterExperienceLevel = data.experience_level || '';
+      this.filterDepartment = data.department || '';
+      this.filterSalary = data.salary || '';
+      this.filterLocation = data.location || '';
+      this.filterCompanyName = data.company_name || '';
+      this.filterIndustries = data.industries || '';
+      this.filterWorkMode = data.work_mode || '';
+      this.filterRole = data.role || '';
+      this.filterJobType = data.job_type || '';
+    }
+  }
 
   resetFilters(): void {
     this.filterDatePosted = '';
@@ -85,17 +105,40 @@ export class Morefilterscomponent1 {
 
   savePreference(): void {
     const filters = {
-      datePosted: this.filterDatePosted,
-      experienceLevel: this.filterExperienceLevel,
+      date_posted: this.filterDatePosted,
+      experience_level: this.filterExperienceLevel,
       department: this.filterDepartment,
       salary: this.filterSalary,
       location: this.filterLocation,
-      companyName: this.filterCompanyName,
+      company_name: this.filterCompanyName,
       industries: this.filterIndustries,
-      workMode: this.filterWorkMode,
+      work_mode: this.filterWorkMode,
       role: this.filterRole,
-      jobType: this.filterJobType
+      job_type: this.filterJobType
     };
-    this.savePreferenceEvent.emit(filters);
+
+    // Check if at least one field is filled
+    if (Object.values(filters).every(value => value === '')) {
+      alert('Please fill in at least one field to save a preference.');
+      return;
+    }
+
+    this.preferenceService.getPreferences().subscribe(preferences => {
+      if (preferences.length >= 3) {
+        alert('You can only save up to 3 preferences.');
+      } else {
+        this.preferenceService.savePreference(filters).subscribe(
+          response => {
+            console.log('Preference saved successfully!', response);
+            this.savePreferenceEvent.emit(filters);
+            alert('Preference saved!');
+          },
+          error => {
+            console.error('Error saving preference:', error);
+            alert('Failed to save preference.');
+          }
+        );
+      }
+    });
   }
 }
