@@ -57,6 +57,14 @@ const routes = [
       
   },
   {
+    path: 'recruiter-view-3rd-page1',
+    loadChildren: () =>
+      import(
+        './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
+      ).then((m) => m.RecruiterView3rdPage1Module),
+      
+  },
+  {
     path: 'recruiter-view-job-applications-1',
     loadChildren: () =>
       import(

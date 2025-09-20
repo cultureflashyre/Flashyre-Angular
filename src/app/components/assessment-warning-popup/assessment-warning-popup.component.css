@@ -651,6 +651,11 @@
   color: rgb(116, 116, 116);
   display: inline-block;
 }
+
+.assessment-warning-popup-unattempted-text {
+  color: rgb(116, 116, 116);
+  display: inline-block;
+}
  
 .assessment-warning-popup-fragment24 {
   display: contents;

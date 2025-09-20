@@ -46,17 +46,19 @@
 .recruiter-profile-details-container {
   gap: 3px;
   flex: 0 0 auto;
-  width: 152px;
+  gap: 16px;
+  width: 100%;
   height: 102px;
-  display: flex;
-  align-items: flex-start;
+  display: flex;  
+  align-items: center;
   flex-direction: column;
+  justify-content: center;
 }
  
 .recruiter-profile-recruiter-name {
   fill: #18191C;
   color: #18191C;
-  width: 128px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
@@ -69,7 +71,7 @@
 .recruiter-profile-container2 {
   gap: 4px;
   flex: 0 0 auto;
-  width: 76px;
+  width: 100%;
   height: 24px;
   display: flex;
   align-self: center;
@@ -87,7 +89,7 @@
 }
  
 .recruiter-profile-company-name {
-  width: 56px;
+  width: 80%;
   height: 24px;
   display: flex;
   font-style: normal;
@@ -99,7 +101,7 @@
 .recruiter-profile-job-role-of-recruiter {
   fill: #18191C;
   color: #18191C;
-  width: 152px;
+  width: 100%;
   height: 48px;
   display: flex;
   font-size: 14px;
