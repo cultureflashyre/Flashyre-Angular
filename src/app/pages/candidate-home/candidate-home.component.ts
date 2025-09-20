@@ -340,20 +340,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  onApplyFilters(filters: any): void {
-    this.searchDatePosted = filters.datePosted;
-    this.searchExperienceLevel = filters.experienceLevel;
-    this.searchDepartment = filters.department;
-    this.searchSalary = filters.salary;
-    this.searchLocation = filters.location; // Override main search if filled
-    this.searchCompanyName = filters.companyName;
-    this.searchIndustries = filters.industries;
-    this.searchWorkMode = filters.workMode;
-    this.searchRole = filters.role;
-    // this.searchExperience already exists, but can add level if different
-    this.onSearch();
-    this.showMoreFilters = false; // Close modal after apply
-  }
+
 
   private filterAndDisplayJobs(jobs: any[]): void {
     // Diagnostic log to help debug data mismatches
@@ -479,23 +466,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  updateFilterPosition(): void {
-    if (this.filterIcon && this.filterIcon.nativeElement) {
-      const rect = this.filterIcon.nativeElement.getBoundingClientRect();
-      this.filterPosition = {
-        top: rect.bottom + window.scrollY + 10,
-        left: rect.left + window.scrollX + (rect.width / 2) - 450
-      };
-    }
-  }
 
-  @HostListener('window:scroll', ['$event'])
-  @HostListener('window:resize', ['$event'])
-  onWindowScrollOrResize(): void {
-    if (this.showMoreFilters) {
-      this.updateFilterPosition();
-    }
-  }
 
   getRandomImage(): string {
     return this.images[Math.floor(Math.random() * this.images.length)];
