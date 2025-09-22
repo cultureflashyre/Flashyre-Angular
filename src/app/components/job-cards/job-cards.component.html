@@ -21,11 +21,16 @@
     >
       <div class="job-cards-job-card-job-details-container">
         <div class="job-cards-company-logo-container">
-          <img
+          <img *ngIf="job.logo; else initialsAvatar"
             alt="{{ job.company_name || 'Company' }} logo"
             src="{{ job.logo || 'https://via.placeholder.com/24' }}"
             class="job-cards-company-image"
           />
+          <ng-template #initialsAvatar>
+            <div class="avatar-icon">
+              {{ job.initials }}
+            </div>
+          </ng-template>
         </div>
         <div class="job-cards-role-company-location-main-container">
           <div class="job-cards-role-company-location-container">

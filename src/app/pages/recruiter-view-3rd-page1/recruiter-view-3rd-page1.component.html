@@ -24,6 +24,7 @@
               alt="image"
               src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
               class="recruiter-view3rd-page1-flashyre-image"
+              [routerLink]="['/recruiter-view-3rd-page1']"
             />
             <div
               data-thq="thq-navbar-nav"
@@ -34,13 +35,13 @@
                 class="recruiter-view3rd-page1-links1"
               >
                 <a
-                  href="https://www.teleporthq.io"
+                  [routerLink]="['/recruiter-view-3rd-page1']"
                   id="recruiter-dashboard-link"
                   class="recruiter-view3rd-page1-dashboard-link thq-body-small button"
                 >
-                  Dashboard
+                  Home
                 </a>
-                <a
+                <!--<a
                   href="https://www.teleporthq.io"
                   id="recruiter-jobs-posted-link"
                   target="_blank"
@@ -48,7 +49,7 @@
                   class="recruiter-view3rd-page1-jobs-for-you-link thq-body-small button"
                 >
                   Job Posted
-                </a>
+                </a> -->
                 <div
                   id="notification-container"
                   class="recruiter-view3rd-page1-container11"
@@ -95,7 +96,7 @@
                 data-thq="thq-dropdown-toggle"
                 class="recruiter-view3rd-page1-dropdown-toggle1"
               >
-                <svg
+                <!--<svg
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
@@ -107,7 +108,23 @@
                     clip-rule="evenodd"
                     fill-rule="evenodd"
                   ></path>
-                </svg>
+                </svg>-->
+
+                <img
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                *ngIf="recruiterProfile.profile_picture_url; else showInitials"
+                id="user-image"
+                [src]="recruiterProfile.profile_picture_url ? recruiterProfile.profile_picture_url : defaultProfilePicture"
+
+                class="navbar-for-candidate-view-user-image1"
+              />
+                  <ng-template #showInitials>
+                    <div class="avatar-icon navbar-for-candidate-view-user-image1">
+                      {{ recruiterProfile.initials }}
+                    </div>
+                  </ng-template>
                 <div
                   data-thq="thq-dropdown-arrow"
                   class="recruiter-view3rd-page1-dropdown-arrow"
@@ -140,13 +157,14 @@
                   >
                     <span
                       id="Recruiter-profile-Button"
+                      [routerLink]="['/profile-overview-page']"
                       class="recruiter-view3rd-page1-profile2"
                     >
                       Profile
                     </span>
                   </div>
                 </li>
-                <li
+                <!--<li
                   data-thq="thq-dropdown"
                   class="recruiter-view3rd-page1-preference1 list-item"
                 >
@@ -177,7 +195,7 @@
                       Settings
                     </span>
                   </div>
-                </li>
+                </li> -->
                 <li
                   data-thq="thq-dropdown"
                   class="recruiter-view3rd-page1-logout1 list-item"
@@ -238,12 +256,17 @@
                 </div>
                 <div class="recruiter-view3rd-page1-container13">
                   <div class="recruiter-view3rd-page1-container14">
-                    <img
-                      id="Candidate-Profile-Picture"
-                      alt="image"
-                      src="https://s3-alpha-sig.figma.com/img/7583/57be/ae9594f1160471db992db1cf36ca3f46?Expires=1738540800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=JE7txqF-B6mlyS6vVm8jDQNtPmNVIGVkOwGQawWSQEp6~GRMYRWAujE~YfsPMSJxrYRZ8aQLddL-FDlDZ81lzmRF~Ne94jCeoFq-yaK6oGmYbn-fajTwG672CtQraNnyKi8xBDKSzTynf2LH824kvvVOz~wnWqsPrNvZhjcbGoL1HOvN2J3CcCPFr54hAh~kpQWX0U3VAtHwDCZiIVxMdxYlQdAFGXUL7y36B4Ce7P91cvdiAO~iwKAT63Faez7KXBjp~IIB1J~UZLE8S3cMQJcIiD5M-mnL9IwJxqFst5lgJGikKxP1oa8MqkBlGx3Yg3MQkRmhYnIskawUWWFVcA__"
+                    <img 
+                      *ngIf="recruiterProfile.profile_picture_url; else initialsAvatar"
+                      id="recruiter-profile-picture"
+                      [src]="recruiterProfile.profile_picture_url ? recruiterProfile.profile_picture_url : defaultProfilePicture"
                       class="recruiter-view3rd-page1-user-image"
                     />
+                    <ng-template #initialsAvatar>
+                      <div class="initials-avatar recruiter-view3rd-page1-user-image">
+                        {{ recruiterProfile.initials }}
+                      </div>
+                    </ng-template>
                     <div class="recruiter-view3rd-page1-container15">
                       <recruiter-profile
                         rootClassName="recruiter-profileroot-class-name27"
@@ -431,7 +454,7 @@
                       id="profile-popup-container"
                       class="recruiter-view3rd-page1-container20"
                     >
-                      <div
+                      <!--<div
                         id="preference-container"
                         class="recruiter-view3rd-page1-preference-container"
                       >
@@ -497,7 +520,7 @@
                         >
                           Settings
                         </span>
-                      </div>
+                      </div> -->
                       <div
                         id="logout-container"
                         class="recruiter-view3rd-page1-logout-container button"
@@ -522,7 +545,8 @@
                         <span
                           id="recruiter-logout-button"
                           class="recruiter-view3rd-page1-logout-text"
-                        >
+                          (click)="onLogoutClick()"
+                          >
                           Logout
                         </span>
                       </div>
@@ -593,19 +617,25 @@
             <ng-template #text>
               <div class="recruiter-view3rd-page1-fragment20">
                 <span class="recruiter-view3rd-page1-text32">
-                  {{ recruiterProfile?.recruiter_name }}
+                  {{ recruiterProfile.first_name }} {{ recruiterProfile.last_name }}
                 </span>
               </div>
             </ng-template>
             <ng-template #text1>
               <div class="recruiter-view3rd-page1-fragment21">
-                <span class="recruiter-view3rd-page1-text33">{{ recruiterProfile?.company_name }}</span>
+                <span class="recruiter-view3rd-page1-text33">
+
+                                {{ recruiterProfile.latest_job_title 
+                  ? recruiterProfile.latest_job_title + ' @ ' + recruiterProfile.latest_company_name 
+                  : (recruiterProfile.latest_education_level ? recruiterProfile.latest_education_level + ' from ' + recruiterProfile.latest_university : '--') }}
+                
+                </span>
               </div>
             </ng-template>
             <ng-template #text3>
               <div class="recruiter-view3rd-page1-fragment22">
                 <span class="recruiter-view3rd-page1-text34">
-                  <span>{{ recruiterProfile?.job_role_of_recruiter }}</span>
+                  <span>{{ recruiterProfile.latest_job_title }}</span>
                   <br />
                   <!-- <span>Mountain View, CA</span> -->
                 </span>
@@ -822,11 +852,17 @@
                     class="recruiter-view3rd-page1-company-icon-container"
                   >
                     <img
+                      *ngIf="job.company_image_url; else showInitials"
                       id="company-image"
                       alt="image"
                       [src]="job.company_image_url"
                       class="recruiter-view3rd-page1-company-image2"
                     />
+                    <ng-template #showInitials>
+                      <div class="avatar-icon" >
+                        {{ job.initials }}
+                      </div>
+                    </ng-template>
                   </div>
                   <div
                     id="details-container"

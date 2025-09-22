@@ -12,11 +12,17 @@
       class="recruiter-flow-large-card-company-name-logo-container"
     >
       <img
+      *ngIf="imageSrc; else initialsAvatar"
         id="company-image"
         [attr.alt]="imageAlt"
         [attr.src]="imageSrc"
         class="recruiter-flow-large-card-company-image"
       />
+      <ng-template #initialsAvatar>
+        <div class="company-initials-avatar">
+          {{ companyInitials }}
+        </div>
+      </ng-template>
       <span id="company-name" class="recruiter-flow-large-card-company-name">
         <ng-container>
           <ng-template #defaultText>

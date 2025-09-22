@@ -29,6 +29,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
   @Input() imageSrc: string =
     'https://s3-alpha-sig.figma.com/img/cb33/d035/72e938963245d419674c3c2e71065794?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=q4HKhJijWG7gIkWWgF~7yllDZKHyqxALVLh-VKU~aa6mkzu0y4';
   @Input() imageAlt: string = 'image';
+  @Input() companyInitials: string;
 
   @ViewChild('desktopBar', { static: false }) desktopBar: ElementRef;
   @ViewChild('mobileLoader', { static: false }) mobileLoader: ElementRef;
@@ -57,7 +58,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     this.loadUserProfile();
     await this.loadJobIdFromCache();
     
-    const userId = localStorage.getItem('userID');
+    const userId = localStorage.getItem('user_id');
 
     if (userId && this.jobId) {
       // --- [MODIFIED] Logic to fetch disliked jobs status using Cache API ---
@@ -141,6 +142,12 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       console.log("User Profile NOT fetched");
     }
   }
+
+  isImage(src: string): boolean {
+    // very basic check, you can improve for base64 or remote images
+    return src?.startsWith('http') || src?.startsWith('data:image');
+  }
+
 
   async loadJobIdFromCache(): Promise<void> {
     if (!this.jobId) {
@@ -306,7 +313,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
       return;
     }
     
-    const userId = localStorage.getItem('userID');
+    const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for dislike action', { userId, jobId: this.jobId });
       alert('Unable to dislike job: User or job information is missing.');
@@ -362,7 +369,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
     }
 
-    const userId = localStorage.getItem('userID');
+    const userId = localStorage.getItem('user_id');
     if (!userId || !this.jobId) {
       console.error('user_id or job_id missing for save action', { userId, jobId: this.jobId });
       alert('Unable to save job: User or job information is missing.');

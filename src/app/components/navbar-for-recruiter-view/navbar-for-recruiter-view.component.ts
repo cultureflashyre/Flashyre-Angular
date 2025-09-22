@@ -1,11 +1,17 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core'
+import { CorporateAuthService } from '../../services/corporate-auth.service';
 
 @Component({
   selector: 'navbar-for-recruiter-view',
   templateUrl: 'navbar-for-recruiter-view.component.html',
   styleUrls: ['navbar-for-recruiter-view.component.css'],
 })
-export class NavbarForRecruiterView {
+export class NavbarForRecruiterView implements OnInit {
+
+  recruiterProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+
+
   @ContentChild('text14')
   text14: TemplateRef<any>
   @Input()
@@ -66,5 +72,26 @@ export class NavbarForRecruiterView {
   link4: TemplateRef<any>
   @ContentChild('text10')
   text10: TemplateRef<any>
-  constructor() {}
+  constructor(
+    private corporateAuthService: CorporateAuthService,
+  ) {}
+
+    ngOnInit(): void {
+    // Check if running in a browser environment before accessing localStorage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.loadUserProfile();
+      
+    }
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) 
+      this.recruiterProfile = JSON.parse(profileData);
+  } 
+
+  onLogoutClick() {
+    this.corporateAuthService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
+  }
 }

@@ -170,7 +170,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       mode: stage.mode,
       assigned_to: stage.assigned_to,
       order: index + 1,
-      user_id: localStorage.getItem('userID')
+      user_id: localStorage.getItem('user_id')
     }));
 
     console.log("payload: ", payload);
@@ -183,7 +183,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
         // 2. Set a 5-second timer to clear the workflow and navigate
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/create-job-post-1st-page']);
+          this.router.navigate(['/recruiter-view-3rd-page1']);
           // Optional: hide the popup right before navigation
           this.showSuccessPopup = false; 
         }, 5000); // 5000 milliseconds = 5 seconds

@@ -59,7 +59,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     @Inject(DOCUMENT) private document: Document,
     private skillService: SkillService,
     private workflowService: JobCreationWorkflowService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
   )  {
     const numberValidator = (control: import('@angular/forms').AbstractControl): { [key: string]: any } | null => {
       if (control.value === null || control.value === '') return null;
@@ -935,6 +935,11 @@ if (this.jobForm.invalid) {
       this.document.execCommand(command, false, value);
       editor.focus();
     }
+  }
+
+  onLogoutClick() {
+    this.corporateAuthService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
 
 }

@@ -16,6 +16,7 @@
         [attr.alt]="imageAlt1"
         [attr.src]="imageSrc1"
         class="navbar-for-recruiter-view-flashyre-image"
+        [routerLink]="['/recruiter-view-3rd-page1']"
       />
       <div
         data-thq="thq-navbar-nav"
@@ -29,12 +30,13 @@
             [attr.href]="link1Url"
             id="recruiter-dashboard-link"
             class="navbar-for-recruiter-view-dashboard-link thq-body-small button"
+            [routerLink]="['/recruiter-view-3rd-page1']"
           >
             <ng-container>
               <ng-template #defaultLink1>
                 <div class="navbar-for-recruiter-view-fragment29">
                   <span class="navbar-for-recruiter-view-text41">
-                    Dashboard
+                    Home
                   </span>
                 </div>
               </ng-template>
@@ -43,7 +45,7 @@
               ></ng-container>
             </ng-container>
           </a>
-          <a
+          <!--<a
             [attr.href]="link4Url"
             id="recruiter-jobs-posted-link"
             target="_blank"
@@ -62,7 +64,7 @@
                 *ngTemplateOutlet="link4 ? link4 : defaultLink4"
               ></ng-container>
             </ng-container>
-          </a>
+          </a> -->
           <div
             id="notification-container"
             class="navbar-for-recruiter-view-container12"
@@ -119,11 +121,17 @@
           class="navbar-for-recruiter-view-dropdown-toggle1"
         >
           <img
+            *ngIf="recruiterProfile.profile_picture_url; else initialsAvatar"
             id="recruiter-profile-picture"
             [attr.alt]="imageAlt3"
-            [attr.src]="imageSrc3"
+            [src]="recruiterProfile.profile_picture_url ? recruiterProfile.profile_picture_url : defaultProfilePicture"
             class="navbar-for-recruiter-view-user-image1"
           />
+          <ng-template #initialsAvatar>
+            <div class="initials-avatar navbar-for-recruiter-view-user-image1">
+              {{ recruiterProfile.initials }}
+            </div>
+          </ng-template>
           <div
             data-thq="thq-dropdown-arrow"
             class="navbar-for-recruiter-view-dropdown-arrow"
@@ -156,7 +164,7 @@
             >
               <span
                 id="Recruiter-profile-Button"
-                class="navbar-for-recruiter-view-profile2"
+                class="navbar-for-recruiter-view-profile2" [routerLink]="['/profile-overview-page']"
               >
                 <ng-container>
                   <ng-template #defaultText1>
@@ -173,7 +181,7 @@
               </span>
             </div>
           </li>
-          <li
+          <!--<li
             data-thq="thq-dropdown"
             class="navbar-for-recruiter-view-preference1 list-item"
           >
@@ -199,8 +207,8 @@
                 </ng-container>
               </span>
             </div>
-          </li>
-          <li
+          </li> -->
+          <!--<li
             data-thq="thq-dropdown"
             class="navbar-for-recruiter-view-settings1 list-item"
           >
@@ -226,10 +234,10 @@
                 </ng-container>
               </span>
             </div>
-          </li>
+          </li> -->
           <li
             data-thq="thq-dropdown"
-            class="navbar-for-recruiter-view-logout1 list-item"
+            class="navbar-for-recruiter-view-logout1 list-item" (click)="onLogoutClick()"
           >
             <div
               data-thq="thq-dropdown-toggle"
@@ -327,13 +335,13 @@
                     </div>
                   </ng-template>
                   <ng-template #text1>
-                    <div class="navbar-for-recruiter-view-fragment11">
+                    <div class="navbar-for-recruiter-view-fragment11" [routerLink]="['/profile-overview-page']">
                       <span class="navbar-for-recruiter-view-text13">
-                        Google
+                        Profile
                       </span>
                     </div>
                   </ng-template>
-                  <ng-template #text3>
+                  <!--<ng-template #text3>
                     <div class="navbar-for-recruiter-view-fragment12">
                       <span class="navbar-for-recruiter-view-text14">
                         <span>Software Development</span>
@@ -341,7 +349,7 @@
                         <span>Mountain View, CA</span>
                       </span>
                     </div>
-                  </ng-template>
+                  </ng-template> -->
                 </recruiter-profile>
                 <recruiter-job-posted1
                   rootClassName="recruiter-job-posted1root-class-name7"
@@ -353,13 +361,13 @@
                       </span>
                     </div>
                   </ng-template>
-                  <ng-template #text3>
+                  <!--<ng-template #text3>
                     <div class="navbar-for-recruiter-view-fragment14">
                       <span class="navbar-for-recruiter-view-text19">
                         2 Jobs Posted
                       </span>
                     </div>
-                  </ng-template>
+                  </ng-template> -->
                 </recruiter-job-posted1>
               </div>
               <div
@@ -399,9 +407,9 @@
                   >
                     <ng-container>
                       <ng-template #defaultText16>
-                        <div class="navbar-for-recruiter-view-fragment25">
+                        <div class="navbar-for-recruiter-view-fragment25" [routerLink]="['/profile-overview-page']">
                           <span class="navbar-for-recruiter-view-text34">
-                            Google
+                            Profile
                           </span>
                         </div>
                       </ng-template>
@@ -411,7 +419,7 @@
                     </ng-container>
                   </span>
                 </div>
-                <span
+                <!--<span
                   id="recruiter-role"
                   class="navbar-for-recruiter-view-job-role-of-recruiter"
                 >
@@ -429,7 +437,7 @@
                       *ngTemplateOutlet="text32 ? text32 : defaultText32"
                     ></ng-container>
                   </ng-container>
-                </span>
+                </span> -->
               </div>
             </div>
             <div
@@ -616,7 +624,7 @@
                     </ng-container>
                   </span>
                 </div>
-                <div
+                <!--<div
                   id="settings-container"
                   class="navbar-for-recruiter-view-settings-container"
                 >
@@ -650,10 +658,11 @@
                       ></ng-container>
                     </ng-container>
                   </span>
-                </div>
+                </div> -->
                 <div
                   id="logout-container"
                   class="navbar-for-recruiter-view-logout-container button"
+                  (click)="onLogoutClick()"
                 >
                   <svg
                     id="logout-icon"
@@ -693,19 +702,19 @@
               <recruiter-profile
                 rootClassName="recruiter-profileroot-class-name5"
               >
-                <ng-template #text>
+                <!--<ng-template #text>
                   <div class="navbar-for-recruiter-view-fragment15">
                     <span class="navbar-for-recruiter-view-text21">
                       Leslie Alexander
                     </span>
                   </div>
-                </ng-template>
+                </ng-template> -->
                 <ng-template #text1>
                   <div class="navbar-for-recruiter-view-fragment16">
                     <span class="navbar-for-recruiter-view-text22">Google</span>
                   </div>
                 </ng-template>
-                <ng-template #text3>
+                <!--<ng-template #text3>
                   <div class="navbar-for-recruiter-view-fragment17">
                     <span class="navbar-for-recruiter-view-text23">
                       <span>Software Development</span>
@@ -713,7 +722,7 @@
                       <span>Mountain View, CA</span>
                     </span>
                   </div>
-                </ng-template>
+                </ng-template> -->
               </recruiter-profile>
               <recruiter-job-posted1
                 rootClassName="recruiter-job-posted1root-class-name6"
@@ -725,13 +734,13 @@
                     </span>
                   </div>
                 </ng-template>
-                <ng-template #text3>
+                <!--<ng-template #text3>
                   <div class="navbar-for-recruiter-view-fragment19">
                     <span class="navbar-for-recruiter-view-text28">
                       2 Jobs Posted
                     </span>
                   </div>
-                </ng-template>
+                </ng-template> -->
               </recruiter-job-posted1>
             </div>
           </div>

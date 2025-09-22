@@ -4,14 +4,16 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RecruiterDataService, RecruiterProfile, JobPost } from '../../services/recruiter-data.service';
-
+import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 @Component({
   selector: 'recruiter-view3rd-page1',
   templateUrl: 'recruiter-view-3rd-page1.component.html',
   styleUrls: ['recruiter-view-3rd-page1.component.css'],
 })
 export class RecruiterView3rdPage1 implements OnInit {
-  recruiterProfile: RecruiterProfile | null = null;
+  recruiterProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  
   
   // Job list management
   masterPostedJobs: JobPost[] = []; // Holds all jobs from the API, never modified by filters
@@ -34,7 +36,8 @@ export class RecruiterView3rdPage1 implements OnInit {
     private title: Title,
     private meta: Meta,
     private recruiterService: RecruiterDataService,
-    private router: Router
+    private router: Router,
+    private corporateAuthService: CorporateAuthService,
   ) {
     this.title.setTitle('Recruiter-View-3rd-Page1 - Flashyre');
     this.meta.addTags([
@@ -45,11 +48,12 @@ export class RecruiterView3rdPage1 implements OnInit {
   ngOnInit(): void {
   // Check if running in a browser environment before accessing localStorage
   if (typeof window !== 'undefined' && window.localStorage) {
+    this.loadUserProfile();
     this.recruiterId = localStorage.getItem('user_id');
   }
 
   if (this.recruiterId) {
-    this.fetchRecruiterProfile();
+    //this.fetchRecruiterProfile();
     this.fetchAllJobs(); // Start fetching all jobs page by page
   } else {
     console.error('Recruiter ID not found in local storage. User might not be logged in.');
@@ -57,6 +61,12 @@ export class RecruiterView3rdPage1 implements OnInit {
     // this.router.navigate(['/login']);
   }
 }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) 
+      this.recruiterProfile = JSON.parse(profileData);
+  } 
 
   fetchRecruiterProfile(): void {
     this.recruiterService.getRecruiterProfile(this.recruiterId).subscribe(
@@ -208,5 +218,10 @@ export class RecruiterView3rdPage1 implements OnInit {
     } else {
       console.error('Job ID is missing, cannot navigate.');
     }
+  }
+
+  onLogoutClick() {
+    this.corporateAuthService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
   }
 }

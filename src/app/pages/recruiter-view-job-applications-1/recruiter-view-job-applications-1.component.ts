@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'recruiter-view-job-applications1',
@@ -34,7 +34,8 @@ export class RecruiterViewJobApplications1 implements OnInit {
     private title: Title,
     private meta: Meta,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.title.setTitle('Recruiter-View-Job-Applications-1 - Flashyre');
     this.meta.addTags([
@@ -52,11 +53,13 @@ export class RecruiterViewJobApplications1 implements OnInit {
 
   ngOnInit() {
     this.jobId = this.route.snapshot.paramMap.get('jobId');
+    
     this.fetchJobDetails();
   }
 
   fetchJobDetails() {
     if (this.jobId) {
+      console.log("Attempting to fetch job for job_id: ", this.jobId);
       this.http
         .get(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/applications/`)
         .subscribe(
@@ -241,5 +244,9 @@ export class RecruiterViewJobApplications1 implements OnInit {
     } else {
       alert('No CV available for this candidate.');
     }
+  }
+
+  navigateToRecruiterHome() {
+    this.router.navigate(['/recruiter-view-3rd-page1']);
   }
 }

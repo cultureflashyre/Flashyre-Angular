@@ -136,7 +136,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     if (!token) {
       // Replaced MatSnackBar with custom popup
       this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-candidate']);
+      this.router.navigate(['/login-corporate']);
       return;
     }
 
@@ -182,7 +182,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     this.showSuccessPopup('Job post creation cancelled.');
     // Added delay for navigation
     setTimeout(() => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
   
@@ -208,7 +208,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     // Replaced MatSnackBar and added navigation delay
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
 
