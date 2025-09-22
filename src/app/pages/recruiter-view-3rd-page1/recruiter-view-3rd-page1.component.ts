@@ -5,6 +5,8 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RecruiterDataService, RecruiterProfile, JobPost } from '../../services/recruiter-data.service';
 import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'recruiter-view3rd-page1',
   templateUrl: 'recruiter-view-3rd-page1.component.html',
@@ -12,7 +14,11 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 })
 export class RecruiterView3rdPage1 implements OnInit {
   recruiterProfile: any = {};
-  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+
+  defaultProfilePicture: string = environment.defaultProfilePicture;
+  defaultCompanyIcon: string = environment.defaultCompanyIcon;
+  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
+  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
   
   
   // Job list management

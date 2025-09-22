@@ -240,7 +240,7 @@
   left: 0%;
   width: max-content;
   display: none;
-  z-index: 100;
+  z-index: 1000;
   position: absolute;
   min-width: 100%;
   transition: 0.3s;
@@ -1499,6 +1499,10 @@
   display: flex;
   transform: rotate(-90deg);
   align-self: center;
+}
+
+.recruiter-view3rd-page1-right-icon:hover {
+  cursor: pointer;
 }
  
 @media(max-width: 1200px) {

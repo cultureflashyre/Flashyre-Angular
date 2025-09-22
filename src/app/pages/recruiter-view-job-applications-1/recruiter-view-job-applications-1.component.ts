@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'recruiter-view-job-applications1',
@@ -29,6 +30,12 @@ export class RecruiterViewJobApplications1 implements OnInit {
   searchJobTitle: string = '';
   searchLocation: string = '';
   searchExperience: string = '';
+
+  defaultProfilePicture: string = environment.defaultProfilePicture;
+  defaultCompanyIcon: string = environment.defaultCompanyIcon;
+  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
+  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
+    
 
   constructor(
     private title: Title,
@@ -64,7 +71,9 @@ export class RecruiterViewJobApplications1 implements OnInit {
         .get(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/applications/`)
         .subscribe(
           (data: any) => {
+
             this.job = data;
+            console.log("Displaying Job Details: ", this.job);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
             
             this.appliedCount = data.applied_count;

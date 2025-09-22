@@ -110,7 +110,7 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
     localStorage.removeItem('userType');
     // Optionally clear other stored corporate user data
 
-    this.router.navigate(['/login-candidate']);
+    this.router.navigate(['/login-corporate']);
   }
   
 

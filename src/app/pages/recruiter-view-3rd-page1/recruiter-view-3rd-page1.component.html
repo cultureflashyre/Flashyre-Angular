@@ -150,6 +150,7 @@
                 <li
                   data-thq="thq-dropdown"
                   class="recruiter-view3rd-page1-profile1 list-item"
+                  [routerLink]="['/profile-overview-page']"
                 >
                   <div
                     data-thq="thq-dropdown-toggle"
@@ -157,7 +158,7 @@
                   >
                     <span
                       id="Recruiter-profile-Button"
-                      [routerLink]="['/profile-overview-page']"
+                      
                       class="recruiter-view3rd-page1-profile2"
                     >
                       Profile
@@ -199,6 +200,7 @@
                 <li
                   data-thq="thq-dropdown"
                   class="recruiter-view3rd-page1-logout1 list-item"
+                  (click)="onLogoutClick()"
                 >
                   <div
                     data-thq="thq-dropdown-toggle"
@@ -207,6 +209,7 @@
                     <span
                       id="recruiter-logout-Button"
                       class="recruiter-view3rd-page1-logout2"
+                      
                     >
                       Logout
                     </span>
@@ -375,7 +378,7 @@
                         id="dashboard-button"
                         class="recruiter-view3rd-page1-dashboard-text"
                       >
-                        Dashboard
+                        Home
                       </span>
                     </div>
                     <div
@@ -852,10 +855,10 @@
                     class="recruiter-view3rd-page1-company-icon-container"
                   >
                     <img
-                      *ngIf="job.company_image_url; else showInitials"
+                      *ngIf="chcsThumbnailIcon; else showInitials"
                       id="company-image"
                       alt="image"
-                      [src]="job.company_image_url"
+                      [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
                       class="recruiter-view3rd-page1-company-image2"
                     />
                     <ng-template #showInitials>
@@ -924,9 +927,9 @@
               </div>
               <svg
                 id="right-icon"
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
+                width="34"
+                height="34"
+                viewBox="0 0 34 34"
                 class="recruiter-view3rd-page1-right-icon"
                 (click)="viewJobApplications(job.job_id)"
               >

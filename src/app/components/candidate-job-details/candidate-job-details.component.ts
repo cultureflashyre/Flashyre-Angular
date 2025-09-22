@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'candidate-job-details',
@@ -53,7 +54,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   fillColor: string = '#4D91C6';
   matchingScoreFillColor: string = '#4D91C6';
   matchingScoreStrokeDasharray: string = '0 25.12';
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  defaultProfilePicture: string = environment.defaultProfilePicture;
+  defaultCompanyIcon: string = environment.defaultCompanyIcon;
+  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
+  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
+  
   isMobile: boolean = window.innerWidth < 767;
   isProcessing: boolean = false;
   isApplied: boolean = false;

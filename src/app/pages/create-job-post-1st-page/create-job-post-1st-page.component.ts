@@ -207,7 +207,7 @@ showSuccessPopup(message: string) {
         error: (err) => {
           this.isSubmitting = false;
           this.showErrorPopup(`Failed to load existing job data: ${err.message}`);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/recruiter-view-3rd-page1']);
         }
       })
     );
@@ -840,6 +840,22 @@ if (this.jobForm.invalid) {
     this.spinner.show('main-spinner');
     const formValues = this.jobForm.getRawValue();
     const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
+    
+    // Get userProfile from localStorage
+    const userProfileString = localStorage.getItem('userProfile');
+    let companyName = 'Freelancer';
+
+    if (userProfileString) {
+      try {
+        const userProfile = JSON.parse(userProfileString);
+        if (userProfile.latest_company_name && userProfile.latest_company_name.trim() !== '') {
+          companyName = userProfile.latest_company_name;
+        }
+      } catch (e) {
+        console.error('Failed to parse userProfile from localStorage', e);
+      }
+    }
+
     const jobDetails: JobDetails = {
       ...formValues,
       location: locationString,
@@ -847,8 +863,11 @@ if (this.jobForm.invalid) {
         primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
         secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
       },
-      status: 'draft'
+      status: 'draft',
+      companyName: companyName
     };
+
+    console.log("About to create Job with the details: ", jobDetails);
 
     const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
       next: (response) => {
@@ -879,7 +898,7 @@ if (this.jobForm.invalid) {
     // --- FIX START ---
     // Delay navigation to allow the user to see the cancellation message
     setTimeout(() => {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000); // 3-second delay
     // --- FIX END ---
   }

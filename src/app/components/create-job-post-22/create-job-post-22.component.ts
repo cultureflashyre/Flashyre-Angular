@@ -574,7 +574,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.showSuccessPopup('Job post creation cancelled.');
     // Added delay for navigation
     setTimeout(() => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
 
