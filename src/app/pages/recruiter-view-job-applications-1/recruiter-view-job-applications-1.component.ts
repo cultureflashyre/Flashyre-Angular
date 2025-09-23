@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./recruiter-view-job-applications-1.component.css'],
 })
 export class RecruiterViewJobApplications1 implements OnInit {
+
+  private apiUrl = environment.apiUrl;
+
   job: any = null;
   candidates: any[] = [];
   allCandidates: any[] = [];
@@ -68,7 +71,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
     if (this.jobId) {
       console.log("Attempting to fetch job for job_id: ", this.jobId);
       this.http
-        .get(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/applications/`)
+        .get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`)
         .subscribe(
           (data: any) => {
 
@@ -213,7 +216,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
     }
 
     this.http
-      .post(`http://127.0.0.1:8000/api/recruiter/jobs/${this.jobId}/send-invites/`, {
+      .post(this.apiUrl+`api/recruiter/jobs/${this.jobId}/send-invites/`, {
         application_ids: applicationIds,
         invite_type: inviteType,
       })

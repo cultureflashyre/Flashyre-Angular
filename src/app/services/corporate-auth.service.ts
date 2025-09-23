@@ -112,6 +112,14 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
 
     this.router.navigate(['/login-corporate']);
   }
+
+  clearTokens(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
+  }
   
 
 }

@@ -62,6 +62,14 @@ export class AuthService {
     this.router.navigate(['/login-candidate']);
   }
 
+  clearTokens(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
+  }
+
   getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {
     const url = `${this.apiUrl}api/jobs/get-match-scores/`;
     // The backend expects an object with a 'job_ids' key

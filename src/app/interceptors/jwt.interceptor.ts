@@ -5,23 +5,37 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { AuthService } from '../services/candidate.service';
 import { CorporateAuthService } from '../services/corporate-auth.service'; // Import corporate service
-
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
+
+interface JwtPayload {
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService,
-    private corporateAuthService: CorporateAuthService
-  ) {}
 
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  
+constructor(
+    private authService: AuthService,
+    private corporateAuthService: CorporateAuthService,
+    private router: Router,
+  ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authService = this.getAuthService(request.url);
-    const token = authService.getJWTToken();
+    let token = authService.getJWTToken();
+
+    if (token && this.isTokenExpired(token)) {
+      // Clear expired tokens immediately
+      authService.clearTokens();
+      token = null;
+    }
 
     let authReq = request;
 
@@ -64,6 +78,17 @@ export class JwtInterceptor implements HttpInterceptor {
     });
   }
 
+    // ✅ Checks token expiry using exp claim
+  private isTokenExpired(token: string): boolean {
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      const expiryDate = new Date(decoded.exp * 1000);
+      return expiryDate < new Date();
+    } catch (e) {
+      return true; // treat malformed token as expired
+    }
+  }
+
   private handle401Error(request: HttpRequest<any>, next: HttpHandler, authService: AuthService | CorporateAuthService) {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
@@ -81,12 +106,15 @@ export class JwtInterceptor implements HttpInterceptor {
         }),
         catchError(err => {
           this.isRefreshing = false;
+
+          authService.clearTokens();
           authService.logout();
           // Redirect to appropriate login
           if (authService instanceof CorporateAuthService) {
-            // Add corporate logout navigation if needed, e.g., this.router.navigate(['/corporate-login']);
+            // Add corporate logout navigation if needed, e.g., 
+            this.router.navigate(['/login-corporate']);
           } else {
-            // Existing candidate logout navigation, e.g., this.router.navigate(['/candidate-login']);
+            this.router.navigate(['/login-candidate']);
           }
           return throwError(() => err);
         })

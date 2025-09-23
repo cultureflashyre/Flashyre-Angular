@@ -62,6 +62,8 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
       ).then((m) => m.RecruiterView3rdPage1Module),
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
       
   },
   {
