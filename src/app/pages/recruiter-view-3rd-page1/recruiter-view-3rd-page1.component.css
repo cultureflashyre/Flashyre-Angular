@@ -1,6 +1,21 @@
 :host { 
   display: contents; 
 }
+
+.filter-popup-wrapper {
+  position: absolute;
+  /* Add any other wrapper-specific styles if needed */
+}
+
+.filter-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1001; /* Should be below the popup */
+}
  
 .recruiter-view3rd-page1-container10 {
   width: 100%;
@@ -13,7 +28,7 @@
 .recruiter-view3rd-page1-recruiter-view3rd-page1-main-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 1440px;
+  min-width: 100%;
   height: 1100px;
   display: flex;
   align-items: flex-start;
@@ -24,7 +39,7 @@
 .recruiter-view3rd-page1-recruiter-view3rd-page1-first-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 1440px;
+  min-width: 100%;
   height: 1100px;
   display: flex;
   align-items: center;
@@ -865,7 +880,7 @@
 
  
 .recruiter-view3rd-page1-job-title-location-experience-main-container {
-  width: 812px;
+  width: 100%;
   height: 72px;
   display: flex;
   position: relative;
@@ -875,7 +890,7 @@
  
 .recruiter-view3rd-page1-navbar-interactive2 {
   gap: 12px;
-  width: 812px;
+  width: 100%;
   height: 72px;
   display: flex;
   padding: 12px;
@@ -888,7 +903,7 @@
 }
  
 .recruiter-view3rd-page1-desktop-menu2 {
-  gap: 8px;
+  gap: 24px;
   flex: 1;
   width: 100%;
   display: flex;
@@ -898,7 +913,7 @@
 .recruiter-view3rd-page1-links2 {
   gap: var(--dl-layout-space-twounits);
   flex: 0;
-  width: 637px;
+  width: 650px;
   height: 56px;
   display: flex;
   align-items: center;
@@ -950,7 +965,7 @@
 .recruiter-view3rd-page1-location-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: auto;
+  width: 140px;
   height: 56px;
   display: flex;
   align-items: center;
@@ -971,7 +986,7 @@
  
 .recruiter-view3rd-page1-your-location-text1 {
   color: rgb(116, 116, 116);
-  width: 120px;
+  width: 100px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -981,7 +996,7 @@
 .recruiter-view3rd-page1-experience-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: 146px;
+  width: auto;
   height: 56px;
   display: flex;
   align-items: center;
@@ -990,7 +1005,7 @@
  
 .recruiter-view3rd-page1-experience-text1 {
   color: rgb(116, 116, 116);
-  width: 120px;
+  width: 100px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -1318,7 +1333,7 @@
  
 .recruiter-view3rd-page1-job-posted-container {
   gap: 8px;
-  width: 812px;
+  width: 100%;
   height: auto;
   display: flex;
   padding: 0px;
@@ -1334,7 +1349,7 @@
  
 .recruiter-view3rd-page1-recruiter-flow-job-posted-container {
   flex: 0 0 auto;
-  width: 812px;
+  width: 100%;
   height: 112px;
   display: flex;
   padding: var(--dl-layout-space-unit);
@@ -1468,6 +1483,58 @@
 }
  
 @media(max-width: 1200px) {
+
+  .recruiter-view3rd-page1-job-title-text1 {
+    padding: 0px;
+    width: 140px;
+  }
+
+  .recruiter-view3rd-page1-experience-text1 {
+    padding: 0px;
+  }
+
+  .recruiter-view3rd-page1-your-location-text1 { 
+    width: 90px;
+    padding: 0px;
+  }
+
+  .recruiter-view3rd-page1-job-title-container1 {
+    gap: 4px;
+  }
+
+  .recruiter-view3rd-page1-location-container1 {
+    gap: 4px;
+    width: 130px;
+  }
+
+  .recruiter-view3rd-page1-experience-container1 {
+    gap: 4px;
+  }
+
+  .recruiter-view3rd-page1-desktop-menu2 {
+    gap: 8px;
+  }
+
+  .recruiter-view3rd-page1-links2 {
+    width: 67%;
+  }
+
+  .recruiter-view3rd-page1-job-posting-container {
+    padding: 16px;
+  }
+
+  .recruiter-view3rd-page1-search-button2 {
+    width: 100px;
+  }
+
+  .recruiter-view3rd-page1-search-button1 {
+    width: 70px;
+  }
+
+  .recruiter-view3rd-page1-navbar-interactive2 {
+    padding: 8px;
+  }
+
   .recruiter-view3rd-page1-recruiter-view3rd-page1-main-container {
     width: 100%;
   }
