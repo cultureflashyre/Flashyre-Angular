@@ -62,6 +62,8 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
       ).then((m) => m.RecruiterView3rdPage1Module),
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
       
   },
   {
@@ -138,6 +140,13 @@ const routes = [
       ),
   },
   {
+    path: 'login-corporate',
+    loadChildren: () =>
+      import('./pages/login-corporate/login-corporate.module').then(
+        (m) => m.LoginCorporateModule
+      ),
+  },
+  {
     path: 'corporate/recruiter-view-5th-page',
     loadChildren: () =>
       import(
@@ -168,13 +177,6 @@ const routes = [
       import(
         './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
       ).then((m) => m.RecruiterView4thPageModule),
-  },
-  {
-    path: 'login-corporate',
-    loadChildren: () =>
-      import('./pages/login-corporate/login-corporate.module').then(
-        (m) => m.LoginCorporateModule
-      ),
   },
   {
     path: 'signup-college',

@@ -119,6 +119,20 @@
   flex-shrink: 0; /* Prevent shrinking */
 }
 
+.avatar-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #7f8c8d; /* You may set this dynamically in TS */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 24px;
+  user-select: none;
+}
+
 .candidate-job-for-you-card-container13 {
   gap: 16px;
   flex: 1; /* Grow to fill space */
@@ -642,6 +656,10 @@ svg {
   .candidate-job-for-you-card-image {
     width: 36px;
     height: 36px;
+  }
+
+  .avatar-icon {
+    font-size: 18px;
   }
   .candidate-job-for-you-card-container13 {
     width: 536px;

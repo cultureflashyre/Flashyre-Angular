@@ -176,18 +176,17 @@ export class SignupCorporate1 implements OnInit {
           // Store JWT tokens in localStorage just like candidate signup
           localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('user_id', response.user_id); // Store the user_id
           localStorage.setItem('userType', response.role);
           
           // Fetch user profile
           this.userProfileService.fetchUserProfile().subscribe(
             () => {
-
-              this.router.navigate(['/recruiter-view-3rd-page1'], { state: { source: 'recruiter' } });
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
             },
             (profileError) => {
               console.error('Error fetching profile', profileError);
-              this.router.navigate(['/recruiter-view-3rd-page1'], { state: { source: 'recruiter' } });
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
             }
           );
 

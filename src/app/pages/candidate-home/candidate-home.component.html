@@ -50,7 +50,7 @@
     </ng-template>
     <ng-template #text1>
       <div class="candidate-home-fragment14">
-        <span class="candidate-home-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -130,11 +130,12 @@
           </ng-template>
           <ng-template #text1>
             <span>
-              {{
-                userProfile.job_title 
-                  ? userProfile.job_title + ' @ ' + userProfile.company_name 
-                  : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
-              }}
+
+              
+                                {{ userProfile.latest_job_title 
+                  ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                  : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
+                
             </span>
           </ng-template>
         </candidate-profile-short>
@@ -497,9 +498,10 @@
               *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
               [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
               [jobId]="job.job_id.toString()"
-              [imageSrc]="job.logo || getRandomImage()"
+              [imageSrc]="getImageOrInitials(job)"
               [imageAlt]="job.company_name + ' logo'"
               [matchingScore]="job.matching_score || 80"
+              [companyInitials]="job.initials" 
             >
               <ng-template #text>
                 <div class="candidate-home-fragment31">

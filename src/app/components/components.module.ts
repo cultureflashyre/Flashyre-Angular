@@ -118,7 +118,7 @@ import { Morefilterscomponent1 } from './morefilterscomponent1/morefilterscompon
 import { PreferenceComponent } from './preference-component/preference-component.component'
 
 import{Signupadmin} from './signup-admin/signup-admin.component'
-
+import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-view.component';
 
 @NgModule({
   declarations: [
@@ -226,7 +226,8 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
     Morefilterscomponent1,
     PreferenceComponent,
 
-    Signupadmin
+    Signupadmin,
+    NavbarForAdminView
 
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
@@ -334,7 +335,8 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
     Morefilterscomponent1,
     PreferenceComponent,
 
-    Signupadmin
+    Signupadmin,
+    NavbarForAdminView
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

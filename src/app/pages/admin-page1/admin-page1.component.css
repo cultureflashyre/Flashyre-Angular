@@ -2,6 +2,161 @@
   display: contents; 
 }
 
+
+.candidate-home-fragment10 {
+  display: contents;
+}
+ 
+.candidate-home-text100 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-home-fragment11 {
+  display: contents;
+}
+ 
+.candidate-home-text101 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-home-fragment12 {
+  display: contents;
+}
+ 
+.candidate-home-text102 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.candidate-home-fragment13 {
+  display: contents;
+}
+ 
+.candidate-home-text103 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.candidate-home-fragment14 {
+  display: contents;
+}
+ 
+.candidate-home-text104 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment15 {
+  display: contents;
+}
+ 
+.candidate-home-text105 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment16 {
+  display: contents;
+}
+ 
+.candidate-home-text106 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment17 {
+  display: contents;
+}
+ 
+.candidate-home-text107 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment18 {
+  display: contents;
+}
+ 
+.candidate-home-text108 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment19 {
+  display: contents;
+}
+ 
+.candidate-home-text109 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment20 {
+  display: contents;
+}
+ 
+.candidate-home-text110 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment21 {
+  display: contents;
+}
+ 
+.candidate-home-text111 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment22 {
+  display: contents;
+}
+ 
+.candidate-home-text112 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment23 {
+  display: contents;
+}
+ 
+.candidate-home-text113 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment24 {
+  display: contents;
+}
+ 
+.candidate-home-text114 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment25 {
+  display: contents;
+}
+ 
+.candidate-home-text115 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment26 {
+  display: contents;
+}
+ 
+.candidate-home-text116 {
+  display: inline-block;
+}
+ 
+.candidate-home-fragment27 {
+  display: contents;
+}
+ 
+.candidate-home-text117 {
+  display: inline-block;
+}
+ 
+
+
 /* Style for the tab buttons for better user interaction */
 .tab-button {
   cursor: pointer;
@@ -56,8 +211,9 @@
  
 .admin-page1-container {
   width: 100vw;
+  height: auto;
   display: flex;
-  min-height: 100vh;
+/*  min-height: 100vh;*/
   align-items: center;
   flex-direction: column;
 }

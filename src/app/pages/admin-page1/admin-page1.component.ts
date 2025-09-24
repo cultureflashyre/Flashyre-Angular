@@ -13,6 +13,8 @@ const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
   styleUrls: ['admin-page1.component.css'],
 })
 export class AdminPage1 implements OnInit {
+  userProfile: any = {};
+
   public activeView: 'resumes' | 'jobDescription' = 'resumes';
   public isUploadingCVs: boolean = false;
   public isUploadingJd: boolean = false;
@@ -41,6 +43,9 @@ export class AdminPage1 implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.loadUserProfile();
+
     const activeJobId = sessionStorage.getItem(ACTIVE_JOB_ID_KEY);
     if (activeJobId) {
       this.activeView = 'jobDescription';
@@ -115,5 +120,10 @@ export class AdminPage1 implements OnInit {
     });
 
     this.jdUploader.nativeElement.value = '';
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) this.userProfile = JSON.parse(profileData);
   }
 }

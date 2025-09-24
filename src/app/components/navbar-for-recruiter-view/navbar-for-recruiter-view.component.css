@@ -39,6 +39,10 @@
   object-fit: cover;
   margin-top: 2px;
 }
+
+.navbar-for-recruiter-view-flashyre-image:hover {
+  cursor: pointer;
+}
  
 .navbar-for-recruiter-view-desktop-menu {
   flex: 1;
@@ -170,6 +174,20 @@
   object-fit: cover;
   border-radius: var(--dl-radius-radius-round);
 }
+
+.initials-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #4CAF50; /* adjust color or make dynamic */
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
  
 .navbar-for-recruiter-view-dropdown-arrow {
   transition: 0.3s;
@@ -198,7 +216,7 @@
   left: 0%;
   width: max-content;
   display: none;
-  z-index: 100;
+  z-index: 1000;
   position: absolute;
   min-width: 100%;
   transition: 0.3s;

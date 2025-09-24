@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/candidate.service';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -24,15 +29,23 @@ export class AuthGuard implements CanActivate {
     const expectedRoles: string[] = route.data['roles'];
     console.log('Expected roles for this route:', expectedRoles);
 
-    if (!token) {
+    if (!token || this.isTokenExpired(token)) {
       console.log('No token found, user is not logged in.');
 
+    const expectedRoles: string[] = route.data['roles'];
+    console.log('Expected roles for this route:', expectedRoles);
+
       if (expectedRoles && expectedRoles.length === 1) {
-        console.log(`Redirecting to login page for role: login-${expectedRoles[0]} with returnUrl: ${state.url}`);
-        this.router.navigate([`/login-${expectedRoles[0]}`], { queryParams: { returnUrl: state.url } });
+      let roleToRedirect = expectedRoles[0];
+        if (roleToRedirect === 'recruiter') {
+            roleToRedirect = 'corporate';
+        }
+
+        console.log(`Redirecting to login page for role: login-${roleToRedirect} with returnUrl: ${state.url}`);
+        this.router.navigate([`/login-${roleToRedirect}`], { queryParams: { returnUrl: state.url } });
       } else {
         console.log(`Redirecting to default candidate login with returnUrl: ${state.url}`);
-        this.router.navigate(['/login-candidate'], { queryParams: { returnUrl: state.url } });
+        this.router.navigate([`/login-${userType || 'candidate'}`], { queryParams: { returnUrl: state.url } });
       }
       return false;
     }
@@ -46,4 +59,13 @@ export class AuthGuard implements CanActivate {
     console.log('All checks passed. Route access granted.');
     return true;
   }
+
+    private isTokenExpired(token: string): boolean {
+    try {
+        const decoded = jwtDecode<JwtPayload>(token);
+        return new Date(decoded.exp * 1000) < new Date();
+    } catch {
+        return true;
+    }
+    }
 }

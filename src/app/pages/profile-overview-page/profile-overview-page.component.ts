@@ -214,7 +214,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
             setTimeout(() => {
               console.log("Navigating to page: ", this.navigationSource);
               if (this.navigationSource === 'recruiter') {
-                this.router.navigate(['corporate-home']);
+                this.router.navigate(['recruiter-view-3rd-page1']);
               } else {
                 this.router.navigate(['candidate-home']);
               }
@@ -273,7 +273,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       setTimeout(() => {
         console.log("Navigating to page: ", this.navigationSource);
         if (this.navigationSource === 'recruiter') {
-          this.router.navigate(['corporate-home']);
+          this.router.navigate(['recruiter-view-3rd-page1']);
         } else {
           this.router.navigate(['candidate-home']);
         }

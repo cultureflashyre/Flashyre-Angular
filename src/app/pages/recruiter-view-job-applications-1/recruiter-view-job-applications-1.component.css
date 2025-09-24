@@ -214,6 +214,10 @@
   flex-direction: row;
   justify-content: center;
 }
+
+.recruiter-view-job-applications1-arrow-icon-container:hover {
+  cursor: pointer;
+}
  
 .recruiter-view-job-applications1-job-detail-text {
   fill: #18191C;

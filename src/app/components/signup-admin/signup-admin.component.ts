@@ -161,7 +161,7 @@ export class Signupadmin implements OnInit {
           
           localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id);
+          localStorage.setItem('user_id', response.user_id);
           localStorage.setItem('userType', response.role);
 
           this.userProfileService.fetchUserProfile().subscribe({

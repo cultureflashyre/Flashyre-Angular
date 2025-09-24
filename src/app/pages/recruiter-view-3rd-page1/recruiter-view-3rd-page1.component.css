@@ -84,6 +84,10 @@
   height: auto;
   object-fit: cover;
 }
+
+.recruiter-view3rd-page1-flashyre-image:hover {
+  cursor: pointer;
+}
  
 .recruiter-view3rd-page1-desktop-menu1 {
   flex: 1;
@@ -251,7 +255,7 @@
   left: 0%;
   width: max-content;
   display: none;
-  z-index: 100;
+  z-index: 1000;
   position: absolute;
   min-width: 100%;
   transition: 0.3s;
@@ -496,6 +500,21 @@
   width: 200px;
   object-fit: cover;
 }
+
+.initials-avatar {
+  width: 48px;
+  height: 48px;
+  background-color: #4CAF50; /* adjust color or make dynamic */
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
  
 .recruiter-view3rd-page1-container15 {
   gap: 16px;
@@ -1396,6 +1415,21 @@
   border-radius: var(--dl-layout-radius-round);
   background-color: #C0C0C0;
 }
+
+.avatar-icon {
+  width: 30px;
+  height: 30px;
+  background-color: #2196F3;  /* Or use dynamic color logic */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  user-select: none;
+}
+
  
 .recruiter-view3rd-page1-details-container3 {
   gap: 4px;
@@ -1480,6 +1514,10 @@
   display: flex;
   transform: rotate(-90deg);
   align-self: center;
+}
+
+.recruiter-view3rd-page1-right-icon:hover {
+  cursor: pointer;
 }
  
 @media(max-width: 1200px) {
