@@ -20,6 +20,13 @@ export interface JobPost {
   experience_location: string;
   number_of_candidates_applied: string;
   created_at: string;
+   description: string;
+  requirements: string;
+  job_type: string;
+  experience_required: number;
+  location: string;
+  company_name: string;
+  updated_at: string;
 }
 
 @Injectable({
