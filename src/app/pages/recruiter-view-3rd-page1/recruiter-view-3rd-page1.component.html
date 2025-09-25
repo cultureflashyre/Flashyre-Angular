@@ -833,10 +833,61 @@
     <!-- ... mobile menu ... -->
   </header>
 </header>
+<div class="recruiter-view3rd-page1-container23">
+            <div
+              id="live-draft-deleted-container"
+              class="recruiter-view3rd-page1-live-draft-deleted-container"
+            >
+              <div
+                id="live-container"
+                class="recruiter-view3rd-page1-live-container"
+                [class.active-tab]="activeTab === 'live'"
+                (click)="selectTab('live')"
+              >
+                <span id="live-text" class="recruiter-view3rd-page1-live-text">
+                  Live ({{ getStatusCount('final') }})
+                </span>
+              </div>
+              <div
+                id="draft-container"
+                class="recruiter-view3rd-page1-draft-container"
+                [class.active-tab]="activeTab === 'draft-pause'"
+                (click)="selectTab('draft-pause')"
+              >
+                <span
+                  id="draft-text"
+                  class="recruiter-view3rd-page1-draft-text"
+                >
+                  Draft ({{ getStatusCount('draft') }}) / Pause ({{ getStatusCount('pause') }})
+                </span>
+              </div>
+              <div
+                id="deleted-container"
+                class="recruiter-view3rd-page1-deleted-container"
+                [class.active-tab]="activeTab === 'deleted'"
+                (click)="selectTab('deleted')"
+              >
+                <span
+                  id="deleted-text"
+                  class="recruiter-view3rd-page1-deleted-text"
+                >
+                  Deleted ({{ getStatusCount('deleted') }})
+                </span>
+              </div>
+            </div>
+          </div>
           <div
             id="job-posted-container"
             class="recruiter-view3rd-page1-job-posted-container"
           >
+          <div *ngIf="postedJobs.length === 0 && !isLoading" class="empty-state-container">
+    <div [ngSwitch]="activeTab">
+      <p *ngSwitchCase="'live'">You have no active job postings.</p>
+      <p *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</p>
+      <p *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</p>
+      <p *ngSwitchDefault>No jobs to display.</p>
+    </div>
+  </div>
             <div
               *ngFor="let job of postedJobs"
               id="recruiter-flow-job-posted-container"
@@ -925,19 +976,192 @@
                   </div>
                 </div>
               </div>
-              <svg
-                id="right-icon"
-                width="34"
-                height="34"
-                viewBox="0 0 34 34"
-                class="recruiter-view3rd-page1-right-icon"
-                (click)="viewJobApplications(job.job_id)"
+              <div
+                id="second-container"
+                class="recruiter-view3rd-page1-second-container"
               >
-                <path
-                  d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
-                  fill="currentColor"
-                ></path>
-              </svg>
+                <div
+                  *ngIf="job.status === 'final' || job.status === 'pause'"
+                  id="switch-container"
+                  class="recruiter-view3rd-page1-switch-container"
+                >
+                  <div class="recruiter-view3rd-page1-container24">
+                    <div class="recruiter-view3rd-page1-container25">
+                          <style>
+        body {
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 28px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (background of the switch) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #28a745; /* Green for 'Live' state (default) */
+            transition: .4s;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        /* Text labels - positioned absolutely */
+        .slider-text {
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            z-index: 1;
+            transition: .4s;
+        }
+
+        .live-text {
+            left: 0;
+        }
+
+        .pause-text {
+            right: 0;
+        }
+
+        /* The sliding knob that covers the active text */
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 22px;
+            width: 47px;
+            left: 3px;
+            top: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 11px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        /* Active text color - the text under the white slider */
+        .slider:after {
+            position: absolute;
+            top: 0;
+            left: 3px;
+            width: 47px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            z-index: 3;
+            transition: .4s;
+            content: 'Live';
+        }
+
+        /* When the switch is 'off' (unchecked) - Pause state */
+        input:not(:checked) + .slider {
+            background-color: #ff4444; /* Red for 'Pause' state */
+        }
+
+        /* When the switch is 'on' (checked) - Live state */
+        input:checked + .slider {
+            background-color: #28a745; /* Green for 'Live' state */
+        }
+
+        /* Move the knob and text to the right when 'off' (Pause) */
+        input:not(:checked) + .slider:before {
+            transform: translateX(50px);
+        }
+
+        input:not(:checked) + .slider:after {
+            transform: translateX(50px);
+            content: 'Pause';
+        }
+
+        /* Keep knob and text on the left when 'on' (Live) */
+        input:checked + .slider:before {
+            transform: translateX(0px);
+        }
+
+        input:checked + .slider:after {
+            transform: translateX(0px);
+            content: 'Live';
+        }
+    </style>
+
+<body>
+    <label class='switch'>
+        <input type='checkbox' [checked]="job.status === 'final'"
+            (click)="handleStatusChange(job, job.status === 'final' ? 'pause' : 'final')"> <!-- Default 'Live' state (checked) -->
+        <span class='slider'>
+            <div class='slider-text live-text'>Live</div>
+            <div class='slider-text pause-text'>Pause</div>
+        </span>
+    </label>
+</body>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="icons-cContainer"
+                  class="recruiter-view3rd-page1-icons-container"
+                >
+                  <svg
+                    *ngIf="job.status !== 'deleted'"
+                    id="delete-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="recruiter-view3rd-page1-delete-icon"
+                    (click)="handleStatusChange(job, 'deleted')"
+                  >
+                    <path
+                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  <span
+                    id="edit-text"
+                    class="recruiter-view3rd-page1-edit-text"
+                    (click)="editJob(job)"
+                  >
+                    Edit
+                  </span>
+                  <span
+                    id="view-candidates-text"
+                    class="recruiter-view3rd-page1-view-candidates-text"
+                    (click)="viewJobApplications(job.job_id)"
+                  >
+                    View candidates
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
