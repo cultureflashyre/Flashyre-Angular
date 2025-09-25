@@ -5,6 +5,8 @@ import { AceModule } from 'ngx-ace-wrapper';
 import { ComponentsModule } from '../../components/components.module';
 import { RouterModule, Routes } from '@angular/router';
 import { CodingAssessment } from './coding-assessment.component';
+import { MarkdownModule } from 'ngx-markdown';
+
 
 const routes: Routes = [
   { path: '', component: CodingAssessment }, // Default: list problems
@@ -18,6 +20,7 @@ const routes: Routes = [
     FormsModule,
     AceModule,
     ComponentsModule,
+    MarkdownModule.forChild(),
     RouterModule.forChild(routes)
   ],
   exports: [CodingAssessment]

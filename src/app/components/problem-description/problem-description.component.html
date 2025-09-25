@@ -4,9 +4,7 @@
     </div>
     <div class="section">
         <div class="section-title">Problem Statement</div>
-        <div class="section-content">
-            <p>{{ problem.description }}</p>
-        </div>
+        <div class="section-content" [innerHTML]="parsedDescription"></div>
     </div>
     <div class="section">
         <div class="section-title">Input Format</div>

@@ -110,3 +110,24 @@
 .problem-container::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
 }
+
+.section-content p, .section-content markdown {
+    margin-bottom: 0.75rem;
+}
+
+.section-content markdown ::ng-deep p, 
+.section-content markdown ::ng-deep ul,
+.section-content markdown ::ng-deep ol,
+.section-content markdown ::ng-deep pre {
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.section-content markdown ::ng-deep pre {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}

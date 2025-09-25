@@ -1,120 +1,111 @@
-/* Reset default styles for consistency */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Main page container with a clean, centered layout */
 .page-container {
-    max-width: 1440px;
-    margin: 2.5rem auto;
-    padding: 0 2.5rem;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
     display: grid;
-    grid-template-columns: 50% 50%; /* Updated to 50% for problem description, 50% for code editor */
-    gap: 10px; /* Reduced gap to 10px */
-    min-height: calc(100vh - 140px);
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    min-height: calc(100vh - 120px);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     align-items: start;
 }
 
-/* Section styling for left and right columns */
 .left-section, .right-section {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
-/* Problem selector with modern styling */
-.problem-selector {
-    padding: 1.25rem;
-}
+/* .problem-selector {
+    padding: 1rem;
+} */
 
-/* Label for problem selector */
 .problem-selector label {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: #1f2a44;
-    margin-right: 0.75rem;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1e293b;
+    margin-right: 0.5rem;
 }
 
-/* Select dropdown with a sleek appearance */
 .problem-selector select {
-    background: #1f2a44;
-    border: 1px solid #374151;
-    border-radius: 8px;
-    padding: 0.6rem 1.25rem;
-    color: #ffffff;
-    font-size: 0.95rem;
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 100%;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
 }
 
 .problem-selector select:focus {
     outline: none;
     border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .problem-selector select option {
-    background: #1f2a44;
-    color: #ffffff;
-}
-
-/* Timer display with a prominent, urgent appearance */
-.timer-display {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #dc2626;
-    padding: 1.25rem;
-    background: #fef2f2;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid #dc2626;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    transition: box-shadow 0.2s ease;
-}
-
-.timer-display:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-/* Loading state with centered text */
-.loading {
-    padding: 3rem;
+    background: #334155;
+    color: white;
     font-size: 1rem;
-    color: #6b7280;
+    font-weight: 500;
+}
+
+.timer-display {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f59e0b;
+    padding: 1rem;
+    background: #fffbeb;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #f59e0b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 16px;
+}
+
+.loading {
+    padding: 40px;
+    font-size: 14px;
+    color: #6a737d;
     text-align: center;
     grid-column: 1 / -1;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Scrollbar styling for consistency */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f3f4f6;
+    background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 4px;
+    background: #cbd5e0;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
+    background: #a0aec0;
 }
 
-/* Responsive layout for medium screens */
-@media (max-width: 1280px) {
+@media (max-width: 1200px) {
     .page-container {
-        grid-template-columns: 1fr; /* Revert to single column for smaller screens */
-        gap: 2rem;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
     .left-section, .right-section {
@@ -122,24 +113,14 @@
     }
     
     app-problem-description {
-        max-height: 60vh;
+        max-height: 50vh;
         overflow-y: auto;
     }
 }
 
-/* Responsive layout for small screens */
 @media (max-width: 768px) {
     .page-container {
-        padding: 0 1.5rem;
-        margin: 1.5rem auto;
-    }
-    
-    .problem-selector {
-        padding: 1rem;
-    }
-    
-    .timer-display {
-        font-size: 1.1rem;
-        padding: 1rem;
+        padding: 0 1rem;
+        margin: 1rem auto;
     }
 }
