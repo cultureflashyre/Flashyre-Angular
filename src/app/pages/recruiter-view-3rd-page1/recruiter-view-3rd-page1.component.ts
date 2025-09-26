@@ -177,7 +177,7 @@ export class RecruiterView3rdPage1 implements OnInit {
   }
   // --- END OF ADDED FUNCTION ---
 
-  handleStatusChange(job: JobPost, newStatus: 'pause' | 'final' | 'deleted'): void {
+  handleStatusChange(job: JobPost, newStatus: 'pause' | 'final' | 'deleted', event: Event): void {
     let confirmationMessage = '';
     if (newStatus === 'pause') {
       confirmationMessage = 'Are you sure you want to pause this job?';
@@ -198,26 +198,39 @@ export class RecruiterView3rdPage1 implements OnInit {
         },
         error: (err) => console.error('Failed to update job status:', err)
       });
+    } else {
+        // If user clicks "Cancel", prevent the default action and revert the checkbox state
+        event.preventDefault();
+        const input = event.target as HTMLInputElement;
+        input.checked = !input.checked;
     }
   }
   
   editJob(job: JobPost): void {
+    // This change passes the job's unique_id as a parameter in the URL.
     this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
   }
 
-  getPostedDaysAgo(createdAt: string): string {
-    const createdDate = new Date(createdAt);
-    const currentDate = new Date();
-    const differenceInTime = currentDate.getTime() - createdDate.getTime();
+  getPostedDaysAgo(dateStr: string): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const differenceInTime = now.getTime() - date.getTime();
     const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
 
     if (differenceInDays === 0) {
-      return 'job posted today';
+        return 'today';
     } else if (differenceInDays === 1) {
-      return 'job posted 1 day ago';
+        return '1 day ago';
     } else {
-      return `job posted ${differenceInDays} days ago`;
+        return `${differenceInDays} days ago`;
     }
+  }
+
+  getDisplayDate(job: JobPost): string {
+    if (this.activeTab === 'draft-pause' || this.activeTab === 'deleted') {
+      return `Updated ${this.getPostedDaysAgo(job.updated_at || job.created_at)}`;
+    }
+    return `Posted ${this.getPostedDaysAgo(job.created_at)}`;
   }
 
   navigateToCreateJobPost(): void {

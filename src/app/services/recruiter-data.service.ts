@@ -1,9 +1,10 @@
 // src/app/services/recruiter-data.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- MODIFIED: Imported HttpHeaders
+import { Observable, of } from 'rxjs'; // <-- MODIFIED: Imported 'of' for error handling
 import { environment } from '../../environments/environment';
+import { CorporateAuthService } from './corporate-auth.service'; // <-- ADDED: Import your auth service
 
 // Make sure JobPost interface includes all fields from your backend's JobPost model
 export interface JobPost {
@@ -43,29 +44,58 @@ export interface JobPost {
 })
 export class RecruiterDataService {
   private apiUrl = environment.apiUrl + 'recruiter';
-  private jobPostApiUrl = environment.apiUrl + 'job-post'; // This URL is correct for job_post app
+  private jobPostApiUrl = environment.apiUrl + 'job-post';
 
-  constructor(private http: HttpClient) { }
+  // MODIFIED: Injected the CorporateAuthService
+  constructor(
+    private http: HttpClient,
+    private corporateAuthService: CorporateAuthService
+  ) { }
 
-  // Method to get the recruiter's profile
-  getRecruiterProfile(recruiterId: string): Observable<any> { // Change RecruiterProfile to any if it's not fully defined
-    return this.http.get<any>(`${this.apiUrl}/profile/?recruiter_id=${recruiterId}`);
-  }
-
-  // Method to get the jobs posted by the recruiter
-  getRecruiterJobs(recruiterId: string | null, page: number): Observable<{ jobs: JobPost[] }> {
-    return this.http.get<{ jobs: JobPost[] }>(`${this.apiUrl}/jobs/?recruiter_id=${recruiterId}&page=${page}`);
-  }
-
-  updateJobStatus(uniqueId: string, status: 'final' | 'draft' | 'pause' | 'deleted'): Observable<any> {
-    return this.http.post(`${this.jobPostApiUrl}/update-status/`, {
-      unique_id: uniqueId,
-      status: status
+  // ADDED: A private helper function to get authenticated headers
+  private getAuthHeaders(): HttpHeaders | null {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+      console.error("Authentication token not found!");
+      return null;
+    }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
     });
   }
 
-  // ADDED: Method to get a single job post's details
+  getRecruiterProfile(recruiterId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (!headers) return of(null); // Return empty observable if no token
+    return this.http.get<any>(`${this.apiUrl}/profile/?recruiter_id=${recruiterId}`, { headers });
+  }
+
+  getRecruiterJobs(recruiterId: string | null, page: number): Observable<{ jobs: JobPost[] }> {
+    const headers = this.getAuthHeaders();
+    if (!headers) return of({ jobs: [] }); // Return empty job list if no token
+    return this.http.get<{ jobs: JobPost[] }>(`${this.apiUrl}/jobs/?recruiter_id=${recruiterId}&page=${page}`, { headers });
+  }
+
+  updateJobStatus(uniqueId: string, status: 'final' | 'draft' | 'pause' | 'deleted'): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (!headers) return of(null);
+    const body = {
+      unique_id: uniqueId,
+      status: status
+    };
+    return this.http.post(`${this.jobPostApiUrl}/update-status/`, body, { headers });
+  }
+
+  // MODIFIED: This function now includes the Authorization header and has no trailing slash.
   getJobDetails(uniqueId: string): Observable<JobPost> {
-    return this.http.get<JobPost>(`${this.jobPostApiUrl}/detail/${uniqueId}/`);
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return new Observable(observer => observer.error('No authentication token found'));
+    }
+    // Corrected URL without trailing slash and with headers object
+    return this.http.get<JobPost>(
+      `${this.jobPostApiUrl}/detail/${uniqueId}`, // No trailing slash
+      { headers: headers } // Pass the headers here
+    );
   }
 }

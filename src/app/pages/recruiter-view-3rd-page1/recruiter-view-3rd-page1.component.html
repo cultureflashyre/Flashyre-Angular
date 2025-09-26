@@ -967,12 +967,23 @@
                         {{ job.number_of_candidates_applied }} Candidates applied
                       </span>
                     </div>
+                    <div 
+                      id="jobid-expiry-date"
+                      class="recruiter-view3rd-page1-jobid-expiry-date-container"
+                    >
+                    <span
+                      id="jobid"
+                      class="recruiter-view3rd-page1-jobid"
+                    >
+                      Job id : {{ job.job_id }}
+                    </span>
                     <span
                       id="expiry-date"
                       class="recruiter-view3rd-page1-expire-in2-days-text"
                     >
-                      {{ getPostedDaysAgo(job.created_at) }}
+                      {{ getDisplayDate(job) }}
                     </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1118,7 +1129,7 @@
 <body>
     <label class='switch'>
         <input type='checkbox' [checked]="job.status === 'final'"
-            (click)="handleStatusChange(job, job.status === 'final' ? 'pause' : 'final')"> <!-- Default 'Live' state (checked) -->
+            (change)="handleStatusChange(job, job.status === 'final' ? 'pause' : 'final', $event)"> <!-- Default 'Live' state (checked) -->
         <span class='slider'>
             <div class='slider-text live-text'>Live</div>
             <div class='slider-text pause-text'>Pause</div>
@@ -1139,7 +1150,7 @@
                     height="24"
                     viewBox="0 0 24 24"
                     class="recruiter-view3rd-page1-delete-icon"
-                    (click)="handleStatusChange(job, 'deleted')"
+                    (click)="handleStatusChange(job, 'deleted', $event)"
                   >
                     <path
                       d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
@@ -1147,6 +1158,7 @@
                     ></path>
                   </svg>
                   <span
+                    *ngIf="activeTab !== 'live'"
                     id="edit-text"
                     class="recruiter-view3rd-page1-edit-text"
                     (click)="editJob(job)"
@@ -1158,7 +1170,7 @@
                     class="recruiter-view3rd-page1-view-candidates-text"
                     (click)="viewJobApplications(job.job_id)"
                   >
-                    View candidates
+                    View Details
                   </span>
                 </div>
               </div>

@@ -24,7 +24,7 @@ import { RecruiterDataService, JobPost } from '../../services/recruiter-data.ser
 export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('editor') editor!: ElementRef<HTMLDivElement>; // ADDED: reference to the editor
+  @ViewChild('editor', { static: false }) editor!: ElementRef<HTMLDivElement>; // ADDED: reference to the editor
 
   private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik';
   private loader: Loader;
@@ -218,6 +218,8 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     this.subscriptions.add(
       this.recruiterDataService.getJobDetails(uniqueId).subscribe({ // MODIFIED: Use recruiterDataService
         next: (jobDetails: JobPost) => { // Expect JobPost type
+          console.log("%c CHECKPOINT 1: API Response Received", "color: green; font-weight: bold;", jobDetails);
+          console.log("%c CHECKPOINT 1a: Job Description from API is:", "color: green;", jobDetails.job_description);
           this.jobData = jobDetails;
           if (this.isViewInitialized) {
             this.populateForm(jobDetails);
@@ -498,7 +500,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
       total_experience_min, total_experience_max,
       relevant_experience_min, relevant_experience_max,
       budget_type, min_budget, max_budget,
-      notice_period, skills, job_description,
+      notice_period, skills, job_description: job_description,
       job_description_url: job_description_url_val,
       unique_id: unique_id_val,
       // companyName is not a direct form control, it's used in onSubmit, but if you want to store it:
@@ -559,14 +561,24 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   }
 
   private setJobDescription(description: string): void {
-    // MODIFIED: Use ViewChild reference for editor
+    // This function will now be called by ngAfterViewInit, which guarantees the editor exists.
     if (this.editor && this.editor.nativeElement) {
       this.editor.nativeElement.innerHTML = description;
       this.checkEmpty('editor');
-    } else if (this.isViewInitialized) {
-      console.warn('Job description editor element not found.');
+    } else {
+        // Fallback for safety, although it shouldn't be needed with the ngAfterViewInit fix.
+        // This will try again in a moment after the current browser task is complete.
+        setTimeout(() => {
+            if (this.editor && this.editor.nativeElement) {
+                this.editor.nativeElement.innerHTML = description;
+                this.checkEmpty('editor');
+                console.log("SUCCESS: Job Description set after a short delay.");
+            } else {
+                console.error("FAILURE: Editor element could not be found even after a delay.");
+            }
+        }, 0);
     }
-  }
+}
 
   updateJobDescriptionFromEditor(event: Event): void {
     const editorContent = (event.target as HTMLDivElement).innerHTML;

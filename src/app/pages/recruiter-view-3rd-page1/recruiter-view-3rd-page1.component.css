@@ -1594,13 +1594,15 @@
 .recruiter-view3rd-page1-second-container {
   flex: 0 0 auto;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
   align-items: flex-start;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .recruiter-view3rd-page1-switch-container {
+  grid-row: 1;
   flex: 0 0 auto;
   height: 30px;
   display: flex;
@@ -1617,6 +1619,7 @@
 }
 
 .recruiter-view3rd-page1-icons-container {
+  grid-row: 4;
   gap: 16px;
   flex: 0 0 auto;
   display: flex;
@@ -1671,7 +1674,7 @@
 }
 
 .recruiter-view3rd-page1-live-draft-deleted-container > div.active-tab {
-  border-bottom: 2px solid #007bff; /* Or your theme color */
+  border-bottom: 2px solid #05356c; /* Or your theme color */
   font-weight: bold;
 }
 
@@ -1692,6 +1695,24 @@
   font-size: 1.1rem;
   color: #555;
   margin: 0;
+}
+
+.recruiter-view3rd-page1-jobid-expiry-date-container {
+  height: auto;
+  width: auto;
+  gap: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.recruiter-view3rd-page1-jobid {
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  font-weight: 400;
+  color: #05356c;
+  align-self: center;
 }
  
 @media(max-width: 1200px) {

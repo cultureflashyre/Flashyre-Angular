@@ -11,7 +11,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 // Define routes for the module
 const routes = [
   {
-    path: '',
+    path: '', // This path handles creating a new job (e.g., /create-job-post-1st-page)
+    component: CreateJobPost1stPageComponent
+  },
+  {
+    path: ':id', // This new path handles editing a job (e.g., /create-job-post-1st-page/some-id)
     component: CreateJobPost1stPageComponent
   }
 ];
