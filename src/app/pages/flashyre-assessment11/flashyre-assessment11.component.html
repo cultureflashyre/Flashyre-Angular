@@ -87,6 +87,7 @@
         <div
           id="question-numbers-main-container"
           class="flashyre-assessment11-question-numbers-main-container"
+          *ngIf="!isCodingSection"
         >
           <svg
             id="backward-arrow-icon"
@@ -139,6 +140,7 @@
 <div
 id="previous-next-button-main-container"
 class="flashyre-assessment11-previous-next-button-main-container1"
+*ngIf="!isCodingSection"
 >
 <!-- Previous button - always visible -->
 <button
@@ -194,6 +196,7 @@ class="flashyre-assessment11-previous-next-button-main-container1"
         <div
           id="questions-container"
           class="flashyre-assessment11-questions-container"
+          *ngIf="!isCodingSection"
         >
           <span
             id="question-num-text"
@@ -232,6 +235,7 @@ class="flashyre-assessment11-previous-next-button-main-container1"
           type="button"
           (click)="nextQuestion()"
           class="flashyre-assessment11-next-button2 button"
+          *ngIf="!isCodingSection"
         >
           ->
         </button>
@@ -242,6 +246,7 @@ class="flashyre-assessment11-previous-next-button-main-container1"
           <div
             id="select-an-option-container"
             class="flashyre-assessment11-select-an-option-container"
+            *ngIf="!isCodingSection"
           >
             <span
               id="select-an-option-text"
@@ -289,6 +294,7 @@ class="flashyre-assessment11-previous-next-button-main-container1"
           <div
             id="options-container"
             class="flashyre-assessment11-options-container"
+            *ngIf="!isCodingSection"
           >
             <div
               *ngFor="let option of currentOptions; let i = index"
@@ -335,11 +341,20 @@ class="flashyre-assessment11-previous-next-button-main-container1"
               ></textarea>
             </div>
           </div>
+          <!-- Add coding section if coding_problem is present -->
+          <ng-container *ngIf="isCodingSection">
+            <div class="coding-section">
+              <app-problem-description [problem]="currentSection.problemData"></app-problem-description>
+              <app-code-editor [problemId]="currentSection.coding_id_id" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+              <app-test-results [results]="results"></app-test-results>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div
         id="previous-next-button-main-container"
         class="flashyre-assessment11-previous-next-button-main-container2"
+        *ngIf="!isCodingSection"
       >
         <button
           id="previous-button2"

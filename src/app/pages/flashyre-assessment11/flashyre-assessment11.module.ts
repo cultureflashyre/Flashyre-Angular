@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http'
 import { NgxSpinnerModule } from 'ngx-spinner'
 import { SharedPipesModule } from '../../shared/shared-pipes.module' // Import the shared module
 import { FormsModule } from '@angular/forms'
+import { AceModule } from 'ngx-ace-wrapper';
+import { MarkdownModule } from 'ngx-markdown';
 
 const routes = [
   {
@@ -24,7 +26,9 @@ const routes = [
     HttpClientModule,
     NgxSpinnerModule,
     SharedPipesModule, // Add the shared module here
-    FormsModule
+    FormsModule,
+    AceModule,
+    MarkdownModule.forChild()
   ],
   exports: [FlashyreAssessment11],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

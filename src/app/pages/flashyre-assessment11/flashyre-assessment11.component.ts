@@ -1,6 +1,4 @@
-import { ContentChild, Input, TemplateRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-
+import { Component, ContentChild, Input, TemplateRef, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { TrialAssessmentService } from '../../services/trial-assessment.service';
 import { Subscription } from 'rxjs';
@@ -8,48 +6,35 @@ import { VideoRecorderService } from '../../services/video-recorder.service';
 import { ProctoringService } from '../../services/proctoring.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { lastValueFrom } from 'rxjs';
 
 interface SelectedAnswer {
   answer: string;
   section_id: number;
-  answerValue?: any; // Add this optional property
+  answerValue?: any;
 }
 
 @Component({
-  selector: 'flashyre-assessment11',
-  templateUrl: 'flashyre-assessment11.component.html',
-  styleUrls: ['flashyre-assessment11.component.css'],
+  selector: 'app-flashyre-assessment11',
+  templateUrl: './flashyre-assessment11.component.html',
+  styleUrls: ['./flashyre-assessment11.component.css'],
 })
 export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
 
-  @ContentChild('endTestText')
-  endTestText: TemplateRef<any>;
-  @Input()
-  logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
-  @Input()
-  rootClassName: string = '';
-  @Input()
-  logoAlt: string = 'image';
+  @ContentChild('endTestText') endTestText: TemplateRef<any>;
+  @Input() logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
+  @Input() rootClassName: string = '';
+  @Input() logoAlt: string = 'image';
 
-  // New property to control popup visibility
   showWarningPopup = false;
-
-  ngAfterViewInit(): void {
-    // Scroll to active question on init
-    this.scrollToActiveQuestion();
-  }
-
   totalQuestionsInSection: number;
   isLastSection: boolean;
   currentQuestionIndex: number = 0;
   currentSectionIndex: number = 0;
   totalSections: number;
-
   assessmentData: any = {};
-  sections: any[];
+  sections: any[] = [];
   currentSection: any;
   currentQuestions: any[] = [];
   timer: number;
@@ -58,24 +43,26 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   videoPath: string | null;
   sectionTimer: number = 0;
   currentQuestion: any = {};
-  userResponses: {[key: string]: any} = {};
+  userResponses: { [key: string]: any } = {};
   currentOptions: any[] = [];
-
   isLastQuestionInSection = false;
-
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
-  
-  // New property to store remaining time for each section
   sectionTimers: { [section_id: number]: number } = {};
+  isCodingSection = false;
+  results: string[] = [];
+  codingSubmissions: { [problem_id: number]: { id: number, score: number } } = {};
 
   private timerSubscription: Subscription;
   private sectionTimerInterval: any;
+  private timerInterval: any;
+  private violationSubscription: Subscription;
+  private isCleanedUp = false;
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private trialassessmentService: TrialAssessmentService,
+    private trialAssessmentService: TrialAssessmentService,
     private videoRecorder: VideoRecorderService,
     private proctoringService: ProctoringService,
     private router: Router,
@@ -83,7 +70,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute
   ) {
     this.currentQuestionIndex = 0;
-
     this.title.setTitle('Flashyre-Assessment11 - Flashyre');
     this.meta.addTags([
       {
@@ -92,96 +78,77 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       },
       {
         property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
+        content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ]);
   }
 
-  private timerInterval: any;
-  private violationSubscription: Subscription;
-  private isCleanedUp = false;
+  ngAfterViewInit(): void {
+    this.scrollToActiveQuestion();
+  }
 
   async ngOnInit(): Promise<void> {
-
     this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
-      this.terminateTest(true); // Pass a flag if you want to distinguish violation termination
+      this.terminateTest(true);
     });
 
-    // Extract assessmentId from query parameters
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
     this.userId = localStorage.getItem('user_id');
     
-    if (assessmentId && this.userId) {   // <-- Ensure both are present
-    this.fetchAssessmentData(+assessmentId);
-    this.startTime = new Date();
-    try {
-      await this.videoRecorder.startRecording(this.userId, assessmentId); // <-- Pass both arguments
-      this.proctoringService.startMonitoring();
-    } catch (error) {
-      console.error('Failed to start assessment:', error);
-    }
-  } else {
+    if (assessmentId && this.userId) {
+      this.fetchAssessmentData(+assessmentId);
+      this.startTime = new Date();
+      try {
+        await this.videoRecorder.startRecording(this.userId, assessmentId);
+        this.proctoringService.startMonitoring();
+      } catch (error) {
+        console.error('Failed to start assessment:', error);
+      }
+    } else {
       console.error('No assessment ID or user ID provided');
-      this.router.navigate(['/assessment-error']); // Redirect if no ID
+      this.router.navigate(['/assessment-error']);
     }
   }
 
   private async cleanupResources(): Promise<void> {
-    console.log('cleanupResources called');
-
     if (this.isCleanedUp) return;
     this.isCleanedUp = true;
 
     try {
       if (this.timerSubscription) {
         this.timerSubscription.unsubscribe();
-        console.log('Unsubscribed timerSubscription');
       }
-      
       clearInterval(this.timerInterval);
-
       if (this.sectionTimerInterval) {
         clearInterval(this.sectionTimerInterval);
-        console.log('Cleared sectionTimerInterval');
       }
-
-      // Await stopRecording to ensure video is stopped and path is retrieved
       this.videoPath = await this.videoRecorder.stopRecording();
-      console.log("Inside cleanupResources...Video PATH url: ", this.videoPath);
-
       this.proctoringService.stopMonitoring();
-
-      // Any other cleanup logic here
-
     } catch (error) {
       console.error('Error during cleanupResources:', error);
-      // Handle less fatal errors here if needed, e.g., continue cleanup despite error
     }
   }
 
   ngOnDestroy(): void {
-  if (this.violationSubscription) {
-    this.violationSubscription.unsubscribe();
+    if (this.violationSubscription) {
+      this.violationSubscription.unsubscribe();
+    }
+    this.cleanupResources();
   }
-  // this.cleanupResources();
-}
 
   fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
-    this.trialassessmentService.getAssessmentDetails(assessmentId).subscribe({
+    this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
       next: (data) => {
         console.log('Raw API response:', data);
         this.assessmentData = data;
-        this.sections = Object.keys(data.sections).map((sectionName) => ({
-          name: sectionName,
-          ...data.sections[sectionName],
-        }));
+        this.sections = [];
+        this.processCustomizations(data.sections);
         console.log('Processed sections:', this.sections);
         console.log('First section questions:', this.sections[0]?.questions);
         this.totalSections = this.sections.length;
         this.timer = data.total_assessment_duration * 60;
-        this.trialassessmentService.updateTimer(this.timer);
+        this.trialAssessmentService.updateTimer(this.timer);
         this.startTimer();
         this.selectSection(this.sections[0]);
       },
@@ -194,10 +161,28 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  processCustomizations(sectionsData: any): void {
+    for (const sectionName in sectionsData) {
+      console.log('Processing section:', sectionName);
+      const section = sectionsData[sectionName];
+      const sectionEntry = {
+        name: sectionName,
+        section_id: section.section_id,
+        duration: section.duration_per_section,
+        questions: section.questions || [],
+        coding_problem: section.coding_problem,
+        type: section.coding_problem ? 'coding' : 'mcq',
+        coding_id_id: section.coding_problem?.id,
+        problemData: section.coding_problem
+      };
+      this.sections.push(sectionEntry);
+    }
+    console.log('Final sections array:', JSON.stringify(this.sections, null, 2));
+  }
+
   startTimer(): void {
-    this.timerSubscription = this.trialassessmentService.timer$.subscribe((time) => {
+    this.timerSubscription = this.trialAssessmentService.timer$.subscribe((time) => {
       this.timer = time;
-      //console.log('timer data in startTimer(): ', this.timer);
       if (this.timer <= 0) {
         this.terminateTest();
       }
@@ -208,7 +193,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   decrementTimer(): void {
     this.timerInterval = setInterval(() => {
       if (this.timer > 0) {
-        this.trialassessmentService.updateTimer(this.timer - 1 );
+        this.trialAssessmentService.updateTimer(this.timer - 1);
       } else {
         clearInterval(this.timerInterval);
       }
@@ -225,14 +210,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       } else {
         clearInterval(this.sectionTimerInterval);
         this.sectionTimerInterval = null;
-        // Optional: Auto-move to next section or end test
       }
     }, 1000);
   }
 
   submitAssessment(): void {
     const responses = this.prepareSubmissionData();
-    this.trialassessmentService.submitAssessment(responses).subscribe({
+    this.trialAssessmentService.submitAssessment(responses).subscribe({
       next: (response) => {
         console.log('Assessment submitted successfully:', response);
       },
@@ -243,21 +227,25 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectSection(section: any): void {
-    // Before switching, save the remaining time of the current section
+    console.log('Selected section:', JSON.stringify(section, null, 2));
     if (this.currentSection) {
-      this.sectionTimers[this.currentSection.section_id] = this.sectionTimer;
+      this.sectionTimers[this.currentSection.section_id || this.currentSection.coding_id_id] = this.sectionTimer;
     }
 
     this.currentSection = section;
     this.currentSectionIndex = this.sections.indexOf(section);
-    this.currentQuestions = section.questions;
-    this.currentQuestionIndex = 0;
-    this.updateCurrentQuestion();
-    this.totalQuestionsInSection = this.currentQuestions.length;
+    this.isCodingSection = section.type === 'coding';
+    if (!this.isCodingSection) {
+      this.currentQuestions = section.questions;
+      this.currentQuestionIndex = 0;
+      this.updateCurrentQuestion();
+      this.totalQuestionsInSection = this.currentQuestions.length;
+    } else {
+      this.results = [];
+    }
 
-    // Set the timer for the new section
-    this.sectionTimer = this.sectionTimers[section.section_id] !== undefined 
-      ? this.sectionTimers[section.section_id] 
+    this.sectionTimer = this.sectionTimers[section.section_id || section.coding_id_id] !== undefined 
+      ? this.sectionTimers[section.section_id || section.coding_id_id] 
       : section.duration * 60;
 
     clearInterval(this.sectionTimerInterval);
@@ -275,11 +263,11 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.currentOptions = [];
     }
   }
-  
+
   scrollLeft(): void {
     if (this.numbersContainer) {
       this.numbersContainer.nativeElement.scrollBy({
-        left: -100, // scroll left by 100px
+        left: -100,
         behavior: 'smooth'
       });
     }
@@ -288,29 +276,25 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   scrollRight(): void {
     if (this.numbersContainer) {
       this.numbersContainer.nativeElement.scrollBy({
-        left: 100, // scroll right by 100px
+        left: 100,
         behavior: 'smooth'
       });
     }
   }
-  
+
   scrollToActiveQuestion(): void {
     if (!this.numbersContainer) return;
-
     const container = this.numbersContainer.nativeElement;
     const activeButton = container.querySelector('.active') as HTMLElement;
-
     if (activeButton) {
       const containerRect = container.getBoundingClientRect();
       const activeRect = activeButton.getBoundingClientRect();
-
       if (activeRect.left < containerRect.left) {
         container.scrollBy({
           left: activeRect.left - containerRect.left - 8,
           behavior: 'smooth'
         });
-      }
-      else if (activeRect.right > containerRect.right) {
+      } else if (activeRect.right > containerRect.right) {
         container.scrollBy({
           left: activeRect.right - containerRect.right + 8,
           behavior: 'smooth'
@@ -327,10 +311,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  updateCurrentSection(): void {
-    this.totalQuestionsInSection = this.currentQuestions.length;
-  }
-
   checkIfLastQuestionInSection(): void {
     if (this.currentQuestions && this.currentQuestionIndex !== undefined) {
       this.isLastQuestionInSection = this.currentQuestionIndex === this.currentQuestions.length - 1;
@@ -338,13 +318,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.isLastQuestionInSection = false;
     }
   }
-  
+
   getOptions(question: any): any[] {
     if (!question || !question.options) return [];
     const options = [];
     for (let i = 1; i <= 4; i++) {
       const key = `option${i}`;
-      const imageKey = `option${i}_image`;
+      const imageKey = `q_option${i}_image`;
       if (question.options[key]) {
         options.push({
           key: key,
@@ -355,29 +335,25 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
     return options;
   }
-  
+
   markQuestionAsVisited(index: number): void {
     if (!this.questionStates[index]) {
       this.questionStates[index] = 'visited';
     }
   }
-  
+
   markQuestionAsAnswered(index: number): void {
     if (this.questionStates[index] === 'visited') {
       this.questionStates[index] = 'answered';
     }
   }
-  
+
   navigateToQuestion(index: number): void {
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
       this.markQuestionAsVisited(index);
       this.updateCurrentQuestion();
     }
-  }
-
-  goToQuestion(index: number): void {
-    this.navigateToQuestion(index);
   }
 
   selectOption(questionId: number, sectionId: number, answer: string): void {
@@ -422,17 +398,14 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   private isTerminating = false;
 
   async terminateTest(isViolation = false): Promise<void> {
-    if (this.isTerminating) {
-        return;
-    }
+    if (this.isTerminating) return;
     this.isTerminating = true;
 
     try {
       await this.cleanupResources();
       const responses = this.prepareSubmissionData();
-      const response = await lastValueFrom(this.trialassessmentService.submitAssessment(responses));
+      const response = await lastValueFrom(this.trialAssessmentService.submitAssessment(responses));
       console.log('Assessment submitted successfully:', response);
-
       if (isViolation) {
         this.router.navigate(['/assessment-violation-message'], {
           state: { message: "Test submitted automatically due to screen/app switching" }
@@ -446,16 +419,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // New method to show the warning popup
   showEndTestWarning(): void {
-    // Store the final time for the current section before showing the popup
     if (this.currentSection) {
-      this.sectionTimers[this.currentSection.section_id] = this.sectionTimer;
+      this.sectionTimers[this.currentSection.section_id || this.currentSection.coding_id_id] = this.sectionTimer;
     }
     this.showWarningPopup = true;
   }
 
-  // New method to handle closing the popup
   handleCloseWarningPopup(): void {
     this.showWarningPopup = false;
   }
@@ -468,6 +438,11 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
         questionId: +questionId,
         sectionId: this.selectedAnswers[+questionId].section_id,
         answer: this.selectedAnswers[+questionId].answer,
+      })),
+      codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
+        problemId: +problemId,
+        submissionId: this.codingSubmissions[+problemId].id,
+        score: this.codingSubmissions[+problemId].score
       })),
       startTime: this.startTime,
       endTime: new Date().toISOString(),
@@ -489,7 +464,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.updateCurrentQuestion();
     }
   }
-  
+
   nextSection(): void {
     if (this.currentSectionIndex < this.totalSections - 1) {
       this.currentSectionIndex++;
@@ -500,7 +475,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   hasQuestionImage(question: any): boolean {
     return question && question.question_image && question.question_image.trim() !== '';
   }
-  
+
   hasOptionImage(option: any): boolean {
     return option && option.image && option.image.trim() !== '';
   }
@@ -513,20 +488,56 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     (event.target as HTMLImageElement).style.display = 'none';
   }
 
-  handleQuestionNavigation(event: {section: any, questionIndex: number}): void {
-  const { section, questionIndex } = event;
-  
-  // Check if we need to switch to a different section
-  if (this.currentSection !== section) {
-    // Switch to the selected section
-    this.currentSection = section;
-    // Update current questions array to match the new section
-    this.currentQuestions = section.questions;
+  handleQuestionNavigation(event: { section: any, questionIndex: number }): void {
+    const { section, questionIndex } = event;
+    if (this.currentSection !== section) {
+      this.currentSection = section;
+      this.currentQuestions = section.questions;
+    }
+    this.currentQuestionIndex = questionIndex;
+    this.markQuestionAsVisited(questionIndex);
+    this.updateCurrentQuestion();
   }
 
-  // Navigate to the specific question within the section
-  this.currentQuestionIndex = questionIndex;
-  this.markQuestionAsVisited(questionIndex);
-  this.updateCurrentQuestion();
-}
+  onRunCode(event: { source_code: string, language_id: number }) {
+    const data = {
+      problem_id: this.currentSection.coding_id_id,
+      source_code: event.source_code,
+      language_id: event.language_id
+    };
+    console.log('Sending run code request:', JSON.stringify(data, null, 2));
+    this.trialAssessmentService.runCode(data).subscribe({
+      next: (response) => {
+        console.log('Run code response:', JSON.stringify(response, null, 2));
+        this.results = response.results || ['No results available'];
+      },
+      error: (error) => {
+        console.error('Run code error:', error);
+        this.results = [`Error running code: ${error.status} ${error.statusText}`];
+      }
+    });
+  }
+
+  onSubmitCode(event: { source_code: string, language_id: number }) {
+    const data = {
+      problem_id: this.currentSection.coding_id_id,
+      source_code: event.source_code,
+      language_id: event.language_id
+    };
+    console.log('Sending submit code request:', JSON.stringify(data, null, 2));
+    this.trialAssessmentService.submitCode(data).subscribe({
+      next: (response) => {
+        console.log('Submit code response:', JSON.stringify(response, null, 2));
+        this.results = response.results || ['No results available'];
+        this.codingSubmissions[this.currentSection.coding_id_id] = {
+          id: response.id,
+          score: response.score
+        };
+      },
+      error: (error) => {
+        console.error('Submit code error:', error);
+        this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
+      }
+    });
+  }
 }

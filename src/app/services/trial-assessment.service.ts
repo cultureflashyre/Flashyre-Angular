@@ -15,7 +15,7 @@ interface TrialAssessmentResponse {
   total_assessment_duration: number;
   sections: {
     [sectionName: string]: {
-      section_id: number;
+      section_id: number | null;
       duration: number;
       questions: {
         question_id: number;
@@ -33,6 +33,17 @@ interface TrialAssessmentResponse {
           q_option4_image: string | null;
         };
       }[];
+      coding_problem?: {
+        id: number;
+        title: string;
+        description: string;
+        input_format: string;
+        output_format: string;
+        constraints: string;
+        example: string;
+        timer: number;
+        test_cases: { input: string; expected_output: string }[];
+      } | null;
     };
   };
 }
@@ -41,7 +52,6 @@ interface TrialAssessmentResponse {
   providedIn: 'root'
 })
 export class TrialAssessmentService {
-  private apiUrl = `${environment.apiUrl}`; // Uses environment-based URL
   private timerSource = new BehaviorSubject<number>(0);
   public timer$ = this.timerSource.asObservable();
 
@@ -54,63 +64,66 @@ export class TrialAssessmentService {
     this.timerSource.next(time);
   }
 
-  // Fetch trial assessment data including sections, questions, and timer duration
   getAssessmentDetails(assessmentId: number): Observable<TrialAssessmentResponse> {
     this.spinner.show();
-    
     const token = localStorage.getItem('token');
     console.log('Using token:', token ? 'Token exists' : 'No token found');
-    
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    
+    const url = `${environment.apiUrl}trial_assessments/?assessment_id=${assessmentId}`;
+    console.log('Making request to:', url);
     return new Observable<TrialAssessmentResponse>((observer) => {
-      const url = `${this.apiUrl}trial_assessments/?assessment_id=${assessmentId}`;
-      console.log('Making request to:', url);
-      
-      this.http.get<TrialAssessmentResponse>(url, { headers })
-      .subscribe({
-          next: (response) => {
-            console.log('API Response:', response);
-            this.spinner.hide();
-            observer.next(response);
-            observer.complete();
-          },
-          error: (error) => {
-            console.error('API Error details:', error);
-            console.error('Error status:', error.status);
-            console.error('Error message:', error.message);
-            console.error('Error response:', error.error);
-            this.spinner.hide();
-            observer.error(error);
-          }
-        });
+      this.http.get<TrialAssessmentResponse>(url, { headers }).subscribe({
+        next: (response) => {
+          console.log('API Response:', response);
+          this.spinner.hide();
+          observer.next(response);
+          observer.complete();
+        },
+        error: (error) => {
+          console.error('API Error details:', error);
+          this.spinner.hide();
+          observer.error(error);
+        }
+      });
     });
   }
 
-  // Submit trial assessment answers
   submitAssessment(data: any): Observable<any> {
-    this.spinner.show(); // Show spinner before submitting
-
-    const token = localStorage.getItem('token'); // Retrieve JWT token
+    this.spinner.show();
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
     return new Observable((observer) => {
-      this.http.post(`${this.apiUrl}submit-assessment/`, data, { headers })
-      .subscribe({
-          next: (response) => {
-            this.spinner.hide(); // Hide spinner on successful submission
-            observer.next(response);
-            observer.complete();
-          },
-          error: (error) => {
-            this.spinner.hide(); // Hide spinner on error
-            observer.error(error);
-          }
-        });
+      this.http.post(`${environment.apiUrl}submit-assessment/`, data, { headers }).subscribe({
+        next: (response) => {
+          this.spinner.hide();
+          observer.next(response);
+          observer.complete();
+        },
+        error: (error) => {
+          this.spinner.hide();
+          observer.error(error);
+        }
+      });
     });
+  }
+
+  getProblem(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get(`${environment.apiUrl}problems/${id}`, { headers });
+  }
+
+    runCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
+    return this.http.post('http://localhost:8000/api/' + 'run', data);
+  }
+
+  submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
+    return this.http.post('http://localhost:8000/api/' + 'submissions', data);
   }
 }
