@@ -1,0 +1,642 @@
+:host { 
+  display: contents; 
+}
+
+/* Modify the container5 class to include disabled state */
+.admin-create-job-step2-container5 {
+  /* ...existing code... */
+  pointer-events: none; /* This will disable all interactions */
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #f5f5f5;
+}
+
+.alert {
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  position: fixed; /* Positions the alert relative to the viewport */
+  top: 20px;       /* 20px from the top */
+  right: 20px;      /* 20px from the right */
+  z-index: 1050;   /* Ensures it appears above other content */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  min-width: 300px;
+}
+
+.alert.success {
+  background-color: #28a745; /* A standard, clear green */
+}
+
+.alert.error {
+  background-color: #dc3545; /* A standard, clear red */
+}
+
+/* The close button (×) */
+.closebtn {
+  margin-left: auto; /* Pushes the button to the far right */
+  padding-left: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: #e0e0e0; /* A light grey to indicate interaction */
+}
+
+/* Green tick (✔) for success messages */
+.tick {
+  margin-right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Style for disabled upload button text */
+.admin-create-job-step2-container5 .admin-create-job-step2-text13 {
+  /* ...existing code... */
+  color: #666666;
+}
+
+/* Style for disabled upload button icon */
+.admin-create-job-step2-container5 .admin-create-job-step2-icon1 {
+  /* ...existing code... */
+  opacity: 0.5;
+}
+
+/* Remove hover effects when disabled */
+.admin-create-job-step2-container5:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: #f5f5f5;
+}
+
+.admin-create-job-step2-navigation-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-create-job-step2-previous-button,
+.admin-create-job-step2-next-button,
+.admin-create-job-step2-cancel-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.admin-create-job-step2-next-button:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Style for the container holding the two buttons */
+.admin-create-job-step2-container3 {
+  gap: 24px; /* Space between buttons */
+  flex: 0 0 auto;
+  width: 100%;
+  /* Adjust height if needed, or let it be determined by content */
+  height: auto; /* Or a specific height like 104px if required */
+  display: flex;
+  align-items: flex-start; /* Align buttons to the top */
+  justify-content: flex-start; /* Align buttons to the left */
+  padding: 10px 0; /* Add some vertical padding if needed */
+}
+
+/* Apply disabled styles to both button containers */
+.admin-create-job-step2-container4.disabled,
+.admin-create-job-step2-container5.disabled {
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduce opacity to indicate disabled state */
+  /* Remove interactive effects */
+  transform: none !important;
+  box-shadow: none !important;
+  background-color: #f0f0f0 !important; /* Light grey background when disabled */
+}
+
+/* Ensure text inside disabled buttons also reflects the state */
+.admin-create-job-step2-container4.disabled .admin-create-job-step2-text11,
+.admin-create-job-step2-container5.disabled .admin-create-job-step2-text13 {
+  opacity: 0.6; /* Reduce text opacity */
+  background: none !important; /* Remove gradient if applied */
+  color: #666666 !important; /* Darker grey text when disabled */
+  -webkit-text-fill-color: #666666 !important; /* For gradient text */
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+}
+
+/* Ensure icon inside disabled upload button reflects the state */
+.admin-create-job-step2-container5.disabled .admin-create-job-step2-icon1 path {
+  fill: #666666 !important; /* Darker grey icon when disabled */
+}
+
+/* Style for the text inside the 'Generate with AI' button */
+.admin-create-job-step2-text11 {
+  color: transparent; /* Make base text color transparent */
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Apply the gradient as text fill */
+  background: linear-gradient(90deg, #E489A9, #6D68E7, #76A7DA);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600; /* Match original font weight if needed */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+
+.disabled-button {
+  background-color: #cccccc !important; /* Light grey background */
+  color: #666666 !important; /* Darker grey text */
+  cursor: not-allowed !important; /* Show disabled cursor */
+  opacity: 0.6;
+}
+
+/* Ensure the button containers are clickable */
+.admin-create-job-step2-container4{
+  flex: 0 0 auto;
+  width: 248px;
+  height: 100px; /* Assuming parent sets height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Border styles matching original */
+  border-color: transparent;
+  /* Gradient border using border-image */
+  border-image: linear-gradient(to right, #E489A9, #6D68E7, #76A7DA) 1;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: #ffffff; /* Explicit background */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  position: relative; /* Needed for potential pseudo-elements or absolute positioning */
+  overflow: hidden; /* Contain potential background effects */
+}
+
+/* Hover effect for 'Generate with AI' button */
+.admin-create-job-step2-container4:hover:not(.disabled) {
+  transform: scale(1.02); /* Slight scale up */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  /* Optional: Enhance gradient on hover if desired */
+  /* border-image: linear-gradient(to right, #e699b7, #7d77f0, #86b7e7) 1; */
+}
+
+/* Active/click effect for 'Generate with AI' button */
+.admin-create-job-step2-container4:active:not(.disabled) {
+  transform: scale(0.98); /* Slight scale down */
+}
+
+
+ .admin-create-job-step2-container5 {
+  gap: 8px; /* Space between icon and text */
+  flex: 0 0 auto;
+  width: 248px;
+  height: 100px; /* Assuming parent sets height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Border styles matching original */
+  border-color: #A7A7A7;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: #ffffff; /* Explicit background */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect for 'Upload Manually' button */
+.admin-create-job-step2-container5:hover:not(.disabled) {
+  background-color: #f5f5f5; /* Light grey background on hover */
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Active/click effect for 'Upload Manually' button */
+.admin-create-job-step2-container5:active:not(.disabled) {
+  transform: scale(0.98);
+  background-color: #e0e0e0; /* Slightly darker grey on active */
+}
+
+/* Style for the text inside the 'Upload Manually' button */
+.admin-create-job-step2-text13 {
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #18191C; /* Text color matching original */
+  font-weight: 500; /* Adjust font weight as needed */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+/* Style for the icon inside the 'Upload Manually' button */
+.admin-create-job-step2-icon1 {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+  /* Icon color is set via SVG fill attribute */
+}
+
+.admin-create-job-step2-container4:hover, .admin-create-job-step2-container5:hover {
+  transform: scale(1.03);
+}
+
+.admin-create-job-step2-container4:disabled, .admin-create-job-step2-container5:disabled {
+  cursor: not-allowed;
+  background-color: #f0f0f0;
+  transform: none;
+  opacity: 0.7;
+}
+
+ 
+.admin-create-job-step2-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.admin-create-job-step2-container2 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: 1024px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 24px;
+}
+ 
+.admin-create-job-step2-fragment10 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text10 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment11 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text11 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.admin-create-job-step2-fragment12 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment13 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text13 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment14 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text14 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment15 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text15 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment16 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text16 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment17 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text17 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment18 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text18 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment19 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text19 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment20 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text20 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment21 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text21 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment22 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text22 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.admin-create-job-step2-fragment23 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text23 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment24 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text24 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment25 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text25 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment26 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text26 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment27 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text30 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.admin-create-job-step2-container3 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 80%;
+  height: 904px;
+  display: flex;
+  padding: 24px;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.admin-create-job-step2-container4 {
+  gap: 40px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 792px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-create-job-step2-container5 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.admin-create-job-step2-icon1 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+ 
+.admin-create-job-step2-text31 {
+  height: 100%;
+  display: flex;
+  font-size: 24px;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.admin-create-job-step2-fragment28 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text32 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment29 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text33 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-text34 {
+  color: var(--dl-color-theme-neutral-dark);
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.admin-create-job-step2-fragment30 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text36 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment31 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text37 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-text38 {
+  color: var(--dl-color-theme-neutral-dark);
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.admin-create-job-step2-fragment32 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text40 {
+  color: #41327b;
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment33 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text41 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment34 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text42 {
+  color: rgb(65, 50, 123);
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment35 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text43 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment36 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text44 {
+  display: inline-block;
+}
+ 
+.admin-create-job-step2-fragment37 {
+  display: contents;
+}
+ 
+.admin-create-job-step2-text45 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .admin-create-job-step2-container2 {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .admin-create-job-step2-text11 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .admin-create-job-step2-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .admin-create-job-step2-text31 {
+    font-size: 22px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .admin-create-job-step2-text10 {
+    fill: var(--dl-color-theme-primary1);
+    color: var(--dl-color-theme-primary1);
+  }
+  .admin-create-job-step2-text15 {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .admin-create-job-step2-text16 {
+    font-size: 12px;
+  }
+  .admin-create-job-step2-text17 {
+    font-size: 12px;
+  }
+  .admin-create-job-step2-text18 {
+    font-size: 12px;
+  }
+  .admin-create-job-step2-text19 {
+    font-size: 10px;
+  }
+  .admin-create-job-step2-text20 {
+    font-size: 10px;
+  }
+  .admin-create-job-step2-text21 {
+    font-size: 10px;
+  }
+  .admin-create-job-step2-text23 {
+    font-size: 16px;
+  }
+  .admin-create-job-step2-text26 {
+    color: rgb(24, 25, 28);
+  }
+  .admin-create-job-step2-container3 {
+    width: 100%;
+  }
+  .admin-create-job-step2-text31 {
+    font-size: 20px;
+  }
+}

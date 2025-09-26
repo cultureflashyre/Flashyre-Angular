@@ -1,0 +1,191 @@
+<ngx-spinner
+  name="ai-spinner"
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+  [fullScreen]="true"
+>
+  <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
+</ngx-spinner>
+<div class="admin-create-job-step2-container1">
+  <div class="admin-create-job-step2-container2">
+    <!-- Navbar Component -->
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name9"
+    >
+      <ng-template #text>
+        <div class="admin-create-job-step2-fragment10">
+          <span class="admin-create-job-step2-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="admin-create-job-step2-fragment11">
+          <span class="admin-create-job-step2-text11">Home</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="admin-create-job-step2-fragment12">
+          <span class="admin-create-job-step2-text12">Job Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="admin-create-job-step2-fragment13">
+          <span class="admin-create-job-step2-text13" [routerLink]="['/profile-overview-page']">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="admin-create-job-step2-fragment15">
+          <span class="admin-create-job-step2-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="admin-create-job-step2-fragment16">
+          <span class="admin-create-job-step2-text16">Home</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="admin-create-job-step2-fragment17">
+          <span class="admin-create-job-step2-text17">Notifications</span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="admin-create-job-step2-fragment18">
+          <span class="admin-create-job-step2-text18">Jobs Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="admin-create-job-step2-fragment20">
+          <span class="admin-create-job-step2-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="admin-create-job-step2-fragment21">
+          <span class="admin-create-job-step2-text21" (click)="onLogoutClick()">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="admin-create-job-step2-fragment22">
+          <span class="admin-create-job-step2-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="admin-create-job-step2-fragment24">
+          <span class="admin-create-job-step2-text24" [routerLink]="['/profile-overview-page']">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="admin-create-job-step2-fragment25">
+          <span class="admin-create-job-step2-text25" (click)="onLogoutClick()">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="admin-create-job-step2-fragment27">
+          <span class="admin-create-job-step2-text30">2</span>
+        </div>
+      </ng-template>
+    </navbar-for-recruiter-view>
+    <!-- Popup Message -->
+    <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      <span *ngIf="popupType === 'success'" class="tick">✔</span>
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> × </span>
+    </div>
+    <!-- Main Content Container -->
+    <div class="admin-create-job-step2-container3">
+      <div class="admin-create-job-step2-container4">
+        <!-- Header Section with Back Arrow and Title -->
+        <div class="admin-create-job-step2-container5">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            class="admin-create-job-step2-icon1"
+            (click)="onPrevious()"
+            style="cursor: pointer;"
+          >
+            <path
+              d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+              fill="currentColor"
+            ></path>
+          </svg>
+          <span class="admin-create-job-step2-text31">Create Job Post</span>
+        </div>
+        <!-- Progress Bar -->
+        <progress-bar2-code
+          rootClassName="progress-bar2-coderoot-class-name"
+        ></progress-bar2-code>
+        <!-- Main Interactive Area -->
+        <div class="create-job-post-21-container2">
+          <span class="create-job-post-21-text10">
+            How do you want to Add your Questions to Assessment?
+          </span>
+          <div class="create-job-post-21-container3">
+            <!-- Generate with AI Button -->
+            <button
+      id="generate-questions-button" 
+      class="create-job-post-21-container4" 
+      (click)="onGenerateAi()"
+      [disabled]="isGenerating"
+      [class.disabled]="isGenerating || hasGenerated" 
+      [title]="isGenerating ? 'Generating...' : hasGenerated ? 'Questions Generated' : 'Generate questions using AI'"
+    >
+      <span id="generate-questions-text" class="create-job-post-21-text11">
+        <span *ngIf="!isGenerating && !hasGenerated">
+          <span class="create-job-post-21-text15">Generate with AI</span>
+          <span class="create-job-post-21-text20"> ✨</span> <!-- Sparkle inside the button -->
+        </span>
+        <span *ngIf="isGenerating">Generating...</span>
+        <span *ngIf="!isGenerating && hasGenerated">
+           <span class="create-job-post-21-text15">Regenerate</span>
+           <span class="create-job-post-21-text20"> ✨</span>
+        </span>
+      </span>
+    </button>
+            <!-- Upload Manually Button -->
+            <button
+      id="upload-questions-button" 
+      class="create-job-post-21-container5" 
+      (click)="onUploadManually()"
+      [disabled]="isGenerating"
+      [class.disabled]="isGenerating" 
+      title="Upload your own questions (Functionality to be implemented)"
+    >
+      <!-- Inline SVG Icon -->
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        class="create-job-post-21-icon1"
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M11 14.9861C11 15.5384 11.4477 15.9861 12 15.9861C12.5523 15.9861 13 15.5384 13 14.9861V7.82831L15.0607 9.88897C15.4512 10.2795 16.0844 10.2795 16.4749 9.88897C16.8654 9.49845 16.8654 8.86528 16.4749 8.47476L12.7071 4.70698C12.5196 4.51945 12.2652 4.4141 12 4.4141C11.7348 4.4141 11.4804 4.51945 11.2929 4.70698L7.52513 8.47476C7.1346 8.86528 7.1346 9.49845 7.52513 9.88897C7.91565 10.2795 8.54882 10.2795 8.93934 9.88897L11 7.82831V14.9861Z"
+          fill="#18191C" 
+        />
+        <path
+          d="M4 14.9861C4 14.4338 4.44772 13.9861 5 13.9861C5.55228 13.9861 6 14.4338 6 14.9861V18.9861H18V14.9861C18 14.4338 18.4477 13.9861 19 13.9861C19.5523 13.9861 20 14.4338 20 14.9861V18.9861C20 20.0907 19.1046 20.9861 18 20.9861H6C4.89543 20.9861 4 20.0907 4 18.9861V14.9861Z"
+          fill="#18191C" 
+        />
+      </svg>
+      <span id="upload-text" class="create-job-post-21-text13">
+        <span>Upload</span>
+      </span>
+    </button>
+          </div>
+        </div>
+      </div>
+      <!-- Footer Component -->
+      <create-job-post-footer2
+        rootClassName="create-job-post-footer2root-class-name1"
+        [isNextDisabled]="!hasGenerated || isGenerating"
+        (cancelClick)="onCancel()"
+        (previousClick)="onPrevious()"
+        (skipClick)="onSkip()"
+        (nextClick)="onNext()"
+        (saveDraftClick)="onSaveDraft()">
+      </create-job-post-footer2>
+    </div>
+  </div>
+</div>

@@ -329,6 +329,26 @@ const routes = [
     data: { roles: ['admin'] },
   },
   {
+  path: 'admin-create-job-step1',
+  loadChildren: () => import('./pages/admin-create-job-step1/admin-create-job-step1.module').then(m => m.AdminCreateJobStep1Module),
+  canActivate: [AuthGuard]
+},
+{
+  path: 'admin-create-job-step2',
+  loadChildren: () => import('./pages/admin-create-job-step2/admin-create-job-step2.module').then(m => m.AdminCreateJobStep2Module),
+  canActivate: [AuthGuard]
+},
+{
+  path: 'admin-create-job-step3',
+  loadChildren: () => import('./pages/admin-create-job-step3/admin-create-job-step3.module').then(m => m.AdminCreateJobStep3Module),
+  canActivate: [AuthGuard]
+},
+{
+  path: 'admin-create-job-step4',
+  loadChildren: () => import('./pages/admin-create-job-step4/dmin-create-job-step4.module').then(m => m.AdminCreateJobStep4Module),
+  canActivate: [AuthGuard]
+},
+  {
     path: '**',
     loadChildren: () =>
       import('./pages/not-found/not-found.module').then(

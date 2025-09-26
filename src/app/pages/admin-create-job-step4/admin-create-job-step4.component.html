@@ -1,0 +1,234 @@
+<div *ngIf="showSuccessPopup" class="success-popup-overlay">
+  <div class="success-popup-box">
+    <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+    <p class="success-message">Successfully Created!</p>
+  </div>
+</div>
+<div class="admin-create-job-step4-container1">
+  <div
+    id="create-job-post-3rd-page-main-container"
+    class="admin-create-job-step4-create-job-post3rd-page-main-container"
+  >
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name6"
+    >
+      <ng-template #text>
+        <div class="admin-create-job-step4-fragment10">
+          <span class="admin-create-job-step4-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="admin-create-job-step4-fragment11">
+          <span class="admin-create-job-step4-text11">Home</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="admin-create-job-step4-fragment12">
+          <span class="admin-create-job-step4-text12">Job Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="admin-create-job-step4-fragment13">
+          <span class="admin-create-job-step4-text13" [routerLink]="['/profile-overview-page']">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="admin-create-job-step4-fragment15">
+          <span class="admin-create-job-step4-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="admin-create-job-step4-fragment16">
+          <span class="admin-create-job-step4-text16">Home</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="admin-create-job-step4-fragment17">
+          <span class="admin-create-job-step4-text17">Notifications</span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="admin-create-job-step4-fragment18">
+          <span class="admin-create-job-step4-text18">Jobs Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="admin-create-job-step4-fragment20">
+          <span class="admin-create-job-step4-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="admin-create-job-step4-fragment21">
+          <span class="admin-create-job-step4-text21" (click)="onLogoutClick()">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="admin-create-job-step4-fragment22">
+          <span class="admin-create-job-step4-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="admin-create-job-step4-fragment24">
+          <span class="admin-create-job-step4-text24" [routerLink]="['/profile-overview-page']">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="admin-create-job-step4-fragment25">
+          <span class="admin-create-job-step4-text25" (click)="onLogoutClick()">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="admin-create-job-step4-fragment27">
+          <span class="admin-create-job-step4-text30">2</span>
+        </div>
+      </ng-template>
+    </navbar-for-recruiter-view>
+    <div
+      id="interview-container"
+      class="admin-create-job-step4-interview-container"
+    >
+      <div
+        id="progress-bar-3-container"
+        class="admin-create-job-step4-progress-bar3-container1"
+      >
+        <div
+          id="progressBar-3-container"
+          class="admin-create-job-step4-progress-bar3-container2"
+        >
+          <div class="admin-create-job-step4-container2">
+            <div class="admin-create-job-step4-container3">
+              <body>
+                <div class='progress-bar'>
+                  <div class='step'>
+                    <div class='step-circle'>&#10003;</div>
+                    <span>Create Job Post</span>
+                  </div>
+                  <div class='step'>
+                    <div class='step-circle'>&#10003;</div>
+                    <span>Assessment for Job</span>
+                  </div>
+                  <div class='step'>
+                    <div class='step-circle'>&#10003;</div>
+                    <span>Interview process</span>
+                  </div>
+                </div>
+              </body>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="interview-process-container"
+        class="admin-create-job-step4-interview-process-container"
+      >
+        <span
+          id="interview-process-text"
+          class="admin-create-job-step4-interview-process-text"
+        >
+          Interview Process
+        </span>
+        <!-- Form binds to the main FormGroup in the component -->
+        <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
+          <!-- Container binds to the 'stages' FormArray -->
+          <div formArrayName="stages" class="admin-create-job-step4-different-stages-container">
+            <!-- This div will be repeated for each stage in the FormArray -->
+            <div *ngFor="let stageControl of stages.controls; let i = index" [formGroupName]="i" class="admin-create-job-step4-different-stage-container">
+              <!-- 1. Stage Name (Conditional Dropdown/Input) -->
+              <div class="form-field-wrapper stage-field">
+                <label [for]="'stage-name-' + i">Interview Stage <span class="required-asterisk">*</span></label>
+                <!-- Show dropdown if 'Customize' is NOT selected -->
+                <select *ngIf="stageControl.get('stage_name')?.value !== 'Customize'" formControlName="stage_name" [id]="'stage-name-' + i">
+                  <option value="Screening">Screening</option>
+                  <option value="Technical interview - 1">Technical interview - 1</option>
+                  <option value="Technical interview - 2">Technical interview - 2</option>
+                  <option value="HR interview">HR interview</option>
+                  <option value="Customize">Customize</option>
+                </select>
+                <!-- Show text input ONLY if 'Customize' is selected -->
+                <input *ngIf="stageControl.get('stage_name')?.value === 'Customize'" type="text" formControlName="custom_stage_name" placeholder="Enter Custom Stage Name" [id]="'custom-stage-name-' + i">
+                <!-- Validation Message -->
+                <div *ngIf="stageControl.get('custom_stage_name')?.touched && stageControl.get('custom_stage_name')?.errors?.required" class="field-error-message">
+                  Custom name is required.
+                </div>
+              </div>
+              <!-- 2. Date Picker -->
+              <div class="form-field-wrapper date-field">
+                <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
+                <div class="compact-date-input-wrapper">
+                  <input 
+                    type="date" 
+                    formControlName="stage_date"
+                    [min]="minDateString"
+                    [id]="'date-input-' + i"
+                    class="compact-date-input"
+                    (input)="validateDateInput($event, stageControl)"
+                    >
+                </div>
+                <!-- Error for invalid format (High Priority) -->
+                <div *ngIf="stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched" class="field-error-message">
+                  A valid date is required.
+                </div>
+                <!-- Error for empty field (Low Priority) -->
+                <div *ngIf="stageControl.get('stage_date')?.hasError('required') && !stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched" class="field-error-message">
+                  Date is Required
+                </div>
+              </div>
+              <!-- 3. Mode Dropdown -->
+              <div class="form-field-wrapper mode-field">
+                <label [for]="'mode-select-' + i">Interview Mode <span class="required-asterisk">*</span></label>
+                <select formControlName="mode" [id]="'mode-select-' + i">
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                </select>
+              </div>
+              <!-- 4. Assigned To Input -->
+              <div class="form-field-wrapper assigned-to-field">
+                <label [for]="'assigned-to-' + i">Assigned To <span class="required-asterisk">*</span></label>
+                <input type="email" formControlName="assigned_to" placeholder="interviewer@company.com" [id]="'assigned-to-' + i">
+                <!-- Validation Messages -->
+                <div *ngIf="stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.required" class="field-error-message">
+                  Email is required.
+                </div>
+                <div *ngIf="stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.email" class="field-error-message">
+                  Please enter a valid email.
+                </div>
+              </div>
+              <!-- 5. Remove Button -->
+              <div class="remove-icon-wrapper">
+                <svg 
+                  (click)="removeStage(i)"
+                  id="remove-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="admin-create-job-step4-remove-icon"
+                  title="Remove Stage">
+                  <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- 6. Add Stage Button -->
+          <div id="add-section-container" class="admin-create-job-step4-add-section-container">
+            <button type="button" (click)="addStage()" class="admin-create-job-step4-add-section-text button">
+              + Add Stage
+            </button>
+          </div>
+        </form>
+              </div>
+    </div>
+    <create-job-post-footer2
+      [rootClassName]="'admin-create-job-step4-footer'"
+      [isNextDisabled]="isSubmitting || interviewForm.invalid"
+      [nextButtonText]="'Save'"
+      (cancelClick)="onCancel()"
+      (previousClick)="onPrevious()"
+      (saveDraftClick)="onSaveDraft()"
+      (skipClick)="onSkip()"
+      (nextClick)="onNext()"
+    ></create-job-post-footer2>
+  </div>
+</div>
