@@ -4,19 +4,22 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { JobDetails, AIJobResponse } from '../pages/admin-create-job-step1/types';
+import { environment } from '../../environments/environment'; // ✅ Import environment
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminJobDescriptionService {
-  // Use environment variable or hardcoded base URL as per your setup
-  private readonly baseUrl = '/api/admin/job-post';
-  private readonly interviewFinalizeUrl = '/api/interview/job-post';
+  // ✅ Use environment.apiUrl as the base for all admin job post endpoints
+  private readonly baseUrl = `${environment.apiUrl}api/admin/job-post`;
+  private readonly interviewFinalizeUrl = `${environment.apiUrl}api/job-post`;
+  // ✅ Adjusted base URL for mcq-assessment endpoints to match existing backend routes
+  private readonly mcqAssessmentBaseUrl = `${environment.apiUrl}api/mcq-assessments`;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Uploads a job description file and processes it with OpenAI.
+   * Uploads a job description file and processes it with AI.
    * @param file The JD file to upload
    * @param token JWT token for authentication
    * @returns Observable of AIJobResponse
@@ -38,16 +41,25 @@ export class AdminJobDescriptionService {
    * Saves a manually created job post.
    * @param jobDetails Job post data
    * @param token JWT token
-   * @returns Observable with unique_id
+   * @returns Observable with unique_id inside a nested data object
    */
   saveJobPost(jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.post<{ unique_id: string }>(`${this.baseUrl}/job-post/`, jobDetails, { headers })
+    // ✅ Expect backend to return { "status": "success", "data": { "unique_id": "..." } }
+    return this.http.post<{ status: string; data: { unique_id: string } }>(`${this.baseUrl}/job-post/`, jobDetails, { headers })
       .pipe(
-        map(response => response),
+        // ✅ Extract unique_id from the nested data structure
+        map(response => {
+          if (response.status === 'success' && response.data && response.data.unique_id) {
+            return { unique_id: response.data.unique_id };
+          } else {
+            // This should ideally not happen if the backend is correct
+            throw new Error('Backend response format is incorrect or unique_id is missing.');
+          }
+        }),
         catchError(this.handleError)
       );
   }
@@ -70,7 +82,7 @@ export class AdminJobDescriptionService {
   }
 
   /**
-   * Generates MCQs for all skills in a job post using OpenAI.
+   * Generates MCQs for all skills in a job post using AI.
    * @param jobUniqueId Job unique ID
    * @param token JWT token
    * @returns Observable with success message
@@ -112,11 +124,11 @@ export class AdminJobDescriptionService {
    * @param token JWT token
    * @returns Observable of MCQs by skill
    */
-  job_post_mcqs_list_api(jobUniqueId: string, token: string): Observable<{ data: any }> {
+  job_post_mcqs_list_api(jobUniqueId: string, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<{ data: any }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`, { headers })
+    return this.http.get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`, { headers })
       .pipe(
         map(response => response),
         catchError(this.handleError)
@@ -141,6 +153,7 @@ export class AdminJobDescriptionService {
   }
 
   // --- Assessment API Calls (Reuses mcq_assessment app) ---
+  // ✅ URLs adjusted to match existing mcq_assessment/urls.py patterns
 
   /**
    * Saves a new assessment.
@@ -153,7 +166,8 @@ export class AdminJobDescriptionService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.post<{ assessment_uuid: string }>(`/api/mcq-assessments/assessments/`, payload, { headers })
+    // ✅ Changed URL to match backend: /api/mcq-assessments/create/
+    return this.http.post<{ assessment_uuid: string }>(`${this.mcqAssessmentBaseUrl}/create/`, payload, { headers })
       .pipe(
         map(response => response),
         catchError(this.handleError)
@@ -172,7 +186,8 @@ export class AdminJobDescriptionService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    return this.http.put<any>(`/api/mcq-assessments/assessments/${assessmentId}/`, payload, { headers })
+    // ✅ Changed URL to match backend: /api/mcq-assessments/{assessmentId}/
+    return this.http.put<any>(`${this.mcqAssessmentBaseUrl}/${assessmentId}/`, payload, { headers })
       .pipe(
         map(response => response),
         catchError(this.handleError)
@@ -189,7 +204,8 @@ export class AdminJobDescriptionService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any>(`/api/mcq-assessments/assessments/${assessmentId}/`, { headers })
+    // ✅ Changed URL to match backend: /api/mcq-assessments/{assessmentId}/
+    return this.http.get<any>(`${this.mcqAssessmentBaseUrl}/${assessmentId}/`, { headers })
       .pipe(
         map(response => response),
         catchError(this.handleError)

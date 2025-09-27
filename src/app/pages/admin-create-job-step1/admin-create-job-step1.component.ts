@@ -6,12 +6,13 @@ import { Router } from '@angular/router';
 import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AdminJobDescriptionService } from '../../services/admin-job-description.service'; // ← NEW SERVICE
+import { AdminJobDescriptionService } from '../../services/admin-job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
-import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service'; // ← NEW WORKFLOW
+import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from '../../../environments/environment'; // ✅ ADDED
 
 @Component({
   selector: 'admin-create-job-step1',
@@ -48,14 +49,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
-    private jobDescriptionService: AdminJobDescriptionService, // ← ADMIN SERVICE
+    private jobDescriptionService: AdminJobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private router: Router,
     private ngZone: NgZone,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
     private skillService: SkillService,
-    private workflowService: AdminJobCreationWorkflowService, // ← ADMIN WORKFLOW
+    private workflowService: AdminJobCreationWorkflowService,
     private spinner: NgxSpinnerService,
   ) {
     const numberValidator = (control: import('@angular/forms').AbstractControl): { [key: string]: any } | null => {
@@ -379,7 +380,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     let budget_type: string, min_budget: number | null, max_budget: number | null;
     let notice_period: string, skills: string[], job_description: string;
     let unique_id_val: string = '', job_description_url_val: string = '';
-
     if ('job_details' in jobData) {
       const aiJobData = jobData as Omit<AIJobResponse, 'mcqs'>;
       const details = aiJobData.job_details;
@@ -425,7 +425,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = details.job_description_url || '';
     }
-
     this.jobForm.patchValue({
       role,
       location: locationArray,
@@ -438,7 +437,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       job_description_url: job_description_url_val,
       unique_id: unique_id_val
     });
-
     if (job_description_url_val) {
       try {
         const url = new URL(job_description_url_val);
@@ -452,7 +450,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     } else {
       this.isFileUploadCompletedSuccessfully = false;
     }
-
     if (this.isViewInitialized) {
       this.populateSkills(skills);
       this.setJobDescription(job_description);
@@ -807,7 +804,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.spinner.show('main-spinner');
     const formValues = this.jobForm.getRawValue();
     const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
-    // Get userProfile from localStorage
     const userProfileString = localStorage.getItem('userProfile');
     let companyName = 'Freelancer';
     if (userProfileString) {
@@ -837,9 +833,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.showSuccessPopup('Job post saved. Proceeding to assessment setup.');
         this.workflowService.startWorkflow(response.unique_id);
         this.spinner.hide('main-spinner');
-        setTimeout(() => {
-          this.router.navigate(['/admin-create-job-step2']);
-        }, 3000);
+        // ✅ Navigate immediately after storing workflow
+        this.router.navigate(['/admin-create-job-step2']);
       },
       error: (error) => {
         this.isSubmitting = false;

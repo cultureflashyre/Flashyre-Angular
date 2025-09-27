@@ -1,12 +1,11 @@
 // src/app/pages/admin-create-job-step4/admin-create-job-step4.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { AdminJobDescriptionService } from '../../services/admin-job-description.service'; // ← NEW SERVICE
-
 
 @Component({
   selector: 'admin-create-job-step4',
@@ -22,6 +21,9 @@ export class AdminCreateJobStep4Component implements OnInit {
   minDateString: string; // For HTML5 date input
   // MODIFICATION: Add a new property to control the popup's visibility
   showSuccessPopup = false;
+  // --- NEW: Dropdown State ---
+  showDropdown = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -29,6 +31,7 @@ export class AdminCreateJobStep4Component implements OnInit {
     private authService: CorporateAuthService,
     private jobDescriptionService: AdminJobDescriptionService // ← ADMIN SERVICE
   ) {}
+
   ngOnInit(): void {
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     if (!this.jobUniqueId) {
@@ -45,10 +48,12 @@ export class AdminCreateJobStep4Component implements OnInit {
     this.addStage(); // Start with one default stage
     this.isLoading = false;
   }
+
   // Getter for easy access to the FormArray in the template
   get stages(): FormArray {
     return this.interviewForm.get('stages') as FormArray;
   }
+
   // Creates a FormGroup for a single interview stage row
   private createStageGroup(): FormGroup {
     const stageGroup = this.fb.group({
@@ -70,10 +75,12 @@ export class AdminCreateJobStep4Component implements OnInit {
     });
     return stageGroup;
   }
+
   // Adds a new stage to the FormArray
   addStage(): void {
     this.stages.push(this.createStageGroup());
   }
+
   // Removes a stage from the FormArray at a specific index
   removeStage(index: number): void {
     if (this.stages.length > 1) { // Prevent removing the last stage
@@ -82,6 +89,7 @@ export class AdminCreateJobStep4Component implements OnInit {
       alert('You must have at least one interview stage.');
     }
   }
+
   validateDateInput(event: Event, stageControl: AbstractControl) {
     const inputElement = event.target as HTMLInputElement;
     const dateControl = stageControl.get('stage_date');
@@ -99,6 +107,25 @@ export class AdminCreateJobStep4Component implements OnInit {
       dateControl.updateValueAndValidity(); // Re-run other validators like 'required'
     }
   }
+
+  // --- NEW: Dropdown Toggle Method ---
+  toggleDropdown(): void {
+    // Only allow toggling if the main button is enabled
+    if (!(this.isSubmitting || this.interviewForm.invalid)) {
+      this.showDropdown = !this.showDropdown;
+    }
+  }
+
+  // --- NEW: Close Dropdown on Outside Click (Optional but recommended) ---
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    // Close dropdown if clicked outside the dropdown container
+    if (!target.closest('.admin-create-job-step4-dropdown-container')) {
+      this.showDropdown = false;
+    }
+  }
+
   // Footer Event Handlers
   onCancel(): void {
     // Navigate back to dashboard or show confirmation dialog
@@ -107,14 +134,17 @@ export class AdminCreateJobStep4Component implements OnInit {
       this.router.navigate(['/admin-page1']);
     }
   }
+
   onPrevious(): void {
     // Navigate to the previous step in the job creation workflow
     this.router.navigate(['/admin-create-job-step3']);
   }
+
   onSaveDraft(): void {
     // Since you don't want draft functionality, we'll show a message
     alert('Draft functionality is not available. Please complete the form and click Next.');
   }
+
   onSkip(): void {
     // Skip the interview process and complete job creation
     if (confirm('Are you sure you want to skip the interview process? You can add it later.')) {
@@ -123,11 +153,19 @@ export class AdminCreateJobStep4Component implements OnInit {
       this.router.navigate(['/admin-page1']);
     }
   }
-  onNext(): void {
-    // This will be the same as your current onSubmit logic
-    this.onSubmit();
-  }
+
+  // --- MODIFIED: onSubmit now calls the specific save method ---
   onSubmit(): void {
+    // This can now be an alias or removed if you directly call the specific methods from the dropdown
+    // For safety, let's keep it calling the save method
+    this.onSaveJobAndAssessment();
+  }
+
+  // --- NEW: Specific method for saving job and assessment ---
+  onSaveJobAndAssessment(): void {
+    // Close the dropdown first
+    this.showDropdown = false;
+
     if (this.interviewForm.invalid) {
       alert('Please fill all required fields correctly.');
       this.interviewForm.markAllAsTouched();
@@ -147,6 +185,7 @@ export class AdminCreateJobStep4Component implements OnInit {
       user_id: localStorage.getItem('user_id')
     }));
     console.log("payload: ", payload);
+
     // MODIFICATION: Call the interview app's finalize endpoint (same as corporate)
     this.jobDescriptionService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
       next: () => {
@@ -156,7 +195,7 @@ export class AdminCreateJobStep4Component implements OnInit {
           this.workflowService.clearWorkflow();
           this.router.navigate(['/admin-page1']);
           // Optional: hide the popup right before navigation
-          this.showSuccessPopup = false; 
+          this.showSuccessPopup = false;
         }, 5000); // 5000 milliseconds = 5 seconds
         // isSubmitting can be set to false immediately or after the timeout
         this.isSubmitting = false;
@@ -167,5 +206,13 @@ export class AdminCreateJobStep4Component implements OnInit {
       }
     });
   }
-  
+
+  // --- NEW: Method for navigating to the view score page ---
+  onViewScore(): void {
+    // Close the dropdown first
+    this.showDropdown = false;
+
+    // Navigate to the new scores page
+    this.router.navigate(['/admin-candidate-scores']); // Use the path you defined for the new page
+  }
 }

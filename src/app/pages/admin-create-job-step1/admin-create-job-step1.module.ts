@@ -25,8 +25,8 @@ const routes = [
     MatSnackBarModule,
     HttpClientModule,
     ComponentsModule,
-    RouterModule,
-    NgxSpinnerModule // Importing NgxSpinnerModule for loading spinner functionality
+    RouterModule.forChild(routes), // ← CRITICAL FIX: Changed from RouterModule to RouterModule.forChild(routes)
+    NgxSpinnerModule
   ],
   exports: [AdminCreateJobStep1Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
