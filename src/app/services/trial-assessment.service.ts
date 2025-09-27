@@ -120,10 +120,10 @@ export class TrialAssessmentService {
   }
 
     runCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post('http://localhost:8000/api/' + 'run', data);
+    return this.http.post(`${environment.apiUrl}/api/run`, data);
   }
 
   submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post('http://localhost:8000/api/' + 'submissions', data);
+    return this.http.post(`${environment.apiUrl}/api/submissions`, data);
   }
 }

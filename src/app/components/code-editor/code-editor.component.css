@@ -11,6 +11,7 @@
     resize: vertical;
     overflow-y: auto;
     transition: box-shadow 0.2s ease;
+    height: 490px;
 }
 
 .editor-container:hover {
@@ -20,11 +21,12 @@
 /* Form group for language selector */
 .form-group {
     background: #f3f4f6;
-    padding: 1.25rem 1.75rem;
+    padding: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #e5e7eb;
+    height: 48px;
 }
 
 /* Label with consistent typography */
