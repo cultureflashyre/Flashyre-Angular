@@ -115,6 +115,9 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   ngOnInit(): void {
     this.initializeForm();
 
+    // THIS IS THE KEY: Get the job ID from the workflow service
+    this.jobUniqueId = this.workflowService.getCurrentJobId();
+
     // MODIFICATION: Get the current job ID from the workflow service
     // This replaces the @Input for jobUniqueId if workflow is the primary source
     // If jobUniqueId is still passed as input, this will override it.
@@ -129,16 +132,87 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     if (!this.jobUniqueId) {
       this.showErrorPopup('Error: Job context is missing.');
       this.isLoading = false;
+      this.router.navigate(['/create-job-post-1st-page']); // Go back if no job ID
       return;
     }
 
-    // MODIFICATION: Conditional logic to either load existing data or fetch new data
-    if (this.currentAssessmentId) {
-      this.loadExistingAssessment(this.currentAssessmentId);
-    } else {
-      this.fetchNewMcqList(); // This calls the original fetchMcqData logic
-    }
+    // NEW LOGIC: Check if an assessment already exists for this job.
+    // If we have an ID from the workflow, we use it. Otherwise, we can have a check.
+    // For simplicity, we'll assume for now that if an assessment exists, we need to load it.
+    // A more robust solution might involve checking on the backend.
+    this.loadExistingAssessmentAndAllQuestions();
+  
+}
+
+// CREATE a new method to orchestrate loading
+  private loadExistingAssessmentAndAllQuestions(): void {
+    this.isLoading = true;
+    const token = this.authService.getJWTToken();
+    if (!token) { /* handle error */ return; }
+
+    // 1. Fetch ALL available questions for the job post
+    this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
+      next: (mcqResponse) => {
+        const skillData = mcqResponse.data;
+        this.skillSections = Object.keys(skillData).map(skillName => {
+            const questions = this.processMcqItems(skillData[skillName].mcq_items);
+            return {
+              skillName, questions, totalCount: questions.length,
+              selectedCount: 0, isAllSelected: false,
+            };
+        });
+
+        // 2. NOW, try to fetch the details of a SAVED assessment
+        this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token).subscribe({
+            next: (assessmentDetails) => {
+                if (assessmentDetails) { // Check if an assessment was found
+                    this.currentAssessmentId = assessmentDetails.assessment_uuid;
+                    this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+
+                    // Populate form fields
+                    this.assessmentForm.patchValue({
+                        assessmentName: assessmentDetails.name,
+                        shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+                        isProctored: assessmentDetails.is_proctored,
+                        allowPhoneAccess: assessmentDetails.allow_phone_access,
+                        allowVideoRecording: assessmentDetails.has_video_recording,
+                        difficulty: assessmentDetails.difficulty,
+                        timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+                    });
+
+                    // Pre-select the questions
+                    const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
+                    this.skillSections.forEach(section => {
+                        section.questions.forEach(q => {
+                            if (selectedIds.has(q.mcq_item_id)) {
+                                q.isSelected = true;
+                            }
+                        });
+                        this.updateCountsForSection(section);
+                    });
+                    this.updateCounts();
+                }
+                this.isLoading = false;
+                setTimeout(() => {
+                  this.calculateCarouselState();
+                  this.updateSliderFill();
+                }, 0);
+            },
+            error: (err) => {
+              // This is not a critical error; it just means no assessment exists yet.
+              console.warn("No existing assessment found for this job, starting fresh.", err);
+              this.isLoading = false;
+              setTimeout(() => this.calculateCarouselState(), 0);
+            }
+        }));
+      },
+      error: (err) => {
+        this.showErrorPopup(`Failed to load base questions: ${err.message}`);
+        this.isLoading = false;
+      }
+    }));
   }
+  
 
   /**
    * Lifecycle hook called after the component's view has been fully initialized 

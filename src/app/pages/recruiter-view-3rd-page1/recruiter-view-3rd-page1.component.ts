@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { RecruiterDataService, JobPost } from '../../services/recruiter-data.service';
 import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
+import { JobCreationWorkflowService } from 'src/app/services/job-creation-workflow.service';
 
 @Component({
   selector: 'recruiter-view3rd-page1',
@@ -39,6 +40,7 @@ export class RecruiterView3rdPage1 implements OnInit {
     private meta: Meta,
     private recruiterService: RecruiterDataService,
     private router: Router,
+    private workflowService: JobCreationWorkflowService,
     private corporateAuthService: CorporateAuthService,
   ) {
     this.title.setTitle('Recruiter-View-3rd-Page1 - Flashyre');
@@ -207,7 +209,10 @@ export class RecruiterView3rdPage1 implements OnInit {
   }
   
   editJob(job: JobPost): void {
-    // This change passes the job's unique_id as a parameter in the URL.
+    // 3. MODIFY THIS METHOD
+    // This starts the edit workflow and stores the job ID and edit flag
+    this.workflowService.startEditWorkflow(job.unique_id);
+    // This navigation is now more powerful because the workflow service holds the state
     this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
   }
 

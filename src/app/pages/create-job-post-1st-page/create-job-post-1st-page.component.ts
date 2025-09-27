@@ -948,17 +948,27 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
         this.spinner.hide('main-spinner');
         this.showSuccessPopup(this.isEditMode ? 'Job post updated successfully.' : 'Job post saved. Proceeding to assessment setup.');
         
-        // If coming from Recruiter View, stay on that page (or go back)
-        // If it was a new job or from workflow, proceed to next step
-        if (this.isEditMode) {
-          setTimeout(() => {
-            this.router.navigate(['/recruiter-view-3rd-page1']); // Go back to the recruiter jobs list
-          }, 2000);
+        if (this.workflowService.getIsEditMode()) {
+            // In edit mode, we proceed to the next step.
+            // We also ensure the workflow knows the job ID.
+            this.workflowService.startEditWorkflow(response.unique_id);
+            setTimeout(() => {
+              this.router.navigate(['/create-job-post-21-page']);
+            }, 2000); // Wait for popup
         } else {
-          this.workflowService.startWorkflow(response.unique_id);
-          setTimeout(() => {
-            this.router.navigate(['/create-job-post-21-page']);
-          }, 2000);
+            // This is the original logic for creating a new job or saving a draft outside the full edit flow
+            if (this.isEditMode) {
+              // This case now handles saving a draft and exiting
+              setTimeout(() => {
+                this.router.navigate(['/recruiter-view-3rd-page1']);
+              }, 2000);
+            } else {
+              // This is for a brand new post
+              this.workflowService.startWorkflow(response.unique_id);
+              setTimeout(() => {
+                this.router.navigate(['/create-job-post-21-page']);
+              }, 2000);
+            }
         }
       },
       error: (error) => {
