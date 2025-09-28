@@ -5,6 +5,7 @@ export interface Skill {
   type_confidence: number;
 }
 export interface JobDetails {
+  id: number; 
   unique_id: string;
   job_description_url: string;
   role: string;

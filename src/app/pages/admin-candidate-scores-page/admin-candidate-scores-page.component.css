@@ -11,24 +11,29 @@
   align-items: center;
   padding: 24px;
   box-sizing: border-box;
-  background-color: #f4f4f4; /* Match your app's background */
+  background-color: #f4f4f4; /* Match existing background */
 }
 
 .admin-candidate-scores-page-header {
   width: 100%;
-  max-width: 1200px; /* Or match other pages */
+  max-width: 1200px; /* Match existing max-width */
   margin-bottom: 24px;
   text-align: left;
 }
 
 .admin-candidate-scores-page-header h2 {
   margin: 0;
-  color: #05356c; /* Match your theme */
+  color: #05356c; /* Match existing theme */
   font-size: 1.5rem;
 }
 
-.back-button {
-  background-color: #05356c;
+.job-id-display {
+  font-size: 1rem;
+  color: #666;
+}
+
+.admin-candidate-scores-page-back-button.button {
+  background-color: #05356c; /* Match existing button color */
   color: white;
   border: none;
   padding: 8px 16px;
@@ -38,12 +43,80 @@
   font-size: 14px;
 }
 
-.back-button:hover {
-  background-color: #042a5a;
+.admin-candidate-scores-page-back-button.button:hover {
+  background-color: #042a5a; /* Match existing hover color */
 }
 
 .admin-candidate-scores-page-content {
   width: 100%;
-  max-width: 1200px; /* Match other pages */
+  max-width: 1200px; /* Match existing max-width */
   flex-grow: 1;
+}
+
+.candidate-list {
+  margin-top: 24px;
+}
+
+.candidate-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white; /* Contrast with background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.candidate-table th,
+.candidate-table td {
+  border: 1px solid #ddd; /* Light border for table cells */
+  padding: 12px; /* Slightly more padding for readability */
+  text-align: left;
+  font-size: 14px;
+}
+
+.candidate-table th {
+  background-color: #05356c; /* Match theme color */
+  color: white; /* White text for contrast */
+  font-weight: bold;
+}
+
+.candidate-table td {
+  color: #333; /* Dark text for readability */
+}
+
+.candidate-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Alternating row color */
+}
+
+.candidate-table tr:hover {
+  background-color: #f1f1f1; /* Hover effect */
+}
+
+.loading-container {
+  text-align: center;
+  padding: 24px;
+  color: #05356c; /* Match theme */
+  font-size: 16px;
+}
+
+.error-container {
+  text-align: center;
+  padding: 24px;
+}
+
+.error-message {
+  color: #d32f2f; /* Red for errors */
+  font-size: 16px;
+}
+
+.no-candidates {
+  text-align: center;
+  padding: 24px;
+  color: #666; /* Subtle color for no data */
+  font-size: 16px;
+}
+
+.admin-candidate-scores-page-no-job-message {
+  text-align: center;
+  padding: 24px;
+  color: #d32f2f; /* Match error color */
+  font-size: 16px;
 }

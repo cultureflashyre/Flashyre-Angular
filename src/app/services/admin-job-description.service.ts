@@ -233,6 +233,24 @@ export class AdminJobDescriptionService {
       );
   }
 
+  /**
+   * Fetches sourced candidates for a job and their AI-calculated matching scores.
+   * @param jobUniqueId The unique ID of the job post.
+   * @param token JWT token for authentication.
+   * @returns Observable of the scored candidate list.
+   */
+  getSourcedCandidatesWithScores(jobUniqueId: string, token: string, sortBy: string = 'score_desc'): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    // ✅ Call the NEW endpoint in admin_job_post
+    return this.http.get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/sourced-candidates-with-scores/?sort_by=${sortBy}`, { headers })
+      .pipe(
+        map(response => response),
+        catchError(this.handleError)
+      );
+  }
+
   // --- Error Handling ---
 
   private handleError(error: HttpErrorResponse) {
@@ -246,4 +264,5 @@ export class AdminJobDescriptionService {
     }
     return throwError(() => new Error(errorMessage));
   }
+  
 }

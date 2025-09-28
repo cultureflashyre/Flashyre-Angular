@@ -1,8 +1,5 @@
 <!-- src/app/pages/admin-candidate-scores-page/admin-candidate-scores-page.component.html -->
-
 <div class="admin-candidate-scores-page-container">
-  <!-- Admin Navbar -->
-
   <!-- Page Header -->
   <div class="admin-candidate-scores-page-header">
     <button (click)="onBackToJobSetup()" class="admin-candidate-scores-page-back-button button">
@@ -14,22 +11,58 @@
     </h2>
   </div>
 
-  <!-- Main Content Area: Displays the candidate scores using the existing component -->
+  <!-- Main Content Area: Displays candidate scores -->
   <div class="admin-candidate-scores-page-content">
-    <admin-candidate-sourced-component
-      [jobId]="jobUniqueId" 
-      [filterByDate]="'all'" 
-      [rootClassName]="'admin-candidate-sourced-component-on-scores-page'"
-      *ngIf="jobUniqueId"
-    ></admin-candidate-sourced-component>
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <p>Loading candidates...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error && !loading" class="error-container">
+      <p class="error-message">{{ error }}</p>
+    </div>
+
+    <!-- Candidate List -->
+    <div *ngIf="!loading && !error && candidates.length > 0" class="candidate-list">
+      <table class="candidate-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Score</th>
+            <th>Total Experience</th>
+            <th>Relevant Experience</th>
+            <th>Location</th>
+            <th>Skills</th>
+            <th>Education</th>
+            <th>Certification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let candidate of candidates">
+            <td>{{ candidate.name || 'N/A' }}</td>
+            <td>{{ candidate.email || 'N/A' }}</td>
+            <td>{{ candidate.score }}%</td>
+            <td>{{ candidate.details.total_experience || 'N/A' }}</td>
+            <td>{{ candidate.details.relevant_experience || 'N/A' }}</td>
+            <td>{{ candidate.details.location || 'N/A' }}</td>
+            <td>{{ candidate.details.skills?.length ? candidate.details.skills.join(', ') : 'N/A' }}</td>
+            <td>{{ candidate.details.education || 'N/A' }}</td>
+            <td>{{ candidate.details.certification || 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No Candidates Message -->
+    <div *ngIf="!loading && !error && candidates.length === 0" class="no-candidates">
+      <p>No candidates found for this job.</p>
+    </div>
 
     <!-- Fallback message if no job ID is found -->
     <div *ngIf="!jobUniqueId" class="admin-candidate-scores-page-no-job-message">
       <p>No active job creation flow found. Please start the process again.</p>
     </div>
   </div>
-
-  <!-- Optional: Footer if needed -->
-  <!-- <create-job-post-footer2 ... ></create-job-post-footer2> -->
-
 </div>
