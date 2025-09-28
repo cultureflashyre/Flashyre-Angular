@@ -264,5 +264,20 @@ export class AdminJobDescriptionService {
     }
     return throwError(() => new Error(errorMessage));
   }
+
+  // For selected candidates
+exportSelectedCandidatesCSV(jobId: string, candidateIds: string[], token: string): Observable<Blob> {
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+  
+  return this.http.post(`${this.baseUrl}/job-post/${jobId}/export-candidates-csv/`, 
+    { candidate_ids: candidateIds }, 
+    { headers, responseType: 'blob' }
+  );
+}
+
+
   
 }
