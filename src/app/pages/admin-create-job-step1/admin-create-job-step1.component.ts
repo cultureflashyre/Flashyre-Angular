@@ -20,6 +20,7 @@ import { environment } from '../../../environments/environment'; // ✅ ADDED
   styleUrls: ['./admin-create-job-step1.component.css']
 })
 export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDestroy {
+  userProfile: any = {};
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
   private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik';
@@ -906,5 +907,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
   onLogoutClick() {
     this.corporateAuthService.logout();
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) this.userProfile = JSON.parse(profileData);
   }
 }

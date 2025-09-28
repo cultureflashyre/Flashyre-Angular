@@ -39,6 +39,7 @@ interface SkillSection {
   styleUrls: ['admin-create-job-step3.component.css'],
 })
 export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
+  userProfile: any = {};
   // Input property for the unique job identifier
   @Input() jobUniqueId: string;
   @Input() rootClassName: string = '';
@@ -662,5 +663,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    */
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) this.userProfile = JSON.parse(profileData);
   }
 }

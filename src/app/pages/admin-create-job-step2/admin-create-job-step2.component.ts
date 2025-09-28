@@ -14,6 +14,7 @@ import { AdminJobCreationWorkflowService } from '../../services/admin-job-creati
   styleUrls: ['admin-create-job-step2.component.css'],
 })
 export class AdminCreateJobStep2 implements OnInit, OnDestroy {
+  userProfile: any = {};
   jobUniqueId: string | null = null;
   isGenerating: boolean = false;
   hasGenerated: boolean = false;
@@ -193,5 +194,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) this.userProfile = JSON.parse(profileData);
   }
 }
