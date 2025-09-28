@@ -1,15 +1,17 @@
+
 /* src/app/pages/admin-create-job-step3/admin-create-job-step3.component.css */
 
+/* Host selector to ensure the component doesn't add extra styling boundaries */
 :host { 
   display: contents; 
 }
 
+/* Spacing for AI marker emoji next to question text */
 .ai-marker {
-  /* Adds a little space between the emoji and the question text */
   margin-right: 4px; 
 }
- 
-/* MODIFIED: Renamed from .admin-create-job-step3-container to match HTML */
+
+/* Main form container, ensuring full width and height with centered content */
 .admin-create-job-step3-container10 {
   width: 100%;
   display: flex;
@@ -17,313 +19,784 @@
   align-items: center;
   flex-direction: column;
 }
- 
-/* MODIFIED: Renamed from .admin-create-job-step3-create-job-post22-page-main-container to match HTML */
+
+/* Primary content wrapper, set to flex row for two-column layout */
 .admin-create-job-step3-create-job-post22-main-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 1440px;
-  height: 1070px;
-  display: flex;
-  align-self: center;
-  align-items: center;
-  flex-direction: column;
-  padding-bottom: 24px;
-}
- 
-.admin-create-job-step3-fragment10 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text10 {
-  color: rgb(255, 255, 255);
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment11 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text11 {
-  color: rgb(5, 53, 108);
-  display: inline-block;
-  font-style: normal;
-  font-weight: 600;
-  background-color: rgb(255, 255, 255);
-}
- 
-.admin-create-job-step3-fragment12 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text12 {
-  color: rgb(5, 53, 108);
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment13 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text13 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment14 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text14 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment15 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text15 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment16 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text16 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment17 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text17 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment18 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text18 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment19 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text19 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment20 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text20 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment21 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text21 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment22 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text22 {
-  color: #ffffff;
-  display: inline-block;
-  font-size: 12px;
-}
- 
-.admin-create-job-step3-fragment23 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text23 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment24 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text24 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment25 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text25 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment26 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text26 {
-  display: inline-block;
-}
- 
-.admin-create-job-step3-fragment27 {
-  display: contents;
-}
- 
-.admin-create-job-step3-text30 {
-  color: #ffffff;
-  display: inline-block;
-  font-size: 12px;
-}
- 
-.admin-create-job-step3-create-job-post-details-main-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 1124px;
-  height: 949px;
-  display: flex;
-  padding: 24px;
-  align-self: center;
-  align-items: flex-start;
-  border-radius: 8px;
-  flex-direction: column;
-  background-color: #FFFFFF;
-}
- 
-.admin-create-job-step3-create-job-post-details-container {
-  gap: 24px;
-  flex: 0 0 auto;
-  width: 1076px;
-  height: 837px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
- 
-.admin-create-job-step3-create-job-post-container {
-  gap: 16px;
+  display: flex; /* Enable flexbox for layout */
+  flex-direction: row; /* Arrange children side by side */
+  flex-wrap: wrap; /* Allow wrapping for footer to go below */
+  gap: 24px; /* Space between columns */
   flex: 0 0 auto;
   width: 100%;
-  height: 32px;
+  max-width: 1440px; /* Max width for large screens */
+  height: auto; /* Auto height to fit content */
+  align-self: center;
+  align-items: flex-start; /* Align tops of columns */
+  padding: 24px; /* Padding around content */
+  background-color: #ffffff; /* White background to match original container */
+  border-radius: 8px; /* Rounded corners like original */
+}
+
+/* Left column: Assessment settings */
+.admin-create-job-step3-assessment-additional-settings-main-container {
+  flex: 0 0 30%; /* Fixed basis for left column, approximately 1/3 width */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 16px; /* Space between sections */
+}
+
+/* Right column: Questions section */
+.admin-create-job-step3-questions-main-container1 {
+  flex: 1; /* Take remaining space for right column */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 16px; /* Space between sections */
+}
+
+/* Assume footer component takes full width on wrap */
+.create-job-post-footer2root-class-name2 {
+  flex: 0 0 100%; /* Full width for footer */
+  margin-top: 24px; /* Space above footer */
+}
+
+/* Container for assessment name input and label */
+.admin-create-job-step3-assessment-container {
+  gap: 8px; /* Space between label and input */
+  flex: 0 0 auto;
+  width: 100%;
   display: flex;
   align-items: flex-start;
+  flex-direction: column;
 }
- 
-/* MODIFIED: Renamed from .admin-create-job-step3-icon1 to match HTML */
+
+/* Label text for assessment name */
+.admin-create-job-step3-assessment-text {
+  font-size: 16px; /* Standard label size */
+  font-weight: 600; /* Bold for emphasis */
+  color: #18191c; /* Dark text color */
+}
+
+/* Input field for entering assessment name */
+.admin-create-job-step3-enter-name-input {
+  width: 100%; /* Full width */
+  padding: 12px; /* Internal padding */
+  border: 1px solid #d0d5dd; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 16px; /* Matching text size */
+}
+
+/* Error message styling for form fields */
+.field-error-message {
+  color: #f04438; /* Red for errors */
+  font-size: 12px; /* Small text */
+  margin-top: -4px; /* Close to input */
+}
+
+/* Container for additional settings, slider, and time limit - stacked vertically */
+.admin-create-job-step3-additional-settings-slide-bar-time-limit-container2 {
+  gap: 24px; /* Space between sections */
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Changed to column to stack checkboxes above slider/time */
+  align-items: flex-start;
+}
+
+/* Container for assessment options checkboxes */
+.admin-create-job-step3-additional-settings-container2 {
+  gap: 16px; /* Space between checkboxes */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Wrapper for options container */
+.admin-create-job-step3-container14 {
+  display: flex;
+  width: 100%;
+}
+
+/* Container holding all checkbox options */
+.admin-create-job-step3-assessment-options-container2 {
+  gap: 12px; /* Space between individual checkboxes */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container for shuffle questions checkbox */
+.admin-create-job-step3-shuffle-questions-container2 {
+  gap: 8px; /* Space between checkbox and label */
+  display: flex;
+  align-items: center;
+}
+
+/* Checkbox for shuffle questions */
+.admin-create-job-step3-shuffle-questions-checkbox2 {
+  width: 16px; /* Standard checkbox size */
+  height: 16px;
+}
+
+/* Label for shuffle questions */
+.admin-create-job-step3-shuffle-questions-text2 {
+  font-size: 14px; /* Smaller text for options */
+  color: #475467; /* Gray text */
+  cursor: pointer; /* Hand cursor on hover */
+}
+
+/* Container for proctored checkbox with tooltip support */
+.admin-create-job-step3-proctored-container2 {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Checkbox for proctored mode */
+.admin-create-job-step3-proctored-checkbox2 {
+  width: 16px;
+  height: 16px;
+}
+
+/* Label for proctored */
+.admin-create-job-step3-proctored-text2 {
+  font-size: 14px;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Info icon for tooltip */
 .admin-create-job-step3-info-icon2 {
-  width: 24px;
-  height: 24px;
-  align-self: center;
+  width: 16px;
+  height: 16px;
+  color: #667085; /* Light gray */
+  cursor: help; /* Question mark cursor */
 }
- 
-.admin-create-job-step3-create-job-post-text {
-  height: 100%;
+
+/* Container for allow phone access checkbox */
+.admin-create-job-step3-allow-phone-access-container2 {
+  gap: 8px;
   display: flex;
-  font-size: 24px;
-  align-self: center;
-  font-style: normal;
   align-items: center;
-  font-weight: 600;
 }
- 
-/* MODIFIED: Renamed from .admin-create-job-step3-progress-bar-assessment-questions-main-container to match HTML */
-.admin-create-job-step3-questions-main-container2 {
-  gap: 40px;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 781px;
+
+/* Checkbox for phone access */
+.admin-create-job-step3-phone-access-checkbox2 {
+  width: 16px;
+  height: 16px;
+}
+
+/* Label for phone access */
+.admin-create-job-step3-allow-phone-access-text2 {
+  font-size: 14px;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Container for video recording checkbox */
+.admin-create-job-step3-video-recording-container2 {
+  gap: 8px;
   display: flex;
-  align-self: center;
   align-items: center;
+}
+
+/* Checkbox for video recording */
+.admin-create-job-step3-video-recorder-checkbox2 {
+  width: 16px;
+  height: 16px;
+}
+
+/* Label for video recording */
+.admin-create-job-step3-allow-video-recording-text2 {
+  font-size: 14px;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Main container for difficulty slider */
+.admin-create-job-step3-slide-bar-main-container2 {
+  gap: 16px; /* Space between slider and time */
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
   flex-direction: column;
 }
- 
-/* NOTE: The following 'fragment' and 'text' classes are likely unused based on the provided HTML. */
-/* They are left here to prevent unintended side effects if used elsewhere, but should be reviewed for cleanup. */
-.admin-create-job-step3-fragment28 {
-  display: contents;
+
+/* Container for the slider itself */
+.admin-create-job-step3-slide-bar-container2 {
+  gap: 8px; /* Space between text and slider */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.admin-create-job-step3-text31 {
+
+/* Text for difficulty level */
+.admin-create-job-step3-difficulty-level-text2 {
+  font-size: 14px;
+  font-weight: 500; /* Semi-bold */
+  color: #344054; /* Dark gray */
+}
+
+/* Container for slider and labels */
+.slider-container-angular {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Small space */
+}
+
+/* Labels for easy/hard */
+.slider-labels {
+  display: flex;
+  justify-content: space-between; /* Spread labels */
+  font-size: 12px;
+  color: #667085; /* Light gray */
+}
+
+/* Input range for difficulty */
+.difficulty-slider-input {
+  width: 100%;
+  accent-color: #41327b; /* Purple thumb and track */
+}
+
+/* Container for time limit input */
+.admin-create-job-step3-time-limit-container2 {
+  gap: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label for time limit */
+.admin-create-job-step3-time-limit-text2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+/* Input for time limit */
+.admin-create-job-step3-time-input2 {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Container for questions header with buttons */
+.admin-create-job-step3-questions-ai-upload-button-container {
+  gap: 16px;
+  display: flex;
+  justify-content: space-between; /* Spread elements */
+  align-items: center;
+}
+
+/* Container for questions count */
+.admin-create-job-step3-questions-score-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between text */
+}
+
+/* Text for 'Questions' */
+.admin-create-job-step3-questions-text1 {
+  font-size: 20px; /* Larger heading */
+  font-weight: 600;
+  color: #18191c;
+}
+
+/* Text for selected count */
+.admin-create-job-step3-selected-text {
+  font-size: 14px;
+  color: #667085;
+}
+
+/* Wrapper for buttons */
+.admin-create-job-step3-container17 {
+  display: flex;
+  gap: 16px; /* Space between buttons */
+}
+
+/* Button for adding AI questions */
+.admin-create-job-step3-add-questions-with-ai-button {
+  padding: 10px 16px; /* Padding for button */
+  background-color: #41327b; /* Purple background */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 20px; /* More rounded to match image */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth hover */
+}
+
+/* Hover state for AI button */
+.admin-create-job-step3-add-questions-with-ai-button:hover {
+  background-color: #33215f; /* Darker purple */
+}
+
+/* Text inside AI button */
+.admin-create-job-step3-add-questions-with-ai-text {
   display: inline-block;
 }
-.admin-create-job-step3-fragment29 {
-  display: contents;
+
+/* Disabled state for AI button */
+.admin-create-job-step3-add-questions-with-ai-button[disabled] {
+  background-color: #d0d5dd; /* Gray */
+  cursor: not-allowed;
 }
-.admin-create-job-step3-text32 {
+
+/* Container for upload button */
+.admin-create-job-step3-upload-file-button-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+  padding: 10px 16px;
+  background-color: #41327b; /* Purple to match image */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 20px; /* More rounded */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Hover state for upload */
+.admin-create-job-step3-upload-file-button-container:hover {
+  background-color: #33215f; /* Darker purple */
+}
+
+/* Icon for upload */
+.admin-create-job-step3-upload-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Text for upload */
+.admin-create-job-step3-upload-text {
   display: inline-block;
 }
-/* ... (remaining unused fragment and text classes) ... */
-.admin-create-job-step3-fragment66 {
-  display: contents;
+
+/* Disabled state for upload */
+.admin-create-job-step3-upload-file-button-container.disabled {
+  opacity: 0.5; /* Faded */
+  cursor: not-allowed;
 }
-.admin-create-job-step3-text69 {
+
+/* Main container for AI generated and uploaded tabs */
+.admin-create-job-step3-ai-generated-uploaded-questions-main-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d0d5dd; /* Border around section */
+  border-radius: 8px;
+  overflow: hidden; /* Clip content */
+  height: 700px; /* Fixed height to enable scrolling in questions */
+}
+
+/* Container for tabs */
+.admin-create-job-step3-ai-generated-uploaded-container {
+  display: flex;
+  border-bottom: 1px solid #d0d5dd; /* Bottom separator */
+}
+
+/* AI generated tab */
+.admin-create-job-step3-ai-generated-container {
+  padding: 12px 24px; /* Padding for tab */
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+  cursor: pointer;
+}
+
+/* Active tab style */
+.active-tab {
+  border-bottom: 2px solid #41327b; /* Purple underline */
+  color: #41327b; /* Purple text */
+}
+
+/* Text for AI generated */
+.admin-create-job-step3-ai-generated-text {
   display: inline-block;
 }
- 
+
+/* Uploaded tab */
+.admin-create-job-step3-uploaded-container {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #667085; /* Inactive gray */
+  cursor: pointer;
+}
+
+/* Text for uploaded */
+.admin-create-job-step3-uploaded-text {
+  display: inline-block;
+}
+
+/* Main container for language/skill tabs and questions */
+.admin-create-job-step3-language-questions-main-container {
+  padding: 16px; /* Internal padding */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: calc(100% - 48px); /* Adjust for tab height */
+  overflow: hidden; /* Prevent overflow here */
+}
+
+/* Container for skill carousel */
+.admin-create-job-step3-languages-main-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between arrows and track */
+}
+
+/* Arrow container for navigation */
+.arrow-container {
+  padding: 8px;
+  border-radius: 50%; /* Circle */
+  background-color: #f2f4f7; /* Light background */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Shadow for arrows */
+.left-arrow-shadow, .right-arrow-shadow {
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1); /* Subtle shadow */
+}
+
+/* Disabled arrow */
+.arrow-container.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Icon for navigation arrows */
+.nav-arrow-icon {
+  width: 20px;
+  height: 20px;
+  color: #475467; /* Gray */
+}
+
+/* Viewport for skill tabs */
+.admin-create-job-step3-container18 {
+  overflow: hidden; /* Hide overflow for scroll */
+  flex: 1;
+}
+
+/* Track for scrolling skills */
+.skill-scroll-track {
+  display: flex; /* Horizontal layout */
+  transition: transform 0.3s ease-in-out; /* Smooth scroll */
+}
+
+/* Individual skill tab */
+.admin-create-job-step3-language-tab {
+  padding: 8px 16px;
+  border-radius: 20px; /* Pill shape */
+  background-color: #f2f4f7;
+  margin-right: 8px; /* Space between tabs */
+  cursor: pointer;
+  white-space: nowrap; /* No wrap */
+  font-size: 14px;
+  color: #475467;
+  transition: background-color 0.3s;
+}
+
+/* Active skill tab */
+.admin-create-job-step3-language-tab.active-section {
+  background-color: #e4e1f7; /* Light purple */
+  font-weight: 600;
+  color: #41327b; /* Purple text */
+}
+
+/* Name in skill tab */
+.skill-tab-name {
+  font-weight: 500;
+}
+
+/* Count in skill tab */
+.skill-tab-count {
+  font-weight: 400;
+  color: #667085;
+}
+
+/* Container for select all checkbox */
+.admin-create-job-step3-select-all-container {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* Container for select all checkbox */
+.admin-create-job-step3-check-box-container {
+  display: flex;
+}
+
+/* Checkbox icon for select all */
+.admin-create-job-step3-checkbox-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Text for select all */
+.admin-create-job-step3-select-all-text {
+  font-size: 14px;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Main container for listing questions */
+.admin-create-job-step3-questions-main-container2 {
+  gap: 16px; /* Space between questions */
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Stack questions */
+  overflow-y: auto; /* Enable scrolling for MCQs */
+  padding-right: 8px; /* Space for scrollbar */
+  box-sizing: border-box; /* Include padding in height */
+}
+
+/* Individual question container */
+.admin-create-job-step3-questions-container {
+  gap: 16px;
+  width: 100%;
+  display: flex;
+  padding: 16px; /* Internal padding */
+  border: 1px solid #e4e7ec; /* Light border */
+  border-radius: 8px;
+  align-items: flex-start;
+  justify-content: space-between; /* Spread content */
+}
+
+/* Wrapper for checkbox and question content */
+.admin-create-job-step3-container19 {
+  flex: 1;
+  display: flex;
+  gap: 12px; /* Space between checkbox and text */
+}
+
+/* Container for question checkbox */
+.admin-create-job-step3-questions-checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 4px; /* Align with text */
+}
+
+/* Checkbox for question selection */
+.admin-create-job-step3-questions-checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+/* Container for question text and options */
+.admin-create-job-step3-question1-container {
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Question text label */
+.admin-create-job-step3-questions-text2 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #18191c;
+  cursor: pointer;
+}
+
+/* Container for options */
+.admin-create-job-step3-options-container {
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Individual option container */
+.admin-create-job-step3-option1-container {
+  gap: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Radio icon for options (disabled) */
+.admin-create-job-step3-radio-icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+}
+
+/* Wrapper for option text */
+.option-text-wrapper {
+  flex: 1;
+}
+
+/* Text for option */
+.admin-create-job-step3-option1-text {
+  font-size: 14px;
+  color: #475467;
+  cursor: default;
+}
+
+/* Container for marks and level */
+.admin-create-job-step3-marks-container {
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align to right */
+}
+
+/* Text for marks */
+.admin-create-job-step3-marks-text {
+  font-size: 14px;
+  color: #667085;
+}
+
+/* Container for level tag */
+.admin-create-job-step3-levels-container {
+  display: flex;
+}
+
+/* Level tag base style */
+.admin-create-job-step3-level-tag {
+  padding: 4px 12px;
+  border-radius: 16px; /* Pill shape */
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize; /* Capitalize difficulty */
+}
+
+/* Difficulty specific colors */
+.easy {
+  background-color: #d1fadf; /* Light green */
+  color: #027a48; /* Dark green */
+}
+
+.medium {
+  background-color: #fef3c7; /* Light yellow */
+  color: #b45309; /* Orange */
+}
+
+.hard {
+  background-color: #fee2e2; /* Light red */
+  color: #b91c1c; /* Red */
+}
+
+/* Message when no questions */
+.no-questions-message {
+  font-size: 14px;
+  color: #667085;
+  text-align: center;
+  padding: 16px;
+}
+
+/* Popup alert container */
+.alert {
+  position: relative; /* For close button positioning */
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Success popup style */
+.success {
+  background-color: #d1fadf;
+  color: #027a48;
+}
+
+/* Error popup style */
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Tick icon for success */
+.tick {
+  font-size: 18px;
+}
+
+/* Close button for popup */
+.closebtn {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  font-size: 20px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Loading container style */
+.loading-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #667085;
+}
+
+/* Media queries for responsiveness */
+
+/* For screens up to 1200px */
 @media(max-width: 1200px) {
-  /* MODIFIED: Renamed from .admin-create-job-step3-create-job-post22-page-main-container to match HTML */
   .admin-create-job-step3-create-job-post22-main-container {
-    width: 100%;
+    max-width: 100%; /* Full width */
+    padding: 16px; /* Reduced padding */
   }
 }
- 
+
+/* For screens up to 991px - switch to single column */
 @media(max-width: 991px) {
-  /* MODIFIED: Renamed from .admin-create-job-step3-create-job-post22-page-main-container to match HTML */
   .admin-create-job-step3-create-job-post22-main-container {
-    width: 100%;
+    flex-direction: column; /* Stack columns vertically */
+    align-items: center;
   }
-  .admin-create-job-step3-text11 {
-    color: rgb(5, 53, 108);
-    font-size: 14px;
+  .admin-create-job-step3-assessment-additional-settings-main-container {
+    flex: 0 0 auto; /* Reset flex */
+    width: 100%; /* Full width */
   }
-  .admin-create-job-step3-text12 {
-    color: rgb(5, 53, 108);
-    font-size: 14px;
+  .admin-create-job-step3-questions-main-container1 {
+    width: 100%; /* Full width */
   }
-  .admin-create-job-step3-create-job-post-details-main-container {
-    width: 100%;
+  .admin-create-job-step3-questions-ai-upload-button-container {
+    flex-direction: column; /* Stack buttons */
+    align-items: flex-start;
   }
-  .admin-create-job-step3-create-job-post-details-container {
-    width: 100%;
-  }
-  .admin-create-job-step3-create-job-post-text {
-    font-size: 22px;
+  .admin-create-job-step3-ai-generated-uploaded-questions-main-container {
+    height: auto; /* Disable fixed height on smaller screens */
   }
 }
- 
+
+/* For screens up to 767px */
 @media(max-width: 767px) {
-  .admin-create-job-step3-text10 {
-    fill: var(--dl-color-theme-primary1);
-    color: var(--dl-color-theme-primary1);
-  }
-  /* ... (other media query styles) ... */
-  .admin-create-job-step3-create-job-post-details-container {
-    height: auto;
-  }
-  .admin-create-job-step3-create-job-post-text {
-    font-size: 20px;
-  }
-  /* MODIFIED: Renamed from .admin-create-job-step3-progress-bar-assessment-questions-main-container to match HTML */
   .admin-create-job-step3-questions-main-container2 {
-    height: auto;
+    height: auto; /* Auto height */
+  }
+  .admin-create-job-step3-languages-main-container {
+    flex-wrap: wrap; /* Wrap if needed */
+  }
+  .admin-create-job-step3-questions-container {
+    flex-direction: column; /* Stack question elements */
+    align-items: flex-start;
+  }
+  .admin-create-job-step3-marks-container {
+    align-items: flex-start; /* Align left */
+    margin-top: 8px;
   }
 }
- 
+
+/* For screens up to 479px */
 @media(max-width: 479px) {
-  /* MODIFIED: Renamed from .admin-create-job-step3-create-job-post22-page-main-container to match HTML */
   .admin-create-job-step3-create-job-post22-main-container {
-    height: 1302px;
-  }
-  .admin-create-job-step3-create-job-post-details-main-container {
     height: auto;
+    padding: 16px;
+  }
+  .admin-create-job-step3-assessment-options-container2 {
+    gap: 16px;
+  }
+  .admin-create-job-step3-slide-bar-container2 {
+    width: 100%;
   }
 }
