@@ -1,68 +1,238 @@
 <!-- src/app/pages/admin-candidate-scores-page/admin-candidate-scores-page.component.html -->
-<div class="admin-candidate-scores-page-container">
-  <!-- Page Header -->
-  <div class="admin-candidate-scores-page-header">
-    <button (click)="onBackToJobSetup()" class="admin-candidate-scores-page-back-button button">
-      ← Back to Job Setup
-    </button>
-    <h2 class="admin-candidate-scores-page-title">
-      Candidate Scores for Job
-      <span *ngIf="jobUniqueId" class="job-id-display">({{ jobUniqueId }})</span>
-    </h2>
-  </div>
-
-  <!-- Main Content Area: Displays candidate scores -->
-  <div class="admin-candidate-scores-page-content">
-    <!-- Loading Indicator -->
-    <div *ngIf="loading" class="loading-container">
-      <p>Loading candidates...</p>
+<div
+  id="admin-page-scores-component"
+  class="admin-candidate-scores-page-admin-candidate-scores-component"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="candidate-scores-main-container"
+    class="admin-candidate-scores-page-candidate-scores-main-container"
+  >
+    <div
+      id="select-sort-download-zip-main-container"
+      class="admin-candidate-scores-page-select-sort-download-zip-main-container"
+    >
+      <div
+        id="select-all-main-container"
+        class="admin-candidate-scores-page-select-all-main-container"
+      >
+        <input
+          type="checkbox"
+          id="select-checkbox"
+          class="admin-candidate-scores-page-select-checkbox1"
+          [(ngModel)]="isAllSelected"
+          (ngModelChange)="toggleSelectAll()"
+          [disabled]="loading || candidates.length === 0"
+        />
+        <span
+          id="select-all-text"
+          class="admin-candidate-scores-page-select-all-text"
+        >
+          Select All
+        </span>
+      </div>
+      <div
+        id="sort-download-zip-container"
+        class="admin-candidate-scores-page-sort-download-zip-container"
+      >
+        <div
+          data-thq="thq-dropdown"
+          class="admin-candidate-scores-page-sort-dropdown list-item"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="admin-candidate-scores-page-dropdown-toggle1"
+          >
+            <span class="admin-candidate-scores-page-text10">
+              Sort By
+            </span>
+            <div
+              data-thq="thq-dropdown-arrow"
+              class="admin-candidate-scores-page-dropdown-arrow"
+            >
+              <svg
+                viewBox="0 0 1024 1024"
+                class="admin-candidate-scores-page-icon1"
+              >
+                <path d="M426 726v-428l214 214z"></path>
+              </svg>
+            </div>
+          </div>
+          <ul
+            data-thq="thq-dropdown-list"
+            class="admin-candidate-scores-page-dropdown-list"
+          >
+            <li
+              data-thq="thq-dropdown"
+              class="admin-candidate-scores-page-dropdown1 list-item"
+              (click)="applySort('score_desc')"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="admin-candidate-scores-page-dropdown-toggle2"
+              >
+                <span>Score: High to Low</span>
+              </div>
+            </li>
+            <li
+              data-thq="thq-dropdown"
+              class="admin-candidate-scores-page-dropdown2 list-item"
+              (click)="applySort('score_asc')"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="admin-candidate-scores-page-dropdown-toggle3"
+              >
+                <span>Score: Low to High</span>
+              </div>
+            </li>
+            <li
+              data-thq="thq-dropdown"
+              class="admin-candidate-scores-page-dropdown3 list-item"
+              (click)="applySort('name_asc')"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="admin-candidate-scores-page-dropdown-toggle4"
+              >
+                <span>Name: A to Z</span>
+              </div>
+            </li>
+            <li
+              data-thq="thq-dropdown"
+              class="admin-candidate-scores-page-dropdown3 list-item"
+              (click)="applySort('name_desc')"
+            >
+              <div
+                data-thq="thq-dropdown-toggle"
+                class="admin-candidate-scores-page-dropdown-toggle4"
+              >
+                <span>Name: Z to A</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div
+          id="download-zip-container"
+          class="admin-candidate-scores-page-download-zip-container"
+          (click)="triggerBulkDownload()"
+          title="Download Excel report for selected candidates"
+        >
+          <svg
+            id="download-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+            class="admin-candidate-scores-page-download-icon1"
+          >
+            <path
+              d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span
+            id="download-zip-text"
+            class="admin-candidate-scores-page-download-zip-text"
+          >
+            Download Report
+          </span>
+        </div>
+      </div>
     </div>
 
-    <!-- Error Message -->
-    <div *ngIf="error && !loading" class="error-container">
-      <p class="error-message">{{ error }}</p>
+    <div *ngIf="loading" class="loading-container" style="text-align: center; padding: 40px; font-style: italic; color: #555;">
+      Loading candidates...
     </div>
-
-    <!-- Candidate List -->
-    <div *ngIf="!loading && !error && candidates.length > 0" class="candidate-list">
-      <table class="candidate-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Score</th>
-            <th>Total Experience</th>
-            <th>Relevant Experience</th>
-            <th>Location</th>
-            <th>Skills</th>
-            <th>Education</th>
-            <th>Certification</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let candidate of candidates">
-            <td>{{ candidate.name || 'N/A' }}</td>
-            <td>{{ candidate.email || 'N/A' }}</td>
-            <td>{{ candidate.score }}%</td>
-            <td>{{ candidate.details.total_experience || 'N/A' }}</td>
-            <td>{{ candidate.details.relevant_experience || 'N/A' }}</td>
-            <td>{{ candidate.details.location || 'N/A' }}</td>
-            <td>{{ candidate.details.skills?.length ? candidate.details.skills.join(', ') : 'N/A' }}</td>
-            <td>{{ candidate.details.education || 'N/A' }}</td>
-            <td>{{ candidate.details.certification || 'N/A' }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div *ngIf="!loading && candidates.length === 0" class="empty-state-container" style="text-align: center; padding: 40px; font-style: italic; color: #555;">
+      No candidates found for this job.
     </div>
-
-    <!-- No Candidates Message -->
-    <div *ngIf="!loading && !error && candidates.length === 0" class="no-candidates">
-      <p>No candidates found for this job.</p>
-    </div>
-
-    <!-- Fallback message if no job ID is found -->
-    <div *ngIf="!jobUniqueId" class="admin-candidate-scores-page-no-job-message">
-      <p>No active job creation flow found. Please start the process again.</p>
+    <div
+      *ngIf="!loading && candidates.length > 0"
+      id="candidate-details-download-cv-main-container"
+      class="admin-candidate-scores-page-candidate-details-download-cv-main-container"
+    >
+      <div
+        *ngFor="let candidate of candidates"
+        class="admin-candidate-scores-page-candidate-details-download-cv-container"
+      >
+        <div
+          id="candidate-name-container"
+          class="admin-candidate-scores-page-candidate-name-container"
+        >
+          <input
+            type="checkbox"
+            [id]="'candidate-checkbox-' + candidate.id"
+            class="admin-candidate-scores-page-select-checkbox2"
+            [(ngModel)]="candidate.selected"
+            (ngModelChange)="updateSelectAllState()"
+          />
+          <span
+            id="candidate-name-text"
+            class="admin-candidate-scores-page-candidate-name-text"
+          >
+            {{ candidate.name || 'N/A' }}
+          </span>
+        </div>
+        <div
+          id="job-title-container"
+          class="admin-candidate-scores-page-job-title-container"
+        >
+          <span
+            id="job-title-text"
+            class="admin-candidate-scores-page-job-title-text"
+          >
+            Score: {{ candidate.score }}%
+          </span>
+        </div>
+        <div
+          id="view-cv-container"
+          class="admin-candidate-scores-page-view-cv-container"
+          title="View CV in new tab"
+        >
+          <a [href]="candidate.cv_file_path" target="_blank" rel="noopener noreferrer" style="display: contents; text-decoration: none; color: inherit;">
+            <svg
+              id="eye-icon"
+              width="1024"
+              height="1024"
+              viewBox="0 0 1024 1024"
+              class="admin-candidate-scores-page-eye-icon"
+            >
+              <path
+                d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112"
+                fill="currentColor"
+              ></path>
+            </svg>
+            <span
+              id="view-cv-text"
+              class="admin-candidate-scores-page-view-cv-text"
+            >
+              View CV
+            </span>
+          </a>
+        </div>
+        <svg
+          id="download-icon"
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          class="admin-candidate-scores-page-download-icon2"
+          (click)="downloadCandidateResume(candidate)"
+          title="Download this candidate's resume"
+        >
+          <path
+            d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </div>
     </div>
   </div>
 </div>
