@@ -804,7 +804,7 @@
     border-top-width: 0px;
     border-left-width: 0px;
     border-bottom-width: 0px;
-    overflow: hidden; /* Prevent overflow outside container */
+    overflow: visible; /* Prevent overflow outside container */
   }
 
   .flashyre-assessment11-questions-container app-problem-description {
@@ -919,10 +919,7 @@
     align-items: flex-start;
     flex-direction: column;
     overflow: hidden; /* Prevent overflow outside container */
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    scrollbar-width: thin;
+  
   }
 
   .flashyre-assessment11-answers-container .coding-section {
@@ -935,12 +932,16 @@
 }
 
 .flashyre-assessment11-answers-container .coding-section app-code-editor {
-  flex: 2; /* Take more space for editor */
-  width: 100%;
-  height: 490px;
-  max-height: 500px; /* Ensure minimum height for usability */
-  overflow-y: auto; /* Allow scrolling within editor */
+ width: 100%;
+  height: 100%; /* Full height when test-results is hidden */
+  min-height: 300px;
+  overflow-y: auto;
   scrollbar-width: none;
+}
+
+.flashyre-assessment11-answers-container .coding-section app-code-editor[showTestResults] {
+  flex: 2; /* Adjust height when test-results is visible */
+  height: auto;
 }
 
 .flashyre-assessment11-answers-container .coding-section app-code-editor::-webkit-scrollbar {
@@ -948,12 +949,16 @@
 }
 
 .flashyre-assessment11-answers-container .coding-section app-test-results {
-  flex: 1; /* Take less space for results */
+  flex: 1;
   width: 100%;
-  height: 100%;
-  min-height: 150px; /* Ensure minimum height for results */
-  overflow-y: auto; /* Allow scrolling for long results */
+  min-height: 150px;
+  overflow-y: auto;
   scrollbar-width: none;
+}
+
+.flashyre-assessment11-answers-container .coding-section app-test-results::-webkit-scrollbar,
+.flashyre-assessment11-answers-container .coding-section app-code-editor::-webkit-scrollbar {
+  display: none;
 }
 
 .flashyre-assessment11-answers-container .coding-section app-test-results::-webkit-scrollbar {
@@ -966,6 +971,7 @@
     width: 100%;
     height: 100%;
     gap: 1rem;
+    overflow: hidden;
   }
 
   .flashyre-assessment11-select-an-option-container {

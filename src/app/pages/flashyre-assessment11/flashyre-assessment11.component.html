@@ -348,11 +348,19 @@ class="flashyre-assessment11-previous-next-button-main-container1"
             </div>
           </ng-container>
           <ng-container *ngIf="isCodingSection">
-            <div class="coding-section">
-              <app-code-editor [problemId]="currentSection.coding_id_id" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
-              <app-test-results [results]="results"></app-test-results>
-            </div>
-          </ng-container>
+  <div class="coding-section">
+    <app-code-editor
+      [problemId]="currentSection.coding_id_id"
+      (runCode)="onRunCode($event)"
+      (submitCode)="onSubmitCode($event)"
+      (codeChange)="onCodeChange()"
+    ></app-code-editor>
+    <app-test-results
+      *ngIf="showTestResults"
+      [results]="results"
+    ></app-test-results>
+  </div>
+</ng-container>
         </div>
       </div>
       <div

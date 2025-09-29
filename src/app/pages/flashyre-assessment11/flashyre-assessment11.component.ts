@@ -52,6 +52,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   isCodingSection = false;
   results: string[] = [];
   codingSubmissions: { [problem_id: number]: { id: number, score: number } } = {};
+  showTestResults: boolean = false; // New flag to control test results visibility
 
   private timerSubscription: Subscription;
   private sectionTimerInterval: any;
@@ -510,12 +511,17 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       next: (response) => {
         console.log('Run code response:', JSON.stringify(response, null, 2));
         this.results = response.results || ['No results available'];
+        this.showTestResults = true; // Show test results after running code
       },
       error: (error) => {
         console.error('Run code error:', error);
         this.results = [`Error running code: ${error.status} ${error.statusText}`];
       }
     });
+  }
+  onCodeChange() {
+    // Hide test results when user starts typing
+    this.showTestResults = false;
   }
 
   onSubmitCode(event: { source_code: string, language_id: number }) {
