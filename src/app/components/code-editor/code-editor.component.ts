@@ -15,7 +15,7 @@ export class CodeEditorComponent implements AfterViewInit {
   @Input() problemId: number = 0;
   @Output() runCode = new EventEmitter<{ source_code: string, language_id: number }>();
   @Output() submitCode = new EventEmitter<{ source_code: string, language_id: number }>();
-  @Output() codeChange = new EventEmitter<void>(); // New output event
+  @Output() codeChange = new EventEmitter<void>();
   @ViewChild('editor') private editorRef!: ElementRef<HTMLDivElement>;
 
   languages = [
@@ -30,12 +30,8 @@ export class CodeEditorComponent implements AfterViewInit {
 
   constructor() {}
 
-ngAfterViewInit() {
-    // Initialize Ace editor (example)
-    this.editor = ace.edit('editor'); // Adjust based on your setup
-    this.editor.on('change', () => {
-      this.codeChange.emit(); // Emit event on every change
-    });
+  ngAfterViewInit() {
+    this.setupAceEditor();
   }
 
   setupAceEditor() {
@@ -52,6 +48,7 @@ ngAfterViewInit() {
       });
       this.editor.on('change', () => {
         this.code = this.editor!.getValue();
+        this.codeChange.emit();
       });
     }
   }
