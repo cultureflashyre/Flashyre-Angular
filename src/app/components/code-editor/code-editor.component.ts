@@ -66,4 +66,14 @@ export class CodeEditorComponent implements AfterViewInit {
   submit() {
     this.submitCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
   }
+
+  /**
+   * Public method that can be called by a parent component.
+   * It commands the Ace editor instance to resize itself to fit its container.
+   */
+  public onResize(): void {
+    if (this.editor) {
+      this.editor.resize();
+    }
+  }
 }

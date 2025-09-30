@@ -1,24 +1,26 @@
-/* Editor container with a clean, professional look */
+/* --- THIS ENTIRE FILE SHOULD BE REPLACED --- */
+
+/* 
+  The main container is now a flex column. It will fill whatever height 
+  its parent gives it (e.g., 100% or 60%). Overflow is hidden to ensure
+  only the designated area scrolls.
+*/
 .editor-container {
-    flex: 1;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background: #f9fafb;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #e5e7eb;
-    min-height: 500px;
-    resize: vertical;
-    overflow-y: auto;
-    transition: box-shadow 0.2s ease;
-    height: 490px;
+    overflow: hidden; 
 }
 
-.editor-container:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-/* Form group for language selector */
+/* 
+  Header: Fixed height. 'flex-shrink: 0' is crucial to prevent it from
+  shrinking if the component's total height becomes very small.
+*/
 .form-group {
     background: #f3f4f6;
     padding: 8px;
@@ -27,9 +29,51 @@
     align-items: center;
     border-bottom: 1px solid #e5e7eb;
     height: 48px;
+    flex-shrink: 0;
 }
 
-/* Label with consistent typography */
+/* Note for Java: Also has a fixed height. */
+.java-note {
+    background: #fefce8;
+    border-left: 4px solid #f4d03f;
+    padding: 1rem 1.75rem;
+    font-size: 0.9rem;
+    color: #78350f;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    height: 18px;
+}
+
+/* 
+  Ace editor container: This is the scrollable heart of the component.
+  'flex-grow: 1' makes it expand to fill all available vertical space
+  left by the header and footer. 'overflow: auto' is not needed here
+  because the Ace editor handles its own internal scrolling.
+*/
+.ace-editor {
+    flex-grow: 9;
+    width: 100%;
+    position: relative; /* Often required by editor libraries */
+    height: 300px;
+}
+
+/* 
+  Button group (Footer): Fixed height, also prevented from shrinking.
+*/
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px;
+    background: #f3f4f6;
+    gap: 1rem;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+
+/* --- AESTHETIC STYLES (UNCHANGED) --- */
+
 .form-group label {
     font-weight: 600;
     color: #1f2a44;
@@ -37,7 +81,6 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Language selector with modern styling */
 .language-selector {
     background: #ffffff;
     border: 1px solid #d1d5db;
@@ -47,45 +90,8 @@
     font-size: 0.95rem;
     cursor: pointer;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.language-selector:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-/* Ace editor container */
-.ace-editor {
-    flex: 1;
-    min-height: 400px;
-    width: 100%;
-}
-
-/* Contextual note for Java */
-.java-note {
-    background: #fefce8;
-    border-left: 4px solid #f4d03f;
-    padding: 1rem 1.75rem;
-    font-size: 0.9rem;
-    color: #78350f;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-/* Button group with consistent spacing */
-.button-group {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 1.25rem 1.75rem;
-    background: #f3f4f6;
-    gap: 1rem;
-    border-top: 1px solid #e5e7eb;
-}
-
-/* Base button styles */
 .btn {
     padding: 0.75rem 1.75rem;
     border: none;
@@ -101,40 +107,17 @@
     transform: translateY(-1px);
 }
 
-/* Primary button (Run) */
 .btn-primary {
     background: #10b981;
     color: #ffffff;
 }
-
 .btn-primary:hover {
     background: #059669;
 }
-
-/* Secondary button (Submit) */
 .btn-secondary {
     background: #3b82f6;
     color: #ffffff;
 }
-
 .btn-secondary:hover {
     background: #2563eb;
-}
-
-/* Scrollbar styling */
-.editor-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.editor-container::-webkit-scrollbar-track {
-    background: #f3f4f6;
-}
-
-.editor-container::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 4px;
-}
-
-.editor-container::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
 }

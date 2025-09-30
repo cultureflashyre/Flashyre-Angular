@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+// an-assessment/src/app/coding-test-results/coding-test-results.component.ts
+
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-test-results',
@@ -7,8 +9,15 @@ import { Component, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@
 })
 export class CodingTestResultsComponent implements OnChanges {
   @Input() results: string[] = [];
-  isVisible = true;
+  
+  // --- MODIFICATION START ---
+  // 1. Create an output event that the parent can listen to.
+  @Output() hideResults = new EventEmitter<void>();
+
+  // 2. REMOVE the local 'isVisible' state. The parent will now control visibility.
+  // isVisible = true; 
   isMinimized = false;
+  // --- MODIFICATION END ---
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -16,16 +25,17 @@ export class CodingTestResultsComponent implements OnChanges {
     if (changes['results']) {
       console.log('TestResultsComponent received results:', this.results);
       this.isMinimized = false;
-      this.isVisible = true;
+      // When new results arrive, we don't need to manage visibility here anymore.
       this.cdr.detectChanges();
     }
   }
 
+  // --- MODIFICATION START ---
+  // 3. This method no longer toggles a local property. It just emits the event to the parent.
   toggleVisibility() {
-    this.isVisible = !this.isVisible;
-    console.log('TestResultsComponent visibility toggled:', this.isVisible);
-    this.cdr.detectChanges();
+    this.hideResults.emit();
   }
+  // --- MODIFICATION END ---
 
   toggleMinimize() {
     this.isMinimized = !this.isMinimized;

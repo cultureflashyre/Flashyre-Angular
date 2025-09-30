@@ -8,6 +8,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { lastValueFrom } from 'rxjs';
 
+// We need to import the CodeEditorComponent to use it with @ViewChild
+import { CodeEditorComponent } from '../../components/code-editor/code-editor.component';
+
 interface SelectedAnswer {
   answer: string;
   section_id: number;
@@ -21,6 +24,11 @@ interface SelectedAnswer {
 })
 export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
+
+  // --- MODIFICATION START ---
+  // Get a reference to the instance of the app-code-editor component in the template
+  @ViewChild(CodeEditorComponent) private codeEditorComponent: CodeEditorComponent;
+  // --- MODIFICATION END ---
 
   @ContentChild('endTestText') endTestText: TemplateRef<any>;
   @Input() logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
@@ -52,7 +60,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   isCodingSection = false;
   results: string[] = [];
   codingSubmissions: { [problem_id: number]: { id: number, score: number } } = {};
-  showTestResults: boolean = false; // New flag to control test results visibility
+
+  showTestResults = false;
 
   private timerSubscription: Subscription;
   private sectionTimerInterval: any;
@@ -162,12 +171,11 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  processCustomizations(sectionsData: any): void {
-    for (const sectionName in sectionsData) {
-      console.log('Processing section:', sectionName);
-      const section = sectionsData[sectionName];
+  processCustomizations(sectionsData: any[]): void {
+    for (const section of sectionsData) {
+      console.log('Processing section:', section.name);
       const sectionEntry = {
-        name: sectionName,
+        name: section.name,
         section_id: section.section_id,
         duration: section.duration_per_section,
         questions: section.questions || [],
@@ -243,6 +251,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.totalQuestionsInSection = this.currentQuestions.length;
     } else {
       this.results = [];
+      this.showTestResults = true;
     }
 
     this.sectionTimer = this.sectionTimers[section.section_id || section.coding_id_id] !== undefined 
@@ -500,6 +509,18 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.updateCurrentQuestion();
   }
 
+  handleHideResults(): void {
+    this.showTestResults = false;
+    
+    // Use a short setTimeout to allow Angular's change detection to update the layout
+    // BEFORE we command the editor to resize. This is a robust way to handle this.
+    setTimeout(() => {
+      if (this.codeEditorComponent) {
+        this.codeEditorComponent.onResize();
+      }
+    }, 10); // 10ms is enough to push this to the next browser render cycle.
+  }
+
   onRunCode(event: { source_code: string, language_id: number }) {
     const data = {
       problem_id: this.currentSection.coding_id_id,
@@ -511,17 +532,14 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       next: (response) => {
         console.log('Run code response:', JSON.stringify(response, null, 2));
         this.results = response.results || ['No results available'];
-        this.showTestResults = true; // Show test results after running code
+        this.showTestResults = true;
       },
       error: (error) => {
         console.error('Run code error:', error);
         this.results = [`Error running code: ${error.status} ${error.statusText}`];
+        this.showTestResults = true;
       }
     });
-  }
-  onCodeChange() {
-    // Hide test results when user starts typing
-    this.showTestResults = false;
   }
 
   onSubmitCode(event: { source_code: string, language_id: number }) {
@@ -539,10 +557,12 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
           id: response.id,
           score: response.score
         };
+        this.showTestResults = true;
       },
       error: (error) => {
         console.error('Submit code error:', error);
         this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
+        this.showTestResults = true;
       }
     });
   }

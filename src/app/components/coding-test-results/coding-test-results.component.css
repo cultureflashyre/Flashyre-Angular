@@ -25,11 +25,12 @@
 .header {
     background: #1f2a44;
     color: #ffffff;
-    padding: 1.25rem 1.75rem;
+    padding: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #2d3748;
+    height: 48px;
 }
 
 /* Results title with refined typography */
@@ -66,7 +67,7 @@
 /* Results content with scrollable area */
 .results-content {
     flex: 1;
-    padding: 1.75rem;
+    padding: 10px;
     overflow-y: auto;
 }
 

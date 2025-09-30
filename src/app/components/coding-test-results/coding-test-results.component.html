@@ -1,10 +1,14 @@
-<div class="results-container" [ngClass]="{ minimized: isMinimized }" *ngIf="isVisible">
+<!-- an-assessment/src/app/coding-test-results/coding-test-results.component.html -->
+
+<!-- MODIFICATION: REMOVED *ngIf="isVisible" from this root div -->
+<div class="results-container" [ngClass]="{ minimized: isMinimized }">
     <div class="header">
         <div class="results-title">Test Results</div>
         <button class="btn" (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
         <button class="btn" (click)="toggleVisibility()">Hide</button>
     </div>
     <div *ngIf="!isMinimized" class="results-content">
+        <!-- The rest of this file remains the same -->
         <div *ngIf="results.length === 0" class="empty-results">
             No results available. Run your code to see test case results.
         </div>

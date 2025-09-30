@@ -28,7 +28,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
 
-  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik'; // Replace with your actual key
+  private readonly googleMapsApiKey: string = 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w'; // Replace with your actual key
   
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;

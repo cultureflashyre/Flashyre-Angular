@@ -4,6 +4,41 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../environments/environment';
 
+// <--- MODIFICATION START --->
+// Define an interface for a single section object
+interface Section {
+  name: string;
+  section_id: number | null;
+  duration_per_section: number;
+  questions: {
+    question_id: number;
+    question: string;
+    question_image: string | null;
+    option_type: string;
+    options: {
+      option1: string;
+      q_option1_image: string | null;
+      option2: string;
+      q_option2_image: string | null;
+      option3?: string;
+      q_option3_image: string | null;
+      option4?: string;
+      q_option4_image: string | null;
+    };
+  }[];
+  coding_problem?: {
+    id: number;
+    title: string;
+    description: string;
+    input_format: string;
+    output_format: string;
+    constraints: string;
+    example: string;
+    timer: number;
+    test_cases: { input: string; expected_output: string }[];
+  } | null;
+}
+
 interface TrialAssessmentResponse {
   attempts_allowed: number;
   attempts_remaining: number;
@@ -13,40 +48,10 @@ interface TrialAssessmentResponse {
   allow_mobile: string;
   video_recording: string;
   total_assessment_duration: number;
-  sections: {
-    [sectionName: string]: {
-      section_id: number | null;
-      duration: number;
-      questions: {
-        question_id: number;
-        question: string;
-        question_image: string | null;
-        option_type: string;
-        options: {
-          option1: string;
-          q_option1_image: string | null;
-          option2: string;
-          q_option2_image: string | null;
-          option3?: string;
-          q_option3_image: string | null;
-          option4?: string;
-          q_option4_image: string | null;
-        };
-      }[];
-      coding_problem?: {
-        id: number;
-        title: string;
-        description: string;
-        input_format: string;
-        output_format: string;
-        constraints: string;
-        example: string;
-        timer: number;
-        test_cases: { input: string; expected_output: string }[];
-      } | null;
-    };
-  };
+  sections: Section[]; // Changed from a dictionary to an array of Section objects
 }
+// <--- MODIFICATION END --->
+
 
 @Injectable({
   providedIn: 'root'
