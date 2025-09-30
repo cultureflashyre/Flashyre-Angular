@@ -43,4 +43,10 @@ export class InterviewService {
     
     return this.http.post(endpoint, stages, { headers });
   }
+
+  saveDraftStages(jobUniqueId: string, stages: InterviewStage[], token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/save-draft/`;
+    return this.http.post(endpoint, stages, { headers });
+  }
 }

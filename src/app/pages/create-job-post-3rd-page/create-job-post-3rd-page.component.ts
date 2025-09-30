@@ -24,6 +24,12 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   // MODIFICATION: Add a new property to control the popup's visibility
   showSuccessPopup = false;
 
+    // State for alert-message component
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
+  private pendingAction: string = '';
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -117,39 +123,6 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   }
 
 
-  // Footer Event Handlers
-  onCancel(): void {
-    // Navigate back to dashboard or show confirmation dialog
-    if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-      this.workflowService.clearWorkflow();
-      this.router.navigate(['/create-job-post-1st-page']);
-    }
-  }
-
-  onPrevious(): void {
-    // Navigate to the previous step in the job creation workflow
-    this.router.navigate(['/create-job-post-22-page']);
-  }
-
-  onSaveDraft(): void {
-    // Since you don't want draft functionality, we'll show a message
-    this.snackBar.open('Draft functionality is not available. Please complete the form and click Next.', 'Close', { duration: 4000 });
-  }
-
-  onSkip(): void {
-    // Skip the interview process and complete job creation
-    if (confirm('Are you sure you want to skip the interview process? You can add it later.')) {
-      this.snackBar.open('Interview process skipped. Job post created successfully!', 'Close', { duration: 3000 });
-      this.workflowService.clearWorkflow();
-      this.router.navigate(['/create-job-post-1st-page']);
-    }
-  }
-
-  onNext(): void {
-    // This will be the same as your current onSubmit logic
-    this.onSubmit();
-  }
-
   onSubmit(): void {
     if (this.interviewForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', 'Close', { duration: 4000 });
@@ -197,4 +170,179 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       }
     });
   }
+
+
+  // Footer button handlers:
+  onCancel(): void {
+    this.openAlert('You are about to Cancel this action. All unsaved changes will be lost.', ['Cancel', 'Yes']);
+    this.pendingAction = 'cancel';
+  }
+
+  onPrevious(): void {
+    this.openAlert('Are you sure you want to go to the previous step?', ['Cancel', 'Continue']);
+    this.pendingAction = 'previous';
+  }
+
+  onSaveDraft(): void {
+    this.openAlert('You are about to save this as a draft.', ['Cancel', 'Save Draft']);
+    this.pendingAction = 'saveDraft';
+  }
+
+  onSkip(): void {
+    this.openAlert('You are about to skip the interview process. You can add it later.', ['Cancel', 'Continue']);
+    this.pendingAction = 'skip';
+  }
+
+  onNext(): void {
+    // For safety, add a confirmation as well (adapt as desired):
+    this.openAlert('Are you sure you want to save the interview process?', ['Cancel', 'Save']);
+    this.pendingAction = 'next';
+  }
+
+  // Alert button handling:
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+
+    switch (this.pendingAction) {
+      case 'cancel':
+        if (action.toLowerCase() === 'yes') {
+          this.onCancelConfirmed();
+        }
+        break;
+
+      case 'previous':
+        if (action.toLowerCase() === 'continue') {
+          this.router.navigate(['/create-job-post-22-page']);
+        }
+        break;
+
+      case 'saveDraft':
+        if (action.toLowerCase() === 'save draft') {
+          this.onSaveDraftConfirmed();
+        }
+        break;
+
+      case 'skip':
+        if (action.toLowerCase() === 'continue') {
+          this.onSkipConfirmed();
+        }
+        break;
+
+      case 'next':
+        if (action.toLowerCase() === 'save') {
+          this.onSubmit(); // submit form
+        }
+        break;
+      default:
+        break;
+    }
+    // Cancel, No, or dismissal does nothing further.
+    this.pendingAction = '';
+  }
+
+  onCancelConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.router.navigate(['/create-job-post-1st-page']);
+  }
+
+ // onSaveDraftConfirmed() {
+  //  this.snackBar.open('Draft functionality is not available. Please complete the form and click Next.', 'Close', { duration: 4000 });
+  //}
+
+  onSaveDraftConfirmed(): void {
+    // Mark all fields as touched to show validation errors on fields that are filled incorrectly.
+    this.interviewForm.markAllAsTouched();
+    if (this.interviewForm.invalid) {
+      this.snackBar.open('Please correct the errors before saving a draft.', 'Close', { duration: 4000 });
+      return;
+    }
+
+    if (!this.jobUniqueId) {
+      this.snackBar.open('Cannot save draft: Job ID is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Cannot save draft: Authentication token is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+
+    this.isSubmitting = true; // Disable buttons during the save operation
+
+    const formStages = this.stages.value;
+    const payload: InterviewStage[] = formStages.map((stage: any, index: number) => ({
+      stage_name: stage.stage_name === 'Customize' ? stage.custom_stage_name : stage.stage_name,
+      stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
+      mode: stage.mode,
+      assigned_to: stage.assigned_to,
+      order: index + 1,
+      user_id: localStorage.getItem('user_id')
+    }));
+    
+    // Call the new service method
+    this.interviewService.saveDraftStages(this.jobUniqueId, payload, token).subscribe({
+      next: () => {
+        this.snackBar.open('Draft saved successfully!', 'Close', { duration: 3000 });
+        this.isSubmitting = false;
+        // Mark the form as pristine again after a successful save
+        this.interviewForm.markAsPristine();
+      },
+      error: (err) => {
+        this.snackBar.open(`Draft save failed: ${err.message || 'An unknown server error occurred.'}`, 'Close', { duration: 5000 });
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+ // onSkipConfirmed() {
+   // this.snackBar.open('Interview process skipped. Job post created successfully!', 'Close', { duration: 3000 });
+    //this.workflowService.clearWorkflow();
+    //this.router.navigate(['/create-job-post-1st-page']);
+  //}
+
+
+  onSkipConfirmed() {
+    if (!this.jobUniqueId) {
+      this.snackBar.open('No job ID found. Please start again.', 'Close', { duration: 4000 });
+      this.router.navigate(['/create-job-post-1st-page']);
+      return;
+    }
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.router.navigate(['/login-corporate']);
+      return;
+    }
+    this.isSubmitting = true;
+
+    // Send an empty array for stages or a minimal valid payload
+    const payload: InterviewStage[] = [];
+
+    this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
+      next: () => {
+        this.showSuccessPopup = true;
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.showSuccessPopup = false;
+        }, 5000);
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.snackBar.open(`Finalization failed: ${err.message || 'An unknown server error occurred.'}`, 'Close', { duration: 5000 });
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+
+  
+  // Method to open alert with message and buttons
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+
 }

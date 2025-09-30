@@ -12,6 +12,7 @@ import { SkillService, ApiSkill } from '../../services/skill.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'create-job-post-1st-page',
@@ -22,7 +23,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
 
-  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik';
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;

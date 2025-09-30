@@ -194,11 +194,13 @@ export class ProfileBasicinformationComponent implements OnInit {
   saveProfile(): Promise<{ success: boolean; rateLimited: boolean; message: string; }> {
   return new Promise((resolve) => {
     if (!this.resume) {
+
+          console.log("Inside profile-basic-info-PAGE: with ONLY CV");
       // If only a profile picture is being saved
       if (this.profilePicture) {
         const formData = new FormData();
         formData.append('profile_picture', this.profilePicture);
-        
+        console.log("Inside profile-basic-info-PAGE: with ONLY CV", formData);
         this.profileService.saveProfile(formData).subscribe(
           (response) => {
             console.log('Profile picture saved successfully', response);
@@ -234,6 +236,11 @@ export class ProfileBasicinformationComponent implements OnInit {
       formData.append('profile_picture', this.profilePicture);
     }
     formData.append('resume', this.resume);
+
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",this.profilePicture);
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",this.resume);
+
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",formData);
 
     this.profileService.saveProfile(formData).subscribe(
       (response) => {

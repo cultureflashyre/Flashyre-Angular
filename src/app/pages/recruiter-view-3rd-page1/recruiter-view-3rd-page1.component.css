@@ -1359,11 +1359,16 @@
   max-height: 815px;
   overflow-x: hidden;
   overflow-y: scroll;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 8px;
   flex-direction: column;
   scroll-behavior: smooth;
   scrollbar-width: none;
+}
+
+.jobs-posted-view {
+  width: 100%;
+  align-items: center;
 }
  
 .recruiter-view3rd-page1-recruiter-flow-job-posted-container {
@@ -1518,6 +1523,13 @@
 
 .recruiter-view3rd-page1-right-icon:hover {
   cursor: pointer;
+}
+
+.no-jobs-message {
+  font-size: 1.2em;
+  color: #666;
+  padding: 20px;
+  text-align: center;
 }
  
 @media(max-width: 1200px) {

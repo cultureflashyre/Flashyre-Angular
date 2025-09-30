@@ -283,7 +283,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   isStepVisible(step: number): boolean {
     const visible = this.currentStep === step;
-    console.log(`isStepVisible(${step}) called, returning:`, visible);
+    // console.log(`isStepVisible(${step}) called, returning:`, visible);
     return visible;
   }
 }

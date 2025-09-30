@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { ThumbnailService } from '../../services/thumbnail.service'; // Import thumbnail service
+import { Console } from 'console';
 
 @Component({
   selector: 'signup-candidate1',
@@ -148,6 +149,9 @@ export class SignupCandidate1 implements OnInit {
         user_type: 'candidate',
         initials: initials  // Include initials here
       };
+
+      console.log("cANDIDATE sIGNUP FORM: ", formData);
+      
 
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe(
         (response: any) => {

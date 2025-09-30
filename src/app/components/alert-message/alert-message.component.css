@@ -1,0 +1,103 @@
+/* Full screen overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* translucent grey */
+  z-index: 9999; /* very high z-index */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Alert container box */
+.alert-message {
+  gap: var(--dl-layout-space-threeunits);
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  flex-direction: column;
+  align-self: center;
+  background-color: white;
+  /*padding: 1.5rem 2rem;*/
+  border-radius: 8px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 10000; /* above background overlay */
+}
+
+.alter-message-close-icon-container {
+    justify-content: space-between;
+}
+
+/* Close icon */
+.close-icon {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.alter-message-buttons-container1 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.button-cancel {
+  background-color: transparent;
+  border: 1px solid #888;
+  color: #555;
+}
+
+.button-save-draft, .button-yes {
+  background-color: rgb(255, 255, 255); /* blue */
+  color: #05356c;
+  border: none;
+}
+
+.button-delete {
+  background-color: #dc3545; /* red */
+  color: white;
+  border: none;
+}
+
+
+.alter-message-component-button {
+
+  color: var(--dl-color-theme-neutral-dark);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-theme-neutral-light);
+
+  color: #05356c;
+  width: auto;
+  height: 75%;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  transition: 0.3s;
+  border-color: #05356c;
+  border-width: 1px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.alter-message-component-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.alter-message-component-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}

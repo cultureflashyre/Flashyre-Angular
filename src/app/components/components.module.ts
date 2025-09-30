@@ -119,6 +119,7 @@ import { PreferenceComponent } from './preference-component/preference-component
 
 import{Signupadmin} from './signup-admin/signup-admin.component'
 import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-view.component';
+import { AlertMessageComponent } from './alert-message/alert-message.component';
 
 @NgModule({
   declarations: [
@@ -227,7 +228,8 @@ import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-vie
     PreferenceComponent,
 
     Signupadmin,
-    NavbarForAdminView
+    NavbarForAdminView,
+    AlertMessageComponent,
 
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule],
@@ -336,7 +338,8 @@ import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-vie
     PreferenceComponent,
 
     Signupadmin,
-    NavbarForAdminView
+    NavbarForAdminView,
+    AlertMessageComponent
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

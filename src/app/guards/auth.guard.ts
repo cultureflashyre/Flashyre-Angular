@@ -50,11 +50,36 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    if (expectedRoles && !expectedRoles.includes(userType)) {
-      console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to /forbidden.`);
-      this.router.navigate(['/forbidden']);
-      return false;
-    }
+    //if (expectedRoles && !expectedRoles.includes(userType)) {
+    //  console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to /forbidden.`);
+    //  this.router.navigate(['/forbidden']);
+   //   return false;
+   // }
+
+    if (expectedRoles && !expectedRoles.includes(userType)) {
+    console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to userType specific page.`);
+
+    switch(userType) {
+        case 'candidate':
+            console.log("Inside the SWITCH for ", userType);
+        this.router.navigate(['/candidate-home']);
+        break;
+        case 'recruiter':
+                        console.log("Inside the SWITCH for ", userType);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
+        break;
+        case 'admin':
+                        console.log("Inside the SWITCH for ", userType);
+        this.router.navigate(['/admin-page1']);
+        break;
+        default:
+                        console.log("Inside the SWITCH for ", userType);
+        this.router.navigate(['/forbidden']);
+        break;
+    }
+    return false;
+    }
+
 
     console.log('All checks passed. Route access granted.');
     return true;

@@ -8,6 +8,15 @@
 >
   <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
 </ngx-spinner>
+
+<app-alert-message 
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
 <div class="create-job-post21-page-container1">
   <div class="create-job-post21-page-container2">
     <!-- Navbar Component with all its original template content -->

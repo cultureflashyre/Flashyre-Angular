@@ -1,3 +1,11 @@
+<app-alert-message 
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
 <!-- src/app/components/create-job-post-22/create-job-post-22.component.html -->
 
 <!-- The ng-container handles the loading state without adding an extra element to the DOM -->
@@ -206,7 +214,8 @@
       (cancelClick)="onCancel()"
       (previousClick)="onPrevious()"
       (skipClick)="onSkip()"
-      (nextClick)="onNext()">
+      (nextClick)="onNext()"
+      (saveDraftClick)="onSaveDraft()">
     </create-job-post-footer2>
   </form>
 </ng-container>
