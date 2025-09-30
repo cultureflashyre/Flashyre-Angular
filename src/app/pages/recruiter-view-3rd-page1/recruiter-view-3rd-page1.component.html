@@ -14,6 +14,7 @@
     <more-filters-and-preference-component 
       (closeEvent)="showMoreFilters = false"
       (applyFiltersEvent)="onApplyFilters($event)"
+      (savePreferenceEvent)="onSavePreference($event)"
       [initialTab]="initialFilterTab"
     ></more-filters-and-preference-component>
   </div>
@@ -871,7 +872,8 @@
               <p>Fetching Jobs Posted...</p>
             </div>
             <div *ngIf="!isLoading && postedJobs.length === 0" class="no-jobs-message">
-              No jobs posted yet.
+              <span *ngIf="masterPostedJobs.length > 0">No match found.</span>
+              <span *ngIf="masterPostedJobs.length === 0">No jobs posted yet.</span>
             </div>
             <div *ngIf="postedJobs.length > 0" class="jobs-posted-view">
               <div

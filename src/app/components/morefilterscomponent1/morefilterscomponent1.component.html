@@ -118,47 +118,17 @@
               ></ng-container>
             </ng-container>
           </span>
-          <div
-            id="select-container-2"
-            class="morefilterscomponent1-select-container2"
-          >
-            <form
-              id="date-posted-dropdown"
-              class="morefilterscomponent1-form11 input"
-            >
-              <span
-                id="select-text"
-                class="morefilterscomponent1-select-text11"
-              >
-                <ng-container>
-                  <ng-template #defaultText314>
-                    <div class="morefilterscomponent1-fragment14">
-                      <select class="morefilterscomponent1-text16" [(ngModel)]="filterExperienceLevel" name="filterExperienceLevel">
-                        <option value="">Select</option>
-                        <option value="entry">Entry Level</option>
-                        <option value="mid">Mid Level</option>
-                        <option value="senior">Senior Level</option>
-                      </select>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text314 ? text314 : defaultText314"
-                  ></ng-container>
-                </ng-container>
-              </span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 32 32"
-                class="morefilterscomponent1-down-down-icon11"
-              >
-                <path
-                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </form>
-          </div>
+          <div id="select-container-2" class="morefilterscomponent1-select-container2">
+  <form id="experience-level-form" class="morefilterscomponent1-form11 input">
+    <input 
+      type="text" 
+      placeholder="Enter Experience" 
+      class="morefilterscomponent1-text16" 
+      [(ngModel)]="filterExperienceLevel" 
+      name="filterExperienceLevel"
+    >
+  </form>
+</div>
         </div>
       </div>
     </div>
@@ -267,9 +237,10 @@
                     <div class="morefilterscomponent1-fragment10">
                       <select class="morefilterscomponent1-text10" [(ngModel)]="filterJobType" name="filterJobType">
                         <option value="">Select</option>
-                        <option value="full-time">Full-time</option>
+                        <option value="permanent">Permanent</option> <!-- Changed from Full-time -->
                         <option value="part-time">Part-time</option>
                         <option value="contract">Contract</option>
+                        <option value="internship">Internship</option> <!-- Added Internship -->
                       </select>
                     </div>
                   </ng-template>
@@ -379,47 +350,17 @@
               ></ng-container>
             </ng-container>
           </span>
-          <div
-            id="select-container-6"
-            class="morefilterscomponent1-select-container6"
-          >
-            <form
-              id="date-posted-dropdown"
-              class="morefilterscomponent1-form15 input"
-            >
-              <span
-                id="select-text"
-                class="morefilterscomponent1-select-text15"
-              >
-                <ng-container>
-                  <ng-template #defaultText3143>
-                    <div class="morefilterscomponent1-fragment16">
-                      <select class="morefilterscomponent1-text18" [(ngModel)]="filterRole" name="filterRole">
-                        <option value="">Select</option>
-                        <option value="developer">Developer</option>
-                        <option value="designer">Designer</option>
-                        <option value="manager">Manager</option>
-                      </select>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text3143 ? text3143 : defaultText3143"
-                  ></ng-container>
-                </ng-container>
-              </span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 32 32"
-                class="morefilterscomponent1-down-down-icon15"
-              >
-                <path
-                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </form>
-          </div>
+          <div id="select-container-6" class="morefilterscomponent1-select-container6">
+  <form id="role-form" class="morefilterscomponent1-form15 input">
+    <input 
+      type="text" 
+      placeholder="Enter Role" 
+      class="morefilterscomponent1-text18" 
+      [(ngModel)]="filterRole" 
+      name="filterRole"
+    >
+  </form>
+</div>
         </div>
       </div>
     </div>
@@ -447,47 +388,17 @@
               ></ng-container>
             </ng-container>
           </span>
-          <div
-            id="select-container-7"
-            class="morefilterscomponent1-select-container7"
-          >
-            <form
-              id="date-posted-dropdown"
-              class="morefilterscomponent1-form16 input"
-            >
-              <span
-                id="select-text"
-                class="morefilterscomponent1-select-text16"
-              >
-                <ng-container>
-                  <ng-template #defaultText316>
-                    <div class="morefilterscomponent1-fragment12">
-                      <select class="morefilterscomponent1-text14" [(ngModel)]="filterSalary" name="filterSalary">
-                        <option value="">Select</option>
-                        <option value="0-5">0-5 LPA</option>
-                        <option value="5-10">5-10 LPA</option>
-                        <option value="10+">10+ LPA</option>
-                      </select>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text316 ? text316 : defaultText316"
-                  ></ng-container>
-                </ng-container>
-              </span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 32 32"
-                class="morefilterscomponent1-down-down-icon16"
-              >
-                <path
-                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </form>
-          </div>
+          <div id="select-container-7" class="morefilterscomponent1-select-container7">
+  <form id="salary-form" class="morefilterscomponent1-form16 input">
+    <input 
+      type="text" 
+      placeholder="Enter Salary" 
+      class="morefilterscomponent1-text14" 
+      [(ngModel)]="filterSalary" 
+      name="filterSalary"
+    >
+  </form>
+</div>
         </div>
       </div>
       <div
@@ -560,7 +471,7 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       id="department-industries-container"
       class="morefilterscomponent1-department-industries-container"
     >
@@ -702,7 +613,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div id="buttons-container" class="morefilterscomponent1-buttons-container">
     <button

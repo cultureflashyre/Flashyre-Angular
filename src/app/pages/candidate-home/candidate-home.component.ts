@@ -66,6 +66,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   private currentPage = 0;
   private jobsPerPage = 30;
   private isLoadingMore = false;
+  noMatchesFound: boolean = false;
   
   // UI State
   showMoreFilters: boolean = false;
@@ -195,6 +196,15 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.runFilterPipeline();
   }
 
+  private parseFirstNumber(input: string): number | null {
+    if (!input || typeof input !== 'string') {
+      return null;
+    }
+    // This regex finds the first sequence of digits in a string.
+    const match = input.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
+  }
+
   getImageOrInitials(job: any): string {
     if (job.logo) {
       return job.logo;
@@ -209,98 +219,77 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * This prevents conflicts and ensures consistent search results.
    */
   private runFilterPipeline(): void {
-    let tempJobs = [...this.jobs];
-    const mainKeywordTerm = this.searchJobTitle.toLowerCase().trim();
+  let tempJobs = [...this.jobs];
 
-    // --- Filter 1: Main Keyword Search (Robust Version) ---
-    if (mainKeywordTerm) {
-      tempJobs = tempJobs.filter(job => {
-        // Combine all searchable text fields from a job into one string.
-        // This makes the search powerful and resilient to missing data.
-        const searchableFields = [
-          job.title,
-          job.company_name,
-          job.description,
-          job.location,
-          job.job_type,
-          job.role,
-          // Add any other text fields you want to search here, e.g., job.skills
-        ];
-        
-        // We join all fields with a space and search within the resulting string.
-        return (searchableFields.join(' ').toLowerCase()).includes(mainKeywordTerm);
-      });
-    }
-
-    // --- Filter 2: Main Location Search Bar ---
-    if (this.searchLocation.trim()) {
-      const searchLoc = this.searchLocation.toLowerCase().trim();
-      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(searchLoc));
-    }
-
-    // --- Filter 3: Main Experience Search Bar ---
-    if (this.searchExperience.trim()) {
-      const searchExp = parseInt(this.searchExperience, 10);
-      if (!isNaN(searchExp)) {
-        tempJobs = tempJobs.filter(job => job.experience_required != null && job.experience_required >= searchExp);
-      }
-    }
-    
-    // --- Filters 4-11: Advanced "More Filters" ---
-    if (this.searchDatePosted) {
-      const now = new Date();
-      let cutoff: Date;
-      if (this.searchDatePosted === '24h') {
-        cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      } else if (this.searchDatePosted === 'week') {
-        cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      } else if (this.searchDatePosted === 'month') {
-        cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      } else {
-        cutoff = new Date(0); // Any
-      }
-      tempJobs = tempJobs.filter(job => new Date(job.posted_date) > cutoff);
-    }
-
-    if (this.searchExperienceLevel) { 
-      tempJobs = tempJobs.filter(j => (j.experience_level || '').toLowerCase() === this.searchExperienceLevel.toLowerCase()); 
-    }
-    
-    if (this.searchDepartment) { 
-      tempJobs = tempJobs.filter(j => (j.department || '').toLowerCase().includes(this.searchDepartment.toLowerCase())); 
-    }
-
-    if (this.searchSalary) { 
-      tempJobs = tempJobs.filter(j => j.salary_range === this.searchSalary); 
-    }
-
-    if (this.searchCompanyName) { 
-      tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(this.searchCompanyName.toLowerCase().trim())); 
-    }
-
-    if (this.searchIndustries) { 
-      tempJobs = tempJobs.filter(j => (j.industries || []).includes(this.searchIndustries)); 
-    }
-
-    if (this.searchWorkMode) { 
-      tempJobs = tempJobs.filter(j => (j.work_mode || '').toLowerCase() === this.searchWorkMode.toLowerCase()); 
-    }
-
-    if (this.searchRole) { 
-      tempJobs = tempJobs.filter(j => (j.role || '').toLowerCase().includes(this.searchRole.toLowerCase())); 
-    }
-
-    if (this.searchJobType) { 
-      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase()); 
-    }
-
-
-    this.filteredJobs = tempJobs;
-    this.currentPage = 0;
-    this.displayedJobs = [];
-    this.loadNextPage();
-    this.setupInfiniteScroll();
+  // --- RESTORED: Logic for the 3 main search bars ---
+  const mainKeyword = this.searchJobTitle.toLowerCase().trim();
+  if (mainKeyword) {
+    tempJobs = tempJobs.filter(job => 
+      (job.title || '').toLowerCase().includes(mainKeyword) ||
+      (job.description || '').toLowerCase().includes(mainKeyword) ||
+      (job.company_name || '').toLowerCase().includes(mainKeyword)
+    );
   }
+
+  const mainLocation = this.searchLocation.toLowerCase().trim();
+  if (mainLocation) {
+    tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
+  }
+
+  const mainExperience = this.searchExperience.trim();
+  if (mainExperience) {
+    const candidateExp = this.parseFirstNumber(mainExperience);
+    if (candidateExp !== null) {
+      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    }
+  }
+
+  // --- "More Filters" Popup Logic ---
+
+  // Date Posted Filter
+  if (this.searchDatePosted) {
+    const now = new Date();
+    let cutoffDate = new Date();
+    if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
+    else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
+    else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+    
+    tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
+  }
+
+  // Experience Filter (from popup)
+  if (this.searchExperienceLevel && this.searchExperienceLevel.trim()) {
+    const candidateExp = this.parseFirstNumber(this.searchExperienceLevel);
+    if (candidateExp !== null) {
+      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    }
+  }
+
+  // Job Type Filter
+  if (this.searchJobType) {
+    tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
+  }
+
+  // Role Filter
+  if (this.searchRole && this.searchRole.trim()) {
+    const searchRol = this.searchRole.toLowerCase().trim();
+    tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
+  }
+  
+  // NOTE: Salary and Work Mode filters for candidate are still placeholders
+  // as per the previous discussion, pending backend data.
+
+  // --- Finalize and Update UI ---
+  this.filteredJobs = tempJobs;
+  // ... (rest of the method remains the same)
+  const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
+  this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
+
+  this.currentPage = 0;
+  this.displayedJobs = [];
+  this.loadNextPage();
+  this.setupInfiniteScroll();
+}
   
   /**
    * Handles opening the filter popup and setting its initial tab.
@@ -347,6 +336,15 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
+  private parseNumbersFromString(input: string): number[] {
+    if (!input || typeof input !== 'string') {
+      return [];
+    }
+    // This regex finds all sequences of digits in a string.
+    const matches = input.match(/\d+/g);
+    return matches ? matches.map(num => parseInt(num, 10)) : []; 
+  }
+
   private filterAndDisplayJobs(jobs: any[]): void {
     // Diagnostic log to help debug data mismatches
     if (jobs && jobs.length > 0) {
@@ -376,23 +374,25 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadNextPage(): void {
-    if (this.isLoadingMore || this.displayedJobs.length >= this.filteredJobs.length) {
-      return;
-    }
-    this.isLoadingMore = true;
-    const startIndex = this.currentPage * this.jobsPerPage;
-    const endIndex = startIndex + this.jobsPerPage;
-    const nextJobs = this.filteredJobs.slice(startIndex, endIndex);
-    
-    if (nextJobs.length > 0) {
-      this.displayedJobs = [...this.displayedJobs, ...nextJobs];
-      this.currentPage++;
-      // --- [NEW] Fetch scores for the newly loaded jobs ---
-      this.fetchAndAssignMatchScores(nextJobs);
-    }
-    this.isLoadingMore = false;
-    setTimeout(() => this.setupInfiniteScroll(), 100);
+  // Determine which list to paginate from
+  const sourceList = this.noMatchesFound ? this.jobs : this.filteredJobs;
+
+  if (this.isLoadingMore || this.displayedJobs.length >= sourceList.length) {
+    return;
   }
+  this.isLoadingMore = true;
+  const startIndex = this.currentPage * this.jobsPerPage;
+  const endIndex = startIndex + this.jobsPerPage;
+  const nextJobs = sourceList.slice(startIndex, endIndex);
+  
+  if (nextJobs.length > 0) {
+    this.displayedJobs = [...this.displayedJobs, ...nextJobs];
+    this.currentPage++;
+    this.fetchAndAssignMatchScores(nextJobs);
+  }
+  this.isLoadingMore = false;
+  setTimeout(() => this.setupInfiniteScroll(), 100);
+}
 
   /**
    * --- [NEW] Fetches scores for a batch of jobs and assigns them to the objects in the displayedJobs array. ---
@@ -481,6 +481,18 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
           alert(error.error?.error || 'Failed to apply for this job');
         }
       );
+  }
+
+  private parseNumericFilter(input: string): number | null {
+    if (!input || typeof input !== 'string') {
+      return null;
+    }
+    // Extracts the first sequence of digits from the string.
+    const match = input.match(/\d+/);
+    if (match) {
+      return parseInt(match[0], 10);
+    }
+    return null;
   }
 
 

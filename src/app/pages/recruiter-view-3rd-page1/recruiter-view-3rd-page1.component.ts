@@ -13,6 +13,7 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
 
 
+
 @Component({
   selector: 'recruiter-view3rd-page1',
   templateUrl: 'recruiter-view-3rd-page1.component.html',
@@ -95,6 +96,7 @@ export class RecruiterView3rdPage1 implements OnInit {
     private recruiterService: RecruiterDataService,
     private router: Router,
     private corporateAuthService: CorporateAuthService,
+    private recruiterPreferenceService: RecruiterPreferenceService,
   ) {
     this.title.setTitle('Recruiter-View-3rd-Page1 - Flashyre');
     this.meta.addTags([
@@ -220,73 +222,114 @@ export class RecruiterView3rdPage1 implements OnInit {
    */
   private runFilterPipeline(): void {
     let tempJobs = [...this.masterPostedJobs];
-    const keywordTerm = this.searchJobTitle.toLowerCase().trim();
-    const locationTerm = this.searchLocation.toLowerCase().trim();
-    const experienceTerm = this.searchExperience.toLowerCase().trim();
 
-    if (keywordTerm) {
+    // --- Combine Main Search Bars AND "More Filters" Popup values ---
+    const keyword = this.searchJobTitle.toLowerCase().trim();
+    const location = (this.searchLocation || '').toLowerCase().trim();
+    const experience = this.searchExperience || this.searchExperienceLevel; // Use main bar or popup
+
+    // --- Apply Filters ---
+
+    // Keyword Filter (from main search bar)
+    if (keyword) {
       tempJobs = tempJobs.filter(job =>
-        (job.job_role || '').toLowerCase().includes(keywordTerm) ||
-        (job.description || '').toLowerCase().includes(keywordTerm) ||
-        (job.requirements || '').toLowerCase().includes(keywordTerm) ||
-        (job.company_name || '').toLowerCase().includes(keywordTerm) ||
-        (job.job_type || '').toLowerCase().includes(keywordTerm)
+        (job.role || '').toLowerCase().includes(keyword) ||
+        (job.description || '').toLowerCase().includes(keyword)
       );
     }
 
-    if (locationTerm) {
-      tempJobs = tempJobs.filter(job =>
-        (job.location || '').toLowerCase().includes(locationTerm)
-      );
+    // Location Filter (from main search bar OR popup)
+    if (location) {
+      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(location));
+    }
+
+    // Experience Filter (from main search bar OR popup)
+    if (experience && experience.trim()) {
+      const searchExp = this.parseFirstNumber(experience);
+      if (searchExp !== null) {
+        tempJobs = tempJobs.filter(j => 
+          j.total_experience_min != null && j.total_experience_max != null &&
+          searchExp >= j.total_experience_min && searchExp <= j.total_experience_max
+        );
+      }
+    }
+
+    // Company Name Filter (from popup)
+    if (this.searchCompanyName && this.searchCompanyName.trim()) {
+        const searchCompany = this.searchCompanyName.toLowerCase().trim();
+        tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
     }
     
-    if (experienceTerm) {
-        const searchExp = parseInt(experienceTerm, 10);
-        if (!isNaN(searchExp)) {
-            tempJobs = tempJobs.filter(job => job.experience_required != null && job.experience_required >= searchExp);
-        }
+    // Job Type Filter (from popup)
+    if (this.searchJobType) {
+        tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
     }
 
-    // --- Add "More Filters" logic below ---
-    if (this.searchDatePosted) {
-      const now = new Date();
-      let cutoff: Date;
-      if (this.searchDatePosted === '24h') { cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000); } 
-      else if (this.searchDatePosted === 'week') { cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); } 
-      else if (this.searchDatePosted === 'month') { cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); } 
-      else { cutoff = new Date(0); }
-      tempJobs = tempJobs.filter(job => new Date(job.created_at) > cutoff);
-    }
-    
-    // **FIXED**: The 'experience_level' filter now uses 'experience_required' with an assumed mapping.
-    if (this.searchExperienceLevel) { 
-        tempJobs = tempJobs.filter(j => {
-            const exp = j.experience_required;
-            if (exp == null) return false;
-            switch (this.searchExperienceLevel.toLowerCase()) {
-                case 'entry': return exp >= 0 && exp <= 2;
-                case 'mid': return exp >= 3 && exp <= 7;
-                case 'senior': return exp >= 8;
-                default: return false;
-            }
-        });
+    // Salary Filter (from popup)
+    if (this.searchSalary && this.searchSalary.trim()) {
+      const searchSal = this.parseFirstNumber(this.searchSalary);
+      if (searchSal !== null) {
+        tempJobs = tempJobs.filter(j => 
+          j.min_budget != null && j.max_budget != null &&
+          searchSal >= j.min_budget && searchSal <= j.max_budget
+        );
+      }
     }
 
-    // **NOTE**: The following properties do not exist on JobPost and have been removed from the filter logic:
-    // - department
-    // - salary_range
-    // - industries
-    // - work_mode
-
-    if (this.searchCompanyName) { tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(this.searchCompanyName.toLowerCase().trim())); }
-    if (this.searchRole) { tempJobs = tempJobs.filter(j => (j.job_role || '').toLowerCase().includes(this.searchRole.toLowerCase())); }
-    if (this.searchJobType) { tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase()); }
-
+    // --- Finalize and Update UI ---
     this.filteredJobs = tempJobs;
     this.displayPage = 0;
     this.postedJobs = [];
     this.allJobsDisplayed = false;
     this.loadNextPage();
+  }
+
+
+  onSavePreference(filters: any): void {
+    // Here you would call your recruiter preference service
+    // This assumes your recruiter preference service has a 'savePreference' method
+    this.recruiterPreferenceService.savePreference(filters).subscribe({
+      next: (response) => {
+        console.log('Recruiter preference saved successfully!', response);
+        alert('Preference saved!');
+        // Optionally, switch to the preferences tab
+        this.initialFilterTab = 'preferences';
+      },
+      error: (error) => {
+        console.error('Error saving recruiter preference:', error);
+        alert('Failed to save preference. Please try again.');
+      }
+    });
+  }
+
+  private parseFirstNumber(input: string): number | null {
+    if (!input || typeof input !== 'string') {
+      return null;
+    }
+    // This regex finds the first sequence of digits in a string.
+    const match = input.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
+  }
+
+  private parseNumericFilter(input: string): number | null {
+    if (!input || typeof input !== 'string') {
+      return null;
+    }
+    // Extracts the first sequence of digits from the string.
+    const match = input.match(/\d+/);
+    if (match) {
+      return parseInt(match[0], 10);
+    }
+    return null;
+  }
+
+  private parseNumbersFromString(input: string): number[] {
+    if (!input || typeof input !== 'string') {
+      return [];
+    }
+    // This regex finds all sequences of digits in a string.
+    const matches = input.match(/\d+/g);
+    return matches ? matches.map(num => parseInt(num, 10)) : [];
   }
 
   /**

@@ -14,19 +14,28 @@ export interface RecruiterProfile {
 }
 
 export interface JobPost {
+  // --- Existing fields used by your HTML template ---
   job_id: number;
   company_image_url: string;
   job_role: string;
   experience_location: string;
   number_of_candidates_applied: string;
   created_at: string;
-   description: string;
+  description: string;
   requirements: string;
   job_type: string;
   experience_required: number;
   location: string;
   company_name: string;
   updated_at: string;
+  
+  // --- NEW: Added fields from your backend model to fix filter errors ---
+  role: string;                 // For the 'Role' filter
+  workplace_type: string;       // For the 'Work Mode' filter
+  total_experience_min: number; // For the 'Experience' filter
+  total_experience_max: number; // For the 'Experience' filter
+  min_budget: number;           // For the 'Salary' filter
+  max_budget: number;           // For the 'Salary' filter
 }
 
 @Injectable({
