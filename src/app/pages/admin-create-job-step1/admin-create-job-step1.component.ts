@@ -23,8 +23,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   userProfile: any = {};
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
-  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik';
-  private loader: Loader;
+  private readonly googleMapsApiKey: string = 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w';
+  private loader: Loader;   
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
   private google: any;
