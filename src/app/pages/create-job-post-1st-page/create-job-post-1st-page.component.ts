@@ -12,6 +12,7 @@ import { SkillService, ApiSkill } from '../../services/skill.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
 
 // Import RecruiterDataService and JobPost interface
 import { RecruiterDataService, JobPost } from '../../services/recruiter-data.service'; // ADDED
@@ -26,7 +27,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
   @ViewChild('editor', { static: false }) editor!: ElementRef<HTMLDivElement>; // ADDED: reference to the editor
 
-  private readonly googleMapsApiKey: string = 'AIzaSyDDJ8fuCQjHsZ6S1upWWmn3xJG7yA4o_Ik';
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;

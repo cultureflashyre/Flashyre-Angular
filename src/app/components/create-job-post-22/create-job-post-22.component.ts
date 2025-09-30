@@ -79,6 +79,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   private readonly skillTabWidth = 130; // From CSS: width
   private readonly skillTabGap = 16;   // From CSS: gap
 
+    // State for alert-message component
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
+
   /**
    * Constructor for dependency injection
    * @param fb FormBuilder for creating reactive forms
@@ -638,18 +643,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   /**
    * Skips the assessment creation/editing step.
    */
-  onSkip(): void { this.router.navigate(['/create-job-post-3rd-page']); }
+  onCancel() {
+    this.openAlert('You are about to Cancel this action', ['Yes', 'No']);
+  }
 
-  /**
-   * Cancels the job creation process and navigates to the dashboard.
-   */
-  onCancel(): void {
-    this.workflowService.clearWorkflow();
-    this.showSuccessPopup('Job post creation cancelled.');
-    // Added delay for navigation
-    setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
-    }, 3000);
+  onSkip() {
+    this.openAlert('You are about to skip this step', ['Cancel', 'Continue']);
+  }
+
+  onSaveDraft() {
+    this.openAlert('You are about to save this as a draft', ['Cancel', 'Save Draft']);
   }
 
   /**
@@ -768,6 +771,54 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     }
   }
 
+
+    // Method to open alert with message and buttons
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  // Method to handle alert button click events
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false; // hide alert initially
+
+    switch(action.toLowerCase()) {
+      case 'yes':
+        this.onCancelConfirmed();
+        break;
+      case 'no':
+      case 'cancel':
+        // Just close alert, do nothing else
+        break;
+      case 'continue':
+        this.onSkipConfirmed();
+        break;
+      case 'save draft':
+        this.onSaveDraftConfirmed();
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Confirmed action handlers (called from alert buttons)
+  onCancelConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Job post creation cancelled.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+  onSkipConfirmed() {
+    this.router.navigate(['/create-job-post-3rd-page']);
+  }
+
+  onSaveDraftConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+  
   /**
    * Lifecycle hook called when the component is destroyed .
    * Unsubscribes from all active subscriptions to prevent memory leaks.

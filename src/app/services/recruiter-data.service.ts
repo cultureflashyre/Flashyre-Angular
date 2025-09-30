@@ -22,7 +22,7 @@ export interface JobPost {
   location: string; // backend stores as string, frontend as array
   job_type: string;
   workplace_type: string;
-  total_experience_min: number;
+  total_experience_min: number; 
   total_experience_max: number;
   relevant_experience_min: number;
   relevant_experience_max: number;
@@ -36,6 +36,9 @@ export interface JobPost {
   company_name: string; // matches backend
   updated_at?: string;
   is_deleted?: boolean;
+  description: string;
+  requirements: string;
+  experience_required: number;
 }
 
 

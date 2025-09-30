@@ -262,40 +262,38 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       tempJobs = tempJobs.filter(job => new Date(job.posted_date) > cutoff);
     }
 
-    if (this.searchExperienceLevel) {
-      tempJobs = tempJobs.filter(job => job.experience_level?.toLowerCase() === this.searchExperienceLevel.toLowerCase());
+    if (this.searchExperienceLevel) { 
+      tempJobs = tempJobs.filter(j => (j.experience_level || '').toLowerCase() === this.searchExperienceLevel.toLowerCase()); 
+    }
+    
+    if (this.searchDepartment) { 
+      tempJobs = tempJobs.filter(j => (j.department || '').toLowerCase().includes(this.searchDepartment.toLowerCase())); 
     }
 
-    if (this.searchDepartment) {
-      tempJobs = tempJobs.filter(job => job.department?.toLowerCase().includes(this.searchDepartment.toLowerCase()));
+    if (this.searchSalary) { 
+      tempJobs = tempJobs.filter(j => j.salary_range === this.searchSalary); 
     }
 
-    if (this.searchSalary) {
-      // Assume salary_range like '0-5', parse and filter
-      tempJobs = tempJobs.filter(job => job.salary_range === this.searchSalary);
+    if (this.searchCompanyName) { 
+      tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(this.searchCompanyName.toLowerCase().trim())); 
     }
 
-    if (this.searchCompanyName?.trim()) {
-      const searchTerm = this.searchCompanyName.toLowerCase().trim();
-      tempJobs = tempJobs.filter(job => job.company_name?.toLowerCase().includes(searchTerm));
+    if (this.searchIndustries) { 
+      tempJobs = tempJobs.filter(j => (j.industries || []).includes(this.searchIndustries)); 
     }
 
-    if (this.searchIndustries) {
-      tempJobs = tempJobs.filter(job => job.industries?.includes(this.searchIndustries));
+    if (this.searchWorkMode) { 
+      tempJobs = tempJobs.filter(j => (j.work_mode || '').toLowerCase() === this.searchWorkMode.toLowerCase()); 
     }
 
-    if (this.searchWorkMode) {
-      tempJobs = tempJobs.filter(job => job.work_mode?.toLowerCase() === this.searchWorkMode.toLowerCase());
+    if (this.searchRole) { 
+      tempJobs = tempJobs.filter(j => (j.role || '').toLowerCase().includes(this.searchRole.toLowerCase())); 
     }
 
-    if (this.searchRole) {
-      tempJobs = tempJobs.filter(job => job.role?.toLowerCase().includes(this.searchRole.toLowerCase()));
+    if (this.searchJobType) { 
+      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase()); 
     }
 
-    // Existing job_type filter if needed
-    if (this.searchJobTitle) {
-      tempJobs = tempJobs.filter(job => job.job_type?.toLowerCase() === this.searchJobTitle.toLowerCase());
-    }
 
     this.filteredJobs = tempJobs;
     this.currentPage = 0;
@@ -348,8 +346,6 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         }
       );
   }
-
-
 
   private filterAndDisplayJobs(jobs: any[]): void {
     // Diagnostic log to help debug data mismatches

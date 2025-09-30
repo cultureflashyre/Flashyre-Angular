@@ -25,6 +25,9 @@ export class AssessmentTakenPage implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 6; // Set how many items to load per page/scroll
 
+    // UI State
+  isLoading: boolean = true;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -47,6 +50,7 @@ export class AssessmentTakenPage implements OnInit {
       this.selectedAssessmentId = params['assessmentId'] || null;
     });
     
+    this.isLoading = true; // Start loading before request
     this.assessmentTakenService.getAllAssessmentScores().subscribe(
       (data) => {
         // Sort assessments by the latest_end_time in descending order (recent first)
@@ -55,8 +59,12 @@ export class AssessmentTakenPage implements OnInit {
           const dateB = new Date(b.latest_end_time).getTime();
           return dateB - dateA;
         });
+        this.isLoading = false; // Loading done after data received
       },
-      (error) => { console.error('Error fetching assessment scores', error); }
+      (error) => { 
+        console.error('Error fetching assessment scores', error); 
+        this.isLoading = false; // Loading done even if error occurs
+      }
     );
   }
 

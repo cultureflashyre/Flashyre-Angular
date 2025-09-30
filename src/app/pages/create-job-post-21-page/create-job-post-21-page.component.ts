@@ -34,6 +34,11 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   rawp46g: string = ' '; 
   rawliiy: string = ' '; 
 
+  // State for alert-message component
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -176,7 +181,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
 
   /**
    * Handles the 'Cancel' button click in the footer.
-   */
+
   onCancel(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
@@ -185,7 +190,8 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
         this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
-  
+       */
+
   /**
    * Handles the 'Previous' button click in the footer.
    */
@@ -195,14 +201,15 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   
   /**
    * Handles the 'Skip' button click in the footer.
-   */
-  onSkip(): void {
-    this.router.navigate(['/create-job-post-22-page']);
-  }
+
+  * onSkip(): void {
+    * this.router.navigate(['/create-job-post-22-page']);
+ * }
+     */
 
   /**
    * Handles the 'Save Draft' button click in the footer.
-   */
+
   onSaveDraft(): void {
     this.workflowService.clearWorkflow();
     // Replaced MatSnackBar and added navigation delay
@@ -210,6 +217,19 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     setTimeout(() => {
         this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
+  }
+       */
+
+  onCancel() {
+    this.openAlert('You are about to Cancel this action', ['Yes', 'No']);
+  }
+
+  onSkip() {
+    this.openAlert('You are about to skip this step', ['Cancel', 'Continue']);
+  }
+
+  onSaveDraft() {
+    this.openAlert('You are about to save this as a draft', ['Cancel', 'Save Draft']);
   }
 
   /**
@@ -227,4 +247,54 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+
+  // Method to open alert with message and buttons
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  // Method to handle alert button click events
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false; // hide alert initially
+
+    switch(action.toLowerCase()) {
+      case 'yes':
+        this.onCancelConfirmed();
+        break;
+      case 'no':
+      case 'cancel':
+        // Just close alert, do nothing else
+        break;
+      case 'continue':
+        this.onSkipConfirmed();
+        break;
+      case 'save draft':
+        this.onSaveDraftConfirmed();
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Confirmed action handlers (called from alert buttons)
+  onCancelConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Job post creation cancelled.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+  onSkipConfirmed() {
+    this.router.navigate(['/create-job-post-22-page']);
+  }
+
+  onSaveDraftConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+
+
 }
