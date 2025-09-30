@@ -1349,6 +1349,92 @@
   font-style: normal;
   font-weight: 600;
 }
+
+.recruiter-view3rd-page1-container23 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.recruiter-view3rd-page1-live-draft-deleted-container {
+  gap: 32px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.recruiter-view3rd-page1-live-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  padding: 12px;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.recruiter-view3rd-page1-live-text {
+  fill: #05356C;
+  color: #05356C;
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.recruiter-view3rd-page1-draft-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  padding: 12px;
+  align-items: flex-start;
+}
+ 
+.recruiter-view3rd-page1-draft-text {
+  fill: #05356C;
+  color: #05356C;
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.recruiter-view3rd-page1-deleted-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  padding: 12px;
+  align-items: flex-start;
+}
+ 
+.recruiter-view3rd-page1-deleted-text {
+  fill: #05356C;
+  color: #05356C;
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
  
 .recruiter-view3rd-page1-job-posted-container {
   gap: 8px;
@@ -1439,7 +1525,7 @@
 .recruiter-view3rd-page1-details-container3 {
   gap: 4px;
   flex: 0 0 auto;
-  width: 451px;
+  width: auto;
   height: 80px;
   display: flex;
   align-items: flex-start;
@@ -1525,11 +1611,135 @@
   cursor: pointer;
 }
 
+.recruiter-view3rd-page1-second-container {
+  flex: 0 0 auto;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recruiter-view3rd-page1-switch-container {
+  grid-row: 1;
+  flex: 0 0 auto;
+  height: 30px;
+  display: flex;
+  align-self: flex-end;
+  align-items: flex-start;
+}
+
+.recruiter-view3rd-page1-container24 {
+  height: 100%;
+}
+ 
+.recruiter-view3rd-page1-container25 {
+  display: contents;
+}
+
+.recruiter-view3rd-page1-icons-container {
+  grid-row: 4;
+  gap: 16px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.recruiter-view3rd-page1-delete-icon {
+  fill: #f10400;
+  color: #f10400;
+}
+
+.recruiter-view3rd-page1-delete-icon:hover {
+  cursor: pointer;
+}
+
+.recruiter-view3rd-page1-edit-text {
+  fill: #05356C;
+  color: #05356C;
+}
+
+.recruiter-view3rd-page1-edit-text:hover {
+  cursor: pointer;
+  transform: scale(00.7s);
+  transition: all 0.9s;
+}
+
+.recruiter-view3rd-page1-edit-text:active {
+  transform: scale(0.9s);
+  transition: all 1.05s;
+}
+
+.recruiter-view3rd-page1-view-candidates-text {
+  fill: #05356C;
+  color: #05356C;
+}
+
+.recruiter-view3rd-page1-view-candidates-text:hover {
+  cursor: pointer;
+  transform: scale(00.7s);
+  transition: all 0.9s;
+}
+
+.recruiter-view3rd-page1-view-candidates-text:active {
+  transform: scale(0.9s);
+  transition: all 1.05s;
+}
+
+.recruiter-view3rd-page1-live-draft-deleted-container > div {
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 2px solid transparent;
+}
+
+.recruiter-view3rd-page1-live-draft-deleted-container > div.active-tab {
+  border-bottom: 2px solid #05356c; /* Or your theme color */
+  font-weight: bold;
+}
+
+.empty-state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.empty-state-container p {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0;
+}
+
+.recruiter-view3rd-page1-jobid-expiry-date-container {
+  height: auto;
+  width: auto;
+  gap: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.recruiter-view3rd-page1-jobid {
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  font-weight: 400;
+  color: #05356c;
+  align-self: center;
+
 .no-jobs-message {
   font-size: 1.2em;
   color: #666;
   padding: 20px;
   text-align: center;
+
 }
  
 @media(max-width: 1200px) {
@@ -1630,6 +1840,29 @@
   .recruiter-view3rd-page1-job-title-container1 {
     width: 192px;
   }
+  .recruiter-view3rd-page1-container23 {
+    height: auto;
+  }
+  .recruiter-view3rd-page1-live-draft-deleted-container {
+    gap: 24px;
+  }
+  .recruiter-view3rd-page1-live-container {
+    width: auto;
+    border-color: #05356C;
+    border-width: 2px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .recruiter-view3rd-page1-live-text {
+    width: auto;
+  }
+  .recruiter-view3rd-page1-draft-text {
+    width: auto;
+  }
+  .recruiter-view3rd-page1-deleted-text {
+    width: auto;
+  }
   .recruiter-view3rd-page1-job-posted-container {
     align-items: center;
   }
@@ -1641,7 +1874,44 @@
   .recruiter-view3rd-page1-job-description-container {
     width: 600px;
   }
+  .recruiter-view3rd-page1-second-container {
+    width: auto;
+    height: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .recruiter-view3rd-page1-switch-container {
+    width: auto;
+    height: 30px;
+    align-self: flex-end;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .recruiter-view3rd-page1-container24 {
+    height: 100%;
+  }
+  .recruiter-view3rd-page1-icons-container {
+    gap: 16px;
+    width: auto;
+    height: auto;
+    border-width: 0px;
+  }
+  .recruiter-view3rd-page1-delete-icon {
+    fill: #f10400;
+    color: #f10400;
+  }
+  .recruiter-view3rd-page1-edit-text {
+    fill: rgb(5, 53, 108);
+    color: rgb(5, 53, 108);
+    align-self: center;
+  }
+  .recruiter-view3rd-page1-view-candidates-text {
+    fill: rgb(5, 53, 108);
+    color: rgb(5, 53, 108);
+    align-self: center;
+  }
 }
+
  
 @media(max-width: 991px) {
   .recruiter-view3rd-page1-recruiter-view3rd-page1-main-container {
@@ -1875,6 +2145,19 @@
     right: 0px;
     position: absolute;
     margin-right: 10px;
+  }
+  .recruiter-view3rd-page1-icons-container {
+    gap: 12px;
+  }
+  .recruiter-view3rd-page1-delete-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .recruiter-view3rd-page1-edit-text {
+    font-size: 14px;
+  }
+  .recruiter-view3rd-page1-view-candidates-text {
+    font-size: 14px;
   }
 }
  

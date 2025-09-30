@@ -11,6 +11,7 @@ import { RecruiterPreferenceService } from '../../services/recruiter-preference.
 
 import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
+import { JobCreationWorkflowService } from 'src/app/services/job-creation-workflow.service';
 
 
 @Component({
@@ -47,19 +48,13 @@ import { environment } from 'src/environments/environment';
 
 export class RecruiterView3rdPage1 implements OnInit {
   recruiterProfile: any = {};
-
   defaultProfilePicture: string = environment.defaultProfilePicture;
-  defaultCompanyIcon: string = environment.defaultCompanyIcon;
-  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
   chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
   
-  
-  // Job list management
-  masterPostedJobs: JobPost[] = []; // Holds all jobs from the API, never modified by filters
-  filteredJobs: JobPost[] = []; // Holds jobs after filtering
-  postedJobs: JobPost[] = []; // Holds the jobs currently displayed on the page
+  masterPostedJobs: JobPost[] = [];
+  filteredJobs: JobPost[] = [];
+  postedJobs: JobPost[] = [];
 
-  // Search bar models
   searchJobTitle: string = '';
   searchLocation: string = '';
   searchExperience: string = '';
@@ -84,16 +79,19 @@ export class RecruiterView3rdPage1 implements OnInit {
 
   // State management
   recruiterId: string | null = null;
-  private displayPage = 0; // Tracks the current page of DISPLAYED jobs
-  private jobsPerPage = 10; // How many jobs to display at a time
-  isLoading = true; // For initial load
-  allJobsDisplayed = false; // Tracks if all FILTERED jobs are displayed
+  private displayPage = 0;
+  private jobsPerPage = 10;
+  isLoading = true;
+  allJobsDisplayed = false;
+
+  activeTab: 'live' | 'draft-pause' | 'deleted' = 'live';
 
   constructor(
     private title: Title,
     private meta: Meta,
     private recruiterService: RecruiterDataService,
     private router: Router,
+    private workflowService: JobCreationWorkflowService,
     private corporateAuthService: CorporateAuthService,
   ) {
     this.title.setTitle('Recruiter-View-3rd-Page1 - Flashyre');
@@ -109,78 +107,48 @@ export class RecruiterView3rdPage1 implements OnInit {
   }
 
   ngOnInit(): void {
-  // Check if running in a browser environment before accessing localStorage
-  if (typeof window !== 'undefined' && window.localStorage) {
-    this.loadUserProfile();
-    this.recruiterId = localStorage.getItem('user_id');
-  }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.loadUserProfile();
+      this.recruiterId = localStorage.getItem('user_id');
+    }
 
-  if (this.recruiterId) {
-    //this.fetchRecruiterProfile();
-    this.fetchAllJobs(); // Start fetching all jobs page by page
-  } else {
-    console.error('Recruiter ID not found in local storage. User might not be logged in.');
-    // Optionally, you can redirect the user to the login page
-    // this.router.navigate(['/login']);
+    if (this.recruiterId) {
+      this.fetchAllJobs();
+    } else {
+      console.error('Recruiter ID not found in local storage.');
+    }
   }
-}
 
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) 
       this.recruiterProfile = JSON.parse(profileData);
-  } 
-
-  fetchRecruiterProfile(): void {
-    this.recruiterService.getRecruiterProfile(this.recruiterId).subscribe(
-      (data) => {
-        this.recruiterProfile = data;
-      },
-      (error) => {
-        console.error('Error fetching recruiter profile:', error);
-      }
-    );
   }
 
-  /**
-   * Fetches all posted jobs by calling the paginated API endpoint recursively.
-   * This is the corrected data loading logic.
-   * @param apiPage The page number to fetch from the API.
-   */
   fetchAllJobs(apiPage = 1): void {
-    // Show loader only on the first call
     if (apiPage === 1) {
       this.isLoading = true;
       this.masterPostedJobs = [];
     }
 
-    // Call the service with the correct two arguments
     this.recruiterService.getRecruiterJobs(this.recruiterId, apiPage).subscribe(
       (data) => {
         if (data.jobs && data.jobs.length > 0) {
-          // Add the fetched jobs to our master list
           this.masterPostedJobs.push(...data.jobs);
-          // Recursively call to fetch the next page
           this.fetchAllJobs(apiPage + 1);
         } else {
-          // No more jobs were returned, so we're done fetching from the API.
           this.isLoading = false;
-          // Now, display the initial set of jobs based on current (empty) filters.
           this.runFilterPipeline();
         }
       },
       (error) => {
         console.error(`Error fetching page ${apiPage} of posted jobs:`, error);
         this.isLoading = false;
-        // In case of an error, still try to display whatever jobs were fetched successfully.
         this.runFilterPipeline();
       }
     );
   }
 
-  /**
-   * Main search button click handler
-   */
   onSearch(): void {
     this.resetMoreFilters();
     this.runFilterPipeline();
@@ -218,8 +186,22 @@ export class RecruiterView3rdPage1 implements OnInit {
    * The core filtering logic. It filters the master list of jobs
    * and resets the view with the results.
    */
+
   private runFilterPipeline(): void {
     let tempJobs = [...this.masterPostedJobs];
+    
+    switch (this.activeTab) {
+      case 'live':
+        tempJobs = tempJobs.filter(job => job.status === 'final');
+        break;
+      case 'draft-pause':
+        tempJobs = tempJobs.filter(job => job.status === 'draft' || job.status === 'pause');
+        break;
+      case 'deleted':
+        tempJobs = tempJobs.filter(job => job.status === 'deleted');
+        break;
+    }
+
     const keywordTerm = this.searchJobTitle.toLowerCase().trim();
     const locationTerm = this.searchLocation.toLowerCase().trim();
     const experienceTerm = this.searchExperience.toLowerCase().trim();
@@ -233,13 +215,11 @@ export class RecruiterView3rdPage1 implements OnInit {
         (job.job_type || '').toLowerCase().includes(keywordTerm)
       );
     }
-
     if (locationTerm) {
       tempJobs = tempJobs.filter(job =>
         (job.location || '').toLowerCase().includes(locationTerm)
       );
     }
-    
     if (experienceTerm) {
         const searchExp = parseInt(experienceTerm, 10);
         if (!isNaN(searchExp)) {
@@ -289,23 +269,15 @@ export class RecruiterView3rdPage1 implements OnInit {
     this.loadNextPage();
   }
 
-  /**
-   * Loads the next set of jobs from the filtered list into the displayed list.
-   */
   private loadNextPage(): void {
-    if (this.isLoading || this.allJobsDisplayed) {
-      return;
-    }
-
+    if (this.isLoading || this.allJobsDisplayed) return;
     const startIndex = this.displayPage * this.jobsPerPage;
     if (startIndex >= this.filteredJobs.length) {
-      this.allJobsDisplayed = true; // All filtered jobs have been loaded
+      this.allJobsDisplayed = true;
       return;
     }
-
     const endIndex = startIndex + this.jobsPerPage;
     const nextJobs = this.filteredJobs.slice(startIndex, endIndex);
-    
     this.postedJobs.push(...nextJobs);
     this.displayPage++;
   }
@@ -314,8 +286,6 @@ export class RecruiterView3rdPage1 implements OnInit {
   onScroll(event: Event): void {
     const pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     const max = document.documentElement.scrollHeight;
-    
-    // Load more jobs for display when the user is 100px from the bottom
     if (pos >= max - 100) {
       this.loadNextPage();
     }
@@ -346,27 +316,90 @@ export class RecruiterView3rdPage1 implements OnInit {
       };
     }
   }
+  
+  selectTab(tabName: 'live' | 'draft-pause' | 'deleted'): void {
+    this.activeTab = tabName;
+    this.runFilterPipeline();
+  }
 
-  getPostedDaysAgo(createdAt: string): string {
-    const createdDate = new Date(createdAt);
-    const currentDate = new Date();
-    const differenceInTime = currentDate.getTime() - createdDate.getTime();
+  // --- ADD THIS FUNCTION ---
+  /**
+   * Calculates the number of jobs with a given status from the master list.
+   * @param status The status to count.
+   * @returns The number of jobs matching the status.
+   */
+  getStatusCount(status: 'final' | 'draft' | 'pause' | 'deleted'): number {
+    if (!this.masterPostedJobs) {
+      return 0;
+    }
+    return this.masterPostedJobs.filter(job => job.status === status).length;
+  }
+  // --- END OF ADDED FUNCTION ---
+
+  handleStatusChange(job: JobPost, newStatus: 'pause' | 'final' | 'deleted', event: Event): void {
+    let confirmationMessage = '';
+    if (newStatus === 'pause') {
+      confirmationMessage = 'Are you sure you want to pause this job?';
+    } else if (newStatus === 'final') {
+      confirmationMessage = 'Are you sure you want to make this job live?';
+    } else if (newStatus === 'deleted') {
+      confirmationMessage = 'Are you sure you want to delete this job?';
+    }
+
+    if (confirm(confirmationMessage)) {
+      this.recruiterService.updateJobStatus(job.unique_id, newStatus).subscribe({
+        next: () => {
+          const jobInMaster = this.masterPostedJobs.find(j => j.unique_id === job.unique_id);
+          if (jobInMaster) {
+            jobInMaster.status = newStatus;
+          }
+          this.runFilterPipeline();
+        },
+        error: (err) => console.error('Failed to update job status:', err)
+      });
+    } else {
+        // If user clicks "Cancel", prevent the default action and revert the checkbox state
+        event.preventDefault();
+        const input = event.target as HTMLInputElement;
+        input.checked = !input.checked;
+    }
+  }
+  
+  editJob(job: JobPost): void {
+    // 3. MODIFY THIS METHOD
+    // This starts the edit workflow and stores the job ID and edit flag
+    this.workflowService.startEditWorkflow(job.unique_id);
+    // This navigation is now more powerful because the workflow service holds the state
+    this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
+  }
+
+  getPostedDaysAgo(dateStr: string): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const differenceInTime = now.getTime() - date.getTime();
     const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
 
     if (differenceInDays === 0) {
-      return 'job posted today';
+        return 'today';
     } else if (differenceInDays === 1) {
-      return 'job posted 1 day ago';
+        return '1 day ago';
     } else {
-      return `job posted ${differenceInDays} days ago`;
+        return `${differenceInDays} days ago`;
     }
+  }
+
+  getDisplayDate(job: JobPost): string {
+    if (this.activeTab === 'draft-pause' || this.activeTab === 'deleted') {
+      return `Updated ${this.getPostedDaysAgo(job.updated_at || job.created_at)}`;
+    }
+    return `Posted ${this.getPostedDaysAgo(job.created_at)}`;
   }
 
   navigateToCreateJobPost(): void {
     this.router.navigate(['/create-job-post-1st-page']);
   }
 
-  viewJobApplications(jobId: string): void {
+  viewJobApplications(jobId: string | number): void { // Can be string or number
     if (jobId) {
       this.router.navigate(['/recruiter-view-job-applications-1', jobId]);
     } else {
@@ -375,7 +408,6 @@ export class RecruiterView3rdPage1 implements OnInit {
   }
 
   onLogoutClick() {
-    this.corporateAuthService.logout(); // Call the logout method in AuthService
-    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
+    this.corporateAuthService.logout();
   }
 }
