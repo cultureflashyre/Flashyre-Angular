@@ -24,7 +24,6 @@
       >
         <nav id="header-links" class="navbar-for-candidate-view-links">
           <a
-            [attr.href]="link1Url"
             id="navbar-dashboard-link"
             class="navbar-for-candidate-view-dashboard-link thq-body-small button"
           >
@@ -41,7 +40,7 @@
               ></ng-container>
             </ng-container>
           </a>
-          <a
+          <!-- <a
             [attr.href]="link2Url"
             id="navbar-upskill-link"
             class="navbar-for-candidate-view-upskill-link thq-body-small button"
@@ -57,8 +56,8 @@
               ></ng-container>
             </ng-container>
           </a>
+        -->
           <a
-            [attr.href]="link3Url"
             id="navbar-assessment-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-assessment-link thq-body-small button"
@@ -77,7 +76,6 @@
             </ng-container>
           </a>
           <a
-            [attr.href]="link4Url"
             id="navbar-jobs-for-you-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
@@ -107,11 +105,17 @@
           class="navbar-for-candidate-view-dropdown-toggle1"
         >
           <img
+            *ngIf="userProfile.profile_picture_url; else showInitials"
             id="user-image"
             [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
             [attr.alt]="imageAlt3"
             class="navbar-for-candidate-view-user-image1"
           />
+              <ng-template #showInitials>
+                <div class="avatar-icon navbar-for-candidate-view-user-image1" [style.background-color]="avatarBgColor">
+                  {{ userProfile.initials }}
+                </div>
+              </ng-template>
           <div
             data-thq="thq-dropdown-arrow"
             class="navbar-for-candidate-view-dropdown-arrow"
@@ -149,9 +153,9 @@
                 <ng-container>
                   <ng-template #defaultText1>
                     <div class="navbar-for-candidate-view-fragment14">
-                      <span class="navbar-for-candidate-view-text14">
+                      <a [routerLink]="['/profile-overview-page']" class="navbar-for-candidate-view-text14">
                         Profile
-                      </span>
+                      </a>
                     </div>
                   </ng-template>
                   <ng-container
@@ -161,7 +165,7 @@
               </span>
             </div>
           </li>
-          <li
+          <!-- <li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view-preference1 list-item"
           >
@@ -214,7 +218,7 @@
                 </ng-container>
               </span>
             </div>
-          </li>
+          </li> -->
           <li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view-logout1 list-item"
@@ -589,7 +593,7 @@
                 id="profile-dropdown"
                 class="navbar-for-candidate-view-container19"
               >
-                <div
+                <!--<div
                   id="preference-container"
                   class="navbar-for-candidate-view-preference-container"
                 >
@@ -636,8 +640,8 @@
                       ></ng-container>
                     </ng-container>
                   </span>
-                </div>
-                <div
+                </div> -->
+                <!-- <div
                   id="settings-container"
                   class="navbar-for-candidate-view-settings-container"
                 >
@@ -671,7 +675,7 @@
                       ></ng-container>
                     </ng-container>
                   </span>
-                </div>
+                </div> -->
                 <div
                   id="logout-container"
                   class="navbar-for-candidate-view-logout-container button"

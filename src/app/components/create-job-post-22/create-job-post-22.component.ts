@@ -1,9 +1,7 @@
-
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { McqAssessmentService } from '../../services/mcq-assessment.service';
 import { JobDescriptionService } from '../../services/job-description.service';
@@ -69,6 +67,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   isLoading: boolean = true;
   isSubmitting: boolean = false;
 
+  // Properties for the custom alert popup
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupType: 'success' | 'error' = 'success';
+
   // Properties for the horizontal skill tab carousel logic
   currentScrollIndex = 0;
   maxScrollIndex = 0;
@@ -76,11 +79,15 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   private readonly skillTabWidth = 130; // From CSS: width
   private readonly skillTabGap = 16;   // From CSS: gap
 
+    // State for alert-message component
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
+
   /**
    * Constructor for dependency injection
    * @param fb FormBuilder for creating reactive forms
    * @param router Router for navigation
-   * @param snackBar MatSnackBar for displaying notifications
    * @param authService CorporateAuthService for handling authentication
    * @param mcqService McqAssessmentService for assessment-related API calls
    * @param jobService JobDescriptionService for job-related API calls
@@ -90,7 +97,6 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar,
     private authService: CorporateAuthService,
     private mcqService: McqAssessmentService,
     private jobService: JobDescriptionService,
@@ -114,6 +120,9 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   ngOnInit(): void {
     this.initializeForm();
 
+    // THIS IS THE KEY: Get the job ID from the workflow service
+    this.jobUniqueId = this.workflowService.getCurrentJobId();
+
     // MODIFICATION: Get the current job ID from the workflow service
     // This replaces the @Input for jobUniqueId if workflow is the primary source
     // If jobUniqueId is still passed as input, this will override it.
@@ -126,18 +135,89 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
 
     // Ensure job context is available
     if (!this.jobUniqueId) {
-      this.snackBar.open('Error: Job context is missing.', 'Close', { duration: 5000 });
+      this.showErrorPopup('Error: Job context is missing.');
       this.isLoading = false;
+      this.router.navigate(['/create-job-post-1st-page']); // Go back if no job ID
       return;
     }
 
-    // MODIFICATION: Conditional logic to either load existing data or fetch new data
-    if (this.currentAssessmentId) {
-      this.loadExistingAssessment(this.currentAssessmentId);
-    } else {
-      this.fetchNewMcqList(); // This calls the original fetchMcqData logic
-    }
+    // NEW LOGIC: Check if an assessment already exists for this job.
+    // If we have an ID from the workflow, we use it. Otherwise, we can have a check.
+    // For simplicity, we'll assume for now that if an assessment exists, we need to load it.
+    // A more robust solution might involve checking on the backend.
+    this.loadExistingAssessmentAndAllQuestions();
+  
+}
+
+// CREATE a new method to orchestrate loading
+  private loadExistingAssessmentAndAllQuestions(): void {
+    this.isLoading = true;
+    const token = this.authService.getJWTToken();
+    if (!token) { /* handle error */ return; }
+
+    // 1. Fetch ALL available questions for the job post
+    this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
+      next: (mcqResponse) => {
+        const skillData = mcqResponse.data;
+        this.skillSections = Object.keys(skillData).map(skillName => {
+            const questions = this.processMcqItems(skillData[skillName].mcq_items);
+            return {
+              skillName, questions, totalCount: questions.length,
+              selectedCount: 0, isAllSelected: false,
+            };
+        });
+
+        // 2. NOW, try to fetch the details of a SAVED assessment
+        this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token).subscribe({
+            next: (assessmentDetails) => {
+                if (assessmentDetails) { // Check if an assessment was found
+                    this.currentAssessmentId = assessmentDetails.assessment_uuid;
+                    this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+
+                    // Populate form fields
+                    this.assessmentForm.patchValue({
+                        assessmentName: assessmentDetails.name,
+                        shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+                        isProctored: assessmentDetails.is_proctored,
+                        allowPhoneAccess: assessmentDetails.allow_phone_access,
+                        allowVideoRecording: assessmentDetails.has_video_recording,
+                        difficulty: assessmentDetails.difficulty,
+                        timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+                    });
+
+                    // Pre-select the questions
+                    const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
+                    this.skillSections.forEach(section => {
+                        section.questions.forEach(q => {
+                            if (selectedIds.has(q.mcq_item_id)) {
+                                q.isSelected = true;
+                            }
+                        });
+                        this.updateCountsForSection(section);
+                    });
+                    this.updateCounts();
+                }
+                this.isLoading = false;
+                setTimeout(() => {
+                  this.calculateCarouselState();
+                  this.updateSliderFill();
+                }, 0);
+            },
+            error: (err) => {
+              // This is not a critical error; it just means no assessment exists yet.
+              console.warn("No existing assessment found for this job, starting fresh.", err);
+              this.isLoading = false;
+              setTimeout(() => this.calculateCarouselState(), 0);
+            }
+        }));
+      },
+      error: (err) => {
+        this.showErrorPopup(`Failed to load base questions: ${err.message}`);
+        this.isLoading = false;
+      }
+    }));
   }
+  
 
   /**
    * Lifecycle hook called after the component's view has been fully initialized 
@@ -150,6 +230,25 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.calculateCarouselState();
   }
 
+  // --- Popup Handling Methods ---
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'success';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
+  }
+
+  showErrorPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 5000); // Auto-close after 5 seconds
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.popupMessage = '';
+  }
 
   /**
    * Processes raw MCQ items from the API into the internal McqQuestion format.
@@ -215,7 +314,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    */
   private initializeForm(): void {
     this.assessmentForm = this.fb.group({
-      assessmentName: ['', Validators.required],
+      assessmentName: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$')
+      ]],
       shuffleQuestions: [true],
       isProctored: [true],
       allowPhoneAccess: [true],
@@ -234,7 +337,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isLoading = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.showErrorPopup('Authentication error. Please log in again.');
       this.router.navigate(['/login-corporate']);
       this.isLoading = false;
       return;
@@ -289,7 +392,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
                  setTimeout(() => this.calculateCarouselState(), 0);
             },
             error: (err) => {
-              this.snackBar.open(`Failed to load assessment details: ${err.message}`, 'Close', { duration: 5000 });
+              this.showErrorPopup(`Failed to load assessment details: ${err.message}`);
               this.isLoading = false;
               // Even if loading details fails, we have the MCQ list, so maybe don't navigate away?
               // Or navigate back? Depends on desired UX.
@@ -297,7 +400,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
         }));
       },
       error: (err) => {
-        this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
+        this.showErrorPopup(`Failed to load questions: ${err.message}`);
         this.isLoading = false;
       }
     }));
@@ -312,7 +415,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isLoading = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+      this.showErrorPopup('Authentication error. Please log in again.');
       this.router.navigate(['/login-corporate']);
       this.isLoading = false;
       return;
@@ -334,7 +437,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
            setTimeout(() => this.calculateCarouselState(), 0);
         },
         error: (err) => {
-          this.snackBar.open(`Failed to load questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.showErrorPopup(`Failed to load questions: ${err.message}`);
           this.isLoading = false;
         }
       })
@@ -508,7 +611,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.isSubmitting = true;
     const token = this.authService.getJWTToken();
     if (!token) {
-        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.showErrorPopup('Authentication error. Please log in again.');
         this.isSubmitting = false;
         return;
     }
@@ -521,11 +624,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
           this.onQuestionSelectionChange(); // Re-evaluate section selection state
           // After adding questions, the total number of items might have changed, so recalculate.
           setTimeout(() => this.calculateCarouselState(), 0);
-          this.snackBar.open(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`, 'Close', { duration: 3000 });
+          this.showSuccessPopup(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`);
           this.isSubmitting = false;
         },
         error: (err) => {
-          this.snackBar.open(`Failed to generate more questions: ${err.message}`, 'Close', { duration: 5000 });
+          this.showErrorPopup(`Failed to generate more questions: ${err.message}`);
           this.isSubmitting = false;
         }
       })
@@ -540,14 +643,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   /**
    * Skips the assessment creation/editing step.
    */
-  onSkip(): void { this.router.navigate(['/create-job-post-3rd-page']); }
+  onCancel() {
+    this.openAlert('You are about to Cancel this action', ['Yes', 'No']);
+  }
 
-  /**
-   * Cancels the job creation process and navigates to the dashboard.
-   */
-  onCancel(): void {
-    this.workflowService.clearWorkflow();
-    this.router.navigate(['/dashboard']);
+  onSkip() {
+    this.openAlert('You are about to skip this step', ['Cancel', 'Continue']);
+  }
+
+  onSaveDraft() {
+    this.openAlert('You are about to save this as a draft', ['Cancel', 'Save Draft']);
   }
 
   /**
@@ -568,17 +673,17 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   onNext(): void {
     this.assessmentForm.markAllAsTouched(); // Mark fields as touched to show validation errors
     if (this.assessmentForm.invalid) {
-      this.snackBar.open('Please fill in all required settings (e.g., Assessment Name).', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      this.showErrorPopup('Please fill in all required settings (e.g., Assessment Name).');
       return;
     }
     if (this.totalSelectedCount === 0) {
-      this.snackBar.open('Please select at least one question to proceed.', 'Close', { panelClass: ['error-snackbar'], duration: 3000 });
+      this.showErrorPopup('Please select at least one question to proceed.');
       return;
     }
 
     const token = this.authService.getJWTToken();
     if (!token) {
-        this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
+        this.showErrorPopup('Authentication error. Please log in again.');
         return;
     }
 
@@ -599,7 +704,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
         timeInMinutes = (hours * 60) + minutes;
     } catch (e) {
         console.error("Could not parse time limit", this.assessmentForm.get('timeLimit')?.value);
-        this.snackBar.open('Invalid time format. Please use HH:MM.', 'Close');
+        this.showErrorPopup('Invalid time format. Please use HH:MM.');
         this.isSubmitting = false;
         return;
     }
@@ -625,13 +730,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
             this.mcqService.updateAssessment(this.currentAssessmentId, payload, token).subscribe({
                 next: () => {
                     this.isSubmitting = false;
-                    this.snackBar.open('Assessment updated successfully!', 'Close', { duration: 3000 });
-                    this.router.navigate(['/create-job-post-3rd-page']);
+                    this.showSuccessPopup('Assessment updated successfully!');
+                    // SOLUTION: Delay navigation to allow the user to see the message.
+                    setTimeout(() => {
+                      this.router.navigate(['/create-job-post-3rd-page']);
+                    }, 3000);
                 },
                 error: (err) => {
                   this.isSubmitting = false;
                   const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
-                  this.snackBar.open(`Update failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
+                  this.showErrorPopup(`Update failed: ${errorDetail}`);
                   console.error("Backend update error:", err);
                 }
             })
@@ -643,18 +751,19 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
                 next: (response) => {
                     this.isSubmitting = false;
                     // CRITICAL: Save the new assessment ID to the workflow
-                    // Assuming the response contains the UUID as `assessment_uuid` or similar.
-                    // Adjust the property name based on your actual API response.
                     if (response && response.assessment_uuid) {
                        this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
                     }
-                    this.snackBar.open('Assessment saved successfully!', 'Close', { duration: 3000 });
-                    this.router.navigate(['/create-job-post-3rd-page']);
+                    this.showSuccessPopup('Assessment saved successfully!');
+                    // SOLUTION: Delay navigation to allow the user to see the message.
+                    setTimeout(() => {
+                      this.router.navigate(['/create-job-post-3rd-page']);
+                    }, 3000);
                 },
                 error: (err) => {
                   this.isSubmitting = false;
                   const errorDetail = err.error ? (typeof err.error === 'string' ? err.error : JSON.stringify(err.error)) : err.message;
-                  this.snackBar.open(`Save failed: ${errorDetail}`, 'Close', { panelClass: ['error-snackbar'], duration: 7000 });
+                  this.showErrorPopup(`Save failed: ${errorDetail}`);
                   console.error("Backend save error:", err);
                 }
             })
@@ -662,6 +771,54 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     }
   }
 
+
+    // Method to open alert with message and buttons
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  // Method to handle alert button click events
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false; // hide alert initially
+
+    switch(action.toLowerCase()) {
+      case 'yes':
+        this.onCancelConfirmed();
+        break;
+      case 'no':
+      case 'cancel':
+        // Just close alert, do nothing else
+        break;
+      case 'continue':
+        this.onSkipConfirmed();
+        break;
+      case 'save draft':
+        this.onSaveDraftConfirmed();
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Confirmed action handlers (called from alert buttons)
+  onCancelConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Job post creation cancelled.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+  onSkipConfirmed() {
+    this.router.navigate(['/create-job-post-3rd-page']);
+  }
+
+  onSaveDraftConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+  
   /**
    * Lifecycle hook called when the component is destroyed .
    * Unsubscribes from all active subscriptions to prevent memory leaks.
@@ -670,4 +827,3 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.subscriptions.unsubscribe();
   }
 }
-

@@ -168,6 +168,18 @@
   object-fit: cover;
   border-radius: var(--dl-radius-radius-round);
 }
+
+.avatar-icon {
+  /*background-color: #6c757d;  or any preferred color */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
  
 .navbar-for-candidate-view-dropdown-arrow {
   transition: 0.3s;

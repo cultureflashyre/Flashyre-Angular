@@ -8,6 +8,15 @@
 >
   <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
 </ngx-spinner>
+
+<app-alert-message 
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
 <div class="create-job-post21-page-container1">
   <div class="create-job-post21-page-container2">
     <!-- Navbar Component with all its original template content -->
@@ -21,7 +30,7 @@
       </ng-template>
       <ng-template #link1>
         <div class="create-job-post21-page-fragment11">
-          <span class="create-job-post21-page-text11">Dashboard</span>
+          <span class="create-job-post21-page-text11">Home</span>
         </div>
       </ng-template>
       <ng-template #link4>
@@ -46,7 +55,7 @@
       </ng-template>
       <ng-template #text7>
         <div class="create-job-post21-page-fragment16">
-          <span class="create-job-post21-page-text16">Dashboard</span>
+          <span class="create-job-post21-page-text16">Home</span>
         </div>
       </ng-template>
       <ng-template #text9>
@@ -109,6 +118,14 @@
         </div>
       </ng-template>
     </navbar-for-recruiter-view>
+
+    <!-- Popup Message -->
+    <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      <span *ngIf="popupType === 'success'" class="tick">✔</span>
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> × </span>
+
+    </div>
 
     <!-- Main Content Container -->
     <div class="create-job-post21-page-container3">

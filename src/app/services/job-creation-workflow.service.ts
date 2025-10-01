@@ -8,6 +8,7 @@ export class JobCreationWorkflowService {
   private readonly STORAGE_KEY = 'jobCreationUniqueId';
 
   private readonly ASSESSMENT_ID_KEY = 'jobCreationAssessmentId';
+  private readonly EDIT_MODE_KEY = 'jobCreationIsEditMode';
   
   // BehaviorSubject allows components to subscribe to the current ID
   private currentJobId = new BehaviorSubject<string | null>(null);
@@ -16,6 +17,9 @@ export class JobCreationWorkflowService {
   // MODIFICATION: Add BehaviorSubject for the assessment ID
   private currentAssessmentId = new BehaviorSubject<string | null>(null);
   public currentAssessmentId$ = this.currentAssessmentId.asObservable();
+
+  private isEditMode = new BehaviorSubject<boolean>(false);
+  public isEditMode$ = this.isEditMode.asObservable();
 
   constructor() {
     // When the service is instantiated, try to load the ID from session storage.
@@ -29,6 +33,11 @@ export class JobCreationWorkflowService {
     const savedAssessmentId = sessionStorage.getItem(this.ASSESSMENT_ID_KEY);
     if (savedAssessmentId) {
         this.currentAssessmentId.next(savedAssessmentId);
+    }
+
+    const savedEditMode = sessionStorage.getItem(this.EDIT_MODE_KEY);
+    if (savedEditMode) {
+      this.isEditMode.next(savedEditMode === 'true');
     }
 
   }
@@ -46,12 +55,30 @@ export class JobCreationWorkflowService {
     this.currentJobId.next(uniqueId);
   }
 
+  public startEditWorkflow(uniqueId: string): void {
+    if (!uniqueId) {
+      console.error("Edit workflow cannot be started with an empty uniqueId.");
+      return;
+    }
+    sessionStorage.setItem(this.STORAGE_KEY, uniqueId);
+    this.currentJobId.next(uniqueId);
+    
+    sessionStorage.setItem(this.EDIT_MODE_KEY, 'true');
+    this.isEditMode.next(true);
+  }
+
+
   /**
    * Retrieves the current job ID synchronously.
    * @returns The unique ID string or null if not in a workflow.
    */
   public getCurrentJobId(): string | null {
     return this.currentJobId.getValue();
+  }
+
+  // ADD THIS NEW METHOD
+  public getIsEditMode(): boolean {
+    return this.isEditMode.getValue();
   }
 
   // MODIFICATION: New methods to manage assessment ID

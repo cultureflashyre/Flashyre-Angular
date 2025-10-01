@@ -7,12 +7,17 @@
     id="recruiter-profile-container"
     class="recruiter-profile-recruiter-profile-container"
   >
-    <img
-      id="recruiter-profile-picture"
-      [attr.alt]="imageAlt"
-      [attr.src]="imageSrc"
-      class="recruiter-profile-recruiter-image"
-    />
+  <img 
+    *ngIf="recruiterProfile.profile_picture_url; else initialsAvatar"
+    id="recruiter-profile-picture"
+    [src]="recruiterProfile.profile_picture_url ? recruiterProfile.profile_picture_url : defaultProfilePicture"
+    class="recruiter-view3rd-page1-user-image thq-img-ratio-1-1 thq-img-round"
+  />
+  <ng-template #initialsAvatar>
+    <div class="initials-avatar thq-img-ratio-1-1 thq-img-round recruiter-view3rd-page1-user-image">
+      {{ recruiterProfile.initials }}
+    </div>
+  </ng-template>
     <div id="recruiter-details" class="recruiter-profile-details-container">
       <span id="recruiter-name" class="recruiter-profile-recruiter-name">
         <ng-container>
@@ -30,12 +35,12 @@
         id="recruiter-company-logo-and-name"
         class="recruiter-profile-container2"
       >
-        <img
+        <!--<img
           id="recruiter-company-image"
           [attr.alt]="imageAlt1"
           [attr.src]="imageSrc1"
           class="recruiter-profile-company-image"
-        />
+        /> -->
         <span
           id="recruiter-company-name"
           class="recruiter-profile-company-name"

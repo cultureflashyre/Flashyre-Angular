@@ -37,6 +37,7 @@
                   <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
                 </ng-container>
               </span>
+              <div class="profile-education-dates-container">
               <div class="profile-education-component-form1 input">
                 <input
                   type="date"
@@ -46,7 +47,6 @@
                   required
                 />
               </div>
-            </div>
             <div class="profile-education-component-form2 input">
               <input
                 type="date"
@@ -56,6 +56,8 @@
                 [max]="todayDate"
                 required
               />
+            </div>
+            </div>
             </div>
           </div>
 

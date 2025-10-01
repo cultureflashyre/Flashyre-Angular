@@ -55,14 +55,37 @@ const routes = [
       import(
         './pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module'
       ).then((m) => m.RecruiterView3rdPageModule),
+      
+  },
+  {
+    path: 'recruiter-view-3rd-page1',
+    loadChildren: () =>
+      import(
+        './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
+      ).then((m) => m.RecruiterView3rdPage1Module),
       canActivate: [AuthGuard],
       data: { roles: ['recruiter'] },
+      
+  },
+  {
+    path: 'recruiter-view-job-applications-1',
+    loadChildren: () =>
+      import(
+        './pages/recruiter-view-job-applications-1/recruiter-view-job-applications-1.module'
+      ).then((m) => m.RecruiterViewJobApplications1Module),
   },
   {
     path: 'signup-candidate',
     loadChildren: () =>
       import('./pages/signup-candidate/signup-candidate.module').then(
         (m) => m.SignupCandidateModule
+      ),
+  },
+  {
+    path: 'signup-admin',
+    loadChildren: () =>
+      import('./pages/signup-admin/signup-admin.module').then(
+        (m) => m.SignupAdminModule
       ),
   },
   {
@@ -111,6 +134,20 @@ const routes = [
       ),
   },
   {
+    path: 'login-admin',
+    loadChildren: () =>
+      import('./pages/login-admin/login-admin.module').then(
+        (m) => m.LoginAdminModule
+      ),
+  },
+  {
+    path: 'login-corporate',
+    loadChildren: () =>
+      import('./pages/login-corporate/login-corporate.module').then(
+        (m) => m.LoginCorporateModule
+      ),
+  },
+  {
     path: 'corporate/recruiter-view-5th-page',
     loadChildren: () =>
       import(
@@ -141,13 +178,6 @@ const routes = [
       import(
         './pages/recruiter-view-4th-page/recruiter-view-4th-page.module'
       ).then((m) => m.RecruiterView4thPageModule),
-  },
-  {
-    path: 'login-corporate',
-    loadChildren: () =>
-      import('./pages/login-corporate/login-corporate.module').then(
-        (m) => m.LoginCorporateModule
-      ),
   },
   {
     path: 'signup-college',
@@ -221,6 +251,9 @@ const routes = [
       import(
         './pages/create-job-post-1st-page/create-job-post-1st-page.module'
       ).then((m) => m.CreateJobPost1stPageModule),
+      canActivate: [AuthGuard],
+      data: { roles: ['recruiter'] },
+          
   },
   {
     path: 'create-job-post-21-page',
@@ -292,8 +325,9 @@ const routes = [
     path: 'admin-page1',
     loadChildren: () =>
       import('./pages/admin-page1/admin-page1.module').then(
-        (m) => m.AdminPage1Module
-      ),
+        (m) => m.AdminPage1Module),
+           canActivate: [AuthGuard],
+    data: { roles: ['admin'] },
   },
   {
   path: 'coding-assessment',

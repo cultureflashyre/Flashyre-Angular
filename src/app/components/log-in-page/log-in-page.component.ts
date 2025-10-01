@@ -2,6 +2,7 @@ import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, Chan
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'log-in-page',
@@ -36,7 +37,7 @@ export class LogInPage implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)]]
     });
   }
 
@@ -71,21 +72,26 @@ export class LogInPage implements OnInit {
       ? this.corporateAuthService.loginCorporate(email, password)
       : this.authService.login(email, password);
 
+    // Inside log-in-page.component.ts onSubmit()
     loginObservable.subscribe({
       next: (response: any) => {
-        console.log(`${this.userType} login successful:`, response);
-        this.errorMessage = '';
-        localStorage.setItem('jwtToken', response.access);
-        this.loginSubmit.emit(response);
-        this.cdr.detectChanges();
+        if (response.message === 'Login successful' && response.access) {
+          this.errorMessage = '';
+          localStorage.setItem('jwtToken', response.access);
+          this.loginSubmit.emit(response);
+        } else {
+          this.errorMessage = response.error || 'Invalid Email or Password';
+          this.cdr.detectChanges();
+          // DO NOT emit loginSubmit on error
+        }
       },
       error: (err) => {
-        console.error(`${this.userType} login failed:`, err);
         this.errorMessage = 'Invalid Email or Password';
-        console.log('Setting errorMessage:', this.errorMessage);
         this.cdr.detectChanges();
+        // DO NOT emit loginSubmit in error block
       }
     });
+
   }
 
   togglePasswordVisibility() {

@@ -38,6 +38,31 @@ export class ProfileEmploymentComponent {
     private employmentService: EmploymentService,
   ) {}
 
+  ngOnInit(): void {
+    this.loadPositionsFromUserProfile();
+  }
+
+private loadPositionsFromUserProfile(): void {
+  const userProfileString = localStorage.getItem('userProfile');
+  if (userProfileString) {
+    try {
+      const userProfile = JSON.parse(userProfileString);
+      if (userProfile.employments && Array.isArray(userProfile.employments) && userProfile.employments.length > 0) {
+        this.positions = userProfile.employments.map((emp: any) => ({
+          jobTitle: emp.job_title || '',
+          companyName: emp.company_name || '',
+          startDate: emp.start_date || '',
+          endDate: emp.end_date || '',
+          jobDetails: emp.job_details || '',
+        }));
+      }
+    } catch (error) {
+      console.warn('Error parsing userProfile from localStorage in employment component', error);
+      // fallback to initial state with one empty position
+    }
+  }
+}
+
   // Add a new empty position and scroll to the bottom
   addPosition() {
     this.positions.push({

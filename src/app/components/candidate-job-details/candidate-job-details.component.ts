@@ -1,18 +1,17 @@
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { JobsService } from '../../services/job.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'candidate-job-details',
   templateUrl: './candidate-job-details.component.html',
   styleUrls: ['./candidate-job-details.component.css'],
 })
-export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit {
+export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() rootClassName: string = 'candidate-default-root';
   @Input() jobId: number | null = null;
   @Input() text: TemplateRef<any> | null = null;
@@ -44,8 +43,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     contract_type: '',
     external_id: '',
     last_updated: '',
-    assessment: null, // Added assessment_id
-    attempts_remaining: null // <-- ADDED: Initialize the new property
+    assessment: null,
+    attempts_remaining: null
   };
   userProfile: any = {};
   loading: boolean = false;
@@ -55,16 +54,22 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   fillColor: string = '#4D91C6';
   matchingScoreFillColor: string = '#4D91C6';
   matchingScoreStrokeDasharray: string = '0 25.12';
-  defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
+  defaultProfilePicture: string = environment.defaultProfilePicture;
+  defaultCompanyIcon: string = environment.defaultCompanyIcon;
+  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
+  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
+  
   isMobile: boolean = window.innerWidth < 767;
   isProcessing: boolean = false;
   isApplied: boolean = false;
   successMessage: string | null = null;
   private destroy$ = new Subject<void>();
+  
+  // This will store the attempts value passed from the previous page
+  private attemptsFromNavigation: number | null = null;
 
   constructor(
     private jobService: JobsService,
-    private sanitizer: DomSanitizer,
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
@@ -78,6 +83,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
+      // Read 'attempts' from the URL and store it
+      this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
+
       if (jobIdFromUrl) {
         this.jobId = jobIdFromUrl;
         this.fetchJobDetails();
@@ -159,7 +167,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           external_id: data.external_id || '',
           last_updated: data.last_updated || '',
           assessment: data.assessment || null, // Added assessment_id
-          attempts_remaining: data.attempts_remaining || null // <-- ADDED: Map the property from the API response
+          attempts_remaining: data.attempts_remaining !== undefined && data.attempts_remaining !== null 
+            ? data.attempts_remaining 
+            : this.attemptsFromNavigation,
         };
         this.matchingScore = data.matching_score || 80;
         this.updateProgressBar(this.matchingScore, this.progress);
@@ -214,10 +224,10 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           this.isApplied = true;
           this.isProcessing = false;
 
+            alert('You have successfully applied for this job!');
           setTimeout(() => {
             this.jobService.removeJobFromCache(this.job.job_id);
             this.job = null;
-            this.successMessage = 'You have successfully applied for this job!';
           }, 2000);
         },
         (error) => {

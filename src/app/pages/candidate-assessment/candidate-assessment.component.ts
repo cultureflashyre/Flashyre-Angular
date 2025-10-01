@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -12,10 +12,12 @@ import { AuthService } from '../../services/candidate.service'; // Import AuthSe
   templateUrl: 'candidate-assessment.component.html',
   styleUrls: ['candidate-assessment.component.css'],
 })
-export class CandidateAssessment {
+export class CandidateAssessment implements AfterViewInit {
   userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
   assessments: any[] = []; // Array to store fetched assessments
+
+  @ViewChildren('descriptionElement') descriptions!: QueryList<ElementRef>;
 
   private baseUrl = environment.apiUrl;
 
@@ -42,6 +44,12 @@ export class CandidateAssessment {
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ]);
+  }
+
+  ngAfterViewInit(): void {
+    this.descriptions.changes.subscribe(() => {
+      this.checkOverflows();
+    });
   }
 
   loadUserProfile(): void {
@@ -77,7 +85,12 @@ export class CandidateAssessment {
     this.http.get<any[]>(`${this.baseUrl}api/assessments/assessment-list/`)
       .subscribe({
         next: (data) => {
-          this.assessments = data; // Store fetched assessments
+          this.assessments = data.map(ass => ({
+            ...ass,
+            showReadMore: false,
+            isExpanded: false,
+            isScrollable: false
+          })); // Initialize properties
           this.spinner.hide(); // Hide spinner on success
         },
         error: (error) => {
@@ -87,10 +100,45 @@ export class CandidateAssessment {
       });
   }
 
-  // Navigate to assessment page (dynamic based on assessment ID)
-  startAssessment(assessmentId: number): void {
-    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessmentId } });
+  checkOverflows(): void {
+    if (this.descriptions) {
+      this.descriptions.forEach((elRef, index) => {
+        const el = elRef.nativeElement;
+        const ass = this.assessments[index];
+        if (ass && !ass.isExpanded && el.scrollHeight > el.clientHeight) {
+          ass.showReadMore = true;
+        }
+      });
+    }
   }
+
+  expandDescription(assessment: any, index: number): void {
+    assessment.isExpanded = true;
+    setTimeout(() => {
+      const el = this.descriptions.toArray()[index].nativeElement;
+      if (el.scrollHeight > el.clientHeight) {
+        assessment.isScrollable = true;
+      }
+    }, 0);
+  }
+
+  startAssessment(assessmentId: number): void {
+    // Find the full assessment object for the selected id
+    const selectedAssessment = this.assessments.find(a => a.assessment_id === assessmentId);
+    if (!selectedAssessment) {
+      console.error("Assessment not found for id", assessmentId);
+      return;
+    }
+
+    // Serialize the object to JSON string to send as query param or use router state
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // Navigate with serialized object as query param (or use state)
+    this.router.navigate(['/flashyre-assessment-rules-card'], 
+      { queryParams: { data: assessmentDataString } });
+  }
+
+
 
   ngOnInit(): void {
     this.loadUserProfile();

@@ -249,7 +249,20 @@
           id="answers-container"
           class="flashyre-assessment11-answers-container"
         >
+
           <ng-container *ngIf="!isCodingSection">
+          <div
+            *ngIf="hasQuestions"
+            id="select-an-option-container"
+            class="flashyre-assessment11-select-an-option-container"
+          >
+            <span
+              id="select-an-option-text"
+              class="flashyre-assessment11-select-an-option-text"
+            >
+              Select an option
+            </span>
+
             <div
               id="select-an-option-container"
               class="flashyre-assessment11-select-an-option-container"

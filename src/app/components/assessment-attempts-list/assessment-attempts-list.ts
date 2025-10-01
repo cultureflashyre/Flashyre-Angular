@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router'; // Add this import
+import { Router, ActivatedRoute } from '@angular/router'; // Add this import
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 
 @Component({
@@ -24,7 +24,8 @@ export class AssessmentAttemptsListComponent implements OnInit {
 
   constructor(
     private assessmentTakenService: AssessmentTakenService,
-    private router: Router // Inject Router here
+    private router: Router, // Inject Router here
+     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -36,23 +37,44 @@ export class AssessmentAttemptsListComponent implements OnInit {
   }
 
   fetchAssessmentData(assessmentId: string) {
-    this.loading = true;
-    this.assessmentTakenService.fetchAssessmentScore(assessmentId).subscribe({
-      next: (data) => {
-        this.assessmentData = data;
-        this.assessment_title = data.assessment_title ?? '';
-        this.assessment_logo_url = data.assessment_logo_url ?? '';
-        this.created_by = data.created_by ?? '';
-        this.attempts_remaining = data.attempts_remaining ?? 0;
-        this.attempts = Array.isArray(data.attempts) ? data.attempts : [];
-        this.loading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Failed to load assessment data.';
-        this.loading = false;
-      }
-    });
-  }
+  this.loading = true;
+  this.assessmentTakenService.fetchAssessmentScore(assessmentId).subscribe({
+    next: (data) => {
+      this.assessmentData = data;
+      this.assessment_title = data.assessment_title ?? '';
+      this.assessment_logo_url = data.assessment_logo_url ?? '';
+      this.created_by = data.created_by ?? '';
+      this.attempts_remaining = data.attempts_remaining ?? 0;
+      this.attempts = Array.isArray(data.attempts) ? data.attempts : [];
+      this.loading = false;
+      
+      // Add this block to check URL parameters after data loads
+      this.route.queryParams.subscribe(params => {
+        const attemptIndex = params['attemptIndex'];
+        if (attemptIndex !== undefined && this.attempts[attemptIndex]) {
+          // We call a modified function to prevent a navigation loop
+          this.setDetailView(this.attempts[attemptIndex]);
+        }
+      });
+    },
+    error: (error) => {
+      this.errorMessage = 'Failed to load assessment data.';
+      this.loading = false;
+    }
+  });
+}
+
+  setDetailView(attempt: any) {
+  this.selectedAttempt = {
+    ...attempt,
+    attempts_remaining: this.attempts_remaining,
+    created_by: this.created_by,
+    assessment_title: this.assessment_title,
+    assessment_logo_url: this.assessment_logo_url,
+    assessment_id: this.assessmentId
+  };
+  this.showDetailView = true;
+}
 
   getFillColor(value: number): string {
     if (value <= 40) return 'red';
@@ -72,22 +94,24 @@ export class AssessmentAttemptsListComponent implements OnInit {
     }
   }
 
-  openDetailView(attempt: any) {
-    this.selectedAttempt = {
-      ...attempt,
-      attempts_remaining: this.attempts_remaining,
-      created_by: this.created_by,
-      assessment_title: this.assessment_title,
-      assessment_logo_url: this.assessment_logo_url,
-      assessment_id: this.assessmentId
-    };
-    this.showDetailView = true;
-  }
+  openDetailView(attempt: any, index: number) { 
+  this.setDetailView(attempt); // Use the new helper method to set the state
+  this.router.navigate([], {
+    relativeTo: this.route,
+    queryParams: { attemptIndex: index },
+    queryParamsHandling: 'merge'
+  });
+}
 
   closeDetailView() {
-    this.showDetailView = false;
-    this.selectedAttempt = null;
-  }
+  this.showDetailView = false;
+  this.selectedAttempt = null;
+  this.router.navigate([], {
+    relativeTo: this.route,
+    queryParams: { attemptIndex: null },
+    queryParamsHandling: 'merge'
+  });
+}
 
   onBackClick() {
   this.back.emit();

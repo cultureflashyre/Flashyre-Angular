@@ -117,6 +117,14 @@ import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { ProblemDescriptionComponent } from './problem-description/problem-description.component';
 import { CodingTestResultsComponent } from './coding-test-results/coding-test-results.component';
 
+import { MoreFiltersAndPreferenceComponent } from './more-filters-and-preference-component/more-filters-and-preference-component.component'
+import { Morefilterscomponent1 } from './morefilterscomponent1/morefilterscomponent1.component'
+import { PreferenceComponent } from './preference-component/preference-component.component'
+
+import{Signupadmin} from './signup-admin/signup-admin.component'
+import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-view.component';
+import { AlertMessageComponent } from './alert-message/alert-message.component';
+
 @NgModule({
   declarations: [
     HeaderContainer,
@@ -178,7 +186,7 @@ import { CodingTestResultsComponent } from './coding-test-results/coding-test-re
     RecruiterFlowSmallCard,
     ProgressBarStep2,
     Navbar4,
-   WriteAJobPostForRecruiter,
+    WriteAJobPostForRecruiter,
     CTA26,
     ProfileEmploymentComponent,
     NavbarForCandidateView860721,
@@ -221,6 +229,14 @@ import { CodingTestResultsComponent } from './coding-test-results/coding-test-re
     CodeEditorComponent,
     ProblemDescriptionComponent,
     CodingTestResultsComponent,
+
+    MoreFiltersAndPreferenceComponent,
+    Morefilterscomponent1,
+    PreferenceComponent,
+
+    Signupadmin,
+    NavbarForAdminView,
+    AlertMessageComponent,
   ],
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule, AceModule],
   exports: [
@@ -326,7 +342,14 @@ import { CodingTestResultsComponent } from './coding-test-results/coding-test-re
     CodeEditorComponent,
     ProblemDescriptionComponent,
     CodingTestResultsComponent,
-    
+
+    MoreFiltersAndPreferenceComponent,
+    Morefilterscomponent1,
+    PreferenceComponent,
+
+    Signupadmin,
+    NavbarForAdminView,
+    AlertMessageComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

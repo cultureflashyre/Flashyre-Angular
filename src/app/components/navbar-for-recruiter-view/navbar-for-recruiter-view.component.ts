@@ -1,11 +1,17 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core'
+import { CorporateAuthService } from '../../services/corporate-auth.service';
 
 @Component({
   selector: 'navbar-for-recruiter-view',
   templateUrl: 'navbar-for-recruiter-view.component.html',
   styleUrls: ['navbar-for-recruiter-view.component.css'],
 })
-export class NavbarForRecruiterView {
+export class NavbarForRecruiterView implements OnInit {
+
+  recruiterProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+
+
   @ContentChild('text14')
   text14: TemplateRef<any>
   @Input()
@@ -48,8 +54,7 @@ export class NavbarForRecruiterView {
   @ContentChild('text15')
   text15: TemplateRef<any>
   @Input()
-  imageSrc3: string =
-    'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
+  imageSrc3: string = "/assets/placeholders/profile-placeholder.jpg";
   @Input()
   imageAlt4: string = 'image'
   @Input()
@@ -60,13 +65,33 @@ export class NavbarForRecruiterView {
   @Input()
   rootClassName: string = ''
   @Input()
-  imageAlt3: string =
-    'https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__'
+  imageAlt3: string = "/assets/placeholders/profile-placeholder.jpg";
   @ContentChild('text9')
   text9: TemplateRef<any>
   @ContentChild('link4')
   link4: TemplateRef<any>
   @ContentChild('text10')
   text10: TemplateRef<any>
-  constructor() {}
+  constructor(
+    private corporateAuthService: CorporateAuthService,
+  ) {}
+
+    ngOnInit(): void {
+    // Check if running in a browser environment before accessing localStorage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.loadUserProfile();
+      
+    }
+  }
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) 
+      this.recruiterProfile = JSON.parse(profileData);
+  } 
+
+  onLogoutClick() {
+    this.corporateAuthService.logout(); // Call the logout method in AuthService
+    //this.router.navigate(['/login-candidate']); // Redirect to login page after logout
+  }
 }

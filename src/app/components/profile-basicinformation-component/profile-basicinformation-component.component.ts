@@ -1,6 +1,7 @@
 // FIXED Component.ts - Remove SafeUrl and keep it simple
 import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
+import { UserProfileService } from 'src/app/services/user-profile.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,19 +30,36 @@ export class ProfileBasicinformationComponent implements OnInit {
   profilePicture: File | null = null;
   resume: File | null = null;
   imageSrc: string = ''; // FIXED: Back to simple string
-  defaultImageSrc: string = "/assets/placeholders/profile-placeholder.jpg";
+  defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
   imageAlt: string = 'Profile Picture';
 
   constructor(
   private profileService: ProfileService, 
   private router: Router,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef,
+  private userProfileService: UserProfileService,
 ) {}
   ngOnInit() {
     console.log('Component initialized');
     console.log('Default image source:', this.defaultImageSrc);
-    this.fetchUserDetails();
-  }
+    const profileData = localStorage.getItem('userProfile');
+      if (profileData) {
+        try {
+          const userProfile = JSON.parse(profileData);
+          this.firstName = userProfile.first_name || '';
+          this.lastName = userProfile.last_name || '';
+          this.email = userProfile.email || '';
+          this.phoneNumber = userProfile.phone_number || '';
+          this.imageSrc = userProfile.profile_picture_url || '';
+          console.log('Loaded user profile from localStorage:', userProfile);
+        } catch (error) {
+          console.error('Error parsing userProfile from localStorage:', error);
+          this.fetchUserDetails();
+        }
+      } else {
+        this.fetchUserDetails();
+      }
+    }
 
   fetchUserDetails() {
     this.profileService.getUserDetails().subscribe(
@@ -50,7 +68,18 @@ export class ProfileBasicinformationComponent implements OnInit {
         this.lastName = response.last_name || '';
         this.email = response.email || '';
         this.phoneNumber = response.phone_number || '';
+        this.imageSrc = response.profile_picture_url || '';
         console.log('User details fetched:', response);
+
+        // Async localStorage save with setTimeout
+        setTimeout(() => {
+          try {
+            localStorage.setItem('userProfile', JSON.stringify(response));
+            console.log('User profile saved asynchronously to localStorage');
+          } catch (e) {
+            console.warn('Could not save userProfile to localStorage', e);
+          }
+        }, 0);
       },
       (error) => {
         console.error('Error fetching user details', error);
@@ -62,6 +91,7 @@ export class ProfileBasicinformationComponent implements OnInit {
       }
     );
   }
+
 
   triggerProfilePictureUpload() {
     console.log('Trigger profile picture upload clicked');
@@ -164,11 +194,13 @@ export class ProfileBasicinformationComponent implements OnInit {
   saveProfile(): Promise<{ success: boolean; rateLimited: boolean; message: string; }> {
   return new Promise((resolve) => {
     if (!this.resume) {
+
+          console.log("Inside profile-basic-info-PAGE: with ONLY CV");
       // If only a profile picture is being saved
       if (this.profilePicture) {
         const formData = new FormData();
         formData.append('profile_picture', this.profilePicture);
-        
+        console.log("Inside profile-basic-info-PAGE: with ONLY CV", formData);
         this.profileService.saveProfile(formData).subscribe(
           (response) => {
             console.log('Profile picture saved successfully', response);
@@ -204,6 +236,11 @@ export class ProfileBasicinformationComponent implements OnInit {
       formData.append('profile_picture', this.profilePicture);
     }
     formData.append('resume', this.resume);
+
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",this.profilePicture);
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",this.resume);
+
+    console.log("Inside profile-basic-info-PAGE: with Profile pic and CV",formData);
 
     this.profileService.saveProfile(formData).subscribe(
       (response) => {

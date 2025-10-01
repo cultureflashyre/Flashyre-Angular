@@ -889,10 +889,43 @@
     width: auto;
     height: auto;
     font-size: 14px;
+    display: block;
+    max-height: 60px;
+    overflow: hidden;
+  }
+   
+  .candidate-assessment-assessment1-description.expanded {
+    max-height: 120px;
+  }
+   
+  .candidate-assessment-assessment1-description.scrollable {
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
    
   .candidate-assessment-text6 {
     color: #5e6670;
+  }
+   
+  .candidate-assessment-read-more-button {
+    color: #05356C;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: 0.3s;
+  }
+   
+  .candidate-assessment-read-more-button:hover {
+    transform: scale(0.95);
+  }
+   
+  .candidate-assessment-read-more-button:active {
+    transform: scale(1.05);
   }
    
   .candidate-assessment-lets-go1-button {

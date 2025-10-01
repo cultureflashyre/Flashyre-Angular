@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 interface CorporateSignupData {
   first_name: string;
@@ -31,7 +32,10 @@ export class CorporateAuthService {
   
   private apiUrl = environment.apiUrl; // Adjust the API URL as needed
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+  private router: Router
+) {}
 
 loginCorporate(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
@@ -45,7 +49,7 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
 
   signupCorporate(data: CorporateSignupData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}signup-corporate/`, data).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/signup/`, data).pipe(
       tap((response: AuthResponse) => {
         if (response.access && response.refresh) {
           this.saveTokens(response.access, response.refresh);
@@ -101,7 +105,20 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   logout(): void {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
     // Optionally clear other stored corporate user data
+
+    this.router.navigate(['/login-corporate']);
+  }
+
+  clearTokens(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
   }
   
 

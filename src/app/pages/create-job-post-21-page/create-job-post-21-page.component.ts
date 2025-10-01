@@ -3,7 +3,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -26,15 +25,24 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   
   private subscriptions = new Subscription();
   
+  // Properties for the custom alert popup
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupType: 'success' | 'error' = 'success';
+
   // These properties were in the original file. Kept to prevent potential template binding errors from old fragments.
   rawp46g: string = ' '; 
   rawliiy: string = ' '; 
+
+  // State for alert-message component
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
 
   constructor(
     private title: Title,
     private meta: Meta,
     private router: Router,
-    private snackBar: MatSnackBar,
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private workflowService: JobCreationWorkflowService,
@@ -56,20 +64,42 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     ]);
 
     if (!this.corporateAuthService.isLoggedIn()) {
-      this.snackBar.open('Your session has expired. Please log in again.', 'Close', { duration: 5000 });
+      // Replaced MatSnackBar with custom popup
+      this.showErrorPopup('Your session has expired. Please log in again.');
       this.router.navigate(['/login-corporate']);
       return;
     }
 
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     if (!this.jobUniqueId) {
-      this.snackBar.open('No active job creation flow found. Please start again.', 'Close', { duration: 4000 });
+      // Replaced MatSnackBar with custom popup
+      this.showErrorPopup('No active job creation flow found. Please start again.');
       this.router.navigate(['/create-job-post-1st-page']);
       return;
     }
     
     // Call the method to check the initial state from the backend
     this.checkInitialMcqStatus();
+  }
+
+  // --- Popup Handling Methods ---
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'success';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
+  }
+
+  showErrorPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 5000); // Auto-close after 5 seconds
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.popupMessage = '';
   }
 
   /**
@@ -93,6 +123,8 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
           // If the check fails for any reason, default to the "not generated" state.
           this.hasGenerated = false;
           console.error('Failed to check MCQ status:', err);
+          // Added error popup for better user feedback
+          this.showErrorPopup('Could not verify existing assessment questions.');
         }
       });
     this.subscriptions.add(sub);
@@ -102,14 +134,14 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
    * Handles the 'Generate with AI' / 'Regenerate' button click.
    */
   onGenerateAi(): void {
-    // Allow regeneration by removing hasGenerated from the guard
     if (!this.jobUniqueId || this.isGenerating) {
       return;
     }
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
-      this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
-      this.router.navigate(['/login-candidate']);
+      // Replaced MatSnackBar with custom popup
+      this.showErrorPopup('Authentication error. Please log in again.');
+      this.router.navigate(['/login-corporate']);
       return;
     }
 
@@ -118,8 +150,6 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
 
     const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
       .pipe(
-        // Use the finalize operator to guarantee the spinner is hidden
-        // This block will run on success, error, or completion.
         finalize(() => {
           this.isGenerating = false;
           this.spinner.hide('ai-spinner');
@@ -128,11 +158,13 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.hasGenerated = true; // Set state to true after successful generation
-          this.snackBar.open(response.message || 'Assessment questions have been generated!', 'Close', { duration: 3000 });
+          // Replaced MatSnackBar with custom popup
+          this.showSuccessPopup(response.message || 'Assessment questions have been generated!');
         },
         error: (err) => {
           // isGenerating and spinner.hide() are handled by the finalize operator
-          this.snackBar.open(`Error: ${err.message || 'Could not generate questions.'}`, 'Close', { duration: 5000 });
+          // Replaced MatSnackBar with custom popup
+          this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
         }
     });
     this.subscriptions.add(generateSub);
@@ -142,18 +174,24 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
    * Handles the 'Upload Manually' button click.
    */
   onUploadManually(): void {
-    this.snackBar.open('Manual upload is not yet implemented. You can now proceed.', 'Close', { duration: 3000 });
+    // Replaced MatSnackBar with custom popup
+    this.showSuccessPopup('Manual upload is not yet implemented. You can now proceed.');
     this.hasGenerated = true; // Enable the Next button
   }
 
   /**
    * Handles the 'Cancel' button click in the footer.
-   */
+
   onCancel(): void {
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/dashboard']);
+    this.showSuccessPopup('Job post creation cancelled.');
+    // Added delay for navigation
+    setTimeout(() => {
+        this.router.navigate(['/recruiter-view-3rd-page1']);
+    }, 3000);
   }
-  
+       */
+
   /**
    * Handles the 'Previous' button click in the footer.
    */
@@ -163,18 +201,35 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   
   /**
    * Handles the 'Skip' button click in the footer.
-   */
-  onSkip(): void {
-    this.router.navigate(['/create-job-post-22-page']);
-  }
+
+  * onSkip(): void {
+    * this.router.navigate(['/create-job-post-22-page']);
+ * }
+     */
 
   /**
    * Handles the 'Save Draft' button click in the footer.
-   */
+
   onSaveDraft(): void {
-    this.snackBar.open('Your draft has been saved.', 'Close', { duration: 3000 });
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/dashboard']);
+    // Replaced MatSnackBar and added navigation delay
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => {
+        this.router.navigate(['/recruiter-view-3rd-page1']);
+    }, 3000);
+  }
+       */
+
+  onCancel() {
+    this.openAlert('You are about to Cancel this action', ['Yes', 'No']);
+  }
+
+  onSkip() {
+    this.openAlert('You are about to skip this step', ['Cancel', 'Continue']);
+  }
+
+  onSaveDraft() {
+    this.openAlert('You are about to save this as a draft', ['Cancel', 'Save Draft']);
   }
 
   /**
@@ -184,11 +239,62 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     if (this.jobUniqueId && this.hasGenerated) {
       this.router.navigate(['/create-job-post-22-page']);
     } else if (!this.hasGenerated) {
-        this.snackBar.open('Please generate or upload questions before proceeding.', 'Close', { duration: 3000});
+        // Replaced MatSnackBar with custom popup
+        this.showErrorPopup('Please generate or upload questions before proceeding.');
     }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+
+  // Method to open alert with message and buttons
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  // Method to handle alert button click events
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false; // hide alert initially
+
+    switch(action.toLowerCase()) {
+      case 'yes':
+        this.onCancelConfirmed();
+        break;
+      case 'no':
+      case 'cancel':
+        // Just close alert, do nothing else
+        break;
+      case 'continue':
+        this.onSkipConfirmed();
+        break;
+      case 'save draft':
+        this.onSaveDraftConfirmed();
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Confirmed action handlers (called from alert buttons)
+  onCancelConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Job post creation cancelled.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+  onSkipConfirmed() {
+    this.router.navigate(['/create-job-post-22-page']);
+  }
+
+  onSaveDraftConfirmed() {
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+  }
+
+
+
 }

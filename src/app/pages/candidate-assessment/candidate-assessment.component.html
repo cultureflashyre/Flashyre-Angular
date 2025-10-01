@@ -25,7 +25,7 @@
     </ng-template>
     <ng-template #text1>
       <div class="candidate-assessment-fragment14">
-        <span class="candidate-assessment-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-assessment-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -52,7 +52,7 @@
     </ng-template>
     <ng-template #text6>
       <div class="candidate-assessment-fragment19">
-        <span class="candidate-assessment-text109">View & edit profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-assessment-text109">View & edit profile</span>
       </div>
     </ng-template>
     <ng-template #text7>
@@ -152,7 +152,7 @@
             >
               <!-- Loop through assessments dynamically -->
               <div
-                *ngFor="let assessment of assessments"
+                *ngFor="let assessment of assessments; let i = index"
                 id="assessment-article-card1-container"
                 class="candidate-assessment-assessment-article-card1-container"
               >
@@ -178,13 +178,22 @@
                     {{ assessment.assessment_title }}
                   </span>
                   <span
+                    #descriptionElement
                     id="assessment1-description"
                     class="candidate-assessment-assessment1-description"
+                    [ngClass]="{'expanded': assessment.isExpanded, 'scrollable': assessment.isScrollable}"
                   >
                     <span class="candidate-assessment-text6">
                       {{ assessment.assessment_description }}
                     </span>
                   </span>
+                  <button
+                    *ngIf="!assessment.isExpanded && assessment.showReadMore"
+                    class="candidate-assessment-read-more-button"
+                    (click)="expandDescription(assessment, i)"
+                  >
+                    Read More
+                  </button>
                 </div>
                 <button
                   type="button"

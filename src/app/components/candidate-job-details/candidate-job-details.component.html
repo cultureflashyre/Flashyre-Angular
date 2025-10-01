@@ -30,12 +30,17 @@
             id="image-container"
             class="candidate-job-details-image-container"
           >
-            <img
+            <img *ngIf="job.logo; else initialsAvatar"
               id="Image"
               [attr.alt]="job.company_name + ' logo'"
               [attr.src]="job.logo"
               class="candidate-job-details-image"
             />
+            <ng-template #initialsAvatar>
+              <div class="avatar-icon">
+                {{ job.initials }}
+              </div>
+            </ng-template>
           </div>
           <span
             id="company-name-text"
@@ -114,7 +119,7 @@
           [ngClass]="{'disabled': (job.attempts_remaining || 0) <= 0}"
           (click)="(job.attempts_remaining || 0) > 0 && navigateToAssessment(job.assessment)"
           [title]="(job.attempts_remaining || 0) + ' ' + (job.attempts_remaining === 1 ? 'attempt' : 'attempts') + ' remaining'"
-
+        
         >
           <span
             id="take-assessment-text"

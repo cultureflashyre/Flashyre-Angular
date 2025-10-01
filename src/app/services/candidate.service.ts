@@ -12,7 +12,9 @@ export class AuthService {
   // Base URL for the API, loaded from the environment configuration.
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router) {}
 
   /**
    * Creates and returns HttpHeaders with the JWT token for authenticated requests.
@@ -53,8 +55,19 @@ export class AuthService {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
+
     
     this.router.navigate(['/login-candidate']);
+  }
+
+  clearTokens(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
   }
 
   getMatchScores(jobIds: number[]): Observable<{[key: number]: number}> {

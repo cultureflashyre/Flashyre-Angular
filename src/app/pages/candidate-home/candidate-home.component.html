@@ -1,3 +1,29 @@
+<div 
+  *ngIf="showMoreFilters" 
+  [@popupAnimation] 
+  [ngStyle]="{
+    position: 'absolute',
+    top: filterPosition.top + 'px',
+    left: filterPosition.left + 'px',
+    zIndex: 1002
+  }"
+  class="filter-popup-wrapper"
+  (click)="$event.stopPropagation()"
+>
+  <more-filters-and-preference-component 
+  (closeEvent)="showMoreFilters = false"
+  (applyFiltersEvent)="onApplyFilters($event)"
+  [initialTab]="initialFilterTab"
+></more-filters-and-preference-component>
+</div>
+
+<!-- Backdrop (separate for fade animation) -->
+<div 
+  *ngIf="showMoreFilters" 
+  class="filter-backdrop"
+  [@popupAnimation]
+  (click)="showMoreFilters = false"
+></div>
 <div id="candidate-home" class="candidate-home-container1">
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
@@ -24,7 +50,7 @@
     </ng-template>
     <ng-template #text1>
       <div class="candidate-home-fragment14">
-        <span class="candidate-home-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -104,11 +130,12 @@
           </ng-template>
           <ng-template #text1>
             <span>
-              {{
-                userProfile.job_title 
-                  ? userProfile.job_title + ' @ ' + userProfile.company_name 
-                  : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
-              }}
+
+              
+                                {{ userProfile.latest_job_title 
+                  ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                  : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
+                
             </span>
           </ng-template>
         </candidate-profile-short>
@@ -177,12 +204,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-job-title-input"
                         class="candidate-home-job-title-text1"
-                      >
-                        Job tittle, Keyword...
-                      </span>
+                        placeholder="Job title, Keyword..."
+                        [(ngModel)]="searchJobTitle"
+                      />
                     </div>
                     <div
                       id="location-container"
@@ -204,12 +232,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-location-input"
                         class="candidate-home-your-location-text1"
-                      >
-                        Your Location
-                      </span>
+                        placeholder="Your Location"
+                        [(ngModel)]="searchLocation"
+                      />
                     </div>
                     <div
                       id="experience-search-container"
@@ -226,21 +255,24 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-experience-input"
                         class="candidate-home-experience-text1"
-                      >
-                        Experience
-                      </span>
+                        placeholder="Experience"
+                        [(ngModel)]="searchExperience"
+                      />
                     </div>
                   </div>
                 </nav>
                 <svg
+                  #filterIcon
                   id="filter-icon"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
                   class="candidate-home-filter-icon1"
+                  (click)="openFiltersPopup('filters')"
                 >
                   <path
                     d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
@@ -257,6 +289,7 @@
                     id="search-button"
                     type="button"
                     class="candidate-home-search-button1 button"
+                    (click)="onSearch()"
                   >
                     <span id="search-text" class="candidate-home-search-text1">
                       Search
@@ -266,6 +299,7 @@
                     id="preference-button"
                     type="button"
                     class="candidate-home-preference-button1 button"
+                    (click)="openFiltersPopup('preferences')"
                   >
                     <span
                       id="preference-text"
@@ -464,9 +498,10 @@
               *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
               [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
               [jobId]="job.job_id.toString()"
-              [imageSrc]="job.logo || getRandomImage()"
+              [imageSrc]="getImageOrInitials(job)"
               [imageAlt]="job.company_name + ' logo'"
               [matchingScore]="job.matching_score || 80"
+              [companyInitials]="job.initials" 
             >
               <ng-template #text>
                 <div class="candidate-home-fragment31">
@@ -534,7 +569,7 @@
                 <p>Loading more jobs...</p>
               </div>
               <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
-                <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
+                <p style="color: #666; font-size: 14px;">"No results found. Try broadening your search criteria"</p>
               </div>
             </div>
             

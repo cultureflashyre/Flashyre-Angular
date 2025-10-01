@@ -28,7 +28,7 @@
     </ng-template>
     <ng-template #text1>
       <div class="candidate-home-fragment14">
-        <span class="candidate-home-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -55,7 +55,7 @@
     </ng-template>
     <ng-template #text6>
       <div class="candidate-home-fragment19">
-        <span class="candidate-home-text109">View & edit profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-home-text109">View & edit profile</span>
       </div>
     </ng-template>
     <ng-template #text7>
@@ -104,7 +104,7 @@
     <span id="total-assessments-taken-text" class="assessment-taken-page-total-assessments-taken-text">
       All Assessment Taken
     </span>
-    <div id="job-title-container" class="assessment-taken-page-job-title-container input">
+    <div *ngIf="assessments?.length > 0" id="job-title-container" class="assessment-taken-page-job-title-container input">
       <input type="text" placeholder="Search assessments..." [(ngModel)]="searchQuery" class="assessment-taken-page-job-title-keyword-text" />
       <div id="search-icon-container" class="assessment-taken-page-search-icon-container">
         <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
@@ -116,16 +116,21 @@
       </div>
     </div>
   </div>
-  <div id="assessments-container" class="assessment-taken-page-assessments-container">
+  <div id="assessments-container" class="assessment-taken-page-assessments-container" (scroll)="onScroll($event)">
     <!-- Show the assessment list only if no assessment is selected -->
     <div *ngIf="selectedAssessmentId === null">
+      <!-- Loading indicator -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading Assessment Results...</p>
+      </div>
       <!-- Show message if assessments array is empty -->
-      <div *ngIf="assessments?.length === 0" class="no-assessments-message">
+      <div *ngIf="!isLoading && assessments?.length === 0" class="no-assessments-message">
         No assessments taken yet.
       </div>
       <!-- Show assessments if array is not empty -->
       <div *ngIf="assessments?.length > 0">
-        <div *ngFor="let assessment of getFilteredAssessments()">
+        <div *ngFor="let assessment of getDisplayedAssessments()">
           <div class="assessment-taken-page-first-assessment-container">
             <div class="assessment-taken-page-assessment-details-container">
               <img [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'" alt="image" class="assessment-taken-page-assessment-image1" />
@@ -142,8 +147,7 @@
                 </div>
               </div>
             </div>
-            <div class="assessment-taken-page-score-container">
-              <div class="assessment-taken-page-score-board-container">
+            <div class="assessment-taken-page-score-board-container">
                 <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
                 <div class="assessment-taken-page-score-code-container">
                   <div class="assessment-taken-page-container20">
@@ -158,6 +162,8 @@
                   </div>
                 </div>
               </div>
+            <div class="assessment-taken-page-score-container">
+              
               <div class="assessment-taken-page-attempts-remaining-container">
                 <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
                 <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
@@ -183,6 +189,9 @@
             </div>
           </div>
         </div>
+        <div *ngIf="getFilteredAssessments().length === 0" class="no-assessments-message">
+          No assessment found.
+        </div>
         <!-- <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span> -->
       </div>
     </div>
@@ -194,3 +203,46 @@
     </assessment-attempts-list>
   </div>
 </div>
+
+<!-- Styles for pagination and loading indicators -->
+<style>
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+.small-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container, .loading-more {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.load-more-container {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+
+

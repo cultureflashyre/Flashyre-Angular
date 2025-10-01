@@ -14,7 +14,7 @@
         <ng-template #defaultText>
           <div class="flashyre-assessment-rules-fragment18">
             <span class="flashyre-assessment-rules-text38">
-              Corporate Skill-Based Assessment 
+              {{ assessmentData?.assessment_name || 'Corporate Skill-Based Assessment' }}
             </span>
           </div>
         </ng-template>
@@ -50,9 +50,13 @@
                 </span>
               </div>
             </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text2 ? text2 : defaultText2"
-            ></ng-container>
+              <div>
+                <ul>
+                  <li *ngFor="let section of sections">
+                    Section: {{ section.section_title }} — Questions: {{ section.question_count || 'N/A' }}
+                  </li>
+                </ul>
+              </div>
           </ng-container>
         </span>
         <div class="flashyre-assessment-rules-container2">
@@ -76,7 +80,7 @@
               <ng-template #defaultText4>
                 <div class="flashyre-assessment-rules-fragment29">
                   <span class="flashyre-assessment-rules-text51">
-                    The time limit for the test is 10 minutes.
+                    The time limit for the test is {{ timeLimitDisplay }} minutes.
                   </span>
                 </div>
               </ng-template>
@@ -108,7 +112,7 @@
               <ng-template #defaultText31>
                 <div class="flashyre-assessment-rules-fragment27">
                   <span class="flashyre-assessment-rules-text49">
-                    You must answer all 5 questions within the 10-minute time
+                    You must answer all 5 questions within the {{ answerWithinLimitDisplay }}-minute time
                     limit.
                   </span>
                 </div>
@@ -142,7 +146,7 @@
                 <div class="flashyre-assessment-rules-fragment17">
                   <span class="flashyre-assessment-rules-text35">
                     <span>
-                      Once the 10-minute time limit is up, the test will
+                      Once the {{totalDuration}}-minute time limit is up, the test will
                       automatically submit, even if you have not answered all
                       the questions.
                     </span>
@@ -229,7 +233,7 @@
               <ng-template #defaultText3111>
                 <div class="flashyre-assessment-rules-fragment16">
                   <span class="flashyre-assessment-rules-text34">
-                    The test will auto-submit after 10 minutes, regardless of
+                    The test will auto-submit after {{ autoSubmitMessage }} minutes, regardless of
                     whether you have answered all the questions or not.
                   </span>
                 </div>

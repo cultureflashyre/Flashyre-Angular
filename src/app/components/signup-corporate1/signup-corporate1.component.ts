@@ -8,6 +8,8 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
+import { ThumbnailService } from '../../services/thumbnail.service';  // Import ThumbnailService
+
 
 @Component({
   selector: 'signup-corporate1',
@@ -49,7 +51,8 @@ export class SignupCorporate1 implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private http: HttpClient,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private thumbnailService: ThumbnailService  // Inject ThumbnailService
   ) {  }
 
   ngOnInit() {
@@ -65,7 +68,7 @@ export class SignupCorporate1 implements OnInit {
           Validators.minLength(3),
           Validators.maxLength(10),
       ]],
-        // company_name: ['', Validators.required], // keep simple for now or add validators if needed
+        //company_name: ['', Validators.required], // keep simple for now or add validators if needed
         phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
         email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
         password: ['', [Validators.required, 
@@ -83,7 +86,7 @@ export class SignupCorporate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -94,7 +97,7 @@ export class SignupCorporate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`${this.baseUrl}check-email/?email=${email}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );
@@ -151,6 +154,10 @@ export class SignupCorporate1 implements OnInit {
     if (this.signupForm.valid) {
       this.spinner.show(); // show spinner as in candidate signup
 
+      const firstName = this.signupForm.get('first_name').value;
+      const lastName = this.signupForm.get('last_name').value;
+      const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+
       const formData = { ...this.signupForm.value };
       
       // Remove confirm_password as backend does not need it
@@ -158,6 +165,7 @@ export class SignupCorporate1 implements OnInit {
       
       // Add explicit user_type for corporate (recruiter)
       formData.user_type = 'recruiter';
+      formData.initials = initials;  // Add initials here
 
       // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({
@@ -168,7 +176,7 @@ export class SignupCorporate1 implements OnInit {
           // Store JWT tokens in localStorage just like candidate signup
           localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('user_id', response.user_id); // Store the user_id
           localStorage.setItem('userType', response.role);
           
           // Fetch user profile

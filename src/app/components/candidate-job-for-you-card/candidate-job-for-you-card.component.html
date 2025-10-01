@@ -7,10 +7,17 @@
   <div class="candidate-job-for-you-card-container11">
     <div class="candidate-job-for-you-card-container12">
       <img
+        *ngIf="isImage(imageSrc); else initialsAvatar"
         [attr.alt]="imageAlt"
         [attr.src]="imageSrc"
         class="candidate-job-for-you-card-image"
       />
+      <!-- Show initials as fallback if no logo -->
+      <ng-template #initialsAvatar>
+        <div class="avatar-icon">
+          {{ imageSrc }}
+        </div>
+      </ng-template>
       <div class="candidate-job-for-you-card-container13">
         <div class="candidate-job-for-you-card-container14">
           <span class="candidate-job-for-you-card-text10">
@@ -207,10 +214,16 @@
               </svg>
               <div class="progress-content">
                 <img
+                  *ngIf="userProfile.profile_picture_url; else showInitials"
                   [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
                   alt="Icon"
                   class="progress-icon"
                 />
+                    <ng-template #showInitials>
+                      <div class="avatar-icon progress-icon" [style.background-color]="avatarBgColor">
+                        {{ userProfile.initials }}
+                      </div>
+                    </ng-template>
                 <div class="progress-label">{{ score }}%</div>
               </div>
               <div class="progress-description">Job matching score</div>

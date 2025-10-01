@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UserProfileService } from '../../services/user-profile.service';
 
@@ -9,13 +9,15 @@ import { UserProfileService } from '../../services/user-profile.service';
   templateUrl: './login-corporate.component.html',
   styleUrls: ['./login-corporate.component.css']
 })
-export class LoginCorporate {
+export class LoginCorporate implements OnInit {
   errorMessage: string = '';
+  returnUrl: string;
 
   constructor(
     private title: Title,
     private meta: Meta,
     private router: Router,
+    private route: ActivatedRoute,
     private userProfileService: UserProfileService,
     private spinner: NgxSpinnerService,
   ) {
@@ -33,6 +35,11 @@ export class LoginCorporate {
     ]);
   }
 
+  ngOnInit() {
+    // Capture returnUrl query param or default to candidate login page
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login-corporate';
+  }
+
   onLoginSubmit(response: any) {
     this.spinner.show();
 
@@ -46,12 +53,12 @@ export class LoginCorporate {
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {
           this.errorMessage = '';
-          this.router.navigate(['/recruiter-view-3rd-page']);
+          this.router.navigate(['/recruiter-view-3rd-page1']);
         },
         error: (profileError) => {
           console.error('Error fetching profile', profileError);
           // Navigate anyway, but with a warning
-          this.router.navigate(['/recruiter-view-3rd-page']);
+          this.router.navigate(['/recruiter-view-3rd-page1']);
         }
       });
     } else {

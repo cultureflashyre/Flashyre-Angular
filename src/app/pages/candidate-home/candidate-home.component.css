@@ -166,6 +166,8 @@
   display: inline-block;
 }
  
+
+
 .candidate-home-details-container {
   gap: 24px;
   flex: 0;
@@ -466,7 +468,7 @@
  
 .candidate-home-job-title-text1 {
   color: rgb(116, 116, 116);
-  width: auto;
+  width: 150px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -476,7 +478,7 @@
 .candidate-home-location-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: 192px;
+  width: 180px;
   height: 56px;
   display: flex;
   align-items: center;
@@ -507,7 +509,7 @@
 .candidate-home-experience-container1 {
   gap: var(--dl-layout-space-halfunit);
   flex: 0 0 auto;
-  width: 118px;
+  width: auto;
   height: 56px;
   display: flex;
   align-items: center;
@@ -516,7 +518,7 @@
  
 .candidate-home-experience-text1 {
   color: rgb(116, 116, 116);
-  width: 65px;
+  width: 95px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -1735,6 +1737,32 @@
 .candidate-home-text129.disabled {
   color: grey;
   cursor: not-allowed;
+}
+
+.filter-backdrop {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; /* Below modal */
+}
+
+.filter-popup-wrapper {
+  /* Inherit from existing modal styles, but ensure absolute positioning works */
+  pointer-events: auto; /* Allow interactions inside modal */
+}
+
+/* Override modal backdrop to remove it (since we have our own) */
+::ng-deep .more-filters-and-preference-component-backdrop {
+  display: none !important; /* Hide the component's built-in backdrop */
+}
+
+/* Ensure main container doesn't clip the popup */
+.candidate-home-main-container {
+  overflow: visible !important; /* Allow popup to extend beyond */
+  z-index: 999; /* Keep as-is */
 }
  
 @media(max-width: 1200px) {

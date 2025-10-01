@@ -25,7 +25,7 @@
 .recruiter-flow-large-card-company-name-logo-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
-  width: 88px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: flex-start;
@@ -36,9 +36,24 @@
   height: 24px;
   object-fit: cover;
 }
+
+.company-initials-avatar {
+  width: 24px;
+  height: 24px;
+  background-color: #1565c0; /* Or set dynamically for each company */
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: bold;
+  user-select: none;
+}
+
  
 .recruiter-flow-large-card-company-name {
-  width: 55px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: center;
@@ -46,7 +61,7 @@
 }
  
 .recruiter-flow-large-card-job-role {
-  width: 296px;
+  width: auto;
   height: 32px;
   display: flex;
   align-items: center;
@@ -82,7 +97,7 @@
   width: 24px;
   height: 24px;
   object-fit: cover;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-image2 {
@@ -94,7 +109,7 @@
   object-fit: cover;
   border-color: #FFFFFF;
   border-width: 1px;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-number-of-candidates-applied {

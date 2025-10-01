@@ -157,6 +157,20 @@ body {
   background-color: #747474;
 }
 
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #7f8c8d; /* You may set this dynamically in TS */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  user-select: none;
+}
+
 .candidate-job-details-company-name-text {
   fill: #333;
   color: #333;

@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
+import { ThumbnailService } from '../../services/thumbnail.service'; // Import thumbnail service
+import { Console } from 'console';
 
 @Component({
   selector: 'signup-candidate1',
@@ -46,6 +48,7 @@ export class SignupCandidate1 implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
+    private thumbnailService: ThumbnailService // Inject ThumbnailService here
   ) {}
 
   ngOnInit() {
@@ -133,6 +136,10 @@ export class SignupCandidate1 implements OnInit {
     if (this.signupForm.valid) {
       this.spinner.show(); // Show spinner only when request starts
 
+      const firstName = this.signupForm.get('first_name').value;
+      const lastName = this.signupForm.get('last_name').value;
+      const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+
       const formData = {
         first_name: this.signupForm.get('first_name').value,
         last_name: this.signupForm.get('last_name').value,
@@ -140,7 +147,11 @@ export class SignupCandidate1 implements OnInit {
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
         user_type: 'candidate',
+        initials: initials  // Include initials here
       };
+
+      console.log("cANDIDATE sIGNUP FORM: ", formData);
+      
 
       this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe(
         (response: any) => {
@@ -151,7 +162,7 @@ export class SignupCandidate1 implements OnInit {
           // Store JWT token in local storage or session storage
           localStorage.setItem('jwtToken', response.access); // Store the access token
           localStorage.setItem('refreshToken', response.refresh);
-          localStorage.setItem('userID', response.user_id); // Store the user_id
+          localStorage.setItem('user_id', response.user_id); // Store the user_id
           localStorage.setItem('userType', response.role);
 
           // Fetch user profile after successful login
@@ -193,7 +204,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
@@ -204,7 +215,7 @@ export class SignupCandidate1 implements OnInit {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`${this.baseUrl}check-email/?email=${email}`, { withCredentials: true }).pipe(
+      return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );
