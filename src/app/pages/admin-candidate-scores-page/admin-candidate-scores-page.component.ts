@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx'; // Import xlsx for Excel export
   styleUrls: ['./admin-candidate-scores-page.component.css']
 })
 export class AdminCandidateScoresPageComponent implements OnInit {
+    userProfile: any = {};
   jobUniqueId: string | null = null; // Store the job unique ID
   candidates: any[] = []; // Store candidate data with selected property
   loading: boolean = false; // Loading state for API call
