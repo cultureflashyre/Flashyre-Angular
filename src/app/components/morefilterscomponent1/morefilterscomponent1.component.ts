@@ -40,11 +40,11 @@ export class Morefilterscomponent1 implements OnChanges {
   // Filter properties
   filterDatePosted: string = '';
   filterExperienceLevel: string = '';
-  filterDepartment: string = '';
+  // filterDepartment: string = '';
   filterSalary: string = '';
   filterLocation: string = '';
   filterCompanyName: string = '';
-  filterIndustries: string = '';
+  // filterIndustries: string = '';
   filterWorkMode: string = '';
   filterRole: string = '';
   filterJobType: string = '';
@@ -63,11 +63,11 @@ export class Morefilterscomponent1 implements OnChanges {
       // Populate all the filter fields with data from the preference
       this.filterDatePosted = data.date_posted || '';
       this.filterExperienceLevel = data.experience_level || '';
-      this.filterDepartment = data.department || '';
+      // this.filterDepartment = data.department || '';
       this.filterSalary = data.salary || '';
       this.filterLocation = data.location || '';
       this.filterCompanyName = data.company_name || '';
-      this.filterIndustries = data.industries || '';
+      // this.filterIndustries = data.industries || '';
       this.filterWorkMode = data.work_mode || '';
       this.filterRole = data.role || '';
       this.filterJobType = data.job_type || '';
@@ -77,11 +77,11 @@ export class Morefilterscomponent1 implements OnChanges {
   resetFilters(): void {
     this.filterDatePosted = '';
     this.filterExperienceLevel = '';
-    this.filterDepartment = '';
+    // this.filterDepartment = '';
     this.filterSalary = '';
     this.filterLocation = '';
     this.filterCompanyName = '';
-    this.filterIndustries = '';
+    // this.filterIndustries = '';
     this.filterWorkMode = '';
     this.filterRole = '';
     this.filterJobType = '';
@@ -91,11 +91,11 @@ export class Morefilterscomponent1 implements OnChanges {
     const filters = {
       datePosted: this.filterDatePosted,
       experienceLevel: this.filterExperienceLevel,
-      department: this.filterDepartment,
+      // department: this.filterDepartment,
       salary: this.filterSalary,
       location: this.filterLocation,
       companyName: this.filterCompanyName,
-      industries: this.filterIndustries,
+      // industries: this.filterIndustries,
       workMode: this.filterWorkMode,
       role: this.filterRole,
       jobType: this.filterJobType
@@ -107,38 +107,22 @@ export class Morefilterscomponent1 implements OnChanges {
     const filters = {
       date_posted: this.filterDatePosted,
       experience_level: this.filterExperienceLevel,
-      department: this.filterDepartment,
+      // department: this.filterDepartment,
       salary: this.filterSalary,
       location: this.filterLocation,
       company_name: this.filterCompanyName,
-      industries: this.filterIndustries,
+      // industries: this.filterIndustries,
       work_mode: this.filterWorkMode,
       role: this.filterRole,
       job_type: this.filterJobType
     };
 
-    // Check if at least one field is filled
-    if (Object.values(filters).every(value => value === '')) {
+    if (Object.values(filters).every(value => value === '' || value === null)) {
       alert('Please fill in at least one field to save a preference.');
       return;
     }
 
-    this.preferenceService.getPreferences().subscribe(preferences => {
-      if (preferences.length >= 3) {
-        alert('You can only save up to 3 preferences.');
-      } else {
-        this.preferenceService.savePreference(filters).subscribe(
-          response => {
-            console.log('Preference saved successfully!', response);
-            this.savePreferenceEvent.emit(filters);
-            alert('Preference saved!');
-          },
-          error => {
-            console.error('Error saving preference:', error);
-            alert('Failed to save preference.');
-          }
-        );
-      }
-    });
+    // EMIT THE DATA INSTEAD OF SAVING IT
+    this.savePreferenceEvent.emit(filters);
   }
 }

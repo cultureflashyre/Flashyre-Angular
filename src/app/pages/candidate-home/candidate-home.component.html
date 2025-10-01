@@ -492,6 +492,16 @@
             <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
               <p>No new jobs available. You've applied to all open positions!</p>
             </div>
+
+            <!-- "No match found" message -->
+            <div *ngIf="!isLoading && noMatchesFound" class="no-jobs-container">
+              <p>No match found.</p>
+            </div>
+
+            <!-- Heading for Similar Jobs -->
+            <span *ngIf="!isLoading && noMatchesFound" class="candidate-home-jobs-for-you-text" style="margin-top: 20px;">
+              Similar Jobs
+            </span>
             
             <!-- Job listings -->
             <candidate-job-for-you-card
