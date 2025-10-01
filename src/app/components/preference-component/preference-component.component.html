@@ -82,7 +82,7 @@
               </ng-container>
             </span>
             <span *ngIf="preference.expanded" class="preference-component-text14">Work Mode</span>
-            <span *ngIf="preference.expanded" class="preference-component-text14">Department</span>
+            <!-- <span *ngIf="preference.expanded" class="preference-component-text14">Department</span> -->
           </div>
           <div class="preference-component-container18">
             <span class="preference-component-text15">
@@ -130,7 +130,7 @@
             </span>
             <span class="preference-component-text17">
               <div class="preference-component-fragment10">
-                <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text63">{{ preference.department || 'N/A' }}</span>
+                <!-- <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text63">{{ preference.department || 'N/A' }}</span> -->
               </div>
             </span>
             
@@ -176,7 +176,7 @@
                 ></ng-container>
               </ng-container>
             </span>
-            <span *ngIf="preference.expanded" class="preference-component-text20">Industries</span>
+            <!-- <span *ngIf="preference.expanded" class="preference-component-text20">Industries</span> -->
             <span *ngIf="preference.expanded" class="preference-component-text20">Salary</span>
           </div>
           <div class="preference-component-container21">
@@ -216,11 +216,11 @@
                 ></ng-container>
               </ng-container> -->
             </span>
-            <span class="preference-component-text23">
+            <!-- <span class="preference-component-text23">
               <div class="preference-component-fragment11">
                 <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text67">{{ preference.industries || 'N/A' }}</span>
               </div>
-            </span>
+            </span> -->
             <span class="preference-component-text23">
               <div class="preference-component-fragment11">
                 <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text67">{{ preference.salary || 'N/A' }}</span>
@@ -247,7 +247,7 @@
       height="16"
       viewBox="0 0 32 32"
       class="preference-component-icon3"
-      (click)="toggleExpand(preference)"
+      (click)="toggleExpand(preference); $event.stopPropagation()"
       [class.expanded]="preference.expanded"
     >
       <path

@@ -1,4 +1,33 @@
 <div id="recruiter-view-3rd-page" class="recruiter-view3rd-page1-container10">
+
+  <div 
+    *ngIf="showMoreFilters" 
+    [@popupAnimation] 
+    [ngStyle]="{
+      position: 'absolute',
+      top: filterPosition.top + 'px',
+      left: filterPosition.left + 'px',
+      zIndex: 1002
+    }"
+    class="filter-popup-wrapper"
+    (click)="$event.stopPropagation()"
+  >
+    <more-filters-and-preference-component 
+      (closeEvent)="showMoreFilters = false"
+      (applyFiltersEvent)="onApplyFilters($event)"
+      (savePreferenceEvent)="onSavePreference($event)"
+      [initialTab]="initialFilterTab"
+    ></more-filters-and-preference-component>
+  </div>
+
+  <!-- Backdrop -->
+  <div 
+    *ngIf="showMoreFilters" 
+    class="filter-backdrop"
+    [@popupAnimation]
+    (click)="showMoreFilters = false"
+  ></div>
+
   <div
     id="recruiter-view-3rd-page1-main-container"
     class="recruiter-view3rd-page1-recruiter-view3rd-page1-main-container"
@@ -884,14 +913,27 @@
               <div class="loading-spinner"></div>
               <p>Fetching Jobs Posted...</p>
             </div>
-            <div *ngIf="postedJobs.length === 0 && !isLoading" class="empty-state-container">
-              <div [ngSwitch]="activeTab">
-                <p *ngSwitchCase="'live'">You have no active job postings.</p>
-                <p *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</p>
-                <p *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</p>
-                <p *ngSwitchDefault>No jobs to display.</p>
-              </div>
+            <div *ngIf="!isLoading && postedJobs.length === 0" class="no-jobs-message">
+              <ng-container *ngIf="masterPostedJobs.length > 0; else noJobsPosted">
+                <!-- Filter result: No match found for current tab/filter -->
+                <div [ngSwitch]="activeTab">
+                  <span *ngSwitchCase="'live'">No match found for active jobs.</span>
+                  <span *ngSwitchCase="'draft-pause'">No match found for draft or paused jobs.</span>
+                  <span *ngSwitchCase="'deleted'">No match found for deleted jobs.</span>
+                  <span *ngSwitchDefault>No match found.</span>
+                </div>
+              </ng-container>
+              <ng-template #noJobsPosted>
+                <!-- There are no jobs posted at all -->
+                <div [ngSwitch]="activeTab">
+                  <span *ngSwitchCase="'live'">You have no active job postings.</span>
+                  <span *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</span>
+                  <span *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</span>
+                  <span *ngSwitchDefault>No jobs posted yet.</span>
+                </div>
+              </ng-template>
             </div>
+
             <div
               *ngFor="let job of postedJobs"
               id="recruiter-flow-job-posted-container"
