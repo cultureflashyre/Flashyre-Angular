@@ -1,0 +1,324 @@
+
+:host { 
+  display: contents;  /* Allows the component to not generate a host element, inheriting parent layout */
+}
+
+/* Styles for the questions section wrapper (equivalent to original interactive area) */
+.admin-create-job-step2-questions-section {
+  gap: 16px;  /* Space between title and buttons container */
+  flex: 0 0 auto;  /* Does not grow or shrink */
+  width: 100%;  /* Full width */
+  height: auto;  /* Height determined by content */
+  display: flex;  /* Flex layout for column alignment */
+  align-items: flex-start;  /* Align to start */
+  flex-direction: column;  /* Stack vertically */
+}
+
+/* Styles for the questions title text */
+.admin-create-job-step2-questions-title {
+  color: #18191C;  /* Dark text color for readability */
+  font-size: 18px;  /* Font size matching typical UI headers */
+  font-weight: 500;  /* Medium weight for emphasis */
+  line-height: 1.5;  /* Line height for better readability */
+}
+
+/* Styles for the buttons container (holds generate and upload buttons side by side) */
+.admin-create-job-step2-buttons-container {
+  gap: 24px;  /* Space between the two buttons */
+  flex: 0 0 auto;  /* Does not grow or shrink */
+  width: 100%;  /* Full width */
+  height: auto;  /* Height determined by content */
+  display: flex;  /* Flex layout */
+  align-items: flex-start;  /* Align to top */
+  justify-content: flex-start;  /* Align to left */
+  padding: 10px 0;  /* Vertical padding for spacing */
+}
+
+/* Apply disabled styles to both buttons */
+.admin-create-job-step2-generate-button.disabled,
+.admin-create-job-step2-upload-button.disabled {
+  cursor: not-allowed;  /* Disabled cursor */
+  opacity: 0.6;  /* Reduced opacity for visual feedback */
+  transform: none !important;  /* Override any transform */
+  box-shadow: none !important;  /* Remove shadow */
+  background-color: #f0f0f0 !important;  /* Grey background for disabled */
+}
+
+/* Ensure text inside disabled buttons reflects the state */
+.admin-create-job-step2-generate-button.disabled .admin-create-job-step2-generate-text,
+.admin-create-job-step2-upload-button.disabled .admin-create-job-step2-upload-text {
+  opacity: 0.6;  /* Reduced text opacity */
+  background: none !important;  /* Remove gradient */
+  color: #666666 !important;  /* Grey text */
+  -webkit-text-fill-color: #666666 !important;  /* Override webkit fill */
+  background-clip: unset !important;  /* Unset clipping */
+  -webkit-background-clip: unset !important;  /* Unset webkit clipping */
+}
+
+/* Ensure icon inside disabled upload button reflects the state */
+.admin-create-job-step2-upload-button.disabled .admin-create-job-step2-upload-icon path {
+  fill: #666666 !important;  /* Grey icon fill */
+}
+
+/* Style for the generate button container */
+.admin-create-job-step2-generate-button {
+  flex: 0 0 auto;  /* Fixed size */
+  width: 248px;  /* Fixed width matching original */
+  height: 100px;  /* Fixed height */
+  display: flex;  /* Flex for centering content */
+  align-items: center;  /* Vertical center */
+  justify-content: center;  /* Horizontal center */
+  border-color: transparent;  /* No base border color */
+  border-image: linear-gradient(to right, #E489A9, #6D68E7, #76A7DA) 1;  /* Gradient border */
+  border-style: solid;  /* Solid border */
+  border-width: 1px;  /* 1px border */
+  border-radius: 4px;  /* Rounded corners */
+  background-color: #ffffff;  /* White background */
+  cursor: pointer;  /* Pointer cursor */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth hover/click effects */
+  position: relative;  /* For positioning */
+  overflow: hidden;  /* Hide overflow */
+}
+
+/* Hover effect for generate button (non-disabled) */
+.admin-create-job-step2-generate-button:hover:not(.disabled) {
+  transform: scale(1.02);  /* Slight enlarge */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+}
+
+/* Active effect for generate button (non-disabled) */
+.admin-create-job-step2-generate-button:active:not(.disabled) {
+  transform: scale(0.98);  /* Slight shrink */
+}
+
+/* Style for the text inside the generate button */
+.admin-create-job-step2-generate-text {
+  color: transparent;  /* Transparent base for gradient fill */
+  width: auto;  /* Auto width */
+  height: 24px;  /* Fixed height */
+  display: flex;  /* Flex for alignment */
+  align-items: center;  /* Vertical center */
+  justify-content: center;  /* Horizontal center */
+  background: linear-gradient(90deg, #E489A9, #6D68E7, #76A7DA);  /* Gradient background */
+  background-clip: text;  /* Clip to text */
+  -webkit-background-clip: text;  /* Webkit clip */
+  -webkit-text-fill-color: transparent;  /* Transparent fill for gradient */
+  font-weight: 600;  /* Bold weight */
+  font-size: 16px;  /* Font size */
+}
+
+/* Style for the generate label (inside text) */
+.admin-create-job-step2-generate-label {
+  /* Inherits from parent, no additional styles needed beyond parent */
+}
+
+/* Style for the sparkle emoji */
+.admin-create-job-step2-sparkle {
+  margin-left: 4px;  /* Slight space from text */
+}
+
+/* Style for the upload button container */
+.admin-create-job-step2-upload-button {
+  gap: 8px;  /* Space between icon and text */
+  flex: 0 0 auto;  /* Fixed size */
+  width: 248px;  /* Fixed width */
+  height: 100px;  /* Fixed height */
+  display: flex;  /* Flex for alignment */
+  align-items: center;  /* Vertical center */
+  justify-content: center;  /* Horizontal center */
+  border-color: #A7A7A7;  /* Grey border */
+  border-style: solid;  /* Solid border */
+  border-width: 1px;  /* 1px border */
+  border-radius: 4px;  /* Rounded corners */
+  background-color: #ffffff;  /* White background */
+  cursor: pointer;  /* Pointer cursor */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;  /* Smooth effects */
+  position: relative;  /* For positioning */
+  overflow: hidden;  /* Hide overflow */
+}
+
+/* Hover effect for upload button (non-disabled) */
+.admin-create-job-step2-upload-button:hover:not(.disabled) {
+  background-color: #f5f5f5;  /* Light grey hover */
+  transform: scale(1.02);  /* Slight enlarge */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+}
+
+/* Active effect for upload button (non-disabled) */
+.admin-create-job-step2-upload-button:active:not(.disabled) {
+  transform: scale(0.98);  /* Slight shrink */
+  background-color: #e0e0e0;  /* Darker grey active */
+}
+
+/* Style for the text inside the upload button */
+.admin-create-job-step2-upload-text {
+  width: auto;  /* Auto width */
+  height: 24px;  /* Fixed height */
+  display: flex;  /* Flex alignment */
+  align-items: center;  /* Vertical center */
+  justify-content: center;  /* Horizontal center */
+  color: #18191C;  /* Dark text */
+  font-weight: 500;  /* Medium weight */
+  font-size: 16px;  /* Font size */
+}
+
+/* Style for the icon inside the upload button */
+.admin-create-job-step2-upload-icon {
+  width: 24px;  /* Fixed width */
+  height: 24px;  /* Fixed height */
+  flex-shrink: 0;  /* No shrink */
+}
+
+/* Alert popup styles */
+.alert {
+  padding: 20px;  /* Internal padding */
+  color: white;  /* White text */
+  margin-bottom: 15px;  /* Bottom margin */
+  position: fixed;  /* Fixed to viewport */
+  top: 20px;  /* Top position */
+  right: 20px;  /* Right position */
+  z-index: 1050;  /* High z-index */
+  border-radius: 8px;  /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Shadow for depth */
+  display: flex;  /* Flex for alignment */
+  align-items: center;  /* Center vertically */
+  font-family: Arial, sans-serif;  /* Font family */
+  min-width: 300px;  /* Minimum width */
+}
+
+/* Success alert background */
+.alert.success {
+  background-color: #28a745;  /* Green background */
+}
+
+/* Error alert background */
+.alert.error {
+  background-color: #dc3545;  /* Red background */
+}
+
+/* Close button for alert */
+.closebtn {
+  margin-left: auto;  /* Push to right */
+  padding-left: 20px;  /* Left padding */
+  color: white;  /* White color */
+  font-weight: bold;  /* Bold */
+  font-size: 24px;  /* Size */
+  line-height: 20px;  /* Line height */
+  cursor: pointer;  /* Pointer cursor */
+  transition: 0.3s;  /* Smooth transition */
+}
+
+/* Hover for close button */
+.closebtn:hover {
+  color: #e0e0e0;  /* Light grey hover */
+}
+
+/* Tick icon for success */
+.tick {
+  margin-right: 15px;  /* Right margin */
+  font-size: 24px;  /* Size */
+  font-weight: bold;  /* Bold */
+}
+
+/* Disabled class for buttons (additional fallback) */
+.disabled-button {
+  background-color: #cccccc !important;  /* Grey background */
+  color: #666666 !important;  /* Grey text */
+  cursor: not-allowed !important;  /* Disabled cursor */
+  opacity: 0.6;  /* Reduced opacity */
+}
+
+/* Page-level container1 */
+.admin-create-job-step2-container1 {
+  width: 100%;  /* Full width */
+  display: flex;  /* Flex layout */
+  min-height: 100vh;  /* Minimum full viewport height */
+  align-items: center;  /* Center vertically */
+  flex-direction: column;  /* Column direction */
+}
+
+/* Container2 for fixed dimensions */
+.admin-create-job-step2-container2 {
+  gap: 24px;  /* Gap between children */
+  flex: 0 0 auto;  /* Fixed */
+  width: 1440px;  /* Fixed width */
+  height: 1024px;  /* Fixed height */
+  display: flex;  /* Flex */
+  align-items: center;  /* Center */
+  flex-direction: column;  /* Column */
+  padding-bottom: 24px;  /* Bottom padding */
+}
+
+/* Main content container3 */
+.admin-create-job-step2-container3 {
+  gap: 24px;  /* Gap */
+  flex: 0 0 auto;  /* Fixed */
+  width: 80%;  /* 80% width */
+  height: 904px;  /* Fixed height */
+  display: flex;  /* Flex */
+  padding: 24px;  /* Padding */
+  border-radius: 8px;  /* Rounded */
+  flex-direction: column;  /* Column */
+  background-color: #FFFFFF;  /* White background */
+}
+
+/* Inner container4 for content */
+.admin-create-job-step2-container4 {
+  gap: 40px;  /* Larger gap */
+  flex: 0 0 auto;  /* Fixed */
+  width: 100%;  /* Full */
+  height: 792px;  /* Fixed height */
+  display: flex;  /* Flex */
+  align-items: flex-start;  /* Start alignment */
+  flex-direction: column;  /* Column */
+}
+
+/* Header container5 */
+.admin-create-job-step2-container5 {
+  gap: 16px;  /* Gap between icon and text */
+  flex: 0 0 auto;  /* Fixed */
+  width: 100%;  /* Full */
+  height: 32px;  /* Fixed height */
+  display: flex;  /* Flex */
+  align-items: flex-start;  /* Start */
+}
+
+/* Back icon styling */
+.admin-create-job-step2-icon1 {
+  width: 24px;  /* Width */
+  height: 24px;  /* Height */
+  align-self: center;  /* Center vertically */
+}
+
+/* Header title text */
+.admin-create-job-step2-text31 {
+  height: 100%;  /* Full height */
+  display: flex;  /* Flex */
+  font-size: 24px;  /* Size */
+  align-self: center;  /* Center */
+  font-style: normal;  /* Normal style */
+  align-items: center;  /* Center */
+  font-weight: 600;  /* Bold */
+}
+
+/* Media queries for responsiveness */
+@media(max-width: 1200px) {
+  .admin-create-job-step2-container2 {
+    width: 100%;  /* Full width on smaller screens */
+  }
+}
+
+@media(max-width: 991px) {
+  .admin-create-job-step2-text31 {
+    font-size: 22px;  /* Smaller font */
+  }
+}
+
+@media(max-width: 767px) {
+  .admin-create-job-step2-container3 {
+    width: 100%;  /* Full width */
+  }
+  .admin-create-job-step2-text31 {
+    font-size: 20px;  /* Even smaller */
+  }
+}
