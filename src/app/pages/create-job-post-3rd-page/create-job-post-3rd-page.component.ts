@@ -6,7 +6,7 @@ import { formatDate } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
-import { InterviewService, InterviewStage } from '../../services/interview.service';
+import { InterviewService, InterviewStage, InterviewStageData } from '../../services/interview.service';
 
 @Component({
   selector: 'app-create-job-post-3rd-page',
@@ -21,6 +21,8 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   minDate = new Date(); // For the date picker
   minDateString: string; // For HTML5 date input
 
+  // Add property for success popup message
+  successPopupMessage: string = '';
   // MODIFICATION: Add a new property to control the popup's visibility
   showSuccessPopup = false;
 
@@ -55,9 +57,68 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       stages: this.fb.array([])
     });
 
-    this.addStage(); // Start with one default stage
-    this.isLoading = false;
+    // MODIFIED: Call a new method to load data
+    this.loadInterviewStages();
   }
+
+  private loadInterviewStages(): void {
+    const token = this.authService.getJWTToken();
+    if (!this.jobUniqueId || !token) {
+        this.addStage(); // Add one empty stage if we can't load
+        this.isLoading = false;
+        return;
+    }
+
+    this.isLoading = true;
+    this.interviewService.getInterviewStages(this.jobUniqueId, token).subscribe({
+        next: (stagesData) => {
+            if (stagesData && stagesData.length > 0) {
+                // Clear any default stages
+                this.stages.clear();
+                // Populate the form array with data from the backend
+                stagesData.forEach(stage => {
+                    this.stages.push(this.createStageGroupWithData(stage));
+                });
+            } else {
+                // If no stages exist, add one empty default stage
+                this.addStage();
+            }
+            this.isLoading = false;
+        },
+        error: (err) => {
+            console.error("Failed to load interview stages:", err);
+            this.snackBar.open('Could not load existing interview stages.', 'Close', { duration: 3000 });
+            this.addStage(); // Add a default stage on error
+            this.isLoading = false;
+        }
+    });
+  }
+
+  // ADD THIS NEW HELPER METHOD
+  private createStageGroupWithData(data: InterviewStageData): FormGroup {
+    // Determine if the stage name is a standard one or custom
+    const standardStages = ['Screening', 'Technical interview - 1', 'Technical interview - 2', 'HR interview'];
+    const isCustom = !standardStages.includes(data.stage_name);
+
+    const stageGroup = this.fb.group({
+      stage_name: [isCustom ? 'Customize' : data.stage_name, Validators.required],
+      custom_stage_name: [isCustom ? data.stage_name : ''],
+      stage_date: [data.stage_date, Validators.required],
+      mode: [data.mode, Validators.required],
+      assigned_to: [data.assigned_to, [Validators.required, Validators.email]]
+    });
+
+    // Set up the listener for the 'Customize' option
+    if (isCustom) {
+        stageGroup.get('custom_stage_name')?.setValidators(Validators.required);
+    }
+    stageGroup.get('stage_name')?.valueChanges.subscribe(value => {
+        // ... (existing listener logic from createStageGroup)
+    });
+
+    return stageGroup;
+  }
+
 
   // Getter for easy access to the FormArray in the template
   get stages(): FormArray {
@@ -151,6 +212,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     // MODIFICATION: Call the new finalizeJobPost service method
     this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
       next: () => {
+        this.successPopupMessage = 'Job Posted Successfully';
         this.showSuccessPopup = true;
 
         // 2. Set a 5-second timer to clear the workflow and navigate
@@ -158,6 +220,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
           this.workflowService.clearWorkflow();
           this.router.navigate(['/recruiter-view-3rd-page1']);
           // Optional: hide the popup right before navigation
+          this.successPopupMessage = '';
           this.showSuccessPopup = false; 
         }, 5000); // 5000 milliseconds = 5 seconds
 
@@ -249,7 +312,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   //  this.snackBar.open('Draft functionality is not available. Please complete the form and click Next.', 'Close', { duration: 4000 });
   //}
 
-  onSaveDraftConfirmed(): void {
+  onSaveDraftConfirmed_OLD(): void {
     // Mark all fields as touched to show validation errors on fields that are filled incorrectly.
     this.interviewForm.markAllAsTouched();
     if (this.interviewForm.invalid) {
@@ -293,6 +356,52 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       }
     });
   }
+
+  onSaveDraftConfirmed(): void {
+    if (!this.jobUniqueId) {
+      this.snackBar.open('Cannot save draft: Job ID is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Cannot save draft: Authentication token is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const formStages = this.stages.value;
+    const payload: InterviewStage[] = formStages.map((stage: any, index: number) => ({
+      stage_name: stage.stage_name === 'Customize' ? stage.custom_stage_name : stage.stage_name,
+      stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
+      mode: stage.mode,
+      assigned_to: stage.assigned_to,
+      order: index + 1,
+      user_id: localStorage.getItem('user_id')
+    }));
+
+    this.interviewService.saveDraftStages(this.jobUniqueId, payload, token).subscribe({
+      next: () => {
+        this.successPopupMessage = 'Draft Saved';
+        this.showSuccessPopup = true;
+
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.successPopupMessage = '';
+          this.showSuccessPopup = false;
+        }, 5000);
+        
+        this.isSubmitting = false;
+        this.interviewForm.markAsPristine(); // optional, to reset form touched status
+      },
+      error: (err) => {
+        this.snackBar.open(`Draft save failed: ${err.message || 'An unknown server error occurred.'}`, 'Close', { duration: 5000 });
+        this.isSubmitting = false;
+      }
+    });
+  }
+
 
  // onSkipConfirmed() {
    // this.snackBar.open('Interview process skipped. Job post created successfully!', 'Close', { duration: 3000 });

@@ -1,4 +1,5 @@
 <div id="recruiter-view-3rd-page" class="recruiter-view3rd-page1-container10">
+
   <div 
     *ngIf="showMoreFilters" 
     [@popupAnimation] 
@@ -26,6 +27,7 @@
     [@popupAnimation]
     (click)="showMoreFilters = false"
   ></div>
+
   <div
     id="recruiter-view-3rd-page1-main-container"
     class="recruiter-view3rd-page1-recruiter-view3rd-page1-main-container"
@@ -810,13 +812,11 @@
         </div>
       </nav>
       <svg
-        #filterIcon
         id="filter-icon"
         width="24"
         height="24"
         viewBox="0 0 24 24"
         class="recruiter-view3rd-page1-filter-icon1"
-        (click)="openFiltersPopup('filters')"
       >
         <path
           d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
@@ -849,7 +849,6 @@
           id="preference-button"
           type="button"
           class="recruiter-view3rd-page1-search-button2 button"
-          (click)="openFiltersPopup('preferences')"
         >
           <span
             id="preference-text"
@@ -863,6 +862,49 @@
     <!-- ... mobile menu ... -->
   </header>
 </header>
+<div class="recruiter-view3rd-page1-container23">
+            <div
+              id="live-draft-deleted-container"
+              class="recruiter-view3rd-page1-live-draft-deleted-container"
+            >
+              <div
+                id="live-container"
+                class="recruiter-view3rd-page1-live-container"
+                [class.active-tab]="activeTab === 'live'"
+                (click)="selectTab('live')"
+              >
+                <span id="live-text" class="recruiter-view3rd-page1-live-text">
+                  Live ({{ getStatusCount('final') }})
+                </span>
+              </div>
+              <div
+                id="draft-container"
+                class="recruiter-view3rd-page1-draft-container"
+                [class.active-tab]="activeTab === 'draft-pause'"
+                (click)="selectTab('draft-pause')"
+              >
+                <span
+                  id="draft-text"
+                  class="recruiter-view3rd-page1-draft-text"
+                >
+                  Draft ({{ getStatusCount('draft') }}) / Pause ({{ getStatusCount('pause') }})
+                </span>
+              </div>
+              <div
+                id="deleted-container"
+                class="recruiter-view3rd-page1-deleted-container"
+                [class.active-tab]="activeTab === 'deleted'"
+                (click)="selectTab('deleted')"
+              >
+                <span
+                  id="deleted-text"
+                  class="recruiter-view3rd-page1-deleted-text"
+                >
+                  Deleted ({{ getStatusCount('deleted') }})
+                </span>
+              </div>
+            </div>
+          </div>
           <div
             id="job-posted-container"
             class="recruiter-view3rd-page1-job-posted-container"
@@ -872,111 +914,311 @@
               <p>Fetching Jobs Posted...</p>
             </div>
             <div *ngIf="!isLoading && postedJobs.length === 0" class="no-jobs-message">
-              <span *ngIf="masterPostedJobs.length > 0">No match found.</span>
-              <span *ngIf="masterPostedJobs.length === 0">No jobs posted yet.</span>
+              <ng-container *ngIf="masterPostedJobs.length > 0; else noJobsPosted">
+                <!-- Filter result: No match found for current tab/filter -->
+                <div [ngSwitch]="activeTab">
+                  <span *ngSwitchCase="'live'">No match found for active jobs.</span>
+                  <span *ngSwitchCase="'draft-pause'">No match found for draft or paused jobs.</span>
+                  <span *ngSwitchCase="'deleted'">No match found for deleted jobs.</span>
+                  <span *ngSwitchDefault>No match found.</span>
+                </div>
+              </ng-container>
+              <ng-template #noJobsPosted>
+                <!-- There are no jobs posted at all -->
+                <div [ngSwitch]="activeTab">
+                  <span *ngSwitchCase="'live'">You have no active job postings.</span>
+                  <span *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</span>
+                  <span *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</span>
+                  <span *ngSwitchDefault>No jobs posted yet.</span>
+                </div>
+              </ng-template>
             </div>
-            <div *ngIf="postedJobs.length > 0" class="jobs-posted-view">
+
+            <div
+              *ngFor="let job of postedJobs"
+              id="recruiter-flow-job-posted-container"
+              class="recruiter-view3rd-page1-recruiter-flow-job-posted-container"
+            >
               <div
-                *ngFor="let job of postedJobs"
-                id="recruiter-flow-job-posted-container"
-                class="recruiter-view3rd-page1-recruiter-flow-job-posted-container"
+                id="job-description-container"
+                class="recruiter-view3rd-page1-job-description-container"
               >
                 <div
-                  id="job-description-container"
-                  class="recruiter-view3rd-page1-job-description-container"
+                  id="job-description"
+                  class="recruiter-view3rd-page1-job-description"
                 >
                   <div
-                    id="job-description"
-                    class="recruiter-view3rd-page1-job-description"
+                    id="company-icon-container"
+                    class="recruiter-view3rd-page1-company-icon-container"
+                  >
+                    <img
+                      *ngIf="chcsThumbnailIcon; else showInitials"
+                      id="company-image"
+                      alt="image"
+                      [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
+                      class="recruiter-view3rd-page1-company-image2"
+                    />
+                    <ng-template #showInitials>
+                      <div class="avatar-icon" >
+                        {{ job.initials }}
+                      </div>
+                    </ng-template>
+                  </div>
+                  <div
+                    id="details-container"
+                    class="recruiter-view3rd-page1-details-container3"
                   >
                     <div
-                      id="company-icon-container"
-                      class="recruiter-view3rd-page1-company-icon-container"
+                      id="Job-role-experience-location-container"
+                      class="recruiter-view3rd-page1-job-role-experience-location-container"
                     >
-                      <img
-                        *ngIf="chcsThumbnailIcon; else showInitials"
-                        id="company-image"
-                        alt="image"
-                        [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
-                        class="recruiter-view3rd-page1-company-image2"
-                      />
-                      <ng-template #showInitials>
-                        <div class="avatar-icon" >
-                          {{ job.initials }}
-                        </div>
-                      </ng-template>
+                      <span
+                        id="job-role"
+                        class="recruiter-view3rd-page1-job-role-text"
+                      >
+                        {{ job.job_role }}
+                      </span>
+                      <span
+                        id="experience-location"
+                        class="recruiter-view3rd-page1-experience-location-text"
+                      >
+                        {{ job.experience_location }}
+                      </span>
                     </div>
                     <div
-                      id="details-container"
-                      class="recruiter-view3rd-page1-details-container3"
+                      id="number-of-candidates-applied-container"
+                      class="recruiter-view3rd-page1-number-of-candidates-applied-container"
                     >
                       <div
-                        id="Job-role-experience-location-container"
-                        class="recruiter-view3rd-page1-job-role-experience-location-container"
+                        id="candidates-icon-container"
+                        class="recruiter-view3rd-page1-candidates-icon-container"
                       >
-                        <span
-                          id="job-role"
-                          class="recruiter-view3rd-page1-job-role-text"
+                        <svg
+                          id="candidates-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
                         >
-                          {{ job.job_role }}
-                        </span>
-                        <span
-                          id="experience-location"
-                          class="recruiter-view3rd-page1-experience-location-text"
-                        >
-                          {{ job.experience_location }}
-                        </span>
-                      </div>
-                      <div
-                        id="number-of-candidates-applied-container"
-                        class="recruiter-view3rd-page1-number-of-candidates-applied-container"
-                      >
-                        <div
-                          id="candidates-icon-container"
-                          class="recruiter-view3rd-page1-candidates-icon-container"
-                        >
-                          <svg
-                            id="candidates-icon"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M8 13a3 3 0 1 1 0-6a3 3 0 0 1 0 6m8 0a3 3 0 1 1 0-6a3 3 0 0 1 0 6m-8 2a7.98 7.98 0 0 1 6 2.708V19H2v-1.292A7.98 7.98 0 0 1 8 15m8 4v-2.048l-.5-.567a10 10 0 0 0-1.25-1.193A8 8 0 0 1 16 15a7.98 7.98 0 0 1 6 2.708V19z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </div>
-                        <span
-                          id="total-applications"
-                          class="recruiter-view3rd-page1-number-of-canadidates-applied-text"
-                        >
-                          {{ job.number_of_candidates_applied }} Candidates applied
-                        </span>
+                          <path
+                            d="M8 13a3 3 0 1 1 0-6a3 3 0 0 1 0 6m8 0a3 3 0 1 1 0-6a3 3 0 0 1 0 6m-8 2a7.98 7.98 0 0 1 6 2.708V19H2v-1.292A7.98 7.98 0 0 1 8 15m8 4v-2.048l-.5-.567a10 10 0 0 0-1.25-1.193A8 8 0 0 1 16 15a7.98 7.98 0 0 1 6 2.708V19z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
                       </div>
                       <span
-                        id="expiry-date"
-                        class="recruiter-view3rd-page1-expire-in2-days-text"
+                        id="total-applications"
+                        class="recruiter-view3rd-page1-number-of-canadidates-applied-text"
                       >
-                        {{ getPostedDaysAgo(job.created_at) }}
+                        {{ job.number_of_candidates_applied }} Candidates applied
                       </span>
+                    </div>
+                    <div 
+                      id="jobid-expiry-date"
+                      class="recruiter-view3rd-page1-jobid-expiry-date-container"
+                    >
+                    <span
+                      id="jobid"
+                      class="recruiter-view3rd-page1-jobid"
+                    >
+                      Job id : {{ job.job_id }}
+                    </span>
+                    <span
+                      id="expiry-date"
+                      class="recruiter-view3rd-page1-expire-in2-days-text"
+                    >
+                      {{ getDisplayDate(job) }}
+                    </span>
                     </div>
                   </div>
                 </div>
-                <svg
-                  id="right-icon"
-                  width="34"
-                  height="34"
-                  viewBox="0 0 34 34"
-                  class="recruiter-view3rd-page1-right-icon"
-                  (click)="viewJobApplications(job.job_id)"
+              </div>
+              <div
+                id="second-container"
+                class="recruiter-view3rd-page1-second-container"
+              >
+                <div
+                  *ngIf="job.status === 'final' || job.status === 'pause'"
+                  id="switch-container"
+                  class="recruiter-view3rd-page1-switch-container"
                 >
-                  <path
-                    d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
+                  <div class="recruiter-view3rd-page1-container24">
+                    <div class="recruiter-view3rd-page1-container25">
+                          <style>
+        body {
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 28px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (background of the switch) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #28a745; /* Green for 'Live' state (default) */
+            transition: .4s;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        /* Text labels - positioned absolutely */
+        .slider-text {
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            z-index: 1;
+            transition: .4s;
+        }
+
+        .live-text {
+            left: 0;
+        }
+
+        .pause-text {
+            right: 0;
+        }
+
+        /* The sliding knob that covers the active text */
+        .slider:before {
+            position: absolute;
+            content: '';
+            height: 22px;
+            width: 47px;
+            left: 3px;
+            top: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 11px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        /* Active text color - the text under the white slider */
+        .slider:after {
+            position: absolute;
+            top: 0;
+            left: 3px;
+            width: 47px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            z-index: 3;
+            transition: .4s;
+            content: 'Live';
+        }
+
+        /* When the switch is 'off' (unchecked) - Pause state */
+        input:not(:checked) + .slider {
+            background-color: #ff4444; /* Red for 'Pause' state */
+        }
+
+        /* When the switch is 'on' (checked) - Live state */
+        input:checked + .slider {
+            background-color: #28a745; /* Green for 'Live' state */
+        }
+
+        /* Move the knob and text to the right when 'off' (Pause) */
+        input:not(:checked) + .slider:before {
+            transform: translateX(50px);
+        }
+
+        input:not(:checked) + .slider:after {
+            transform: translateX(50px);
+            content: 'Pause';
+        }
+
+        /* Keep knob and text on the left when 'on' (Live) */
+        input:checked + .slider:before {
+            transform: translateX(0px);
+        }
+
+        input:checked + .slider:after {
+            transform: translateX(0px);
+            content: 'Live';
+        }
+    </style>
+
+<body>
+    <label class='switch'>
+        <input type='checkbox' [checked]="job.status === 'final'"
+            (change)="handleStatusChange(job, job.status === 'final' ? 'pause' : 'final', $event)"> <!-- Default 'Live' state (checked) -->
+        <span class='slider'>
+            <div class='slider-text live-text'>Live</div>
+            <div class='slider-text pause-text'>Pause</div>
+        </span>
+    </label>
+</body>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="icons-cContainer"
+                  class="recruiter-view3rd-page1-icons-container"
+                >
+                  <svg
+                    *ngIf="job.status !== 'deleted'"
+                    id="delete-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="recruiter-view3rd-page1-delete-icon"
+                    (click)="handleStatusChange(job, 'deleted', $event)"
+                  >
+                    <path
+                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  <span
+                    *ngIf="activeTab !== 'live'"
+                    id="edit-text"
+                    class="recruiter-view3rd-page1-edit-text"
+                    (click)="editJob(job)"
+                  >
+                    Edit
+                  </span>
+                  <span
+                    id="view-candidates-text"
+                    class="recruiter-view3rd-page1-view-candidates-text"
+                    (click)="viewJobApplications(job.job_id)"
+                  >
+                    View Details
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -1024,6 +1266,4 @@
   justify-content: center;
 }
 </style>
-
-
 

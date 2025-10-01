@@ -1,0 +1,123 @@
+/* --- THIS ENTIRE FILE SHOULD BE REPLACED --- */
+
+/* 
+  The main container is now a flex column. It will fill whatever height 
+  its parent gives it (e.g., 100% or 60%). Overflow is hidden to ensure
+  only the designated area scrolls.
+*/
+.editor-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f9fafb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    overflow: hidden; 
+}
+
+/* 
+  Header: Fixed height. 'flex-shrink: 0' is crucial to prevent it from
+  shrinking if the component's total height becomes very small.
+*/
+.form-group {
+    background: #f3f4f6;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+/* Note for Java: Also has a fixed height. */
+.java-note {
+    background: #fefce8;
+    border-left: 4px solid #f4d03f;
+    padding: 1rem 1.75rem;
+    font-size: 0.9rem;
+    color: #78350f;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    height: 18px;
+}
+
+/* 
+  Ace editor container: This is the scrollable heart of the component.
+  'flex-grow: 1' makes it expand to fill all available vertical space
+  left by the header and footer. 'overflow: auto' is not needed here
+  because the Ace editor handles its own internal scrolling.
+*/
+.ace-editor {
+    flex-grow: 9;
+    width: 100%;
+    position: relative; /* Often required by editor libraries */
+    height: 300px;
+}
+
+/* 
+  Button group (Footer): Fixed height, also prevented from shrinking.
+*/
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px;
+    background: #f3f4f6;
+    gap: 1rem;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+
+/* --- AESTHETIC STYLES (UNCHANGED) --- */
+
+.form-group label {
+    font-weight: 600;
+    color: #1f2a44;
+    font-size: 0.95rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.language-selector {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.6rem 1.25rem;
+    color: #1f2a44;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.btn {
+    padding: 0.75rem 1.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #10b981;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background: #059669;
+}
+.btn-secondary {
+    background: #3b82f6;
+    color: #ffffff;
+}
+.btn-secondary:hover {
+    background: #2563eb;
+}

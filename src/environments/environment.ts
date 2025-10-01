@@ -14,6 +14,7 @@ export const environment = {
   chcs_logo_thumbnail: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/chcs_logo_thumbnail.jfif',
 
   googleMapsApiKey: 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w'
+
 };
 
 /*
