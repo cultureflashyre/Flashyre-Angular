@@ -21,6 +21,8 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   minDate = new Date(); // For the date picker
   minDateString: string; // For HTML5 date input
 
+  // Add property for success popup message
+  successPopupMessage: string = '';
   // MODIFICATION: Add a new property to control the popup's visibility
   showSuccessPopup = false;
 
@@ -210,6 +212,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     // MODIFICATION: Call the new finalizeJobPost service method
     this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
       next: () => {
+        this.successPopupMessage = 'Job Posted Successfully';
         this.showSuccessPopup = true;
 
         // 2. Set a 5-second timer to clear the workflow and navigate
@@ -217,6 +220,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
           this.workflowService.clearWorkflow();
           this.router.navigate(['/recruiter-view-3rd-page1']);
           // Optional: hide the popup right before navigation
+          this.successPopupMessage = '';
           this.showSuccessPopup = false; 
         }, 5000); // 5000 milliseconds = 5 seconds
 
@@ -308,7 +312,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   //  this.snackBar.open('Draft functionality is not available. Please complete the form and click Next.', 'Close', { duration: 4000 });
   //}
 
-  onSaveDraftConfirmed(): void {
+  onSaveDraftConfirmed_OLD(): void {
     // Mark all fields as touched to show validation errors on fields that are filled incorrectly.
     this.interviewForm.markAllAsTouched();
     if (this.interviewForm.invalid) {
@@ -352,6 +356,52 @@ export class CreateJobPost3rdPageComponent implements OnInit {
       }
     });
   }
+
+  onSaveDraftConfirmed(): void {
+    if (!this.jobUniqueId) {
+      this.snackBar.open('Cannot save draft: Job ID is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.snackBar.open('Cannot save draft: Authentication token is missing.', 'Close', { duration: 4000 });
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const formStages = this.stages.value;
+    const payload: InterviewStage[] = formStages.map((stage: any, index: number) => ({
+      stage_name: stage.stage_name === 'Customize' ? stage.custom_stage_name : stage.stage_name,
+      stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
+      mode: stage.mode,
+      assigned_to: stage.assigned_to,
+      order: index + 1,
+      user_id: localStorage.getItem('user_id')
+    }));
+
+    this.interviewService.saveDraftStages(this.jobUniqueId, payload, token).subscribe({
+      next: () => {
+        this.successPopupMessage = 'Draft Saved';
+        this.showSuccessPopup = true;
+
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.successPopupMessage = '';
+          this.showSuccessPopup = false;
+        }, 5000);
+        
+        this.isSubmitting = false;
+        this.interviewForm.markAsPristine(); // optional, to reset form touched status
+      },
+      error: (err) => {
+        this.snackBar.open(`Draft save failed: ${err.message || 'An unknown server error occurred.'}`, 'Close', { duration: 5000 });
+        this.isSubmitting = false;
+      }
+    });
+  }
+
 
  // onSkipConfirmed() {
    // this.snackBar.open('Interview process skipped. Job post created successfully!', 'Close', { duration: 3000 });

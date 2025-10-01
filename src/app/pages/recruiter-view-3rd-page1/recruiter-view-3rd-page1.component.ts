@@ -3,7 +3,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { RecruiterDataService, RecruiterProfile, JobPost } from '../../services/recruiter-data.service';
+import { RecruiterDataService, JobPost } from '../../services/recruiter-data.service';
 
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 import { CandidatePreferenceService } from '../../services/candidate-preference.service'; // <-- Import the original service

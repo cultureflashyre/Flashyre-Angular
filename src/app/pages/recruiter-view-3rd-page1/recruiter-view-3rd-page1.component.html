@@ -1,30 +1,4 @@
 <div id="recruiter-view-3rd-page" class="recruiter-view3rd-page1-container10">
-  <div 
-    *ngIf="showMoreFilters" 
-    [@popupAnimation] 
-    [ngStyle]="{
-      position: 'absolute',
-      top: filterPosition.top + 'px',
-      left: filterPosition.left + 'px',
-      zIndex: 1002
-    }"
-    class="filter-popup-wrapper"
-    (click)="$event.stopPropagation()"
-  >
-    <more-filters-and-preference-component 
-      (closeEvent)="showMoreFilters = false"
-      (applyFiltersEvent)="onApplyFilters($event)"
-      [initialTab]="initialFilterTab"
-    ></more-filters-and-preference-component>
-  </div>
-
-  <!-- Backdrop -->
-  <div 
-    *ngIf="showMoreFilters" 
-    class="filter-backdrop"
-    [@popupAnimation]
-    (click)="showMoreFilters = false"
-  ></div>
   <div
     id="recruiter-view-3rd-page1-main-container"
     class="recruiter-view3rd-page1-recruiter-view3rd-page1-main-container"
@@ -809,13 +783,11 @@
         </div>
       </nav>
       <svg
-        #filterIcon
         id="filter-icon"
         width="24"
         height="24"
         viewBox="0 0 24 24"
         class="recruiter-view3rd-page1-filter-icon1"
-        (click)="openFiltersPopup('filters')"
       >
         <path
           d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
@@ -848,7 +820,6 @@
           id="preference-button"
           type="button"
           class="recruiter-view3rd-page1-search-button2 button"
-          (click)="openFiltersPopup('preferences')"
         >
           <span
             id="preference-text"
@@ -909,103 +880,95 @@
             id="job-posted-container"
             class="recruiter-view3rd-page1-job-posted-container"
           >
-        <div *ngIf="isLoading" class="loading-container">
-          <div class="loading-spinner"></div>
-          <p>Fetching Jobs Posted...</p>
-        </div>
-        <div *ngIf="!isLoading && postedJobs.length === 0" class="empty-state-container">
-          <div [ngSwitch]="activeTab">
-            <p *ngSwitchCase="'live'">You have no active job postings.</p>
-            <p *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</p>
-            <p *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</p>
-            <p *ngSwitchDefault>No jobs to display.</p>
-          </div>
-        </div>
-        <div *ngIf="!isLoading && postedJobs.length > 0" class="jobs-posted-view">
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="loading-spinner"></div>
+              <p>Fetching Jobs Posted...</p>
+            </div>
+            <div *ngIf="postedJobs.length === 0 && !isLoading" class="empty-state-container">
+              <div [ngSwitch]="activeTab">
+                <p *ngSwitchCase="'live'">You have no active job postings.</p>
+                <p *ngSwitchCase="'draft-pause'">You have no jobs saved as draft or currently paused.</p>
+                <p *ngSwitchCase="'deleted'">Your deleted jobs folder is empty.</p>
+                <p *ngSwitchDefault>No jobs to display.</p>
+              </div>
+            </div>
+            <div
+              *ngFor="let job of postedJobs"
+              id="recruiter-flow-job-posted-container"
+              class="recruiter-view3rd-page1-recruiter-flow-job-posted-container"
+            >
               <div
-                *ngFor="let job of postedJobs"
-                id="recruiter-flow-job-posted-container"
-                class="recruiter-view3rd-page1-recruiter-flow-job-posted-container"
+                id="job-description-container"
+                class="recruiter-view3rd-page1-job-description-container"
               >
                 <div
-                  id="job-description-container"
-                  class="recruiter-view3rd-page1-job-description-container"
+                  id="job-description"
+                  class="recruiter-view3rd-page1-job-description"
                 >
                   <div
-                    id="job-description"
-                    class="recruiter-view3rd-page1-job-description"
+                    id="company-icon-container"
+                    class="recruiter-view3rd-page1-company-icon-container"
+                  >
+                    <img
+                      *ngIf="chcsThumbnailIcon; else showInitials"
+                      id="company-image"
+                      alt="image"
+                      [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
+                      class="recruiter-view3rd-page1-company-image2"
+                    />
+                    <ng-template #showInitials>
+                      <div class="avatar-icon" >
+                        {{ job.initials }}
+                      </div>
+                    </ng-template>
+                  </div>
+                  <div
+                    id="details-container"
+                    class="recruiter-view3rd-page1-details-container3"
                   >
                     <div
-                      id="company-icon-container"
-                      class="recruiter-view3rd-page1-company-icon-container"
+                      id="Job-role-experience-location-container"
+                      class="recruiter-view3rd-page1-job-role-experience-location-container"
                     >
-                      <img
-                        *ngIf="chcsThumbnailIcon; else showInitials"
-                        id="company-image"
-                        alt="image"
-                        [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
-                        class="recruiter-view3rd-page1-company-image2"
-                      />
-                      <ng-template #showInitials>
-                        <div class="avatar-icon" >
-                          {{ job.initials }}
-                        </div>
-                      </ng-template>
+                      <span
+                        id="job-role"
+                        class="recruiter-view3rd-page1-job-role-text"
+                      >
+                        {{ job.job_role }}
+                      </span>
+                      <span
+                        id="experience-location"
+                        class="recruiter-view3rd-page1-experience-location-text"
+                      >
+                        {{ job.experience_location }}
+                      </span>
                     </div>
                     <div
-                      id="details-container"
-                      class="recruiter-view3rd-page1-details-container3"
+                      id="number-of-candidates-applied-container"
+                      class="recruiter-view3rd-page1-number-of-candidates-applied-container"
                     >
                       <div
-                        id="Job-role-experience-location-container"
-                        class="recruiter-view3rd-page1-job-role-experience-location-container"
+                        id="candidates-icon-container"
+                        class="recruiter-view3rd-page1-candidates-icon-container"
                       >
-                        <span
-                          id="job-role"
-                          class="recruiter-view3rd-page1-job-role-text"
+                        <svg
+                          id="candidates-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
                         >
-                          {{ job.job_role }}
-                        </span>
-                        <span
-                          id="experience-location"
-                          class="recruiter-view3rd-page1-experience-location-text"
-                        >
-                          {{ job.experience_location }}
-                        </span>
-                      </div>
-                      <div
-                        id="number-of-candidates-applied-container"
-                        class="recruiter-view3rd-page1-number-of-candidates-applied-container"
-                      >
-                        <div
-                          id="candidates-icon-container"
-                          class="recruiter-view3rd-page1-candidates-icon-container"
-                        >
-                          <svg
-                            id="candidates-icon"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M8 13a3 3 0 1 1 0-6a3 3 0 0 1 0 6m8 0a3 3 0 1 1 0-6a3 3 0 0 1 0 6m-8 2a7.98 7.98 0 0 1 6 2.708V19H2v-1.292A7.98 7.98 0 0 1 8 15m8 4v-2.048l-.5-.567a10 10 0 0 0-1.25-1.193A8 8 0 0 1 16 15a7.98 7.98 0 0 1 6 2.708V19z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </div>
-                        <span
-                          id="total-applications"
-                          class="recruiter-view3rd-page1-number-of-canadidates-applied-text"
-                        >
-                          {{ job.number_of_candidates_applied }} Candidates applied
-                        </span>
+                          <path
+                            d="M8 13a3 3 0 1 1 0-6a3 3 0 0 1 0 6m8 0a3 3 0 1 1 0-6a3 3 0 0 1 0 6m-8 2a7.98 7.98 0 0 1 6 2.708V19H2v-1.292A7.98 7.98 0 0 1 8 15m8 4v-2.048l-.5-.567a10 10 0 0 0-1.25-1.193A8 8 0 0 1 16 15a7.98 7.98 0 0 1 6 2.708V19z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
                       </div>
                       <span
-                        id="expiry-date"
-                        class="recruiter-view3rd-page1-expire-in2-days-text"
+                        id="total-applications"
+                        class="recruiter-view3rd-page1-number-of-canadidates-applied-text"
                       >
-                        {{ getPostedDaysAgo(job.created_at) }}
+                        {{ job.number_of_candidates_applied }} Candidates applied
                       </span>
                     </div>
                     <div 
@@ -1027,19 +990,6 @@
                     </div>
                   </div>
                 </div>
-                <svg
-                  id="right-icon"
-                  width="34"
-                  height="34"
-                  viewBox="0 0 34 34"
-                  class="recruiter-view3rd-page1-right-icon"
-                  (click)="viewJobApplications(job.job_id)"
-                >
-                  <path
-                    d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
               </div>
               <div
                 id="second-container"
@@ -1274,6 +1224,4 @@
   justify-content: center;
 }
 </style>
-
-
 
