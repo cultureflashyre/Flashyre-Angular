@@ -28,6 +28,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('editor', { static: false }) editor!: ElementRef<HTMLDivElement>; // ADDED: reference to the editor
 
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+
   private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
