@@ -506,6 +506,12 @@
   border-width: 0px;
   background-color: #F10400;
 }
+
+.assessment-warning-popup-end-test-button :hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+}
  
 .assessment-warning-popup-back-to-test-button {
   fill: #05356C;
@@ -574,6 +580,12 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
+}
+
+.assessment-warning-popup-text16:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
 }
  
 .assessment-warning-popup-fragment16 {
