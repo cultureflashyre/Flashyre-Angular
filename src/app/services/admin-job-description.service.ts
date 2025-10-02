@@ -15,10 +15,10 @@ export class AdminJobDescriptionService {
   constructor(private http: HttpClient) {}
 
   /* ================================================================= |
-  |  Public API – identical to your last working version               |
+  |  Public API for Job Post CRUD Operations                           |
   | ================================================================= */
 
-    /**
+  /**
    * Uploads a job description file and processes it with AI.
    * @param file The JD file to upload
    * @param token JWT token for authentication
@@ -30,7 +30,7 @@ export class AdminJobDescriptionService {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
-      // ❌ DO NOT ADD Content-Type here – browser sets multipart boundary
+      // NOTE: Content-Type is not set here; the browser handles it for multipart/form-data.
     });
 
     return this.http.post<{ status: string; data: AIJobResponse }>(
@@ -46,6 +46,12 @@ export class AdminJobDescriptionService {
     );
   }
 
+  /**
+   * Creates a new job post draft from manual entry.
+   * @param jobDetails The job data from the form
+   * @param token JWT token for authentication
+   * @returns Observable containing the unique_id of the new job post
+   */
   saveJobPost(jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
     return this.http
       .post<{ status: string; data: { unique_id: string } }>(
@@ -56,17 +62,70 @@ export class AdminJobDescriptionService {
       .pipe(
         map(res => {
           if (res.status === 'success' && res.data?.unique_id) return { unique_id: res.data.unique_id };
-          throw new Error('Malformed response');
+          throw new Error('Malformed response on create');
         }),
         catchError(this.handleError)
       );
   }
 
+  /**
+   * Updates an existing job post draft.
+   * @param uniqueId The ID of the job post to update
+   * @param jobDetails The updated job data from the form
+   * @param token JWT token for authentication
+   * @returns Observable containing the unique_id of the updated job post
+   */
+  updateJobPost(uniqueId: string, jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
+    return this.http.put<{ status: string; data: { unique_id: string } }>(
+      `${this.baseUrl}/job-post/${uniqueId}/`,
+      jobDetails,
+      { headers: this.jsonHeaders(token) }
+    ).pipe(
+      map(res => {
+        if (res.status === 'success' && res.data?.unique_id) return { unique_id: res.data.unique_id };
+        throw new Error('Malformed response on update');
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Fetches the details of a single job post.
+   * This now correctly parses the wrapped API response.
+   * @param uniqueId The ID of the job post to retrieve
+   * @param token JWT token for authentication
+   * @returns Observable of JobDetails
+   */
   getJobPost(uniqueId: string, token: string): Observable<JobDetails> {
     return this.http
-      .get<JobDetails>(`${this.baseUrl}/job-post/${uniqueId}/`, { headers: this.bearer(token) })
-      .pipe(catchError(this.handleError));
+      .get<{ status: string; data: JobDetails }>(`${this.baseUrl}/job-post/${uniqueId}/`, { headers: this.bearer(token) })
+      .pipe(
+        map(response => {
+            if (response.status === 'success' && response.data) {
+                return response.data; // Correctly unwraps the data object
+            }
+            throw new Error('Failed to retrieve valid job post data.');
+        }),
+        catchError(this.handleError)
+      );
   }
+
+  /**
+   * Deletes a job post draft.
+   * @param uniqueId The ID of the job post to delete
+   * @param token JWT token for authentication
+   * @returns Observable<void>
+   */
+  deleteJobPost(uniqueId: string, token: string): Observable<void> {
+    return this.http.delete<void>(
+        `${this.baseUrl}/job-post/${uniqueId}/`,
+        { headers: this.bearer(token) }
+    ).pipe(catchError(this.handleError));
+  }
+
+  /* ================================================================= |
+  |  Other Service Methods (MCQ, Assessment, Sourcing)                 |
+  | ================================================================= */
 
   generateMcqsForJob(jobUniqueId: string, token: string): Observable<{ message: string }> {
     return this.http
@@ -131,7 +190,7 @@ export class AdminJobDescriptionService {
   }
 
   /* ================================================================= |
-  |  Private helpers                                                   |
+  |  Private helpers for headers and error handling                    |
   | ================================================================= */
 
   private bearer(token: string): HttpHeaders {
@@ -145,8 +204,11 @@ export class AdminJobDescriptionService {
   private handleError(error: HttpErrorResponse): Observable<never> {
     let msg = 'An unknown error occurred';
     if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred.
       msg = `Client Error: ${error.error.message}`;
     } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong.
       msg = error.error?.message || `Server Error: ${error.status} – ${error.statusText}`;
     }
     console.error('HTTP Error:', msg);

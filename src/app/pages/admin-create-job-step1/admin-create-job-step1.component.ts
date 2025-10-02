@@ -12,7 +12,7 @@ import { SkillService, ApiSkill } from '../../services/skill.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
-import { environment } from '../../../environments/environment'; // ✅ ADDED
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'admin-create-job-step1',
@@ -23,8 +23,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   userProfile: any = {};
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput!: ElementRef<HTMLInputElement>;
-  private readonly googleMapsApiKey: string = 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w';
-  private loader: Loader;   
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader;
   private placesService: google.maps.places.AutocompleteService | undefined;
   private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
   private google: any;
@@ -97,12 +97,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 5000);
   }
+
   showErrorPopup(message: string) {
     this.popupMessage = message;
     this.popupType = 'error';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 5000);
   }
+
   closePopup() {
     this.showPopup = false;
     this.popupMessage = '';
@@ -117,6 +119,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
       }
     ]);
+
     this.subscriptions.add(
       this.locationInput$.pipe(
         debounceTime(300),
@@ -134,11 +137,13 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.locationSuggestions = suggestions;
       })
     );
+
     if (!this.corporateAuthService.isLoggedIn()) {
       this.showErrorPopup('Please log in to create a job post.');
       this.router.navigate(['/login-corporate']);
       return;
     }
+
     const workflowId = this.workflowService.getCurrentJobId();
     if (workflowId) {
       console.log('Resuming existing admin job post with unique_id:', workflowId);
@@ -146,6 +151,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     } else {
       this.resetForm();
     }
+
     this.subscriptions.add(
       this.jobForm.get('total_experience_max')!.valueChanges.pipe(
         debounceTime(100)
@@ -181,19 +187,23 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       return;
     }
     this.isSubmitting = true;
+    this.spinner.show('main-spinner');
     this.subscriptions.add(
       this.jobDescriptionService.getJobPost(uniqueId, token).subscribe({
-        next: (jobDetails) => {
+        next: (jobDetails: JobDetails) => {
           this.jobData = jobDetails;
           if (this.isViewInitialized) {
-            this.populateForm(jobDetails);
+            this.populateForm(this.jobData);
           }
           this.isSubmitting = false;
+          this.spinner.hide('main-spinner');
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.showErrorPopup(`Failed to load existing job data: ${err.message}`);
-          this.router.navigate(['/admin-page1']);
+          this.spinner.hide('main-spinner');
+          this.showErrorPopup('Something went wrong. Please try again later.');
+          console.error(`Failed to load existing job data for ID ${uniqueId}:`, err);
+          this.workflowService.clearWorkflow(); // Clear broken workflow
         }
       })
     );
@@ -359,6 +369,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         console.error('File upload error:', error);
         this.showErrorPopup(`File upload or processing failed: ${error?.message || 'Unknown error'}`);
         this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = false;
       }
     });
@@ -381,7 +392,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     let budget_type: string, min_budget: number | null, max_budget: number | null;
     let notice_period: string, skills: string[], job_description: string;
     let unique_id_val: string = '', job_description_url_val: string = '';
+
     if ('job_details' in jobData) {
+      // Data is from AI response after file upload
       const aiJobData = jobData as Omit<AIJobResponse, 'mcqs'>;
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
@@ -404,6 +417,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = aiJobData.file_url || '';
     } else {
+      // Data is from DB (getJobPost)
       const details = jobData as JobDetails;
       role = details.role;
       const dbLocationString = details.location || '';
@@ -426,6 +440,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = details.job_description_url || '';
     }
+
     this.jobForm.patchValue({
       role,
       location: locationArray,
@@ -438,6 +453,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       job_description_url: job_description_url_val,
       unique_id: unique_id_val
     });
+
     if (job_description_url_val) {
       try {
         const url = new URL(job_description_url_val);
@@ -451,6 +467,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     } else {
       this.isFileUploadCompletedSuccessfully = false;
     }
+
     if (this.isViewInitialized) {
       this.populateSkills(skills);
       this.setJobDescription(job_description);
@@ -467,6 +484,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     }
     const existingTags = tagContainer.querySelectorAll('.tag');
     existingTags.forEach(tag => tag.remove());
+
     skills.forEach(skillText => {
       if (!skillText.trim()) return;
       const tag = this.renderer.createElement('div'); this.renderer.addClass(tag, 'tag');
@@ -582,14 +600,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       let rightPosPx = parseFloat(markerRight.style.left) || effectiveWidth;
       leftPosPx = Math.max(0, Math.min(leftPosPx, effectiveWidth));
       rightPosPx = Math.max(0, Math.min(rightPosPx, effectiveWidth));
-      if (leftPosPx > rightPosPx) { 
-        if (currentMarker === markerLeft) leftPosPx = rightPosPx; 
-        else rightPosPx = leftPosPx; 
+      if (leftPosPx > rightPosPx) {
+        if (currentMarker === markerLeft) leftPosPx = rightPosPx;
+        else rightPosPx = leftPosPx;
       }
       const maxYears = type === 'total' ? 30 : this.jobForm.get('total_experience_max')?.value || 30;
       const minYearRaw = Math.round((leftPosPx / effectiveWidth) * maxYears);
       const maxYearRaw = Math.round((rightPosPx / effectiveWidth) * maxYears);
-      const minYear = Math.min(minYearRaw, maxYearRaw); 
+      const minYear = Math.min(minYearRaw, maxYearRaw);
       const maxYear = Math.max(minYearRaw, maxYearRaw);
       this.jobForm.patchValue(type === 'total' ?
         { total_experience_min: minYear, total_experience_max: maxYear } :
@@ -599,11 +617,11 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.setExperienceRange(type, minYear, maxYear);
     };
     const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging || !currentMarker) return; 
+      if (!isDragging || !currentMarker) return;
       e.preventDefault();
-      const rect = rangeIndicator.getBoundingClientRect(); 
+      const rect = rangeIndicator.getBoundingClientRect();
       let newLeftPx = e.clientX - rect.left - (markerWidth / 2);
-      const minBoundaryPx = 0; 
+      const minBoundaryPx = 0;
       const maxBoundaryPx = rect.width - markerWidth;
       if (currentMarker === markerLeft) {
         const rightMarkerPos = parseFloat(markerRight.style.left) || maxBoundaryPx;
@@ -612,7 +630,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         const leftMarkerPos = parseFloat(markerLeft.style.left) || minBoundaryPx;
         newLeftPx = Math.max(leftMarkerPos, Math.min(newLeftPx, maxBoundaryPx));
       }
-      currentMarker.style.left = `${newLeftPx}px`; 
+      currentMarker.style.left = `${newLeftPx}px`;
       updateUIFromMarkers();
     };
     const onMouseUp = () => {
@@ -622,14 +640,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.jobForm.get(type === 'total' ? 'total_experience_max' : 'relevant_experience_max')?.markAsDirty();
         this.jobForm.updateValueAndValidity();
       }
-      isDragging = false; 
+      isDragging = false;
       currentMarker = null;
       this.document.removeEventListener('mousemove', onMouseMove);
       this.document.removeEventListener('mouseup', onMouseUp);
     };
     const onMouseDown = (e: MouseEvent, marker: HTMLDivElement) => {
-      e.preventDefault(); 
-      isDragging = true; 
+      e.preventDefault();
+      isDragging = true;
       currentMarker = marker;
       this.document.addEventListener('mousemove', onMouseMove);
       this.document.addEventListener('mouseup', onMouseUp);
@@ -772,7 +790,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']); return;
+      this.router.navigate(['/login-corporate']);
+      return;
     }
     this.jobForm.markAllAsTouched();
     this.checkEmpty('editor');
@@ -827,14 +846,22 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       status: 'draft',
       companyName: companyName
     };
-    console.log("About to create Admin Job with the details: ", jobDetails);
-    const saveSub = this.jobDescriptionService.saveJobPost(jobDetails, token).subscribe({
+
+    const existingUniqueId = this.jobForm.get('unique_id')?.value;
+    let saveOperation: Observable<{ unique_id: string }>;
+
+    if (existingUniqueId) {
+      saveOperation = this.jobDescriptionService.updateJobPost(existingUniqueId, jobDetails, token);
+    } else {
+      saveOperation = this.jobDescriptionService.saveJobPost(jobDetails, token);
+    }
+
+    const saveSub = saveOperation.subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        this.showSuccessPopup('Job post saved. Proceeding to assessment setup.');
+        this.showSuccessPopup(`Job post ${existingUniqueId ? 'updated' : 'saved'}. Proceeding to assessment setup.`);
         this.workflowService.startWorkflow(response.unique_id);
         this.spinner.hide('main-spinner');
-        // ✅ Navigate immediately after storing workflow
         this.router.navigate(['/admin-create-job-step2']);
       },
       error: (error) => {
@@ -848,11 +875,31 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   }
 
   onCancel(): void {
-    this.showSuccessPopup('Job post creation cancelled.');
-    this.resetForm();
-    setTimeout(() => {
-      this.router.navigate(['/admin-page1']);
-    }, 3000);
+    const token = this.corporateAuthService.getJWTToken();
+    const uniqueId = this.jobForm.get('unique_id')?.value;
+
+    if (uniqueId && token) {
+      this.spinner.show('main-spinner');
+      this.jobDescriptionService.deleteJobPost(uniqueId, token).subscribe({
+        next: () => {
+          this.spinner.hide('main-spinner');
+          this.showSuccessPopup('Job post draft deleted.');
+          this.workflowService.clearWorkflow();
+          this.resetForm();
+          setTimeout(() => { this.router.navigate(['/admin-page1']); }, 2000);
+        },
+        error: (err) => {
+          this.spinner.hide('main-spinner');
+          console.error('Failed to delete job post draft:', err);
+          this.showErrorPopup('Could not delete the draft. Please try again.');
+        }
+      });
+    } else {
+      this.showSuccessPopup('Job post creation cancelled.');
+      this.workflowService.clearWorkflow();
+      this.resetForm();
+      setTimeout(() => { this.router.navigate(['/admin-page1']); }, 2000);
+    }
   }
 
   resetForm(): void {
@@ -894,7 +941,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.sessionToken = undefined;  
+    this.sessionToken = undefined;
   }
 
   formatText(command: string, value: string | null = null): void {
