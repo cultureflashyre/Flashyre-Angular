@@ -178,6 +178,7 @@
 }
  
 .recruiter-view-job-applications1-recruiter-view-job-application-first-container {
+  margin-top: 100px;
   gap: 16px;
   flex: 0 0 auto;
   width: 1124px;

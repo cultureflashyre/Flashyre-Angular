@@ -190,11 +190,14 @@
 
 .progress-bar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 80%;
   padding: 10px 0;
   position: relative;
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: Inter, sans-serif;
   
 }
 
@@ -621,7 +624,7 @@
   min-height: 100vh;
   align-items: center;
   flex-direction: column;
-  padding-top: 80px;
+  margin-top: 100px;
 }
  
 .admin-create-job-step4-create-job-post3rd-page-main-container {

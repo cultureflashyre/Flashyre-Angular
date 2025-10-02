@@ -230,6 +230,7 @@
 
 /* Page-level container1 */
 .admin-create-job-step2-container1 {
+  margin-top: 100px;
   width: 100%;  /* Full width */
   display: flex;  /* Flex layout */
   min-height: 100vh;  /* Minimum full viewport height */
@@ -259,7 +260,6 @@
   padding: 24px;  /* Padding */
   border-radius: 8px;  /* Rounded */
   flex-direction: column;  /* Column */
-  background-color: #FFFFFF;  /* White background */
 }
 
 /* Inner container4 for content */
@@ -268,9 +268,11 @@
   flex: 0 0 auto;  /* Fixed */
   width: 100%;  /* Full */
   height: 792px;  /* Fixed height */
+  padding: 24px;
   display: flex;  /* Flex */
   align-items: flex-start;  /* Start alignment */
   flex-direction: column;  /* Column */
+  background-color: #FFFFFF;  /* White background */
 }
 
 /* Header container5 */

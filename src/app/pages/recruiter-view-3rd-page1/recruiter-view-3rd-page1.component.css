@@ -42,6 +42,7 @@
   padding-top: var(--dl-layout-space-unit);
   padding-bottom: var(--dl-layout-space-unit);
   background-color: var(--dl-color-theme-neutral-light);
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
 }
  
 .recruiter-view3rd-page1-recruiter-view-navbar-container {

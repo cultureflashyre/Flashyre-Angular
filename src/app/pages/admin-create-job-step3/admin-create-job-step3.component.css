@@ -25,6 +25,7 @@
 
 /* Main form container, ensuring full width and height with centered content */
 .admin-create-job-step3-container10 {
+  gap: 24px;
   width: 100%;
   display: flex;
   min-height: 100vh;
@@ -37,7 +38,7 @@
 /* Primary content wrapper, set to flex row for two-column layout */
 .admin-create-job-step3-create-job-post22-main-container {
   display: flex; /* Enable flexbox for layout */
-  flex-direction: row; /* Arrange children side by side */
+  flex-direction: column; /* Arrange children side by side */
   flex-wrap: wrap; /* Allow wrapping for footer to go below */
   gap: 24px; /* Space between columns */
   flex: 0 0 auto;

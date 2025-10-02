@@ -464,6 +464,7 @@ gmp-place-autocomplete::part(input):focus {
 
   
   .admin-create-job-step1-container10 {
+    margin-top: 100px;
     width: 100vw;
     display: flex;
     min-height: 100vh;

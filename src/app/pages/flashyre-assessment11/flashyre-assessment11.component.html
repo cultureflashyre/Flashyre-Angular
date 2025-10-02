@@ -245,116 +245,117 @@
           -&gt;
         </button>
         <!-- Right side: Answers or Code Editor + Test Results -->
-        <div
-          id="answers-container"
-          class="flashyre-assessment11-answers-container"
-        >
-
-          <ng-container *ngIf="!isCodingSection">
           <div
-            *ngIf="hasQuestions"
-            id="select-an-option-container"
-            class="flashyre-assessment11-select-an-option-container"
+            id="answers-container"
+            class="flashyre-assessment11-answers-container"
           >
-            <span
-              id="select-an-option-text"
-              class="flashyre-assessment11-select-an-option-text"
-            >
-              Select an option
-            </span>
+
+            <ng-container *ngIf="!isCodingSection">
               <div
-                id="clear-response-container"
-                class="flashyre-assessment11-clear-response-container"
-                (click)="clearResponse(currentQuestion.question_id)"
+                *ngIf="hasQuestions"
+                id="select-an-option-container"
+                class="flashyre-assessment11-select-an-option-container"
               >
-                <svg
-                  id="eraser-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="flashyre-assessment11-eraser-icon"
-                >
-                  <defs>
-                    <clippath id="majesticonsEraserLine0">
-                      <path d="M0 0h24v24H0z" fill="#fff"></path>
-                    </clippath>
-                  </defs>
-                  <g fill="none">
-                    <g clip-path="url(#majesticonsEraserLine0)">
-                      <path
-                        d="m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                    </g>
-                  </g>
-                </svg>
                 <span
-                  id="clear-response-text"
-                  class="flashyre-assessment11-clear-response-text"
+                  id="select-an-option-text"
+                  class="flashyre-assessment11-select-an-option-text"
                 >
-                  Clear Response
+                  Select an option
                 </span>
-              </div>
-            </div>
-            <div
-              id="options-container"
-              class="flashyre-assessment11-options-container"
-            >
-              <div
-                *ngFor="let option of currentOptions; let i = index"
-                [id]="['first', 'second', 'third', 'fourth'][i] + '-option-container'"
-                class="flashyre-assessment11-first-option-container"
-              >
-                <input
-                  type="radio"
-                  [id]="'radio' + (i + 1)"
-                  name="radio"
-                  [value]="option.key"
-                  [(ngModel)]="userResponses[currentQuestion.question_id]"
-                  (change)="onOptionSelected(currentQuestion.question_id, currentSection.section_id, option.key)"
-                  class="flashyre-assessment11-radio1"
-                />
-                <label
-                  [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text-image-container'"
-                  [for]="'radio' + (i + 1)"
-                  class="flashyre-assessment11-first-option-text-image-container"
-                >
-                  <span
-                    [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text'"
-                    class="flashyre-assessment11-first-option-text"
+                  <div
+                    id="clear-response-container"
+                    class="flashyre-assessment11-clear-response-container"
+                    (click)="clearResponse(currentQuestion.question_id)"
                   >
-                    {{ option.text || 'No option text' }}
-                  </span>
-                  <img
-                    *ngIf="option.image"
-                    [id]="['first', 'second', 'third', 'fourth'][i] + '-option-image'"
-                    [src]="option.image"
-                    alt="option image"
-                    class="flashyre-assessment11-first-option-image"
-                  />
-                </label>
+                    <svg
+                      id="eraser-icon"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      class="flashyre-assessment11-eraser-icon"
+                    >
+                      <defs>
+                        <clippath id="majesticonsEraserLine0">
+                          <path d="M0 0h24v24H0z" fill="#fff"></path>
+                        </clippath>
+                      </defs>
+                      <g fill="none">
+                        <g clip-path="url(#majesticonsEraserLine0)">
+                          <path
+                            d="m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </g>
+                      </g>
+                    </svg>
+                    <span
+                      id="clear-response-text"
+                      class="flashyre-assessment11-clear-response-text"
+                    >
+                      Clear Response
+                    </span>
+                  </div>
+                </div>
+                <div
+                  id="options-container"
+                  class="flashyre-assessment11-options-container"
+                >
+                  <div
+                    *ngFor="let option of currentOptions; let i = index"
+                    [id]="['first', 'second', 'third', 'fourth'][i] + '-option-container'"
+                    class="flashyre-assessment11-first-option-container"
+                  >
+                    <input
+                      type="radio"
+                      [id]="'radio' + (i + 1)"
+                      name="radio"
+                      [value]="option.key"
+                      [(ngModel)]="userResponses[currentQuestion.question_id]"
+                      (change)="onOptionSelected(currentQuestion.question_id, currentSection.section_id, option.key)"
+                      class="flashyre-assessment11-radio1"
+                    />
+                    <label
+                      [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text-image-container'"
+                      [for]="'radio' + (i + 1)"
+                      class="flashyre-assessment11-first-option-text-image-container"
+                    >
+                      <span
+                        [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text'"
+                        class="flashyre-assessment11-first-option-text"
+                      >
+                        {{ option.text || 'No option text' }}
+                      </span>
+                      <img
+                        *ngIf="option.image"
+                        [id]="['first', 'second', 'third', 'fourth'][i] + '-option-image'"
+                        [src]="option.image"
+                        alt="option image"
+                        class="flashyre-assessment11-first-option-image"
+                      />
+                    </label>
+                  </div>
+                  <!-- Descriptive answer placeholder (not used unless question type changes) -->
+                  <div class="flashyre-assessment11-text-input-container" *ngIf="currentQuestion.question_type === 'descriptive'">
+                    <textarea
+                      id="descriptive-answer"
+                      class="flashyre-assessment11-description-type-answer textarea"
+                      [(ngModel)]="userResponses[currentQuestion.question_id]"
+                      placeholder="Enter your answer here"
+                    ></textarea>
+                  </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="isCodingSection">
+              <div class="coding-section">
+                <app-code-editor [problemId]="currentSection.coding_id_id" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+                <app-test-results *ngIf="showTestResults" [results]="results"  (hideResults)="handleHideResults()"></app-test-results>
               </div>
-              <!-- Descriptive answer placeholder (not used unless question type changes) -->
-              <div class="flashyre-assessment11-text-input-container" *ngIf="currentQuestion.question_type === 'descriptive'">
-                <textarea
-                  id="descriptive-answer"
-                  class="flashyre-assessment11-description-type-answer textarea"
-                  [(ngModel)]="userResponses[currentQuestion.question_id]"
-                  placeholder="Enter your answer here"
-                ></textarea>
-              </div>
-            </div>
+            </ng-container>
           </div>
-          </ng-container>
-          <ng-container *ngIf="isCodingSection">
-            <div class="coding-section">
-              <app-code-editor [problemId]="currentSection.coding_id_id" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
-              <app-test-results *ngIf="showTestResults" [results]="results"  (hideResults)="handleHideResults()"></app-test-results>
-            </div>
-          </ng-container>
         </div>
       </div>
       <div
@@ -396,5 +397,4 @@
       </button>
       </div>
     </div>
-  </div>
 </div>

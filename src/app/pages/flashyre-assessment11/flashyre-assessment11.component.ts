@@ -100,9 +100,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
-      this.terminateTest(true);
-    });
+//    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
+  //    this.terminateTest(true);
+    //});
 
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
     this.userId = localStorage.getItem('user_id');
@@ -112,7 +112,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.startTime = new Date();
       try {
         await this.videoRecorder.startRecording(this.userId, assessmentId);
-        this.proctoringService.startMonitoring();
+      //  this.proctoringService.startMonitoring();
       } catch (error) {
         console.error('Failed to start assessment:', error);
       }
@@ -536,7 +536,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.trialAssessmentService.runCode(data).subscribe({
       next: (response) => {
         console.log('Run code response:', JSON.stringify(response, null, 2));
-        this.results = response.results || ['No results available'];
+        //this.results = response.results || ['No results available'];
+
+        this.results = response.results?.map((r: any) => {
+        // Compose a single string summarizing the test result
+        return `Input: ${r.input}, Expected: ${r.expected_output}, Actual: ${r.actual_output}, Status: ${r.status}`;
+        }) || ['No results available'];
+
         this.showTestResults = true;
       },
       error: (error) => {
