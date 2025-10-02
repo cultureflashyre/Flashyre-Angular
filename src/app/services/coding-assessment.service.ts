@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CodingAssessmentService {
-  private apiUrl = 'http://localhost:8000/api/'; // Your Django API
+  private apiUrl = 'http://localhost:8000/api/coding/'; // Your Django API
   private codeforcesUrl = 'https://codeforces.com/api/problemset.problems';
 
   constructor(private http: HttpClient) {}

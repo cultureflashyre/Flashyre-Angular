@@ -124,11 +124,13 @@ export class TrialAssessmentService {
     return this.http.get(`${environment.apiUrl}problems/${id}`, { headers });
   }
 
-    runCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post(`${environment.apiUrl}api/run/`, data);
-  }
+ runCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
+    // Add 'coding/' to the path
+    return this.http.post(`${environment.apiUrl}api/coding/run/`, data);
+}
 
-  submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post(`${environment.apiUrl}api/submissions/`, data);
-  }
+submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
+    // Add 'coding/' to the path
+    return this.http.post(`${environment.apiUrl}api/coding/submissions/`, data);
+}
 }
