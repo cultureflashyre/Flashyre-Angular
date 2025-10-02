@@ -262,17 +262,6 @@
             >
               Select an option
             </span>
-
-            <div
-              id="select-an-option-container"
-              class="flashyre-assessment11-select-an-option-container"
-            >
-              <span
-                id="select-an-option-text"
-                class="flashyre-assessment11-select-an-option-text"
-              >
-                Select an option
-              </span>
               <div
                 id="clear-response-container"
                 class="flashyre-assessment11-clear-response-container"
@@ -285,6 +274,11 @@
                   viewBox="0 0 24 24"
                   class="flashyre-assessment11-eraser-icon"
                 >
+                  <defs>
+                    <clippath id="majesticonsEraserLine0">
+                      <path d="M0 0h24v24H0z" fill="#fff"></path>
+                    </clippath>
+                  </defs>
                   <g fill="none">
                     <g clip-path="url(#majesticonsEraserLine0)">
                       <path
@@ -295,11 +289,6 @@
                         stroke-linejoin="round"
                       ></path>
                     </g>
-                    <defs>
-                      <clippath id="majesticonsEraserLine0">
-                        <path d="M0 0h24v24H0z" fill="#fff"></path>
-                      </clippath>
-                    </defs>
                   </g>
                 </svg>
                 <span
@@ -333,13 +322,12 @@
                   [for]="'radio' + (i + 1)"
                   class="flashyre-assessment11-first-option-text-image-container"
                 >
-                  <label
+                  <span
                     [id]="['first', 'second', 'third', 'fourth'][i] + '-option-text'"
-                    [for]="'radio' + (i + 1)"
                     class="flashyre-assessment11-first-option-text"
                   >
                     {{ option.text || 'No option text' }}
-                  </label>
+                  </span>
                   <img
                     *ngIf="option.image"
                     [id]="['first', 'second', 'third', 'fourth'][i] + '-option-image'"
