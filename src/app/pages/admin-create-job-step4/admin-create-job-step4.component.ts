@@ -13,6 +13,7 @@ import { AdminJobDescriptionService } from '../../services/admin-job-description
   styleUrls: ['./admin-create-job-step4.component.css']
 })
 export class AdminCreateJobStep4Component implements OnInit {
+  userProfile: any = {};
   interviewForm: FormGroup;
   jobUniqueId: string | null = null;
   isLoading = true;

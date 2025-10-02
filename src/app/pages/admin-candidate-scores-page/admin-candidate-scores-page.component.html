@@ -4,6 +4,102 @@
   class="admin-candidate-scores-page-admin-candidate-scores-component"
   [ngClass]="rootClassName"
 >
+<navbar-for-admin-view
+  rootClassName="navbar-for-candidate-viewroot-class-name"
+>
+  <ng-template>
+    <div class="candidate-home-fragment10">
+      <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment11">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment12">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment13">
+      <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
+    </div>
+  </ng-template>
+  <ng-template #text1>
+    <div class="candidate-home-fragment14">
+      <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
+    </div>
+  </ng-template>
+  <ng-template #text2>
+    <div class="candidate-home-fragment15">
+      <span class="candidate-home-text105">Preference</span>
+    </div>
+  </ng-template>
+  <ng-template #text3>
+    <div class="candidate-home-fragment16">
+      <span class="candidate-home-text106">Settings</span>
+    </div>
+  </ng-template>
+  <ng-template #text4>
+    <div class="candidate-home-fragment17">
+      <span class="candidate-home-text107">
+        {{ userProfile.first_name }} {{ userProfile.last_name }}
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text5>
+    <div class="candidate-home-fragment18">
+      <span class="candidate-home-text108">✅ 90% Profile Completion</span>
+    </div>
+  </ng-template>
+  <ng-template #text6>
+    <div class="candidate-home-fragment19">
+      <span class="candidate-home-text109">View & edit profile</span>
+    </div>
+  </ng-template>
+  <ng-template #text7>
+    <div class="candidate-home-fragment20">
+      <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
+    </div>
+  </ng-template>
+  <ng-template #text8>
+    <div class="candidate-home-fragment21">
+      <span class="candidate-home-text111">Upskill</span>
+    </div>
+  </ng-template>
+  <ng-template #text9>
+    <div class="candidate-home-fragment22">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
+    </div>
+  </ng-template>
+  <ng-template #text10>
+    <div class="candidate-home-fragment23">
+      <span class="candidate-home-text113">Jobs for you</span>
+    </div>
+  </ng-template>
+  <ng-template #text11>
+    <div class="candidate-home-fragment24">
+      <span class="candidate-home-text114">Preference</span>
+    </div>
+  </ng-template>
+  <ng-template #text12>
+    <div class="candidate-home-fragment25">
+      <span class="candidate-home-text115">Settings</span>
+    </div>
+  </ng-template>
+  <ng-template #text13>
+    <div class="candidate-home-fragment26">
+      <span class="candidate-home-text116">Logout</span>
+    </div>
+  </ng-template>
+  <ng-template #text31>
+    <div class="candidate-home-fragment27">
+      <span class="candidate-home-text117">Logout</span>
+    </div>
+  </ng-template>
+</navbar-for-admin-view>
   <div
     id="candidate-scores-main-container"
     class="admin-candidate-scores-page-candidate-scores-main-container"
