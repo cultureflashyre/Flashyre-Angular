@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CodingAssessmentService {
-  private apiUrl = 'http://localhost:8000/api/'; // Your Django API
+  private apiUrl = 'http://localhost:8000/api/coding/'; // Your Django API
   private codeforcesUrl = 'https://codeforces.com/api/problemset.problems';
 
   constructor(private http: HttpClient) {}
@@ -43,10 +43,12 @@ export class CodingAssessmentService {
   }
 
   runCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post(this.apiUrl + 'run', data);
+    // Add trailing slash to match the Django URL pattern 'run/'
+    return this.http.post(this.apiUrl + 'run/', data);
   }
 
   submitCode(data: { problem_id: number, source_code: string, language_id: number }): Observable<any> {
-    return this.http.post(this.apiUrl + 'submissions', data);
+    // Add trailing slash to match the Django URL pattern 'submissions/'
+    return this.http.post(this.apiUrl + 'submissions/', data);
   }
 }
