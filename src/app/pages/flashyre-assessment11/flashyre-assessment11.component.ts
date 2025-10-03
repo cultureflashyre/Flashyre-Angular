@@ -100,9 +100,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-//    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
-  //    this.terminateTest(true);
-    //});
+    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
+      this.terminateTest(true);
+    });
 
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
     this.userId = localStorage.getItem('user_id');
@@ -112,7 +112,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.startTime = new Date();
       try {
         await this.videoRecorder.startRecording(this.userId, assessmentId);
-      //  this.proctoringService.startMonitoring();
+        this.proctoringService.startMonitoring();
       } catch (error) {
         console.error('Failed to start assessment:', error);
       }
