@@ -99,7 +99,7 @@ export class RecruiterDataService {
     }
     // Corrected URL without trailing slash and with headers object
     return this.http.get<JobPost>(
-      `${this.jobPostApiUrl}/detail/${uniqueId}`, // No trailing slash
+      `${this.jobPostApiUrl}/${uniqueId}/`, // No trailing slash
       { headers: headers } // Pass the headers here
     );
   }

@@ -115,12 +115,18 @@
         
         <div id="ai-generated-uploaded-questions-main-container" class="create-job-post-22-ai-generated-uploaded-questions-main-container">
           <div id="ai-generated-uploaded-container" class="create-job-post-22-ai-generated-uploaded-container">
-            <div id="ai-generated-container" class="create-job-post-22-ai-generated-container active-tab">
+            <div id="ai-generated-container" 
+            class="create-job-post-22-ai-generated-container"
+            [class.active-tab]="activeTab === 'ai-generated'" 
+            (click)="activeTab = 'ai-generated'">>
               <span id="ai-generated-text" class="create-job-post-22-ai-generated-text">AI Generated ({{totalQuestionCount}})</span>
             </div>
-            <div id="uploaded-container" class="create-job-post-22-uploaded-container">
+            <div id="uploaded-container" 
+            class="create-job-post-22-uploaded-container" 
+            [class.active-tab]="activeTab === 'uploaded'"
+            (click)="activeTab = 'uploaded'">
               <div id="border-line-container" class="create-job-post-22-border-line-container">
-                <span id="uploaded-text" class="create-job-post-22-uploaded-text">Uploaded (0)</span>
+                <span id="uploaded-text" class="create-job-post-22-uploaded-text">Uploaded ({{ uploadedQuestionCount }})</span>
               </div>
             </div>
           </div>
@@ -135,18 +141,35 @@
                 (click)="navigateCarousel('prev')">
                 <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
               </div>
+
+              
               <!-- Dynamic looping through skill sections -->
-              <div #skillViewport class="create-job-post-22-container18">
-                <div #skillTrack class="skill-scroll-track">
+              <div *ngIf="activeTab === 'ai-generated'" class="create-job-post-22-container18">
+                <div class="skill-scroll-track">
                   <div *ngFor="let section of skillSections; let i = index" 
-                       class="create-job-post-22-language-tab" 
-                       [ngClass]="{'active-section': i === activeSectionIndex}" 
-                       (click)="selectSection(i)">
+                      class="create-job-post-22-language-tab" 
+                      [ngClass]="{'active-section': i === activeSectionIndex}" 
+                      (click)="selectSection(i)">
                     <span class="skill-tab-name">{{ section.skillName }}</span>
-                    <span class="skill-tab-count">({{section.selectedCount}}/{{section.totalCount}})</span>
+                    <span class="skill-tab-count">({{ section.selectedCount }}/{{ section.totalCount }})</span>
                   </div>
                 </div>
               </div>
+
+
+              <!-- Uploaded Skills List Viewport -->
+              <div *ngIf="activeTab === 'uploaded'" class="create-job-post-22-container18">
+                <div class="skill-scroll-track">
+                  <div *ngFor="let section of uploadedSkillSections; let i = index" 
+                      class="create-job-post-22-language-tab" 
+                      [ngClass]="{'active-section': i === activeUploadedSectionIndex}" 
+                      (click)="selectUploadedSection(i)">
+                    <span class="skill-tab-name">{{ section.skillName }}</span>
+                    <span class="skill-tab-count">({{ section.selectedCount || 0 }}/{{ section.totalCount }})</span>
+                  </div>
+                </div>
+              </div>
+
               <!-- Right Arrow Icon -->
               <div 
                 id="right-arrow-container" 
@@ -157,8 +180,11 @@
               </div>
               </div>
 
+            <!-- Questions display: switch by active tab -->
+
+            <!-- AI Generated Questions -->
             <!-- This container shows the questions for the currently active section -->
-            <ng-container *ngIf="skillSections.length > 0 && skillSections[activeSectionIndex] as activeSection">
+            <ng-container *ngIf="activeTab === 'ai-generated' && skillSections.length > 0 && skillSections[activeSectionIndex] as activeSection">
               <div id="select-all-container" class="create-job-post-22-select-all-container">
                 <div id="check-box-container" class="create-job-post-22-check-box-container">
                   <input type="checkbox" id="select-all-checkbox" class="create-job-post-22-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
@@ -202,7 +228,122 @@
                 </div>
               </div>
             </ng-container>
+
+            <ng-container *ngIf="activeTab === 'uploaded' && uploadedSkillSections.length > 0 && uploadedSkillSections[activeUploadedSectionIndex] as activeUploadedSection">
+              <div id="select-all-container" class="create-job-post-22-select-all-container">
+                <div id="check-box-container" class="create-job-post-22-check-box-container">
+                  <input type="checkbox" id="select-all-checkbox" class="create-job-post-22-checkbox-icon" 
+                        [(ngModel)]="activeUploadedSection.isAllSelected" 
+                        [ngModelOptions]="{standalone: true}" 
+                        (change)="toggleSelectAllForUploadedSection($event)" />
+                </div>
+                <label for="select-all-checkbox" id="select-all-text" class="create-job-post-22-select-all-text">
+                  Select all ({{ activeUploadedSection.questions.length }})
+                </label>
+              </div>
+
+              <div id="questions-main-container" class="create-job-post-22-questions-main-container2">
+                <div *ngFor="let question of activeUploadedSection.questions; let i = index" id="questions-container" class="create-job-post-22-questions-container">
+                  <div class="create-job-post-22-container19">
+                    <div id="questions-checkbox-container" class="create-job-post-22-questions-checkbox-container">
+                      <input type="checkbox" [id]="'uq-checkbox-' + question.id" class="create-job-post-22-questions-checkbox" 
+                            [(ngModel)]="question.isSelected" 
+                            [ngModelOptions]="{standalone: true}" 
+                            (ngModelChange)="onUploadedQuestionSelectionChange()" />
+                    </div>
+                    <div id="question-1-container" class="create-job-post-22-question1-container">
+                      <label [for]="'uq-checkbox-' + question.id" id="questions-text" class="create-job-post-22-questions-text2">
+                        {{ question.question }}
+                      </label>
+                      <div id="options-container" class="create-job-post-22-options-container">
+                        <div *ngFor="let option of question.options; let j = index" class="create-job-post-22-option1-container">
+                          <input type="radio" [id]="'uq-' + question.id + '-option-' + j" [name]="'uq-radio-' + question.id" 
+                                class="create-job-post-22-radio-icon" 
+            [checked]="option === question.correctAnswer" disabled />
+                          <div class="option-text-wrapper">
+                            <label [for]="'uq-' + question.id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="marks-container" class="create-job-post-22-marks-container">
+                    <span id="marks-text" class="create-job-post-22-marks-text">{{ question.marks }} marks</span>
+                    <div id="levels-container" class="create-job-post-22-levels-container">
+                      <span class="create-job-post-22-level-tag" [ngClass]="question.difficulty.toLowerCase()">{{ question.difficulty }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="activeUploadedSection.questions.length === 0" class="no-questions-message">
+                  No questions found for this skill.
+                </div>
+              </div>
+            </ng-container>
+
+
           </div>
+
+          <!--<div *ngIf="uploadedSkillSections.length > 0 && uploadedSkillSections[activeUploadedSectionIndex] as activeUploadedSection">
+            <div id="select-all-container" class="create-job-post-22-select-all-container">
+              <div id="check-box-container" class="create-job-post-22-check-box-container">
+                <input 
+                  type="checkbox" 
+                  id="select-all-uploaded-checkbox" 
+                  class="create-job-post-22-checkbox-icon"
+                  [(ngModel)]="activeUploadedSection.isAllSelected" 
+                  [ngModelOptions]="{standalone: true}" 
+                  (change)="toggleSelectAllForUploadedSection($event)" />
+              </div>
+              <label for="select-all-uploaded-checkbox" id="select-all-uploaded-text" class="create-job-post-22-select-all-text">
+                Select all ({{ activeUploadedSection.questions.length }})
+              </label>
+            </div>
+
+            <div id="uploaded-questions-main-container" class="create-job-post-22-questions-main-container2">
+              <div *ngFor="let question of activeUploadedSection.questions; let i = index" 
+                  id="uploaded-questions-container" class="create-job-post-22-questions-container">
+                <div class="create-job-post-22-container19">
+                  <div id="questions-checkbox-container" class="create-job-post-22-questions-checkbox-container">
+                    <input type="checkbox" 
+                          [id]="'uq-checkbox-' + question.id" 
+                          class="create-job-post-22-questions-checkbox" 
+                          [(ngModel)]="question.isSelected" 
+                          [ngModelOptions]="{standalone: true}" 
+                          (ngModelChange)="onUploadedQuestionSelectionChange()" />
+                  </div>
+                  <div id="question-text-container" class="create-job-post-22-question1-container">
+                    <label [for]="'uq-checkbox-' + question.id" id="uploaded-questions-text" class="create-job-post-22-questions-text2">
+                      {{ question.question }}
+                    </label>
+                    <div id="options-container" class="create-job-post-22-options-container">
+                      <div *ngFor="let option of question.options; let j = index" class="create-job-post-22-option1-container">
+                        <input type="radio" 
+                              [id]="'uq-' + question.id + '-option-' + j" 
+                              [name]="'uq-radio-' + question.id" 
+                              class="create-job-post-22-radio-icon" 
+                              [checked]="option === question.correctAnswer" 
+                              disabled />
+                        <div class="option-text-wrapper">
+                          <label [for]="'uq-' + question.id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="marks-container" class="create-job-post-22-marks-container">
+                  <span id="marks-text" class="create-job-post-22-marks-text">{{ question.marks }} marks</span>
+                  <div id="levels-container" class="create-job-post-22-levels-container">
+                    <span class="create-job-post-22-level-tag" [ngClass]="question.difficulty.toLowerCase()">{{ question.difficulty }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="activeUploadedSection.questions.length === 0" class="no-questions-message">
+                No uploaded questions found for this skill.
+              </div>
+            </div>
+          </div> -->
         </div>
       </div>
     </div>

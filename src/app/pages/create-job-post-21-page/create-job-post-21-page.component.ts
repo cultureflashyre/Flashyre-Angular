@@ -10,6 +10,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { JobDescriptionService } from '../../services/job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
+import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/services/candidate.service';
 
 @Component({
   selector: 'create-job-post21-page',
@@ -39,6 +41,13 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   alertMessage = '';
   alertButtons: string[] = []; // e.g., ['yes', 'no'], ['cancel', 'continue'], etc.
 
+  // File Upload variables
+  showUploadPopup = false;
+  uploadedFileName: string | null = null;
+  selectedExcelFile: File | null = null; // Should be set on file input change event
+  isUploading = false;
+  uploadedExcelFileUrl: string | null = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -46,7 +55,8 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     private jobDescriptionService: JobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private workflowService: JobCreationWorkflowService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -179,6 +189,39 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     this.hasGenerated = true; // Enable the Next button
   }
 
+    // Enable popup on Upload button click
+  openUploadPopup() {
+    this.showUploadPopup = true;
+  }
+
+  closeUploadPopup() {
+    this.showUploadPopup = false;
+  }
+
+  // Handle template download (could be an API call or static file link)
+  downloadTemplate() {
+    const templateUrl = environment.mcq_upload_template; // Adjust path as needed
+    const link = document.createElement('a');
+    link.href = templateUrl;
+    link.download = 'mcq_question_upload_template_flashyre_mcq_questions_template.xlsx';
+    link.click();
+  }
+
+  // Handle file selection and capture filename
+  onFileSelected(event: Event) {
+    this.hasGenerated = true; // Enable the Next button
+
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.uploadedFileName = file.name;
+      this.selectedExcelFile = input.files[0];
+
+      // TODO: Implement file upload and processing logic here
+      // For example, upload to server or parse Excel client-side
+    }
+  }
+
   /**
    * Handles the 'Cancel' button click in the footer.
 
@@ -234,7 +277,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
 
   /**
    * Handles the 'Next' button click in the footer.
-   */
+
   onNext(): void {
     if (this.jobUniqueId && this.hasGenerated) {
       this.router.navigate(['/create-job-post-22-page']);
@@ -243,6 +286,34 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
         this.showErrorPopup('Please generate or upload questions before proceeding.');
     }
   }
+       */
+
+  onNext(): void {
+    if (this.selectedExcelFile) {
+      this.isUploading = true; // optional spinner state
+      const token = this.authService.getJWTToken(); // adjust as needed
+
+      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, token).subscribe({
+        next: (response) => {
+          this.isUploading = false;
+          this.hasGenerated = true;
+          this.jobUniqueId = response.unique_id;
+          this.uploadedExcelFileUrl = response.file_url; // optional store URL if needed
+          this.router.navigate(['/create-job-post-22-page']);
+        },
+        error: (error) => {
+          this.isUploading = false;
+          this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
+        }
+      });
+
+    } else if (this.jobUniqueId && this.hasGenerated) {
+      this.router.navigate(['/create-job-post-22-page']);
+    } else {
+      this.showErrorPopup('Please generate or upload questions before proceeding.');
+    }
+  }
+
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment'; // Ensure this path is correct
 import { JobDetails, AIJobResponse, PaginatedJobPostResponse, MCQItem } from '../pages/create-job-post-1st-page/types'; // Ensure this path is correct
 
@@ -65,6 +65,67 @@ export class JobDescriptionService {
         catchError(error => this.handleError(error, 'uploadFile'))
       );
   }
+
+
+  uploadExcelFile(file: File, token: string): Observable<{ file_url: string; unique_id: string }> {
+    if (!file) {
+      console.error('No file provided for upload');
+      return throwError(() => new Error('No file selected for upload'));
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return throwError(() => new Error('File size exceeds 10MB'));
+    }
+
+    const allowedExtensions = ['.xlsx', '.xls'];
+    const ext = file.name.toLowerCase().split('.').pop();
+    if (!ext || !allowedExtensions.includes(`.${ext}`)) {
+      return throwError(() => new Error(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`));
+    }
+
+    const formData = new FormData();
+    formData.append('excel_file', file, file.name); // Use backend expected key
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+      // omit content-type for FormData
+    });
+
+    const endpoint = `${this.apiUrl}upload-mcq-excel/`; // adjust to your backend URL
+
+    return this.http.post<{ status: string; data: { file_url: string; unique_id: string } }>(
+      endpoint,
+      formData,
+      { headers }
+    ).pipe(
+      tap(response => console.log('Raw uploadExcelFile response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error(response.data?.toString() || 'Unexpected response during Excel upload');
+      }),
+      catchError(error => this.handleError(error, 'uploadExcelFile'))
+    );
+
+  }
+
+  getUploadedQuestions(jobUniqueId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/uploaded-questions/`;
+
+    return this.http.get<{ status: string; data: any }>(endpoint, { headers }).pipe(
+      tap(response => console.log('getUploadedQuestions response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Unexpected response structure in getUploadedQuestions');
+      }),
+      catchError(error => this.handleError(error, 'getUploadedQuestions'))
+    );
+  }
+
 
   /**
    * Saves or updates a job post by sending a POST request to the backend.

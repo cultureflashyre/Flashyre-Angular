@@ -33,6 +33,22 @@ interface SkillSection {
   isAllSelected: boolean;
 }
 
+interface UploadedQuestion {
+  id: number;               // unique question id
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  marks: number;
+  difficulty: string;
+  isSelected: boolean;
+}
+interface UploadedSkillSection {
+  skillName: string;
+  questions: UploadedQuestion[];
+  isAllSelected: boolean;
+}
+
+
 @Component({
   selector: 'create-job-post22',
   templateUrl: 'create-job-post-22.component.html',
@@ -57,11 +73,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   // Reactive form group for assessment settings
   assessmentForm: FormGroup;
 
-  // Array holding the data for each skill section (tab)
-  skillSections: SkillSection[] = [];
+  activeTab: 'ai-generated' | 'uploaded' = 'ai-generated';
 
-  // Index of the currently active skill section
-  activeSectionIndex = 0;
+  activeSectionIndex: number = 0; // for AI generated
+
+  skillSections: SkillSection[] = []; // your AI generated skill sections 
 
   // Loading and submission state flags
   isLoading: boolean = true;
@@ -78,6 +94,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   private visibleItems = 4; // Default number of visible items
   private readonly skillTabWidth = 130; // From CSS: width
   private readonly skillTabGap = 16;   // From CSS: gap
+
+  // properties for upload section
+  uploadedSkillSections: UploadedSkillSection[] = [];
+  activeUploadedSectionIndex: number = 0;
+  uploadedQuestionCount: number = 0;
 
     // State for alert-message component
   showAlert = false;
@@ -113,6 +134,25 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     this.updateScrollPosition();
   }
 
+  // Returns current skill sections based on active tab
+  getCurrentSkillSections() {
+    return this.activeTab === 'ai-generated' ? this.skillSections : this.uploadedSkillSections;
+  }
+
+  // Returns active section index based on tab
+  getActiveSectionIndex() {
+    return this.activeTab === 'ai-generated' ? this.activeSectionIndex : this.activeUploadedSectionIndex;
+  }
+
+  // Scroll index controls
+  getCurrentScrollIndex() {
+    // Implement your logic to get scroll index per active tab
+    return this.currentScrollIndex;
+  }
+  getMaxScrollIndex() {
+    return this.maxScrollIndex;
+  }
+
   /**
    * Lifecycle hook called when the component is initialized 
    * Initializes the form and fetches data based on whether an existing assessment is being edited.
@@ -146,6 +186,8 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     // For simplicity, we'll assume for now that if an assessment exists, we need to load it.
     // A more robust solution might involve checking on the backend.
     this.loadExistingAssessmentAndAllQuestions();
+
+    this.loadUploadedQuestions();
   
 }
 
@@ -218,6 +260,89 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     }));
   }
   
+  loadUploadedQuestions_OLD(): void {
+  const token = this.authService.getJWTToken(); // adjust accordingly
+  if (!this.jobUniqueId) {
+    this.showErrorPopup('Job context missing to load uploaded questions.');
+    return;
+  }
+
+  this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
+      next: (data) => {
+        // Assume backend returns structured data like:
+        // { skillName: string, questions: [{question, options, correctAnswer, marks, difficulty, id}] }[]
+        this.uploadedSkillSections = data.map(section => ({
+          skillName: section.skillName,
+          questions: section.questions.map(q => ({
+            id: q.id,
+            question: q.question,
+            options: [q.q_option1, q.q_option2, q.q_option3, q.q_option4].filter(opt => !!opt),
+            correctAnswer: q.q_correct_answer,
+            marks: q.marks || 2,
+            difficulty: q.difficulty_level || 'Medium',
+            isSelected: false,
+          })),
+          isAllSelected: false,
+        }));
+        
+        // Calculate total uploaded questions count
+        this.uploadedQuestionCount = this.uploadedSkillSections.reduce((sum, s) => sum + s.questions.length, 0);
+      },
+      error: (err) => {
+        this.showErrorPopup('Failed to load uploaded questions.');
+      }
+    });
+  }
+
+  loadUploadedQuestions(): void {
+    const token = this.authService.getJWTToken(); // adjust accordingly
+    if (!this.jobUniqueId) {
+      this.showErrorPopup('Job context missing to load uploaded questions.');
+      return;
+    }
+
+    this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
+      next: (data) => {
+        this.uploadedSkillSections = data.map(section => {
+          const questions = section.questions.map(q => ({
+            id: q.id,
+            question: q.question,
+            options: [q.q_option1, q.q_option2, q.q_option3, q.q_option4].filter(opt => !!opt),
+            correctAnswer: q.q_correct_answer,
+            marks: q.marks || 2,
+            difficulty: q.difficulty_level || 'Medium',
+            isSelected: false,
+          }));
+
+          return {
+            skillName: section.skillName,
+            questions: questions,
+            totalCount: questions.length,
+            selectedCount: 0,
+            isAllSelected: false,
+          };
+        });
+
+        this.uploadedQuestionCount = this.uploadedSkillSections.reduce((sum, s) => sum + s.questions.length, 0);
+        
+      },
+      error: (err) => {
+        this.showErrorPopup('Failed to load uploaded questions.');
+      }
+    });
+  }
+
+
+  toggleSelectAllForUploadedSection(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const section = this.uploadedSkillSections[this.activeUploadedSectionIndex];
+    section.questions.forEach(q => q.isSelected = isChecked);
+    this.onUploadedQuestionSelectionChange();
+  }
+
+  onUploadedQuestionSelectionChange(): void {
+    // Update overall selection state or take action on selection changes
+  }
 
   /**
    * Lifecycle hook called after the component's view has been fully initialized 
@@ -483,12 +608,12 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    * @param direction 'prev' or 'next'
    */
   navigateCarousel(direction: 'prev' | 'next'): void {
-    if (direction === 'next') {
+    if (direction === 'next'  && this.currentScrollIndex < this.maxScrollIndex) {
       if (this.currentScrollIndex < this.maxScrollIndex) {
         this.currentScrollIndex++;
       }
     } else { // 'prev'
-      if (this.currentScrollIndex > 0) {
+      if (direction === 'prev' && this.currentScrollIndex > 0) {
         this.currentScrollIndex--;
       }
     }
@@ -596,8 +721,16 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
    * Sets the active skill section index, changing the displayed questions.
    * @param index The index of the section to activate.
    */
-  selectSection(index: number): void {
-    this.activeSectionIndex = index;
+  selectSection(index: number) {
+    if (this.activeTab === 'ai-generated') {
+      this.activeSectionIndex = index;
+    } else {
+      this.activeUploadedSectionIndex = index;
+    }
+  }
+
+  selectUploadedSection(index: number) {
+    this.activeUploadedSectionIndex = index;
   }
 
   /**
