@@ -289,12 +289,14 @@
         </div>
       </div>
     </div>
+    
     <!-- The footer is now part of this component's template, directly calling its methods -->
     <create-job-post-footer2
       rootClassName="create-job-post-footer2root-class-name2"
       [isNextDisabled]="totalSelectedCount === 0 || isSubmitting"
       (cancelClick)="onCancel()"
       (previousClick)="onPrevious()"
+      (saveDraftClick)="onSaveDraft()"
       (skipClick)="onSkip()"
       (nextClick)="onNext()">
     </create-job-post-footer2>

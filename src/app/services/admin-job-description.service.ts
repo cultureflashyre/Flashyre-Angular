@@ -139,6 +139,26 @@ export class AdminJobDescriptionService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+ * Fetches the latest assessment for a specific job post
+ * @param jobUniqueId The unique_id of the JobPost
+ * @param token JWT token for authentication
+ * @returns Observable of the latest assessment or null
+ */
+getLatestAssessmentForJob(jobUniqueId: string, token: string): Observable<any> {
+  return this.http
+    .get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/latest-assessment/`, { headers: this.bearer(token) })
+    .pipe(
+      map(response => {
+        if (response.status === 'success') {
+          return response.data; // Could be null or an assessment object
+        }
+        throw new Error('Failed to fetch latest assessment');
+      }),
+      catchError(this.handleError)
+    );
+}
+
   finalizeJobPost(jobUniqueId: string, interviewStages: any[], token: string): Observable<any> {
     return this.http
       .post<any>(`${this.interviewFinalizeUrl}/${jobUniqueId}/finalize/`, interviewStages, { headers: this.jsonHeaders(token) })

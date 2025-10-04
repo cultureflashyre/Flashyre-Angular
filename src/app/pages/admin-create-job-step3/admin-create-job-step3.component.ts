@@ -115,11 +115,43 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (this.currentAssessmentId) {
-      this.loadExistingAssessment(this.currentAssessmentId);
-    } else {
-      this.fetchNewMcqList();
+    // NEW LOGIC: Check for existing assessment first
+    this.checkAndLoadAssessment();
+  }
+
+  /**
+   * NEW METHOD: Checks if an assessment exists and loads it, otherwise fetches MCQs
+   */
+  private checkAndLoadAssessment(): void {
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      this.isLoading = false;
+      this.spinner.hide('main-spinner');
+      return;
     }
+
+    // First, check if there's already an assessment for this job
+    this.subscriptions.add(
+      this.jobService.getLatestAssessmentForJob(this.jobUniqueId, token).subscribe({
+        next: (assessmentData) => {
+          if (assessmentData && assessmentData.assessment_uuid) {
+            // Assessment exists - load it
+            this.currentAssessmentId = assessmentData.assessment_uuid;
+            this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+            this.loadExistingAssessment(this.currentAssessmentId);
+          } else {
+            // No assessment exists - fetch fresh MCQs
+            this.fetchNewMcqList();
+          }
+        },
+        error: (err) => {
+          this.showErrorPopup(`Failed to check assessment status: ${err.message}`);
+          this.isLoading = false;
+          this.spinner.hide('main-spinner');
+        }
+      })
+    );
   }
 
   /**
@@ -513,8 +545,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Helper to build the payload for save/update operations.
-   * @returns The payload object for the API call.
+   * MODIFIED: Builds payload for create/update operations
    */
   private buildPayload(): any {
     const selectedIds = this.skillSections
@@ -539,17 +570,29 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Saves the assessment as a draft and navigates back to step 1.
+   * MODIFIED: Save Draft - saves and navigates to admin-page1
    */
   onSaveDraft(): void {
+    this.assessmentForm.markAllAsTouched();
+    
+    // Allow saving draft even with incomplete data (remove validation)
+    if (this.totalSelectedCount === 0) {
+      this.showErrorPopup('Please select at least one question before saving.');
+      return;
+    }
+
     const token = this.authService.getJWTToken();
-    if (!token) { this.showErrorPopup('Authentication error.'); return; }
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      return;
+    }
 
     this.isSubmitting = true;
     this.spinner.show('main-spinner');
 
     const payload = this.buildPayload();
 
+    // Determine if we're creating or updating
     const saveOperation = this.currentAssessmentId
       ? this.jobService.updateAssessment(this.currentAssessmentId, payload, token)
       : this.jobService.saveAssessment(payload, token);
@@ -559,12 +602,18 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         next: (response: any) => {
           this.isSubmitting = false;
           this.spinner.hide('main-spinner');
+          
+          // Store the assessment UUID if it's a new creation
           if (response && response.assessment_uuid && !this.currentAssessmentId) {
+            this.currentAssessmentId = response.assessment_uuid;
             this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
           }
+          
           this.showSuccessPopup('Draft saved successfully!');
+          
+          // Navigate to admin-page1 after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/admin-create-job-step1']);
+            this.router.navigate(['/admin-page1']);
           }, 2000);
         },
         error: (err) => {
@@ -577,20 +626,34 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Handles the 'Next' button click.
-   * Validates the form, constructs the payload, and either creates or updates the assessment.
+   * MODIFIED: Next button - saves and navigates to Step 4
    */
   onNext(): void {
     this.assessmentForm.markAllAsTouched();
-    if (this.assessmentForm.invalid) { this.showErrorPopup('Please fill in Assessment Name.'); return; }
-    if (this.totalSelectedCount === 0) { this.showErrorPopup('Please select at least one question.'); return; }
+    
+    // Validate form
+    if (this.assessmentForm.invalid) {
+      this.showErrorPopup('Please fill in all required fields correctly.');
+      return;
+    }
+    
+    if (this.totalSelectedCount === 0) {
+      this.showErrorPopup('Please select at least one question.');
+      return;
+    }
 
     const token = this.authService.getJWTToken();
-    if (!token) { this.showErrorPopup('Authentication error.'); return; }
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      return;
+    }
 
     this.isSubmitting = true;
     this.spinner.show('main-spinner');
+    
     const payload = this.buildPayload();
+    
+    // Determine if we're creating or updating
     const saveOperation = this.currentAssessmentId
       ? this.jobService.updateAssessment(this.currentAssessmentId, payload, token)
       : this.jobService.saveAssessment(payload, token);
@@ -600,11 +663,19 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         next: (response: any) => {
           this.isSubmitting = false;
           this.spinner.hide('main-spinner');
+          
+          // Store the assessment UUID if it's a new creation
           if (response && response.assessment_uuid && !this.currentAssessmentId) {
-             this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
+            this.currentAssessmentId = response.assessment_uuid;
+            this.workflowService.setCurrentAssessmentId(response.assessment_uuid);
           }
+          
           this.showSuccessPopup('Assessment saved successfully!');
-          setTimeout(() => { this.router.navigate(['/admin-create-job-step4']); }, 2000);
+          
+          // Navigate to Step 4 after 2 seconds
+          setTimeout(() => {
+            this.router.navigate(['/admin-create-job-step4']);
+          }, 2000);
         },
         error: (err) => {
           this.isSubmitting = false;
@@ -613,6 +684,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         }
       })
     );
+    this.workflowService.clearWorkflow();
   }
 
   /**
@@ -622,6 +694,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+  
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) this.userProfile = JSON.parse(profileData);
