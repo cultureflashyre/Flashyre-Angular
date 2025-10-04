@@ -623,6 +623,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         }
       })
     );
+    this.workflowService.clearWorkflow();
   }
 
   /**
@@ -684,7 +685,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         }
       })
     );
-    this.workflowService.clearWorkflow();
   }
 
   /**
