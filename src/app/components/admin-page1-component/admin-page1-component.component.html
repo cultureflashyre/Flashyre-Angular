@@ -1,3 +1,19 @@
+<!-- Add this entire block -->
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
+<div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+</div>
+
+
 <div
   id="admin-page1-component"
   class="admin-page1-component-container"
@@ -98,7 +114,7 @@
           id="start-process-button"
           type="button"
           class="admin-page1-component-start-process-button button"
-          (click)="startProcess()"
+          (click)="onStartProcessAttempt()"
         >
           <span
             id="start-process-text"
@@ -111,7 +127,7 @@
           id="remove-button"
           type="button"
           class="admin-page1-component-remove-button button"
-          (click)="removeSelected()"
+          (click)="onRemoveSelectedAttempt()"
         >
           <span id="remove-text" class="admin-page1-component-remove-text">
             Remove
@@ -235,7 +251,7 @@
             height="24"
             viewBox="0 0 24 24"
             class="admin-page1-component-remove-icon"
-            (click)="removeCandidate(candidate.candidate_id, i)"
+            (click)="onRemoveCandidateAttempt(candidate.candidate_id, i)"
             title="Remove this candidate"
           >
             <path d="M19 13H5v-2h14z" fill="currentColor"></path>

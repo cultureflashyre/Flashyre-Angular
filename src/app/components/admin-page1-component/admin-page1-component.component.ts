@@ -26,6 +26,15 @@ export class AdminPage1Component implements OnInit {
   public dateFilters: DateFilter[] = [];
   public activeFilter: string | null = null; 
 
+   // Add these properties
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupType: 'success' | 'error' = 'success';
+  private actionContext: { action: string, candidateId?: number, index?: number } | null = null;
+
   constructor(
     private adminService: AdminService,
     private datePipe: DatePipe 
@@ -118,7 +127,7 @@ export class AdminPage1Component implements OnInit {
     this.isAllSelected = this.candidates.length > 0 && this.candidates.every(c => c.selected);
   }
 
-  public removeCandidate(id: number, index: number): void {
+  public removeCandidateConfirmed(id: number, index: number): void {
     if (confirm('Are you sure you want to remove this candidate? This action cannot be undone.')) {
       this.adminService.deleteCandidate(id).subscribe({
         next: () => {
@@ -133,7 +142,7 @@ export class AdminPage1Component implements OnInit {
     }
   }
 
-  public removeSelected(): void {
+  public removeSelectedConfirmed(): void {
     const selectedIds = this.candidates.filter(c => c.selected).map(c => c.candidate_id);
     if (selectedIds.length === 0) {
       alert('Please select at least one candidate to remove.');
@@ -156,7 +165,7 @@ export class AdminPage1Component implements OnInit {
     }
   }
 
-  public startProcess(): void {
+  public startProcessConfirmed(): void {
     const selectedCandidates = this.candidates.filter(c => c.selected);
     if (selectedCandidates.length === 0) {
       alert('Please select at least one candidate to start the process.');
@@ -193,4 +202,96 @@ export class AdminPage1Component implements OnInit {
       });
     }
   }
+
+  // --- Alert and Popup Handling ---
+
+showSuccessPopup(message: string) {
+  this.popupMessage = message;
+  this.popupType = 'success';
+  this.showPopup = true;
+  setTimeout(() => this.closePopup(), 3000);
+}
+
+showErrorPopup(message: string) {
+  this.popupMessage = message;
+  this.popupType = 'error';
+  this.showPopup = true;
+  setTimeout(() => this.closePopup(), 5000);
+}
+
+closePopup() {
+  this.showPopup = false;
+}
+
+private openAlert(message: string, buttons: string[]) {
+  this.alertMessage = message;
+  this.alertButtons = buttons;
+  this.showAlert = true;
+}
+
+onAlertButtonClicked(action: string) {
+  this.showAlert = false;
+  if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
+    this.actionContext = null;
+    return;
+  }
+  
+  if (this.actionContext) {
+    switch (this.actionContext.action) {
+      case 'removeCandidate':
+        this.removeCandidateConfirmed(this.actionContext.candidateId!, this.actionContext.index!);
+        break;
+      case 'removeSelected':
+        this.removeSelectedConfirmed();
+        break;
+      case 'startProcess':
+        this.startProcessConfirmed();
+        break;
+    }
+    this.actionContext = null;
+  }
+}
+
+// --- Action "Attempt" Handlers (called from HTML) ---
+
+onRemoveCandidateAttempt(id: number, index: number) {
+  this.actionContext = { action: 'removeCandidate', candidateId: id, index: index };
+  this.openAlert('Are you sure you want to remove this candidate? This action cannot be undone.', ['Cancel', 'Remove']);
+}
+
+onRemoveSelectedAttempt() {
+  const selectedIds = this.candidates.filter(c => c.selected).map(c => c.candidate_id);
+  if (selectedIds.length === 0) {
+    this.showErrorPopup('Please select at least one candidate to remove.');
+    return;
+  }
+  this.actionContext = { action: 'removeSelected' };
+  this.openAlert(`Are you sure you want to permanently delete ${selectedIds.length} candidate(s)?`, ['Cancel', 'Delete']);
+}
+
+onStartProcessAttempt() {
+  const selectedCandidates = this.candidates.filter(c => c.selected);
+  if (selectedCandidates.length === 0) {
+    this.showErrorPopup('Please select at least one candidate to start the process.');
+    return;
+  }
+  const unregisteredIds = selectedCandidates
+    .filter(c => c.has_account !== 'Yes')
+    .map(c => c.candidate_id);
+  
+  if (unregisteredIds.length === 0) {
+    this.showErrorPopup('All selected candidates are already registered.');
+    return;
+  }
+
+  const hasRegistered = selectedCandidates.some(c => c.has_account === 'Yes');
+  let confirmationMessage = `This will send registration invites to ${unregisteredIds.length} unregistered candidate(s). Proceed?`;
+  if (hasRegistered) {
+    confirmationMessage = 'Some selected candidates are already registered. ' + confirmationMessage;
+  }
+
+  this.actionContext = { action: 'startProcess' };
+  this.openAlert(confirmationMessage, ['Cancel', 'Proceed']);
+}
+
 }

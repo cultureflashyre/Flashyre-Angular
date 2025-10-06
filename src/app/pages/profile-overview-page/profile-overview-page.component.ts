@@ -20,6 +20,11 @@ import { ProfileCertificationsComponent } from '../../components/profile-certifi
 export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   currentStep: number = 1;
   isSaving: boolean = false;
+  
+  // New Alert and Popup Properties
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
   showPopup: boolean = false;
   popupMessage: string = '';
   popupType: 'success' | 'error' = 'success';
@@ -118,26 +123,18 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // --- Popup Handling ---
-  showSuccessPopup() {
-    this.popupMessage = 'Successfully Saved';
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
     this.popupType = 'success';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
   }
 
-  showErrorPopup(message?: string) {
-    this.popupMessage = message || 'Failed to upload';
-    this.popupType = 'error';
-    this.showPopup = true;
-    setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
-  }
-
-    // New method for the rate-limit warning
-  showRateLimitWarningPopup(message: string) {
+  showErrorPopup(message: string) {
     this.popupMessage = message;
     this.popupType = 'error';
     this.showPopup = true;
-    setTimeout(() => this.closePopup(), 3000);
+    setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
   }
 
   closePopup() {
@@ -145,145 +142,122 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     this.popupMessage = '';
   }
 
+  // --- Alert Handling ---
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    switch(action.toLowerCase()) {
+      case 'save & next':
+        this.onSaveAndNextConfirmed();
+        break;
+      case 'previous':
+        this.onPreviousConfirmed();
+        break;
+      case 'skip':
+        this.onSkipConfirmed();
+        break;
+      case 'cancel':
+        // Do nothing
+        break;
+    }
+  }
+
   // --- Navigation ---
-  async onSaveAndNext() {
-    console.log('onSaveAndNext called, currentStep:', this.currentStep);
+  onSaveAndNext() {
+    this.openAlert('Do you want to save your changes and proceed?', ['Cancel', 'Save & Next']);
+  }
+
+  onPrevious() {
+    this.openAlert('Are you sure you want to go to the previous step?', ['Cancel', 'Previous']);
+  }
+
+  onSkip() {
+    this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
+  }
+
+  // --- Confirmed Actions ---
+  async onSaveAndNextConfirmed() {
+    console.log('onSaveAndNext confirmed, currentStep:', this.currentStep);
     this.isSaving = true;
     let success = false;
 
-    // Move to next step immediately
     if (this.currentStep < 6) {
       const previousStep = this.currentStep;
       this.currentStep++;
       if (this.currentStep === 4) {
-        console.log('Skipping step 4 as per logic.');
         this.currentStep = 5; // Skip step 4
       }
-      console.log('Navigated to step:', this.currentStep);
 
-      // Save data in the background
       try {
         switch (previousStep) {
           case 1:
-            console.log('Saving profile information...');
             const result = await this.profileComponent.saveProfile();
             success = result.success;
             if (result.success) {
-              if (result.rateLimited) {
-                // Show rate-limit warning only for step 1
-                this.showRateLimitWarningPopup(result.message);
-              } else {
-                // Show standard success for step 1
-                this.showSuccessPopup();
-              }
+                this.showSuccessPopup("Successfully Saved");
             } else {
               this.showErrorPopup(result.message || 'Failed to save profile.');
             }
             break;
           case 2:
-            console.log('Saving employment information...');
             success = await this.employmentComponent.saveEmployment();
-            if (success) {
-              this.showSuccessPopup();
-            } else {
-              this.showErrorPopup('Failed to save employment details.');
-            }
+            if (success) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save employment details.');
             break;
-
           case 3:
-            console.log('Saving education information...');
             success = await this.educationComponent.saveEducation();
-            if (success) {
-              this.showSuccessPopup();
-            } else {
-              this.showErrorPopup('Failed to save education details.');
-            }
+            if (success) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save education details.');
             break;
           case 5:
-            console.log('Saving certifications information...');
             success = await this.certificationComponent.saveCertifications();
-            console.log('Certifications save result:', success);
-
             if (success) {
-              this.showSuccessPopup();
+                this.showSuccessPopup("Successfully Saved");
             } else {
-              this.showErrorPopup();
+                this.showErrorPopup("Failed to upload");
             }
-
-            // Redirect to 'candidate-home' after 5 seconds regardless of success or failure
             setTimeout(() => {
-              console.log("Navigating to page: ", this.navigationSource);
-              if (this.navigationSource === 'recruiter') {
-                this.router.navigate(['recruiter-view-3rd-page1']);
-              } else {
-                this.router.navigate(['candidate-home']);
-              }
+              if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
+              else this.router.navigate(['candidate-home']);
             }, 3000);
             break;
-          default:
-            console.warn('Invalid step encountered:', previousStep);
-            this.showErrorPopup();
-            this.isSaving = false;
-            return;
-        }
-
-        if (success) {
-          console.log(`Step ${previousStep} saved successfully.`);
-          this.showSuccessPopup();
-        } else {
-          console.warn(`Saving step ${previousStep} failed.`);
-          this.showErrorPopup();
         }
       } catch (error) {
-        console.error(`Exception caught during save at step ${previousStep}:`, error);
-        this.showErrorPopup();
+        this.showErrorPopup('An unexpected error occurred.');
       } finally {
         this.isSaving = false;
-        console.log('onSaveAndNext completed, isSaving set to false');
       }
-    } else {
-      this.isSaving = false;
     }
   }
 
-  onPrevious() {
+  onPreviousConfirmed() {
     if (this.currentStep > 1) {
       this.currentStep--;
       if (this.currentStep === 4) {
-        console.log('Skipping step 4 on previous, moving back to step 3');
         this.currentStep = 3; // Skip step 4
       }
     }
-    console.log('onPrevious called, currentStep:', this.currentStep);
   }
 
-  onSkip() {
+  onSkipConfirmed() {
     if (this.currentStep < 6) {
       this.currentStep++;
       if (this.currentStep === 4) {
-        console.log('Skipping step 4 on skip, moving forward to step 5');
         this.currentStep = 5; // Skip step 4
       }
     }
-    console.log('onSkip called, currentStep:', this.currentStep);
-
-    // If user has reached or passed the last step, navigate to candidate-home
     if (this.currentStep >= 6) {
-      console.log('All steps skipped or completed, navigating to', this.navigationSource);
       setTimeout(() => {
-        console.log("Navigating to page: ", this.navigationSource);
-        if (this.navigationSource === 'recruiter') {
-          this.router.navigate(['recruiter-view-3rd-page1']);
-        } else {
-          this.router.navigate(['candidate-home']);
-        }
-      }, 3000);
+        if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
+        else this.router.navigate(['candidate-home']);
+      }, 1000);
     }
   }
 
   isStepVisible(step: number): boolean {
-    const visible = this.currentStep === step;
-    // console.log(`isStepVisible(${step}) called, returning:`, visible);
-    return visible;
+    return this.currentStep === step;
   }
 }

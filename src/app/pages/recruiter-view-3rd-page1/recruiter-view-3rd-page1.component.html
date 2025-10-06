@@ -1,5 +1,19 @@
 <div id="recruiter-view-3rd-page" class="recruiter-view3rd-page1-container10">
 
+  <app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
+<div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+</div>
+
   <div 
     *ngIf="showMoreFilters" 
     [@popupAnimation] 
@@ -1175,7 +1189,7 @@
 <body>
     <label class='switch'>
         <input type='checkbox' [checked]="job.status === 'final'"
-            (change)="handleStatusChange(job, job.status === 'final' ? 'pause' : 'final', $event)"> <!-- Default 'Live' state (checked) -->
+            (change)="onStatusChangeAttempt(job, $event)"> <!-- Default 'Live' state (checked) -->
         <span class='slider'>
             <div class='slider-text live-text'>Live</div>
             <div class='slider-text pause-text'>Pause</div>
@@ -1196,7 +1210,7 @@
                     height="24"
                     viewBox="0 0 24 24"
                     class="recruiter-view3rd-page1-delete-icon"
-                    (click)="handleStatusChange(job, 'deleted', $event)"
+                    (click)="onDeleteAttempt(job, $event)"
                   >
                     <path
                       d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM8 9h8v10H8zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"

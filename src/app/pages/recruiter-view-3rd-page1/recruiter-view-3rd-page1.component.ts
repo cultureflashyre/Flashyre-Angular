@@ -13,6 +13,8 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
 import { JobCreationWorkflowService } from 'src/app/services/job-creation-workflow.service';
 
+// Define the type for job statuses
+type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
 
 
 @Component({
@@ -56,6 +58,15 @@ export class RecruiterView3rdPage1 implements OnInit {
   filteredJobs: JobPost[] = [];
   postedJobs: JobPost[] = [];
 
+  // Add these properties for alert and popup state
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupType: 'success' | 'error' = 'success';
+
   searchJobTitle: string = '';
   searchLocation: string = '';
   searchExperience: string = '';
@@ -84,6 +95,8 @@ export class RecruiterView3rdPage1 implements OnInit {
   private jobsPerPage = 10;
   isLoading = true;
   allJobsDisplayed = false;
+  // This will temporarily store the context of the action being confirmed
+  private actionContext: { action: string, job?: JobPost, newStatus?: JobStatus, event?: Event } | null = null;
 
   activeTab: 'live' | 'draft-pause' | 'deleted' = 'live';
 
@@ -389,42 +402,32 @@ export class RecruiterView3rdPage1 implements OnInit {
   }
   // --- END OF ADDED FUNCTION ---
 
-  handleStatusChange(job: JobPost, newStatus: 'pause' | 'final' | 'deleted', event: Event): void {
-    let confirmationMessage = '';
-    if (newStatus === 'pause') {
-      confirmationMessage = 'Are you sure you want to pause this job?';
-    } else if (newStatus === 'final') {
-      confirmationMessage = 'Are you sure you want to make this job live?';
-    } else if (newStatus === 'deleted') {
-      confirmationMessage = 'Are you sure you want to delete this job?';
-    }
-
-    if (confirm(confirmationMessage)) {
-      this.recruiterService.updateJobStatus(job.unique_id, newStatus).subscribe({
+  handleStatusChangeConfirmed(job: JobPost, newStatus: JobStatus, event: Event): void {
+    this.recruiterService.updateJobStatus(job.unique_id, newStatus).subscribe({
         next: () => {
-          const jobInMaster = this.masterPostedJobs.find(j => j.unique_id === job.unique_id);
-          if (jobInMaster) {
-            jobInMaster.status = newStatus;
-          }
-          this.runFilterPipeline();
+            const jobInMaster = this.masterPostedJobs.find(j => j.unique_id === job.unique_id);
+            if (jobInMaster) {
+                jobInMaster.status = newStatus as 'pause' | 'final' | 'deleted';
+            }
+            this.runFilterPipeline();
+            this.showSuccessPopup('Job status updated successfully!');
         },
-        error: (err) => console.error('Failed to update job status:', err)
-      });
-    } else {
-        // If user clicks "Cancel", prevent the default action and revert the checkbox state
-        event.preventDefault();
-        const input = event.target as HTMLInputElement;
-        input.checked = !input.checked;
-    }
-  }
+        error: (err) => {
+            console.error('Failed to update job status:', err);
+            this.showErrorPopup('Failed to update job status.');
+            // Revert the checkbox if the API call fails
+            if (event) {
+                const input = event.target as HTMLInputElement;
+                input.checked = !input.checked;
+            }
+        }
+    });
+}
   
   editJob(job: JobPost): void {
-    // 3. MODIFY THIS METHOD
-    // This starts the edit workflow and stores the job ID and edit flag
-    this.workflowService.startEditWorkflow(job.unique_id);
-    // This navigation is now more powerful because the workflow service holds the state
-    this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
-  }
+  this.workflowService.startEditWorkflow(job.unique_id);
+  this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
+}
 
   getPostedDaysAgo(dateStr: string): string {
     const date = new Date(dateStr);
@@ -463,4 +466,77 @@ export class RecruiterView3rdPage1 implements OnInit {
   onLogoutClick() {
     this.corporateAuthService.logout();
   }
+
+  // --- Alert and Popup Handling ---
+
+showSuccessPopup(message: string) {
+  this.popupMessage = message;
+  this.popupType = 'success';
+  this.showPopup = true;
+  setTimeout(() => this.closePopup(), 3000);
+}
+
+showErrorPopup(message: string) {
+  this.popupMessage = message;
+  this.popupType = 'error';
+  this.showPopup = true;
+  setTimeout(() => this.closePopup(), 5000);
+}
+
+closePopup() {
+  this.showPopup = false;
+}
+
+private openAlert(message: string, buttons: string[]) {
+  this.alertMessage = message;
+  this.alertButtons = buttons;
+  this.showAlert = true;
+}
+
+onAlertButtonClicked(action: string) {
+  this.showAlert = false;
+  const context = this.actionContext;
+  
+  if (!context) return;
+
+  const confirmedAction = action.toLowerCase() !== 'no' && action.toLowerCase() !== 'cancel';
+
+  if (confirmedAction) {
+    switch (context.action) {
+      case 'changeStatus':
+        this.handleStatusChangeConfirmed(context.job!, context.newStatus!, context.event!);
+        break;
+      case 'delete':
+        this.handleStatusChangeConfirmed(context.job!, 'deleted', context.event!);
+        break;
+      
+    }
+  } else {
+    // If the action was cancelled, handle reverting the UI state
+    if (context.action === 'changeStatus' && context.event) {
+        const input = context.event.target as HTMLInputElement;
+        input.checked = !input.checked; // Revert the checkbox
+    }
+  }
+  
+  this.actionContext = null; // Clear the context
+}
+
+// --- Action Attempt Handlers (These open the alerts) ---
+
+onStatusChangeAttempt(job: JobPost, event: Event) {
+  event.preventDefault(); // Prevent immediate UI change
+  const newStatus: JobStatus = job.status === 'final' ? 'pause' : 'final';
+  const message = newStatus === 'pause' 
+    ? 'Are you sure you want to pause this job?' 
+    : 'Are you sure you want to make this job live?';
+  
+  this.actionContext = { action: 'changeStatus', job, newStatus, event };
+  this.openAlert(message, ['No', 'Yes']);
+}
+
+onDeleteAttempt(job: JobPost, event: Event) {
+  this.actionContext = { action: 'delete', job, event };
+  this.openAlert('Are you sure you want to delete this job?', ['Cancel', 'Delete']);
+}
 }
