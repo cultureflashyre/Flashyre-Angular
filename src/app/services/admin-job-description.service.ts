@@ -62,6 +62,42 @@ export class AdminJobDescriptionService {
       );
   }
 
+  // --- NEW METHOD 1: Upload MCQ Excel File ---
+  uploadMcqExcel(file: File, jobUniqueId: string, token: string): Observable<{ file_url: string; unique_id: string }> {
+    const formData = new FormData();
+    formData.append('excel_file', file, file.name);
+    formData.append('jobUniqueId', jobUniqueId);
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post<{ status: string; data: { file_url: string; unique_id: string } }>(
+      `${this.baseUrl}/upload-mcq-excel/`,
+      formData,
+      { headers }
+    ).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Unexpected response during Excel upload');
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  // --- NEW METHOD 2: Get Uploaded Questions ---
+  getUploadedQuestions(jobUniqueId: string, token: string): Observable<any> {
+    return this.http.get<{ status: string; data: any }>(
+      `${this.baseUrl}/job-post/${jobUniqueId}/uploaded-questions/`,
+      { headers: this.bearer(token) }
+    ).pipe(
+      map(response => response.data), // Extract the nested 'data' object
+      catchError(this.handleError)
+    );
+  }
+
   updateJobPost(uniqueId: string, jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
     return this.http.put<{ status: string; data: { unique_id: string } }>(
       `${this.baseUrl}/job-post/${uniqueId}/`,
