@@ -100,9 +100,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-//    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
-  //    this.terminateTest(true);
-    //});
+    this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
+      this.terminateTest(true);
+    });
 
     const assessmentId = this.route.snapshot.queryParamMap.get('id');
     this.userId = localStorage.getItem('user_id');
@@ -112,7 +112,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.startTime = new Date();
       try {
         await this.videoRecorder.startRecording(this.userId, assessmentId);
-      //  this.proctoringService.startMonitoring();
+        this.proctoringService.startMonitoring();
       } catch (error) {
         console.error('Failed to start assessment:', error);
       }
@@ -526,7 +526,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }, 10); // 10ms is enough to push this to the next browser render cycle.
   }
 
-  onRunCode(event: { source_code: string, language_id: number }) {
+ onRunCode(event: { source_code: string, language_id: number }) {
     const data = {
       problem_id: this.currentSection.coding_id_id,
       source_code: event.source_code,
@@ -536,12 +536,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.trialAssessmentService.runCode(data).subscribe({
       next: (response) => {
         console.log('Run code response:', JSON.stringify(response, null, 2));
-        //this.results = response.results || ['No results available'];
-
-        this.results = response.results?.map((r: any) => {
-        // Compose a single string summarizing the test result
-        return `Input: ${r.input}, Expected: ${r.expected_output}, Actual: ${r.actual_output}, Status: ${r.status}`;
-        }) || ['No results available'];
+        
+        // ** THE FIX **
+        // The problem was that the code was trying to re-format the results with a .map() function,
+        // which caused the 'undefined' error. The backend already returns a simple array of strings,
+        // which is what the app-test-results component expects.
+        // The fix is to assign the 'results' array from the response directly to our local 'results' variable.
+        this.results = response.results || ['No results available'];
 
         this.showTestResults = true;
       },
@@ -563,7 +564,12 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.trialAssessmentService.submitCode(data).subscribe({
       next: (response) => {
         console.log('Submit code response:', JSON.stringify(response, null, 2));
+        
+        // ** THE FIX **
+        // Applying the same fix here for consistency. We directly use the 'results'
+        // array provided by the server.
         this.results = response.results || ['No results available'];
+
         this.codingSubmissions[this.currentSection.coding_id_id] = {
           id: response.id,
           score: response.score

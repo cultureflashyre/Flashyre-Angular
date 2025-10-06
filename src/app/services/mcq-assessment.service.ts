@@ -87,7 +87,7 @@ export class McqAssessmentService {
    * @param jobUniqueId The UUID of the JobPost.
    * @param token JWT token.
    */
-  getLatestAssessmentForJob(jobUniqueId: string, token: string): Observable<AssessmentDetailResponse | null> {
+  getLatestAssessmentForJob_OLD(jobUniqueId: string, token: string): Observable<AssessmentDetailResponse | null> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     const endpoint = `${this.apiUrl}api/mcq-assessments/job/${jobUniqueId}/latest/`;
     
@@ -100,6 +100,23 @@ export class McqAssessmentService {
         })
     );
   }
+
+  getLatestAssessmentForJob(jobUniqueId: string, token: string, source: string): Observable<AssessmentDetailResponse | null> {
+      const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+      // Append `source` query parameter
+      const endpoint = `${this.apiUrl}api/mcq-assessments/job/${jobUniqueId}/latest/?source=${encodeURIComponent(source)}`;
+
+      return this.http.get<AssessmentDetailResponse>(endpoint, { headers }).pipe(
+          catchError(err => {
+              if (err.status === 404) {
+                  return of(null); // No assessment found is not an error
+              }
+              return throwError(() => err);
+          })
+      );
+  }
+
+
 
   createLegacyAssessment(payload: LegacyAssessmentPayload, token: string): Observable<LegacyAssessmentSaveResponse> {
     const headers = new HttpHeaders({

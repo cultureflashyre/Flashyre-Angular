@@ -46,6 +46,11 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   popupMessage: string = '';
   popupType: 'success' | 'error' = 'success';
 
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private actionContext: { action: string } | null = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -786,7 +791,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.document.getElementById('tagContainer')?.addEventListener('click', () => tagInput.focus());
   }
 
-  onSubmit(): void {
+  onSubmitConfirmed(): void {
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
@@ -874,7 +879,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.subscriptions.add(saveSub);
   }
 
-  onCancel(): void {
+  onCancelConfirmed(): void {
     const token = this.corporateAuthService.getJWTToken();
     const uniqueId = this.jobForm.get('unique_id')?.value;
 
@@ -959,5 +964,69 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) this.userProfile = JSON.parse(profileData);
+  }
+
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false; // Hide the alert first
+
+    // If the user clicked "Cancel" or "No", do nothing further
+    if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
+      this.actionContext = null;
+      return;
+    }
+    
+    // If the user confirmed, check what action we were confirming
+    if (this.actionContext) {
+      switch (this.actionContext.action) {
+        case 'submit':
+          this.onSubmitConfirmed(); // Call the actual submit logic
+          break;
+        case 'cancel':
+          this.onCancelConfirmed(); // Call the actual cancel logic
+          break;
+      }
+      // Clear the context after the action is taken
+      this.actionContext = null;
+    }
+  }
+  
+  // New method called by the "Cancel" button in the HTML
+  onCancelAttempt(): void {
+      this.actionContext = { action: 'cancel' };
+      this.openAlert('Are you sure you want to cancel? Any unsaved changes will be lost.', ['No', 'Yes']);
+  }
+
+  // New method called by the "Next" button in the HTML
+  onSubmitAttempt(): void {
+      // 1. Perform all form validation first
+      this.jobForm.markAllAsTouched();
+      this.checkEmpty('editor');
+      if (this.jobForm.invalid) {
+        // Use the EXISTING showErrorPopup for validation errors
+        this.showErrorPopup('Please fill all required fields correctly.');
+        // (The rest of the scrolling logic to find the invalid field remains the same)
+        const errors = this.jobForm.errors;
+        const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid) || (errors?.['relevantExceedsTotal'] || errors?.['invalidBudgetRange'] ? 'relevant_experience_max' : null);
+        if (firstInvalidControl) {
+            let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
+            if (!element) {
+              if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
+              else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
+              else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
+            }
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return; // Stop if the form is invalid
+      }
+
+      // 2. If validation passes, show the confirmation alert
+      this.actionContext = { action: 'submit' };
+      this.openAlert('Do you want to save this job post and proceed?', ['Cancel', 'Save & Next']);
   }
 }

@@ -26,6 +26,11 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   rawp46g: string = ' ';
   rawliiy: string = ' ';
 
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private actionContext: { action: string } | null = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -161,6 +166,38 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
+  this.actionContext = { action: 'cancel' };
+  this.openAlert('Are you sure you want to cancel? This will delete the job post draft.', ['No', 'Yes, Cancel']);
+}
+
+onPrevious(): void {
+  this.actionContext = { action: 'previous' };
+  this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
+}
+
+onSkip(): void {
+  this.actionContext = { action: 'skip' };
+  this.openAlert('Are you sure you want to skip adding an assessment?', ['Cancel', 'Skip']);
+}
+
+onSaveDraft(): void {
+  this.actionContext = { action: 'saveDraft' };
+  this.openAlert('Do you want to save this as a draft and exit?', ['Cancel', 'Save Draft']);
+}
+
+onNext(): void {
+  // First, perform the validation check
+  if (!this.hasGenerated) {
+    this.showErrorPopup('Please generate or upload questions before proceeding.');
+    return; // Stop if validation fails
+  }
+  
+  // If validation passes, show the confirmation alert
+  this.actionContext = { action: 'next' };
+  this.openAlert('Proceed to the next step?', ['Cancel', 'Next']);
+}
+
+  onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
@@ -168,15 +205,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  onPrevious(): void {
+  onPreviousConfirmed(): void {
     this.router.navigate(['/admin-create-job-step1']);
   }
 
-  onSkip(): void {
+  onSkipConfirmed(): void {
     this.router.navigate(['/admin-create-job-step3']);
   }
 
-  onSaveDraft(): void {
+  onSaveDraftConfirmed(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => {
@@ -184,9 +221,11 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  onNext(): void {
-    // ✅ ADDED: Explicit guard to prevent navigation if state is incorrect
-    if (!this.hasGenerated) {
+
+  onNextConfirmed(): void {
+    if (this.jobUniqueId && this.hasGenerated) {
+      this.router.navigate(['/admin-create-job-step3']);
+    } else if (!this.hasGenerated) {
         this.showErrorPopup('Please generate or upload questions before proceeding.');
         return;
     }
@@ -203,4 +242,41 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) this.userProfile = JSON.parse(profileData);
   }
+
+  // --- Alert Handling ---
+private openAlert(message: string, buttons: string[]) {
+  this.alertMessage = message;
+  this.alertButtons = buttons;
+  this.showAlert = true;
+}
+
+onAlertButtonClicked(action: string) {
+  this.showAlert = false;
+  if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
+    this.actionContext = null; // User cancelled, do nothing
+    return;
+  }
+  
+  // User confirmed, proceed with the stored action
+  if (this.actionContext) {
+    switch (this.actionContext.action) {
+      case 'cancel':
+        this.onCancelConfirmed();
+        break;
+      case 'previous':
+        this.onPreviousConfirmed();
+        break;
+      case 'skip':
+        this.onSkipConfirmed();
+        break;
+      case 'saveDraft':
+        this.onSaveDraftConfirmed();
+        break;
+      case 'next':
+        this.onNextConfirmed();
+        break;
+    }
+    this.actionContext = null; // Reset context
+  }
+}
 }

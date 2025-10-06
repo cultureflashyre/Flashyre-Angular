@@ -61,11 +61,20 @@
       </navbar-for-candidate-view1>
       <div class="profile-overview-page-content-container">
         <!-- Popup Message -->
-        <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
-          <span class="closebtn" (click)="closePopup()">×</span>
-          <span *ngIf="popupType === 'success'" class="tick">✔</span>
-          {{ popupMessage }}
-        </div>
+        <app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
+<!-- This is for the success/error popups after an action -->
+<div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+</div>
     
         <!-- Progress bars for steps 1, 2, 3, 4, 5 -->
         <progress-bar-step1

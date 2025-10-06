@@ -98,6 +98,14 @@
 </navbar-for-admin-view>
 
 <ng-container *ngIf="!isLoading; else loadingTemplate">
+
+  <app-alert-message
+    *ngIf="showAlert"
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
   <!-- Popup Message -->
   <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
     <span *ngIf="popupType === 'success'" class="tick">✔</span>

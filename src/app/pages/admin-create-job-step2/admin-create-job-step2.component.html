@@ -108,6 +108,14 @@
 
 <div class="admin-create-job-step2-container1">
   <div class="admin-create-job-step2-container2">
+    
+    <app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
 
     <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
       <span *ngIf="popupType === 'success'" class="tick">✔</span>
