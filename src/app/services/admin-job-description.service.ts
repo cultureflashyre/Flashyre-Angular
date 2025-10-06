@@ -18,7 +18,7 @@ export class AdminJobDescriptionService {
   |  Public API – identical to your last working version               |
   | ================================================================= */
 
-    /**
+  /**
    * Uploads a job description file and processes it with AI.
    * @param file The JD file to upload
    * @param token JWT token for authentication
@@ -62,10 +62,39 @@ export class AdminJobDescriptionService {
       );
   }
 
+  updateJobPost(uniqueId: string, jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
+    return this.http.put<{ status: string; data: { unique_id: string } }>(
+      `${this.baseUrl}/job-post/${uniqueId}/`,
+      jobDetails,
+      { headers: this.jsonHeaders(token) }
+    ).pipe(
+      map(res => {
+        if (res.status === 'success' && res.data?.unique_id) return { unique_id: res.data.unique_id };
+        throw new Error('Malformed response on update');
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   getJobPost(uniqueId: string, token: string): Observable<JobDetails> {
     return this.http
-      .get<JobDetails>(`${this.baseUrl}/job-post/${uniqueId}/`, { headers: this.bearer(token) })
-      .pipe(catchError(this.handleError));
+      .get<{ status: string; data: JobDetails }>(`${this.baseUrl}/job-post/${uniqueId}/`, { headers: this.bearer(token) })
+      .pipe(
+        map(response => {
+            if (response.status === 'success' && response.data) {
+                return response.data;
+            }
+            throw new Error('Failed to retrieve valid job post data.');
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  deleteJobPost(uniqueId: string, token: string): Observable<void> {
+    return this.http.delete<void>(
+        `${this.baseUrl}/job-post/${uniqueId}/`,
+        { headers: this.bearer(token) }
+    ).pipe(catchError(this.handleError));
   }
 
   generateMcqsForJob(jobUniqueId: string, token: string): Observable<{ message: string }> {
@@ -109,6 +138,26 @@ export class AdminJobDescriptionService {
       .get<any>(`${this.mcqAssessmentBaseUrl}/${assessmentId}/`, { headers: this.bearer(token) })
       .pipe(catchError(this.handleError));
   }
+
+  /**
+ * Fetches the latest assessment for a specific job post
+ * @param jobUniqueId The unique_id of the JobPost
+ * @param token JWT token for authentication
+ * @returns Observable of the latest assessment or null
+ */
+getLatestAssessmentForJob(jobUniqueId: string, token: string): Observable<any> {
+  return this.http
+    .get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/latest-assessment/`, { headers: this.bearer(token) })
+    .pipe(
+      map(response => {
+        if (response.status === 'success') {
+          return response.data; // Could be null or an assessment object
+        }
+        throw new Error('Failed to fetch latest assessment');
+      }),
+      catchError(this.handleError)
+    );
+}
 
   finalizeJobPost(jobUniqueId: string, interviewStages: any[], token: string): Observable<any> {
     return this.http
