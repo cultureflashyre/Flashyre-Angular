@@ -117,9 +117,13 @@ export class AdminJobDescriptionService {
 
   checkMcqStatus(jobUniqueId: string, token: string): Observable<{ has_mcqs: boolean }> {
     return this.http
-      .get<{ has_mcqs: boolean }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
-      .pipe(catchError(this.handleError));
+      .get<{ status: string; data: { has_mcqs: boolean } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
+      .pipe(
+        map(response => response.data), // ✅ FIXED: Extract the nested 'data' object
+        catchError(this.handleError)
+      );
   }
+
 
   saveAssessment(payload: any, token: string): Observable<{ assessment_uuid: string }> {
     return this.http

@@ -151,7 +151,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
         error: (err) => {
           this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
         }
-    });
+      });
     this.subscriptions.add(generateSub);
   }
 
@@ -185,13 +185,17 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onNext(): void {
-    if (this.jobUniqueId && this.hasGenerated) {
-      this.router.navigate(['/admin-create-job-step3']);
-    } else if (!this.hasGenerated) {
+    // ✅ ADDED: Explicit guard to prevent navigation if state is incorrect
+    if (!this.hasGenerated) {
         this.showErrorPopup('Please generate or upload questions before proceeding.');
+        return;
+    }
+  
+    if (this.jobUniqueId) {
+      this.router.navigate(['/admin-create-job-step3']);
     }
   }
-
+  
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
