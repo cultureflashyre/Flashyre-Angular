@@ -510,7 +510,7 @@
               [jobId]="job.job_id.toString()"
               [imageSrc]="getImageOrInitials(job)"
               [imageAlt]="job.company_name + ' logo'"
-              [matchingScore]="job.matching_score || 80"
+              [matchingScore]="job.matching_score"
               [companyInitials]="job.initials" 
             >
               <ng-template #text>

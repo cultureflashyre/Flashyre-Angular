@@ -2,17 +2,70 @@
   display: contents; 
 }
 
+/* --- Alert and Popup Styles --- */
+.alert {
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050; /* Ensure it's on top */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  min-width: 300px;
+}
+
+.alert.success {
+  background-color: #28a745;
+}
+
+.alert.error {
+  background-color: #dc3545;
+}
+
+.closebtn {
+  margin-left: auto;
+  padding-left: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: #e0e0e0;
+}
+
+.tick {
+  margin-right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 /* Updated Footer Styles - Replace the dropdown-related styles with these */
 
 .admin-create-job-step4-footer-container {
   display: flex;
+  width: 100%;
   justify-content: flex-end;
   align-items: center;
-  
   gap: 12px;
-  margin-top: 24px;
   padding: 24px 0;
   border-top: 1px solid #e0e0e0;
+  margin: 0px;
+}
+
+.previous-and-save-buttons-container {
+  display: flex;
+  width: auto;
+  gap: 16px;
+  flex-direction: row;
 }
 
 /* Cancel Button */
@@ -27,7 +80,6 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-right: 1200px; /* Push to the left */
     
 }
 
@@ -149,6 +201,8 @@
 .admin-create-job-step4-dropdown-menu,
 .admin-create-job-step4-dropdown-item {
   /* Remove these classes from your CSS */
+  width: auto;
+  height: auto;
 }
 
 /* Responsive adjustments */

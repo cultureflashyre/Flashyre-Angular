@@ -1,12 +1,16 @@
   <!-- src/app/pages/admin-create-job-step4/admin-create-job-step4.component.html -->
-  <div *ngIf="showSuccessPopup" class="success-popup-overlay">
-    <div class="success-popup-box">
-      <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-      </svg>
-      <p class="success-message">Successfully Created!</p>
-    </div>
+  <app-alert-message
+    *ngIf="showAlert"
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+
+  <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      <span *ngIf="popupType === 'success'" class="tick">✔</span>
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> × </span>
   </div>
 
   <navbar-for-admin-view
@@ -260,6 +264,7 @@
             Cancel
           </span>
         </button>
+        <div id="previousandsave"  class="previous-and-save-buttons-container">
         <button
           type="button"
           id="previous-button"
@@ -308,6 +313,7 @@
             >
               View Score
             </button>
+          </div>
           </div>
         </div>
       </div>

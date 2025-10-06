@@ -276,7 +276,7 @@
 .admin-page1cv-upload-jd-upload-candidate-details-main-container {
   gap: 24px;
   width: 80%;
-  margin-top: 20px;
+  margin-top: 100px;
   height: auto;
   display: flex;
   padding: 24px;
@@ -544,12 +544,16 @@
   .admin-page1-admin-page-main-container {
     width: 100%;
     height: auto;
+    align-items: flex-start;
+  }
+  .admin-page1cv-upload-jd-upload-candidate-details-main-container {
+    margin-top: 20px;
   }
 }
  
 @media(max-width: 991px) {
   .admin-page1-admin-page-main-container {
-    gap: 16;
+    gap: 16px;
     width: 100%;
   }
   .admin-page1cv-upload-jd-upload-candidate-details-main-container {

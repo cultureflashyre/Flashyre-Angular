@@ -736,7 +736,7 @@
 }
  
 .navbar-for-candidate-viewroot-class-name1 {
-  width: auto;
+  width: 100%;
   z-index: 1000;
   position: fixed;
   align-self: stretch;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
 
@@ -7,11 +7,12 @@ import { AuthService } from '../../services/candidate.service';
   templateUrl: './candidate-job-for-you-card.component.html',
   styleUrls: ['./candidate-job-for-you-card.component.css'],
 })
-export class CandidateJobForYouCard implements OnInit, AfterViewInit {
+export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges {
   // --- Component Properties ---
   userProfile: any = {};
   defaultProfilePicture: string = "https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg";
   score: number = 0;
+  hasValidScore: boolean = false;
   public avatarBgColor: string = '#6c757d'; // default fallback color
 
   // State booleans for the dislike and save buttons.
@@ -23,7 +24,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
 
 
   // --- Angular Decorators ---
-  @Input() matchingScore: number = 80;
+  @Input() matchingScore: number | null | undefined;
   @Input() jobId: string;
   @Input() rootClassName: string = '';
   @Input() imageSrc: string =
@@ -123,6 +124,17 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit {
     const index = Math.abs(hash) % colors.length;
     return colors[index];
   }
+
+  private processMatchingScore(): void {
+  const score = this.matchingScore;
+  if (score !== null && score !== undefined && !isNaN(score)) {
+    this.score = score;
+    this.hasValidScore = true;
+  } else {
+    this.score = 0; // Default to 0 internally
+    this.hasValidScore = false;
+  }
+}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['matchingScore'] && !changes['matchingScore'].firstChange) {
