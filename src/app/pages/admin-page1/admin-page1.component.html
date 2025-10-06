@@ -105,6 +105,22 @@
   </ng-template>
 </navbar-for-admin-view>
 
+<!-- Add this entire block -->
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
+<div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+</div>
+<!-- End of block to add -->
+
 
 <div id="admin-page1" class="admin-page1-container">
   <div
@@ -159,7 +175,7 @@
             id="add-questions-with-ai-button"
             type="button"
             class="admin-page1-add-questions-with-ai-button1 button"
-            (click)="cvUploader.click()"
+            (click)="onCvUploadAttempt()"
             [disabled]="isUploadingCVs || isUploadingJd"
           >
             <span
@@ -174,7 +190,7 @@
             id="add-questions-with-ai-button"
             type="button"
             class="admin-page1-add-questions-with-ai-button2 button"
-            (click)="jdUploader.click()"
+            (click)="onJdUploadAttempt()"
             [disabled]="isUploadingCVs || isUploadingJd"
           >
             <span

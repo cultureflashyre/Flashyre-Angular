@@ -651,6 +651,7 @@ gmp-place-autocomplete::part(input):focus {
     flex: 0 0 auto;
     width: 1124px;
     height: auto;
+    margin-top: 100px;
     display: flex;
     padding: 24px;
     z-index: 999;
