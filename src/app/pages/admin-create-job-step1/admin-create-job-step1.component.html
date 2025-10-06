@@ -107,6 +107,14 @@
     id="create-job-post-main-container"
     class="admin-create-job-step1-create-job-post-main-container"
   >
+    
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
     <!-- Popup Message -->
     <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
       <span *ngIf="popupType === 'success'" class="tick">✔</span>
@@ -923,7 +931,7 @@
         id="cancel-button"
         name="cancel-button"
         class="admin-create-job-step1-cancel-button button"
-        (click)="onCancel()"
+        (click)="onCancelAttempt()"
         [disabled]="isSubmitting"
       >
         <span id="cancel-text" class="admin-create-job-step1-cancel-text">
@@ -935,7 +943,7 @@
         id="submit-button"
         name="submit-button"
         class="admin-create-job-step1-submit-button button"
-        (click)="onSubmit()"
+        (click)="onSubmitAttempt()"
         [disabled]="isSubmitting"
       >
         <span id="submit-text" class="admin-create-job-step1-submit-text">

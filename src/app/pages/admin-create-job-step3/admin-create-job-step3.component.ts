@@ -64,6 +64,11 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   currentScrollIndex = 0;
   maxScrollIndex = 0;
 
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private actionContext: { action: string } | null = null;
+
   /**
    * Constructor for dependency injection
    * @param fb FormBuilder for creating reactive forms
@@ -182,6 +187,46 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     this.showPopup = false;
     this.popupMessage = '';
   }
+
+  // --- ALERT HANDLING LOGIC ---
+
+private openAlert(message: string, buttons: string[]) {
+  this.alertMessage = message;
+  this.alertButtons = buttons;
+  this.showAlert = true;
+}
+
+onAlertButtonClicked(action: string) {
+  this.showAlert = false; // Always hide the alert after a button is clicked
+
+  // If the user clicked "Cancel" or "No", we stop here
+  if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
+    this.actionContext = null;
+    return;
+  }
+  
+  // If the user confirmed, check which action to perform
+  if (this.actionContext) {
+    switch (this.actionContext.action) {
+      case 'saveDraft':
+        this.onSaveDraftConfirmed();
+        break;
+      case 'skip':
+        this.onSkipConfirmed();
+        break;
+      case 'next':
+        this.onNextConfirmed();
+        break;
+      case 'cancel':
+        this.onCancelConfirmed();
+        break;
+      case 'previous':
+        this.onPreviousConfirmed();
+        break;
+    }
+    this.actionContext = null; // Clear the context after handling
+  }
+}
 
   /**
    * Processes raw MCQ items from the API into the internal McqQuestion format.
@@ -511,20 +556,60 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  onCancel(): void {
+  this.actionContext = { action: 'cancel' };
+  this.openAlert('Are you sure you want to cancel? The current progress will be lost.', ['No', 'Yes, Cancel']);
+}
+
+onPrevious(): void {
+  this.actionContext = { action: 'previous' };
+  this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
+}
+
+onSaveDraft(): void {
+  this.assessmentForm.markAllAsTouched();
+  if (this.totalSelectedCount === 0) {
+    this.showErrorPopup('Please select at least one question before saving.');
+    return;
+  }
+  this.actionContext = { action: 'saveDraft' };
+  this.openAlert('Do you want to save this as a draft and exit?', ['Cancel', 'Save Draft']);
+}
+
+onSkip(): void {
+  this.actionContext = { action: 'skip' };
+  this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
+}
+
+onNext(): void {
+  this.assessmentForm.markAllAsTouched();
+  if (this.assessmentForm.invalid) {
+    this.showErrorPopup('Please fill in all required fields correctly.');
+    return;
+  }
+  if (this.totalSelectedCount === 0) {
+    this.showErrorPopup('Please select at least one question.');
+    return;
+  }
+  this.actionContext = { action: 'next' };
+  this.openAlert('Are you sure you want to save and proceed?', ['Cancel', 'Save & Next']);
+}
+
+
   /**
    * Navigates to the previous step in the job creation workflow.
    */
-  onPrevious(): void { this.router.navigate(['/admin-create-job-step2']); }
+  onPreviousConfirmed(): void { this.router.navigate(['/admin-create-job-step2']); }
 
   /**
    * Skips the assessment creation/editing step.
    */
-  onSkip(): void { this.router.navigate(['/admin-create-job-step4']); }
+  onSkipConfirmed(): void { this.router.navigate(['/admin-create-job-step4']); }
 
   /**
    * Cancels the job creation process and navigates to the dashboard.
    */
-  onCancel(): void {
+  onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
@@ -572,7 +657,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   /**
    * MODIFIED: Save Draft - saves and navigates to admin-page1
    */
-  onSaveDraft(): void {
+  onSaveDraftConfirmed(): void {
     this.assessmentForm.markAllAsTouched();
     
     // Allow saving draft even with incomplete data (remove validation)
@@ -629,7 +714,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   /**
    * MODIFIED: Next button - saves and navigates to Step 4
    */
-  onNext(): void {
+  onNextConfirmed(): void {
     this.assessmentForm.markAllAsTouched();
     
     // Validate form

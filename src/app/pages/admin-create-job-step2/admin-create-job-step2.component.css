@@ -3,6 +3,52 @@
   display: contents;  /* Allows the component to not generate a host element, inheriting parent layout */
 }
 
+/* --- Alert and Popup Styles --- */
+.alert {
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  min-width: 300px;
+}
+
+.alert.success {
+  background-color: #28a745;
+}
+
+.alert.error {
+  background-color: #dc3545;
+}
+
+.closebtn {
+  margin-left: auto;
+  padding-left: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: #e0e0e0;
+}
+
+.tick {
+  margin-right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 /* Styles for the questions section wrapper (equivalent to original interactive area) */
 .admin-create-job-step2-questions-section {
   gap: 16px;  /* Space between title and buttons container */
