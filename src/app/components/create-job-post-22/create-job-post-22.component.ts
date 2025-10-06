@@ -100,7 +100,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   // properties for upload section
   uploadedSkillSections: UploadedSkillSection[] = [];
   activeUploadedSectionIndex: number = 0;
-  uploadedQuestionCount: number = 0;
+  //uploadedQuestionCount: number = 0;
 
     // State for alert-message component
   showAlert = false;
@@ -194,322 +194,263 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
 }
 
 // CREATE a new method to orchestrate loading
+
   private loadExistingAIQuestions(): void {
     this.isLoading = true;
     const token = this.authService.getJWTToken();
-    if (!token) { /* handle error */ return; }
+    if (!token) {
+      console.error('JWT token missing. Cannot load AI generated questions.');
+      return;
+    }
 
-    // 1. Fetch ALL available questions for the job post
+    console.log(`Fetching AI-generated MCQs for jobUniqueId=${this.jobUniqueId}`);
+
+    // 1. Fetch ALL available AI-generated questions for the job post
     this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
       next: (mcqResponse) => {
+        console.log('Received response from job_post_mcqs_list_api:', mcqResponse);
+
         const skillData = mcqResponse.data;
-        this.skillSections = Object.keys(skillData).map(skillName => {
+        if (!skillData || Object.keys(skillData).length === 0) {
+          console.warn('No AI-generated skill data found in response.');
+          this.skillSections = [];
+        } else {
+          console.log(`Processing AI-generated skill data for ${Object.keys(skillData).length} skills.`);
+          this.skillSections = Object.keys(skillData).map(skillName => {
             const questions = this.processMcqItems(skillData[skillName].mcq_items);
+            console.log(`Mapped ${questions.length} questions for skill: ${skillName}`);
             return {
-              skillName, questions, totalCount: questions.length,
-              selectedCount: 0, isAllSelected: false,
+              skillName,
+              questions,
+              totalCount: questions.length,
+              selectedCount: 0,
+              isAllSelected: false,
             };
-        });
+          });
+          console.log('Constructed skillSections:', this.skillSections);
+        }
 
-        // 2. NOW, try to fetch the details of a SAVED assessment
+        // 2. NOW, try to fetch details of a SAVED assessment filtered by 'ai_generated'
         this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'ai_generated').subscribe({
-            next: (assessmentDetails) => {
-                if (assessmentDetails) { // Check if an assessment was found
-                    this.currentAssessmentId = assessmentDetails.assessment_uuid;
-                    this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+          next: (assessmentDetails) => {
+            if (assessmentDetails) {
+              console.log('Assessment details received:', assessmentDetails);
+              this.currentAssessmentId = assessmentDetails.assessment_uuid;
+              this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
 
-                    // Populate form fields
-                    this.assessmentForm.patchValue({
-                        assessmentName: assessmentDetails.name,
-                        shuffleQuestions: assessmentDetails.shuffle_questions_overall,
-                        isProctored: assessmentDetails.is_proctored,
-                        allowPhoneAccess: assessmentDetails.allow_phone_access,
-                        allowVideoRecording: assessmentDetails.has_video_recording,
-                        difficulty: assessmentDetails.difficulty,
-                        timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
-                    });
+              this.assessmentForm.patchValue({
+                assessmentName: assessmentDetails.name,
+                shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+                isProctored: assessmentDetails.is_proctored,
+                allowPhoneAccess: assessmentDetails.allow_phone_access,
+                allowVideoRecording: assessmentDetails.has_video_recording,
+                difficulty: assessmentDetails.difficulty,
+                timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+              });
 
-                    // Pre-select the questions
-                    const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
-                    this.skillSections.forEach(section => {
-                        section.questions.forEach(q => {
-                            if (selectedIds.has(q.mcq_item_id)) {
-                                q.isSelected = true;
-                            }
-                        });
-                        this.updateCountsForSection(section);
-                    });
-                    this.updateCounts();
-                }
-                this.isLoading = false;
-                setTimeout(() => {
-                  this.calculateCarouselState();
-                  this.updateSliderFill();
-                }, 0);
-            },
-            error: (err) => {
-              // This is not a critical error; it just means no assessment exists yet.
-              console.warn("No existing assessment found for this job, starting fresh.", err);
-              this.isLoading = false;
-              setTimeout(() => this.calculateCarouselState(), 0);
+              const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
+              console.log('Selected MCQ IDs:', Array.from(selectedIds));
+
+              this.skillSections.forEach(section => {
+                section.questions.forEach(q => {
+                  if (selectedIds.has(q.mcq_item_id)) {
+                    q.isSelected = true;
+                    console.log(`Marking question with mcq_item_id=${q.mcq_item_id} as selected`);
+                  }
+                });
+                this.updateCountsForSection(section);
+              });
+              this.updateCounts();
+            } else {
+              console.log('No saved assessment found for this job.');
             }
+            this.isLoading = false;
+            setTimeout(() => {
+              this.calculateCarouselState();
+              this.updateSliderFill();
+            }, 0);
+          },
+          error: (err) => {
+            console.warn('No existing assessment found for this job, starting fresh.', err);
+            this.isLoading = false;
+            setTimeout(() => this.calculateCarouselState(), 0);
+          }
         }));
       },
       error: (err) => {
+        console.error(`Failed to load AI-generated base questions: ${err.message}`, err);
         this.showErrorPopup(`Failed to load base questions: ${err.message}`);
         this.isLoading = false;
       }
     }));
   }
 
-  // CREATE a new method to orchestrate loading Excel-uploaded questions
-private loadExistingExcelUploadQuestions_OLD(): void {
-  this.isLoading = true;
-  const token = this.authService.getJWTToken();
-  if (!token) { /* handle error */ return; }
-
-  // 1. Fetch ALL uploaded Excel questions for the job post
-  this.subscriptions.add(this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
-    next: (mcqResponse) => {
-      const skillData = mcqResponse.data;
-      this.skillSections = Object.keys(skillData).map(skillName => {
-        const questions = this.processMcqItems(skillData[skillName].mcq_items);
-        return {
-          skillName,
-          questions,
-          totalCount: questions.length,
-          selectedCount: 0,
-          isAllSelected: false,
-        };
-      });
-
-      // 2. NOW, try to fetch the details of a SAVED assessment
-      this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'excel_upload').subscribe({
-        next: (assessmentDetails) => {
-          if (assessmentDetails) {
-            this.currentAssessmentId = assessmentDetails.assessment_uuid;
-            this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
-
-            // Populate form fields
-            this.assessmentForm.patchValue({
-              assessmentName: assessmentDetails.name,
-              shuffleQuestions: assessmentDetails.shuffle_questions_overall,
-              isProctored: assessmentDetails.is_proctored,
-              allowPhoneAccess: assessmentDetails.allow_phone_access,
-              allowVideoRecording: assessmentDetails.has_video_recording,
-              difficulty: assessmentDetails.difficulty,
-              timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
-            });
-
-            // Pre-select the questions
-            const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
-            this.skillSections.forEach(section => {
-              section.questions.forEach(q => {
-                if (selectedIds.has(q.mcq_item_id)) {
-                  q.isSelected = true;
-                }
-              });
-              this.updateCountsForSection(section);
-            });
-            this.updateCounts();
-          }
-          this.isLoading = false;
-          setTimeout(() => {
-            this.calculateCarouselState();
-            this.updateSliderFill();
-          }, 0);
-        },
-        error: (err) => {
-          // This is not a critical error; it just means no assessment exists yet.
-          console.warn("No existing assessment found for this job, starting fresh.", err);
-          this.isLoading = false;
-          setTimeout(() => this.calculateCarouselState(), 0);
-        }
-      }));
-    },
-    error: (err) => {
-      this.showErrorPopup(`Failed to load uploaded questions: ${err.message}`);
-      this.isLoading = false;
-    }
-  }));
-}
-
-
-
 ///////////////////////////////////////////////////////////
 
-private loadExistingExcelUploadQuestions(): void {
-  this.isLoading = true;
-  const token = this.authService.getJWTToken();
-  if (!token) { /* handle error */ return; }
+  /**
+   * Helper function to extract options from the full question text.
+   * Assumes the format where options follow the question text.
+   */
+  private extractOptionsFromQuestionText(questionText: string): string[] {
+    console.log('[extractOptionsFromQuestionText] Input questionText:', questionText);
 
-  this.subscriptions.add(this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
-    next: (mcqResponse) => {
-      const skillData = mcqResponse.data;
-      
-      // Build uploadedSkillSections matching older variable structure expected by HTML
-      this.uploadedSkillSections = Object.keys(skillData).map(skillName => {
-        // Map each mcq_item to the expected question format
-        const questions = skillData[skillName].mcq_items.map((q: any) => ({
-          id: q.mcq_item_id,
-          question: q.question_text,
-          options: this.extractOptionsFromQuestionText(q.question_text),
-          correctAnswer: this.extractCorrectAnswerFromQuestionText(q.question_text),
-          marks: 2,  // Default marks (adjust if needed)
-          difficulty: 'Medium',  // Set default difficulty, can expand if available in data
-          isSelected: false,
-        }));
+    const options: string[] = [];
+    const optionLabels = ['a)', 'b)', 'c)', 'd)'];
+    let remainingText = questionText.toLowerCase();
 
-        return {
-          skillName,
-          questions,
-          totalCount: questions.length,
-          selectedCount: 0,
-          isAllSelected: false,
-        };
-      });
-
-      // Fetch latest assessment for excel_upload type
-      this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'excel_upload').subscribe({
-        next: (assessmentDetails) => {
-          if (assessmentDetails) {
-            this.currentAssessmentId = assessmentDetails.assessment_uuid;
-            this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
-
-            this.assessmentForm.patchValue({
-              assessmentName: assessmentDetails.name,
-              shuffleQuestions: assessmentDetails.shuffle_questions_overall,
-              isProctored: assessmentDetails.is_proctored,
-              allowPhoneAccess: assessmentDetails.allow_phone_access,
-              allowVideoRecording: assessmentDetails.has_video_recording,
-              difficulty: assessmentDetails.difficulty,
-              timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
-            });
-
-            const selectedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
-            this.uploadedSkillSections.forEach(section => {
-              section.questions.forEach(q => {
-                if (selectedIds.has(q.id)) {
-                  q.isSelected = true;
-                }
-              });
-              this.updateCountsForUploadedSection(section);
-            });
-            this.updateCounts();
-          }
-          this.isLoading = false;
-          setTimeout(() => {
-            this.calculateCarouselState();
-            this.updateSliderFill();
-          }, 0);
-        },
-        error: (err) => {
-          console.warn("No existing assessment found for this job, starting fresh.", err);
-          this.isLoading = false;
-          setTimeout(() => this.calculateCarouselState(), 0);
+    for (let i = 0; i < optionLabels.length; i++) {
+      const start = remainingText.indexOf(optionLabels[i]);
+      if (start < 0) {
+        console.log(`[extractOptionsFromQuestionText] No option "${optionLabels[i]}" found, breaking.`);
+        break; // no more options
+      }
+      let end = remainingText.length;
+      for (let j = i + 1; j < optionLabels.length; j++) {
+        const idx = remainingText.indexOf(optionLabels[j]);
+        if (idx > start) {
+          end = idx;
+          break;
         }
-      }));
-    },
-    error: (err) => {
-      this.showErrorPopup(`Failed to load uploaded questions: ${err.message}`);
-      this.isLoading = false;
-    }
-  }));
-}
-
-/**
- * Helper function to extract options from the full question text.
- * Assumes the format where options follow the question text.
- * 
- * You may need to adjust this parsing logic to your actual question text format.
- */
-private extractOptionsFromQuestionText(questionText: string): string[] {
-  // Example approach: options are 'a)', 'b)', 'c)', 'd)' or similar separated
-  // This depends on your actual question_text format in MCQItem, adjust as needed
-
-  // Here, a simple split by "a)", "b)", "c)", "d)" slice might suffice.
-  // This is a heuristic implementation; adjust parsing logic as needed.
-
-  const options: string[] = [];
-  const optionLabels = ['a)', 'b)', 'c)', 'd)'];
-
-  let remainingText = questionText.toLowerCase();
-
-  for (let i = 0; i < optionLabels.length; i++) {
-    const start = remainingText.indexOf(optionLabels[i]);
-    if (start < 0) break; // no more options
-    let end = remainingText.length;
-    for (let j = i + 1; j < optionLabels.length; j++) {
-      const idx = remainingText.indexOf(optionLabels[j]);
-      if (idx > start) {
-        end = idx;
-        break;
+      }
+      const optionText = questionText.substring(start, end).trim();
+      if (optionText) {
+        console.log(`[extractOptionsFromQuestionText] Extracted option: "${optionText}"`);
+        options.push(optionText);
       }
     }
-    const optionText = questionText.substring(start, end).trim();
-    if (optionText) options.push(optionText);
+
+    console.log('[extractOptionsFromQuestionText] Final options array:', options);
+    return options.length ? options : [];
   }
 
-  return options.length ? options : [];
-}
-
-/**
- * Helper to extract the 'Correct: x)' answer from question text.
- */
-private extractCorrectAnswerFromQuestionText(questionText: string): string {
-  const correctIndex = questionText.indexOf('correct:');
-  if (correctIndex < 0) return '';
-  // Extract from 'Correct:' till next space or end of string
-  let correctPart = questionText.substring(correctIndex + 8).trim();
-  // Often correctPart starts with option like 'a)', or just 'a', clean it
-  const match = correctPart.match(/[a-d]\)?/i);
-  return match ? match[0] : correctPart;
-}
-
-
-
-////////////////////////////////////////////////////////////
-
-
-
-
-
-  loadUploadedQuestions_OLD(): void {
-  const token = this.authService.getJWTToken(); // adjust accordingly
-  if (!this.jobUniqueId) {
-    this.showErrorPopup('Job context missing to load uploaded questions.');
-    return;
+  /**
+   * Helper to extract the 'Correct: x)' answer from question text.
+   */
+  private extractCorrectAnswerFromQuestionText(questionText: string): string {
+    console.log('[extractCorrectAnswerFromQuestionText] Input questionText:', questionText);
+    const correctIndex = questionText.indexOf('correct:');
+    if (correctIndex < 0) {
+      console.log('[extractCorrectAnswerFromQuestionText] "Correct:" not found in question text.');
+      return '';
+    }
+    let correctPart = questionText.substring(correctIndex + 8).trim();
+    const match = correctPart.match(/[a-d]\)?/i);
+    const answer = match ? match[0] : correctPart;
+    console.log(`[extractCorrectAnswerFromQuestionText] Parsed answer: "${answer}"`);
+    return answer;
   }
 
-  this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
-      next: (data) => {
-        // Assume backend returns structured data like:
-        // { skillName: string, questions: [{question, options, correctAnswer, marks, difficulty, id}] }[]
-        this.uploadedSkillSections = data.map(section => ({
-          skillName: section.skillName,
-          questions: section.questions.map(q => ({
-            id: q.id,
-            question: q.question,
-            options: [q.q_option1, q.q_option2, q.q_option3, q.q_option4].filter(opt => !!opt),
-            correctAnswer: q.q_correct_answer,
-            marks: q.marks || 2,
-            difficulty: q.difficulty_level || 'Medium',
-            isSelected: false,
-          })),
-          isAllSelected: false,
+  private loadExistingExcelUploadQuestions(): void {
+    this.isLoading = true;
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      console.error('JWT token missing. Cannot load uploaded questions.');
+      return;
+    }
+
+    this.subscriptions.add(this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
+      next: (mcqResponse) => {
+        console.log('Received response from getUploadedQuestions:', mcqResponse);
+        const skillData = mcqResponse.data;
+
+        if (!skillData || Object.keys(skillData).length === 0) {
+          console.warn('No skill data found in response.');
+          this.uploadedSkillSections = [];
+        } else {
+          console.log(`Processing skill data for ${Object.keys(skillData).length} skills.`);
+          this.uploadedSkillSections = Object.keys(skillData).map(skillName => {
+            const mcqItems = skillData[skillName].mcq_items;
+            console.log(`Mapping ${mcqItems.length} MCQs for skill: ${skillName}`);
+
+            const questions = mcqItems.map((q: any) => {
+              // Use the new parseQuestionText which returns ParsedDetails object
+              const parsed: ParsedDetails = this.parseQuestionText(q.question_text);
+              console.log(`Question ID: ${q.mcq_item_id} | Parsed question: "${parsed.question}" | Options: ${parsed.options.join(', ')} | Correct answer: ${parsed.correctAnswer} | Difficulty: ${parsed.difficulty}`);
+
+              return {
+                id: q.mcq_item_id,
+                question: parsed.question,
+                options: parsed.options,
+                correctAnswer: parsed.correctAnswer,
+                marks: 2,               // default or adjust if you get marks info
+                difficulty: parsed.difficulty,
+                isSelected: false,
+              };
+            });
+
+            return {
+              skillName,
+              questions,
+              totalCount: questions.length,
+              selectedCount: 0,
+              isAllSelected: false,
+            };
+          });
+
+          console.log('Constructed uploadedSkillSections:', this.uploadedSkillSections);
+        }
+
+        // Fetch latest assessment info to pre-select questions etc.
+        this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'excel_upload').subscribe({
+          next: (assessmentDetails) => {
+            if (assessmentDetails) {
+              console.log('Assessment details received:', assessmentDetails);
+              this.currentAssessmentId = assessmentDetails.assessment_uuid;
+              this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+
+              this.assessmentForm.patchValue({
+                assessmentName: assessmentDetails.name,
+                shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+                isProctored: assessmentDetails.is_proctored,
+                allowPhoneAccess: assessmentDetails.allow_phone_access,
+                allowVideoRecording: assessmentDetails.has_video_recording,
+                difficulty: assessmentDetails.difficulty,
+                timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+              });
+
+              const selectedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
+              console.log(`Selected MCQ IDs in assessment:`, Array.from(selectedIds));
+
+              this.uploadedSkillSections.forEach(section => {
+                section.questions.forEach(q => {
+                  if (selectedIds.has(q.id)) {
+                    q.isSelected = true;
+                    console.log(`Marking question ID ${q.id} as selected.`);
+                  }
+                });
+                this.updateCountsForUploadedSection(section);
+              });
+              this.updateCounts();
+            } else {
+              console.warn('No assessment details found.');
+            }
+            this.isLoading = false;
+            setTimeout(() => {
+              this.calculateCarouselState();
+              this.updateSliderFill();
+            }, 0);
+          },
+          error: (err) => {
+            console.warn("No existing assessment found, starting fresh.", err);
+            this.isLoading = false;
+            setTimeout(() => this.calculateCarouselState(), 0);
+          }
         }));
-        
-        // Calculate total uploaded questions count
-        this.uploadedQuestionCount = this.uploadedSkillSections.reduce((sum, s) => sum + s.questions.length, 0);
+
       },
       error: (err) => {
-        this.showErrorPopup('Failed to load uploaded questions.');
+        console.error(`Failed to load uploaded questions: ${err.message}`, err);
+        this.showErrorPopup(`Failed to load uploaded questions: ${err.message}`);
+        this.isLoading = false;
       }
-    });
+    }));
   }
 
+////////////////////////////////////////////////////////////////
+
+
   loadUploadedQuestions(): void {
-    const token = this.authService.getJWTToken(); // adjust accordingly
+    const token = this.authService.getJWTToken();
     if (!this.jobUniqueId) {
       this.showErrorPopup('Job context missing to load uploaded questions.');
       return;
@@ -517,34 +458,36 @@ private extractCorrectAnswerFromQuestionText(questionText: string): string {
 
     this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
       next: (data) => {
-        this.uploadedSkillSections = data.map(section => {
-          const questions = section.questions.map(q => ({
-            id: q.id,
-            question: q.question,
-            options: [q.q_option1, q.q_option2, q.q_option3, q.q_option4].filter(opt => !!opt),
-            correctAnswer: q.q_correct_answer,
-            marks: q.marks || 2,
-            difficulty: q.difficulty_level || 'Medium',
+        // Here, 'data' is an object keyed by skill name, not an array
+        this.uploadedSkillSections = Object.keys(data).map(skillName => {
+          const mcqGroup = data[skillName];
+          const questions = mcqGroup.mcq_items.map((q: any) => ({
+            id: q.mcq_item_id,
+            question: q.question_text,
+            options: this.extractOptionsFromQuestionText(q.question_text),
+            correctAnswer: this.extractCorrectAnswerFromQuestionText(q.question_text),
+            marks: 2, // default or adjust as needed
+            difficulty: 'Medium', // default or adjust as needed
             isSelected: false,
           }));
 
           return {
-            skillName: section.skillName,
-            questions: questions,
+            skillName,
+            questions,
             totalCount: questions.length,
             selectedCount: 0,
             isAllSelected: false,
           };
         });
 
-        this.uploadedQuestionCount = this.uploadedSkillSections.reduce((sum, s) => sum + s.questions.length, 0);
-        
+        //this.uploadedQuestionCount = this.uploadedSkillSections.reduce((sum, s) => sum + s.questions.length, 0);
       },
       error: (err) => {
         this.showErrorPopup('Failed to load uploaded questions.');
       }
     });
   }
+
 
 /*
   toggleSelectAllForUploadedSection(event: Event): void {
@@ -977,6 +920,11 @@ private extractCorrectAnswerFromQuestionText(questionText: string): string {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.totalCount, 0);
   }   
+
+  get uploadedQuestionCount(): number {
+    if (!this.uploadedSkillSections) return 0;
+    return this.uploadedSkillSections.reduce((acc, section) => acc + section.totalCount, 0);
+  }  
 
   get totalQuestionCount(): number {
     const aiCount = this.skillSections?.reduce((acc, section) => acc + section.totalCount, 0) || 0;

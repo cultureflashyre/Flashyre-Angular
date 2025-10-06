@@ -119,7 +119,7 @@ export class JobDescriptionService {
       tap(response => console.log('getUploadedQuestions response:', response)),
       map(response => {
         if (response.status === 'success' && response.data) {
-          return response.data;
+          return response;
         }
         throw new Error('Unexpected response structure in getUploadedQuestions');
       }),
