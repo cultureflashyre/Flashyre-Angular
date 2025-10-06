@@ -115,12 +115,14 @@
         
         <div id="ai-generated-uploaded-questions-main-container" class="create-job-post-22-ai-generated-uploaded-questions-main-container">
           <div id="ai-generated-uploaded-container" class="create-job-post-22-ai-generated-uploaded-container">
+            
             <div id="ai-generated-container" 
             class="create-job-post-22-ai-generated-container"
             [class.active-tab]="activeTab === 'ai-generated'" 
-            (click)="activeTab = 'ai-generated'">>
-              <span id="ai-generated-text" class="create-job-post-22-ai-generated-text">AI Generated ({{totalQuestionCount}})</span>
+            (click)="activeTab = 'ai-generated'">
+              <span id="ai-generated-text" class="create-job-post-22-ai-generated-text">AI Generated ({{totalAIQuestionCount}})</span>
             </div>
+            
             <div id="uploaded-container" 
             class="create-job-post-22-uploaded-container" 
             [class.active-tab]="activeTab === 'uploaded'"
@@ -249,7 +251,8 @@
                       <input type="checkbox" [id]="'uq-checkbox-' + question.id" class="create-job-post-22-questions-checkbox" 
                             [(ngModel)]="question.isSelected" 
                             [ngModelOptions]="{standalone: true}" 
-                            (ngModelChange)="onUploadedQuestionSelectionChange()" />
+                            (ngModelChange)="onUploadedQuestionSelectionChange()"
+                            (ngModelChange)="onQuestionSelectionChange()" />
                     </div>
                     <div id="question-1-container" class="create-job-post-22-question1-container">
                       <label [for]="'uq-checkbox-' + question.id" id="questions-text" class="create-job-post-22-questions-text2">

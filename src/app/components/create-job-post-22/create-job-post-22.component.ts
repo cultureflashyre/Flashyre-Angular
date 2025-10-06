@@ -46,6 +46,8 @@ interface UploadedSkillSection {
   skillName: string;
   questions: UploadedQuestion[];
   isAllSelected: boolean;
+  totalCount: number;
+  selectedCount: number;
 }
 
 
@@ -185,14 +187,14 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     // If we have an ID from the workflow, we use it. Otherwise, we can have a check.
     // For simplicity, we'll assume for now that if an assessment exists, we need to load it.
     // A more robust solution might involve checking on the backend.
-    this.loadExistingAssessmentAndAllQuestions();
+    this.loadExistingAIQuestions();
 
-    this.loadUploadedQuestions();
+    this.loadExistingExcelUploadQuestions();
   
 }
 
 // CREATE a new method to orchestrate loading
-  private loadExistingAssessmentAndAllQuestions(): void {
+  private loadExistingAIQuestions(): void {
     this.isLoading = true;
     const token = this.authService.getJWTToken();
     if (!token) { /* handle error */ return; }
@@ -210,7 +212,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
         });
 
         // 2. NOW, try to fetch the details of a SAVED assessment
-        this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token).subscribe({
+        this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'ai_generated').subscribe({
             next: (assessmentDetails) => {
                 if (assessmentDetails) { // Check if an assessment was found
                     this.currentAssessmentId = assessmentDetails.assessment_uuid;
@@ -259,7 +261,219 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
       }
     }));
   }
-  
+
+  // CREATE a new method to orchestrate loading Excel-uploaded questions
+private loadExistingExcelUploadQuestions_OLD(): void {
+  this.isLoading = true;
+  const token = this.authService.getJWTToken();
+  if (!token) { /* handle error */ return; }
+
+  // 1. Fetch ALL uploaded Excel questions for the job post
+  this.subscriptions.add(this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
+    next: (mcqResponse) => {
+      const skillData = mcqResponse.data;
+      this.skillSections = Object.keys(skillData).map(skillName => {
+        const questions = this.processMcqItems(skillData[skillName].mcq_items);
+        return {
+          skillName,
+          questions,
+          totalCount: questions.length,
+          selectedCount: 0,
+          isAllSelected: false,
+        };
+      });
+
+      // 2. NOW, try to fetch the details of a SAVED assessment
+      this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'excel_upload').subscribe({
+        next: (assessmentDetails) => {
+          if (assessmentDetails) {
+            this.currentAssessmentId = assessmentDetails.assessment_uuid;
+            this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+
+            // Populate form fields
+            this.assessmentForm.patchValue({
+              assessmentName: assessmentDetails.name,
+              shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+              isProctored: assessmentDetails.is_proctored,
+              allowPhoneAccess: assessmentDetails.allow_phone_access,
+              allowVideoRecording: assessmentDetails.has_video_recording,
+              difficulty: assessmentDetails.difficulty,
+              timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+            });
+
+            // Pre-select the questions
+            const selectedIds = new Set(assessmentDetails.selected_mcqs.map(q => q.mcq_item_details.id));
+            this.skillSections.forEach(section => {
+              section.questions.forEach(q => {
+                if (selectedIds.has(q.mcq_item_id)) {
+                  q.isSelected = true;
+                }
+              });
+              this.updateCountsForSection(section);
+            });
+            this.updateCounts();
+          }
+          this.isLoading = false;
+          setTimeout(() => {
+            this.calculateCarouselState();
+            this.updateSliderFill();
+          }, 0);
+        },
+        error: (err) => {
+          // This is not a critical error; it just means no assessment exists yet.
+          console.warn("No existing assessment found for this job, starting fresh.", err);
+          this.isLoading = false;
+          setTimeout(() => this.calculateCarouselState(), 0);
+        }
+      }));
+    },
+    error: (err) => {
+      this.showErrorPopup(`Failed to load uploaded questions: ${err.message}`);
+      this.isLoading = false;
+    }
+  }));
+}
+
+
+
+///////////////////////////////////////////////////////////
+
+private loadExistingExcelUploadQuestions(): void {
+  this.isLoading = true;
+  const token = this.authService.getJWTToken();
+  if (!token) { /* handle error */ return; }
+
+  this.subscriptions.add(this.jobService.getUploadedQuestions(this.jobUniqueId, token).subscribe({
+    next: (mcqResponse) => {
+      const skillData = mcqResponse.data;
+      
+      // Build uploadedSkillSections matching older variable structure expected by HTML
+      this.uploadedSkillSections = Object.keys(skillData).map(skillName => {
+        // Map each mcq_item to the expected question format
+        const questions = skillData[skillName].mcq_items.map((q: any) => ({
+          id: q.mcq_item_id,
+          question: q.question_text,
+          options: this.extractOptionsFromQuestionText(q.question_text),
+          correctAnswer: this.extractCorrectAnswerFromQuestionText(q.question_text),
+          marks: 2,  // Default marks (adjust if needed)
+          difficulty: 'Medium',  // Set default difficulty, can expand if available in data
+          isSelected: false,
+        }));
+
+        return {
+          skillName,
+          questions,
+          totalCount: questions.length,
+          selectedCount: 0,
+          isAllSelected: false,
+        };
+      });
+
+      // Fetch latest assessment for excel_upload type
+      this.subscriptions.add(this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'excel_upload').subscribe({
+        next: (assessmentDetails) => {
+          if (assessmentDetails) {
+            this.currentAssessmentId = assessmentDetails.assessment_uuid;
+            this.workflowService.setCurrentAssessmentId(this.currentAssessmentId);
+
+            this.assessmentForm.patchValue({
+              assessmentName: assessmentDetails.name,
+              shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+              isProctored: assessmentDetails.is_proctored,
+              allowPhoneAccess: assessmentDetails.allow_phone_access,
+              allowVideoRecording: assessmentDetails.has_video_recording,
+              difficulty: assessmentDetails.difficulty,
+              timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+            });
+
+            const selectedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
+            this.uploadedSkillSections.forEach(section => {
+              section.questions.forEach(q => {
+                if (selectedIds.has(q.id)) {
+                  q.isSelected = true;
+                }
+              });
+              this.updateCountsForUploadedSection(section);
+            });
+            this.updateCounts();
+          }
+          this.isLoading = false;
+          setTimeout(() => {
+            this.calculateCarouselState();
+            this.updateSliderFill();
+          }, 0);
+        },
+        error: (err) => {
+          console.warn("No existing assessment found for this job, starting fresh.", err);
+          this.isLoading = false;
+          setTimeout(() => this.calculateCarouselState(), 0);
+        }
+      }));
+    },
+    error: (err) => {
+      this.showErrorPopup(`Failed to load uploaded questions: ${err.message}`);
+      this.isLoading = false;
+    }
+  }));
+}
+
+/**
+ * Helper function to extract options from the full question text.
+ * Assumes the format where options follow the question text.
+ * 
+ * You may need to adjust this parsing logic to your actual question text format.
+ */
+private extractOptionsFromQuestionText(questionText: string): string[] {
+  // Example approach: options are 'a)', 'b)', 'c)', 'd)' or similar separated
+  // This depends on your actual question_text format in MCQItem, adjust as needed
+
+  // Here, a simple split by "a)", "b)", "c)", "d)" slice might suffice.
+  // This is a heuristic implementation; adjust parsing logic as needed.
+
+  const options: string[] = [];
+  const optionLabels = ['a)', 'b)', 'c)', 'd)'];
+
+  let remainingText = questionText.toLowerCase();
+
+  for (let i = 0; i < optionLabels.length; i++) {
+    const start = remainingText.indexOf(optionLabels[i]);
+    if (start < 0) break; // no more options
+    let end = remainingText.length;
+    for (let j = i + 1; j < optionLabels.length; j++) {
+      const idx = remainingText.indexOf(optionLabels[j]);
+      if (idx > start) {
+        end = idx;
+        break;
+      }
+    }
+    const optionText = questionText.substring(start, end).trim();
+    if (optionText) options.push(optionText);
+  }
+
+  return options.length ? options : [];
+}
+
+/**
+ * Helper to extract the 'Correct: x)' answer from question text.
+ */
+private extractCorrectAnswerFromQuestionText(questionText: string): string {
+  const correctIndex = questionText.indexOf('correct:');
+  if (correctIndex < 0) return '';
+  // Extract from 'Correct:' till next space or end of string
+  let correctPart = questionText.substring(correctIndex + 8).trim();
+  // Often correctPart starts with option like 'a)', or just 'a', clean it
+  const match = correctPart.match(/[a-d]\)?/i);
+  return match ? match[0] : correctPart;
+}
+
+
+
+////////////////////////////////////////////////////////////
+
+
+
+
+
   loadUploadedQuestions_OLD(): void {
   const token = this.authService.getJWTToken(); // adjust accordingly
   if (!this.jobUniqueId) {
@@ -332,16 +546,33 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     });
   }
 
-
+/*
   toggleSelectAllForUploadedSection(event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     const section = this.uploadedSkillSections[this.activeUploadedSectionIndex];
     section.questions.forEach(q => q.isSelected = isChecked);
     this.onUploadedQuestionSelectionChange();
+  } */
+
+  toggleSelectAllForUploadedSection(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const section = this.uploadedSkillSections[this.activeUploadedSectionIndex];
+
+    if (section) {
+      section.isAllSelected = isChecked;
+      section.questions.forEach(q => q.isSelected = isChecked);
+      this.updateCounts(); // Update global and section counts
+    }
   }
 
   onUploadedQuestionSelectionChange(): void {
-    // Update overall selection state or take action on selection changes
+    // Also update uploaded active section counts
+    const activeUploadedSection = this.uploadedSkillSections[this.activeUploadedSectionIndex];
+    if (activeUploadedSection) {
+      activeUploadedSection.isAllSelected = activeUploadedSection.questions.length > 0 && activeUploadedSection.questions.every(q => q.isSelected);
+      this.updateCountsForUploadedSection(activeUploadedSection);
+    }
+    this.updateCounts(); // Update global counts
   }
 
   /**
@@ -667,16 +898,28 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     }
   }
 
+
+
   /**
    * Handles individual question selection changes.
    * Updates the 'isAllSelected' state of the active section and global counts.
-   */
+
   onQuestionSelectionChange(): void {
     const activeSection = this.skillSections[this.activeSectionIndex];
     if (activeSection) {
        // Check if all questions in the section are now selected
       activeSection.isAllSelected = activeSection.questions.length > 0 && activeSection.questions.every(q => q.isSelected);
       this.updateCountsForSection(activeSection); // Update count for this section
+    }
+    this.updateCounts(); // Update global counts
+  }   */
+
+  onQuestionSelectionChange(): void {
+    // Update AI-generated active section counts
+    const activeSection = this.skillSections[this.activeSectionIndex];
+    if (activeSection) {
+      activeSection.isAllSelected = activeSection.questions.length > 0 && activeSection.questions.every(q => q.isSelected);
+      this.updateCountsForSection(activeSection);
     }
     this.updateCounts(); // Update global counts
   }
@@ -689,33 +932,58 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
      section.selectedCount = section.questions.filter(q => q.isSelected).length;
   }
 
+  /** Updates the selected count for an UploadedSkillSection */
+  private updateCountsForUploadedSection(section: UploadedSkillSection): void {
+    section.selectedCount = section.questions.filter(q => q.isSelected).length;
+  }
+
   /**
    * Updates the selected counts for all skill sections and the total selected count.
-   */
+
   private updateCounts(): void {
     this.skillSections.forEach(section => {
       this.updateCountsForSection(section); // Update each section's count
     });
     // Note: totalSelectedCount getter recalculates based on section.selectedCount
+  }   */
+
+  private updateCounts(): void {
+    this.skillSections.forEach(section => this.updateCountsForSection(section));
+    this.uploadedSkillSections.forEach(section => this.updateCountsForUploadedSection(section));
+    // totalSelectedCount getter will compute combined counts dynamically
   }
 
   /**
    * Getter for the total number of selected questions across all sections.
    * @returns The total selected count.
-   */
+
   get totalSelectedCount(): number {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.selectedCount, 0);
+  }   */
+
+  get totalSelectedCount(): number {
+    const aiSelectedCount = this.skillSections?.reduce((acc, section) => acc + section.selectedCount, 0) || 0;
+    const uploadedSelectedCount = this.uploadedSkillSections?.reduce((acc, section) => acc + section.selectedCount, 0) || 0;
+    return aiSelectedCount + uploadedSelectedCount;
   }
+
 
   /**
    * Getter for the total number of questions across all sections.
    * @returns The total question count.
-   */
-  get totalQuestionCount(): number {
+  */
+  get totalAIQuestionCount(): number {
     if (!this.skillSections) return 0;
     return this.skillSections.reduce((acc, section) => acc + section.totalCount, 0);
+  }   
+
+  get totalQuestionCount(): number {
+    const aiCount = this.skillSections?.reduce((acc, section) => acc + section.totalCount, 0) || 0;
+    const uploadedCount = this.uploadedSkillSections?.reduce((acc, section) => acc + section.totalCount, 0) || 0;
+    return aiCount + uploadedCount;
   }
+
 
   /**
    * Sets the active skill section index, changing the displayed questions.
@@ -822,11 +1090,25 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
 
     this.isSubmitting = true;
 
-    // Collect IDs of all selected questions
-    const selectedIds = this.skillSections
+    // Collect selected AI-generated question IDs
+    const selectedAiIds = this.skillSections
       .reduce((acc, s) => acc.concat(s.questions), [] as McqQuestion[])
       .filter(q => q.isSelected)
       .map(q => q.mcq_item_id);
+
+    // Collect selected uploaded question IDs
+    const selectedUploadedIds = this.uploadedSkillSections
+      .reduce((acc, s) => acc.concat(s.questions), [] as UploadedQuestion[])
+      .filter(q => q.isSelected)
+      .map(q => q.id);
+
+    // Debug logs
+    console.log('Selected AI-generated question IDs:', selectedAiIds);
+    console.log('Selected Uploaded question IDs:', selectedUploadedIds);
+    
+    // Combine all selected question IDs
+    const selectedIds = [...selectedAiIds, ...selectedUploadedIds];
+    console.log('Combined selected question IDs:', selectedIds);
 
     let timeInMinutes = 0;
     try {
@@ -854,6 +1136,8 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
       difficulty: this.assessmentForm.get('difficulty')?.value,
       time_limit: timeInMinutes,
     };
+
+    console.log('Payload to submit:', payload);
 
 
     // MODIFICATION: Conditional create vs. update logic

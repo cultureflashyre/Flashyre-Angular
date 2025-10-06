@@ -164,11 +164,13 @@
 }
 
 /* Style for the active main tab */
-.create-job-post-22-ai-generated-container.active-tab {
+.create-job-post-22-ai-generated-container.active-tab, 
+.create-job-post-22-uploaded-container.active-tab {
   border-bottom-color: #41327B; /* Your primary theme color */
 }
 
-.create-job-post-22-ai-generated-container.active-tab .create-job-post-22-ai-generated-text {
+.create-job-post-22-ai-generated-container.active-tab,
+.create-job-post-22-ai-generated-text {
   color: #41327B; /* Your primary theme color */
   font-weight: 600;
 }

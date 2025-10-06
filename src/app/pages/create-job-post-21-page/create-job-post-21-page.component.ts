@@ -293,7 +293,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
       this.isUploading = true; // optional spinner state
       const token = this.authService.getJWTToken(); // adjust as needed
 
-      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, token).subscribe({
+      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId, token).subscribe({
         next: (response) => {
           this.isUploading = false;
           this.hasGenerated = true;

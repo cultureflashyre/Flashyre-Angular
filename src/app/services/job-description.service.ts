@@ -67,7 +67,7 @@ export class JobDescriptionService {
   }
 
 
-  uploadExcelFile(file: File, token: string): Observable<{ file_url: string; unique_id: string }> {
+  uploadExcelFile(file: File, jobUniqueId:string, token: string): Observable<{ file_url: string; unique_id: string }> {
     if (!file) {
       console.error('No file provided for upload');
       return throwError(() => new Error('No file selected for upload'));
@@ -85,6 +85,7 @@ export class JobDescriptionService {
 
     const formData = new FormData();
     formData.append('excel_file', file, file.name); // Use backend expected key
+    formData.append('jobUniqueId', jobUniqueId);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
