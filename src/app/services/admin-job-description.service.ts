@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AdminJobDescriptionService {
   private readonly baseUrl = `${environment.apiUrl}api/admin/job-post`;
-  private readonly interviewFinalizeUrl = `${environment.apiUrl}api/job-post`;
+  private readonly interviewFinalizeUrl = `${environment.apiUrl}api/interview/job-post`;
   private readonly mcqAssessmentBaseUrl = `${environment.apiUrl}api/mcq-assessments`;
 
   constructor(private http: HttpClient) {}
