@@ -5,7 +5,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: '',
+  apiUrl: 'https://backend-dot-flashyre-testing-473116.el.r.appspot.com',
 
   defaultProfilePicture: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/profile-placeholder.jpg',
   defaultCompanyIcon: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/company_icon.png',
