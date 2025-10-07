@@ -8,6 +8,7 @@
 >
   <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
 </ngx-spinner>
+
 <navbar-for-admin-view
   rootClassName="navbar-for-candidate-viewroot-class-name"
 >
@@ -110,12 +111,12 @@
   <div class="admin-create-job-step2-container2">
     
     <app-alert-message
-  *ngIf="showAlert"
-  [message]="alertMessage"
-  [buttons]="alertButtons"
-  (buttonClicked)="onAlertButtonClicked($event)"
-  (close)="showAlert = false">
-</app-alert-message>
+      *ngIf="showAlert"
+      [message]="alertMessage"
+      [buttons]="alertButtons"
+      (buttonClicked)="onAlertButtonClicked($event)"
+      (close)="showAlert = false">
+    </app-alert-message>
 
     <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
       <span *ngIf="popupType === 'success'" class="tick">✔</span>
@@ -177,10 +178,10 @@
             <button
               id="upload-questions-button"
               class="admin-create-job-step2-upload-button"
-              (click)="onUploadManually()"
+              (click)="openUploadPopup()"
               [disabled]="isGenerating"
               [class.disabled]="isGenerating"
-              title="Upload your own questions (Functionality to be implemented)"
+              title="Upload your own questions"
             >
               <svg
                 width="24"
@@ -216,6 +217,36 @@
         (nextClick)="onNext()"
         (saveDraftClick)="onSaveDraft()">
       </create-job-post-footer2>
+    </div>
+  </div>
+</div>
+
+<!-- NEW: Upload Popup Modal -->
+<div class="upload-popup-backdrop" *ngIf="showUploadPopup">
+  <div class="upload-popup-card">
+    <h3>Upload Questions Template</h3>
+    <div class="step">
+      <strong>Step 1:</strong> Download the Excel template and fill it in the required format.
+      <small>Note: Ensure all required columns are present: question, q_option1, q_option2, q_option3, q_option4, q_correct_answer.</small>
+      <button class="download-template-button" (click)="downloadTemplate()">
+        Download Template <span class="download-icon">⬇️</span>
+      </button>
+    </div>
+    <div class="step">
+      <strong>Step 2:</strong> Upload the filled Excel template.
+      <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" #fileInput />
+      <div *ngIf="uploadedFileName" class="uploaded-file-name">
+        Selected file: {{ uploadedFileName }}
+      </div>
+    </div>
+    <div class="popup-actions">
+      <button (click)="closeUploadPopup()">Close</button>
+      <button 
+        class="download-template-button" 
+        (click)="onUploadConfirmed()"
+        [disabled]="!selectedExcelFile || isUploading">
+        {{ isUploading ? 'Uploading...' : 'Upload & Proceed' }}
+      </button>
     </div>
   </div>
 </div>

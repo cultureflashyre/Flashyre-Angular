@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AdminJobDescriptionService } from '../../services/admin-job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'admin-create-job-step2',
@@ -30,6 +31,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   alertMessage = '';
   alertButtons: string[] = [];
   private actionContext: { action: string } | null = null;
+
+  // --- NEW PROPERTIES FOR UPLOAD MODAL ---
+  showUploadPopup = false;
+  uploadedFileName: string | null = null;
+  selectedExcelFile: File | null = null;
+  isUploading = false;
 
   constructor(
     private title: Title,
@@ -63,7 +70,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
 
     this.jobUniqueId = this.workflowService.getCurrentJobId();
 
-    // ✅ CRITICAL: Validate jobUniqueId before proceeding
     if (!this.jobUniqueId || this.jobUniqueId === 'undefined') {
       this.showErrorPopup('No active job post found. Redirecting to Step 1.');
       setTimeout(() => {
@@ -124,7 +130,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onGenerateAi(): void {
-    // ✅ Guard against undefined jobUniqueId
     if (!this.jobUniqueId || this.jobUniqueId === 'undefined') {
       this.showErrorPopup('Invalid job ID. Please return to Step 1.');
       return;
@@ -160,42 +165,101 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.subscriptions.add(generateSub);
   }
 
-  onUploadManually(): void {
-    this.showSuccessPopup('Manual upload is not yet implemented. You can now proceed.');
-    this.hasGenerated = true;
+  // --- NEW METHODS FOR UPLOAD MODAL ---
+  openUploadPopup() {
+    this.showUploadPopup = true;
+  }
+
+  closeUploadPopup() {
+    this.showUploadPopup = false;
+    this.uploadedFileName = null;
+    this.selectedExcelFile = null;
+    this.isUploading = false;
+  }
+
+  downloadTemplate() {
+    const templateUrl = environment.mcq_upload_template;
+    const link = document.createElement('a');
+    link.href = templateUrl;
+    link.download = 'flashyre_mcq_questions_template.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedExcelFile = input.files[0];
+      this.uploadedFileName = this.selectedExcelFile.name;
+    } else {
+      this.selectedExcelFile = null;
+      this.uploadedFileName = null;
+    }
+  }
+  
+  onUploadConfirmed() {
+    if (!this.selectedExcelFile || !this.jobUniqueId) {
+      this.showErrorPopup('Please select a file before uploading.');
+      return;
+    }
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+        this.showErrorPopup('Authentication error. Please log in again.');
+        return;
+    }
+
+    this.isUploading = true;
+    this.spinner.show('ai-spinner'); // Re-use the same spinner
+
+    const uploadSub = this.jobDescriptionService.uploadMcqExcel(this.selectedExcelFile, this.jobUniqueId, token)
+      .pipe(finalize(() => {
+        this.isUploading = false;
+        this.spinner.hide('ai-spinner');
+      }))
+      .subscribe({
+        next: (response) => {
+          this.hasGenerated = true; // Enable the Next button
+          this.showSuccessPopup('File uploaded and questions processed successfully!');
+          this.closeUploadPopup();
+        },
+        error: (err) => {
+          // Display the specific error from the backend as requested
+          this.showErrorPopup(`Upload failed: ${err.message || 'An unknown error occurred.'}`);
+        }
+      });
+    
+    this.subscriptions.add(uploadSub);
   }
 
   onCancel(): void {
-  this.actionContext = { action: 'cancel' };
-  this.openAlert('Are you sure you want to cancel? This will delete the job post draft.', ['No', 'Yes, Cancel']);
-}
-
-onPrevious(): void {
-  this.actionContext = { action: 'previous' };
-  this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
-}
-
-onSkip(): void {
-  this.actionContext = { action: 'skip' };
-  this.openAlert('Are you sure you want to skip adding an assessment?', ['Cancel', 'Skip']);
-}
-
-onSaveDraft(): void {
-  this.actionContext = { action: 'saveDraft' };
-  this.openAlert('Do you want to save this as a draft and exit?', ['Cancel', 'Save Draft']);
-}
-
-onNext(): void {
-  // First, perform the validation check
-  if (!this.hasGenerated) {
-    this.showErrorPopup('Please generate or upload questions before proceeding.');
-    return; // Stop if validation fails
+    this.actionContext = { action: 'cancel' };
+    this.openAlert('Are you sure you want to cancel? This will delete the job post draft.', ['No', 'Yes, Cancel']);
   }
-  
-  // If validation passes, show the confirmation alert
-  this.actionContext = { action: 'next' };
-  this.openAlert('Proceed to the next step?', ['Cancel', 'Next']);
-}
+
+  onPrevious(): void {
+    this.actionContext = { action: 'previous' };
+    this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
+  }
+
+  onSkip(): void {
+    this.actionContext = { action: 'skip' };
+    this.openAlert('Are you sure you want to skip adding an assessment?', ['Cancel', 'Skip']);
+  }
+
+  onSaveDraft(): void {
+    this.actionContext = { action: 'saveDraft' };
+    this.openAlert('Do you want to save this as a draft and exit?', ['Cancel', 'Save Draft']);
+  }
+
+  onNext(): void {
+    if (!this.hasGenerated) {
+      this.showErrorPopup('Please generate or upload questions before proceeding.');
+      return;
+    }
+    this.actionContext = { action: 'next' };
+    this.openAlert('Proceed to the next step?', ['Cancel', 'Next']);
+  }
 
   onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
@@ -221,7 +285,6 @@ onNext(): void {
     }, 3000);
   }
 
-
   onNextConfirmed(): void {
     if (this.jobUniqueId && this.hasGenerated) {
       this.router.navigate(['/admin-create-job-step3']);
@@ -238,45 +301,34 @@ onNext(): void {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) this.userProfile = JSON.parse(profileData);
   }
 
-  // --- Alert Handling ---
-private openAlert(message: string, buttons: string[]) {
-  this.alertMessage = message;
-  this.alertButtons = buttons;
-  this.showAlert = true;
-}
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
 
-onAlertButtonClicked(action: string) {
-  this.showAlert = false;
-  if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
-    this.actionContext = null; // User cancelled, do nothing
-    return;
-  }
-  
-  // User confirmed, proceed with the stored action
-  if (this.actionContext) {
-    switch (this.actionContext.action) {
-      case 'cancel':
-        this.onCancelConfirmed();
-        break;
-      case 'previous':
-        this.onPreviousConfirmed();
-        break;
-      case 'skip':
-        this.onSkipConfirmed();
-        break;
-      case 'saveDraft':
-        this.onSaveDraftConfirmed();
-        break;
-      case 'next':
-        this.onNextConfirmed();
-        break;
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
+      this.actionContext = null;
+      return;
     }
-    this.actionContext = null; // Reset context
+    
+    if (this.actionContext) {
+      switch (this.actionContext.action) {
+        case 'cancel': this.onCancelConfirmed(); break;
+        case 'previous': this.onPreviousConfirmed(); break;
+        case 'skip': this.onSkipConfirmed(); break;
+        case 'saveDraft': this.onSaveDraftConfirmed(); break;
+        case 'next': this.onNextConfirmed(); break;
+      }
+      this.actionContext = null;
+    }
   }
-}
 }
