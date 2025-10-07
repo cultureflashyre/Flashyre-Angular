@@ -178,7 +178,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       console.log('Processing section:', section.name);
       const sectionEntry = {
         name: section.name,
-        section_id: section.section_id,
+      section_id: section.section ? section.section.section_id : null,   //Add 
         duration: section.duration_per_section,
         questions: section.questions || [],
         coding_problem: section.coding_problem,
@@ -445,27 +445,27 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.showWarningPopup = false;
   }
 
-  prepareSubmissionData(): any {
-    return {
-      assessmentId: this.assessmentData.assessment_id,
-      userId: this.userId,
-      responses: Object.keys(this.selectedAnswers).map((questionId) => ({
-        questionId: +questionId,
-        sectionId: this.selectedAnswers[+questionId].section_id,
-        answer: this.selectedAnswers[+questionId].answer,
-      })),
-      codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
-        problemId: +problemId,
-        submissionId: this.codingSubmissions[+problemId].id,
-        score: this.codingSubmissions[+problemId].score
-      })),
-      startTime: this.startTime,
-      endTime: new Date().toISOString(),
-      submissionType: 'manual',
-      videoPath: this.videoPath,
-    };
-  }
-
+prepareSubmissionData(): any {
+  return {
+    assessmentId: this.assessmentData.assessment_id,
+    userId: this.userId,
+    // FIX: Provide the required callback function to map()
+    responses: Object.keys(this.selectedAnswers).map((questionId) => ({
+      questionId: +questionId,
+      sectionId: this.selectedAnswers[+questionId].section_id,
+      answer: this.selectedAnswers[+questionId].answer,
+    })),
+    codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
+      problemId: +problemId,
+      submissionId: this.codingSubmissions[+problemId].id,
+      score: this.codingSubmissions[+problemId].score
+    })),
+    startTime: this.startTime,
+    endTime: new Date().toISOString(),
+    submissionType: 'manual',
+    videoPath: this.videoPath,
+  };
+}
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
@@ -554,33 +554,29 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onSubmitCode(event: { source_code: string, language_id: number }) {
-    const data = {
-      problem_id: this.currentSection.coding_id_id,
-      source_code: event.source_code,
-      language_id: event.language_id
-    };
-    console.log('Sending submit code request:', JSON.stringify(data, null, 2));
-    this.trialAssessmentService.submitCode(data).subscribe({
-      next: (response) => {
-        console.log('Submit code response:', JSON.stringify(response, null, 2));
-        
-        // ** THE FIX **
-        // Applying the same fix here for consistency. We directly use the 'results'
-        // array provided by the server.
-        this.results = response.results || ['No results available'];
-
-        this.codingSubmissions[this.currentSection.coding_id_id] = {
-          id: response.id,
-          score: response.score
-        };
-        this.showTestResults = true;
-      },
-      error: (error) => {
-        console.error('Submit code error:', error);
-        this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
-        this.showTestResults = true;
-      }
-    });
-  }
+onSubmitCode(event: { source_code: string, language_id: number }) {
+  // FIX: Construct the 'data' object with the required properties.
+  const data = {
+    problem_id: this.currentSection.coding_id_id,
+    source_code: event.source_code,
+    language_id: event.language_id
+  };
+  console.log('Sending submit code request:', JSON.stringify(data, null, 2));
+  this.trialAssessmentService.submitCode(data).subscribe({
+    next: (response) => {
+      console.log('Submit code response:', JSON.stringify(response, null, 2));
+      this.results = response.results || ['No results available'];
+      this.codingSubmissions[this.currentSection.coding_id_id] = {
+        id: response.id,
+        score: response.score
+      };
+      this.showTestResults = true;
+    },
+    error: (error) => {
+      console.error('Submit code error:', error);
+      this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
+      this.showTestResults = true;
+    }
+  });
+}
 }
