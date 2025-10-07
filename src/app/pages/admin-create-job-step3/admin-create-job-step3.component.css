@@ -422,7 +422,15 @@
   font-size: 13px;
   font-weight: 500;
   color: #98a2b3;
-  cursor: not-allowed;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.admin-create-job-step3-uploaded-container.active-tab {
+  color: #41327b;
+  border-bottom-color: #41327b;
+  background-color: #ffffff;
 }
 
 /* Skill Tabs Carousel */

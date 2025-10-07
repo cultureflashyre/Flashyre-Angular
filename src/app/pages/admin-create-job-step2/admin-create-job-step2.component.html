@@ -177,7 +177,7 @@
             <button
               id="upload-questions-button"
               class="admin-create-job-step2-upload-button"
-              (click)="onUploadManually()"
+              (click)="openUploadPopup()"
               [disabled]="isGenerating"
               [class.disabled]="isGenerating"
               title="Upload your own questions (Functionality to be implemented)"
@@ -203,6 +203,39 @@
                 <span>Upload</span>
               </span>
             </button>
+
+                        <!-- Uploaded file name display -->
+                <div *ngIf="uploadedFileName" class="uploaded-file-name">
+                  Uploaded file: {{ uploadedFileName }}
+                </div>
+
+                    <!-- Popup Floating Message Card -->
+                <div class="upload-popup-backdrop" *ngIf="showUploadPopup">
+                  <div class="upload-popup-card">
+                    <h3>Upload Questions Template</h3>
+                    <div class="step">
+                      <strong>Step 1:</strong> Download the Excel template and fill it in the given format.<br />
+                      <small>
+                        Note: multiple choice questions, options, the actual correct answer, difficulty level (optional), marks (optional).
+                      </small><br />
+                      <button class="download-template-button" (click)="downloadTemplate()">
+                        Download Template&nbsp;
+                        <span class="download-icon">⬇️</span>
+                      </button>
+                    </div>
+
+                    <div class="step" style="margin-top: 20px;">
+                      <strong>Step 2:</strong> Upload the filled Excel template to extract questions and then give it some time.<br />
+                      <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+                    </div>
+
+                    <div class="popup-actions" style="margin-top: 20px;">
+                      <button (click)="closeUploadPopup()">Close</button>
+                    </div>
+                  </div>
+                </div>
+
+
           </div>
         </div>
       </div>
