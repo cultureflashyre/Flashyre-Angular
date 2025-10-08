@@ -10,7 +10,8 @@
   class="filter-popup-wrapper"
   (click)="$event.stopPropagation()"
 >
-  <more-filters-and-preference-component 
+  <more-filters-and-preference-component
+  [callerType]="'candidate'" 
   (closeEvent)="showMoreFilters = false"
   (applyFiltersEvent)="onApplyFilters($event)"
   [initialTab]="initialFilterTab"

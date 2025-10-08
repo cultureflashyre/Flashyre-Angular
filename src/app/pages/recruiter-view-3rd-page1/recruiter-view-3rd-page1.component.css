@@ -64,7 +64,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  background-color: #F4F4F4;
+  /* background-color: #F4F4F4; */
 }
  
 .recruiter-view3rd-page1-recruiter-view3rd-page1-first-container {
@@ -79,7 +79,7 @@
 }
  
 .recruiter-view3rd-page1-recruiter-view-navbar1st-container {
-  width: 1440px;
+  width: 100%;
   height: 72px;
   display: flex;
   z-index: 1000;
@@ -93,9 +93,11 @@
  
 .recruiter-view3rd-page1-recruiter-view-navbar-container {
   flex: 0 0 auto;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #FFFFFF;
 }
  
 .recruiter-view3rd-page1-navbar-interactive1 {

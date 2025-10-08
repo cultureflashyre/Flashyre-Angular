@@ -31,6 +31,7 @@ export interface JobPost {
   budget_type: string;
   min_budget: number;
   max_budget: number;
+  work_mode?: string;
   notice_period: string;
   skills: { primary: { skill: string, skill_confidence: number, type_confidence: number }[], secondary: { skill: string, skill_confidence: number, type_confidence: number }[] }; // JSONField
   job_description: string;
