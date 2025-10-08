@@ -8,12 +8,14 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateJobDetailView {
   selectedJobId: number | null = null;
-  public activeTab: 'recommended' | 'saved' = 'recommended';
+  public activeTab: 'recommended' | 'saved'  | 'applied'= 'recommended';
 
   // --- [NEW] Properties to store the dynamic counts ---
   // Initializing to null allows us to show nothing until the first count is received.
   public recommendedJobCount: number | null = null;
   public savedJobCount: number | null = null;
+  public appliedJobCount: number | null = null;
+
 
   constructor(private title: Title, private meta: Meta) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
@@ -44,6 +46,13 @@ export class CandidateJobDetailView {
     }
   }
 
+  selectAppliedTab(): void {
+  if (this.activeTab !== 'applied') {
+    console.log('Switching to Applied tab');
+    this.activeTab = 'applied';
+  }
+}
+
   // --- [NEW] Event handler methods for the counts ---
 
   /**
@@ -63,4 +72,8 @@ export class CandidateJobDetailView {
     console.log(`Parent received saved job count: ${count}`);
     this.savedJobCount = count;
   }
+  onAppliedJobsCountChanged(count: number): void {
+  console.log(`Parent received applied job count: ${count}`);
+  this.appliedJobCount = count;
+}
 }

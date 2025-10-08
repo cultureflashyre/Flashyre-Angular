@@ -110,6 +110,22 @@ export class JobsService {
     );
   }
 
+   public fetchAppliedJobDetails(): Observable<any[]> {
+    // Note: The user ID is sent automatically in the auth token header.
+    const url = `${environment.apiUrl}api/applied-job-details/`;
+    console.log('%c[JobsService] fetchAppliedJobDetails: Fetching applied jobs from API...', 'color: blue; font-weight: bold;');
+    
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
+      tap(jobs => {
+        console.log(`%c[JobsService] fetchAppliedJobDetails: API call successful. Received ${jobs.length} applied jobs.`, 'color: green;');
+      }),
+      catchError(error => {
+        console.error('[JobsService] fetchAppliedJobDetails: API call failed.');
+        return this.handleError(error);
+      })
+    );
+  }
+
 
   /**
    * Retrieves a single job by its ID, using a cache.
