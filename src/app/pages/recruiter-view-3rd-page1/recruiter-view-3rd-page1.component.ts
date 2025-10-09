@@ -82,6 +82,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   initialFilterTab: 'filters' | 'preferences' = 'filters';
   @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
   filterPosition = { top: 0, left: 0 };
+  
 
   // General State management
   recruiterId: string | null = null;
@@ -157,7 +158,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
 
   selectTab(tabName: 'live' | 'draft-pause' | 'deleted'): void {
     this.activeTab = tabName;
-    console.log("current tab: ",this.activeTab);
+    console.log("[IN REC PAGE - selectTab] current tab: ",this.activeTab);
     this.recruiterPreferenceService.setActiveTab(tabName);
     this.runFilterPipeline();
   }

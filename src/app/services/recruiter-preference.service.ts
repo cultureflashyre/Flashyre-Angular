@@ -15,6 +15,7 @@ export class RecruiterPreferenceService {
   activeTab$ = this.activeTabSubject.asObservable();
 
   setActiveTab(tab: string): void {
+    console.log("[REC pref ERVICE] setActiveTab() tab: ", tab);
     this.activeTabSubject.next(tab);
   }
 
@@ -62,6 +63,7 @@ export class RecruiterPreferenceService {
       ...preferenceData,
       tab_name: this.getActiveTab()
     };
+    console.log("[IN rec-preference SERVICE] payload sending: ", payload);
     return this.http.post(`${this.apiUrl}preferences/`, payload, { headers: this.getHeaders() });
   }
     

@@ -1,4 +1,5 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';import { CandidatePreferenceService } from '../../services/candidate-preference.service';
+import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
 
 @Component({
   selector: 'app-morefilterscomponent1',
@@ -49,13 +50,29 @@ export class Morefilterscomponent1 implements OnChanges {
   filterRole: string = '';
   filterJobType: string = '';
 
+  recJobType: string = '';
+
   // Outputs for actions
   @Output() applyFiltersEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() savePreferenceEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private preferenceService: CandidatePreferenceService) {}
+  constructor(
+    private preferenceService: CandidatePreferenceService,
+    private recruiterPreferenceService: RecruiterPreferenceService
+  ) {}
+
+  @Input() callerType: 'candidate' | 'recruiter' = 'candidate';
 
   ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['callerType']) {
+      if (this.callerType === 'recruiter') {
+        console.log("[MORE FILTERS-1] callerType: ",this.callerType);
+        this.recJobType = this.recruiterPreferenceService.getActiveTab();
+        console.log("[MORE FILTERS-1] rec Job Type: ",this.recJobType);
+      }
+    }
+
     // Check if the 'preferenceToLoad' input has changed and has a value
     if (changes.preferenceToLoad && changes.preferenceToLoad.currentValue) {
       const data = changes.preferenceToLoad.currentValue;
@@ -123,22 +140,43 @@ export class Morefilterscomponent1 implements OnChanges {
       return;
     }
 
-    this.preferenceService.getPreferences().subscribe(preferences => {
-      if (preferences.length >= 3) {
-        alert('You can only save up to 3 preferences.');
-      } else {
-        this.preferenceService.savePreference(filters).subscribe(
-          response => {
-            console.log('Preference saved successfully!', response);
-            this.savePreferenceEvent.emit(filters);
-            alert('Preference saved!');
-          },
-          error => {
-            console.error('Error saving preference:', error);
-            alert('Failed to save preference.');
-          }
-        );
-      }
-    });
+    if (this.callerType === 'recruiter') {
+      this.recruiterPreferenceService.getPreferences().subscribe(preferences => {
+        if (preferences.length >= 3) {
+          alert('You can only save up to 3 preferences.');
+        } else {
+          this.recruiterPreferenceService.savePreference(filters, this.recJobType).subscribe(
+            response => {
+              console.log('Preference saved successfully!', response);
+              this.savePreferenceEvent.emit(filters);
+              alert('Preference saved!');
+            },
+            error => {
+              console.error('Error saving preference:', error);
+              alert('Failed to save preference.');
+            }
+          );
+        }
+      });
+    } else {
+      this.preferenceService.getPreferences().subscribe(preferences => {
+        if (preferences.length >= 3) {
+          alert('You can only save up to 3 preferences.');
+        } else {
+          this.preferenceService.savePreference(filters).subscribe(
+            response => {
+              console.log('Preference saved successfully!', response);
+              this.savePreferenceEvent.emit(filters);
+              alert('Preference saved!');
+            },
+            error => {
+              console.error('Error saving preference:', error);
+              alert('Failed to save preference.');
+            }
+          );
+        }
+      });
+    }
+    
   }
 }

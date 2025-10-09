@@ -1763,6 +1763,32 @@
   color: #05356c;
   align-self: center;
 }
+
+.filter-backdrop {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; /* Below modal */
+}
+
+.filter-popup-wrapper {
+  /* Inherit from existing modal styles, but ensure absolute positioning works */
+  pointer-events: auto; /* Allow interactions inside modal */
+}
+
+/* Override modal backdrop to remove it (since we have our own) */
+::ng-deep .more-filters-and-preference-component-backdrop {
+  display: none !important; /* Hide the component's built-in backdrop */
+}
+
+/* Ensure main container doesn't clip the popup */
+.candidate-home-main-container {
+  overflow: visible !important; /* Allow popup to extend beyond */
+  z-index: 999; /* Keep as-is */
+}
  
 @media(max-width: 1200px) {
   .recruiter-view3rd-page1-recruiter-view3rd-page1-main-container {
