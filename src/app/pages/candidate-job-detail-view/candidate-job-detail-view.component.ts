@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { JobCardsComponent } from '../../components/job-cards/job-cards.component'; 
+
 
 @Component({
   selector: 'candidate-job-detail-view',
@@ -8,12 +10,16 @@ import { Title, Meta } from '@angular/platform-browser';
 })
 export class CandidateJobDetailView {
   selectedJobId: number | null = null;
-  public activeTab: 'recommended' | 'saved' = 'recommended';
+  public activeTab: 'recommended' | 'saved'  | 'applied'= 'recommended';
+  @ViewChild(JobCardsComponent) private jobCardsComponent: JobCardsComponent;
+
 
   // --- [NEW] Properties to store the dynamic counts ---
   // Initializing to null allows us to show nothing until the first count is received.
   public recommendedJobCount: number | null = null;
   public savedJobCount: number | null = null;
+  public appliedJobCount: number | null = null;
+
 
   constructor(private title: Title, private meta: Meta) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
@@ -33,6 +39,7 @@ export class CandidateJobDetailView {
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {
       console.log('Switching to Recommended tab');
+      this.selectedJobId = null;
       this.activeTab = 'recommended';
     }
   }
@@ -40,7 +47,27 @@ export class CandidateJobDetailView {
   selectSavedTab(): void {
     if (this.activeTab !== 'saved') {
       console.log('Switching to Saved tab');
+      this.selectedJobId = null;
       this.activeTab = 'saved';
+    }
+  }
+
+  selectAppliedTab(): void {
+  if (this.activeTab !== 'applied') {
+    console.log('Switching to Applied tab');
+    this.selectedJobId = null;
+    this.activeTab = 'applied';
+  }
+}
+
+  onApplicationRevoked(revokedJobId: number): void {
+    console.log(`Parent component notified that job ${revokedJobId} was revoked.`);
+    
+    // This is the direct and correct way to refresh the child component.
+    // It tells the job-cards component to re-run its data loading logic
+    // for the currently active tab.
+    if (this.jobCardsComponent) {
+      this.jobCardsComponent.loadJobs();
     }
   }
 
@@ -63,4 +90,8 @@ export class CandidateJobDetailView {
     console.log(`Parent received saved job count: ${count}`);
     this.savedJobCount = count;
   }
+  onAppliedJobsCountChanged(count: number): void {
+  console.log(`Parent received applied job count: ${count}`);
+  this.appliedJobCount = count;
+}
 }

@@ -321,7 +321,7 @@
           </header>
         </header>
       </div>
-      <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
+  <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
         <div 
           id="job-recommended-container" 
           class="candidate-job-detail-view-job-recommended-container"
@@ -329,7 +329,6 @@
           [class.active-tab]="activeTab === 'recommended'">
           <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
             Jobs recommended
-            <!-- [NEW] Display count dynamically if it's not null -->
             <ng-container *ngIf="recommendedJobCount !== null">
               ({{ recommendedJobCount }})
             </ng-container>
@@ -338,7 +337,6 @@
         <div 
           id="preference-container" 
           class="candidate-job-detail-view-preference-container">
-          <!-- (Preference tab remains unchanged for now) -->
           <span id="preference-text" class="candidate-job-detail-view-preference-text2">
             Preference (4)
           </span>
@@ -350,24 +348,39 @@
           [class.active-tab]="activeTab === 'saved'">
           <span id="saved-text" class="candidate-job-detail-view-saved-text">
             Saved
-            <!-- [NEW] Display count dynamically if it's not null -->
             <ng-container *ngIf="savedJobCount !== null">
               ({{ savedJobCount }})
             </ng-container>
           </span>
         </div>
-      </div>
+ <div 
+  id="applied-container" 
+  class="candidate-job-detail-view-applied-container"
+  (click)="selectAppliedTab()"
+  [class.active-tab]="activeTab === 'applied'">
+  <span id="applied-text" class="candidate-job-detail-view-applied-text">
+    Applied
+    <ng-container *ngIf="appliedJobCount !== null">
+      ({{ appliedJobCount }})
+    </ng-container>
+  </span>
+</div>
+</div>
       <div class="candidate-job-detail-view-container4">
 <job-cards
           (jobSelected)="onJobSelected($event)"
           [displayMode]="activeTab"
           (recommendedJobsCount)="onRecommendedJobsCountChanged($event)"
           (savedJobsCount)="onSavedJobsCountChanged($event)"
+          (appliedJobsCount)="onAppliedJobsCountChanged($event)"
+
           rootClassName="job-cardsroot-class-name"
         ></job-cards>
         <div class="candidate-job-detail-view-container5">
           <candidate-job-details
             [jobId]="selectedJobId"
+            [activeTab]="activeTab"
+            (applicationRevoked)="onApplicationRevoked($event)"
             rootClassName="candidate-job-detailsroot-class-name"
           ></candidate-job-details>
         </div>

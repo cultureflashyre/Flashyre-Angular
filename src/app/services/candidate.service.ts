@@ -265,4 +265,18 @@ export class AuthService {
     const token = this.getJWTToken();
     return !!token; // Converts the token string (or null) to a boolean.
   }
+   /**
+   * Revokes a job application for the current user.
+   * @param jobId The ID of the job application to revoke.
+   * @returns An Observable of the API response.
+   */
+  revokeApplication(jobId: number): Observable<any> {
+    const url = `${this.apiUrl}api/revoke-application/`;
+    return this.http.post(url, { job_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in revokeApplication:', error);
+        return throwError(() => new Error('Failed to revoke application'));
+      })
+    );
+  }
 }
