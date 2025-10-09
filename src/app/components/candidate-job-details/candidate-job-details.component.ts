@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
@@ -20,6 +20,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @Input() text3: TemplateRef<any> | null = null;
   @Input() button: TemplateRef<any> | null = null;
   @Input() button1: TemplateRef<any> | null = null;
+  @Input() activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
+ @Output() applicationRevoked = new EventEmitter<number>();
 
   @ViewChild('mobileBar') mobileBar: ElementRef;
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
@@ -224,7 +226,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           this.isApplied = true;
           this.isProcessing = false;
 
-            alert('You have successfully applied for this job!');
+           // alert('You have successfully applied for this job!');
           setTimeout(() => {
             this.jobService.removeJobFromCache(this.job.job_id);
             this.job = null;
@@ -237,6 +239,41 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         }
       );
   }
+
+  revokeApplication(): void {
+  if (!this.job.job_id) {
+    return; // Should not happen, but a good safeguard
+  }
+
+  // Use the browser's confirm dialog for the pop-up
+  const wantsToRevoke = window.confirm('Do you want to Revoke?');
+
+  if (wantsToRevoke) {
+    this.isProcessing = true; // Show a loading state on the button
+
+    this.authService.revokeApplication(this.job.job_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Application revoked successfully:', response);
+          this.isProcessing = false;
+          
+          // CRITICAL: Clear the jobs cache so the job reappears in other lists
+          this.jobService.clearCache();
+
+          // Notify the parent component that a revoke happened
+          this.applicationRevoked.emit(this.job.job_id);
+
+          alert('Application revoked successfully!');
+        },
+        error: (err) => {
+          console.error('Failed to revoke application:', err);
+          this.isProcessing = false;
+          alert(err.error?.error || 'Failed to revoke application');
+        }
+      });
+  }
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();

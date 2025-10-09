@@ -67,11 +67,14 @@ export class JobCardsComponent implements OnInit, OnChanges {
    * Now handles 'recommended', 'saved', and 'applied' modes,
    * and emits the count of loaded jobs after a successful fetch for each mode.
    */
-  private loadJobs(): void {
+  public loadJobs(): void {
     this.loading = true;
     this.errorMessage = null;
     this.jobs = [];
     console.log(`[JobCardsComponent] loadJobs: Loading jobs for mode: '${this.displayMode}'`);
+     this.recommendedJobsCount.emit(null);
+    this.savedJobsCount.emit(null);
+    this.appliedJobsCount.emit(null);
 
     let jobObservable: Observable<any[]>;
     const userId = localStorage.getItem('user_id');

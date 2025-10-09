@@ -545,7 +545,7 @@
  
 .candidate-job-detail-view-preference-container {
   flex: 0 0 auto;
-  width: 128px;
+  width: auto;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -554,7 +554,7 @@
 .candidate-job-detail-view-preference-text2 {
   fill: #05356C;
   color: #05356C;
-  width: 113px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
@@ -585,6 +585,7 @@
   font-style: normal;
   align-items: center;
   font-weight: 600;
+  padding-top: 4px;
 }
 
 .candidate-job-detail-view-saved-container:hover ,

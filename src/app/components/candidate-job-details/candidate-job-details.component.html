@@ -100,6 +100,7 @@
         class="candidate-job-details-apply-take-assessment-button-container"
       >
         <button
+          *ngIf="activeTab !== 'applied'"
           [disabled]="isProcessing || isApplied"
           [ngClass]="{'apply-button': true, 'applying': isProcessing, 'applied': isApplied}"
           (click)="applyForJob()"
@@ -110,6 +111,17 @@
             <span class="tick-mark">✓</span> Applied Successfully
           </span>
         </button>
+
+          <button
+          *ngIf="activeTab === 'applied'"
+          class="apply-button revoke-button"
+          [disabled]="isProcessing"
+          (click)="revokeApplication()"
+        >
+          <span *ngIf="!isProcessing">Revoke</span>
+          <span *ngIf="isProcessing">Revoking...</span>
+        </button>
+
         <button
           *ngIf="job.assessment != null"
           id="take-assessment-button"

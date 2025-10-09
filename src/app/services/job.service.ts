@@ -184,4 +184,13 @@ export class JobsService {
     delete this.jobDetailsCache[jobId];
     this.jobsSubject.next([...this.jobsCache]);
   }
+   revokeApplication(jobId: number): Observable<any> {
+    const url = `${this.apiUrl}api/revoke-application/`;
+    return this.http.post(url, { job_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error in revokeApplication:', error);
+        return throwError(() => new Error('Failed to revoke application'));
+      })
+    );
+  }
 }
