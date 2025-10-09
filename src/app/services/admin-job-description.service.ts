@@ -166,15 +166,32 @@ export class AdminJobDescriptionService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * NEW: Triggers generation for a single skill and expects the new questions back.
+   */
+  generateMcqForSkill(jobUniqueId: string, skillName: string, token: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-single-skill-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
+      .pipe(catchError(this.handleError));
+  }
+
   generateMoreMcqsForSkill(jobUniqueId: string, skillName: string, token: string): Observable<any[]> {
     return this.http
       .post<any[]>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
       .pipe(catchError(this.handleError));
   }
 
-  job_post_mcqs_list_api(jobUniqueId: string, token: string): Observable<any> {
+  /**
+   * MODIFIED: Can now fetch all MCQs or MCQs for a single skill.
+   * @param skillName - Optional skill name to fetch questions for.
+   */
+  job_post_mcqs_list_api(jobUniqueId: string, token: string, skillName?: string): Observable<any> {
+    let url = `${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`;
+    if (skillName) {
+      url += `?skill=${encodeURIComponent(skillName)}`;
+    }
     return this.http
-      .get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`, { headers: this.bearer(token) })
+      .get<any>(url, { headers: this.bearer(token) })
       .pipe(catchError(this.handleError));
   }
 
@@ -184,11 +201,14 @@ export class AdminJobDescriptionService {
       .pipe(catchError(this.handleError));
   }
 
-  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ has_mcqs: boolean }> {
+  /**
+   * MODIFIED: Fetches the detailed generation status for all skills from the cache.
+   */
+  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ status: string; skills: { [key: string]: string } }> {
     return this.http
-      .get<{ status: string; data: { has_mcqs: boolean } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
+      .get<{ status: string; data: { status: string; skills: { [key: string]: string } } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
       .pipe(
-        map(response => response.data), // ✅ FIXED: Extract the nested 'data' object
+        map(response => response.data),
         catchError(this.handleError)
       );
   }

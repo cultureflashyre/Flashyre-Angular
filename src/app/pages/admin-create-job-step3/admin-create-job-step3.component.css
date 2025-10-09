@@ -4,6 +4,33 @@
   display: contents; 
 }
 
+.tab-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(65, 50, 123, 0.3); /* Light purple */
+  border-top-color: #41327b; /* Dark purple */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.tab-error-icon {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  background-color: #d92d20; /* Red */
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 50%;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* --- Alert and Popup Styles --- */
 .alert {
   padding: 20px;
@@ -497,6 +524,9 @@
   color: #667085;
   transition: all 0.3s;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Add gap for spacing between name and spinner */
 }
 
 .admin-create-job-step3-language-tab:hover {
