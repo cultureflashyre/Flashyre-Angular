@@ -169,11 +169,11 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // NEW LOGIC: Check for existing assessment first
-    this.checkAndLoadAssessment();
+    this.checkAndLoadAssessment(); // Load AI generated MCQ question if available
 
-    this.loadExistingExcelUploadQuestions();
+    this.loadExistingExcelUploadQuestions(); // Load Excel Uploaded MCQ question if available
 
-    this.fetchCodingProblems();
+    this.fetchCodingProblems(); // Load Coding Assessment questions if available
   }
 
 
@@ -389,7 +389,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * NEW METHOD: Checks if an assessment exists and loads it, otherwise fetches MCQs
+   * NEW METHOD: Checks if an AI MCQ assessment exists and loads it, otherwise fetches newly generated AI MCQs
    */
   private checkAndLoadAssessment(): void {
     const token = this.authService.getJWTToken();
@@ -635,31 +635,43 @@ onAlertButtonClicked(action: string) {
    */
   private fetchNewMcqList(): void {
     const token = this.authService.getJWTToken();
+    console.log('JWT Token:', token); // Log token
+
     if (!token) {
-        this.showErrorPopup('Authentication error.');
-        this.isLoading = false;
-        this.spinner.hide('main-spinner');
-        return;
+      this.showErrorPopup('Authentication error.');
+      this.isLoading = false;
+      this.spinner.hide('main-spinner');
+      return;
     }
 
     this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
-        next: (response) => {
-          const skillData = response.data;
-          this.skillSections = Object.keys(skillData).map(skillName => ({
-            skillName,
-            questions: this.processMcqItems(skillData[skillName].mcq_items),
-            totalCount: skillData[skillName].mcq_items.length,
-            selectedCount: 0,
-            isAllSelected: false,
-          }));
-          this.isLoading = false;
-          this.spinner.hide('main-spinner');
-          setTimeout(() => this.calculateCarouselState(), 0);
-        },
-        error: (err) => { this.showErrorPopup(`Failed to load questions: ${err.message}`); this.isLoading = false; this.spinner.hide('main-spinner'); }
-      })
-    );
+      next: (response) => {
+        console.log('API Response:', response); // Log response
+
+        const skillData = response.data;
+        this.skillSections = Object.keys(skillData).map(skillName => ({
+          skillName,
+          questions: this.processMcqItems(skillData[skillName].mcq_items),
+          totalCount: skillData[skillName].mcq_items.length,
+          selectedCount: 0,
+          isAllSelected: false,
+        }));
+
+        console.log('Processed skillSections:', this.skillSections); // Log processed data
+
+        this.isLoading = false;
+        this.spinner.hide('main-spinner');
+        setTimeout(() => this.calculateCarouselState(), 0);
+      },
+      error: (err) => {
+        console.error('API Error:', err); // Log error
+        this.showErrorPopup(`Failed to load questions: ${err.message}`);
+        this.isLoading = false;
+        this.spinner.hide('main-spinner');
+      }
+    }));
   }
+
 
   /**
    * Calculates the state of the skill tab carousel (number of visible items, max scroll index).
@@ -968,7 +980,7 @@ onNext(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/admin-page1']);
+        this.router.navigate(['/admin-create-job-step1']);
     }, 2000);
   }
 
@@ -1075,7 +1087,7 @@ onNext(): void {
           
           // Navigate to admin-page1 after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/admin-page1']);
+            this.router.navigate(['/admin-create-job-step1']);
           }, 2000);
         },
         error: (err) => {

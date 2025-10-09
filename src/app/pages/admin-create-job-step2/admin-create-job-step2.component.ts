@@ -243,7 +243,7 @@ onNext(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/admin-page1']);
+        this.router.navigate(['/admin-create-job-step1']);
     }, 3000);
   }
 
@@ -259,7 +259,7 @@ onNext(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => {
-        this.router.navigate(['/admin-page1']);
+        this.router.navigate(['/admin-create-job-step1']);
     }, 3000);
   }
 
