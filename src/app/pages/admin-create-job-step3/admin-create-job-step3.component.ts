@@ -295,7 +295,7 @@ private loadAndApplyExistingAssessment(): void {
           section.generationStatus = 'loading';
           const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
           const newQuestions = this.processMcqItems(response.data);
-          section.questions.push(...newQuestions);
+          section.questions = [...section.questions, ...newQuestions];
           section.totalCount = section.questions.length;
           section.generationStatus = 'completed';
           this.cdr.detectChanges();
@@ -1033,7 +1033,7 @@ onAlertButtonClicked(action: string) {
       this.jobService.generateMoreMcqsForSkill(this.jobUniqueId, activeSection.skillName, token).subscribe({
         next: (newMcqs) => {
           const newQuestions = this.processMcqItems(newMcqs);
-          activeSection.questions.push(...newQuestions);
+          activeSection.questions = [...activeSection.questions, ...newQuestions];  
           activeSection.totalCount = activeSection.questions.length;
           this.onQuestionSelectionChange();
           setTimeout(() => this.calculateCarouselState(), 0);

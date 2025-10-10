@@ -177,8 +177,12 @@ export class AdminJobDescriptionService {
 
   generateMoreMcqsForSkill(jobUniqueId: string, skillName: string, token: string): Observable<any[]> {
     return this.http
-      .post<any[]>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
-      .pipe(catchError(this.handleError));
+      .post<{ status: string, data: any[] }>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
+      .pipe(
+        // THIS IS THE FIX: We extract the 'data' array from the response object.
+        map(response => response.data || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
