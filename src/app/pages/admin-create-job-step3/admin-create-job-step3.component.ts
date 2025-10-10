@@ -1,5 +1,5 @@
 // src/app/pages/admin-create-job-step3/admin-create-job-step3.component.ts
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener,ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -140,7 +140,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     private renderer: Renderer2,
     private mcqService: McqAssessmentService,
     private skillService: SkillService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -297,9 +298,11 @@ private loadAndApplyExistingAssessment(): void {
           section.questions.push(...newQuestions);
           section.totalCount = section.questions.length;
           section.generationStatus = 'completed';
+          this.cdr.detectChanges();
         } catch (error) {
           section.generationStatus = 'failed';
           console.error(`Failed to generate questions for ${section.skillName}:`, error);
+          this.cdr.detectChanges();
         }
       }
     }
@@ -1036,6 +1039,7 @@ onAlertButtonClicked(action: string) {
           setTimeout(() => this.calculateCarouselState(), 0);
           this.showSuccessPopup(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`);
           this.isSubmitting = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           this.showErrorPopup(`Failed to generate more questions: ${err.message}`);
