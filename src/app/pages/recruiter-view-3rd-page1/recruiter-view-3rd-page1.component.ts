@@ -82,7 +82,6 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   initialFilterTab: 'filters' | 'preferences' = 'filters';
   @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
   filterPosition = { top: 0, left: 0 };
-  
 
   // General State management
   recruiterId: string | null = null;
@@ -158,7 +157,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
 
   selectTab(tabName: 'live' | 'draft-pause' | 'deleted'): void {
     this.activeTab = tabName;
-    console.log("[IN REC PAGE - selectTab] current tab: ",this.activeTab);
+    console.log("[IN REC PAGE - select Tab]current tab: ",this.activeTab);
     this.recruiterPreferenceService.setActiveTab(tabName);
     this.runFilterPipeline();
   }
@@ -199,6 +198,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   private runFilterPipeline(): void {
     let tempJobs = [...this.masterPostedJobs];
 
+    // Filter by Active Tab first
     switch (this.activeTab) {
       case 'live':
         tempJobs = tempJobs.filter(job => job.status === 'final');
@@ -211,26 +211,34 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
         break;
     }
 
+    // Filter by Job Title/Keyword
     const mainKeyword = this.searchJobTitle.toLowerCase().trim();
     if (mainKeyword) {
         tempJobs = tempJobs.filter(job => 
-            (job.job_role || '').toLowerCase().includes(mainKeyword) ||
-            (job.description || '').toLowerCase().includes(mainKeyword)
+            (job.role || '').toLowerCase().includes(mainKeyword) || // CHANGED: from 'job_role' to 'role'
+            (job.job_description || '').toLowerCase().includes(mainKeyword)
         );
     }
 
+    // Filter by Location
     const mainLocation = this.searchLocation.toLowerCase().trim();
     if (mainLocation) {
         tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
     }
 
+    // Filter by Experience (from main search bar)
     const mainExperience = this.parseFirstNumber(this.searchExperience);
     if (mainExperience !== null) {
         tempJobs = tempJobs.filter(j => 
-            j.total_experience_min != null && mainExperience >= j.total_experience_min
+            j.total_experience_min != null && j.total_experience_max != null &&
+            mainExperience >= j.total_experience_min &&
+            mainExperience <= j.total_experience_max
         );
     }
 
+    // --- "More Filters" Popup Logic ---
+
+    // Filter by Date Posted
     if (this.searchDatePosted) {
         const now = new Date();
         let cutoffDate = new Date();
@@ -241,27 +249,34 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
         tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
     }
 
+    // Filter by Experience (from popup)
     const popupExperience = this.parseFirstNumber(this.searchExperienceLevel);
     if (popupExperience !== null) {
         tempJobs = tempJobs.filter(j => 
-            j.total_experience_min != null && popupExperience >= j.total_experience_min
+            j.total_experience_min != null && j.total_experience_max != null &&
+            popupExperience >= j.total_experience_min &&
+            popupExperience <= j.total_experience_max
         );
     }
     
+    // Filter by Job Type
     if (this.searchJobType) {
         tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
     }
 
+    // Filter by Role
     if (this.searchRole && this.searchRole.trim()) {
         const searchRol = this.searchRole.toLowerCase().trim();
-        tempJobs = tempJobs.filter(j => (j.job_role || '').toLowerCase().includes(searchRol));
+        tempJobs = tempJobs.filter(j => (j.role || '').toLowerCase().includes(searchRol)); // CHANGED: from 'job_role' to 'role'
     }
     
+    // Filter by Company Name
     if (this.searchCompanyName && this.searchCompanyName.trim()) {
         const searchCompany = this.searchCompanyName.toLowerCase().trim();
         tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
     }
     
+    // Filter by Salary
     const searchSal = this.parseFirstNumber(this.searchSalary);
     if (searchSal !== null) {
         tempJobs = tempJobs.filter(j => 
@@ -270,10 +285,13 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
         );
     }
 
+    // Filter by Work Mode
     if (this.searchWorkMode) {
-        tempJobs = tempJobs.filter(j => (j.work_mode || '').toLowerCase() === this.searchWorkMode.toLowerCase());
+        // CHANGED: from 'work_mode' to 'workplace_type' to match backend model
+        tempJobs = tempJobs.filter(j => (j.workplace_type || '').toLowerCase() === this.searchWorkMode.toLowerCase());
     }
 
+    // Finalize and update UI
     this.filteredJobs = tempJobs;
     this.displayPage = 0;
     this.postedJobs = [];

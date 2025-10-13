@@ -1,7 +1,7 @@
 // src/app/services/recruiter-data.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- MODIFIED: Imported HttpHeaders
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'; // <-- MODIFIED: Imported HttpHeaders
 import { Observable, of } from 'rxjs'; // <-- MODIFIED: Imported 'of' for error handling
 import { environment } from '../../environments/environment';
 import { CorporateAuthService } from './corporate-auth.service'; // <-- ADDED: Import your auth service
