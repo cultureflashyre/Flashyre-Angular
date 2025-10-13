@@ -258,21 +258,33 @@ private loadAndApplyExistingAssessment(): void {
               timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
           });
 
-          const selectedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
+          // Pre-select MCQs (existing logic)
+          const selectedMcqIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
           this.skillSections.forEach(section => {
               section.questions.forEach(q => {
-                  if (selectedIds.has(q.mcq_item_id)) {
+                  if (selectedMcqIds.has(q.mcq_item_id)) {
                       q.isSelected = true;
                   }
               });
               this.updateCountsForSection(section);
           });
+          
+          // THIS IS THE NEW LOGIC TO ADD for pre-selecting coding problems
+          if (assessmentDetails.selected_coding_problems && this.codingProblems.length > 0) {
+            const selectedCodingIds = new Set(assessmentDetails.selected_coding_problems.map((p: any) => p.coding_problem_details.id));
+            
+            this.codingProblems.forEach(problem => {
+              if (selectedCodingIds.has(problem.id)) {
+                problem.isSelected = true;
+              }
+            });
+            this.onCodingProblemSelectionChange(); // Update counts and 'select all' state
+          }
         },
         error: (err) => console.warn("Could not load details for existing assessment.", err)
       }));
     }
   }
-  
   
   /**
    * NEW: Asynchronously generates MCQs for all pending skills, one by one.
