@@ -1,5 +1,5 @@
 // src/app/pages/admin-create-job-step3/admin-create-job-step3.component.ts
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener,ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -33,6 +33,7 @@ interface SkillSection {
   totalCount: number;
   selectedCount: number;
   isAllSelected: boolean;
+  generationStatus: 'pending' | 'loading' | 'completed' | 'failed';
 }
 
 interface UploadedQuestion {
@@ -116,6 +117,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   isAllCodingSelected: boolean = false;
   codingProblemsSelectedCount: number = 0;  // Declare this property
 
+   // NEW: Flag to prevent multiple sequential generation loops
+  private isGeneratingSequentially = false;
+
   /**
    * Constructor for dependency injection
    * @param fb FormBuilder for creating reactive forms
@@ -136,7 +140,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     private renderer: Renderer2,
     private mcqService: McqAssessmentService,
     private skillService: SkillService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -155,15 +160,12 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * Initializes the form and fetches data based on whether an existing assessment is being edited.
    */
   ngOnInit(): void {
-    this.spinner.show('main-spinner');
     this.initializeForm();
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     this.currentAssessmentId = this.workflowService.getCurrentAssessmentId();
 
     if (!this.jobUniqueId) {
-      this.showErrorPopup('Error: Job context is missing. Please go back to Step 1.');
-      this.isLoading = false;
-      this.spinner.hide('main-spinner');
+      this.showErrorPopup('Error: Job context is missing. Redirecting...');
       this.router.navigate(['/admin-create-job-step1']);
       return;
     }
@@ -174,9 +176,154 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     this.loadExistingExcelUploadQuestions(); // Load Excel Uploaded MCQ question if available
 
     this.fetchCodingProblems(); // Load Coding Assessment questions if available
+
   }
 
+   /**
+   * NEW: Orchestrates the initial loading of the component.
+   * 1. Fetches the status of all skills.
+   * 2. Initializes the UI with correct loading/completed states.
+   * 3. Fetches data for skills that are already done.
+   * 4. Kicks off the sequential background generation for pending skills.
+   */private loadInitialData(): void {
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      this.isLoading = false;
+      return;
+    }
 
+    this.isLoading = true;
+    this.subscriptions.add(
+      this.jobService.checkMcqStatus(this.jobUniqueId, token).subscribe({
+        next: (statusResponse) => {
+          this.skillSections = Object.keys(statusResponse.skills).map(skillName => ({
+            skillName,
+            questions: [],
+            totalCount: 0,
+            selectedCount: 0,
+            isAllSelected: false,
+            generationStatus: statusResponse.skills[skillName] as 'pending' | 'loading' | 'completed' | 'failed',
+          }));
+
+          this.subscriptions.add(
+            this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
+              next: (mcqResponse) => {
+                const completedSkillData = mcqResponse.data;
+                this.skillSections.forEach(section => {
+                  if (completedSkillData[section.skillName]) {
+                    const processedQuestions = this.processMcqItems(completedSkillData[section.skillName].mcq_items);
+                    section.questions = processedQuestions;
+                    section.totalCount = processedQuestions.length;
+                  }
+                });
+
+                this.loadAndApplyExistingAssessment();
+                this.isLoading = false;
+                this.generateRemainingSkillsSequentially();
+              },
+              error: (err) => {
+                 this.showErrorPopup(`Failed to load initial questions: ${err.message}`);
+                 this.isLoading = false;
+              }
+            })
+          );
+        },
+        error: (err) => {
+          this.showErrorPopup(`Failed to get MCQ generation status: ${err.message}`);
+          this.isLoading = false;
+        }
+      })
+    );
+  }
+  
+  /**
+   * NEW: Helper function to load and apply details from a previously saved assessment.
+   */
+private loadAndApplyExistingAssessment(): void {
+    const token = this.authService.getJWTToken();
+    if (!token) return;
+
+    const assessmentId = this.workflowService.getCurrentAssessmentId();
+    if (assessmentId) {
+      this.subscriptions.add(this.jobService.getAssessmentDetails(assessmentId, token).subscribe({
+        next: (assessmentDetails) => {
+          if (!assessmentDetails) return;
+          
+          this.assessmentForm.patchValue({
+              assessmentName: assessmentDetails.name,
+              shuffleQuestions: assessmentDetails.shuffle_questions_overall,
+              isProctored: assessmentDetails.is_proctored,
+              allowPhoneAccess: assessmentDetails.allow_phone_access,
+              allowVideoRecording: assessmentDetails.has_video_recording,
+              difficulty: assessmentDetails.difficulty,
+              timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+          });
+
+          // Pre-select MCQs (existing logic)
+          const selectedMcqIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
+          this.skillSections.forEach(section => {
+              section.questions.forEach(q => {
+                  if (selectedMcqIds.has(q.mcq_item_id)) {
+                      q.isSelected = true;
+                  }
+              });
+              this.updateCountsForSection(section);
+          });
+          
+          // THIS IS THE NEW LOGIC TO ADD for pre-selecting coding problems
+          if (assessmentDetails.selected_coding_problems && this.codingProblems.length > 0) {
+            const selectedCodingIds = new Set(assessmentDetails.selected_coding_problems.map((p: any) => p.coding_problem_details.id));
+            
+            this.codingProblems.forEach(problem => {
+              if (selectedCodingIds.has(problem.id)) {
+                problem.isSelected = true;
+              }
+            });
+            this.onCodingProblemSelectionChange(); // Update counts and 'select all' state
+          }
+        },
+        error: (err) => console.warn("Could not load details for existing assessment.", err)
+      }));
+    }
+  }
+  
+  /**
+   * NEW: Asynchronously generates MCQs for all pending skills, one by one.
+   * Updates the UI in real-time as each skill's questions are fetched.
+   */
+   private async generateRemainingSkillsSequentially(): Promise<void> {
+    if (this.isGeneratingSequentially) return;
+    this.isGeneratingSequentially = true;
+
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error while generating questions.');
+      this.isGeneratingSequentially = false;
+      return;
+    }
+
+    for (const section of this.skillSections) {
+      if (section.generationStatus === 'pending') {
+        try {
+          section.generationStatus = 'loading';
+          const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
+          const newQuestions = this.processMcqItems(response.data);
+          section.questions = [...section.questions, ...newQuestions];
+          section.totalCount = section.questions.length;
+          section.generationStatus = 'completed';
+          this.cdr.detectChanges();
+        } catch (error) {
+          section.generationStatus = 'failed';
+          console.error(`Failed to generate questions for ${section.skillName}:`, error);
+          this.cdr.detectChanges();
+        }
+      }
+    }
+    this.isGeneratingSequentially = false;
+  }
+  
+  
   ///////////////////////////////////////////////////////////
 
   /**
@@ -526,6 +673,7 @@ onAlertButtonClicked(action: string) {
    * @returns Array of processed McqQuestion objects.
    */
   private processMcqItems(mcqItems: IMcqItem[]): McqQuestion[] {
+    if (!mcqItems) return [];
     return mcqItems.map((item): McqQuestion => ({
         ...item,
         isSelected: false,
@@ -542,7 +690,7 @@ onAlertButtonClicked(action: string) {
   private parseQuestionText(rawText: string): ParsedDetails {
     const questionMatch = rawText.match(/^([\s\S]*?)(?=\s*a\))/i);
     const optionsRegex = /\b([a-d])\)\s*([\s\S]*?)(?=\s*[a-d]\)|Correct:|$)/gi;
-    const optionsMatch = [];
+    const optionsMatch: any[] = [];
     let match;
     while ((match = optionsRegex.exec(rawText)) !== null) {
       optionsMatch.push(match);
@@ -557,6 +705,7 @@ onAlertButtonClicked(action: string) {
       difficulty: difficultyMatch ? difficultyMatch[1] : 'Medium'
     };
   }
+
 
   /**
    * Initializes the reactive form with default values and validators.
@@ -596,6 +745,7 @@ onAlertButtonClicked(action: string) {
                 totalCount: skillData[skillName].mcq_items.length,
                 selectedCount: 0,
                 isAllSelected: false,
+                generationStatus: 'completed', // Questions are loaded, so status is 'completed'
             }));
 
             this.subscriptions.add(this.jobService.getAssessmentDetails(assessmentId, token).subscribe({
@@ -643,33 +793,25 @@ onAlertButtonClicked(action: string) {
       this.spinner.hide('main-spinner');
       return;
     }
-
     this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
-      next: (response) => {
-        console.log('API Response:', response); // Log response
-
-        const skillData = response.data;
-        this.skillSections = Object.keys(skillData).map(skillName => ({
-          skillName,
-          questions: this.processMcqItems(skillData[skillName].mcq_items),
-          totalCount: skillData[skillName].mcq_items.length,
-          selectedCount: 0,
-          isAllSelected: false,
-        }));
-
-        console.log('Processed skillSections:', this.skillSections); // Log processed data
-
-        this.isLoading = false;
-        this.spinner.hide('main-spinner');
-        setTimeout(() => this.calculateCarouselState(), 0);
-      },
-      error: (err) => {
-        console.error('API Error:', err); // Log error
-        this.showErrorPopup(`Failed to load questions: ${err.message}`);
-        this.isLoading = false;
-        this.spinner.hide('main-spinner');
-      }
-    }));
+        next: (response) => {
+          const skillData = response.data;
+          this.skillSections = Object.keys(skillData).map(skillName => ({
+            skillName,
+            questions: this.processMcqItems(skillData[skillName].mcq_items),
+            totalCount: skillData[skillName].mcq_items.length,
+            selectedCount: 0,
+            isAllSelected: false,
+            generationStatus: 'completed', // Questions are loaded, so status is 'completed'
+          }));
+          this.isLoading = false;
+          this.spinner.hide('main-spinner');
+          this.spinner.hide('main-spinner');
+          setTimeout(() => this.calculateCarouselState(), 0);
+        },
+        error: (err) => { this.showErrorPopup(`Failed to load questions: ${err.message}`); this.isLoading = false; this.spinner.hide('main-spinner'); }
+      })
+    );
   }
 
 
@@ -908,12 +1050,13 @@ onAlertButtonClicked(action: string) {
       this.jobService.generateMoreMcqsForSkill(this.jobUniqueId, activeSection.skillName, token).subscribe({
         next: (newMcqs) => {
           const newQuestions = this.processMcqItems(newMcqs);
-          activeSection.questions.push(...newQuestions);
+          activeSection.questions = [...activeSection.questions, ...newQuestions];  
           activeSection.totalCount = activeSection.questions.length;
           this.onQuestionSelectionChange();
           setTimeout(() => this.calculateCarouselState(), 0);
           this.showSuccessPopup(`Added ${newMcqs.length} new questions for ${activeSection.skillName}`);
           this.isSubmitting = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           this.showErrorPopup(`Failed to generate more questions: ${err.message}`);

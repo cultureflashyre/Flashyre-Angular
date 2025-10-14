@@ -249,16 +249,26 @@
 
               <!-- Dynamic looping through skill sections -->
               <div *ngIf="activeTab === 'ai-generated'" class="admin-create-job-step3-container18">
-                <div class="skill-scroll-track">
-                  <div *ngFor="let section of skillSections; let i = index" 
-                       class="admin-create-job-step3-language-tab" 
-                       [ngClass]="{'active-section': i === activeSectionIndex}" 
-                       (click)="selectSection(i)">
-                    <span class="skill-tab-name">{{ section.skillName }}</span>
-                    <span class="skill-tab-count">({{section.selectedCount}}/{{section.totalCount}})</span>
-                  </div>
-                </div>
-              </div>
+  <div class="skill-scroll-track">
+    <div *ngFor="let section of skillSections; let i = index" 
+         class="admin-create-job-step3-language-tab" 
+         [ngClass]="{'active-section': i === activeSectionIndex}" 
+         (click)="selectSection(i)">
+
+      <!-- Skill Name -->
+      <span class="skill-tab-name">{{ section.skillName }}</span>
+
+      <!-- Loading/Error Indicators -->
+      <span *ngIf="section.generationStatus === 'loading' || section.generationStatus === 'pending'" class="tab-spinner"></span>
+      <span *ngIf="section.generationStatus === 'failed'" class="tab-error-icon">!</span>
+      
+      <!-- Question Count (only if completed) -->
+      <span *ngIf="section.generationStatus === 'completed'" class="skill-tab-count">
+        ({{section.selectedCount}}/{{section.totalCount}})
+      </span>
+    </div>
+  </div>
+</div>
 
               <div *ngIf="activeTab === 'uploaded'" class="admin-create-job-step3-container18">
                 <div class="skill-scroll-track">
