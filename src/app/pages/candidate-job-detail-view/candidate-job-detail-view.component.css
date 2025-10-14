@@ -15,12 +15,14 @@
 }
 
 .candidate-job-detail-view-job-recommended-container.active-tab,
-.candidate-job-detail-view-saved-container.active-tab {
+.candidate-job-detail-view-saved-container.active-tab,
+.candidate-job-detail-view-applied-container.active-tab {
   border-bottom: 3px solid #41327B; /* Or your primary theme color */
 }
 
 .candidate-job-detail-view-job-recommended-container.active-tab .candidate-job-detail-view-job-recommended-text,
-.candidate-job-detail-view-saved-container.active-tab .candidate-job-detail-view-saved-text {
+.candidate-job-detail-view-saved-container.active-tab .candidate-job-detail-view-saved-text,
+.candidate-job-detail-view-applied-container.active-tab .candidate-job-detail-view-applied-text {
   font-weight: bold;
   color: #41327B; /* Or your primary theme color */
 }
@@ -543,7 +545,7 @@
  
 .candidate-job-detail-view-preference-container {
   flex: 0 0 auto;
-  width: 128px;
+  width: auto;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -552,7 +554,7 @@
 .candidate-job-detail-view-preference-text2 {
   fill: #05356C;
   color: #05356C;
-  width: 113px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
@@ -565,7 +567,7 @@
 .candidate-job-detail-view-saved-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 190px;
+  width: auto;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -576,17 +578,42 @@
 
 .candidate-job-detail-view-saved-text {
   color: #05356C;
-  width: 190px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
   font-style: normal;
   align-items: center;
   font-weight: 600;
+  padding-top: 4px;
 }
 
-.candidate-job-detail-view-saved-container:hover {
+.candidate-job-detail-view-saved-container:hover ,
+.candidate-job-detail-view-applied-container:hover {
   cursor: pointer;
+}
+
+.candidate-job-detail-view-applied-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 12px;
+  flex-direction: row;
+  padding-bottom: 12px;
+}
+
+.candidate-job-detail-view-applied-text {
+  color: #05356C;
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
 }
  
 .candidate-job-detail-view-container4 {

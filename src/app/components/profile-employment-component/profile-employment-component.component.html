@@ -152,15 +152,15 @@
         >
           Job Details
         </span>
-        <input
-          type="text"
-          id="employment-job-detail-input-{{i}}"
-          placeholder="Type here..."
-          class="profile-employment-component-job-details-input input"
-          [(ngModel)]="position.jobDetails"
-          name="jobDetails-{{i}}"
-          required
-        />
+            <textarea
+        id="employment-job-detail-input-{{i}}"
+        placeholder="Type here..."
+        class="profile-employment-component-job-details-input input"
+        [(ngModel)]="position.jobDetails"
+        name="jobDetails-{{i}}"
+        required
+        rows="4"
+      ></textarea>
       </div>
 
       <!-- Remove Position Button (visible only if more than one position) -->

@@ -1,18 +1,18 @@
 <div class="job-cards-container">
   <div class="job-cards-job-cards-main-container">
-    <!-- Loading state -->
-    <div *ngIf="loading" class="job-cards-loading">
+    <!-- [MODIFIED] Loading state is now controlled by an Input property -->
+    <div *ngIf="isLoading" class="job-cards-loading">
       <span>Loading jobs...</span>
     </div>
-    <!-- Error state -->
-    <div *ngIf="errorMessage && !loading" class="job-cards-error">
+    <!-- [MODIFIED] Error state is now controlled by an Input property -->
+    <div *ngIf="errorMessage && !isLoading" class="job-cards-error">
       <span>{{ errorMessage }}</span>
     </div>
-    <!-- No jobs state -->
-    <div *ngIf="!loading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
+    <!-- [MODIFIED] No jobs state now checks the local 'jobs' array -->
+    <div *ngIf="!isLoading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
       <span>No jobs available at the moment.</span>
     </div>
-    <!-- Job cards -->
+    <!-- Job cards rendering logic remains the same -->
     <div
       *ngFor="let job of jobs; index as i"
       (click)="selectJob(job.job_id)"

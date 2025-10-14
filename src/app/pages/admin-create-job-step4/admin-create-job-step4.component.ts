@@ -197,7 +197,7 @@ export class AdminCreateJobStep4Component implements OnInit {
 
   onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/admin-page1']);
+    this.router.navigate(['/admin-create-job-step1']);
   }
 
   onPreviousConfirmed(): void {
@@ -225,7 +225,7 @@ export class AdminCreateJobStep4Component implements OnInit {
         this.showSuccessPopup('Successfully Created!');
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/admin-page1']);
+          this.router.navigate(['/admin-create-job-step1']);
           this.closePopup();
         }, 5000);
         this.isSubmitting = false;

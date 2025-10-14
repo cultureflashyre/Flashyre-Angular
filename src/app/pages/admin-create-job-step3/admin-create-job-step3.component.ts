@@ -170,11 +170,13 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // --- CORRECTED ngOnInit ---
-    // Only these three calls should be here.
-    this.loadInitialData();
-    this.loadExistingExcelUploadQuestions();
-    this.fetchCodingProblems();
+    // NEW LOGIC: Check for existing assessment first
+    this.checkAndLoadAssessment(); // Load AI generated MCQ question if available
+
+    this.loadExistingExcelUploadQuestions(); // Load Excel Uploaded MCQ question if available
+
+    this.fetchCodingProblems(); // Load Coding Assessment questions if available
+
   }
 
    /**
@@ -534,7 +536,7 @@ private loadAndApplyExistingAssessment(): void {
   }
 
   /**
-   * NEW METHOD: Checks if an assessment exists and loads it, otherwise fetches MCQs
+   * NEW METHOD: Checks if an AI MCQ assessment exists and loads it, otherwise fetches newly generated AI MCQs
    */
   private checkAndLoadAssessment(): void {
     const token = this.authService.getJWTToken();
@@ -783,11 +785,13 @@ onAlertButtonClicked(action: string) {
    */
   private fetchNewMcqList(): void {
     const token = this.authService.getJWTToken();
+    console.log('JWT Token:', token); // Log token
+
     if (!token) {
-        this.showErrorPopup('Authentication error.');
-        this.isLoading = false;
-        this.spinner.hide('main-spinner');
-        return;
+      this.showErrorPopup('Authentication error.');
+      this.isLoading = false;
+      this.spinner.hide('main-spinner');
+      return;
     }
     this.subscriptions.add(this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token).subscribe({
         next: (response) => {
@@ -809,6 +813,7 @@ onAlertButtonClicked(action: string) {
       })
     );
   }
+
 
   /**
    * Calculates the state of the skill tab carousel (number of visible items, max scroll index).
@@ -1118,7 +1123,7 @@ onNext(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/admin-page1']);
+        this.router.navigate(['/admin-create-job-step1']);
     }, 2000);
   }
 
@@ -1225,7 +1230,7 @@ onNext(): void {
           
           // Navigate to admin-page1 after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/admin-page1']);
+            this.router.navigate(['/admin-create-job-step1']);
           }, 2000);
         },
         error: (err) => {

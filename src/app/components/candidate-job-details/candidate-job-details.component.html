@@ -3,6 +3,9 @@
   class="candidate-job-details-container1"
   [ngClass]="rootClassName"
 >
+ <div *ngIf="!jobId && !errorMessage" class="no-job-selected-message">
+    <span>No jobs are available at the moment.</span>
+  </div>
   <!-- Display error message if job not found -->
   <div *ngIf="errorMessage" class="candidate-job-details-error">
     <span>{{ errorMessage }}</span>
@@ -15,7 +18,7 @@
   <div
     id="job-details-main-container"
     class="candidate-job-details-job-details-main-container"
-    *ngIf="!errorMessage"
+    *ngIf="jobId && !errorMessage"
   >
     <div class="candidate-job-details-job-details-container">
       <div
@@ -100,6 +103,7 @@
         class="candidate-job-details-apply-take-assessment-button-container"
       >
         <button
+          *ngIf="activeTab !== 'applied'"
           [disabled]="isProcessing || isApplied"
           [ngClass]="{'apply-button': true, 'applying': isProcessing, 'applied': isApplied}"
           (click)="applyForJob()"
@@ -110,6 +114,17 @@
             <span class="tick-mark">✓</span> Applied Successfully
           </span>
         </button>
+
+          <button
+          *ngIf="activeTab === 'applied'"
+          class="apply-button revoke-button"
+          [disabled]="isProcessing"
+          (click)="revokeApplication()"
+        >
+          <span *ngIf="!isProcessing">Revoke</span>
+          <span *ngIf="isProcessing">Revoking...</span>
+        </button>
+
         <button
           *ngIf="job.assessment != null"
           id="take-assessment-button"
