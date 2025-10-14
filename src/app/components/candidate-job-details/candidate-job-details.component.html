@@ -3,6 +3,9 @@
   class="candidate-job-details-container1"
   [ngClass]="rootClassName"
 >
+ <div *ngIf="!jobId && !errorMessage" class="no-job-selected-message">
+    <span>No jobs are available at the moment.</span>
+  </div>
   <!-- Display error message if job not found -->
   <div *ngIf="errorMessage" class="candidate-job-details-error">
     <span>{{ errorMessage }}</span>
@@ -15,7 +18,7 @@
   <div
     id="job-details-main-container"
     class="candidate-job-details-job-details-main-container"
-    *ngIf="!errorMessage"
+    *ngIf="jobId && !errorMessage"
   >
     <div class="candidate-job-details-job-details-container">
       <div
