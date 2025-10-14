@@ -1,3 +1,5 @@
+// candidate-job-details.component.ts
+
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,27 +27,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
   @ViewChild('desktopMatchingLoader') desktopMatchingLoader: ElementRef;
 
-  job: any = {
-    job_id: null,
-    company_name: '',
-    logo: '',
-    title: '',
-    location: '',
-    job_type: '',
-    created_at: '',
-    description: '',
-    requirements: '',
-    salary: null,
-    url: null,
-    source: '',
-    tag: '',
-    contract_time: '',
-    contract_type: '',
-    external_id: '',
-    last_updated: '',
-    assessment: null,
-    attempts_remaining: null
-  };
+  job: any = null;
   userProfile: any = {};
   loading: boolean = false;
   errorMessage: string | null = null;
@@ -56,16 +38,15 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   matchingScoreStrokeDasharray: string = '0 25.12';
   defaultProfilePicture: string = environment.defaultProfilePicture;
   defaultCompanyIcon: string = environment.defaultCompanyIcon;
-  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
-  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
   
   isMobile: boolean = window.innerWidth < 767;
   isProcessing: boolean = false;
   isApplied: boolean = false;
   successMessage: string | null = null;
   private destroy$ = new Subject<void>();
+
+  private isViewInitialized = false;
   
-  // This will store the attempts value passed from the previous page
   private attemptsFromNavigation: number | null = null;
 
   constructor(
@@ -81,10 +62,19 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
-      // Read 'attempts' from the URL and store it
+      const scoreFromUrl = params['score'] ? +params['score'] : null;
+
       this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
+
+      if (scoreFromUrl !== null) {
+        this.matchingScore = scoreFromUrl;
+        // ---- EDIT: Call the new instant function instead of the animation. ----
+        if (this.isViewInitialized) {
+          this.setProgressBarState(); 
+        } 
+      }
 
       if (jobIdFromUrl) {
         this.jobId = jobIdFromUrl;
@@ -96,18 +86,10 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngAfterViewInit() {
-    if (this.matchingScore > 0) {
-      setTimeout(() => {
-        this.animateProgressBar();
-      }, 0);
-    } else {
-      this.fetchJobDetails();
-    }
+    this.isViewInitialized = true;
+    this.setProgressBarState();
   }
 
-  /**
-   * Navigate to assessment page
-   */
   navigateToAssessment(assessment: number): void {
     this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
   }
@@ -122,21 +104,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private loadUserProfile(): void {
-    try {
-      const profileData = localStorage.getItem('userProfile');
-      if (profileData) {
-        this.userProfile = JSON.parse(profileData);
-        console.log('User profile data from local storage:', this.userProfile);
-        if (!this.userProfile.profile_picture_url) {
-          console.warn('No profile picture URL found in local storage, using default.');
-        }
-      } else {
-        console.warn('No user profile data found in local storage, using default profile picture.');
-        this.userProfile = { profile_picture_url: null };
-      }
-    } catch (error) {
-      console.error('Error parsing user profile data from local storage:', error);
-      this.userProfile = { profile_picture_url: null };
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
     }
   }
 
@@ -147,95 +117,46 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.isApplied = false;
     this.jobService.getJobById(this.jobId!).subscribe({
       next: (data) => {
-        console.log('Job details response:', data);
-        this.job = {
-          job_id: data.job_id || null,
-          company_name: data.company_name || '',
-          logo: data.logo || '',
-          title: data.title || '',
-          location: data.location || '',
-          job_type: data.job_type || '',
-          created_at: data.created_at || '',
-          description: data.description || '',
-          requirements: data.requirements || '',
-          salary: data.salary || null,
-          url: data.url || null,
-          source: data.source || '',
-          tag: data.tag || '',
-          contract_time: data.contract_time || '',
-          contract_type: data.contract_type || '',
-          external_id: data.external_id || '',
-          last_updated: data.last_updated || '',
-          assessment: data.assessment || null, // Added assessment_id
-          attempts_remaining: data.attempts_remaining !== undefined && data.attempts_remaining !== null 
-            ? data.attempts_remaining 
-            : this.attemptsFromNavigation,
-        };
-        this.matchingScore = data.matching_score || 80;
-        this.updateProgressBar(this.matchingScore, this.progress);
+        this.job = data;
+        this.job.attempts_remaining = data.attempts_remaining ?? this.attemptsFromNavigation;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching job details:', err);
         this.resetJob();
-        this.errorMessage = err.message || `Job with ID ${this.jobId} not found. Please select another job.`;
+        this.errorMessage = `Job with ID ${this.jobId} not found. Please select another job.`;
         this.loading = false;
       }
     });
   }
 
   private resetJob(): void {
-    this.job = {
-      job_id: null,
-      company_name: '',
-      logo: '',
-      title: '',
-      location: '',
-      job_type: '',
-      created_at: '',
-      description: '',
-      requirements: '',
-      salary: null,
-      url: null,
-      source: '',
-      tag: '',
-      contract_time: '',
-      contract_type: '',
-      external_id: '',
-      last_updated: '',
-      assessment: null, // Added assessment_id
-      attempts_remaining: null // <-- ADDED: Reset the property
-    };
+    this.job = null;
     this.matchingScore = 0;
     this.progress = 0;
   }
 
   applyForJob(): void {
-    if (this.isApplied || !this.job.job_id) {
+    if (this.isApplied || !this.job?.job_id) {
       return;
     }
     this.isProcessing = true;
-
     this.authService.applyForJob(this.job.job_id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (response) => {
-          console.log('Yay! Application worked:', response);
+      .subscribe({
+        next: () => {
           this.isApplied = true;
           this.isProcessing = false;
-
-            alert('You have successfully applied for this job!');
+          alert('You have successfully applied for this job!');
           setTimeout(() => {
             this.jobService.removeJobFromCache(this.job.job_id);
             this.job = null;
           }, 2000);
         },
-        (error) => {
-          console.error('Oops! Something went wrong:', error);
+        error: (error) => {
           this.isProcessing = false;
           alert(error.error?.error || 'Failed to apply for this job');
         }
-      );
+      });
   }
 
   ngOnDestroy(): void {
@@ -244,8 +165,6 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   handleImageError(event: Event): void {
-    console.error('Profile image failed to load:', this.userProfile.profile_picture_url);
-    this.userProfile.profile_picture_url = this.defaultProfilePicture;
     (event.target as HTMLImageElement).src = this.defaultProfilePicture;
   }
 
@@ -257,24 +176,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     return 'darkgreen';
   }
 
-  private animateProgressBar(): void {
-    const duration = 2000;
-    const startTime = Date.now();
-
-    const animate = () => {
-      const currentTime = Date.now();
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const currentMatchingScore = progress * this.matchingScore;
-      const currentCompanyProgress = progress * this.progress;
-      this.updateProgressBar(currentMatchingScore, currentCompanyProgress);
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        this.updateProgressBar(this.matchingScore, this.progress);
-      }
-    };
-    requestAnimationFrame(animate);
+  // ---- EDIT: The 'animateProgressBar' function has been replaced with this new 'setProgressBarState' function. ----
+  private setProgressBarState(): void {
+    if (this.matchingScore === null || typeof this.matchingScore === 'undefined') {
+      return;
+    }
+    // This instantly updates the progress bar to its final values without any animation delay.
+    this.updateProgressBar(this.matchingScore, this.progress);
   }
 
   private updateProgressBar(percentage: number, companyPercentage: number): void {
@@ -303,7 +211,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       }
     }
 
-    this.progress = actualProgress;
-    this.matchingScore = actualMatchingScore;
+    this.progress = Math.round(actualProgress);
+    this.matchingScore = Math.round(actualMatchingScore);
   }
 }

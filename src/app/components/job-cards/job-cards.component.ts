@@ -2,7 +2,7 @@
 
 import { Component, OnInit, Output, EventEmitter, Input, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
 import { JobsService } from '../../services/job.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -36,7 +36,8 @@ export class JobCardsComponent implements OnInit, OnChanges {
 
   constructor(
     private jobService: JobsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,7 +66,13 @@ export class JobCardsComponent implements OnInit, OnChanges {
     this.loading = true;
     this.errorMessage = null;
     this.jobs = [];
-    console.log(`[JobCardsComponent] loadJobs: Loading jobs for mode: '${this.displayMode}'`);
+    
+    if (this.displayMode === 'recommended' && this.jobService.areJobsCached()) {
+      console.log('[JobCardsComponent] Loading jobs from cache.');
+      const cachedJobs = this.jobService.getCachedJobs();
+      this.handleJobData(cachedJobs);
+      return; // Stop here, no need for an API call.
+    }
 
     let jobObservable: Observable<any[]>;
 
@@ -129,6 +136,37 @@ export class JobCardsComponent implements OnInit, OnChanges {
     });
   }
 
+  private handleJobData(data: any[]): void {
+    console.log(`[JobCardsComponent] handleJobData: Received ${data.length} jobs.`);
+    this.jobs = data;
+    this.loading = false;
+
+    const count = data.length;
+    if (this.displayMode === 'saved') {
+      this.savedJobsCount.emit(count);
+    } else {
+      this.recommendedJobsCount.emit(count);
+    }
+
+    if (this.jobIdFromUrl && this.jobs.some(job => job.job_id === this.jobIdFromUrl)) {
+      const jobIndex = this.jobs.findIndex(job => job.job_id === this.jobIdFromUrl);
+      if (jobIndex > 0) {
+        const [selectedJob] = this.jobs.splice(jobIndex, 1);
+        this.jobs.unshift(selectedJob);
+      }
+      // Find the full job object to select it
+      const jobToSelect = this.jobs.find(j => j.job_id === this.jobIdFromUrl);
+      if (jobToSelect) {
+        this.selectJob(jobToSelect);
+      }
+    } else if (this.jobs.length > 0) {
+      this.selectJob(this.jobs[0]);
+    } else {
+      this.clickedIndex = null;
+      this.jobSelected.emit(undefined);
+    }
+  }
+
 
   get selectedJobId(): number | null {
   return this.clickedIndex !== null && this.jobs[this.clickedIndex] 
@@ -145,12 +183,28 @@ export class JobCardsComponent implements OnInit, OnChanges {
    * @param jobId The ID of the job that was clicked.
    */
 
-public selectJob(jobId: number): void {
-    console.log(`[JobCardsComponent] selectJob: Job card with ID ${jobId} was clicked.`);
-    const clickedJobIndex = this.jobs.findIndex(job => job.job_id === jobId);
+public selectJob(job: any): void {
+    console.log(`[JobCardsComponent] Selecting job:`, job);
+    if (!job) return;
+
+    const clickedJobIndex = this.jobs.findIndex(j => j.job_id === job.job_id);
     if (clickedJobIndex !== -1) {
       this.clickedIndex = clickedJobIndex;
     }
-    this.jobSelected.emit(jobId);
+    
+    // ---- EDIT: THIS IS THE KEY CHANGE. ----
+    // Instead of emitting an event, we update the URL's query parameters.
+    // The details component, which is listening to the URL, will automatically update.
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        jobId: job.job_id,
+        score: job.matching_score ?? 0 // Use the score from the job object
+      },
+      queryParamsHandling: 'merge', // Keep other query params if any
+    });
+
+    // We can still emit the ID for other potential listeners.
+    this.jobSelected.emit(job.job_id);
   }
 }

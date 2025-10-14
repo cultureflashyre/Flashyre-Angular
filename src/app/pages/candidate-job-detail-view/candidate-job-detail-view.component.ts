@@ -7,7 +7,7 @@ import { Title, Meta } from '@angular/platform-browser';
   styleUrls: ['./candidate-job-detail-view.component.css'],
 })
 export class CandidateJobDetailView {
-  selectedJobId: number | null = null;
+  //selectedJobId: number | null = null;
   public activeTab: 'recommended' | 'saved' = 'recommended';
 
   // --- [NEW] Properties to store the dynamic counts ---
@@ -25,10 +25,10 @@ export class CandidateJobDetailView {
     ]);
   }
 
-  onJobSelected(jobId: number): void {
-    console.log('Received jobId in parent:', jobId);
-    this.selectedJobId = jobId;
-  }
+  // onJobSelected(jobId: number): void {
+  //   console.log('Received jobId in parent:', jobId);
+  //   this.selectedJobId = jobId;
+  // }
 
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {

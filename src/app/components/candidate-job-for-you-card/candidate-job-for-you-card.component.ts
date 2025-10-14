@@ -297,7 +297,10 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges 
       !target.closest('.candidate-job-for-you-card-icon16')
     ) {
       this.router.navigate(['/candidate-job-detail-view'], {
-        queryParams: { jobId: this.jobId },
+        queryParams: { 
+          jobId: this.jobId,
+          score: this.matchingScore || 0 // The 'score' property is now INSIDE queryParams
+        }
       });
     }
   }

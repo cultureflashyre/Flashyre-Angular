@@ -219,77 +219,104 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * This prevents conflicts and ensures consistent search results.
    */
   private runFilterPipeline(): void {
-  let tempJobs = [...this.jobs];
+    let tempJobs = [...this.jobs];
+    console.log('Jobs:', tempJobs);
 
-  // --- RESTORED: Logic for the 3 main search bars ---
-  const mainKeyword = this.searchJobTitle.toLowerCase().trim();
-  if (mainKeyword) {
-    tempJobs = tempJobs.filter(job => 
-      (job.title || '').toLowerCase().includes(mainKeyword) ||
-      (job.description || '').toLowerCase().includes(mainKeyword) ||
-      (job.company_name || '').toLowerCase().includes(mainKeyword)
-    );
-  }
-
-  const mainLocation = this.searchLocation.toLowerCase().trim();
-  if (mainLocation) {
-    tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
-  }
-
-  const mainExperience = this.searchExperience.trim();
-  if (mainExperience) {
-    const candidateExp = this.parseFirstNumber(mainExperience);
-    if (candidateExp !== null) {
-      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    // --- MAIN SEARCH BARS (No changes to Keyword and Location) ---
+    const mainKeyword = this.searchJobTitle.toLowerCase().trim();
+    if (mainKeyword) {
+      tempJobs = tempJobs.filter(job => 
+        (job.title || '').toLowerCase().includes(mainKeyword) ||
+        (job.description || '').toLowerCase().includes(mainKeyword) ||
+        (job.company_name || '').toLowerCase().includes(mainKeyword)
+      );
     }
-  }
 
-  // --- "More Filters" Popup Logic ---
+    const mainLocation = this.searchLocation.toLowerCase().trim();
+    if (mainLocation) {
+      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
+    }
 
-  // Date Posted Filter
-  if (this.searchDatePosted) {
-    const now = new Date();
-    let cutoffDate = new Date();
-    if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
-    else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
-    else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+    // ---- CORRECTED LOGIC 1: EXPERIENCE FILTER (Main Bar) ----
+    // This logic is now copied from the working recruiter view.
+    const mainExperience = this.parseFirstNumber(this.searchExperience);
+    if (mainExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            mainExperience >= j.total_experience_min &&
+            mainExperience <= j.total_experience_max
+        );
+    }
+
+
+    // --- "MORE FILTERS" POPUP LOGIC ---
+
+    // Date Posted Filter (No changes here)
+    if (this.searchDatePosted) {
+      const now = new Date();
+      let cutoffDate = new Date();
+      if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
+      else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
+      else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+      
+      tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
+    }
+
+    // ---- CORRECTED LOGIC 1: EXPERIENCE FILTER (More Filters Popup) ----
+    // This logic is now copied from the working recruiter view.
+    const popupExperience = this.parseFirstNumber(this.searchExperienceLevel);
+    if (popupExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            popupExperience >= j.total_experience_min &&
+            popupExperience <= j.total_experience_max
+        );
+    }
+
+    // ---- CORRECTED LOGIC 2: COMPANY NAME FILTER ----
+    // This logic is now copied from the working recruiter view.
+    if (this.searchCompanyName && this.searchCompanyName.trim()) {
+        const searchCompany = this.searchCompanyName.toLowerCase().trim();
+        tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
+    }
     
-    tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
-  }
-
-  // Experience Filter (from popup)
-  if (this.searchExperienceLevel && this.searchExperienceLevel.trim()) {
-    const candidateExp = this.parseFirstNumber(this.searchExperienceLevel);
-    if (candidateExp !== null) {
-      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    // ---- CORRECTED LOGIC 3: SALARY FILTER ----
+    // This logic is now copied from the working recruiter view.
+    const searchSal = this.parseFirstNumber(this.searchSalary);
+    if (searchSal !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.min_budget != null && j.max_budget != null &&
+            searchSal >= j.min_budget && searchSal <= j.max_budget
+        );
     }
+
+    // ---- CORRECTED LOGIC 4: WORK MODE FILTER ----
+    // This logic is now copied from the working recruiter view.
+    if (this.searchWorkMode) {
+        tempJobs = tempJobs.filter(j => (j.workplace_type || '').toLowerCase() === this.searchWorkMode.toLowerCase());
+    }
+
+    // Job Type Filter (No changes here)
+    if (this.searchJobType) {
+      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
+    }
+
+    // Role Filter (No changes here)
+    if (this.searchRole && this.searchRole.trim()) {
+      const searchRol = this.searchRole.toLowerCase().trim();
+      tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
+    }
+    
+    // --- Finalize and Update UI ---
+    this.filteredJobs = tempJobs;
+    const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
+    this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
+
+    this.currentPage = 0;
+    this.displayedJobs = [];
+    this.loadNextPage();
+    this.setupInfiniteScroll();
   }
-
-  // Job Type Filter
-  if (this.searchJobType) {
-    tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
-  }
-
-  // Role Filter
-  if (this.searchRole && this.searchRole.trim()) {
-    const searchRol = this.searchRole.toLowerCase().trim();
-    tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
-  }
-  
-  // NOTE: Salary and Work Mode filters for candidate are still placeholders
-  // as per the previous discussion, pending backend data.
-
-  // --- Finalize and Update UI ---
-  this.filteredJobs = tempJobs;
-  // ... (rest of the method remains the same)
-  const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
-  this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
-
-  this.currentPage = 0;
-  this.displayedJobs = [];
-  this.loadNextPage();
-  this.setupInfiniteScroll();
-}
   
   /**
    * Handles opening the filter popup and setting its initial tab.
@@ -431,6 +458,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
             //console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
           }
         });
+        this.jobService.updateJobsInCache(this.displayedJobs);
       },
       (error) => {
         console.error('Failed to fetch match scores for jobs:', error);

@@ -32,7 +32,7 @@ body {
   height: 100%;
   width: 0;
   background-color: #4D91C6;
-  transition: width 0.2s ease;
+  /* transition: width 0.2s ease; */
 }
 
 .score {
@@ -120,7 +120,7 @@ body {
 }
 
 .candidate-job-details-company-name-role-location-container {
-  gap: 8px;
+  gap: 16px;
   flex: 0 0 auto;
   width: 521px;
   height: auto;
@@ -204,6 +204,8 @@ body {
   width: auto;
   height: auto;
   display: flex;
+  margin-top: 8px;
+  margin-bottom: 8px;
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;

@@ -11,91 +11,102 @@
     <span>{{ successMessage }}</span>
   </div>
 
-  <!-- Show job details if no error -->
+  <!-- ---- EDIT: The Main Container is now split into two parts. ---- -->
+  <!-- Part 1: The Job Header and Score. This part shows up faster. -->
   <div
     id="job-details-main-container"
     class="candidate-job-details-job-details-main-container"
     *ngIf="!errorMessage"
   >
     <div class="candidate-job-details-job-details-container">
+      <!-- ---- EDIT: This container for the company/role will now show a loading state. ---- -->
       <div
         id="company-name-role-location-container"
         class="candidate-job-details-company-name-role-location-container"
       >
-        <div
-          id="company-image-name-container"
-          class="candidate-job-details-company-image-name-container"
-        >
+        <!-- This content will only appear AFTER the job is loaded -->
+        <div *ngIf="job">
           <div
-            id="image-container"
-            class="candidate-job-details-image-container"
+            id="company-image-name-container"
+            class="candidate-job-details-company-image-name-container"
           >
-            <img *ngIf="job.logo; else initialsAvatar"
-              id="Image"
-              [attr.alt]="job.company_name + ' logo'"
-              [attr.src]="job.logo"
-              class="candidate-job-details-image"
-            />
-            <ng-template #initialsAvatar>
-              <div class="avatar-icon">
-                {{ job.initials }}
-              </div>
-            </ng-template>
-          </div>
-          <span
-            id="company-name-text"
-            class="candidate-job-details-company-name-text"
-          >
-            <ng-container>
-              <ng-template #defaultText>
-                <div class="candidate-job-details-fragment3">
-                  <span class="candidate-job-details-text12">{{ job.company_name }}</span>
+            <div
+              id="image-container"
+              class="candidate-job-details-image-container"
+            >
+              <img *ngIf="job.logo; else initialsAvatar"
+                id="Image"
+                [attr.alt]="job.company_name + ' logo'"
+                [attr.src]="job.logo"
+                class="candidate-job-details-image"
+              />
+              <ng-template #initialsAvatar>
+                <div class="avatar-icon">
+                  {{ job.initials }}
                 </div>
               </ng-template>
-              <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
-            </ng-container>
-          </span>
-          <div
-            id="progress-bar-container"
-            class="candidate-job-details-progress-bar-container"
-          >
-            <div class="progress-container mobile" *ngIf="isMobile">
-              <div class="progress">
-                <div #mobileBar class="bar" [style.width.%]="progress" [style.backgroundColor]="fillColor"></div>
+            </div>
+            <span
+              id="company-name-text"
+              class="candidate-job-details-company-name-text"
+            >
+              <ng-container>
+                <ng-template #defaultText>
+                  <div class="candidate-job-details-fragment3">
+                    <span class="candidate-job-details-text12">{{ job.company_name }}</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>
+              </ng-container>
+            </span>
+            <div
+              id="progress-bar-container"
+              class="candidate-job-details-progress-bar-container"
+            >
+              <div class="progress-container mobile" *ngIf="isMobile">
+                <div class="progress">
+                  <div #mobileBar class="bar" [style.width.%]="progress" [style.backgroundColor]="fillColor"></div>
+                </div>
+                <span class="score">{{ progress | number:'1.0-0' }}%</span>
               </div>
-              <span class="score">{{ progress | number:'1.0-0' }}%</span>
             </div>
           </div>
-        </div>
-        <div
-          id="job-role-container"
-          class="candidate-job-details-job-role-container"
-        >
-          <span id="job-role-text" class="candidate-job-details-job-role-text">
+          <div
+            id="job-role-container"
+            class="candidate-job-details-job-role-container"
+          >
+            <span id="job-role-text" class="candidate-job-details-job-role-text">
+              <ng-container>
+                <ng-template #defaultText1>
+                  <div class="candidate-job-details-fragment5">
+                    <span class="candidate-job-details-text14">{{ job.title }}</span>
+                  </div>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <span id="location-text" class="candidate-job-details-location-text">
             <ng-container>
-              <ng-template #defaultText1>
-                <div class="candidate-job-details-fragment5">
-                  <span class="candidate-job-details-text14">{{ job.title }}</span>
+              <ng-template #defaultText2>
+                <div class="candidate-job-details-fragment4">
+                  <span class="candidate-job-details-text13">
+                    {{ job.location }} ({{ job.job_type }}) | Posted {{ job.created_at | date: 'shortDate' }}
+                  </span>
                 </div>
               </ng-template>
-              <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+              <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
             </ng-container>
           </span>
         </div>
-        <span id="location-text" class="candidate-job-details-location-text">
-          <ng-container>
-            <ng-template #defaultText2>
-              <div class="candidate-job-details-fragment4">
-                <span class="candidate-job-details-text13">
-                  {{ job.location }} ({{ job.job_type }}) | Posted {{ job.created_at | date: 'shortDate' }}
-                </span>
-              </div>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
-          </ng-container>
-        </span>
+        <!-- ---- EDIT: Added a simple loading message that shows while job is null ---- -->
+        <div *ngIf="!job">
+          <p>Loading job details...</p>
+        </div>
       </div>
+      <!-- This content will only appear AFTER the job is loaded -->
       <div
+        *ngIf="job"
         id="apply-take-assessment-button-container"
         class="candidate-job-details-apply-take-assessment-button-container"
       >
@@ -106,7 +117,7 @@
         >
           <span *ngIf="!isProcessing && !isApplied">Apply</span>
           <span *ngIf="isProcessing && !isApplied">Applying...</span>
-          <span *ngIf="isApplied">  
+          <span *ngIf="isApplied">
             <span class="tick-mark">✓</span> Applied Successfully
           </span>
         </button>
@@ -119,7 +130,6 @@
           [ngClass]="{'disabled': (job.attempts_remaining || 0) <= 0}"
           (click)="(job.attempts_remaining || 0) > 0 && navigateToAssessment(job.assessment)"
           [title]="(job.attempts_remaining || 0) + ' ' + (job.attempts_remaining === 1 ? 'attempt' : 'attempts') + ' remaining'"
-        
         >
           <span
             id="take-assessment-text"
@@ -137,7 +147,11 @@
         </button>
       </div>
     </div>
+
+    <!-- ---- EDIT: This Score Container is now OUTSIDE the job details container above. ---- -->
+    <!-- It has its own *ngIf so it can appear instantly. -->
     <div
+      *ngIf="matchingScore !== null"
       id="job-matching-score-container"
       class="candidate-job-details-job-matching-score-container"
     >
@@ -182,7 +196,10 @@
       </div>
     </div>
   </div>
+
+  <!-- Part 2: The Job Description. This part waits for the job data to be loaded. -->
   <span
+    *ngIf="job"
     id="about-the-job-text"
     class="candidate-job-details-about-the-job-text"
   >

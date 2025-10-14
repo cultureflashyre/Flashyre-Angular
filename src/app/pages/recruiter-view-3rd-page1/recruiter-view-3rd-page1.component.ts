@@ -216,7 +216,8 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     if (mainKeyword) {
         tempJobs = tempJobs.filter(job => 
             (job.role || '').toLowerCase().includes(mainKeyword) || // CHANGED: from 'job_role' to 'role'
-            (job.job_description || '').toLowerCase().includes(mainKeyword)
+            (job.description || '').toLowerCase().includes(mainKeyword) ||
+            (job.company_name || '').toLowerCase().includes(mainKeyword)
         );
     }
 
@@ -225,6 +226,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     if (mainLocation) {
         tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
     }
+    
 
     // Filter by Experience (from main search bar)
     const mainExperience = this.parseFirstNumber(this.searchExperience);

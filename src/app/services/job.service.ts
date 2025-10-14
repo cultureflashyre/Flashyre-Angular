@@ -168,4 +168,17 @@ export class JobsService {
     delete this.jobDetailsCache[jobId];
     this.jobsSubject.next([...this.jobsCache]);
   }
+
+   public updateJobsInCache(updatedJobs: any[]): void {
+    const jobsMap = new Map(updatedJobs.map(job => [job.job_id, job]));
+    this.jobsCache.forEach((job, index) => {
+      if (jobsMap.has(job.job_id)) {
+        // Replace the cached job with the fully updated one (which now includes the score)
+        this.jobsCache[index] = jobsMap.get(job.job_id)!;
+      }
+    });
+    // Notify subscribers that the job data has been updated
+    this.jobsSubject.next([...this.jobsCache]);
+    console.log('[JobsService] Job cache updated with matching scores.');
+  }
 }
