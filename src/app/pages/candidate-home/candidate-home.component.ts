@@ -401,7 +401,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
 
   private fetchAndAssignMatchScores(jobsToScore: any[]): void {
-  console.log('fetchAndAssignMatchScores called with jobsToScore:', jobsToScore);
+  console.log('Attempting to fetch match scores for the following jobs:', jobsToScore);
 
   const jobIds = jobsToScore.map(job => job.job_id).filter(id => id != null);
   console.log('Filtered jobIds to score:', jobIds);
@@ -418,16 +418,17 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         console.log('Received scoresMap from getMatchScores:', scoresMap);
 
         // Create a map for efficient lookup
-        const scores = new Map(Object.entries(scoresMap).map(([k, v]) => [parseInt(k, 10), v]));
-        console.log('Converted scores Map:', scores);
+        const scores = new Map(Object.entries(scoresMap).map(([key, value]) => [parseInt(key, 10), value]));
+        console.log('Processed scores into a lookup Map:', scores);
 
         // Assign scores to the jobs in the main displayedJobs array
         this.displayedJobs.forEach(job => {
           if (scores.has(job.job_id)) {
-            console.log(`Assigning matching_score to job_id ${job.job_id}:`, scores.get(job.job_id));
-            job.matching_score = scores.get(job.job_id);
+            const newScore = scores.get(job.job_id);
+            console.log(`Score FOUND for job_id ${job.job_id}. Assigning new score: ${newScore}`);
+            job.matching_score = newScore;
           } else {
-            console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
+            //console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
           }
         });
       },
