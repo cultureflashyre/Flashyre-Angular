@@ -334,11 +334,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
   private initializeJobs(): void {
     this.isLoading = true;
-    if (this.jobService.areJobsCached()) {
-      this.loadJobsFromCache();
-    } else {
-      this.fetchJobsFromAPI();
-    }
+    // --- [REMOVED] The problematic call to loadJobsFromCache() was removed ---
+    // The logic is now streamlined to always fetch fresh data, which is simpler and more reliable.
+    this.fetchJobsFromAPI();
   }
 
   private loadJobsFromCache(): void {
