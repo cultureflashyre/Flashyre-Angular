@@ -197,9 +197,10 @@
       </div>
     </div>
   </div>
-  <span
+   <span
     id="about-the-job-text"
     class="candidate-job-details-about-the-job-text"
+    *ngIf="jobId && !errorMessage"
   >
     <ng-container>
       <ng-template #defaultText3>

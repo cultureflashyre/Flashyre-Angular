@@ -99,7 +99,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.scrollToActiveQuestion();
   }
 
-  async ngOnInit(): Promise<void> {
+ async ngOnInit(): Promise<void> {
     this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
       this.terminateTest(true);
     });
@@ -108,14 +108,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.userId = localStorage.getItem('user_id');
     
     if (assessmentId && this.userId) {
+      // FIX: The unconditional call to start video recording has been removed from here.
       this.fetchAssessmentData(+assessmentId);
       this.startTime = new Date();
-      try {
-        await this.videoRecorder.startRecording(this.userId, assessmentId);
-        this.proctoringService.startMonitoring();
-      } catch (error) {
-        console.error('Failed to start assessment:', error);
-      }
     } else {
       console.error('No assessment ID or user ID provided');
       this.router.navigate(['/assessment-error']);
@@ -148,16 +143,39 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.cleanupResources();
   }
 
-  fetchAssessmentData(assessmentId: number): void {
+ fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
     this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
-      next: (data) => {
+      next: async (data) => { // Make sure 'async' is here
         console.log('Raw API response:', data);
         this.assessmentData = data;
+        
+        try {
+          // Step 1: Check for Proctoring (Tab Switching) independently.
+          // This is controlled by the "Proctored" checkbox.
+          if (data.proctored?.toUpperCase() === 'YES') {
+            console.log("Assessment is Proctored. Starting tab switch monitoring.");
+            this.proctoringService.startMonitoring();
+          } else {
+            console.log("Assessment is NOT Proctored. Tab switching will be allowed.");
+          }
+
+          // Step 2: Separately check for Video Recording.
+          // This is controlled by the "Allow Video Recording" checkbox.
+          if (data.video_recording?.toUpperCase() === 'YES') {
+            console.log("Video recording is required. Starting camera...");
+            await this.videoRecorder.startRecording(this.userId, String(assessmentId));
+          } else {
+            console.log("Video recording is NOT required for this assessment.");
+          }
+
+        } catch (error) {
+            console.error('Failed to conditionally start assessment services:', error);
+        }
+
+        // The rest of the function remains the same
         this.sections = [];
         this.processCustomizations(data.sections);
-        console.log('Processed sections:', this.sections);
-        console.log('First section questions:', this.sections[0]?.questions);
         this.totalSections = this.sections.length;
         this.timer = data.total_assessment_duration * 60;
         this.trialAssessmentService.updateTimer(this.timer);
@@ -166,6 +184,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (error) => {
         console.error('Error fetching assessment data:', error);
+        this.spinner.hide();
       },
       complete: () => {
         this.spinner.hide();
