@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, E
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
@@ -372,32 +372,77 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     return matches ? matches.map(num => parseInt(num, 10)) : []; 
   }
 
-  private filterAndDisplayJobs(jobs: any[]): void {
-    // Diagnostic log to help debug data mismatches
-    if (jobs && jobs.length > 0) {
-      console.log('SAMPLE JOB DATA FROM API:', jobs[0]);
-    }
+  // private filterAndDisplayJobs(jobs: any[]): void {
+  //   // Diagnostic log to help debug data mismatches
+  //   if (jobs && jobs.length > 0) {
+  //     console.log('SAMPLE JOB DATA FROM API:', jobs[0]);
+  //   }
 
-    this.authService.getAppliedJobs().subscribe(
-      (appliedJobsResponse) => {
-        this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
-        this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
-        this.filteredJobs = [...this.jobs];
-        this.currentPage = 0;
-        this.displayedJobs = [];
-        this.loadNextPage(); // This will now also trigger score fetching for the first page
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching applied jobs, proceeding without filtering:', error);
+  //   this.authService.getAppliedJobs().subscribe(
+  //     (appliedJobsResponse) => {
+  //       this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
+  //       this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+  //       this.filteredJobs = [...this.jobs];
+  //       this.currentPage = 0;
+  //       this.displayedJobs = [];
+  //       this.loadNextPage(); // This will now also trigger score fetching for the first page
+  //       this.isLoading = false;
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching applied jobs, proceeding without filtering:', error);
+  //       this.jobs = jobs;
+  //       this.filteredJobs = [...this.jobs];
+  //       this.currentPage = 0;
+  //       this.displayedJobs = [];
+  //       this.loadNextPage(); // This will now also trigger score fetching for the first page
+  //       this.isLoading = false;
+  //     }
+  //   );
+  // }
+
+  private filterAndDisplayJobs(jobs: any[]): void {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
         this.jobs = jobs;
         this.filteredJobs = [...this.jobs];
-        this.currentPage = 0;
-        this.displayedJobs = [];
-        this.loadNextPage(); // This will now also trigger score fetching for the first page
+        this.loadNextPage();
         this.isLoading = false;
-      }
-    );
+        return;
+    }
+
+    forkJoin({
+        applied: this.authService.getAppliedJobs(),
+        disliked: this.authService.getDislikedJobs(userId) // <-- Fetches disliked jobs
+    }).pipe(
+        takeUntil(this.destroy$)
+    ).subscribe({
+        next: ({ applied, disliked }) => {
+            const appliedJobIds = applied.applied_job_ids || [];
+            const dislikedJobIds = disliked.disliked_jobs.map((job: any) => job.job_id.toString()) || [];
+
+            // --- THIS LINE DOES THE FILTERING ON RELOAD ---
+            this.jobs = jobs.filter(job => 
+                !appliedJobIds.includes(job.job_id) && 
+                !dislikedJobIds.includes(job.job_id.toString())
+            );
+            // --- END OF FILTERING LOGIC ---
+            
+            this.filteredJobs = [...this.jobs];
+            this.currentPage = 0;
+            this.displayedJobs = [];
+            this.loadNextPage();
+            this.isLoading = false;
+        },
+        error: (error) => {
+            console.error('Error fetching applied/disliked jobs, showing all jobs as a fallback:', error);
+            this.jobs = jobs;
+            this.filteredJobs = [...this.jobs];
+            this.currentPage = 0;
+            this.displayedJobs = [];
+            this.loadNextPage();
+            this.isLoading = false;
+        }
+    });
   }
 
   private loadNextPage(): void {

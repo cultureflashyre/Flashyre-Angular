@@ -2,10 +2,16 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError, Subject } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from './candidate.service';
+
+export interface JobInteraction {
+  jobId: string;
+  type: 'dislike' | 'save';
+  state: boolean; // true if liked/saved, false if removed
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +20,10 @@ export class JobsService {
   private apiUrl = environment.apiUrl + 'api/jobs/';
   // [NEW] API URL for the job_saved app
   private savedJobsApiUrl = environment.apiUrl;
+
+  private jobInteractionSource = new Subject<JobInteraction>();
+
+  public jobInteraction$ = this.jobInteractionSource.asObservable();
 
 
   // --- Private State Management ---
@@ -180,5 +190,9 @@ export class JobsService {
     // Notify subscribers that the job data has been updated
     this.jobsSubject.next([...this.jobsCache]);
     console.log('[JobsService] Job cache updated with matching scores.');
+  }
+
+  notifyJobInteraction(jobId: string, type: 'dislike' | 'save', state: boolean): void {
+    this.jobInteractionSource.next({ jobId, type, state });
   }
 }

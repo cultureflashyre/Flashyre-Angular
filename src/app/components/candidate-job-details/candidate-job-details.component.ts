@@ -1,6 +1,6 @@
 // candidate-job-details.component.ts
 
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
@@ -49,11 +49,17 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   
   private attemptsFromNavigation: number | null = null;
 
+  isDisliked: boolean = false;
+  isSaved: boolean = false;
+  // Name for the disliked jobs browser cache.
+  private dislikedCacheName = 'disliked-jobs-cache-v1';
+
   constructor(
     private jobService: JobsService,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth < 767;
@@ -83,6 +89,18 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
     this.progress = 100.0;
     this.loadUserProfile();
+
+    this.jobService.jobInteraction$.pipe(takeUntil(this.destroy$)).subscribe(interaction => {
+      // Check if the event is for the job currently being viewed.
+      if (this.jobId && interaction.jobId === this.jobId.toString()) {
+        if (interaction.type === 'dislike') {
+          this.isDisliked = interaction.state;
+        } else if (interaction.type === 'save') {
+          this.isSaved = interaction.state;
+        }
+        this.cdr.detectChanges(); // Manually update the view to reflect the new state.
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -111,6 +129,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private fetchJobDetails(): void {
+    if (!this.jobId) return;
     this.loading = true;
     this.errorMessage = null;
     this.successMessage = null;
@@ -120,6 +139,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         this.job = data;
         this.job.attempts_remaining = data.attempts_remaining ?? this.attemptsFromNavigation;
         this.loading = false;
+        this.fetchInteractionStatus();
       },
       error: (err) => {
         this.resetJob();
@@ -128,6 +148,135 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       }
     });
   }
+
+  private async fetchInteractionStatus(): Promise<void> {
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+
+    if (!userId || !jobIdStr) {
+      return;
+    }
+
+    // Check the browser cache first for a faster UI response for disliked status.
+    const cachedDisliked = await this.getDislikedJobsFromCache(userId);
+    if (cachedDisliked) {
+      this.isDisliked = cachedDisliked.includes(jobIdStr);
+      this.cdr.detectChanges();
+    }
+    // Fetch the latest disliked status from the API.
+    this.authService.getDislikedJobs(userId).subscribe(response => {
+      const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
+      this.isDisliked = dislikedJobs.includes(jobIdStr);
+      this.cacheDislikedJobs(userId, dislikedJobs); // Update the cache with fresh data.
+      this.cdr.detectChanges();
+    });
+
+    // Fetch the saved status from the API.
+    this.authService.getSavedJobs(userId).subscribe(response => {
+      const savedJobIds = response.saved_jobs;
+      this.isSaved = savedJobIds.includes(this.jobId);
+      this.cdr.detectChanges();
+    });
+  }
+
+  onDislike(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isSaved) {
+      alert('You cannot dislike a job that is saved. Please unsave it first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
+
+    const action = this.isDisliked
+      ? this.authService.removeDislikedJob(userId, jobIdStr)
+      : this.authService.dislikeJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        this.isDisliked = !this.isDisliked;
+        this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
+        this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
+
+        if (this.isDisliked) {
+          alert('Job disliked successfully.');
+        } else {
+          alert('Dislike removed.');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error) => alert('Failed to update dislike status: ' + error.message),
+    });
+  }
+
+  /**
+   * Handles clicks on the Save icon.
+   * It toggles the saved state, updates the backend, and notifies other components.
+   */
+  onSave(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isDisliked) {
+      alert('You cannot save a job that is disliked. Please remove the dislike first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
+
+    // Determine whether to call the 'save' or 'remove saved' API endpoint.
+    const action = this.isSaved
+      ? this.authService.removeSavedJob(userId, jobIdStr)
+      : this.authService.saveJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        this.isSaved = !this.isSaved; // Toggle the local state.
+        // Broadcast this change to all other components.
+        this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
+        alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
+        this.cdr.detectChanges();
+      },
+      error: (error) => alert('Failed to update save status: ' + error.message)
+    });
+  }
+
+  // --- Caching Helper Methods for Disliked Jobs (copied from card component for consistency) ---
+  private async getDislikedJobsFromCache(userId: string): Promise<string[] | null> {
+    try {
+      const cache = await caches.open(this.dislikedCacheName);
+      const response = await cache.match(userId);
+      if (!response) return null;
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting disliked jobs from cache:', error);
+      return null;
+    }
+  }
+
+  private async cacheDislikedJobs(userId: string, dislikedJobs: string[]): Promise<void> {
+    try {
+      const cache = await caches.open(this.dislikedCacheName);
+      const response = new Response(JSON.stringify(dislikedJobs));
+      await cache.put(userId, response);
+    } catch (error) {
+      console.error('Error caching disliked jobs:', error);
+    }
+  }
+
+  private async updateDislikedJobsCache(userId: string, jobId: string, action: 'add' | 'remove'): Promise<void> {
+    const cachedJobs = await this.getDislikedJobsFromCache(userId) || [];
+    const jobExists = cachedJobs.includes(jobId);
+
+    if (action === 'add' && !jobExists) {
+      cachedJobs.push(jobId);
+    } else if (action === 'remove' && jobExists) {
+      const index = cachedJobs.indexOf(jobId);
+      cachedJobs.splice(index, 1);
+    }
+    await this.cacheDislikedJobs(userId, cachedJobs);
+  }
+
 
   private resetJob(): void {
     this.job = null;
