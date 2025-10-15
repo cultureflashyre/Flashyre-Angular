@@ -170,13 +170,11 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // NEW LOGIC: Check for existing assessment first
-    this.checkAndLoadAssessment(); // Load AI generated MCQ question if available
-
-    this.loadExistingExcelUploadQuestions(); // Load Excel Uploaded MCQ question if available
-
-    this.fetchCodingProblems(); // Load Coding Assessment questions if available
-
+    // --- CORRECTED ngOnInit ---
+    // Only these three calls should be here.
+    this.loadInitialData();
+    this.loadExistingExcelUploadQuestions();
+    this.fetchCodingProblems();
   }
 
    /**
@@ -185,7 +183,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * 2. Initializes the UI with correct loading/completed states.
    * 3. Fetches data for skills that are already done.
    * 4. Kicks off the sequential background generation for pending skills.
-   */private loadInitialData(): void {
+   */
+  private loadInitialData(): void {
     const token = this.authService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error.');
