@@ -10,7 +10,7 @@ import { UserProfileService } from './user-profile.service';
   providedIn: 'root'
 })
 export class EducationService {
-  private apiUrl = `${environment.apiUrl}api/education/`;
+  private apiUrl = `${environment.apiUrl}api/education/sync/`;
   private referenceDataUrl = `${environment.apiUrl}api/reference-data/`;
 
   constructor(
@@ -22,31 +22,44 @@ export class EducationService {
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('jwtToken');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token || ''}`
     });
   }
 
-addEducation(educationData: any): Observable<any> {
-  this.spinner.show();
+  saveEducation(educationData: any[]): Observable<any> {
+    this.spinner.show();
+    
+    return this.http.post(this.apiUrl, educationData, { headers: this.getAuthHeaders() }).pipe(
+      retry(1),
+      tap(() => {
+        this.userProfileService.refreshUserProfileValues().subscribe({
+          next: () => console.log('User profile refreshed after saving education'),
+          error: err => console.error('Error refreshing user profile', err),
+        });
+      }),
+      catchError(error => {
+        console.error('Full backend error:', error);
+        const errorDetail = error.error;
+        let errorMessage = 'Failed to save education data. Please check your entries.';
+        
+        if (typeof errorDetail === 'object' && errorDetail !== null) {
+            const errorArrays = Object.values(errorDetail) as string[][];
+            
+            // --- FIX APPLIED HERE ---
+            // Replaced .flat() with the universally compatible .reduce() method.
+            // This flattens the array of arrays into a single array of strings.
+            const flattenedErrors = errorArrays.reduce((acc, val) => acc.concat(val), []);
 
-  return this.http.post(this.apiUrl, educationData, { headers: this.getAuthHeaders() }).pipe(
-    retry(1),
-    tap(() => {
-      // Asynchronously refresh user profile after successful save
-      this.userProfileService.refreshUserProfileValues().subscribe({
-        next: () => console.log('User profile refreshed after adding education'),
-        error: err => console.error('Error refreshing user profile', err),
-      });
-    }),
-    catchError(error => {
-      console.error('Full backend error:', error);
-      const errorMessage = error.error || 'Failed to save education';
-      return throwError(() => new Error(JSON.stringify(errorMessage)));
-    }),
-    finalize(() => this.spinner.hide())
-  );
-}
-
+            errorMessage = flattenedErrors.join(' ');
+        } else if (typeof errorDetail === 'string') {
+            errorMessage = errorDetail;
+        }
+        
+        return throwError(() => new Error(errorMessage));
+      }),
+      finalize(() => this.spinner.hide())
+    );
+  }
 
   getReferenceData(): Observable<any> {
     this.spinner.show();

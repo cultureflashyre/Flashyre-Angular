@@ -27,7 +27,7 @@
     </span>
 
     <!-- Form for certifications -->
-    <form [formGroup]="certificationForm" (ngSubmit)="submitCertification()">
+    <form [formGroup]="certificationForm">
       <div formArrayName="certifications">
         <div
           *ngFor="let cert of certifications.controls; let i = index"
