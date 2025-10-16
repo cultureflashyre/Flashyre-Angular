@@ -50,89 +50,71 @@ export class ProfileEducationComponent implements OnInit {
     private router: Router
   ) {}
 
-ngOnInit(): void {
-  this.isLoading = true;
-  this.errorMessage = null;
-
-  const userProfileString = localStorage.getItem('userProfile');
-  if (userProfileString) {
-    try {
-      const userProfile = JSON.parse(userProfileString);
-      if (userProfile.educations && Array.isArray(userProfile.educations) && userProfile.educations.length > 0) {
-        // Load reference data first
-        this.educationService.getReferenceData().subscribe({
-          next: (data: ReferenceData) => {
-            this.universities = data.colleges;
-            this.educationLevels = data.education_levels;
-            this.courses = data.courses;
-            this.specializations = data.specializations;
-
-            this.educationForms = []; // reset
-
-            userProfile.educations.forEach((edu: any) => {
-              const form = this.createEducationForm();
-              form.patchValue({
-                startDate: edu.start_date || '',
-                endDate: edu.end_date || '',
-                university: this.getDropdownIdByName(this.universities, edu.university),
-                educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
-                course: this.getDropdownIdByName(this.courses, edu.course),
-                specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
-              });
-              this.educationForms.push(form);
-            });
-
-            this.isLoading = false;
-          },
-          error: (err) => {
-            this.errorMessage = 'Failed to load dropdown data';
-            this.addNewForm();
-            this.isLoading = false;
-          }
-        });
-        return;
-      }
-    } catch (e) {
-      console.warn('Error parsing userProfile from localStorage', e);
-    }
-  }
-
-  // Fallback for no localStorage data or errors
-  this.loadReferenceData();
-}
-
-  loadReferenceData(): void {
+  ngOnInit(): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.educationService.getReferenceData().pipe(
-      tap((data: ReferenceData) => {
-        console.log('Reference data received:', data);
+    const userProfileString = localStorage.getItem('userProfile');
+
+    // Always fetch reference data first
+    this.educationService.getReferenceData().subscribe({
+      next: (data: ReferenceData) => {
         this.universities = data.colleges;
         this.educationLevels = data.education_levels;
         this.courses = data.courses;
         this.specializations = data.specializations;
 
-        this.addNewForm();
-      }),
-      catchError(error => {
-        this.errorMessage = error.message || 'Failed to load dropdown data';
-        this.addNewForm();
-        return [];
-      })
-    ).subscribe({
-      complete: () => (this.isLoading = false)
+        this.educationForms = []; // Reset forms array
+
+        // Now that we have dropdown data, check for existing user profile data
+        if (userProfileString) {
+          try {
+            const userProfile = JSON.parse(userProfileString);
+            if (userProfile.educations && Array.isArray(userProfile.educations) && userProfile.educations.length > 0) {
+              userProfile.educations.forEach((edu: any) => {
+                const form = this.createEducationForm();
+                form.patchValue({
+                  id: edu.id || null, // <<< POPULATE THE ID
+                  startDate: edu.start_date || '',
+                  endDate: edu.end_date || '',
+                  university: this.getDropdownIdByName(this.universities, edu.university),
+                  educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
+                  course: this.getDropdownIdByName(this.courses, edu.course),
+                  specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
+                });
+                this.educationForms.push(form);
+              });
+            } else {
+              // If user has a profile but no educations, add one empty form
+              this.addNewForm();
+            }
+          } catch (e) {
+            console.warn('Error parsing userProfile from localStorage', e);
+            this.addNewForm();
+          }
+        } else {
+          // If no profile exists at all, add one empty form
+          this.addNewForm();
+        }
+
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to load dropdown data. Please try again.';
+        this.isLoading = false;
+      }
     });
   }
-
-private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | '' {
-  if (!name) return '';
-  const item = dropdownList.find(d => d.name === name);
-  return item ? item.id : '';
-}
+  
+  private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | '' {
+    if (!name) return '';
+    const item = dropdownList.find(d => d.name.toLowerCase() === name.toLowerCase());
+    return item ? item.id : '';
+  }
 
   private createEducationForm(): FormGroup {
     return this.fb.group({
+      id: [null], // <<< ADD THE ID CONTROL
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       university: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
@@ -161,84 +143,50 @@ private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number 
   }
 
   removeForm(index: number): void {
+    // If the form has an ID, it means it exists in the database.
+    // We will handle its deletion on the backend during the sync.
+    // For now, just remove it from the UI.
     this.educationForms.splice(index, 1);
   }
 
   saveEducation(): Promise<boolean> {
     return new Promise((resolve) => {
-      const validForms = this.educationForms.filter(form => form.valid);
-      if (!validForms.length) {
-        console.log('No valid forms to save');
+      // Mark all fields as touched to trigger validation messages
+      this.educationForms.forEach(form => form.markAllAsTouched());
+
+      const invalidForms = this.educationForms.filter(form => form.invalid);
+      if (invalidForms.length > 0) {
         this.errorMessage = 'Please fill out all required fields correctly.';
         resolve(false);
         return;
       }
 
-      const saveObservables = validForms.map(form => {
-        console.log('Raw form values:', form.value);
-
-        // Validate that all dropdown fields have valid IDs
-        if (!form.value.university || !form.value.educationLevel || !form.value.course || !form.value.specialization) {
-          console.error('Invalid or missing dropdown selections:', form.value);
-          this.errorMessage = 'Please select valid options for all dropdowns.';
-          return [];
-        }
-
-        // Map IDs to names
-        const university = this.universities.find(u => u.id === +form.value.university)?.name;
-        const educationLevel = this.educationLevels.find(e => e.id === +form.value.educationLevel)?.name;
-        const course = this.courses.find(c => c.id === +form.value.course)?.name;
-        const specialization = this.specializations.find(s => s.id === +form.value.specialization)?.name;
-
-        // Check if any mapped value is undefined
-        if (!university || !educationLevel || !course || !specialization) {
-          console.error('Invalid mapped values:', { university, educationLevel, course, specialization });
-          this.errorMessage = 'One or more selected options are invalid.';
-          return [];
-        }
-
-        const data = {
-          select_start_date: form.value.startDate,
-          select_end_date: form.value.endDate,
-          university: university,
-          education_level: educationLevel,
-          course: course,
-          specialization: specialization
+      // Map the form data to the payload expected by the backend
+      const payload = this.educationForms.map(form => {
+        const formValue = form.value;
+        return {
+          id: formValue.id, // Include the ID
+          select_start_date: formValue.startDate || null,
+          select_end_date: formValue.endDate || null,
+          university: this.universities.find(u => u.id === +formValue.university)?.name,
+          education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
+          course: this.courses.find(c => c.id === +formValue.course)?.name,
+          specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
         };
-
-        console.log('Sending data to backend:', JSON.stringify(data, null, 2));
-        return this.educationService.addEducation(data).pipe(
-          catchError(error => {
-            console.error('Error saving form:', error);
-            let errorMessage = 'Failed to save education data';
-            try {
-              const parsedError = JSON.parse(error.message);
-              errorMessage = typeof parsedError === 'object' ? Object.values(parsedError).join('; ') : parsedError;
-            } catch (e) {
-              errorMessage = error.message || 'Unknown error occurred';
-            }
-            this.errorMessage = errorMessage;
-            return [];
-          })
-        );
       });
 
-      forkJoin(saveObservables).subscribe({
-        next: () => {
-          console.log('All educations saved successfully');
+      console.log('Sending payload to backend:', payload);
+
+      // Call the service with the entire payload
+      this.educationService.saveEducation(payload).subscribe({
+        next: (response) => {
+          console.log('All educations saved successfully:', response);
           this.errorMessage = null;
           resolve(true);
         },
         error: (error) => {
           console.error('Error saving educations:', error);
-          let errorMessage = 'Failed to save education data';
-          try {
-            const parsedError = JSON.parse(error.message);
-            errorMessage = typeof parsedError === 'object' ? Object.values(parsedError).join('; ') : parsedError;
-          } catch (e) {
-            errorMessage = error.message || 'Unknown error occurred';
-          }
-          this.errorMessage = errorMessage;
+          this.errorMessage = error.message || 'An unknown error occurred while saving.';
           resolve(false);
         }
       });
@@ -257,6 +205,3 @@ private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number 
     return item.id || index;
   }
 }
-
-
-
