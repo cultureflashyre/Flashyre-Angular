@@ -6,6 +6,16 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { JobDetails, AIJobResponse } from '../pages/admin-create-job-step1/types';
 import { environment } from '../../environments/environment';
 
+
+// --- MODIFICATION START ---
+// Define a more specific type for the upload response
+interface ExcelUploadResponse {
+  file_url: string;
+  unique_id: string;
+  uploaded_mcqs: any; // Contains the newly created questions object
+}
+// --- MODIFICATION END ---
+
 @Injectable({ providedIn: 'root' })
 export class AdminJobDescriptionService {
   
@@ -64,7 +74,7 @@ export class AdminJobDescriptionService {
       );
   }
 
-  uploadExcelFile(file: File, jobUniqueId:string, token: string): Observable<{ file_url: string; unique_id: string }> {
+  uploadExcelFile(file: File, jobUniqueId:string, token: string): Observable<ExcelUploadResponse> {
     if (!file) {
       console.error('No file provided for upload');
       return throwError(() => new Error('No file selected for upload'));
@@ -91,12 +101,14 @@ export class AdminJobDescriptionService {
 
     const endpoint = `${this.apiUrl}upload-mcq-excel/`; // adjust to your backend URL
 
-    return this.http.post<{ status: string; data: { file_url: string; unique_id: string } }>(
+    // --- MODIFICATION START ---
+    // Adjusted the http.post call to expect the new response structure
+    return this.http.post<{ status: string; data: ExcelUploadResponse }>(
       endpoint,
       formData,
       { headers }
     ).pipe(
-      tap(response => console.log('Raw uploadExcelFile response:', response)),
+    // --- MODIFICATION END ---      tap(response => console.log('Raw uploadExcelFile response:', response)),
       map(response => {
         if (response.status === 'success' && response.data) {
           return response.data;
