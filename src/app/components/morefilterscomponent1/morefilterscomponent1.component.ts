@@ -1,4 +1,5 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';import { CandidatePreferenceService } from '../../services/candidate-preference.service';
+import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
 
 @Component({
   selector: 'app-morefilterscomponent1',
@@ -40,22 +41,38 @@ export class Morefilterscomponent1 implements OnChanges {
   // Filter properties
   filterDatePosted: string = '';
   filterExperienceLevel: string = '';
-  // filterDepartment: string = '';
+  filterDepartment: string = '';
   filterSalary: string = '';
   filterLocation: string = '';
   filterCompanyName: string = '';
-  // filterIndustries: string = '';
+  filterIndustries: string = '';
   filterWorkMode: string = '';
   filterRole: string = '';
   filterJobType: string = '';
+
+  recJobType: string = '';
 
   // Outputs for actions
   @Output() applyFiltersEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() savePreferenceEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private preferenceService: CandidatePreferenceService) {}
+  constructor(
+    private preferenceService: CandidatePreferenceService,
+    private recruiterPreferenceService: RecruiterPreferenceService
+  ) {}
+
+  @Input() callerType: 'candidate' | 'recruiter' = 'candidate';
 
   ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['callerType']) {
+      if (this.callerType === 'recruiter') {
+        console.log("[MORE FILTERS-1] callerType: ",this.callerType);
+        this.recJobType = this.recruiterPreferenceService.getActiveTab();
+        console.log("[MORE FILTERS-1] rec Job Type: ",this.recJobType);
+      }
+    }
+
     // Check if the 'preferenceToLoad' input has changed and has a value
     if (changes.preferenceToLoad && changes.preferenceToLoad.currentValue) {
       const data = changes.preferenceToLoad.currentValue;
@@ -63,11 +80,11 @@ export class Morefilterscomponent1 implements OnChanges {
       // Populate all the filter fields with data from the preference
       this.filterDatePosted = data.date_posted || '';
       this.filterExperienceLevel = data.experience_level || '';
-      // this.filterDepartment = data.department || '';
+      this.filterDepartment = data.department || '';
       this.filterSalary = data.salary || '';
       this.filterLocation = data.location || '';
       this.filterCompanyName = data.company_name || '';
-      // this.filterIndustries = data.industries || '';
+      this.filterIndustries = data.industries || '';
       this.filterWorkMode = data.work_mode || '';
       this.filterRole = data.role || '';
       this.filterJobType = data.job_type || '';
@@ -77,11 +94,11 @@ export class Morefilterscomponent1 implements OnChanges {
   resetFilters(): void {
     this.filterDatePosted = '';
     this.filterExperienceLevel = '';
-    // this.filterDepartment = '';
+    this.filterDepartment = '';
     this.filterSalary = '';
     this.filterLocation = '';
     this.filterCompanyName = '';
-    // this.filterIndustries = '';
+    this.filterIndustries = '';
     this.filterWorkMode = '';
     this.filterRole = '';
     this.filterJobType = '';
@@ -91,11 +108,11 @@ export class Morefilterscomponent1 implements OnChanges {
     const filters = {
       datePosted: this.filterDatePosted,
       experienceLevel: this.filterExperienceLevel,
-      // department: this.filterDepartment,
+      department: this.filterDepartment,
       salary: this.filterSalary,
       location: this.filterLocation,
       companyName: this.filterCompanyName,
-      // industries: this.filterIndustries,
+      industries: this.filterIndustries,
       workMode: this.filterWorkMode,
       role: this.filterRole,
       jobType: this.filterJobType
@@ -107,22 +124,59 @@ export class Morefilterscomponent1 implements OnChanges {
     const filters = {
       date_posted: this.filterDatePosted,
       experience_level: this.filterExperienceLevel,
-      // department: this.filterDepartment,
+      department: this.filterDepartment,
       salary: this.filterSalary,
       location: this.filterLocation,
       company_name: this.filterCompanyName,
-      // industries: this.filterIndustries,
+      industries: this.filterIndustries,
       work_mode: this.filterWorkMode,
       role: this.filterRole,
       job_type: this.filterJobType
     };
 
-    if (Object.values(filters).every(value => value === '' || value === null)) {
+    // Check if at least one field is filled
+    if (Object.values(filters).every(value => value === '')) {
       alert('Please fill in at least one field to save a preference.');
       return;
     }
 
-    // EMIT THE DATA INSTEAD OF SAVING IT
-    this.savePreferenceEvent.emit(filters);
+    if (this.callerType === 'recruiter') {
+      this.recruiterPreferenceService.getPreferences().subscribe(preferences => {
+        if (preferences.length >= 3) {
+          alert('You can only save up to 3 preferences.');
+        } else {
+          this.recruiterPreferenceService.savePreference(filters, this.recJobType).subscribe(
+            response => {
+              console.log('Preference saved successfully!', response);
+              this.savePreferenceEvent.emit(filters);
+              alert('Preference saved!');
+            },
+            error => {
+              console.error('Error saving preference:', error);
+              alert('Failed to save preference.');
+            }
+          );
+        }
+      });
+    } else {
+      this.preferenceService.getPreferences().subscribe(preferences => {
+        if (preferences.length >= 3) {
+          alert('You can only save up to 3 preferences.');
+        } else {
+          this.preferenceService.savePreference(filters).subscribe(
+            response => {
+              console.log('Preference saved successfully!', response);
+              this.savePreferenceEvent.emit(filters);
+              alert('Preference saved!');
+            },
+            error => {
+              console.error('Error saving preference:', error);
+              alert('Failed to save preference.');
+            }
+          );
+        }
+      });
+    }
+    
   }
 }

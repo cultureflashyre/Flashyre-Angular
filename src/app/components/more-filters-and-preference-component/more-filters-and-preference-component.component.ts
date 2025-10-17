@@ -1,11 +1,21 @@
-import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { PreferenceComponent } from '../preference-component/preference-component.component';
 
 @Component({
   selector: 'more-filters-and-preference-component',
   templateUrl: 'more-filters-and-preference-component.component.html',
   styleUrls: ['more-filters-and-preference-component.component.css'],
 })
-export class MoreFiltersAndPreferenceComponent implements OnInit {
+export class MoreFiltersAndPreferenceComponent implements OnInit, OnChanges {
+
+  @Input() callerType: 'candidate' | 'recruiter' = 'candidate';
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['callerType']) {
+      console.log('callerType changed:', this.callerType);
+      // Now you can react to the change
+    }
+  }
+
   @ContentChild('preferenceText')
   preferenceText: TemplateRef<any>
   @ContentChild('jobRecommendedText')
@@ -17,6 +27,7 @@ export class MoreFiltersAndPreferenceComponent implements OnInit {
   @Input() initialTab: 'filters' | 'preferences' = 'filters';
   activeTab: string = 'filters'; // Default to filters
   public selectedPreferenceData: any = null;
+  @ViewChild(PreferenceComponent) private preferenceComponent!: PreferenceComponent;
 
   constructor() {}
 
@@ -26,6 +37,14 @@ export class MoreFiltersAndPreferenceComponent implements OnInit {
 
   setTab(tab: string): void {
     this.activeTab = tab;
+    console.log('callerType:', this.callerType);
+    if (tab === 'preferences' && this.preferenceComponent) {
+      if (this.callerType === 'recruiter') {
+        this.preferenceComponent.loadRecruiterPreferences();
+      } else {
+        this.preferenceComponent.loadPreferences();
+      }
+    }
   }
 
   // Handler for subcomponent emit
@@ -36,6 +55,7 @@ export class MoreFiltersAndPreferenceComponent implements OnInit {
 
   // Optional: If you added savePreferenceEvent in sub
   onSavePreference(filters: any): void {
+    console.log("in more-filters-preferences, onSavePreference");
     this.setTab('preferences');
   }
 

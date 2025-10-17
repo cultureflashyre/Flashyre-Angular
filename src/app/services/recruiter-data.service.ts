@@ -1,7 +1,7 @@
 // src/app/services/recruiter-data.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- MODIFIED: Imported HttpHeaders
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'; // <-- MODIFIED: Imported HttpHeaders
 import { Observable, of } from 'rxjs'; // <-- MODIFIED: Imported 'of' for error handling
 import { environment } from '../../environments/environment';
 import { CorporateAuthService } from './corporate-auth.service'; // <-- ADDED: Import your auth service
@@ -31,6 +31,7 @@ export interface JobPost {
   budget_type: string;
   min_budget: number;
   max_budget: number;
+  work_mode?: string;
   notice_period: string;
   skills: { primary: { skill: string, skill_confidence: number, type_confidence: number }[], secondary: { skill: string, skill_confidence: number, type_confidence: number }[] }; // JSONField
   job_description: string;

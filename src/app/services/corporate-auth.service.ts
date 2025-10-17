@@ -78,9 +78,9 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
 
   saveTokens(access: string, refresh: string): void {
-  localStorage.setItem('jwtToken', access);
-  localStorage.setItem('refreshToken', refresh);
-}
+    localStorage.setItem('jwtToken', access);
+    localStorage.setItem('refreshToken', refresh);
+  }
 
   getJWTToken(): string | null {
     return localStorage.getItem('jwtToken');

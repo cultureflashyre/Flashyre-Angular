@@ -15,7 +15,7 @@
     <!-- Job cards rendering logic remains the same -->
     <div
       *ngFor="let job of jobs; index as i"
-      (click)="selectJob(job.job_id)"
+      (click)="selectJob(job)"
       class="job-cards-job-cards-first-container"
       [ngClass]="{'clicked': clickedIndex === i}"
     >

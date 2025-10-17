@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
+
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
@@ -29,27 +30,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
   @ViewChild('desktopMatchingLoader') desktopMatchingLoader: ElementRef;
 
-  job: any = {
-    job_id: null,
-    company_name: '',
-    logo: '',
-    title: '',
-    location: '',
-    job_type: '',
-    created_at: '',
-    description: '',
-    requirements: '',
-    salary: null,
-    url: null,
-    source: '',
-    tag: '',
-    contract_time: '',
-    contract_type: '',
-    external_id: '',
-    last_updated: '',
-    assessment: null,
-    attempts_remaining: null
-  };
+  job: any = null;
   userProfile: any = {};
   loading: boolean = false;
   errorMessage: string | null = null;
@@ -60,23 +41,28 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   matchingScoreStrokeDasharray: string = '0 25.12';
   defaultProfilePicture: string = environment.defaultProfilePicture;
   defaultCompanyIcon: string = environment.defaultCompanyIcon;
-  fhThumbnailIcon: string = environment.fh_logo_thumbnail;
-  chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
   
   isMobile: boolean = window.innerWidth < 767;
   isProcessing: boolean = false;
   isApplied: boolean = false;
   successMessage: string | null = null;
   private destroy$ = new Subject<void>();
+
+  private isViewInitialized = false;
   
-  // This will store the attempts value passed from the previous page
   private attemptsFromNavigation: number | null = null;
+
+  isDisliked: boolean = false;
+  isSaved: boolean = false;
+  // Name for the disliked jobs browser cache.
+  private dislikedCacheName = 'disliked-jobs-cache-v1';
 
   constructor(
     private jobService: JobsService,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth < 767;
@@ -85,10 +71,19 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
-      // Read 'attempts' from the URL and store it
+      const scoreFromUrl = params['score'] ? +params['score'] : null;
+
       this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
+
+      if (scoreFromUrl !== null) {
+        this.matchingScore = scoreFromUrl;
+        // ---- EDIT: Call the new instant function instead of the animation. ----
+        if (this.isViewInitialized) {
+          this.setProgressBarState(); 
+        } 
+      }
 
       if (jobIdFromUrl) {
         this.jobId = jobIdFromUrl;
@@ -97,21 +92,25 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
     this.progress = 100.0;
     this.loadUserProfile();
+
+    this.jobService.jobInteraction$.pipe(takeUntil(this.destroy$)).subscribe(interaction => {
+      // Check if the event is for the job currently being viewed.
+      if (this.jobId && interaction.jobId === this.jobId.toString()) {
+        if (interaction.type === 'dislike') {
+          this.isDisliked = interaction.state;
+        } else if (interaction.type === 'save') {
+          this.isSaved = interaction.state;
+        }
+        this.cdr.detectChanges(); // Manually update the view to reflect the new state.
+      }
+    });
   }
 
   ngAfterViewInit() {
-    if (this.matchingScore > 0) {
-      setTimeout(() => {
-        this.animateProgressBar();
-      }, 0);
-    } else {
-      this.fetchJobDetails();
-    }
+    this.isViewInitialized = true;
+    this.setProgressBarState();
   }
 
-  /**
-   * Navigate to assessment page
-   */
   navigateToAssessment(assessment: number): void {
     this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
   }
@@ -126,100 +125,173 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private loadUserProfile(): void {
-    try {
-      const profileData = localStorage.getItem('userProfile');
-      if (profileData) {
-        this.userProfile = JSON.parse(profileData);
-        console.log('User profile data from local storage:', this.userProfile);
-        if (!this.userProfile.profile_picture_url) {
-          console.warn('No profile picture URL found in local storage, using default.');
-        }
-      } else {
-        console.warn('No user profile data found in local storage, using default profile picture.');
-        this.userProfile = { profile_picture_url: null };
-      }
-    } catch (error) {
-      console.error('Error parsing user profile data from local storage:', error);
-      this.userProfile = { profile_picture_url: null };
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) {
+      this.userProfile = JSON.parse(profileData);
     }
   }
 
   private fetchJobDetails(): void {
+    if (!this.jobId) return;
     this.loading = true;
     this.errorMessage = null;
     this.successMessage = null;
     this.isApplied = false;
     this.jobService.getJobById(this.jobId!).subscribe({
       next: (data) => {
-        console.log('Job details response:', data);
-        this.job = {
-          job_id: data.job_id || null,
-          company_name: data.company_name || '',
-          logo: data.logo || '',
-          title: data.title || '',
-          location: data.location || '',
-          job_type: data.job_type || '',
-          created_at: data.created_at || '',
-          description: data.description || '',
-          requirements: data.requirements || '',
-          salary: data.salary || null,
-          url: data.url || null,
-          source: data.source || '',
-          tag: data.tag || '',
-          contract_time: data.contract_time || '',
-          contract_type: data.contract_type || '',
-          external_id: data.external_id || '',
-          last_updated: data.last_updated || '',
-          assessment: data.assessment || null, // Added assessment_id
-          attempts_remaining: data.attempts_remaining !== undefined && data.attempts_remaining !== null 
-            ? data.attempts_remaining 
-            : this.attemptsFromNavigation,
-        };
-        this.matchingScore = data.matching_score || 80;
-        this.updateProgressBar(this.matchingScore, this.progress);
+        this.job = data;
+        this.job.attempts_remaining = data.attempts_remaining ?? this.attemptsFromNavigation;
         this.loading = false;
+        this.fetchInteractionStatus();
       },
       error: (err) => {
-        console.error('Error fetching job details:', err);
         this.resetJob();
-        this.errorMessage = err.message || `Job with ID ${this.jobId} not found. Please select another job.`;
+        this.errorMessage = `Job with ID ${this.jobId} not found. Please select another job.`;
         this.loading = false;
       }
     });
   }
 
+  private async fetchInteractionStatus(): Promise<void> {
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+
+    if (!userId || !jobIdStr) {
+      return;
+    }
+
+    // Check the browser cache first for a faster UI response for disliked status.
+    const cachedDisliked = await this.getDislikedJobsFromCache(userId);
+    if (cachedDisliked) {
+      this.isDisliked = cachedDisliked.includes(jobIdStr);
+      this.cdr.detectChanges();
+    }
+    // Fetch the latest disliked status from the API.
+    this.authService.getDislikedJobs(userId).subscribe(response => {
+      const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
+      this.isDisliked = dislikedJobs.includes(jobIdStr);
+      this.cacheDislikedJobs(userId, dislikedJobs); // Update the cache with fresh data.
+      this.cdr.detectChanges();
+    });
+
+    // Fetch the saved status from the API.
+    this.authService.getSavedJobs(userId).subscribe(response => {
+      const savedJobIds = response.saved_jobs;
+      this.isSaved = savedJobIds.includes(this.jobId);
+      this.cdr.detectChanges();
+    });
+  }
+
+  onDislike(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isSaved) {
+      alert('You cannot dislike a job that is saved. Please unsave it first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
+
+    const action = this.isDisliked
+      ? this.authService.removeDislikedJob(userId, jobIdStr)
+      : this.authService.dislikeJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        this.isDisliked = !this.isDisliked;
+        this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
+        this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
+
+        if (this.isDisliked) {
+          alert('Job disliked successfully.');
+        } else {
+          alert('Dislike removed.');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error) => alert('Failed to update dislike status: ' + error.message),
+    });
+  }
+
+  /**
+   * Handles clicks on the Save icon.
+   * It toggles the saved state, updates the backend, and notifies other components.
+   */
+  onSave(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isDisliked) {
+      alert('You cannot save a job that is disliked. Please remove the dislike first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
+
+    // Determine whether to call the 'save' or 'remove saved' API endpoint.
+    const action = this.isSaved
+      ? this.authService.removeSavedJob(userId, jobIdStr)
+      : this.authService.saveJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        this.isSaved = !this.isSaved; // Toggle the local state.
+        // Broadcast this change to all other components.
+        this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
+        alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
+        this.cdr.detectChanges();
+      },
+      error: (error) => alert('Failed to update save status: ' + error.message)
+    });
+  }
+
+  // --- Caching Helper Methods for Disliked Jobs (copied from card component for consistency) ---
+  private async getDislikedJobsFromCache(userId: string): Promise<string[] | null> {
+    try {
+      const cache = await caches.open(this.dislikedCacheName);
+      const response = await cache.match(userId);
+      if (!response) return null;
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting disliked jobs from cache:', error);
+      return null;
+    }
+  }
+
+  private async cacheDislikedJobs(userId: string, dislikedJobs: string[]): Promise<void> {
+    try {
+      const cache = await caches.open(this.dislikedCacheName);
+      const response = new Response(JSON.stringify(dislikedJobs));
+      await cache.put(userId, response);
+    } catch (error) {
+      console.error('Error caching disliked jobs:', error);
+    }
+  }
+
+  private async updateDislikedJobsCache(userId: string, jobId: string, action: 'add' | 'remove'): Promise<void> {
+    const cachedJobs = await this.getDislikedJobsFromCache(userId) || [];
+    const jobExists = cachedJobs.includes(jobId);
+
+    if (action === 'add' && !jobExists) {
+      cachedJobs.push(jobId);
+    } else if (action === 'remove' && jobExists) {
+      const index = cachedJobs.indexOf(jobId);
+      cachedJobs.splice(index, 1);
+    }
+    await this.cacheDislikedJobs(userId, cachedJobs);
+  }
+
+
   private resetJob(): void {
-    this.job = {
-      job_id: null,
-      company_name: '',
-      logo: '',
-      title: '',
-      location: '',
-      job_type: '',
-      created_at: '',
-      description: '',
-      requirements: '',
-      salary: null,
-      url: null,
-      source: '',
-      tag: '',
-      contract_time: '',
-      contract_type: '',
-      external_id: '',
-      last_updated: '',
-      assessment: null, // Added assessment_id
-      attempts_remaining: null // <-- ADDED: Reset the property
-    };
+    this.job = null;
     this.matchingScore = 0;
     this.progress = 0;
   }
 
   applyForJob(): void {
-    if (this.isApplied || !this.job.job_id) {
+    if (this.isApplied || !this.job?.job_id) {
       return;
     }
     this.isProcessing = true;
-
     this.authService.applyForJob(this.job.job_id)
   .pipe(takeUntil(this.destroy$))
   .subscribe({
@@ -284,8 +356,6 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   handleImageError(event: Event): void {
-    console.error('Profile image failed to load:', this.userProfile.profile_picture_url);
-    this.userProfile.profile_picture_url = this.defaultProfilePicture;
     (event.target as HTMLImageElement).src = this.defaultProfilePicture;
   }
 
@@ -297,24 +367,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     return 'darkgreen';
   }
 
-  private animateProgressBar(): void {
-    const duration = 2000;
-    const startTime = Date.now();
-
-    const animate = () => {
-      const currentTime = Date.now();
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const currentMatchingScore = progress * this.matchingScore;
-      const currentCompanyProgress = progress * this.progress;
-      this.updateProgressBar(currentMatchingScore, currentCompanyProgress);
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        this.updateProgressBar(this.matchingScore, this.progress);
-      }
-    };
-    requestAnimationFrame(animate);
+  // ---- EDIT: The 'animateProgressBar' function has been replaced with this new 'setProgressBarState' function. ----
+  private setProgressBarState(): void {
+    if (this.matchingScore === null || typeof this.matchingScore === 'undefined') {
+      return;
+    }
+    // This instantly updates the progress bar to its final values without any animation delay.
+    this.updateProgressBar(this.matchingScore, this.progress);
   }
 
   private updateProgressBar(percentage: number, companyPercentage: number): void {
@@ -343,7 +402,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       }
     }
 
-    this.progress = actualProgress;
-    this.matchingScore = actualMatchingScore;
+    this.progress = Math.round(actualProgress);
+    this.matchingScore = Math.round(actualMatchingScore);
   }
 }

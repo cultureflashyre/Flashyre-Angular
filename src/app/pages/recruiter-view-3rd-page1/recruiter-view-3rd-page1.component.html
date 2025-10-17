@@ -27,6 +27,7 @@
     (click)="$event.stopPropagation()"
   >
     <more-filters-and-preference-component 
+      [callerType]="'recruiter'"
       (closeEvent)="showMoreFilters = false"
       (applyFiltersEvent)="onApplyFilters($event)"
       (savePreferenceEvent)="onSavePreference($event)"
@@ -728,6 +729,49 @@
               <span id="create-job-post-text">Create Job Post</span>
             </button>
           </div>
+          <div class="recruiter-view3rd-page1-container23">
+            <div
+              id="live-draft-deleted-container"
+              class="recruiter-view3rd-page1-live-draft-deleted-container"
+            >
+              <div
+                id="live-container"
+                class="recruiter-view3rd-page1-live-container"
+                [class.active-tab]="activeTab === 'live'"
+                (click)="selectTab('live')"
+              >
+                <span id="live-text" class="recruiter-view3rd-page1-live-text">
+                  Live ({{ getStatusCount('final') }})
+                </span>
+              </div>
+              <div
+                id="draft-container"
+                class="recruiter-view3rd-page1-draft-container"
+                [class.active-tab]="activeTab === 'draft-pause'"
+                (click)="selectTab('draft-pause')"
+              >
+                <span
+                  id="draft-text"
+                  class="recruiter-view3rd-page1-draft-text"
+                >
+                  Draft ({{ getStatusCount('draft') }}) / Pause ({{ getStatusCount('pause') }})
+                </span>
+              </div>
+              <div
+                id="deleted-container"
+                class="recruiter-view3rd-page1-deleted-container"
+                [class.active-tab]="activeTab === 'deleted'"
+                (click)="selectTab('deleted')"
+              >
+                <span
+                  id="deleted-text"
+                  class="recruiter-view3rd-page1-deleted-text"
+                >
+                  Deleted ({{ getStatusCount('deleted') }})
+                </span>
+              </div>
+            </div>
+          </div>
           <header
   id="job-title-location-experience-main-container"
   class="recruiter-view3rd-page1-job-title-location-experience-main-container"
@@ -826,6 +870,8 @@
         </div>
       </nav>
       <svg
+         #filterIcon 
+        (click)="openFiltersPopup('filters')" 
         id="filter-icon"
         width="24"
         height="24"
@@ -860,6 +906,7 @@
           </span>
         </button>
         <button
+          (click)="openFiltersPopup('preferences')"
           id="preference-button"
           type="button"
           class="recruiter-view3rd-page1-search-button2 button"
@@ -876,49 +923,7 @@
     <!-- ... mobile menu ... -->
   </header>
 </header>
-<div class="recruiter-view3rd-page1-container23">
-            <div
-              id="live-draft-deleted-container"
-              class="recruiter-view3rd-page1-live-draft-deleted-container"
-            >
-              <div
-                id="live-container"
-                class="recruiter-view3rd-page1-live-container"
-                [class.active-tab]="activeTab === 'live'"
-                (click)="selectTab('live')"
-              >
-                <span id="live-text" class="recruiter-view3rd-page1-live-text">
-                  Live ({{ getStatusCount('final') }})
-                </span>
-              </div>
-              <div
-                id="draft-container"
-                class="recruiter-view3rd-page1-draft-container"
-                [class.active-tab]="activeTab === 'draft-pause'"
-                (click)="selectTab('draft-pause')"
-              >
-                <span
-                  id="draft-text"
-                  class="recruiter-view3rd-page1-draft-text"
-                >
-                  Draft ({{ getStatusCount('draft') }}) / Pause ({{ getStatusCount('pause') }})
-                </span>
-              </div>
-              <div
-                id="deleted-container"
-                class="recruiter-view3rd-page1-deleted-container"
-                [class.active-tab]="activeTab === 'deleted'"
-                (click)="selectTab('deleted')"
-              >
-                <span
-                  id="deleted-text"
-                  class="recruiter-view3rd-page1-deleted-text"
-                >
-                  Deleted ({{ getStatusCount('deleted') }})
-                </span>
-              </div>
-            </div>
-          </div>
+
           <div
             id="job-posted-container"
             class="recruiter-view3rd-page1-job-posted-container"
@@ -990,13 +995,13 @@
                         id="job-role"
                         class="recruiter-view3rd-page1-job-role-text"
                       >
-                        {{ job.job_role }}
+                        {{ job.role }}
                       </span>
                       <span
                         id="experience-location"
                         class="recruiter-view3rd-page1-experience-location-text"
                       >
-                        {{ job.experience_location }}
+                        {{ job.location }}
                       </span>
                     </div>
                     <div

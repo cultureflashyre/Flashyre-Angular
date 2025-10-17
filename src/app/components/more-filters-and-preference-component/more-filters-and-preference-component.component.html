@@ -68,6 +68,7 @@
       </svg>
     </div>
     <app-morefilterscomponent1
+  [callerType]="callerType"
   *ngIf="activeTab === 'filters'"
   rootClassName="morefilterscomponent1root-class-name"
   (applyFiltersEvent)="onApplyFilters($event)"
@@ -183,7 +184,11 @@
     </div>
   </ng-template>
     </app-morefilterscomponent1>
-    <preference-component  *ngIf="activeTab === 'preferences'" rootClassName="preference-componentroot-class-name" (applyPreference)="onApplyPreference($event)">
+    <preference-component  
+    [callerType]="callerType"
+    *ngIf="activeTab === 'preferences'" 
+    rootClassName="preference-componentroot-class-name" 
+    (applyPreference)="onApplyPreference($event)">
       <ng-template #text1>
         <div class="more-filters-and-preference-component-fragment34">
           <span class="more-filters-and-preference-component-text54">

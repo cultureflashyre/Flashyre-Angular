@@ -1,13 +1,15 @@
-import { Component, Input, ContentChild, TemplateRef, OnInit, Output, EventEmitter } from '@angular/core'
+import { Component, Input, ContentChild, TemplateRef, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core'
 import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 import { MoreFiltersAndPreferenceComponent } from '../more-filters-and-preference-component/more-filters-and-preference-component.component';
-
+import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
 @Component({
   selector: 'preference-component',
   templateUrl: 'preference-component.component.html',
   styleUrls: ['preference-component.component.css'],
 })
-export class PreferenceComponent {
+export class PreferenceComponent implements OnInit {
+
+
   @Output() applyPreference = new EventEmitter<any>();
   @ContentChild('text211')
   text211: TemplateRef<any>
@@ -43,16 +45,41 @@ export class PreferenceComponent {
   remainingPreferences: number = 0;
 
   constructor(
-    private preferenceService: CandidatePreferenceService,
+    private candidatePreferenceService: CandidatePreferenceService,
+    private recruiterPreferenceService: RecruiterPreferenceService,
     private parent: MoreFiltersAndPreferenceComponent
   ) {}
 
+  @Input() callerType: 'candidate' | 'recruiter' = 'candidate';
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['callerType']) {
+      if (this.callerType === 'recruiter') {
+        this.loadRecruiterPreferences();
+      } else {
+        this.loadPreferences();
+      }
+    }
+  }
+
   ngOnInit() {
-    this.loadPreferences();
+    //this.loadPreferences();
   }
 
   loadPreferences() {
-    this.preferenceService.getPreferences().subscribe(
+    console.log(`[PreferenceComponent] Loading CAND preferences for tab: ${(this.candidatePreferenceService as any).activeTab}`);
+    this.candidatePreferenceService.getPreferences().subscribe(
+      data => {
+        this.preferences = data.map(p => ({ ...p, expanded: false }));
+        this.remainingPreferences = 3 - this.preferences.length;
+      },
+      error => console.error('Error fetching preferences:', error)
+    );
+  }
+
+  loadRecruiterPreferences() {
+    console.log(`[PreferenceComponent] Loading REC preferences for tab: ${this.recruiterPreferenceService.getActiveTab()}`);
+    this.recruiterPreferenceService.getPreferences().subscribe(
       data => {
         this.preferences = data.map(p => ({ ...p, expanded: false }));
         this.remainingPreferences = 3 - this.preferences.length;
@@ -67,7 +94,18 @@ export class PreferenceComponent {
 
   deletePreference(id: number) {
     if (confirm('Are you sure you want to delete this preference?')) {
-      this.preferenceService.deletePreference(id).subscribe(
+      this.candidatePreferenceService.deletePreference(id).subscribe(
+        () => {
+          this.loadPreferences(); // Refresh the list of preferences
+        },
+        error => console.error('Error deleting preference:', error)
+      );
+    }
+  }
+
+  deleteRecruiterPreference(id: number) {
+    if (confirm('Are you sure you want to delete this preference?')) {
+      this.recruiterPreferenceService.deletePreference(id).subscribe(
         () => {
           this.loadPreferences(); // Refresh the list of preferences
         },

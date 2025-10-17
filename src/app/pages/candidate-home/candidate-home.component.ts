@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, E
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
@@ -219,77 +219,104 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
    * This prevents conflicts and ensures consistent search results.
    */
   private runFilterPipeline(): void {
-  let tempJobs = [...this.jobs];
+    let tempJobs = [...this.jobs];
+    console.log('Jobs:', tempJobs);
 
-  // --- RESTORED: Logic for the 3 main search bars ---
-  const mainKeyword = this.searchJobTitle.toLowerCase().trim();
-  if (mainKeyword) {
-    tempJobs = tempJobs.filter(job => 
-      (job.title || '').toLowerCase().includes(mainKeyword) ||
-      (job.description || '').toLowerCase().includes(mainKeyword) ||
-      (job.company_name || '').toLowerCase().includes(mainKeyword)
-    );
-  }
-
-  const mainLocation = this.searchLocation.toLowerCase().trim();
-  if (mainLocation) {
-    tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
-  }
-
-  const mainExperience = this.searchExperience.trim();
-  if (mainExperience) {
-    const candidateExp = this.parseFirstNumber(mainExperience);
-    if (candidateExp !== null) {
-      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    // --- MAIN SEARCH BARS (No changes to Keyword and Location) ---
+    const mainKeyword = this.searchJobTitle.toLowerCase().trim();
+    if (mainKeyword) {
+      tempJobs = tempJobs.filter(job => 
+        (job.title || '').toLowerCase().includes(mainKeyword) ||
+        (job.description || '').toLowerCase().includes(mainKeyword) ||
+        (job.company_name || '').toLowerCase().includes(mainKeyword)
+      );
     }
-  }
 
-  // --- "More Filters" Popup Logic ---
+    const mainLocation = this.searchLocation.toLowerCase().trim();
+    if (mainLocation) {
+      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
+    }
 
-  // Date Posted Filter
-  if (this.searchDatePosted) {
-    const now = new Date();
-    let cutoffDate = new Date();
-    if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
-    else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
-    else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+    // ---- CORRECTED LOGIC 1: EXPERIENCE FILTER (Main Bar) ----
+    // This logic is now copied from the working recruiter view.
+    const mainExperience = this.parseFirstNumber(this.searchExperience);
+    if (mainExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            mainExperience >= j.total_experience_min &&
+            mainExperience <= j.total_experience_max
+        );
+    }
+
+
+    // --- "MORE FILTERS" POPUP LOGIC ---
+
+    // Date Posted Filter (No changes here)
+    if (this.searchDatePosted) {
+      const now = new Date();
+      let cutoffDate = new Date();
+      if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
+      else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
+      else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+      
+      tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
+    }
+
+    // ---- CORRECTED LOGIC 1: EXPERIENCE FILTER (More Filters Popup) ----
+    // This logic is now copied from the working recruiter view.
+    const popupExperience = this.parseFirstNumber(this.searchExperienceLevel);
+    if (popupExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            popupExperience >= j.total_experience_min &&
+            popupExperience <= j.total_experience_max
+        );
+    }
+
+    // ---- CORRECTED LOGIC 2: COMPANY NAME FILTER ----
+    // This logic is now copied from the working recruiter view.
+    if (this.searchCompanyName && this.searchCompanyName.trim()) {
+        const searchCompany = this.searchCompanyName.toLowerCase().trim();
+        tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
+    }
     
-    tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
-  }
-
-  // Experience Filter (from popup)
-  if (this.searchExperienceLevel && this.searchExperienceLevel.trim()) {
-    const candidateExp = this.parseFirstNumber(this.searchExperienceLevel);
-    if (candidateExp !== null) {
-      tempJobs = tempJobs.filter(j => j.experience_required != null && candidateExp >= j.experience_required);
+    // ---- CORRECTED LOGIC 3: SALARY FILTER ----
+    // This logic is now copied from the working recruiter view.
+    const searchSal = this.parseFirstNumber(this.searchSalary);
+    if (searchSal !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.min_budget != null && j.max_budget != null &&
+            searchSal >= j.min_budget && searchSal <= j.max_budget
+        );
     }
+
+    // ---- CORRECTED LOGIC 4: WORK MODE FILTER ----
+    // This logic is now copied from the working recruiter view.
+    if (this.searchWorkMode) {
+        tempJobs = tempJobs.filter(j => (j.workplace_type || '').toLowerCase() === this.searchWorkMode.toLowerCase());
+    }
+
+    // Job Type Filter (No changes here)
+    if (this.searchJobType) {
+      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
+    }
+
+    // Role Filter (No changes here)
+    if (this.searchRole && this.searchRole.trim()) {
+      const searchRol = this.searchRole.toLowerCase().trim();
+      tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
+    }
+    
+    // --- Finalize and Update UI ---
+    this.filteredJobs = tempJobs;
+    const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
+    this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
+
+    this.currentPage = 0;
+    this.displayedJobs = [];
+    this.loadNextPage();
+    this.setupInfiniteScroll();
   }
-
-  // Job Type Filter
-  if (this.searchJobType) {
-    tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
-  }
-
-  // Role Filter
-  if (this.searchRole && this.searchRole.trim()) {
-    const searchRol = this.searchRole.toLowerCase().trim();
-    tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
-  }
-  
-  // NOTE: Salary and Work Mode filters for candidate are still placeholders
-  // as per the previous discussion, pending backend data.
-
-  // --- Finalize and Update UI ---
-  this.filteredJobs = tempJobs;
-  // ... (rest of the method remains the same)
-  const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
-  this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
-
-  this.currentPage = 0;
-  this.displayedJobs = [];
-  this.loadNextPage();
-  this.setupInfiniteScroll();
-}
   
   /**
    * Handles opening the filter popup and setting its initial tab.
@@ -307,11 +334,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
   private initializeJobs(): void {
     this.isLoading = true;
-    if (this.jobService.areJobsCached()) {
-      this.loadJobsFromCache();
-    } else {
-      this.fetchJobsFromAPI();
-    }
+    // --- [REMOVED] The problematic call to loadJobsFromCache() was removed ---
+    // The logic is now streamlined to always fetch fresh data, which is simpler and more reliable.
+    this.fetchJobsFromAPI();
   }
 
   private loadJobsFromCache(): void {
@@ -345,32 +370,77 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     return matches ? matches.map(num => parseInt(num, 10)) : []; 
   }
 
-  private filterAndDisplayJobs(jobs: any[]): void {
-    // Diagnostic log to help debug data mismatches
-    if (jobs && jobs.length > 0) {
-      console.log('SAMPLE JOB DATA FROM API:', jobs[0]);
-    }
+  // private filterAndDisplayJobs(jobs: any[]): void {
+  //   // Diagnostic log to help debug data mismatches
+  //   if (jobs && jobs.length > 0) {
+  //     console.log('SAMPLE JOB DATA FROM API:', jobs[0]);
+  //   }
 
-    this.authService.getAppliedJobs().subscribe(
-      (appliedJobsResponse) => {
-        this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
-        this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
-        this.filteredJobs = [...this.jobs];
-        this.currentPage = 0;
-        this.displayedJobs = [];
-        this.loadNextPage(); // This will now also trigger score fetching for the first page
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching applied jobs, proceeding without filtering:', error);
+  //   this.authService.getAppliedJobs().subscribe(
+  //     (appliedJobsResponse) => {
+  //       this.appliedJobIds = appliedJobsResponse.applied_job_ids || [];
+  //       this.jobs = jobs.filter(job => !this.appliedJobIds.includes(job.job_id));
+  //       this.filteredJobs = [...this.jobs];
+  //       this.currentPage = 0;
+  //       this.displayedJobs = [];
+  //       this.loadNextPage(); // This will now also trigger score fetching for the first page
+  //       this.isLoading = false;
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching applied jobs, proceeding without filtering:', error);
+  //       this.jobs = jobs;
+  //       this.filteredJobs = [...this.jobs];
+  //       this.currentPage = 0;
+  //       this.displayedJobs = [];
+  //       this.loadNextPage(); // This will now also trigger score fetching for the first page
+  //       this.isLoading = false;
+  //     }
+  //   );
+  // }
+
+  private filterAndDisplayJobs(jobs: any[]): void {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
         this.jobs = jobs;
         this.filteredJobs = [...this.jobs];
-        this.currentPage = 0;
-        this.displayedJobs = [];
-        this.loadNextPage(); // This will now also trigger score fetching for the first page
+        this.loadNextPage();
         this.isLoading = false;
-      }
-    );
+        return;
+    }
+
+    forkJoin({
+        applied: this.authService.getAppliedJobs(),
+        disliked: this.authService.getDislikedJobs(userId) // <-- Fetches disliked jobs
+    }).pipe(
+        takeUntil(this.destroy$)
+    ).subscribe({
+        next: ({ applied, disliked }) => {
+            const appliedJobIds = applied.applied_job_ids || [];
+            const dislikedJobIds = disliked.disliked_jobs.map((job: any) => job.job_id.toString()) || [];
+
+            // --- THIS LINE DOES THE FILTERING ON RELOAD ---
+            this.jobs = jobs.filter(job => 
+                !appliedJobIds.includes(job.job_id) && 
+                !dislikedJobIds.includes(job.job_id.toString())
+            );
+            // --- END OF FILTERING LOGIC ---
+            
+            this.filteredJobs = [...this.jobs];
+            this.currentPage = 0;
+            this.displayedJobs = [];
+            this.loadNextPage();
+            this.isLoading = false;
+        },
+        error: (error) => {
+            console.error('Error fetching applied/disliked jobs, showing all jobs as a fallback:', error);
+            this.jobs = jobs;
+            this.filteredJobs = [...this.jobs];
+            this.currentPage = 0;
+            this.displayedJobs = [];
+            this.loadNextPage();
+            this.isLoading = false;
+        }
+    });
   }
 
   private loadNextPage(): void {
@@ -401,7 +471,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
 
   private fetchAndAssignMatchScores(jobsToScore: any[]): void {
-  console.log('fetchAndAssignMatchScores called with jobsToScore:', jobsToScore);
+  console.log('Attempting to fetch match scores for the following jobs:', jobsToScore);
 
   const jobIds = jobsToScore.map(job => job.job_id).filter(id => id != null);
   console.log('Filtered jobIds to score:', jobIds);
@@ -418,18 +488,20 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         console.log('Received scoresMap from getMatchScores:', scoresMap);
 
         // Create a map for efficient lookup
-        const scores = new Map(Object.entries(scoresMap).map(([k, v]) => [parseInt(k, 10), v]));
-        console.log('Converted scores Map:', scores);
+        const scores = new Map(Object.entries(scoresMap).map(([key, value]) => [parseInt(key, 10), value]));
+        console.log('Processed scores into a lookup Map:', scores);
 
         // Assign scores to the jobs in the main displayedJobs array
         this.displayedJobs.forEach(job => {
           if (scores.has(job.job_id)) {
-            console.log(`Assigning matching_score to job_id ${job.job_id}:`, scores.get(job.job_id));
-            job.matching_score = scores.get(job.job_id);
+            const newScore = scores.get(job.job_id);
+            console.log(`Score FOUND for job_id ${job.job_id}. Assigning new score: ${newScore}`);
+            job.matching_score = newScore;
           } else {
-            console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
+            //console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
           }
         });
+        this.jobService.updateJobsInCache(this.displayedJobs);
       },
       (error) => {
         console.error('Failed to fetch match scores for jobs:', error);

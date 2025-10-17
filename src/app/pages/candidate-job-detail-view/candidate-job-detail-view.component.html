@@ -321,15 +321,17 @@
           </header>
         </header>
       </div>
-  <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
-        <!-- [MODIFIED] The counts are now calculated with simple getters -->
+      <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
         <div 
           id="job-recommended-container" 
           class="candidate-job-detail-view-job-recommended-container"
           (click)="selectRecommendedTab()" 
           [class.active-tab]="activeTab === 'recommended'">
           <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
-            Jobs recommended ({{ recommendedJobCount }})
+            Jobs recommended
+            <ng-container *ngIf="recommendedJobCount !== null">
+              ({{ recommendedJobCount }})
+            </ng-container>
           </span>
         </div>
         <div 
@@ -345,7 +347,10 @@
           (click)="selectSavedTab()"
           [class.active-tab]="activeTab === 'saved'">
           <span id="saved-text" class="candidate-job-detail-view-saved-text">
-            Saved ({{ savedJobCount }})
+            Saved
+            <ng-container *ngIf="savedJobCount !== null">
+              ({{ savedJobCount }})
+            </ng-container>
           </span>
         </div>
         <div 
@@ -357,24 +362,25 @@
             Applied ({{ appliedJobCount }})
           </span>
         </div>
-</div>
+      </div>
       <div class="candidate-job-detail-view-container4">
-        <!-- [MODIFIED] The job-cards component now receives its data from us -->
         <job-cards
           [isLoading]="isLoading"
           [errorMessage]="errorMessage"
           [jobsToDisplay]="jobsToDisplay"
           (jobSelected)="onJobSelected($event)"
+          (recommendedJobsCount)="onRecommendedJobsCountChanged($event)"
+          (savedJobsCount)="onSavedJobsCountChanged($event)"
           rootClassName="job-cardsroot-class-name"
         ></job-cards>
         <div class="candidate-job-detail-view-container5">
-         <candidate-job-details
-  [jobId]="selectedJobId"
-  [activeTab]="activeTab"
-  (applicationRevoked)="onApplicationRevoked($event)"
-  (jobAppliedSuccess)="onJobApplied($event)"
-  rootClassName="candidate-job-detailsroot-class-name"
-></candidate-job-details>
+          <candidate-job-details
+            [jobId]="selectedJobId"
+            [activeTab]="activeTab"
+            (applicationRevoked)="onApplicationRevoked($event)"
+            (jobAppliedSuccess)="onJobApplied($event)"
+            rootClassName="candidate-job-detailsroot-class-name"
+          ></candidate-job-details>
         </div>
       </div>
     </div>
