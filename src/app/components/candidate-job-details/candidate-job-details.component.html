@@ -3,7 +3,8 @@
   class="candidate-job-details-container1"
   [ngClass]="rootClassName"
 >
- <div *ngIf="!jobId && !errorMessage" class="no-job-selected-message">
+  <!-- Display message if no job is selected/available -->
+  <div *ngIf="!jobId && !errorMessage" class="no-job-selected-message">
     <span>No jobs are available at the moment.</span>
   </div>
   <!-- Display error message if job not found -->
@@ -28,7 +29,7 @@
         class="candidate-job-details-company-name-role-location-container"
       >
         <!-- This content will only appear AFTER the job is loaded -->
-        <div *ngIf="job">
+        <div *ngIf="job?.job_id">
           <div
             id="company-image-name-container"
             class="candidate-job-details-company-image-name-container"
@@ -103,13 +104,13 @@
           </span>
         </div>
         <!-- ---- EDIT: Added a simple loading message that shows while job is null ---- -->
-        <div *ngIf="!job">
+        <div *ngIf="!job?.job_id && loading">
           <p>Loading job details...</p>
         </div>
       </div>
       <!-- This content will only appear AFTER the job is loaded -->
       <div
-        *ngIf="job"
+        *ngIf="job?.job_id"
         id="apply-take-assessment-button-container"
         class="candidate-job-details-apply-take-assessment-button-container"
       >
@@ -126,7 +127,7 @@
           </span>
         </button>
 
-          <button
+        <button
           *ngIf="activeTab === 'applied'"
           class="apply-button revoke-button"
           [disabled]="isProcessing"
@@ -160,14 +161,14 @@
             </ng-container>
           </span>
         </button>
-        <div class="icon-wrapper">
+        <div class="icon-wrapper" *ngIf="activeTab === 'recommended'">
           <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
             class="candidate-job-for-you-card-icon14"
             [class.filled]="isDisliked"
-            [class.disabled]="isSaved" 
+            [class.disabled]="isSaved"
             (click)="onDislike($event)"
           >
             <path
@@ -178,7 +179,7 @@
           <span class="tooltip-text">{{ isSaved ? 'You cannot dislike a saved job' : (isDisliked ? 'Remove dislike' : 'Dislike the job') }}</span>
         </div>
 
-        <div class="icon-wrapper">
+        <div class="icon-wrapper" *ngIf="activeTab === 'recommended' || activeTab === 'saved'">
           <svg
             width="24"
             height="24"
@@ -206,7 +207,7 @@
     <!-- ---- EDIT: This Score Container is now OUTSIDE the job details container above. ---- -->
     <!-- It has its own *ngIf so it can appear instantly. -->
     <div
-      *ngIf="matchingScore !== null"
+      *ngIf="matchingScore !== null && job?.job_id"
       id="job-matching-score-container"
       class="candidate-job-details-job-matching-score-container"
     >
@@ -252,13 +253,11 @@
     </div>
   </div>
 
-
   <!-- Part 2: The Job Description. This part waits for the job data to be loaded. -->
   <span
-    *ngIf="job"
+    *ngIf="job?.job_id && !errorMessage"
     id="about-the-job-text"
     class="candidate-job-details-about-the-job-text"
-    *ngIf="jobId && !errorMessage"
   >
     <ng-container>
       <ng-template #defaultText3>
