@@ -328,13 +328,15 @@
           (click)="selectRecommendedTab()" 
           [class.active-tab]="activeTab === 'recommended'">
           <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
-            Jobs recommended ({{ recommendedJobCount }})
+            Jobs recommended
+            <ng-container *ngIf="recommendedJobCount !== null">
+              ({{ recommendedJobCount }})
+            </ng-container>
           </span>
         </div>
         <div 
           id="preference-container" 
           class="candidate-job-detail-view-preference-container">
-          <!-- (Preference tab remains unchanged for now) -->
           <span id="preference-text" class="candidate-job-detail-view-preference-text2">
             Preference (4)
           </span>
@@ -345,7 +347,10 @@
           (click)="selectSavedTab()"
           [class.active-tab]="activeTab === 'saved'">
           <span id="saved-text" class="candidate-job-detail-view-saved-text">
-            Saved ({{ savedJobCount }})
+            Saved
+            <ng-container *ngIf="savedJobCount !== null">
+              ({{ savedJobCount }})
+            </ng-container>
           </span>
         </div>
         <div 
@@ -354,7 +359,10 @@
           (click)="selectAppliedTab()"
           [class.active-tab]="activeTab === 'applied'">
           <span id="applied-text" class="candidate-job-detail-view-applied-text">
-            Applied ({{ appliedJobCount }})
+            Applied
+            <ng-container *ngIf="appliedJobCount !== null">
+              ({{ appliedJobCount }})
+            </ng-container>
           </span>
         </div>
       </div>
