@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core'
 
 @Component({
   selector: 'flashyre-assessment-rules',
@@ -6,6 +6,17 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
   styleUrls: ['flashyre-assessment-rules.component.css'],
 })
 export class FlashyreAssessmentRules {
+  // === FIX: THIS CODE IS NEW ===================================
+  // This creates an event that the parent component can listen for.
+  @Output() startAssessmentClick = new EventEmitter<void>();
+
+  // This function will be called by the button in the HTML.
+  onStartAssessment(): void {
+    // This sends the "click" signal out to the parent.
+    this.startAssessmentClick.emit();
+  }
+  // === END OF FIX ==============================================
+
   @Input() assessmentData: any;
 
   @ContentChild('text2')
@@ -58,36 +69,30 @@ export class FlashyreAssessmentRules {
   button: TemplateRef<any>
   constructor() {}
 
-  // Extract sections from assessmentData for convenient use in template
+  // The rest of this file (getters) remains unchanged.
   get sections() {
     return this.assessmentData?.sections || [];
   }
 
-  // Total duration from assessment (in minutes)
   get totalDuration() {
     return this.assessmentData?.total_duration || 0;
   }
 
-  // Total questions across all sections
   get totalQuestions() {
     return this.assessmentData?.total_questions || 0;
   }
 
-  // Example: Construct time limit display text dynamically
   get timeLimitDisplay() {
     return this.totalDuration > 0
       ? `The time limit for the test is ${this.totalDuration} minutes.`
       : 'Time limit not provided.';
   }
 
-  // Example: Construct message for answering questions within time limit
   get answerWithinLimitDisplay() {
     return `You must answer all ${this.totalQuestions} questions within the ${this.totalDuration}-minute time limit.`;
   }
 
-  // Auto-submit message, dynamic based on totalDuration
   get autoSubmitMessage() {
     return `The test will auto-submit after ${this.totalDuration} minutes, regardless of whether you have answered all the questions or not.`;
   }
-  
 }

@@ -1,11 +1,10 @@
-// src/app/pages/admin-page1/admin-page1.component.ts
-
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AdminService } from '../../services/admin.service';
 import { AdminPage1Component as AdminPage1ChildComponent } from '../../components/admin-page1-component/admin-page1-component.component';
 
 const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
+const MAX_TOTAL_UPLOAD_SIZE_MB = 25; // New constant for total upload size limit
 
 @Component({
   selector: 'admin-page1',
@@ -62,29 +61,44 @@ export class AdminPage1 implements OnInit {
   }
 
   onCvFilesSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || input.files.length === 0) {
-    return;
-  }
-
-  const files = Array.from(input.files);
-  const validFiles: File[] = [];
-  const maxFileSize = 5 * 1024 * 1024; // 5 MB
-
-  files.forEach(file => {
-    if (file.size > maxFileSize) {
-      // Use new error popup
-      this.showErrorPopup(`Error: File "${file.name}" is larger than 5MB and was ignored.`);
-    } else {
-      validFiles.push(file);
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
     }
-  });
 
-  if (validFiles.length > 0) {
+    const files = Array.from(input.files);
+    const validFiles: File[] = [];
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB
+    const maxTotalSize = MAX_TOTAL_UPLOAD_SIZE_MB * 1024 * 1024; // Convert MB to bytes
+    let totalSize = 0;
+
+    // First, validate each file individually
+    files.forEach(file => {
+      if (file.size > maxFileSize) {
+        this.showErrorPopup(`Error: File "${file.name}" is larger than 5MB and was ignored.`);
+      } else {
+        validFiles.push(file);
+        totalSize += file.size; // Add to total size if valid
+      }
+    });
+
+    // If there are no valid files after the first check, do nothing further
+    if (validFiles.length === 0) {
+      this.cvUploader.nativeElement.value = '';
+      return;
+    }
+
+    // Now, check the total size of the valid files
+    if (totalSize > maxTotalSize) {
+      this.showErrorPopup(`Error: Total upload size exceeds the limit of ${MAX_TOTAL_UPLOAD_SIZE_MB}MB. Please upload a smaller batch.`);
+      this.cvUploader.nativeElement.value = '';
+      return;
+    }
+
+    // If all checks pass, proceed with the upload
     this.isUploadingCVs = true;
     this.adminService.uploadCVs(validFiles).subscribe({
       next: (response) => {
-        // Use new success popup
         this.showSuccessPopup(`Successfully uploaded ${response.processed_files.length} CV(s). The list will now refresh.`);
         if (this.adminPage1Component) {
           this.adminPage1Component.refreshFiltersAndLoadLatest();
@@ -92,47 +106,43 @@ export class AdminPage1 implements OnInit {
       },
       error: (err) => {
         console.error('CV upload failed:', err);
-        // Use new error popup
         this.showErrorPopup(`CV upload failed: ${err.error?.error || 'Please try again.'}`);
       },
       complete: () => {
         this.isUploadingCVs = false;
       }
     });
-  }
 
-  this.cvUploader.nativeElement.value = '';
-}
+    this.cvUploader.nativeElement.value = '';
+  }
 
   onJdFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || input.files.length === 0) {
-    return;
-  }
-
-  const file = input.files[0];
-  this.isUploadingJd = true;
-
-  this.adminService.uploadJd(file).subscribe({
-    next: (response) => {
-      // Use new success popup
-      this.showSuccessPopup(`Successfully processed JD for role: ${response.role}. The view will now switch.`);
-      sessionStorage.setItem(ACTIVE_JOB_ID_KEY, response.job_id.toString());
-      this.activeView = 'jobDescription';
-    },
-    error: (err) => {
-      console.error('JD upload failed:', err);
-      const errorMessage = err.error?.error || 'An unknown server error occurred. Please try again.';
-      // Use new error popup
-      this.showErrorPopup(`JD upload failed: ${errorMessage}`);
-    },
-    complete: () => {
-      this.isUploadingJd = false;
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
     }
-  });
 
-  this.jdUploader.nativeElement.value = '';
-}
+    const file = input.files[0];
+    this.isUploadingJd = true;
+
+    this.adminService.uploadJd(file).subscribe({
+      next: (response) => {
+        this.showSuccessPopup(`Successfully processed JD for role: ${response.role}. The view will now switch.`);
+        sessionStorage.setItem(ACTIVE_JOB_ID_KEY, response.job_id.toString());
+        this.activeView = 'jobDescription';
+      },
+      error: (err) => {
+        console.error('JD upload failed:', err);
+        const errorMessage = err.error?.error || 'An unknown server error occurred. Please try again.';
+        this.showErrorPopup(`JD upload failed: ${errorMessage}`);
+      },
+      complete: () => {
+        this.isUploadingJd = false;
+      }
+    });
+
+    this.jdUploader.nativeElement.value = '';
+  }
 
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
@@ -141,69 +151,69 @@ export class AdminPage1 implements OnInit {
 
   // --- Alert and Popup Handling ---
 
-showSuccessPopup(message: string) {
-  this.popupMessage = message;
-  this.popupType = 'success';
-  this.showPopup = true;
-  setTimeout(() => this.closePopup(), 3000);
-}
-
-showErrorPopup(message: string) {
-  this.popupMessage = message;
-  this.popupType = 'error';
-  this.showPopup = true;
-  setTimeout(() => this.closePopup(), 5000);
-}
-
-closePopup() {
-  this.showPopup = false;
-}
-
-private openAlert(message: string, buttons: string[]) {
-  this.alertMessage = message;
-  this.alertButtons = buttons;
-  this.showAlert = true;
-}
-
-onAlertButtonClicked(action: string) {
-  this.showAlert = false;
-  if (action.toLowerCase() === 'cancel') {
-    this.actionContext = null;
-    return;
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'success';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000);
   }
-  
-  if (this.actionContext) {
-    switch (this.actionContext.action) {
-      case 'cvUpload':
-        this.cvUploadConfirmed();
-        break;
-      case 'jdUpload':
-        this.jdUploadConfirmed();
-        break;
+
+  showErrorPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 5000);
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
+
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    if (action.toLowerCase() === 'cancel') {
+      this.actionContext = null;
+      return;
     }
-    this.actionContext = null;
+
+    if (this.actionContext) {
+      switch (this.actionContext.action) {
+        case 'cvUpload':
+          this.cvUploadConfirmed();
+          break;
+        case 'jdUpload':
+          this.jdUploadConfirmed();
+          break;
+      }
+      this.actionContext = null;
+    }
   }
-}
 
-// --- Action "Attempt" Handlers ---
+  // --- Action "Attempt" Handlers ---
 
-onCvUploadAttempt() {
-  this.actionContext = { action: 'cvUpload' };
-  this.openAlert('You are about to upload CVs. Do you want to continue?', ['Cancel', 'Upload']);
-}
+  onCvUploadAttempt() {
+    this.actionContext = { action: 'cvUpload' };
+    this.openAlert('You are about to upload CVs. Do you want to continue?', ['Cancel', 'Upload']);
+  }
 
-onJdUploadAttempt() {
-  this.actionContext = { action: 'jdUpload' };
-  this.openAlert('You are about to upload a Job Description. Do you want to continue?', ['Cancel', 'Upload']);
-}
+  onJdUploadAttempt() {
+    this.actionContext = { action: 'jdUpload' };
+    this.openAlert('You are about to upload a Job Description. Do you want to continue?', ['Cancel', 'Upload']);
+  }
 
-// --- Confirmed Actions ---
+  // --- Confirmed Actions ---
 
-private cvUploadConfirmed() {
-  this.cvUploader.nativeElement.click();
-}
+  private cvUploadConfirmed() {
+    this.cvUploader.nativeElement.click();
+  }
 
-private jdUploadConfirmed() {
-  this.jdUploader.nativeElement.click();
-}
+  private jdUploadConfirmed() {
+    this.jdUploader.nativeElement.click();
+  }
 }

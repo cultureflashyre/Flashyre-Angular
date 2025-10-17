@@ -891,7 +891,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
           this.showSuccessPopup('Job post draft deleted.');
           this.workflowService.clearWorkflow();
           this.resetForm();
-          setTimeout(() => { this.router.navigate(['/admin-page1']); }, 2000);
+          setTimeout(() => { this.router.navigate(['/admin-create-job-step1']); }, 2000);
         },
         error: (err) => {
           this.spinner.hide('main-spinner');
@@ -903,7 +903,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.showSuccessPopup('Job post creation cancelled.');
       this.workflowService.clearWorkflow();
       this.resetForm();
-      setTimeout(() => { this.router.navigate(['/admin-page1']); }, 2000);
+      setTimeout(() => { this.router.navigate(['/admin-create-job-step1']); }, 2000);
     }
   }
 

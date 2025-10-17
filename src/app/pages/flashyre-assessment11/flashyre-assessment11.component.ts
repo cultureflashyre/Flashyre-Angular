@@ -99,7 +99,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.scrollToActiveQuestion();
   }
 
-  async ngOnInit(): Promise<void> {
+ async ngOnInit(): Promise<void> {
     this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
       this.terminateTest(true);
     });
@@ -108,14 +108,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.userId = localStorage.getItem('user_id');
     
     if (assessmentId && this.userId) {
+      // FIX: The unconditional call to start video recording has been removed from here.
       this.fetchAssessmentData(+assessmentId);
       this.startTime = new Date();
-      try {
-        await this.videoRecorder.startRecording(this.userId, assessmentId);
-        this.proctoringService.startMonitoring();
-      } catch (error) {
-        console.error('Failed to start assessment:', error);
-      }
     } else {
       console.error('No assessment ID or user ID provided');
       this.router.navigate(['/assessment-error']);
@@ -148,16 +143,39 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.cleanupResources();
   }
 
-  fetchAssessmentData(assessmentId: number): void {
+ fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
     this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
-      next: (data) => {
+      next: async (data) => { // Make sure 'async' is here
         console.log('Raw API response:', data);
         this.assessmentData = data;
+        
+        try {
+          // Step 1: Check for Proctoring (Tab Switching) independently.
+          // This is controlled by the "Proctored" checkbox.
+          if (data.proctored?.toUpperCase() === 'YES') {
+            console.log("Assessment is Proctored. Starting tab switch monitoring.");
+            this.proctoringService.startMonitoring();
+          } else {
+            console.log("Assessment is NOT Proctored. Tab switching will be allowed.");
+          }
+
+          // Step 2: Separately check for Video Recording.
+          // This is controlled by the "Allow Video Recording" checkbox.
+          if (data.video_recording?.toUpperCase() === 'YES') {
+            console.log("Video recording is required. Starting camera...");
+            await this.videoRecorder.startRecording(this.userId, String(assessmentId));
+          } else {
+            console.log("Video recording is NOT required for this assessment.");
+          }
+
+        } catch (error) {
+            console.error('Failed to conditionally start assessment services:', error);
+        }
+
+        // The rest of the function remains the same
         this.sections = [];
         this.processCustomizations(data.sections);
-        console.log('Processed sections:', this.sections);
-        console.log('First section questions:', this.sections[0]?.questions);
         this.totalSections = this.sections.length;
         this.timer = data.total_assessment_duration * 60;
         this.trialAssessmentService.updateTimer(this.timer);
@@ -166,6 +184,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (error) => {
         console.error('Error fetching assessment data:', error);
+        this.spinner.hide();
       },
       complete: () => {
         this.spinner.hide();
@@ -178,7 +197,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       console.log('Processing section:', section.name);
       const sectionEntry = {
         name: section.name,
-        section_id: section.section_id,
+      section_id: section.section ? section.section.section_id : null,   //Add 
         duration: section.duration_per_section,
         questions: section.questions || [],
         coding_problem: section.coding_problem,
@@ -445,27 +464,27 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.showWarningPopup = false;
   }
 
-  prepareSubmissionData(): any {
-    return {
-      assessmentId: this.assessmentData.assessment_id,
-      userId: this.userId,
-      responses: Object.keys(this.selectedAnswers).map((questionId) => ({
-        questionId: +questionId,
-        sectionId: this.selectedAnswers[+questionId].section_id,
-        answer: this.selectedAnswers[+questionId].answer,
-      })),
-      codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
-        problemId: +problemId,
-        submissionId: this.codingSubmissions[+problemId].id,
-        score: this.codingSubmissions[+problemId].score
-      })),
-      startTime: this.startTime,
-      endTime: new Date().toISOString(),
-      submissionType: 'manual',
-      videoPath: this.videoPath,
-    };
-  }
-
+prepareSubmissionData(): any {
+  return {
+    assessmentId: this.assessmentData.assessment_id,
+    userId: this.userId,
+    // FIX: Provide the required callback function to map()
+    responses: Object.keys(this.selectedAnswers).map((questionId) => ({
+      questionId: +questionId,
+      sectionId: this.selectedAnswers[+questionId].section_id,
+      answer: this.selectedAnswers[+questionId].answer,
+    })),
+    codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
+      problemId: +problemId,
+      submissionId: this.codingSubmissions[+problemId].id,
+      score: this.codingSubmissions[+problemId].score
+    })),
+    startTime: this.startTime,
+    endTime: new Date().toISOString(),
+    submissionType: 'manual',
+    videoPath: this.videoPath,
+  };
+}
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
@@ -554,33 +573,29 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onSubmitCode(event: { source_code: string, language_id: number }) {
-    const data = {
-      problem_id: this.currentSection.coding_id_id,
-      source_code: event.source_code,
-      language_id: event.language_id
-    };
-    console.log('Sending submit code request:', JSON.stringify(data, null, 2));
-    this.trialAssessmentService.submitCode(data).subscribe({
-      next: (response) => {
-        console.log('Submit code response:', JSON.stringify(response, null, 2));
-        
-        // ** THE FIX **
-        // Applying the same fix here for consistency. We directly use the 'results'
-        // array provided by the server.
-        this.results = response.results || ['No results available'];
-
-        this.codingSubmissions[this.currentSection.coding_id_id] = {
-          id: response.id,
-          score: response.score
-        };
-        this.showTestResults = true;
-      },
-      error: (error) => {
-        console.error('Submit code error:', error);
-        this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
-        this.showTestResults = true;
-      }
-    });
-  }
+onSubmitCode(event: { source_code: string, language_id: number }) {
+  // FIX: Construct the 'data' object with the required properties.
+  const data = {
+    problem_id: this.currentSection.coding_id_id,
+    source_code: event.source_code,
+    language_id: event.language_id
+  };
+  console.log('Sending submit code request:', JSON.stringify(data, null, 2));
+  this.trialAssessmentService.submitCode(data).subscribe({
+    next: (response) => {
+      console.log('Submit code response:', JSON.stringify(response, null, 2));
+      this.results = response.results || ['No results available'];
+      this.codingSubmissions[this.currentSection.coding_id_id] = {
+        id: response.id,
+        score: response.score
+      };
+      this.showTestResults = true;
+    },
+    error: (error) => {
+      console.error('Submit code error:', error);
+      this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
+      this.showTestResults = true;
+    }
+  });
+}
 }

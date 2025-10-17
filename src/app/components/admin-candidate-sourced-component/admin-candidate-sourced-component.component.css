@@ -1,6 +1,10 @@
 :host { 
   display: contents; 
 }
+
+.admin-candidate-sourced-component-sort-dropdown list-item {
+  background-color: #FFFFFF;
+}
  
 .admin-candidate-sourced-component-admin-candidate-sourced-component {
   gap: 16px;

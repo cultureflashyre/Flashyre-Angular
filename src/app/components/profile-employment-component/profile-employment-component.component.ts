@@ -24,7 +24,8 @@ export class ProfileEmploymentComponent {
 
   positions: any[] = [
     {
-      jobTitle: '',
+        id: null,
+        jobTitle: '',
       companyName: '',
       startDate: '',
       endDate: '',
@@ -49,6 +50,7 @@ private loadPositionsFromUserProfile(): void {
       const userProfile = JSON.parse(userProfileString);
       if (userProfile.employments && Array.isArray(userProfile.employments) && userProfile.employments.length > 0) {
         this.positions = userProfile.employments.map((emp: any) => ({
+          id: emp.id || null, // Map the ID from the profile
           jobTitle: emp.job_title || '',
           companyName: emp.company_name || '',
           startDate: emp.start_date || '',
@@ -58,7 +60,6 @@ private loadPositionsFromUserProfile(): void {
       }
     } catch (error) {
       console.warn('Error parsing userProfile from localStorage in employment component', error);
-      // fallback to initial state with one empty position
     }
   }
 }
@@ -66,6 +67,7 @@ private loadPositionsFromUserProfile(): void {
   // Add a new empty position and scroll to the bottom
   addPosition() {
     this.positions.push({
+      id: null,
       jobTitle: '',
       companyName: '',
       startDate: '',
@@ -118,6 +120,7 @@ private loadPositionsFromUserProfile(): void {
   resetForm() {
     this.positions = [
       {
+        id: null,
         jobTitle: '',
         companyName: '',
         startDate: '',

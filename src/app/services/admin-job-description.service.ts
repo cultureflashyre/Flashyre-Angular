@@ -2,14 +2,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { JobDetails, AIJobResponse } from '../pages/admin-create-job-step1/types';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AdminJobDescriptionService {
+  
+  private readonly apiUrl: string = environment.apiUrl;
   private readonly baseUrl = `${environment.apiUrl}api/admin/job-post`;
-  private readonly interviewFinalizeUrl = `${environment.apiUrl}api/job-post`;
+  private readonly interviewFinalizeUrl = `${environment.apiUrl}api/interview/job-post`;
   private readonly mcqAssessmentBaseUrl = `${environment.apiUrl}api/mcq-assessments`;
 
   constructor(private http: HttpClient) {}
@@ -62,6 +64,67 @@ export class AdminJobDescriptionService {
       );
   }
 
+  uploadExcelFile(file: File, jobUniqueId:string, token: string): Observable<{ file_url: string; unique_id: string }> {
+    if (!file) {
+      console.error('No file provided for upload');
+      return throwError(() => new Error('No file selected for upload'));
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return throwError(() => new Error('File size exceeds 10MB'));
+    }
+
+    const allowedExtensions = ['.xlsx', '.xls'];
+    const ext = file.name.toLowerCase().split('.').pop();
+    if (!ext || !allowedExtensions.includes(`.${ext}`)) {
+      return throwError(() => new Error(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`));
+    }
+
+    const formData = new FormData();
+    formData.append('excel_file', file, file.name); // Use backend expected key
+    formData.append('jobUniqueId', jobUniqueId);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+      // omit content-type for FormData
+    });
+
+    const endpoint = `${this.apiUrl}upload-mcq-excel/`; // adjust to your backend URL
+
+    return this.http.post<{ status: string; data: { file_url: string; unique_id: string } }>(
+      endpoint,
+      formData,
+      { headers }
+    ).pipe(
+      tap(response => console.log('Raw uploadExcelFile response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error(response.data?.toString() || 'Unexpected response during Excel upload');
+      }),
+      catchError(error => this.handleError_2(error, 'uploadExcelFile'))
+    );
+
+  }
+
+  // --- NEW METHOD 2: Get Uploaded Questions ---
+  getUploadedQuestions(jobUniqueId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/uploaded-questions/`;
+
+    return this.http.get<{ status: string; data: any }>(endpoint, { headers }).pipe(
+      tap(response => console.log('getUploadedQuestions response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response;
+        }
+        throw new Error('Unexpected response structure in getUploadedQuestions');
+      }),
+      catchError(error => this.handleError_2(error, 'getUploadedQuestions'))
+    );
+  }
+
   updateJobPost(uniqueId: string, jobDetails: JobDetails, token: string): Observable<{ unique_id: string }> {
     return this.http.put<{ status: string; data: { unique_id: string } }>(
       `${this.baseUrl}/job-post/${uniqueId}/`,
@@ -103,23 +166,53 @@ export class AdminJobDescriptionService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * NEW: Triggers generation for a single skill and expects the new questions back.
+   */
+  generateMcqForSkill(jobUniqueId: string, skillName: string, token: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-single-skill-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
+      .pipe(catchError(this.handleError));
+  }
+
   generateMoreMcqsForSkill(jobUniqueId: string, skillName: string, token: string): Observable<any[]> {
     return this.http
-      .post<any[]>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
-      .pipe(catchError(this.handleError));
-  }
-
-  job_post_mcqs_list_api(jobUniqueId: string, token: string): Observable<any> {
-    return this.http
-      .get<any>(`${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`, { headers: this.bearer(token) })
-      .pipe(catchError(this.handleError));
-  }
-
-  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ has_mcqs: boolean }> {
-    return this.http
-      .get<{ status: string; data: { has_mcqs: boolean } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
+      .post<{ status: string, data: any[] }>(`${this.baseUrl}/job-post/${jobUniqueId}/generate-more-mcqs/`, { skill: skillName }, { headers: this.jsonHeaders(token) })
       .pipe(
-        map(response => response.data), // ✅ FIXED: Extract the nested 'data' object
+        // THIS IS THE FIX: We extract the 'data' array from the response object.
+        map(response => response.data || []),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * MODIFIED: Can now fetch all MCQs or MCQs for a single skill.
+   * @param skillName - Optional skill name to fetch questions for.
+   */
+  job_post_mcqs_list_api(jobUniqueId: string, token: string, skillName?: string): Observable<any> {
+    let url = `${this.baseUrl}/job-post/${jobUniqueId}/mcqs/`;
+    if (skillName) {
+      url += `?skill=${encodeURIComponent(skillName)}`;
+    }
+    return this.http
+      .get<any>(url, { headers: this.bearer(token) })
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllCodingAssessmentQuestions(token: string): Observable<any> {
+    return this.http
+      .get<any>(`${this.baseUrl}/get_coding_problems/`, { headers: this.bearer(token) })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * MODIFIED: Fetches the detailed generation status for all skills from the cache.
+   */
+  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ status: string; skills: { [key: string]: string } }> {
+    return this.http
+      .get<{ status: string; data: { status: string; skills: { [key: string]: string } } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
+      .pipe(
+        map(response => response.data),
         catchError(this.handleError)
       );
   }
@@ -204,5 +297,47 @@ getLatestAssessmentForJob(jobUniqueId: string, token: string): Observable<any> {
     }
     console.error('HTTP Error:', msg);
     return throwError(() => new Error(msg));
+  }
+
+    private handleError_2(error: HttpErrorResponse, operation: string = 'operation'): Observable<never> {
+    let errorMessage = `An unknown error occurred during ${operation}`;
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Client-side error in ${operation}: ${error.error.message}`;
+    } else {
+      const serverError = error.error;
+      if (serverError) {
+        if (serverError.status === 'error') {
+            if (serverError.message) {
+                errorMessage = serverError.message;
+            }
+            if (serverError.errors && typeof serverError.errors === 'object') {
+                const fieldErrors = Object.keys(serverError.errors)
+                .map(key => `${key}: ${Array.isArray(serverError.errors[key]) ? serverError.errors[key].join(', ') : serverError.errors[key]}`)
+                .join('; ');
+                if (fieldErrors) {
+                    errorMessage = fieldErrors;
+                } else if (!serverError.message) {
+                    errorMessage = `Validation errors occurred in ${operation}.`;
+                }
+            } else if (serverError.errors && typeof serverError.errors === 'string') {
+                errorMessage = serverError.errors;
+            } else if (!serverError.message && !serverError.errors) {
+                errorMessage = `An error occurred on the server during ${operation}.`;
+            }
+        } else if (serverError.detail) {
+            errorMessage = serverError.detail;
+        } else if (typeof serverError === 'string') {
+            errorMessage = serverError;
+        } else {
+            errorMessage = `Server error ${error.status} in ${operation}: ${error.message || 'No specific message'}`;
+        }
+      } else {
+        errorMessage = `HTTP ${error.status} in ${operation}: ${error.statusText || error.message || 'Server error'}`;
+      }
+    }
+
+    console.error(`Operation: ${operation} failed. Status: ${error.status}. Message: ${errorMessage}. Full Error:`, error);
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -268,7 +268,7 @@
   gap: 4px;
   flex: 0 0 auto;
   width: 672px;
-  height: 99px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -285,7 +285,7 @@
 
 .profile-employment-component-job-details-input {
   width: 672px;
-  height: 71px;
+  height: auto;
   display: flex;
   align-items: center;
   padding-top: 0px;
@@ -296,6 +296,11 @@
   padding-bottom: var(--dl-space-space-oneandhalfunits);
   justify-content: flex-start;
   background-color: #FFFFFF;
+  word-wrap: break-word; /* This will break long words if necessary */
+  word-break: break-all; /* More aggressive word breaking */
+  resize: vertical; /* Allows the user to resize the textarea vertically */
+  min-height: 50px; /* Optional: Set a minimum height */
+  white-space: pre-wrap; /* This ensures that whitespace and newlines are preserved */
 }
 
 .profile-employment-component-addposition-text {

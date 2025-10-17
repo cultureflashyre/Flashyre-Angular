@@ -100,37 +100,49 @@ export class FlashyreAssessmentRulesCard implements OnInit {
    * Starts the assessment after checking camera and microphone access.
    * Redirects to error page if camera/microphone is not accessible.
    */
-  async startAssessment(): Promise<void> {
-//    if (!this.assessmentData || !this.assessmentId) {
-    if (!this.assessmentId) {
+ async startAssessment(): Promise<void> {
+    if (!this.assessmentData || !this.assessmentId) {
       console.error('Error: "Start Assessment" was clicked before assessment data was loaded.');
-      alert('Assessment ID is missing!');
+      alert('Assessment data is not available. Cannot start.');
       return;
     }
 
     this.isLoading = true;
 
     try {
-      // Check camera and microphone access
-      const hasCameraAndMic = await this.videoRecorderService.checkCameraAndMicrophone();
-     
-      if (hasCameraAndMic) {
-        // Camera and microphone are accessible, proceed to assessment
-        console.log(`Camera and microphone accessible for assessment ${this.assessmentId}. Navigating to test.`);
-        this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: this.assessmentId } });
+      // Step 1: Check if video recording is required based on the assessment rules.
+      if (this.assessmentData.video_recording?.toUpperCase() === 'YES') {
+        
+        console.log("Video recording is required. Checking for camera/mic permissions...");
+        const hasPermission = await this.videoRecorderService.checkCameraAndMicrophone();
+
+        // Step 2: If permissions are required but were denied, execute the ORIGINAL redirect.
+        if (!hasPermission) {
+          // --- THIS BLOCK IS NOW RESTORED TO THE ORIGINAL BEHAVIOR ---
+          console.warn(`Camera or microphone not accessible for assessment ${this.assessmentId}. Redirecting to error page.`);
+          this.isLoading = false; // Stop the spinner before redirecting
+          this.router.navigate(['/error-system-requirement-failed'], { queryParams: { id: this.assessmentId } });
+          return; // Stop the function from proceeding further.
+          // -------------------------------------------------------------
+        }
+
       } else {
-        // Camera or microphone not accessible, redirect to error page with assessmentId
-        console.warn(`Camera or microphone not accessible for assessment ${this.assessmentId}. Redirecting to error page.`);
-        this.router.navigate(['/error-system-requirement-failed'], { queryParams: { id: this.assessmentId } });
+        // If video is not required, we simply log it and continue.
+        console.log("Video recording is not required. Skipping permission check.");
       }
+
+      // Step 3: If we reach this point, all checks have passed. Proceed to the assessment.
+      console.log(`All checks passed for assessment ${this.assessmentId}. Navigating to test.`);
+      this.router.navigate(['/flashyre-assessment11'], { queryParams: { id: this.assessmentId } });
+
     } catch (error) {
-      console.error('Error checking camera and microphone:', error);
-      // Redirect to error page with assessmentId if there's an issue
+      console.error('An unexpected error occurred during pre-assessment checks:', error);
+      this.isLoading = false;
       this.router.navigate(['/error-system-requirement-failed'], { queryParams: { id: this.assessmentId } });
     }
-
-    this.isLoading = false;
   }
+
+ 
 
   get showProctoredRule(): boolean {
     return this.assessmentData?.proctored?.toUpperCase() === 'YES';
