@@ -179,6 +179,15 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    // --- MODIFICATION START ---
+    // Check for pre-loaded data from Step 2 to avoid race condition
+    const preloadedUploadedMcqs = this.workflowService.getUploadedMcqs();
+    if (preloadedUploadedMcqs) {
+      console.log("Found pre-loaded uploaded MCQs from workflow service.", preloadedUploadedMcqs);
+      this.workflowService.clearUploadedMcqs(); // Consume the data
+    }
+    // --- MODIFICATION END ---
+
     // Define observables for initial data fetches
     const mcqStatus$ = this.jobService.checkMcqStatus(this.jobUniqueId, token).pipe(
       catchError(err => {
@@ -189,12 +198,17 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    const uploadedQuestions$ = this.jobService.getUploadedQuestions(this.jobUniqueId, token).pipe(
-      catchError(err => {
-        console.error('Failed to load uploaded questions:', err);
-        return of({ data: {} }); // Provide a default empty structure
-      })
-    );
+    // --- MODIFICATION START ---
+    // If we have pre-loaded data, use it. Otherwise, fetch from API.
+    const uploadedQuestions$ = preloadedUploadedMcqs 
+      ? of({ data: preloadedUploadedMcqs }) // Wrap pre-loaded data in an observable
+      : this.jobService.getUploadedQuestions(this.jobUniqueId, token).pipe(
+          catchError(err => {
+            console.error('Failed to load uploaded questions:', err);
+            return of({ data: {} });
+          })
+        );
+    // --- MODIFICATION END ---
 
     const codingProblems$ = this.jobService.getAllCodingAssessmentQuestions(token).pipe(
       catchError(err => {

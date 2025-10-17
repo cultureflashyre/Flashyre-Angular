@@ -261,33 +261,53 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   onNextConfirmed(): void {
     if (this.selectedExcelFile) {
       this.isUploading = true;
+      // Show spinner with a specific message for file processing
+      this.spinner.show('ai-spinner', {
+        bdColor: "rgba(0, 0, 0, 0.8)",
+        size: "medium",
+        color: "#fff",
+        type: "ball-scale-multiple",
+        template: "<p style='color: white; font-size: 18px;'>Processing your file...</p>"
+      });
+      
       const token = this.authService.getJWTToken();
 
-      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token).subscribe({
-        next: (response) => {
-          this.isUploading = false;
-          this.hasGenerated = true;
-          this.jobUniqueId = response.unique_id;
-          this.uploadedExcelFileUrl = response.file_url;
-          this.router.navigate(['/admin-create-job-step3']);
-        },
-        error: (error) => {
-          this.isUploading = false;
-          this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
-        }
-      });
+      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token)
+        .pipe(
+          finalize(() => {
+            // This ensures spinner is hidden and flags are reset, even on error
+            this.isUploading = false;
+            this.spinner.hide('ai-spinner');
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            this.hasGenerated = true; // Mark as generated
+            
+            // Store the complete MCQ data in the workflow service.
+            if (response.uploaded_mcqs) {
+              console.log("Storing uploaded MCQs in workflow service:", response.uploaded_mcqs);
+              this.workflowService.setUploadedMcqs(response.uploaded_mcqs);
+            } else {
+              console.warn("Upload successful, but no MCQ data was returned from the backend.");
+            }
+            
+            // Navigate AFTER data has been received and stored.
+            this.router.navigate(['/admin-create-job-step3']);
+          },
+          error: (error) => {
+            this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
+          }
+        });
 
     } else if (this.jobUniqueId && this.hasGenerated) {
+      // Handle navigation for AI-generated questions
       this.router.navigate(['/admin-create-job-step3']);
-    } else if (!this.hasGenerated) {
-        this.showErrorPopup('Please generate or upload questions before proceeding.');
-        return;
-    }
-  
-    if (this.jobUniqueId) {
-      this.router.navigate(['/admin-create-job-step3']);
+    } else {
+      this.showErrorPopup('Please generate or upload questions before proceeding.');
     }
   }
+
   
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
