@@ -155,6 +155,14 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     if (profileData) this.recruiterProfile = JSON.parse(profileData);
   }
 
+   isImage(src: string): boolean {
+    // This function checks if the source string is a valid URL for an image.
+    if (!src) {
+      return false;
+    }
+    return src.startsWith('http') || src.startsWith('data:image');
+  }
+
   selectTab(tabName: 'live' | 'draft-pause' | 'deleted'): void {
     this.activeTab = tabName;
     console.log("[IN REC PAGE - select Tab]current tab: ",this.activeTab);

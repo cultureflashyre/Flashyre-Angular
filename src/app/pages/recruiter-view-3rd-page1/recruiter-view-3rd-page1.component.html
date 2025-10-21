@@ -971,18 +971,18 @@
                     class="recruiter-view3rd-page1-company-icon-container"
                   >
                     <img
-                      *ngIf="chcsThumbnailIcon; else showInitials"
-                      id="company-image"
-                      alt="image"
-                      [src]="job.company_image_url? job.company_image_url: chcsThumbnailIcon"
-                      class="recruiter-view3rd-page1-company-image2"
-                    />
-                    <ng-template #showInitials>
-                      <div class="avatar-icon" >
-                        {{ job.initials }}
-                      </div>
-                    </ng-template>
-                  </div>
+    *ngIf="isImage(job.company_image_url); else showInitials"
+    id="company-image"
+    alt="Company Logo"
+    [src]="job.company_image_url"
+    class="recruiter-view3rd-page1-company-image2"
+  />
+                   <ng-template #showInitials>
+    <div class="avatar-icon">
+      {{ job.initials }}
+    </div>
+  </ng-template>
+</div>
                   <div
                     id="details-container"
                     class="recruiter-view3rd-page1-details-container3"

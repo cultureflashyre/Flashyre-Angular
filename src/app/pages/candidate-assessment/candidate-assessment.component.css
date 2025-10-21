@@ -828,7 +828,7 @@
     align-items: flex-start;
     flex-direction: column;
     scroll-behavior: smooth;
-    scrollbar-width: none;
+    scrollbar-width: thin;
     box-shadow: 0 -8px 12px -8px #d4d4d4;
   }
    
