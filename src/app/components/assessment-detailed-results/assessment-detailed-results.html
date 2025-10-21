@@ -1,5 +1,4 @@
-
-    <div
+<div
       id="cloud-architecture-details-container"
       class="assessment-taken-page3-cloud-architecture-details-container"
     >
@@ -147,12 +146,43 @@
       </div>
     </div>
   </div>
-        <div *ngIf="assessmentData?.detailed_questions?.length > 0"></div>
-        <div *ngFor="let question of assessmentData?.detailed_questions; let i = index"
-         class="assessment-taken-page3-qa-container1">
+  <div *ngIf="totalQuestions > 0">
+    <!-- New: Sections capsule container -->
+    <div class="sections-scroller-wrapper">
+  <!-- Left Arrow -->
+  <button class="scroll-arrow left-arrow" (click)="scrollLeft()">
+    &#x2039;
+  </button>
+
+  <!-- Sections capsule container -->
+  <div #capsuleContainer class="sections-capsule-container">
+    
+    <!-- ADD THE NEW WRAPPER DIV AROUND THE NGFOR DIV -->
+    <div class="capsule-content-holder">
+        <div *ngFor="let section of sectionOrder"
+            class="section-capsule"
+            [class.active]="selectedSection === section"
+            (click)="selectSection(section)">
+            {{ section.trim() }}
+        </div>
+    </div>
+
+</div>
+  
+  <!-- Right Arrow -->
+  <button class="scroll-arrow right-arrow" (click)="scrollRight()">
+    &#x203A;
+  </button>
+</div>
+
+    <!-- Questions for selected section -->
+    <div *ngIf="selectedSection" class="selected-section-questions">
+      <div *ngFor="let question of groupedQuestions[selectedSection]; let qi = index">
+        <!-- New: Wrap in card -->
+        <div class="question-card">
           <div class="assessment-taken-page3-question-number-container1">
             <span class="assessment-taken-page3-text33">
-              Question {{ i + 1 }}/{{ assessmentData?.detailed_questions?.length }}
+              Question {{ qi + 1 }}/{{ groupedQuestions[selectedSection].length }}
             </span>
           </div>
           <div class="assessment-taken-page3-question-container1">
@@ -168,8 +198,8 @@
               class="assessment-taken-page3-option-container10">
                 <input
                   type="radio"
-                  [name]="'radio-' + i"
-                  [checked]="logRadioStatus(question, opt, i)"
+                  [name]="'radio-' + question.questionNumber"
+                  [checked]="logRadioStatus(question, opt, question.questionNumber - 1)"
                   disabled
                   class="assessment-taken-page3-radiobutton13"
                 />
@@ -202,8 +232,11 @@
               </div>
             </div>
         </div>
+      </div>
+    </div>
+  </div>
         
-        <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0" class="no-questions-message">
+        <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0 || totalQuestions === 0" class="no-questions-message">
           No questions attended.
         </div>
       </div>

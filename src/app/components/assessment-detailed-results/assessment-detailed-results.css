@@ -291,14 +291,12 @@
 .assessment-taken-page3-cloud-architecture-details-container {
   gap: 24px;
   flex: 0 0 auto;
+  max-width: none;
   width: 100%;
   height: auto;
   display: flex;
-  padding: 24px;
-  padding-top: 0px;
   align-items: center;
-  border-color: #D9D9D9;
-  border-width: 1px;
+  border-radius: 8px;
   flex-direction: column;
   background-color: #FFFFFF;
 }
@@ -318,16 +316,17 @@
   height: 100%;
   display: flex;
   align-items: flex-start;
+  align-self: flex-start;
   flex-direction: column;
 }
  
 .assessment-taken-page3-cloud-architecture-text-container {
   flex: 0 0 auto;
   width: auto;
-  height: 48px;
+  height: auto;
   gap: 16px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
  
 .assessment-taken-page3-back-icon {
@@ -336,11 +335,11 @@
 }
  
 .assessment-taken-page3-cloud-architecture-text {
-  height: 48px;
+  height: auto;
   display: flex;
   font-size: 24px;
   font-style: normal;
-  align-items: center;
+  align-items: flex-start;
   font-weight: 600;
 }
  
@@ -407,7 +406,6 @@
   flex-direction: column;
   align-items: flex-start; /* or center, as needed */
   gap: 12px; /* space between text and button */
-  padding-top: 15px ;
 }
  
 .assessment-taken-page3-re-attempt-container {
@@ -445,6 +443,7 @@
  
 .assessment-taken-page3-qa-details-container {
   gap: var(--dl-layout-space-twounits);
+  max-width: none;
   flex: 0 0 auto;
   height: 600px;
   width: 100%;
@@ -454,7 +453,7 @@
   overflow-y: scroll;
   align-items: flex-start;
   flex-direction: column;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
  
 .assessment-taken-page3-qa-container1 {
@@ -489,12 +488,14 @@
  
 .assessment-taken-page3-text34 {
   height: 24px;
+  justify-content: center;
+  align-items: center;
 }
  
 .assessment-taken-page3-options-container1 {
   gap: 24px;
   flex: 0 0 auto;
-  width: 70%;
+  width: 100%;
   height: auto;
   display: flex;
   align-items: flex-start;
@@ -1623,6 +1624,126 @@
 .assessment-taken-page3-correct-answer-explained-text5 {
   fill: #6B6C6D;
   color: rgb(107, 108, 109);
+}
+
+.section-header {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+.assessment-taken-page3-section-title {
+  text-transform: uppercase;
+}
+
+.sections-capsule-container {
+  flex-grow: 1;
+  overflow-x: auto;
+  padding: 10px 0; /* Provides some vertical spacing */
+  -ms-overflow-style: none;  /* Hides scrollbar on IE/Edge */
+  scrollbar-width: none;     /* Hides scrollbar on Firefox */
+}
+/* Hides scrollbar on Chrome/Safari/Opera */
+.sections-capsule-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 2. NEW: The inner holder. This uses flexbox to arrange the capsules. */
+/* Its width is determined by its content, preventing stretching. */
+.capsule-content-holder {
+  display: inline-flex; /* Use inline-flex */
+  align-items: center; /* Vertically aligns capsules if they have different heights */
+}
+
+
+/* 3. The capsule. We ensure it doesn't shrink. */
+.section-capsule {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  background-color: #fff;
+  font-weight: 500;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+/* Active capsule state */
+.section-capsule.active {
+  background-color: #4D91C6;
+  color: white;
+}
+
+.section-capsule:hover {
+  background-color: #ddd;
+}
+
+
+.selected-section-questions {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.question-card {
+  width: 100%;
+  gap: 16px;
+  max-width: none;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* .large-container {
+  width: 100%;
+  height: auto;
+  gap: 16px;
+} */
+
+.ng-star-inserted {
+  width: 99.8%;
+  align-items: center;
+}
+
+.sections-scroller-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.scroll-arrow {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: center;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scroll-arrow:hover {
+  background-color: #e0e0e0;
+}
+
+.left-arrow {
+  margin-right: 5px;
+}
+
+.right-arrow {
+  margin-left: 5px;
 }
  
 @media(max-width: 991px) {
