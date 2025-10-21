@@ -17,6 +17,19 @@ export class AssessmentTakenService {
     private router: Router
   ) {}
 
+
+  // Helper to get auth headers
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.router.navigate(['/login-candidate']);
+      throw new Error('No authentication token found.');
+    }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   getAllAssessmentScores(): Observable<any> {
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -37,5 +50,35 @@ fetchAssessmentScore(assessmentId: string): Observable<any> {
   return this.http.get(url);
 }
 
+ // --- NEW METHODS FOR AI RECOMMENDATION ---
+
+  /**
+   * Gets the current status of an AI recommendation analysis.
+   * @param resultId The ID of the assessment result.
+   */
+  getRecommendationStatus(resultId: number): Observable<any> {
+    try {
+      const headers = this.getAuthHeaders();
+      const url = `${this.baseUrl}assessment/recommendation/${resultId}/status/`;
+      return this.http.get(url, { headers });
+    } catch (error) {
+      return of({ status: 'FAILED', error: 'Authentication failed' });
+    }
+  }
+
+  /**
+   * Triggers the generation of a new AI recommendation.
+   * @param resultId The ID of the assessment result.
+   */
+  generateRecommendation(resultId: number): Observable<any> {
+    try {
+      const headers = this.getAuthHeaders();
+      const url = `${this.baseUrl}assessment/recommendation/${resultId}/generate/`;
+      // Sending an empty object {} in the body of a POST request
+      return this.http.post(url, {}, { headers });
+    } catch (error) {
+      return of({ status: 'FAILED', error: 'Authentication failed' });
+    }
+  }
 
 }
