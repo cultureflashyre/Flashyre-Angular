@@ -1,23 +1,19 @@
 <div class="job-cards-container">
   <div class="job-cards-job-cards-main-container">
-    <!-- Loading state -->
     <div *ngIf="isLoading" class="job-cards-loading">
       <span>Loading jobs...</span>
     </div>
-    <!-- Error state -->
     <div *ngIf="errorMessage && !isLoading" class="job-cards-error">
       <span>{{ errorMessage }}</span>
     </div>
-    <!-- No jobs state -->
     <div *ngIf="!isLoading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
       <span>No jobs available at the moment.</span>
     </div>
-    <!-- Job cards -->
     <div
       *ngFor="let job of jobs; index as i"
       (click)="selectJob(job)"
       class="job-cards-job-cards-first-container"
-      [ngClass]="{'clicked': clickedIndex === i}"
+      [ngClass]="{'clicked': selectedJobIdInternal === job.job_id}"
     >
       <div class="job-cards-job-card-job-details-container">
         <div class="job-cards-company-logo-container">

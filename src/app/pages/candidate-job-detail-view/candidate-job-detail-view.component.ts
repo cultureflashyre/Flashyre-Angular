@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { JobsService } from '../../services/job.service'; // Assuming this path is correct
+import { JobsService } from '../../services/job.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -9,26 +9,22 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./candidate-job-detail-view.component.css'],
 })
 export class CandidateJobDetailView implements OnInit {
-  // --- State for the selected job and active tab ---
   selectedJobId: number | null = null;
-  activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
-  
-  // --- State for the UI (loading, errors) ---
+  public activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
+
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
-  // --- Master lists to hold all job data ---
   private masterRecommendedJobs: any[] = [];
   private masterSavedJobs: any[] = [];
   private masterAppliedJobs: any[] = [];
 
-  // --- The single list that gets passed to the child component ---
   public jobsToDisplay: any[] = [];
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private jobService: JobsService // Inject JobsService
+    private jobService: JobsService
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -43,9 +39,6 @@ export class CandidateJobDetailView implements OnInit {
     this.fetchAllJobs();
   }
 
-  /**
-   * This is the "Mega-Fetch" that runs only once on page load.
-   */
   private fetchAllJobs(): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -54,17 +47,20 @@ export class CandidateJobDetailView implements OnInit {
     if (!userId) {
       this.errorMessage = "User not found. Please log in again.";
       this.isLoading = false;
+      // Initialize job lists as empty and counts to 0
+      this.masterRecommendedJobs = [];
+      this.masterSavedJobs = [];
+      this.masterAppliedJobs = [];
+      this.updateJobsToDisplay();
       return;
     }
 
-    // Use forkJoin to run all three API calls in parallel
     forkJoin({
       recommended: this.jobService.fetchJobs(),
       saved: this.jobService.fetchSavedJobs(userId),
       applied: this.jobService.fetchAppliedJobDetails()
     }).subscribe({
       next: (results) => {
-        // Store the results in our master lists
         this.masterRecommendedJobs = results.recommended;
         this.masterSavedJobs = results.saved;
         this.masterAppliedJobs = results.applied;
@@ -75,7 +71,6 @@ export class CandidateJobDetailView implements OnInit {
           applied: this.masterAppliedJobs.length
         });
 
-        // Set the initial list to be displayed
         this.updateJobsToDisplay();
         this.isLoading = false;
       },
@@ -83,13 +78,15 @@ export class CandidateJobDetailView implements OnInit {
         console.error('Failed to fetch all jobs:', err);
         this.errorMessage = 'Failed to load job data. Please try again later.';
         this.isLoading = false;
+        // Also set lists to empty on error
+        this.masterRecommendedJobs = [];
+        this.masterSavedJobs = [];
+        this.masterAppliedJobs = [];
+        this.updateJobsToDisplay();
       }
     });
   }
   
-  /**
-   * A central function to update the displayed list based on the active tab.
-   */
   private updateJobsToDisplay(): void {
     this.selectedJobId = null; // Clear old selection
     switch (this.activeTab) {
@@ -103,9 +100,14 @@ export class CandidateJobDetailView implements OnInit {
         this.jobsToDisplay = this.masterAppliedJobs;
         break;
     }
+    // If the currently displayed list has items, select the first one.
+    if (this.jobsToDisplay.length > 0) {
+      this.selectedJobId = this.jobsToDisplay[0].job_id;
+    } else {
+      this.selectedJobId = null; // No jobs to display, so no job selected.
+    }
   }
 
-  // --- Methods for Tab Clicks ---
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {
       console.log('Switching to Recommended tab');
@@ -138,27 +140,30 @@ export class CandidateJobDetailView implements OnInit {
       (job) => job.job_id !== appliedJob.job_id
     );
 
+    // Remove from saved list if it was saved
+    this.masterSavedJobs = this.masterSavedJobs.filter(
+      (job) => job.job_id !== appliedJob.job_id
+    );
+
     // Add the job to the beginning of the applied list to keep state consistent
     this.masterAppliedJobs.unshift(appliedJob);
 
-    // Refresh the view to make the card disappear
+    // Refresh the view to make the card disappear/update
     this.updateJobsToDisplay();
   }
 
-  // --- Methods for getting job counts for the UI ---
-  get recommendedJobCount(): number {
-    return this.masterRecommendedJobs.length;
+  get recommendedJobCount(): number | null {
+    return this.masterRecommendedJobs?.length ?? null;
   }
 
-  get savedJobCount(): number {
-    return this.masterSavedJobs.length;
+  get savedJobCount(): number | null {
+    return this.masterSavedJobs?.length ?? null;
   }
 
-  get appliedJobCount(): number {
-    return this.masterAppliedJobs.length;
+  get appliedJobCount(): number | null {
+    return this.masterAppliedJobs?.length ?? null;
   }
 
-  // --- Event Handlers from Child Components ---
   onJobSelected(jobId: number | undefined): void {
     this.selectedJobId = jobId ?? null;
   }

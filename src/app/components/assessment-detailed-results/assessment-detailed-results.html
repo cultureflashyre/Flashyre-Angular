@@ -1,8 +1,8 @@
-
-    <div
+<div
       id="cloud-architecture-details-container"
       class="assessment-taken-page3-cloud-architecture-details-container"
     >
+    
       <div
         id="text-id-attempts-container"
         class="assessment-taken-page3-text-id-attempts-container"
@@ -100,6 +100,52 @@
 
       </div>
       <div class="assessment-taken-page3-qa-details-container">
+        <div class="ai-recommendation-container">
+    <h3>AI Performance Analysis</h3>
+
+    <!-- PENDING STATE -->
+    <div *ngIf="recommendationStatus === 'PENDING'" class="recommendation-state pending-state">
+      <div class="spinner"></div>
+      <p>Our AI is analyzing your performance to generate personalized feedback. This may take a moment...</p>
+    </div>
+
+    <!-- FAILED STATE -->
+    <div *ngIf="recommendationStatus === 'FAILED'" class="recommendation-state failed-state">
+      <p>Sorry, we couldn't generate the AI analysis at this time. Please try refreshing the page later.</p>
+    </div>
+
+    <!-- COMPLETE STATE -->
+    <div *ngIf="recommendationStatus === 'COMPLETE' && recommendation" class="recommendation-state complete-state">
+      
+      <!-- Weak Topics -->
+      <div class="rec-section" *ngIf="recommendation.weak_topics?.length > 0">
+        <h4>Areas for Improvement</h4>
+        <div *ngFor="let item of recommendation.weak_topics" class="rec-card">
+          <strong>{{ item.topic }}</strong>
+          <p>{{ item.explanation }}</p>
+        </div>
+      </div>
+
+      <!-- Improvement Suggestions -->
+      <div class="rec-section" *ngIf="recommendation.improvement_suggestions?.length > 0">
+        <h4>Actionable Suggestions</h4>
+        <ul>
+          <li *ngFor="let item of recommendation.improvement_suggestions">
+            <strong>{{ item.topic }}:</strong> {{ item.suggestion }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Suggested Resources -->
+      <div class="rec-section" *ngIf="recommendation.suggested_resources?.length > 0">
+        <h4>Learning Resources</h4>
+        <div *ngFor="let item of recommendation.suggested_resources" class="rec-card">
+          <strong><a [href]="item.url" target="_blank" rel="noopener noreferrer">{{ item.title }}</a></strong>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
   <div *ngIf="totalQuestions > 0">
     <!-- New: Sections capsule container -->
     <div class="sections-scroller-wrapper">
@@ -146,48 +192,52 @@
             <img *ngIf="question.question_image" [src]="question.question_image" class="question-image" />
           </div>
           <div class="assessment-taken-page3-options-container1">
-            <div *ngFor="let opt of getOptions(question); let optIdx = index" 
-                 class="assessment-taken-page3-option-container10">
-              <input
-                type="radio"
-                [name]="'radio-' + question.questionNumber"
-                [checked]="logRadioStatus(question, opt, question.questionNumber - 1)"
-                disabled
-                class="assessment-taken-page3-radiobutton13"
-              />
-              <div class="assessment-taken-page3-container15">
-                <label>{{ opt.value }}</label>
-                <span *ngIf="getOptionStatus(question, opt) === 'correct'"
-                      class="assessment-taken-page3-correct-incorrect-text16">
-                  Correct
+
+
+              <div *ngFor="let opt of getOptions(question); let optIdx = index" 
+              class="assessment-taken-page3-option-container10">
+                <input
+                  type="radio"
+                  [name]="'radio-' + question.questionNumber"
+                  [checked]="logRadioStatus(question, opt, question.questionNumber - 1)"
+                  disabled
+                  class="assessment-taken-page3-radiobutton13"
+                />
+                <div class="assessment-taken-page3-container15">
+                  <label>{{ opt.value }}</label>
+                  <span *ngIf="getOptionStatus(question, opt) === 'correct'"
+                        class="assessment-taken-page3-correct-incorrect-text16">
+                    Correct
+                  </span>
+                  <span *ngIf="getOptionStatus(question, opt) === 'incorrect'"
+                        class="assessment-taken-page3-correct-incorrect-text17">
+                    Incorrect
+                  </span>
+                </div>
+              </div>
+
+          </div>
+          <div class="assessment-taken-page3-explianation-container1">
+              <div class="assessment-taken-page3-container16">
+                <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
+                <span class="assessment-taken-page3-correct-option-text1">
+                  {{ getCorrectOptionLetter(question) }}
                 </span>
-                <span *ngIf="getOptionStatus(question, opt) === 'incorrect'"
-                      class="assessment-taken-page3-correct-incorrect-text17">
-                  Incorrect
+              </div>
+              <div class="assessment-taken-page3-container17">
+                <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
+                <span class="assessment-taken-page3-correct-answer-explained-text1">
+                  {{ question.q_answer_explained || 'No explanation provided.' }}
                 </span>
               </div>
             </div>
-          </div>
-          <div class="assessment-taken-page3-explianation-container1">
-            <div class="assessment-taken-page3-container16">
-              <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
-              <span class="assessment-taken-page3-correct-option-text1">
-                {{ getCorrectOptionLetter(question) }}
-              </span>
-            </div>
-            <div class="assessment-taken-page3-container17">
-              <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
-              <span class="assessment-taken-page3-correct-answer-explained-text1">
-                {{ question.q_answer_explained || 'No explanation provided.' }}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="totalQuestions === 0" class="no-questions-message">
-    No questions attended.
-  </div>
-</div>
+        
+        <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0 || totalQuestions === 0" class="no-questions-message">
+          No questions attended.
+        </div>
+      </div>
     </div>

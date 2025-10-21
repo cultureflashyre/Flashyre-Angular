@@ -1,6 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { Router } from '@angular/router';
+import { AssessmentTakenService } from '../../services/assessment-taken.service'; // Import the service
+import { Subscription, interval, of } from 'rxjs';
+import { switchMap, startWith, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'assessment-detailed-results',
@@ -17,12 +20,21 @@ export class AssessmentDetailedResults implements OnChanges  {
     sectionOrder: string[] = [];  // Ordered list of section names
     totalQuestions: number = 0;  // Total for numbering
     selectedSection: string | null = null;  // New: Track currently selected section
+
+     // --- NEW PROPERTIES FOR AI RECOMMENDATION ---
+    recommendation: any = null;
+    recommendationStatus: 'NOT_STARTED' | 'PENDING' | 'COMPLETE' | 'FAILED' = 'NOT_STARTED';
+    private pollingSubscription: Subscription | null = null;
+    // --- END NEW PROPERTIES ---
+
+
     rawhg86: string = ' '
     rawdt3n: string = ' '
     rawrm7v: string = ' '
     rawvn2j: string = ' '
     rawvdwg: string = ' '
-    constructor(private title: Title, private meta: Meta, private router: Router) {
+    constructor(private title: Title, private meta: Meta, private router: Router, private assessmentTakenService: AssessmentTakenService // Inject service
+) {
       this.title.setTitle('Assessment-Detailed-Results - Flashyre')
       this.meta.addTags([
         {
@@ -63,16 +75,83 @@ export class AssessmentDetailedResults implements OnChanges  {
       // Set default selected section to the first one
       this.selectedSection = this.sectionOrder[0] || null;
 
+      // Kick off the recommendation fetching process
+      this.initiateRecommendationCheck();
       this.questions.forEach((q, idx) => {
         console.log(`Q${idx+1} correct:`, q.q_correct_answer, 'explanation:', q.q_answer_explained);
       });
     }
   }
 
-  // New: Method to handle section selection
-  selectSection(section: string) {
-    this.selectedSection = section;
+  ngOnDestroy() {
+    // Clean up the subscription to prevent memory leaks
+    this.stopPolling();
   }
+
+  
+  // --- NEW METHODS FOR AI RECOMMENDATION ---
+
+  initiateRecommendationCheck() {
+    this.stopPolling(); // Ensure no previous polling is running
+    const resultId = this.assessmentData.result_id;
+
+    this.assessmentTakenService.getRecommendationStatus(resultId).subscribe(response => {
+      this.recommendationStatus = response.status;
+      if (response.status === 'COMPLETE') {
+        this.recommendation = response;
+      } else if (response.status === 'NOT_STARTED') {
+        // Status is not started, so we trigger generation
+        this.recommendationStatus = 'PENDING'; // Visually start loading
+        this.assessmentTakenService.generateRecommendation(resultId).subscribe({
+          next: () => {
+            // Generation triggered, now start polling for completion
+            this.startPolling(resultId);
+          },
+          error: () => {
+            this.recommendationStatus = 'FAILED';
+          }
+        });
+      } else if (response.status === 'PENDING') {
+        // It's already being generated, just start polling
+        this.startPolling(resultId);
+      }
+    });
+  }
+
+  startPolling(resultId: number) {
+    this.stopPolling(); // Ensure only one poller is active
+
+    this.pollingSubscription = interval(5000) // Poll every 5 seconds
+      .pipe(
+        startWith(0), // Immediately check on start
+        switchMap(() => this.assessmentTakenService.getRecommendationStatus(resultId)),
+        catchError(() => {
+          this.recommendationStatus = 'FAILED';
+          this.stopPolling();
+          return of(null); // Stop the stream on error
+        })
+      )
+      .subscribe(response => {
+        if (response && (response.status === 'COMPLETE' || response.status === 'FAILED')) {
+          this.recommendationStatus = response.status;
+          if(response.status === 'COMPLETE') {
+            this.recommendation = response;
+          }
+          this.stopPolling();
+        } else if (response) {
+            this.recommendationStatus = response.status;
+        }
+      });
+  }
+
+  stopPolling() {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
+  }
+
+  // --- END NEW METHODS ---
 
   onBackClick() {
   this.back.emit();
@@ -158,4 +237,9 @@ onReattempt() {
   scrollRight() {
         this.capsuleContainer.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
     }
+
+  // New: Method to handle section selection
+  selectSection(section: string) {
+    this.selectedSection = section;
+  }
 }

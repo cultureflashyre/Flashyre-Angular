@@ -157,6 +157,9 @@
           "configurations": {
             "production": {
               "browserTarget": "teleport-project-template-angular:build:production"
+            },
+            "development": { 
+              "browserTarget": "teleport-project-template-angular:build:development"
             }
           }
         },

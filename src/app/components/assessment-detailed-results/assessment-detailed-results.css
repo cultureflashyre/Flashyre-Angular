@@ -2,6 +2,114 @@
   display: contents; 
 }
 
+/* Add these styles to the end of assessment-detailed-results.css */
+
+.ai-recommendation-container {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.ai-recommendation-container h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #05356C;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #05356C;
+  padding-bottom: 8px;
+}
+
+.recommendation-state {
+  padding: 16px;
+}
+
+.pending-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #555;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.failed-state {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border: 1px solid #d32f2f;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.complete-state {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rec-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.rec-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.rec-card strong {
+  color: #05356C;
+}
+
+.rec-card p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.rec-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.rec-section li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.rec-section a {
+  text-decoration: none;
+  color: #1a0dab;
+}
+
+.rec-section a:hover {
+  text-decoration: underline;
+}
+
 .no-questions-message {
   align-self: center;
   display: flex;
