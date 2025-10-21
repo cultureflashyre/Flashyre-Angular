@@ -176,11 +176,10 @@
   width: 100%;
   height: auto;
   display: flex;
-  padding: 24px;
+  /* padding: 24px; */
   max-height: 900px;
   align-items: center;
-  border-color: #D9D9D9;
-  border-width: 1px;
+  border-radius: 8px;
   flex-direction: column;
   background-color: #FFFFFF;
 }

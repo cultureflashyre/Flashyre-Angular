@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { Router } from '@angular/router';
 
@@ -9,9 +9,14 @@ import { Router } from '@angular/router';
 })
 export class AssessmentDetailedResults implements OnChanges  {
     @Input() assessmentData: any;  // This will receive the selected attempt object
+    @ViewChild('capsuleContainer') capsuleContainer!: ElementRef;
     @Output() back = new EventEmitter<void>();
 
     questions: any[] = [];
+    groupedQuestions: { [key: string]: any[] } = {};  // Grouped by section
+    sectionOrder: string[] = [];  // Ordered list of section names
+    totalQuestions: number = 0;  // Total for numbering
+    selectedSection: string | null = null;  // New: Track currently selected section
     rawhg86: string = ' '
     rawdt3n: string = ' '
     rawrm7v: string = ' '
@@ -35,10 +40,38 @@ export class AssessmentDetailedResults implements OnChanges  {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['assessmentData'] && this.assessmentData) {
       this.questions = this.assessmentData.detailed_questions || [];
+      this.totalQuestions = this.questions.length;
+
+      // Assign global question numbers
+      let index = 1;
+      this.questions.forEach(q => {
+        q.questionNumber = index++;
+      });
+
+      // Group questions by section, preserving order
+      this.sectionOrder = [];
+      this.groupedQuestions = this.questions.reduce((acc: { [key: string]: any[] }, q: any) => {
+        const sectionName = q.section || 'Unnamed Section';  // Fallback if section is missing
+        if (!acc[sectionName]) {
+          acc[sectionName] = [];
+          this.sectionOrder.push(sectionName);
+        }
+        acc[sectionName].push(q);
+        return acc;
+      }, {});
+
+      // Set default selected section to the first one
+      this.selectedSection = this.sectionOrder[0] || null;
+
       this.questions.forEach((q, idx) => {
         console.log(`Q${idx+1} correct:`, q.q_correct_answer, 'explanation:', q.q_answer_explained);
       });
     }
+  }
+
+  // New: Method to handle section selection
+  selectSection(section: string) {
+    this.selectedSection = section;
   }
 
   onBackClick() {
@@ -118,5 +151,11 @@ onReattempt() {
     return 'darkgreen';
   }
   
-  
+  scrollLeft() {
+        this.capsuleContainer.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+
+  scrollRight() {
+        this.capsuleContainer.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
+    }
 }
