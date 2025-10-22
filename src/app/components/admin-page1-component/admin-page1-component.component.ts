@@ -127,48 +127,46 @@ export class AdminPage1Component implements OnInit {
     this.isAllSelected = this.candidates.length > 0 && this.candidates.every(c => c.selected);
   }
 
-  public removeCandidateConfirmed(id: number, index: number): void {
-    if (confirm('Are you sure you want to remove this candidate? This action cannot be undone.')) {
-      this.adminService.deleteCandidate(id).subscribe({
-        next: () => {
-          this.candidates.splice(index, 1);
-          this.updateSelectAllState();
-          alert('Candidate removed successfully.');
-        },
-        error: (err) => {
-          alert(`Failed to remove candidate: ${err.error?.detail || 'Server error'}`);
-        }
-      });
-    }
+ public removeCandidateConfirmed(id: number, index: number): void {
+    // The confirmation has already happened. We can now safely delete the candidate.
+    this.adminService.deleteCandidate(id).subscribe({
+      next: () => {
+        this.candidates.splice(index, 1);
+        this.updateSelectAllState();
+        this.showSuccessPopup('Candidate removed successfully.');
+      },
+      error: (err) => {
+        this.showErrorPopup(`Failed to remove candidate: ${err.error?.detail || 'Server error'}`);
+      }
+    });
   }
 
-  public removeSelectedConfirmed(): void {
+public removeSelectedConfirmed(): void {
     const selectedIds = this.candidates.filter(c => c.selected).map(c => c.candidate_id);
     if (selectedIds.length === 0) {
-      alert('Please select at least one candidate to remove.');
+      this.showErrorPopup('Please select at least one candidate to remove.');
       return;
     }
 
-    if (confirm(`Are you sure you want to permanently delete ${selectedIds.length} candidate(s)?`)) {
-      const deleteObservables = selectedIds.map(id => this.adminService.deleteCandidate(id));
-      forkJoin(deleteObservables).subscribe({
-        next: () => {
-          alert('Selected candidates removed successfully.');
-          if(this.activeFilter) {
-            this.applyFilter(this.activeFilter);
-          }
-        },
-        error: (err) => {
-          alert(`An error occurred while removing candidates: ${err.message}`);
+    // Proceed directly with deleting the selected candidates.
+    const deleteObservables = selectedIds.map(id => this.adminService.deleteCandidate(id));
+    forkJoin(deleteObservables).subscribe({
+      next: () => {
+        this.showSuccessPopup('Selected candidates removed successfully.');
+        if(this.activeFilter) {
+          this.applyFilter(this.activeFilter); // This reloads the candidate list
         }
-      });
-    }
+      },
+      error: (err) => {
+        this.showErrorPopup(`An error occurred while removing candidates: ${err.message}`);
+      }
+    });
   }
 
-  public startProcessConfirmed(): void {
+public startProcessConfirmed(): void {
     const selectedCandidates = this.candidates.filter(c => c.selected);
     if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate to start the process.');
+      this.showErrorPopup('Please select at least one candidate to start the process.');
       return;
     }
 
@@ -176,31 +174,23 @@ export class AdminPage1Component implements OnInit {
       .filter(c => c.has_account !== 'Yes')
       .map(c => c.candidate_id);
 
-    const hasRegistered = selectedCandidates.some(c => c.has_account === 'Yes');
-
     if (unregisteredIds.length === 0) {
-      alert('All selected candidates are already registered.');
+      this.showErrorPopup('All selected candidates are already registered.');
       return;
     }
-
-    let confirmationMessage = `This will send registration invites to ${unregisteredIds.length} unregistered candidate(s). Proceed?`;
-    if (hasRegistered) {
-      confirmationMessage = 'Some selected candidates are already registered. ' + confirmationMessage;
-    }
-
-    if (confirm(confirmationMessage)) {
-      this.adminService.sendRegistrationInvites(unregisteredIds).subscribe({
-        next: (response) => {
-          alert(response.message);
-          if(this.activeFilter) {
-            this.applyFilter(this.activeFilter);
-          }
-        },
-        error: (err) => {
-          alert(`Failed to send invites: ${err.error?.message || 'Server error'}`);
+    
+    // Proceed directly with sending the invites.
+    this.adminService.sendRegistrationInvites(unregisteredIds).subscribe({
+      next: (response) => {
+        this.showSuccessPopup(response.message);
+        if(this.activeFilter) {
+          this.applyFilter(this.activeFilter); // This reloads the candidate list
         }
-      });
-    }
+      },
+      error: (err) => {
+        this.showErrorPopup(`Failed to send invites: ${err.error?.message || 'Server error'}`);
+      }
+    });
   }
 
   // --- Alert and Popup Handling ---
