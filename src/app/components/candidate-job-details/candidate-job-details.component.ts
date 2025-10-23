@@ -25,6 +25,10 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @Input() activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
   @Output() applicationRevoked = new EventEmitter<number>();
   @Output() jobAppliedSuccess = new EventEmitter<any>(); // Emits the full job object
+  @Output() jobSaved = new EventEmitter<any>();
+  @Output() jobUnsaved = new EventEmitter<any>();
+  @Output() jobDisliked = new EventEmitter<any>();
+  @Output() jobUndisliked = new EventEmitter<any>();
 
   @ViewChild('mobileBar') mobileBar: ElementRef;
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
@@ -266,61 +270,77 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
   }
 
-  onDislike(event: MouseEvent): void {
-    event.stopPropagation();
-    if (this.isSaved) {
-      alert('You cannot dislike a job that is saved. Please unsave it first.');
-      return;
-    }
-    const userId = localStorage.getItem('user_id');
-    const jobIdStr = this.jobId?.toString();
-    if (!userId || !jobIdStr) return;
-
-    const action = this.isDisliked
-      ? this.authService.removeDislikedJob(userId, jobIdStr)
-      : this.authService.dislikeJob(userId, jobIdStr);
-
-    action.subscribe({
-      next: () => {
-        this.isDisliked = !this.isDisliked;
-        this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
-        this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
-
-        if (this.isDisliked) {
-          alert('Job disliked successfully.');
-        } else {
-          alert('Dislike removed.');
-        }
-        this.cdr.detectChanges();
-      },
-      error: (error) => alert('Failed to update dislike status: ' + error.message),
-    });
+ onDislike(event: MouseEvent): void {
+  event.stopPropagation();
+  if (this.isSaved) {
+    alert('You cannot dislike a job that is saved. Please unsave it first.');
+    return;
   }
+  const userId = localStorage.getItem('user_id');
+  const jobIdStr = this.jobId?.toString();
+  if (!userId || !jobIdStr) return;
 
-  onSave(event: MouseEvent): void {
-    event.stopPropagation();
-    if (this.isDisliked) {
-      alert('You cannot save a job that is disliked. Please remove the dislike first.');
-      return;
-    }
-    const userId = localStorage.getItem('user_id');
-    const jobIdStr = this.jobId?.toString();
-    if (!userId || !jobIdStr) return;
+  const action = this.isDisliked
+    ? this.authService.removeDislikedJob(userId, jobIdStr)
+    : this.authService.dislikeJob(userId, jobIdStr);
 
-    const action = this.isSaved
-      ? this.authService.removeSavedJob(userId, jobIdStr)
-      : this.authService.saveJob(userId, jobIdStr);
+  action.subscribe({
+    next: () => {
+      const wasDisliked = this.isDisliked;
+      this.isDisliked = !wasDisliked;
 
-    action.subscribe({
-      next: () => {
-        this.isSaved = !this.isSaved;
-        this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
-        alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
-        this.cdr.detectChanges();
-      },
-      error: (error) => alert('Failed to update save status: ' + error.message)
-    });
+      // Emit the correct event based on the action performed
+      if (wasDisliked) {
+        // This means the dislike was removed
+        this.jobUndisliked.emit(this.job);
+      } else {
+        // This means the job was just disliked
+        this.jobDisliked.emit(this.job);
+      }
+      
+      this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
+      this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
+
+      this.cdr.detectChanges();
+    },
+    error: (error) => alert('Failed to update dislike status: ' + error.message),
+  });
+}
+ onSave(event: MouseEvent): void {
+  event.stopPropagation();
+  if (this.isDisliked) {
+    alert('You cannot save a job that is disliked. Please remove the dislike first.');
+    return;
   }
+  const userId = localStorage.getItem('user_id');
+  const jobIdStr = this.jobId?.toString();
+  if (!userId || !jobIdStr) return;
+
+  const action = this.isSaved
+    ? this.authService.removeSavedJob(userId, jobIdStr)
+    : this.authService.saveJob(userId, jobIdStr);
+
+  action.subscribe({
+    next: () => {
+      const wasSaved = this.isSaved;
+      this.isSaved = !wasSaved;
+
+      // Emit the correct event to the parent
+      if (wasSaved) {
+          // This means the job was unsaved
+          this.jobUnsaved.emit(this.job);
+      } else {
+          // This means the job was just saved
+          this.jobSaved.emit(this.job);
+      }
+
+      this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
+      alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
+      this.cdr.detectChanges();
+    },
+    error: (error) => alert('Failed to update save status: ' + error.message)
+  });
+}
 
   // --- Caching Helper Methods for Disliked Jobs (copied from card component for consistency) ---
   private async getDislikedJobsFromCache(userId: string): Promise<string[] | null> {
@@ -399,16 +419,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.authService.applyForJob(this.job.job_id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          this.isApplied = true;
-          this.isProcessing = false;
-          alert('You have successfully applied for this job!');
-          setTimeout(() => {
-            this.jobService.removeJobFromCache(this.job.job_id);
-            this.jobAppliedSuccess.emit(this.job); // Emit the full job object
-            this.job = null; // Clear job details from the view
-          }, 2000);
-        },
+       next: () => {
+  this.isApplied = true;
+  this.isProcessing = false;
+  alert('You have successfully applied for this job!');
+  this.jobService.removeJobFromCache(this.job.job_id);
+  this.jobAppliedSuccess.emit(this.job); // Emit the full job object
+},
         error: (error) => {
           this.isProcessing = false;
           alert(error.error?.error || 'Failed to apply for this job');
