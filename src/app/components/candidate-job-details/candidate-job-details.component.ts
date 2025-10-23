@@ -75,6 +75,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private isViewInitialized = false;
   private attemptsFromNavigation: number | null = null;
 
+  isProcessingDislike: boolean = false; // Add new flag for dislike processing
+  isProcessingSave: boolean = false;   // Add new flag for save processing
+
   isDisliked: boolean = false;
   isSaved: boolean = false;
   private dislikedCacheName = 'disliked-jobs-cache-v1';
@@ -270,77 +273,93 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
   }
 
- onDislike(event: MouseEvent): void {
-  event.stopPropagation();
-  if (this.isSaved) {
-    alert('You cannot dislike a job that is saved. Please unsave it first.');
-    return;
+  onDislike(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isSaved) {
+      alert('You cannot dislike a job that is saved. Please unsave it first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
+
+    if (this.isProcessingDislike) { // Prevent multiple clicks
+      console.log('Dislike action already in progress.');
+      return;
+    }
+    this.isProcessingDislike = true; // Set flag to true
+
+    const action = this.isDisliked
+      ? this.authService.removeDislikedJob(userId, jobIdStr)
+      : this.authService.dislikeJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        const wasDisliked = this.isDisliked;
+        this.isDisliked = !wasDisliked;
+
+        if (wasDisliked) {
+          this.jobUndisliked.emit(this.job);
+        } else {
+          this.jobDisliked.emit(this.job);
+        }
+        
+        this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
+        this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
+
+        this.isProcessingDislike = false; // Reset flag on success
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        alert('Failed to update dislike status: ' + (error.error?.detail || error.message)); // Display backend error
+        this.isProcessingDislike = false; // Reset flag on error
+      },
+    });
   }
-  const userId = localStorage.getItem('user_id');
-  const jobIdStr = this.jobId?.toString();
-  if (!userId || !jobIdStr) return;
 
-  const action = this.isDisliked
-    ? this.authService.removeDislikedJob(userId, jobIdStr)
-    : this.authService.dislikeJob(userId, jobIdStr);
+  onSave(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isDisliked) {
+      alert('You cannot save a job that is disliked. Please remove the dislike first.');
+      return;
+    }
+    const userId = localStorage.getItem('user_id');
+    const jobIdStr = this.jobId?.toString();
+    if (!userId || !jobIdStr) return;
 
-  action.subscribe({
-    next: () => {
-      const wasDisliked = this.isDisliked;
-      this.isDisliked = !wasDisliked;
+    if (this.isProcessingSave) { // Prevent multiple clicks
+      console.log('Save action already in progress.');
+      return;
+    }
+    this.isProcessingSave = true; // Set flag to true
 
-      // Emit the correct event based on the action performed
-      if (wasDisliked) {
-        // This means the dislike was removed
-        this.jobUndisliked.emit(this.job);
-      } else {
-        // This means the job was just disliked
-        this.jobDisliked.emit(this.job);
+    const action = this.isSaved
+      ? this.authService.removeSavedJob(userId, jobIdStr)
+      : this.authService.saveJob(userId, jobIdStr);
+
+    action.subscribe({
+      next: () => {
+        const wasSaved = this.isSaved;
+        this.isSaved = !wasSaved;
+
+        if (wasSaved) {
+            this.jobUnsaved.emit(this.job);
+        } else {
+            this.jobSaved.emit(this.job);
+        }
+
+        this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
+        alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
+        
+        this.isProcessingSave = false; // Reset flag on success
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        alert('Failed to update save status: ' + (error.error?.detail || error.message)); // Display backend error
+        this.isProcessingSave = false; // Reset flag on error
       }
-      
-      this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
-      this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
-
-      this.cdr.detectChanges();
-    },
-    error: (error) => alert('Failed to update dislike status: ' + error.message),
-  });
-}
- onSave(event: MouseEvent): void {
-  event.stopPropagation();
-  if (this.isDisliked) {
-    alert('You cannot save a job that is disliked. Please remove the dislike first.');
-    return;
+    });
   }
-  const userId = localStorage.getItem('user_id');
-  const jobIdStr = this.jobId?.toString();
-  if (!userId || !jobIdStr) return;
-
-  const action = this.isSaved
-    ? this.authService.removeSavedJob(userId, jobIdStr)
-    : this.authService.saveJob(userId, jobIdStr);
-
-  action.subscribe({
-    next: () => {
-      const wasSaved = this.isSaved;
-      this.isSaved = !wasSaved;
-
-      // Emit the correct event to the parent
-      if (wasSaved) {
-          // This means the job was unsaved
-          this.jobUnsaved.emit(this.job);
-      } else {
-          // This means the job was just saved
-          this.jobSaved.emit(this.job);
-      }
-
-      this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
-      alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
-      this.cdr.detectChanges();
-    },
-    error: (error) => alert('Failed to update save status: ' + error.message)
-  });
-}
 
   // --- Caching Helper Methods for Disliked Jobs (copied from card component for consistency) ---
   private async getDislikedJobsFromCache(userId: string): Promise<string[] | null> {

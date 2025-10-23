@@ -508,7 +508,7 @@
             <candidate-job-for-you-card
               *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
               [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
-              [jobId]="job.job_id.toString()"
+              [jobId]="job.job_id?.toString() || ''"
               [imageSrc]="getImageOrInitials(job)"
               [imageAlt]="job.company_name + ' logo'"
               [matchingScore]="job.matching_score"

@@ -401,7 +401,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   private filterAndDisplayJobs(jobs: any[]): void {
     const userId = localStorage.getItem('user_id');
     if (!userId) {
-        this.jobs = jobs;
+        this.jobs = jobs.filter(job => job.job_id !== undefined && job.job_id !== null); // Add this filter
         this.filteredJobs = [...this.jobs];
         this.loadNextPage();
         this.isLoading = false;
@@ -410,21 +410,20 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
     forkJoin({
         applied: this.authService.getAppliedJobs(),
-        disliked: this.authService.getDislikedJobs(userId) // <-- Fetches disliked jobs
+        disliked: this.authService.getDislikedJobs(userId) 
     }).pipe(
         takeUntil(this.destroy$)
     ).subscribe({
         next: ({ applied, disliked }) => {
             const appliedJobIds = applied.applied_job_ids || [];
-            const dislikedJobIds = disliked.disliked_jobs.map((job: any) => job.job_id.toString()) || [];
+            const dislikedJobIds = disliked.disliked_jobs.map((job: any) => job.job_id?.toString()) || []; // Use optional chaining here too
 
-            // --- THIS LINE DOES THE FILTERING ON RELOAD ---
-            this.jobs = jobs.filter(job => 
-                !appliedJobIds.includes(job.job_id) && 
+            this.jobs = jobs.filter(job =>
+                job.job_id !== undefined && job.job_id !== null && // Ensure job_id exists
+                !appliedJobIds.includes(job.job_id) &&
                 !dislikedJobIds.includes(job.job_id.toString())
             );
-            // --- END OF FILTERING LOGIC ---
-            
+
             this.filteredJobs = [...this.jobs];
             this.currentPage = 0;
             this.displayedJobs = [];
@@ -433,7 +432,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (error) => {
             console.error('Error fetching applied/disliked jobs, showing all jobs as a fallback:', error);
-            this.jobs = jobs;
+            this.jobs = jobs.filter(job => job.job_id !== undefined && job.job_id !== null); // Add this filter
             this.filteredJobs = [...this.jobs];
             this.currentPage = 0;
             this.displayedJobs = [];
@@ -471,44 +470,42 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
 
   private fetchAndAssignMatchScores(jobsToScore: any[]): void {
-  console.log('Attempting to fetch match scores for the following jobs:', jobsToScore);
+    console.log('Attempting to fetch match scores for the following jobs:', jobsToScore);
 
-  const jobIds = jobsToScore.map(job => job.job_id).filter(id => id != null);
-  console.log('Filtered jobIds to score:', jobIds);
+    const jobIds = jobsToScore.map(job => job.job_id).filter(id => id != null);
+    console.log('Filtered jobIds to score:', jobIds);
 
-  if (jobIds.length === 0) {
-    console.log('No jobIds to score. Exiting function early.');
-    return; // No jobs to score
+    if (jobIds.length === 0) {
+      console.log('No jobIds to score. Exiting function early.');
+      return; // No jobs to score
+    }
+
+    this.authService.getMatchScores(jobIds)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (scoresMap) => {
+          console.log('Received scoresMap from getMatchScores:', scoresMap);
+
+          const scores = new Map(Object.entries(scoresMap).map(([key, value]) => [parseInt(key, 10), value]));
+          console.log('Processed scores into a lookup Map:', scores);
+
+          this.displayedJobs.forEach(job => {
+            // Add a check here for job.job_id
+            if (job.job_id !== undefined && job.job_id !== null && scores.has(job.job_id)) {
+              const newScore = scores.get(job.job_id);
+              console.log(`Score FOUND for job_id ${job.job_id}. Assigning new score: ${newScore}`);
+              job.matching_score = newScore;
+            } else {
+              //console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
+            }
+          });
+          this.jobService.updateJobsInCache(this.displayedJobs);
+        },
+        (error) => {
+          console.error('Failed to fetch match scores for jobs:', error);
+        }
+      );
   }
-
-  this.authService.getMatchScores(jobIds)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(
-      (scoresMap) => {
-        console.log('Received scoresMap from getMatchScores:', scoresMap);
-
-        // Create a map for efficient lookup
-        const scores = new Map(Object.entries(scoresMap).map(([key, value]) => [parseInt(key, 10), value]));
-        console.log('Processed scores into a lookup Map:', scores);
-
-        // Assign scores to the jobs in the main displayedJobs array
-        this.displayedJobs.forEach(job => {
-          if (scores.has(job.job_id)) {
-            const newScore = scores.get(job.job_id);
-            console.log(`Score FOUND for job_id ${job.job_id}. Assigning new score: ${newScore}`);
-            job.matching_score = newScore;
-          } else {
-            //console.log(`No score found for job_id ${job.job_id}, not modifying matching_score.`);
-          }
-        });
-        this.jobService.updateJobsInCache(this.displayedJobs);
-      },
-      (error) => {
-        console.error('Failed to fetch match scores for jobs:', error);
-        // Gracefully handle the error, jobs will just show a 0% score.
-      }
-    );
-}
 
   private setupInfiniteScroll(): void {
     if (this.observer) this.observer.disconnect();

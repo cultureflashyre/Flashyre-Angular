@@ -163,7 +163,7 @@
             viewBox="0 0 24 24"
             class="candidate-job-for-you-card-icon14"
             [class.filled]="isDisliked"
-            [class.disabled]="isSaved" 
+            [class.disabled]="isSaved || isProcessingDislike || isProcessingSave" 
             (click)="onDislike($event)"
           >
             <path
@@ -182,7 +182,7 @@
             viewBox="0 0 24 24"
             class="candidate-job-for-you-card-icon16"
             [class.filled]="isSaved"
-            [class.disabled]="isDisliked"
+            [class.disabled]="isDisliked || isProcessingSave || isProcessingDislike"
             (click)="onSave($event)"
           >
             <g fill="none" fill-rule="evenodd">
