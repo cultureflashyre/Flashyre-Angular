@@ -56,7 +56,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   loading: boolean = false;
   errorMessage: string | null = null;
   progress: number = 0;
-  matchingScore: number = 0;
+  matchingScore: number | null = null;
   fillColor: string = '#4D91C6';
   matchingScoreFillColor: string = '#4D91C6';
   matchingScoreStrokeDasharray: string = '0 25.12';
@@ -207,7 +207,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
             : this.attemptsFromNavigation,
           matching_score: data.matching_score || 0
         };
-        this.matchingScore = data.matching_score || 80; // Default to 80 if not provided
+        if (this.matchingScore === null) {
+          this.matchingScore = data.matching_score || 0;
+        } // Default to 80 if not provided
         this.loading = false;
         this.setProgressBarState(); // Update progress bar instantly
 
@@ -381,7 +383,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       attempts_remaining: null,
       matching_score: 0
     };
-    this.matchingScore = 0;
+    this.matchingScore = null;
     this.progress = 0;
     this.errorMessage = null;
     this.isApplied = false;
@@ -470,8 +472,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private setProgressBarState(): void {
-    if (this.matchingScore === null || typeof this.matchingScore === 'undefined') {
-      return;
+    if (this.matchingScore === null || typeof this.matchingScore === 'undefined' || this.matchingScore < 0) {
+      return;  // Prevent updating if invalid
     }
     this.updateProgressBar(this.matchingScore, this.progress);
   }
