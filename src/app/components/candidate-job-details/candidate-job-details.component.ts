@@ -1,5 +1,3 @@
-// candidate-job-details.component.ts
-
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -60,7 +58,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   loading: boolean = false;
   errorMessage: string | null = null;
   progress: number = 0;
-  matchingScore: number = 0;
+  matchingScore: number | null = null; // Changed to null to reflect branch-2's initial state
   fillColor: string = '#4D91C6';
   matchingScoreFillColor: string = '#4D91C6';
   matchingScoreStrokeDasharray: string = '0 25.12';
@@ -75,8 +73,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private isViewInitialized = false;
   private attemptsFromNavigation: number | null = null;
 
-  isProcessingDislike: boolean = false; // Add new flag for dislike processing
-  isProcessingSave: boolean = false;   // Add new flag for save processing
+  isProcessingDislike: boolean = false; // Add new flag for dislike processing (from branch-1)
+  isProcessingSave: boolean = false;   // Add new flag for save processing (from branch-1)
 
   isDisliked: boolean = false;
   isSaved: boolean = false;
@@ -214,7 +212,15 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
             : this.attemptsFromNavigation,
           matching_score: data.matching_score || 0
         };
-        this.matchingScore = data.matching_score || 80; // Default to 80 if not provided
+        // Logic from branch-2, prioritizing URL score if present, otherwise using fetched data
+        if (this.matchingScore === null) { 
+          this.matchingScore = data.matching_score || 0;
+        } else if (this.matchingScore === 0) { // If URL score was 0, and data has a score, use data's score
+            this.matchingScore = data.matching_score || 0;
+        } else {
+            // If matchingScore was set from URL and is not 0, keep it.
+        }
+
         this.loading = false;
         this.setProgressBarState(); // Update progress bar instantly
 
@@ -283,11 +289,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     const jobIdStr = this.jobId?.toString();
     if (!userId || !jobIdStr) return;
 
-    if (this.isProcessingDislike) { // Prevent multiple clicks
+    if (this.isProcessingDislike) { // Prevent multiple clicks (from branch-1)
       console.log('Dislike action already in progress.');
       return;
     }
-    this.isProcessingDislike = true; // Set flag to true
+    this.isProcessingDislike = true; // Set flag to true (from branch-1)
 
     const action = this.isDisliked
       ? this.authService.removeDislikedJob(userId, jobIdStr)
@@ -295,24 +301,31 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
 
     action.subscribe({
       next: () => {
-        const wasDisliked = this.isDisliked;
-        this.isDisliked = !wasDisliked;
+        const wasDisliked = this.isDisliked; // (from branch-1)
+        this.isDisliked = !wasDisliked; // (from branch-1)
 
-        if (wasDisliked) {
-          this.jobUndisliked.emit(this.job);
-        } else {
-          this.jobDisliked.emit(this.job);
+        if (wasDisliked) { // (from branch-1)
+          this.jobUndisliked.emit(this.job); // (from branch-1)
+        } else { // (from branch-1)
+          this.jobDisliked.emit(this.job); // (from branch-1)
         }
         
         this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
         this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
 
-        this.isProcessingDislike = false; // Reset flag on success
+        // Alert messages from branch-2 integrated for better user feedback
+        if (this.isDisliked) {
+          alert('Job disliked successfully.');
+        } else {
+          alert('Dislike removed.');
+        }
+
+        this.isProcessingDislike = false; // Reset flag on success (from branch-1)
         this.cdr.detectChanges();
       },
       error: (error) => {
-        alert('Failed to update dislike status: ' + (error.error?.detail || error.message)); // Display backend error
-        this.isProcessingDislike = false; // Reset flag on error
+        alert('Failed to update dislike status: ' + (error.error?.detail || error.message)); // Display backend error (from branch-1)
+        this.isProcessingDislike = false; // Reset flag on error (from branch-1)
       },
     });
   }
@@ -327,11 +340,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     const jobIdStr = this.jobId?.toString();
     if (!userId || !jobIdStr) return;
 
-    if (this.isProcessingSave) { // Prevent multiple clicks
+    if (this.isProcessingSave) { // Prevent multiple clicks (from branch-1)
       console.log('Save action already in progress.');
       return;
     }
-    this.isProcessingSave = true; // Set flag to true
+    this.isProcessingSave = true; // Set flag to true (from branch-1)
 
     const action = this.isSaved
       ? this.authService.removeSavedJob(userId, jobIdStr)
@@ -339,24 +352,24 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
 
     action.subscribe({
       next: () => {
-        const wasSaved = this.isSaved;
-        this.isSaved = !wasSaved;
+        const wasSaved = this.isSaved; // (from branch-1)
+        this.isSaved = !wasSaved; // (from branch-1)
 
-        if (wasSaved) {
-            this.jobUnsaved.emit(this.job);
-        } else {
-            this.jobSaved.emit(this.job);
+        if (wasSaved) { // (from branch-1)
+            this.jobUnsaved.emit(this.job); // (from branch-1)
+        } else { // (from branch-1)
+            this.jobSaved.emit(this.job); // (from branch-1)
         }
 
         this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
         alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
         
-        this.isProcessingSave = false; // Reset flag on success
+        this.isProcessingSave = false; // Reset flag on success (from branch-1)
         this.cdr.detectChanges();
       },
       error: (error) => {
-        alert('Failed to update save status: ' + (error.error?.detail || error.message)); // Display backend error
-        this.isProcessingSave = false; // Reset flag on error
+        alert('Failed to update save status: ' + (error.error?.detail || error.message)); // Display backend error (from branch-1)
+        this.isProcessingSave = false; // Reset flag on error (from branch-1)
       }
     });
   }
@@ -420,7 +433,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       attempts_remaining: null,
       matching_score: 0
     };
-    this.matchingScore = 0;
+    this.matchingScore = null; // Changed to null to reflect branch-2's initial state
     this.progress = 0;
     this.errorMessage = null;
     this.isApplied = false;
@@ -439,12 +452,15 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       .pipe(takeUntil(this.destroy$))
       .subscribe({
        next: () => {
-  this.isApplied = true;
-  this.isProcessing = false;
-  alert('You have successfully applied for this job!');
-  this.jobService.removeJobFromCache(this.job.job_id);
-  this.jobAppliedSuccess.emit(this.job); // Emit the full job object
-},
+          this.isApplied = true;
+          this.isProcessing = false;
+          alert('You have successfully applied for this job!');
+          this.jobService.removeJobFromCache(this.job.job_id); // From branch-1
+          this.jobAppliedSuccess.emit(this.job); // Emit the full job object (from branch-1)
+          // Removed the setTimeout and job = null from branch-2's applyForJob next block
+          // to keep the behavior more consistent with branch-1's immediate emission and not clearing the job.
+          // If clearing the job after a delay is a desired feature, it should be re-added consciously.
+        },
         error: (error) => {
           this.isProcessing = false;
           alert(error.error?.error || 'Failed to apply for this job');
@@ -506,14 +522,14 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private setProgressBarState(): void {
-    if (this.matchingScore === null || typeof this.matchingScore === 'undefined') {
-      return;
+    if (this.matchingScore === null || typeof this.matchingScore === 'undefined' || this.matchingScore < 0) { // Added matchingScore < 0 check from branch-2
+      return;  // Prevent updating if invalid
     }
     this.updateProgressBar(this.matchingScore, this.progress);
   }
 
-  private updateProgressBar(percentage: number, companyPercentage: number): void {
-    const actualMatchingScore = Math.min(percentage, 100);
+  private updateProgressBar(percentage: number | null, companyPercentage: number): void { // Changed percentage to number | null
+    const actualMatchingScore = Math.min(percentage || 0, 100); // Handle null matchingScore gracefully
     const actualProgress = Math.min(companyPercentage, 100);
 
     this.fillColor = this.getFillColor(actualProgress);

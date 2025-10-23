@@ -8,39 +8,89 @@ body {
   background-color: transparent;
 }
 
-/* ... existing styles ... */
-
-/* --- [NEW] Custom Tooltip & Icon Styles --- */
-.icon-wrapper {
-  position: relative;
-  display: inline-flex; /* Use flex for alignment */
+.candidate-job-details-icon-container {
+  display: flex;
+  gap: 16px;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-left: 10px; /* Add some space between buttons */
 }
 
+/* In candidate-job-details.component.css */
+
+/* This container will align the icons next to the buttons */
+.candidate-job-details-icon-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Base styles for both Save and Dislike icons */
+.action-icon {
+  cursor: pointer;
+  color: #777; /* Default icon color */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.action-icon:hover {
+  color: #333; /* Darker color on hover */
+  transform: scale(1.1);
+}
+
+/* Style for when an icon is 'filled' (i.e., active) */
+.action-icon1.filled {
+  color: red;
+}
+
+.action-icon2.filled {
+  color: #28A745;
+}
+
+
+/* 
+  --- Custom Tooltip Styles --- 
+  This is the exact block of code you provided.
+*/
+
+/* 
+  The wrapper container for the icon. 
+  It's positioned relatively so the absolute tooltip is positioned relative to it.
+*/
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Ensures the cursor changes to a pointer on hover */
+}
+
+/* 
+  The tooltip text itself. Hidden by default.
+*/
 .tooltip-text {
   visibility: hidden;
-  width: 160px;
+  width: 160px; /* Adjust width as needed */
   background-color: #333;
   color: #fff;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
+  
+  /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  bottom: 125%; 
+  bottom: 125%; /* Position above the icon */
   left: 50%;
-  margin-left: -80px;
+  margin-left: -80px; /* Use half of the width to center it */
+
+  /* Fade-in transition */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
+/* 
+  An optional arrow for the tooltip.
+*/
 .tooltip-text::after {
   content: "";
   position: absolute;
-  top: 100%;
+  top: 100%; /* At the bottom of the tooltip */
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
@@ -48,37 +98,41 @@ body {
   border-color: #333 transparent transparent transparent;
 }
 
+/* 
+  The magic: Show the tooltip when hovering over the icon-wrapper.
+*/
 .icon-wrapper:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }
 
-.icon-wrapper .disabled + .tooltip-text {
+/* Style for when an icon is disabled */
+/* This rule applies to the icon itself */
+.action-icon.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents clicks on the icon */
+}
+
+/* This rule applies to the wrapper when the icon inside is disabled */
+.icon-wrapper .disabled {
+   cursor: not-allowed;
+}
+
+/* 
+  When an icon is disabled, we don't want to show a tooltip.
+  Note: Since the icon itself has pointer-events: none, hover might not trigger.
+  This rule is a fallback. A better approach is handling this in the component logic if needed.
+*/
+.icon-wrapper:has(.disabled):hover .tooltip-text {
   display: none;
 }
 
-.icon-wrapper .disabled {
-   cursor: not-allowed;
-   color: #ccc; /* Visually indicate it's disabled */
-}
-
-/* Style for when an icon is selected (filled) */
-
-.candidate-job-for-you-card-icon14 {
-  color: #05356c;
-}
-
-.candidate-job-for-you-card-icon14.filled {
-  color: #e74c3c;
-}
-
-
-.candidate-job-for-you-card-icon16 {
-  color: #05356c;
-}
-
-.candidate-job-for-you-card-icon16.filled {
-  color: #2ecc71;
+.candidate-job-details-for-progress-bar {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
 }
 
 .progress-container {
@@ -180,6 +234,7 @@ body {
   align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 16px;
 }
 
 .candidate-job-details-job-details-container {
@@ -454,6 +509,7 @@ body {
 
 .candidate-job-details-fragment6 {
   display: contents;
+  width: 100%;
 }
 
 .candidate-job-details-text15 {
@@ -469,6 +525,7 @@ body {
 
 .candidate-job-details-text19 {
   font-weight: normal;
+  width: 100%;
 }
 
 .candidate-job-detailsroot-class-name {
