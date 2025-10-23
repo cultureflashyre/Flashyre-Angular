@@ -12,6 +12,7 @@ import { Observable } from 'rxjs'; // Added from branch-2
 })
 export class JobCardsComponent implements OnInit, OnChanges {
   @Input() jobsToDisplay: any[] = [];
+  @Input() selectedJobId: number | null = null;
   @Input() isLoading: boolean = true;
   @Input() errorMessage: string | null = null;
   @Input() rootClassName: string = '';
@@ -19,12 +20,12 @@ export class JobCardsComponent implements OnInit, OnChanges {
   @Input() text1: TemplateRef<any> | null = null;
   @Input() text2: TemplateRef<any> | null = null;
   @Input() displayMode?: 'recommended' | 'saved'; // Added from branch-2
-  @Output() jobSelected = new EventEmitter<number | undefined>();
+  @Output() jobSelected = new EventEmitter<any>();
   @Output() recommendedJobsCount = new EventEmitter<number>(); // Added from branch-2
   @Output() savedJobsCount = new EventEmitter<number>(); // Added from branch-2
 
   public jobs: any[] = [];
-  public selectedJobIdInternal: number | null = null;
+  // public selectedJobIdInternal: number | null = null;
 
   private jobIdFromUrl: number | null = null; // Added from branch-2
 
@@ -146,17 +147,17 @@ export class JobCardsComponent implements OnInit, OnChanges {
       const job = this.jobs.find(j => j.job_id === this.jobIdFromUrl);
       if (job) {
         // Move the selected job to the beginning of the array for better visibility/UX
-        const jobIndex = this.jobs.findIndex(j => j.job_id === this.jobIdFromUrl);
-        if (jobIndex > 0) {
-          const [selectedJob] = this.jobs.splice(jobIndex, 1);
-          this.jobs.unshift(selectedJob);
-        }
+        // const jobIndex = this.jobs.findIndex(j => j.job_id === this.jobIdFromUrl);
+        // if (jobIndex > 0) {
+        //   const [selectedJob] = this.jobs.splice(jobIndex, 1);
+        //   this.jobs.unshift(selectedJob);
+        // }
         this.selectJob(job); // Use selectJob to also update the URL with score
         return;
       }
     }
     // Fallback to selecting the first job if no ID in URL or job not found
-    this.selectFirstJob();
+    // this.selectFirstJob();
   }
 
   /**
@@ -164,20 +165,20 @@ export class JobCardsComponent implements OnInit, OnChanges {
    * This method remains largely the same, but is called by handleSelectionFromUrl
    * and potentially directly if no displayMode is set.
    */
-  private selectFirstJob(): void {
-    if (this.jobs && this.jobs.length > 0) {
-      this.selectJob(this.jobs[0]); // Pass the full job object to selectJob
-    } else {
-      this.selectedJobIdInternal = null;
-      this.jobSelected.emit(undefined);
-      // Also clear URL params if no jobs are selected
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { jobId: null, score: null },
-        queryParamsHandling: 'merge',
-      });
-    }
-  }
+  // private selectFirstJob(): void {
+  //   if (this.jobs && this.jobs.length > 0) {
+  //     this.selectJob(this.jobs[0]); // Pass the full job object to selectJob
+  //   } else {
+  //     this.selectedJobIdInternal = null;
+  //     this.jobSelected.emit(null);
+  //     // Also clear URL params if no jobs are selected
+  //     this.router.navigate([], {
+  //       relativeTo: this.route,
+  //       queryParams: { jobId: null, score: null },
+  //       queryParamsHandling: 'merge',
+  //     });
+  //   }
+  // }
 
   /**
    * Handles the click event on a job card and updates URL.
@@ -185,27 +186,10 @@ export class JobCardsComponent implements OnInit, OnChanges {
    */
   public selectJob(job: any): void {
     if (!job || !job.job_id) {
-      this.selectedJobIdInternal = null;
       this.jobSelected.emit(undefined);
-      // Clear jobId and score from URL if no job is selected
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { jobId: null, score: null },
-        queryParamsHandling: 'merge',
-      });
-      return;
+    } else {
+      // Just emit the event. The parent will handle the state change.
+      this.jobSelected.emit(job);
     }
-
-    this.selectedJobIdInternal = job.job_id;
-    this.jobSelected.emit(job.job_id);
-    // Navigate to update URL with job_id and matching_score
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        jobId: job.job_id,
-        score: job.matching_score ?? 0 // Use nullish coalescing for score
-      },
-      queryParamsHandling: 'merge',
-    });
   }
 }

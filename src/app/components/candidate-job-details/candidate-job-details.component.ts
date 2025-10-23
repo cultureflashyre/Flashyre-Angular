@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() rootClassName: string = 'candidate-default-root';
   @Input() jobId: number | null = null;
+  // @Input() matchingScore: number | null = null;
   @Input() text: TemplateRef<any> | null = null;
   @Input() text1: TemplateRef<any> | null = null;
   @Input() text2: TemplateRef<any> | null = null;
@@ -58,7 +59,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   loading: boolean = false;
   errorMessage: string | null = null;
   progress: number = 0;
-  matchingScore: number | null = null; // Changed to null to reflect branch-2's initial state
+  // matchingScore: number | null = null; // Changed to null to reflect branch-2's initial state
   fillColor: string = '#4D91C6';
   matchingScoreFillColor: string = '#4D91C6';
   matchingScoreStrokeDasharray: string = '0 25.12';
@@ -79,6 +80,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   isDisliked: boolean = false;
   isSaved: boolean = false;
   private dislikedCacheName = 'disliked-jobs-cache-v1';
+  public matchingScore: number | null = null;
 
   constructor(
     private jobService: JobsService,
@@ -94,28 +96,22 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnInit() {
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
-      const scoreFromUrl = params['score'] ? +params['score'] : null;
+    // this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+    //   const jobIdFromUrl = params['jobId'] ? +params['jobId'] : null;
 
-      this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
+    //   // --- MODIFICATION 2: Remove all logic related to scoreFromUrl ---
+    //   // const scoreFromUrl = params['score'] ? +params['score'] : null; // DELETED
+    //   // if (scoreFromUrl !== null) { ... } // DELETED
 
-      if (scoreFromUrl !== null) {
-        this.matchingScore = scoreFromUrl;
-        if (this.isViewInitialized) {
-          this.setProgressBarState(); 
-        } 
-      }
+    //   this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
 
-      // Only fetch job details if jobId changes or if it's the initial load with a jobId
-      if (jobIdFromUrl && (jobIdFromUrl !== this.jobId)) {
-        this.jobId = jobIdFromUrl;
-        this.fetchJobDetails();
-      } else if (!jobIdFromUrl) {
-        // If no jobId in URL, reset the component
-        this.resetJob();
-      }
-    });
+    //   if (jobIdFromUrl && (jobIdFromUrl !== this.jobId)) {
+    //     this.jobId = jobIdFromUrl;
+    //     this.fetchJobDetails();
+    //   } else if (!jobIdFromUrl) {
+    //     this.resetJob();
+    //   }
+    // });
     this.progress = 100.0;
     this.loadUserProfile();
 
@@ -142,24 +138,40 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // This `ngOnChanges` block primarily handles direct `@Input()` changes.
-    // The `jobId` is now also being updated via `queryParams` in `ngOnInit`.
-    // We need to ensure we don't re-fetch if `jobId` from `@Input` is null,
-    // and that `queryParams` takes precedence for job selection.
-    if (changes['jobId'] && !changes['jobId'].firstChange) {
-      // If `jobId` input changes to a new non-null value, fetch details.
-      // We explicitly check if it's different from the URL-driven jobId.
-      if (this.jobId !== null && this.jobId !== this.route.snapshot.queryParams['jobId']) {
-        this.fetchJobDetails();
-      } else if (this.jobId === null) {
-        this.resetJob();
-        this.errorMessage = null;
-      }
+    // This is the single point of control for the component.
+    if (changes['jobId'] && changes['jobId'].currentValue) {
+      const newJobId = changes['jobId'].currentValue;
+      
+      // --- MODIFICATION 3: Always reset and fetch when the job ID changes ---
+      // 1. Reset the score immediately to prevent showing the old one.
+      this.matchingScore = null; 
+      this.setProgressBarState(); // This will hide/reset the progress bar UI.
+
+      // 2. Fetch the base details for the new job.
+      this.fetchJobDetails(newJobId);
+      
+      // 3. Always fetch the score for the new job.
+      this.fetchMatchingScore(newJobId);
+      
+    } else if (changes['jobId'] && !changes['jobId'].currentValue) {
+      // If the job ID becomes null, reset the component completely.
+      this.resetJob();
     }
-    // Also re-evaluate interactions if the activeTab changes
-    if (changes['activeTab'] && !changes['activeTab'].firstChange && this.jobId) {
-        this.fetchInteractionStatus();
-    }
+  }
+
+  private fetchMatchingScore(jobId: number): void {
+    console.log(`Fetching score for Job ID: ${jobId}`);
+    this.authService.getMatchScores([jobId])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(scoresMap => {
+        const fetchedScore = scoresMap[jobId];
+        if (fetchedScore !== undefined) {
+          this.matchingScore = fetchedScore;
+          console.log(`Successfully fetched score: ${this.matchingScore}`);
+        }
+        // Update the UI after the score has been fetched.
+        this.setProgressBarState();
+      });
   }
 
   private loadUserProfile(): void {
@@ -176,17 +188,12 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     }
   }
 
-  private fetchJobDetails(): void {
-    if (!this.jobId) {
-      this.resetJob();
-      return;
-    }
+  private fetchJobDetails(jobId: number): void {
     this.loading = true;
     this.errorMessage = null;
-    this.successMessage = null;
-    this.isApplied = false; // Reset applied state on new job load
+    this.isApplied = false;
 
-    this.jobService.getJobById(this.jobId!).subscribe({
+    this.jobService.getJobById(jobId).subscribe({
       next: (data) => {
         this.job = {
           job_id: data.job_id || null,
@@ -213,32 +220,23 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           matching_score: data.matching_score || 0
         };
         // Logic from branch-2, prioritizing URL score if present, otherwise using fetched data
-        if (this.matchingScore === null) { 
-          this.matchingScore = data.matching_score || 0;
-        } else if (this.matchingScore === 0) { // If URL score was 0, and data has a score, use data's score
-            this.matchingScore = data.matching_score || 0;
-        } else {
-            // If matchingScore was set from URL and is not 0, keep it.
-        }
+        // if (this.matchingScore === null) { 
+        //   this.matchingScore = data.matching_score || 0;
+        // } else if (this.matchingScore === 0) { // If URL score was 0, and data has a score, use data's score
+        //     this.matchingScore = data.matching_score || 0;
+        // } else {
+        //     // If matchingScore was set from URL and is not 0, keep it.
+        // }
 
         this.loading = false;
-        this.setProgressBarState(); // Update progress bar instantly
-
-        // Only fetch interaction status if not on the 'applied' tab
         if (this.activeTab !== 'applied') {
           this.fetchInteractionStatus();
-        } else {
-          // On 'applied' tab, clear dislike/save status
-          this.isDisliked = false;
-          this.isSaved = false;
         }
-        this.cdr.detectChanges(); // Manually update the view
       },
       error: (err) => {
         this.resetJob();
-        this.errorMessage = `Job with ID ${this.jobId} not found. Please select another job.`;
+        this.errorMessage = `Job with ID ${jobId} not found.`;
         this.loading = false;
-        this.cdr.detectChanges();
       }
     });
   }

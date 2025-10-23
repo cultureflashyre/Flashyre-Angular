@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { JobsService } from '../../services/job.service';
+import { ActivatedRoute } from '@angular/router';
+// import { AuthService } from '../../services/candidate.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -10,6 +12,7 @@ import { forkJoin } from 'rxjs';
 })
 export class CandidateJobDetailView implements OnInit {
   selectedJobId: number | null = null;
+  // selectedJobMatchingScore: number | null = null;
   public activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
 
   isLoading: boolean = true;
@@ -24,7 +27,9 @@ export class CandidateJobDetailView implements OnInit {
   constructor(
     private title: Title,
     private meta: Meta,
+    private route: ActivatedRoute,
     private jobService: JobsService
+    // private authService: AuthService
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -72,7 +77,9 @@ export class CandidateJobDetailView implements OnInit {
         });
 
         this.updateJobsToDisplay();
+        this.setInitialJobSelection();
         this.isLoading = false;
+        //  this.handleScoreFetchingForReload();
       },
       error: (err) => {
         console.error('Failed to fetch all jobs:', err);
@@ -86,9 +93,63 @@ export class CandidateJobDetailView implements OnInit {
       }
     });
   }
+
+  private setInitialJobSelection(): void {
+    const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
+    
+    if (jobIdFromUrl) {
+      const numericJobId = parseInt(jobIdFromUrl, 10);
+      
+      // Check if the job exists in the currently displayed list.
+      const jobExists = this.jobsToDisplay.some(job => job.job_id === numericJobId);
+      
+      if (jobExists) {
+        this.selectedJobId = numericJobId;
+        console.log(`Job ID ${numericJobId} from URL has been selected.`);
+        return; // Exit after successful selection
+      }
+    }
+    
+    // Fallback logic: If no ID in URL or job not found, select the first job.
+    if (this.jobsToDisplay.length > 0) {
+      this.selectedJobId = this.jobsToDisplay[0].job_id;
+    } else {
+      this.selectedJobId = null;
+    }
+  }
+
+  // private handleScoreFetchingForReload(): void {
+  //   // Read the jobId directly from the URL snapshot
+  //   const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
+  //   if (jobIdFromUrl) {
+  //     const numericJobId = parseInt(jobIdFromUrl, 10);
+
+  //     // Find the job in our freshly fetched lists
+  //     const job = [...this.masterRecommendedJobs, ...this.masterSavedJobs].find(
+  //       j => j.job_id === numericJobId
+  //     );
+
+  //     // If we found the job and it doesn't already have a score, fetch it.
+  //     if (job && (!job.matching_score || job.matching_score === 0)) {
+  //       console.log(`Reload detected. Fetching score for job ID: ${numericJobId}`);
+        
+  //       this.authService.getMatchScores([numericJobId]).subscribe(scoresMap => {
+  //         const score = scoresMap[numericJobId];
+  //         if (score !== undefined) {
+  //           console.log(`Score found: ${score}. Updating component state.`);
+  //           // Update the score on the source object for data consistency
+  //           job.matching_score = score;
+  //           // Update the property that is passed to the child component
+  //           this.selectedJobMatchingScore = score;
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
   
 private updateJobsToDisplay(): void {
   this.selectedJobId = null; 
+  // this.selectedJobMatchingScore = null;
   switch (this.activeTab) {
     case 'recommended':
       // Using the spread operator creates a new array, guaranteeing change detection
@@ -103,11 +164,11 @@ private updateJobsToDisplay(): void {
   }
   //... rest of function is the same
   if (this.jobsToDisplay.length > 0) {
-    this.selectedJobId = this.jobsToDisplay[0].job_id;
-  } else {
-    this.selectedJobId = null; 
+      this.selectedJobId = this.jobsToDisplay[0].job_id;
+    } else {
+      this.selectedJobId = null;
+    }
   }
-}
 
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {
@@ -214,8 +275,8 @@ onJobUndisliked(undislikedJob: any): void {
     return this.masterAppliedJobs?.length ?? null;
   }
 
-  onJobSelected(jobId: number | undefined): void {
-    this.selectedJobId = jobId ?? null;
+  onJobSelected(job: any): void {
+    this.selectedJobId = job?.job_id ?? null;
   }
 
  onApplicationRevoked(revokedJobId: number): void {
