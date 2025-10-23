@@ -112,6 +112,13 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
 
   verifyOTP() {
     console.log('verifyOTP called with email:', this.email, 'OTP:', this.otp);
+
+     if (this.countdown === 0) {
+      this.error = 'OTP has expired. Please request a new one by clicking "Resend".';
+      console.log('verifyOTP failed: OTP expired on the frontend.');
+      return; // Stop the function from proceeding
+    }
+
     if (!this.email || !this.otp) {
       this.error = 'Please enter a valid OTP.';
       console.log('verifyOTP failed: missing email or OTP');
@@ -154,6 +161,15 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
     if (this.password !== this.confirmPassword) {
       this.error = 'Passwords do not match.';
       console.log('resetPassword failed: passwords do not match');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,15}$/;
+    if (!passwordRegex.test(this.password)) {
+      // See the next section for the recommended error message
+      this.error = `Password does not meet requirements. It must be 8-15 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character.`;
+      this.loading = false;
+      console.log('resetPassword failed: password complexity validation failed');
       return;
     }
 
