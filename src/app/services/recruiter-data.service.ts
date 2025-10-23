@@ -9,7 +9,7 @@ import { CorporateAuthService } from './corporate-auth.service'; // <-- ADDED: I
 // Make sure JobPost interface includes all fields from your backend's JobPost model
 export interface JobPost {
 
-  job_id?: number; // Optional as it might be 'id' in backend
+  id?: number; // Optional as it might be 'id' in backend
   unique_id: string; // Crucial for editing
   company_image_url: string; // If this comes from backend
   job_role: string; // Frontend uses `job_role`, backend `role`
