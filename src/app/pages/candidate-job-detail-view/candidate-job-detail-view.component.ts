@@ -87,26 +87,27 @@ export class CandidateJobDetailView implements OnInit {
     });
   }
   
-  private updateJobsToDisplay(): void {
-    this.selectedJobId = null; // Clear old selection
-    switch (this.activeTab) {
-      case 'recommended':
-        this.jobsToDisplay = this.masterRecommendedJobs;
-        break;
-      case 'saved':
-        this.jobsToDisplay = this.masterSavedJobs;
-        break;
-      case 'applied':
-        this.jobsToDisplay = this.masterAppliedJobs;
-        break;
-    }
-    // If the currently displayed list has items, select the first one.
-    if (this.jobsToDisplay.length > 0) {
-      this.selectedJobId = this.jobsToDisplay[0].job_id;
-    } else {
-      this.selectedJobId = null; // No jobs to display, so no job selected.
-    }
+private updateJobsToDisplay(): void {
+  this.selectedJobId = null; 
+  switch (this.activeTab) {
+    case 'recommended':
+      // Using the spread operator creates a new array, guaranteeing change detection
+      this.jobsToDisplay = [...this.masterRecommendedJobs]; 
+      break;
+    case 'saved':
+      this.jobsToDisplay = [...this.masterSavedJobs];
+      break;
+    case 'applied':
+      this.jobsToDisplay = [...this.masterAppliedJobs];
+      break;
   }
+  //... rest of function is the same
+  if (this.jobsToDisplay.length > 0) {
+    this.selectedJobId = this.jobsToDisplay[0].job_id;
+  } else {
+    this.selectedJobId = null; 
+  }
+}
 
   selectRecommendedTab(): void {
     if (this.activeTab !== 'recommended') {
@@ -152,6 +153,55 @@ export class CandidateJobDetailView implements OnInit {
     this.updateJobsToDisplay();
   }
 
+  onJobSaved(savedJob: any): void {
+  console.log(`Parent notified that job ${savedJob.job_id} was saved.`);
+  
+  // Remove from recommended list
+  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
+
+  // Add to saved list if it's not already there
+  if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
+      this.masterSavedJobs.unshift(savedJob);
+  }
+
+  this.updateJobsToDisplay();
+}
+
+onJobUnsaved(unsavedJob: any): void {
+  console.log(`Parent notified that job ${unsavedJob.job_id} was unsaved.`);
+
+  // Remove from saved list
+  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
+
+  // Add back to recommended list if not already there
+  if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
+      this.masterRecommendedJobs.unshift(unsavedJob);
+  }
+
+  this.updateJobsToDisplay();
+}
+
+onJobDisliked(dislikedJob: any): void {
+  console.log(`Parent notified that job ${dislikedJob.job_id} was disliked.`);
+
+  // A disliked job should be removed from all visible lists.
+  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+  
+  this.updateJobsToDisplay();
+}
+
+onJobUndisliked(undislikedJob: any): void {
+  console.log(`Parent notified that job ${undislikedJob.job_id} dislike was removed.`);
+  
+  // Add it back to the recommended list if it doesn't exist there already
+  if (!this.masterRecommendedJobs.some(j => j.job_id === undislikedJob.job_id)) {
+    this.masterRecommendedJobs.unshift(undislikedJob);
+  }
+
+  this.updateJobsToDisplay();
+}
+
   get recommendedJobCount(): number | null {
     return this.masterRecommendedJobs?.length ?? null;
   }
@@ -168,9 +218,22 @@ export class CandidateJobDetailView implements OnInit {
     this.selectedJobId = jobId ?? null;
   }
 
-  onApplicationRevoked(revokedJobId: number): void {
-    console.log(`Parent component notified that job ${revokedJobId} was revoked.`);
-    // After a revoke, we must re-fetch all data to ensure everything is in sync.
-    this.fetchAllJobs();
+ onApplicationRevoked(revokedJobId: number): void {
+  console.log(`Parent component notified that job ${revokedJobId} was revoked.`);
+
+  // Find the job in the applied list
+  const revokedJob = this.masterAppliedJobs.find(job => job.job_id === revokedJobId);
+
+  if (revokedJob) {
+      // Remove from applied list
+      this.masterAppliedJobs = this.masterAppliedJobs.filter(job => job.job_id !== revokedJobId);
+
+      // Add it back to recommended list if it's not already there
+      if (!this.masterRecommendedJobs.some(job => job.job_id === revokedJobId)) {
+          this.masterRecommendedJobs.unshift(revokedJob);
+      }
   }
+  
+  this.updateJobsToDisplay();
+}
 }
