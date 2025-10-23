@@ -84,7 +84,7 @@ export class AuthService {
    * @returns An Observable of the API response.
    */
   applyForJob(jobId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/apply/`, { job_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post(`${this.apiUrl}api/apply/`, { job_post_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error('Error in applyForJob:', error);
         return throwError(() => new Error('Failed to apply for job'));
@@ -116,7 +116,7 @@ export class AuthService {
   dislikeJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
       `${this.apiUrl}dislike/`,
-      { user_id: userId, job_id: jobId },
+      { user_id: userId, job_post_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(error => {
@@ -135,7 +135,7 @@ export class AuthService {
   removeDislikedJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
       `${this.apiUrl}remove-dislike/`,
-      { user_id: userId, job_id: jobId },
+      { user_id: userId, job_post_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(error => {
@@ -172,7 +172,7 @@ export class AuthService {
   saveJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
       `${this.apiUrl}save/`,
-      { user_id: userId, job_id: jobId },
+      { user_id: userId, job_post_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(error => {
@@ -192,7 +192,7 @@ export class AuthService {
   removeSavedJob(userId: string, jobId: string): Observable<any> {
     return this.http.post(
       `${this.apiUrl}remove-saved/`,
-      { user_id: userId, job_id: jobId },
+      { user_id: userId, job_post_id: jobId },
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(error => {
@@ -272,7 +272,7 @@ export class AuthService {
    */
   revokeApplication(jobId: number): Observable<any> {
     const url = `${this.apiUrl}api/revoke-application/`;
-    return this.http.post(url, { job_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post(url, { job_post_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error('Error in revokeApplication:', error);
         return throwError(() => new Error('Failed to revoke application'));
