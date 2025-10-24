@@ -6,8 +6,12 @@
     <div *ngIf="errorMessage && !isLoading" class="job-cards-error">
       <span>{{ errorMessage }}</span>
     </div>
-    <div *ngIf="!isLoading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
-      <span>No jobs available at the moment.</span>
+    <div *ngIf="noMatchesFound && !isLoading && !errorMessage" class="job-cards-no-jobs">
+      <span>No jobs match your current filters.</span>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && !noMatchesFound && jobsToDisplay.length === 0" class="job-cards-no-jobs">
+      <span>No jobs available in this category.</span>
     </div>
     <div
       *ngFor="let job of jobs; index as i"

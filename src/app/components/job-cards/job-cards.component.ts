@@ -15,6 +15,7 @@ export class JobCardsComponent implements OnInit, OnChanges {
   @Input() selectedJobId: number | null = null;
   @Input() isLoading: boolean = true;
   @Input() errorMessage: string | null = null;
+  @Input() noMatchesFound: boolean = false;
   @Input() rootClassName: string = '';
   @Input() text: TemplateRef<any> | null = null;
   @Input() text1: TemplateRef<any> | null = null;

@@ -1,3 +1,33 @@
+<!-- candidate-job-detail-view.component.html -->
+
+<!-- ++ START: Filter Popup and Backdrop (Copied from candidate-home) ++ -->
+<div 
+  *ngIf="showMoreFilters" 
+  [@popupAnimation] 
+  [ngStyle]="{
+    position: 'absolute',
+    top: filterPosition.top + 'px',
+    left: filterPosition.left + 'px',
+    zIndex: 1002
+  }"
+  class="filter-popup-wrapper"
+  (click)="$event.stopPropagation()"
+>
+  <more-filters-and-preference-component
+    [callerType]="'candidate'" 
+    (closeEvent)="showMoreFilters = false"
+    (applyFiltersEvent)="onApplyFilters($event)"
+    [initialTab]="initialFilterTab"
+  ></more-filters-and-preference-component>
+</div>
+<div 
+  *ngIf="showMoreFilters" 
+  class="filter-backdrop"
+  [@popupAnimation]
+  (click)="showMoreFilters = false"
+></div>
+<!-- ++ END: Filter Popup and Backdrop ++ -->
+
 <div
   id="candidate-job-detail-view"
   class="candidate-job-detail-view-container1"
@@ -31,6 +61,7 @@
                   id="candidate-job-location-experience-container"
                   class="candidate-job-detail-view-container3"
                 >
+                  <!-- ++ MODIFIED: Job Title Input ++ -->
                   <div
                     id="job-title-container"
                     class="candidate-job-detail-view-job-title-container1"
@@ -47,13 +78,15 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    <span
+                    <input
+                      type="text"
                       id="search-job-title-input"
                       class="candidate-job-detail-view-job-title-text1"
-                    >
-                      Job tittle, Keyword...
-                    </span>
+                      placeholder="Job title, Keyword..."
+                      [(ngModel)]="searchJobTitle"
+                    />
                   </div>
+                  <!-- ++ MODIFIED: Location Input ++ -->
                   <div
                     id="location-container"
                     class="candidate-job-detail-view-location-container1"
@@ -74,44 +107,50 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    <span
+                    <input
+                      type="text"
                       id="search-location-input"
                       class="candidate-job-detail-view-location-text"
-                    >
-                      Your Location
-                    </span>
+                      placeholder="Your Location"
+                      [(ngModel)]="searchLocation"
+                    />
                   </div>
+                  <!-- ++ MODIFIED: Experience Input ++ -->
                   <div
                     id="experience-container"
                     class="candidate-job-detail-view-experience-container1"
                   >
                     <svg
                       id="briefcase-icon"
-                      width="256"
-                      height="256"
-                      viewBox="0 0 256 256"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
                       class="candidate-job-detail-view-briefcase-icon1"
                     >
-                      <path
-                        d="M216 58h-42V48a22 22 0 0 0-22-22h-48a22 22 0 0 0-22 22v10H40a14 14 0 0 0-14 14v128a14 14 0 0 0 14 14h176a14 14 0 0 0 14-14V72a14 14 0 0 0-14-14M94 48a10 10 0 0 1 10-10h48a10 10 0 0 1 10 10v10H94ZM40 70h176a2 2 0 0 1 2 2v74H38V72a2 2 0 0 1 2-2m176 132H40a2 2 0 0 1-2-2v-42h180v42a2 2 0 0 1-2 2"
-                        fill="currentColor"
-                      ></path>
+                       <path
+                          d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
+                          fill="currentColor"
+                        ></path>
                     </svg>
-                    <span
+                    <input
+                      type="text"
                       id="search-experience-input"
                       class="candidate-job-detail-view-experence-text"
-                    >
-                      Experience
-                    </span>
+                      placeholder="Experience"
+                      [(ngModel)]="searchExperience"
+                    />
                   </div>
                 </div>
               </nav>
+              <!-- ++ MODIFIED: Filter Icon with click handler and template ref ++ -->
               <svg
+                #filterIcon
                 id="filter-icon"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 class="candidate-job-detail-view-filter-icon1"
+                (click)="openFiltersPopup('filters')"
               >
                 <path
                   d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
@@ -123,6 +162,7 @@
                   stroke-linejoin="round"
                 ></path>
               </svg>
+              <!-- ++ MODIFIED: Buttons with click handlers ++ -->
               <div
                 id="search-preference-button"
                 class="candidate-job-detail-view-buttons1"
@@ -131,6 +171,7 @@
                   id="search-button"
                   type="button"
                   class="candidate-job-detail-view-search-button1 button"
+                  (click)="onSearch()"
                 >
                   <span
                     id="search-text"
@@ -143,6 +184,7 @@
                   id="preference-button"
                   type="button"
                   class="candidate-job-detail-view-preference-button1 button"
+                  (click)="openFiltersPopup('preferences')"
                 >
                   <span
                     id="preference-text"
@@ -153,6 +195,7 @@
                 </button>
               </div>
             </div>
+             <!-- Mobile view remains unchanged, but could be updated similarly -->
             <div
               data-thq="thq-burger-menu"
               class="candidate-job-detail-view-burger-menu"
@@ -321,6 +364,7 @@
           </header>
         </header>
       </div>
+       <!-- Tab counts are now driven by getters -->
       <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
         <div 
           id="job-recommended-container" 
@@ -367,11 +411,16 @@
         </div>
       </div>
       <div class="candidate-job-detail-view-container4">
+        <!-- ++ ADD: "No match found" message ++ -->
+        <!-- <div *ngIf="noMatchesFound" class="no-match-found">
+            <p>No jobs match your current filters.</p>
+        </div> -->
         <job-cards
           [selectedJobId]="selectedJobId"
           [isLoading]="isLoading"
           [errorMessage]="errorMessage"
           [jobsToDisplay]="jobsToDisplay"
+          [noMatchesFound]="noMatchesFound"
           (jobSelected)="onJobSelected($event)"
           rootClassName="job-cardsroot-class-name"
         ></job-cards>
