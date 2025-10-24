@@ -1,35 +1,89 @@
-import { Component, OnInit } from '@angular/core';
+// candidate-job-detail-view.component.ts
+
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { JobsService } from '../../services/job.service';
-import { ActivatedRoute } from '@angular/router'; // Merged from Branch-2
-// import { AuthService } from '../../services/candidate.service'; // Merged from Branch-2 (commented out)
-import { forkJoin } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
 @Component({
   selector: 'candidate-job-detail-view',
   templateUrl: './candidate-job-detail-view.component.html',
   styleUrls: ['./candidate-job-detail-view.component.css'],
+  // Animation for the filter popup
+  animations: [
+    trigger('popupAnimation', [
+      state('void', style({
+        opacity: 0,
+        transform: 'scale(0.3) translateY(-10px)',
+      })),
+      transition(':enter', [
+        animate('300ms ease-out', keyframes([
+          style({ opacity: 0, transform: 'scale(0.3) translateY(-10px)', offset: 0 }),
+          style({ opacity: 0.5, transform: 'scale(0.8) translateY(0px)', offset: 0.3 }),
+          style({ opacity: 1, transform: 'scale(1) translateY(0px)', offset: 1 }),
+        ]))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({
+          opacity: 0,
+          transform: 'scale(0.8) translateY(-10px)',
+        }))
+      ])
+    ])
+  ]
 })
-export class CandidateJobDetailView implements OnInit {
+export class CandidateJobDetailView implements OnInit, OnDestroy {
   selectedJobId: number | null = null;
-  // selectedJobMatchingScore: number | null = null; // Merged from Branch-2 (commented out)
   public activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
 
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
+  // Master lists for each category (unfiltered data)
   private masterRecommendedJobs: any[] = [];
   private masterSavedJobs: any[] = [];
   private masterAppliedJobs: any[] = [];
 
+  // Filtered lists for each category
+  private filteredRecommendedJobs: any[] = [];
+  private filteredSavedJobs: any[] = [];
+  private filteredAppliedJobs: any[] = [];
+
+  // This list is bound to the job-cards component
   public jobsToDisplay: any[] = [];
+
+  // Properties for Filtering and Preferences
+  private destroy$ = new Subject<void>();
+
+  // Main search bar models
+  searchJobTitle: string = '';
+  searchLocation: string = '';
+  searchExperience: string = '';
+
+  // "More Filters" popup models
+  searchDatePosted: string = '';
+  searchExperienceLevel: string = '';
+  searchSalary: string = '';
+  searchCompanyName: string = '';
+  searchWorkMode: string = '';
+  searchJobType: string = '';
+  searchRole: string = '';
+
+  // UI State for popup
+  showMoreFilters: boolean = false;
+  public initialFilterTab: 'filters' | 'preferences' = 'filters';
+  noMatchesFound: boolean = false;
+
+  @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
+  filterPosition = { top: 0, left: 0 };
 
   constructor(
     private title: Title,
     private meta: Meta,
-    private route: ActivatedRoute, // Merged from Branch-2
+    private route: ActivatedRoute,
     private jobService: JobsService
-    // private authService: AuthService // Merged from Branch-2 (commented out)
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -44,6 +98,174 @@ export class CandidateJobDetailView implements OnInit {
     this.fetchAllJobs();
   }
 
+  // Lifecycle hook for popup positioning
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.updateFilterPosition();
+    }, 100);
+  }
+
+  // HostListeners for popup positioning
+  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:resize', ['$event'])
+  onWindowScrollOrResize(): void {
+    if (this.showMoreFilters) {
+      this.updateFilterPosition();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Core Filtering Logic
+  updateFilterPosition(): void {
+    if (this.filterIcon && this.filterIcon.nativeElement) {
+      const rect = this.filterIcon.nativeElement.getBoundingClientRect();
+      this.filterPosition = {
+        top: rect.bottom + window.scrollY + 10,
+        left: rect.left + window.scrollX + (rect.width / 2) - 450
+      };
+    }
+  }
+
+  openFiltersPopup(initialTab: 'filters' | 'preferences'): void {
+    this.initialFilterTab = initialTab;
+    this.showMoreFilters = true;
+    this.updateFilterPosition();
+  }
+
+  private resetMoreFilters(): void {
+    this.searchDatePosted = '';
+    this.searchExperienceLevel = '';
+    this.searchSalary = '';
+    this.searchCompanyName = '';
+    this.searchWorkMode = '';
+    this.searchJobType = '';
+    this.searchRole = '';
+  }
+
+  onSearch(): void {
+    this.resetMoreFilters();
+    this.runFilterPipeline();
+  }
+
+  onApplyFilters(filters: any): void {
+    this.searchDatePosted = filters.datePosted;
+    this.searchExperienceLevel = filters.experienceLevel;
+    this.searchSalary = filters.salary;
+    this.searchLocation = filters.location || this.searchLocation;
+    this.searchCompanyName = filters.companyName;
+    this.searchWorkMode = filters.workMode;
+    this.searchJobType = filters.jobType;
+    this.searchRole = filters.role;
+    
+    this.showMoreFilters = false;
+    this.runFilterPipeline();
+  }
+
+  private parseFirstNumber(input: string): number | null {
+    if (!input || typeof input !== 'string') return null;
+    const match = input.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
+  }
+
+  private runFilterPipeline(): void {
+    let sourceList: any[] = [];
+    
+    // Determine which master list to filter
+    switch(this.activeTab) {
+      case 'recommended': sourceList = this.masterRecommendedJobs; break;
+      case 'saved': sourceList = this.masterSavedJobs; break;
+      case 'applied': sourceList = this.masterAppliedJobs; break;
+    }
+    
+    let tempJobs = [...sourceList];
+
+    // Main search bar filters
+    const mainKeyword = this.searchJobTitle.toLowerCase().trim();
+    if (mainKeyword) {
+      tempJobs = tempJobs.filter(job => 
+        (job.title || '').toLowerCase().includes(mainKeyword) ||
+        (job.description || '').toLowerCase().includes(mainKeyword) ||
+        (job.company_name || '').toLowerCase().includes(mainKeyword)
+      );
+    }
+
+    const mainLocation = this.searchLocation.toLowerCase().trim();
+    if (mainLocation) {
+      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
+    }
+
+    const mainExperience = this.parseFirstNumber(this.searchExperience);
+    if (mainExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            mainExperience >= j.total_experience_min &&
+            mainExperience <= j.total_experience_max
+        );
+    }
+
+    // "More Filters" popup filters
+    if (this.searchDatePosted) {
+      const now = new Date();
+      let cutoffDate = new Date();
+      if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
+      else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
+      else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+      tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
+    }
+    
+    const popupExperience = this.parseFirstNumber(this.searchExperienceLevel);
+    if (popupExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            popupExperience >= j.total_experience_min &&
+            popupExperience <= j.total_experience_max
+        );
+    }
+
+    if (this.searchCompanyName && this.searchCompanyName.trim()) {
+        const searchCompany = this.searchCompanyName.toLowerCase().trim();
+        tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
+    }
+    
+    const searchSal = this.parseFirstNumber(this.searchSalary);
+    if (searchSal !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.min_budget != null && j.max_budget != null &&
+            searchSal >= j.min_budget && searchSal <= j.max_budget
+        );
+    }
+
+    if (this.searchWorkMode) {
+        tempJobs = tempJobs.filter(j => (j.workplace_type || '').toLowerCase() === this.searchWorkMode.toLowerCase());
+    }
+
+    if (this.searchJobType) {
+      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
+    }
+
+    if (this.searchRole && this.searchRole.trim()) {
+      const searchRol = this.searchRole.toLowerCase().trim();
+      tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
+    }
+    
+    // Update the correct filtered list
+    switch(this.activeTab) {
+      case 'recommended': this.filteredRecommendedJobs = tempJobs; break;
+      case 'saved': this.filteredSavedJobs = tempJobs; break;
+      case 'applied': this.filteredAppliedJobs = tempJobs; break;
+    }
+    
+    const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
+    this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
+
+    // Refresh the jobs displayed in the UI
+    this.updateJobsToDisplay();
+  }
+
   private fetchAllJobs(): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -52,10 +274,9 @@ export class CandidateJobDetailView implements OnInit {
     if (!userId) {
       this.errorMessage = "User not found. Please log in again.";
       this.isLoading = false;
-      // Initialize job lists as empty and counts to 0
-      this.masterRecommendedJobs = [];
-      this.masterSavedJobs = [];
-      this.masterAppliedJobs = [];
+      this.masterRecommendedJobs = this.filteredRecommendedJobs = [];
+      this.masterSavedJobs = this.filteredSavedJobs = [];
+      this.masterAppliedJobs = this.filteredAppliedJobs = [];
       this.updateJobsToDisplay();
       return;
     }
@@ -66,9 +287,10 @@ export class CandidateJobDetailView implements OnInit {
       applied: this.jobService.fetchAppliedJobDetails()
     }).subscribe({
       next: (results) => {
-        this.masterRecommendedJobs = results.recommended;
-        this.masterSavedJobs = results.saved;
-        this.masterAppliedJobs = results.applied;
+        // Populate both master and filtered lists initially
+        this.masterRecommendedJobs = this.filteredRecommendedJobs = results.recommended;
+        this.masterSavedJobs = this.filteredSavedJobs = results.saved;
+        this.masterAppliedJobs = this.filteredAppliedJobs = results.applied;
         
         console.log('All jobs fetched successfully:', {
           recommended: this.masterRecommendedJobs.length,
@@ -76,42 +298,35 @@ export class CandidateJobDetailView implements OnInit {
           applied: this.masterAppliedJobs.length
         });
 
-        this.updateJobsToDisplay();
-        this.setInitialJobSelection(); // Merged from Branch-2
+        // Run the filter pipeline to apply any default filters and update the view
+        this.runFilterPipeline();
         this.isLoading = false;
-        //  this.handleScoreFetchingForReload(); // Merged from Branch-2 (commented out)
       },
       error: (err) => {
         console.error('Failed to fetch all jobs:', err);
         this.errorMessage = 'Failed to load job data. Please try again later.';
         this.isLoading = false;
-        // Also set lists to empty on error
-        this.masterRecommendedJobs = [];
-        this.masterSavedJobs = [];
-        this.masterAppliedJobs = [];
+        this.masterRecommendedJobs = this.filteredRecommendedJobs = [];
+        this.masterSavedJobs = this.filteredSavedJobs = [];
+        this.masterAppliedJobs = this.filteredAppliedJobs = [];
         this.updateJobsToDisplay();
       }
     });
   }
 
-  // Merged from Branch-2
   private setInitialJobSelection(): void {
     const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
     
     if (jobIdFromUrl) {
       const numericJobId = parseInt(jobIdFromUrl, 10);
-      
-      // Check if the job exists in the currently displayed list.
       const jobExists = this.jobsToDisplay.some(job => job.job_id === numericJobId);
       
       if (jobExists) {
         this.selectedJobId = numericJobId;
-        console.log(`Job ID ${numericJobId} from URL has been selected.`);
-        return; // Exit after successful selection
+        return;
       }
     }
     
-    // Fallback logic: If no ID in URL or job not found, select the first job.
     if (this.jobsToDisplay.length > 0) {
       this.selectedJobId = this.jobsToDisplay[0].job_id;
     } else {
@@ -119,184 +334,96 @@ export class CandidateJobDetailView implements OnInit {
     }
   }
 
-  // Merged from Branch-2 (commented out)
-  // private handleScoreFetchingForReload(): void {
-  //   // Read the jobId directly from the URL snapshot
-  //   const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
-  //   if (jobIdFromUrl) {
-  //     const numericJobId = parseInt(jobIdFromUrl, 10);
-
-  //     // Find the job in our freshly fetched lists
-  //     const job = [...this.masterRecommendedJobs, ...this.masterSavedJobs].find(
-  //       j => j.job_id === numericJobId
-  //     );
-
-  //     // If we found the job and it doesn't already have a score, fetch it.
-  //     if (job && (!job.matching_score || job.matching_score === 0)) {
-  //       console.log(`Reload detected. Fetching score for job ID: ${numericJobId}`);
-        
-  //       this.authService.getMatchScores([numericJobId]).subscribe(scoresMap => {
-  //         const score = scoresMap[numericJobId];
-  //         if (score !== undefined) {
-  //           console.log(`Score found: ${score}. Updating component state.`);
-  //           // Update the score on the source object for data consistency
-  //           job.matching_score = score;
-  //           // Update the property that is passed to the child component
-  //           this.selectedJobMatchingScore = score;
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
-  
-private updateJobsToDisplay(): void {
-  this.selectedJobId = null; 
-  // this.selectedJobMatchingScore = null; // Merged from Branch-2 (commented out)
-  switch (this.activeTab) {
-    case 'recommended':
-      // Using the spread operator creates a new array, guaranteeing change detection
-      this.jobsToDisplay = [...this.masterRecommendedJobs]; 
-      break;
-    case 'saved':
-      this.jobsToDisplay = [...this.masterSavedJobs];
-      break;
-    case 'applied':
-      this.jobsToDisplay = [...this.masterAppliedJobs];
-      break;
+  // Updates the displayed jobs based on the active tab's filtered list
+  private updateJobsToDisplay(): void {
+    this.selectedJobId = null; 
+    switch (this.activeTab) {
+      case 'recommended':
+        this.jobsToDisplay = [...this.filteredRecommendedJobs]; 
+        break;
+      case 'saved':
+        this.jobsToDisplay = [...this.filteredSavedJobs];
+        break;
+      case 'applied':
+        this.jobsToDisplay = [...this.filteredAppliedJobs];
+        break;
+    }
+    this.setInitialJobSelection();
   }
-  //... rest of function is the same
-  if (this.jobsToDisplay.length > 0) {
-      this.selectedJobId = this.jobsToDisplay[0].job_id;
-    } else {
-      this.selectedJobId = null;
+
+  // Runs filter pipeline on tab change
+  private selectTab(tab: 'recommended' | 'saved' | 'applied'): void {
+    if (this.activeTab !== tab) {
+      console.log(`Switching to ${tab} tab`);
+      this.activeTab = tab;
+      this.runFilterPipeline(); // This will filter the new source and update jobsToDisplay
     }
   }
 
-  selectRecommendedTab(): void {
-    if (this.activeTab !== 'recommended') {
-      console.log('Switching to Recommended tab');
-      this.activeTab = 'recommended';
-      this.updateJobsToDisplay();
-    }
-  }
+  selectRecommendedTab(): void { this.selectTab('recommended'); }
+  selectSavedTab(): void { this.selectTab('saved'); }
+  selectAppliedTab(): void { this.selectTab('applied'); }
 
-  selectSavedTab(): void {
-    if (this.activeTab !== 'saved') {
-      console.log('Switching to Saved tab');
-      this.activeTab = 'saved';
-      this.updateJobsToDisplay();
-    }
-  }
-
-  selectAppliedTab(): void {
-    if (this.activeTab !== 'applied') {
-      console.log('Switching to Applied tab');
-      this.activeTab = 'applied';
-      this.updateJobsToDisplay();
-    }
-  }
-
+  // Event handlers modify the master lists, then re-run filters
   onJobApplied(appliedJob: any): void {
-    console.log(`Parent notified that job ${appliedJob.job_id} was applied for.`);
-
-    // Remove the job from the recommended list
-    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(
-      (job) => job.job_id !== appliedJob.job_id
-    );
-
-    // Remove from saved list if it was saved
-    this.masterSavedJobs = this.masterSavedJobs.filter(
-      (job) => job.job_id !== appliedJob.job_id
-    );
-
-    // Add the job to the beginning of the applied list to keep state consistent
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
     this.masterAppliedJobs.unshift(appliedJob);
-
-    // Refresh the view to make the card disappear/update
-    this.updateJobsToDisplay();
+    this.runFilterPipeline();
   }
 
   onJobSaved(savedJob: any): void {
-  console.log(`Parent notified that job ${savedJob.job_id} was saved.`);
-  
-  // Remove from recommended list
-  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
-
-  // Add to saved list if it's not already there
-  if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
+    if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
       this.masterSavedJobs.unshift(savedJob);
+    }
+    this.runFilterPipeline();
   }
 
-  this.updateJobsToDisplay();
-}
-
-onJobUnsaved(unsavedJob: any): void {
-  console.log(`Parent notified that job ${unsavedJob.job_id} was unsaved.`);
-
-  // Remove from saved list
-  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
-
-  // Add back to recommended list if not already there
-  if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
+  onJobUnsaved(unsavedJob: any): void {
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
+    if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
       this.masterRecommendedJobs.unshift(unsavedJob);
+    }
+    this.runFilterPipeline();
   }
 
-  this.updateJobsToDisplay();
-}
-
-onJobDisliked(dislikedJob: any): void {
-  console.log(`Parent notified that job ${dislikedJob.job_id} was disliked.`);
-
-  // A disliked job should be removed from all visible lists.
-  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== dislikedJob.job_id);
-  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== dislikedJob.job_id);
-  
-  this.updateJobsToDisplay();
-}
-
-onJobUndisliked(undislikedJob: any): void {
-  console.log(`Parent notified that job ${undislikedJob.job_id} dislike was removed.`);
-  
-  // Add it back to the recommended list if it doesn't exist there already
-  if (!this.masterRecommendedJobs.some(j => j.job_id === undislikedJob.job_id)) {
-    this.masterRecommendedJobs.unshift(undislikedJob);
+  onJobDisliked(dislikedJob: any): void {
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+    this.runFilterPipeline();
   }
 
-  this.updateJobsToDisplay();
-}
-
-  get recommendedJobCount(): number | null {
-    return this.masterRecommendedJobs?.length ?? null;
+  onJobUndisliked(undislikedJob: any): void {
+    if (!this.masterRecommendedJobs.some(j => j.job_id === undislikedJob.job_id)) {
+      this.masterRecommendedJobs.unshift(undislikedJob);
+    }
+    this.runFilterPipeline();
   }
 
-  get savedJobCount(): number | null {
-    return this.masterSavedJobs?.length ?? null;
-  }
-
-  get appliedJobCount(): number | null {
-    return this.masterAppliedJobs?.length ?? null;
-  }
-
-  onJobSelected(job: any): void { // Merged from Branch-2
-    this.selectedJobId = job?.job_id ?? null;
-  }
-
- onApplicationRevoked(revokedJobId: number): void {
-  console.log(`Parent component notified that job ${revokedJobId} was revoked.`);
-
-  // Find the job in the applied list
-  const revokedJob = this.masterAppliedJobs.find(job => job.job_id === revokedJobId);
-
-  if (revokedJob) {
-      // Remove from applied list
+  onApplicationRevoked(revokedJobId: number): void {
+    const revokedJob = this.masterAppliedJobs.find(job => job.job_id === revokedJobId);
+    if (revokedJob) {
       this.masterAppliedJobs = this.masterAppliedJobs.filter(job => job.job_id !== revokedJobId);
-
-      // Add it back to recommended list if it's not already there
       if (!this.masterRecommendedJobs.some(job => job.job_id === revokedJobId)) {
           this.masterRecommendedJobs.unshift(revokedJob);
       }
+    }
+    this.runFilterPipeline();
+  }
+
+  // Getters for counts now use the filtered lists to reflect the UI
+  get recommendedJobCount(): number | null {
+    return this.filteredRecommendedJobs?.length ?? null;
+  }
+  get savedJobCount(): number | null {
+    return this.filteredSavedJobs?.length ?? null;
+  }
+  get appliedJobCount(): number | null {
+    return this.filteredAppliedJobs?.length ?? null;
   }
   
-  this.updateJobsToDisplay();
-}
+  onJobSelected(job: any): void {
+    this.selectedJobId = job?.job_id ?? null;
+  }
 }
