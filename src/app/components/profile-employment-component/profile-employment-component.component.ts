@@ -151,7 +151,7 @@ private loadPositionsFromUserProfile(): void {
         },
         (error) => {
           console.error('Error saving employment:', error);
-          alert('Error saving employment: ' + (error.error?.detail || 'Unknown error'));
+          alert('Error saving employment: ' + (error.error?.detail || 'Fill all required fields'));
           resolve(false);
         }
       );
