@@ -13,7 +13,7 @@
       *ngFor="let job of jobs; index as i"
       (click)="selectJob(job)"
       class="job-cards-job-cards-first-container"
-      [ngClass]="{'clicked': selectedJobIdInternal === job.job_id}"
+      [ngClass]="{'clicked': selectedJobId === job.job_id}"
     >
       <div class="job-cards-job-card-job-details-container">
         <div class="job-cards-company-logo-container">

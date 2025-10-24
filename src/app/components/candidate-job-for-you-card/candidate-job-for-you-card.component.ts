@@ -319,7 +319,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
         this.router.navigate(['/candidate-job-detail-view'], {
           queryParams: {
             jobId: this.jobId,
-            score: this.matchingScore || 0
+            score: this.matchingScore || 0 // Branch-1 includes score, Branch-2 removes it. I'll keep it as it adds value.
           }
         });
       } else {

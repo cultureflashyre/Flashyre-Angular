@@ -368,6 +368,7 @@
       </div>
       <div class="candidate-job-detail-view-container4">
         <job-cards
+          [selectedJobId]="selectedJobId"
           [isLoading]="isLoading"
           [errorMessage]="errorMessage"
           [jobsToDisplay]="jobsToDisplay"
@@ -381,9 +382,9 @@
             (applicationRevoked)="onApplicationRevoked($event)"
             (jobAppliedSuccess)="onJobApplied($event)"
             (jobSaved)="onJobSaved($event)"
-  (jobUnsaved)="onJobUnsaved($event)"
-  (jobDisliked)="onJobDisliked($event)"
-  (jobUndisliked)="onJobUndisliked($event)"
+            (jobUnsaved)="onJobUnsaved($event)"
+            (jobDisliked)="onJobDisliked($event)"
+            (jobUndisliked)="onJobUndisliked($event)"
             rootClassName="candidate-job-detailsroot-class-name"
           ></candidate-job-details>
         </div>
