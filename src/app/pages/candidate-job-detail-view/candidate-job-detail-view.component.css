@@ -864,6 +864,43 @@
 .candidate-job-detail-view-text58 {
   display: inline-block;
 }
+
+.filter-popup-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: auto;
+  max-width: 95vw;
+  border: 1px solid #e0e0e0;
+}
+
+.filter-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1001;
+}
+
+.candidate-job-detail-view-job-title-text1,
+.candidate-job-detail-view-location-text,
+.candidate-job-detail-view-experence-text {
+  width: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.no-match-found {
+  width: 28%; /* Match the width of the job-cards container */
+  text-align: center;
+  padding: 50px 20px;
+  color: #666;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
  
 @media(max-width: 1200px) {
   .candidate-job-detail-view-main-container {

@@ -14,7 +14,6 @@ import { environment } from 'src/environments/environment';
 export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() rootClassName: string = 'candidate-default-root';
   @Input() jobId: number | null = null;
-  // Removed @Input() matchingScore as it's now managed internally by fetchMatchingScore.
   @Input() text: TemplateRef<any> | null = null;
   @Input() text1: TemplateRef<any> | null = null;
   @Input() text2: TemplateRef<any> | null = null;
@@ -53,7 +52,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     last_updated: '',
     assessment: null,
     attempts_remaining: null,
-    matching_score: 0 // Initialize for template safety, actual value comes from fetchMatchingScore
+    matching_score: 0 // Initialize for template safety
   };
   userProfile: any = {};
   loading: boolean = false;
@@ -72,7 +71,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private destroy$ = new Subject<void>();
 
   private isViewInitialized = false;
-  private attemptsFromNavigation: number | null = null; // To capture attempts from URL
+  private attemptsFromNavigation: number | null = null;
 
   isProcessingDislike: boolean = false;
   isProcessingSave: boolean = false;
@@ -95,16 +94,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnInit() {
-    // Retain queryParams subscription only for attempts_remaining, as jobId and score are now @Input driven
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
-      // No jobId or score handling here, as @Input() jobId and ngOnChanges will drive data fetching.
     });
 
     this.progress = 100.0;
     this.loadUserProfile();
 
-    // Subscribe to job interaction events
     this.jobService.jobInteraction$.pipe(takeUntil(this.destroy$)).subscribe(interaction => {
       if (this.jobId && interaction.jobId === this.jobId.toString()) {
         if (interaction.type === 'dislike') {
@@ -112,14 +108,14 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         } else if (interaction.type === 'save') {
           this.isSaved = interaction.state;
         }
-        this.cdr.detectChanges(); // Manually update the view
+        this.cdr.detectChanges();
       }
     });
   }
 
   ngAfterViewInit() {
     this.isViewInitialized = true;
-    this.setProgressBarState(); // Ensure initial state is set without animation
+    this.setProgressBarState();
   }
 
   navigateToAssessment(assessment: number): void {
@@ -130,27 +126,22 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     if (changes['jobId']) {
       const newJobId = changes['jobId'].currentValue;
       if (newJobId) {
-        // Reset score and UI immediately to show a clean state for the new job
         this.matchingScore = null; 
         this.setProgressBarState();
 
-        // Fetch job details and matching score for the new job ID
         this.fetchJobDetails(newJobId);
-        this.fetchMatchingScore(newJobId); // Separate call for matching score
+        this.fetchMatchingScore(newJobId);
       } else {
-        // If jobId becomes null, reset the component completely
         this.resetJob();
       }
     }
     
-    // Always re-evaluate interaction status if the activeTab changes
     if (changes['activeTab'] && !changes['activeTab'].firstChange && this.jobId) {
         this.fetchInteractionStatus();
     }
   }
 
   private fetchMatchingScore(jobId: number): void {
-    // Only fetch if jobId is valid
     if (jobId === null || jobId === undefined) return;
 
     this.authService.getMatchScores([jobId])
@@ -158,17 +149,13 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       .subscribe({
         next: scoresMap => {
           const fetchedScore = scoresMap[jobId];
-          if (fetchedScore !== undefined) {
-            this.matchingScore = fetchedScore;
-          } else {
-            this.matchingScore = 0; // Default if score not found
-          }
-          this.setProgressBarState(); // Update the UI after the score has been fetched
+          this.matchingScore = fetchedScore !== undefined ? fetchedScore : 0;
+          this.setProgressBarState();
           this.cdr.detectChanges();
         },
         error: err => {
           console.error(`Failed to fetch matching score for job ${jobId}:`, err);
-          this.matchingScore = 0; // Set to 0 on error
+          this.matchingScore = 0;
           this.setProgressBarState();
           this.cdr.detectChanges();
         }
@@ -178,11 +165,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private loadUserProfile(): void {
     try {
       const profileData = localStorage.getItem('userProfile');
-      if (profileData) {
-        this.userProfile = JSON.parse(profileData);
-      } else {
-        this.userProfile = { profile_picture_url: null };
-      }
+      this.userProfile = profileData ? JSON.parse(profileData) : { profile_picture_url: null };
     } catch (error) {
       console.error('Error parsing user profile data from local storage:', error);
       this.userProfile = { profile_picture_url: null };
@@ -193,46 +176,27 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.loading = true;
     this.errorMessage = null;
     this.successMessage = null;
-    this.isApplied = false; // Reset applied state on new job load
+    this.isApplied = false;
 
     this.jobService.getJobById(jobId).subscribe({
       next: (data) => {
         this.job = {
-          job_id: data.job_id || null,
-          company_name: data.company_name || '',
-          logo: data.logo || '',
-          title: data.title || '',
-          location: data.location || '',
-          job_type: data.job_type || '',
-          created_at: data.created_at || '',
-          description: data.description || '',
-          requirements: data.requirements || '',
-          salary: data.salary || null,
-          url: data.url || null,
-          source: data.source || '',
-          tag: data.tag || '',
-          contract_time: data.contract_time || '',
-          contract_type: data.contract_type || '',
-          external_id: data.external_id || '',
-          last_updated: data.last_updated || '',
-          assessment: data.assessment || null,
-          // Prioritize API data for attempts, fall back to navigation attempts if API is null/undefined
-          attempts_remaining: (data.attempts_remaining !== undefined && data.attempts_remaining !== null) 
+          ...this.job, // Retain default structure
+          ...data,
+          attempts_remaining: (data.attempts_remaining !== null && data.attempts_remaining !== undefined) 
             ? data.attempts_remaining 
             : this.attemptsFromNavigation,
-          // matching_score is now handled by fetchMatchingScore, so we don't use data.matching_score here for display.
-          matching_score: 0 // Keep as 0, as public matchingScore will hold the true value.
+          matching_score: 0 // Keep as 0, as public matchingScore holds the true value
         };
         this.loading = false;
-        // Interaction status fetch only if not on 'applied' tab
+        
         if (this.activeTab !== 'applied') {
           this.fetchInteractionStatus();
         } else {
-          // On 'applied' tab, clear dislike/save status immediately
           this.isDisliked = false;
           this.isSaved = false;
         }
-        this.cdr.detectChanges(); // Manually update the view
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.resetJob();
@@ -253,28 +217,27 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       return;
     }
 
-    // Reset interaction states before fetching
     this.isDisliked = false;
     this.isSaved = false;
     
-    // Check the browser cache first for a faster UI response for disliked status.
+    // Check cache for dislike status
     const cachedDisliked = await this.getDislikedJobsFromCache(userId);
     if (cachedDisliked) {
       this.isDisliked = cachedDisliked.includes(jobIdStr);
       this.cdr.detectChanges();
     }
-    // Fetch the latest disliked status from the API.
+    
+    // Fetch latest dislike status from API
     this.authService.getDislikedJobs(userId).subscribe(response => {
       const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id.toString());
       this.isDisliked = dislikedJobs.includes(jobIdStr);
-      this.cacheDislikedJobs(userId, dislikedJobs); // Update the cache with fresh data.
+      this.cacheDislikedJobs(userId, dislikedJobs);
       this.cdr.detectChanges();
     });
 
-    // Fetch the saved status from the API.
+    // Fetch saved status from API
     this.authService.getSavedJobs(userId).subscribe(response => {
-      const savedJobIds = response.saved_jobs;
-      this.isSaved = savedJobIds.includes(this.jobId);
+      this.isSaved = response.saved_jobs.includes(this.jobId);
       this.cdr.detectChanges();
     });
   }
@@ -287,12 +250,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     }
     const userId = localStorage.getItem('user_id');
     const jobIdStr = this.jobId?.toString();
-    if (!userId || !jobIdStr) return;
+    if (!userId || !jobIdStr || this.isProcessingDislike) return;
 
-    if (this.isProcessingDislike) { 
-      console.log('Dislike action already in progress.');
-      return;
-    }
     this.isProcessingDislike = true; 
 
     const action = this.isDisliked
@@ -304,21 +263,12 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         const wasDisliked = this.isDisliked; 
         this.isDisliked = !wasDisliked; 
 
-        if (wasDisliked) { 
-          this.jobUndisliked.emit(this.job); 
-        } else { 
-          this.jobDisliked.emit(this.job); 
-        }
+        wasDisliked ? this.jobUndisliked.emit(this.job) : this.jobDisliked.emit(this.job);
         
         this.updateDislikedJobsCache(userId, jobIdStr, this.isDisliked ? 'add' : 'remove');
         this.jobService.notifyJobInteraction(jobIdStr, 'dislike', this.isDisliked);
 
-        if (this.isDisliked) {
-          alert('Job disliked successfully.');
-        } else {
-          alert('Dislike removed.');
-        }
-
+        alert(this.isDisliked ? 'Job disliked successfully.' : 'Dislike removed.');
         this.isProcessingDislike = false; 
         this.cdr.detectChanges();
       },
@@ -338,12 +288,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     }
     const userId = localStorage.getItem('user_id');
     const jobIdStr = this.jobId?.toString();
-    if (!userId || !jobIdStr) return;
+    if (!userId || !jobIdStr || this.isProcessingSave) return;
 
-    if (this.isProcessingSave) { 
-      console.log('Save action already in progress.');
-      return;
-    }
     this.isProcessingSave = true; 
 
     const action = this.isSaved
@@ -355,11 +301,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         const wasSaved = this.isSaved; 
         this.isSaved = !wasSaved; 
 
-        if (wasSaved) { 
-            this.jobUnsaved.emit(this.job); 
-        } else { 
-            this.jobSaved.emit(this.job); 
-        }
+        wasSaved ? this.jobUnsaved.emit(this.job) : this.jobSaved.emit(this.job); 
 
         this.jobService.notifyJobInteraction(jobIdStr, 'save', this.isSaved);
         alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
@@ -375,13 +317,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
   }
 
-  // --- Caching Helper Methods for Disliked Jobs (copied from card component for consistency) ---
   private async getDislikedJobsFromCache(userId: string): Promise<string[] | null> {
     try {
       const cache = await caches.open(this.dislikedCacheName);
       const response = await cache.match(userId);
-      if (!response) return null;
-      return await response.json();
+      return response ? await response.json() : null;
     } catch (error) {
       console.error('Error getting disliked jobs from cache:', error);
       return null;
@@ -391,8 +331,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   private async cacheDislikedJobs(userId: string, dislikedJobs: string[]): Promise<void> {
     try {
       const cache = await caches.open(this.dislikedCacheName);
-      const response = new Response(JSON.stringify(dislikedJobs));
-      await cache.put(userId, response);
+      await cache.put(userId, new Response(JSON.stringify(dislikedJobs)));
     } catch (error) {
       console.error('Error caching disliked jobs:', error);
     }
@@ -400,12 +339,11 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
 
   private async updateDislikedJobsCache(userId: string, jobId: string, action: 'add' | 'remove'): Promise<void> {
     const cachedJobs = await this.getDislikedJobsFromCache(userId) || [];
-    const jobExists = cachedJobs.includes(jobId);
+    const index = cachedJobs.indexOf(jobId);
 
-    if (action === 'add' && !jobExists) {
+    if (action === 'add' && index === -1) {
       cachedJobs.push(jobId);
-    } else if (action === 'remove' && jobExists) {
-      const index = cachedJobs.indexOf(jobId);
+    } else if (action === 'remove' && index > -1) {
       cachedJobs.splice(index, 1);
     }
     await this.cacheDislikedJobs(userId, cachedJobs);
@@ -413,42 +351,25 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
 
   private resetJob(): void {
     this.job = {
-      job_id: null,
-      company_name: '',
-      logo: '',
-      title: '',
-      location: '',
-      job_type: '',
-      created_at: '',
-      description: '',
-      requirements: '',
-      salary: null,
-      url: null,
-      source: '',
-      tag: '',
-      contract_time: '',
-      contract_type: '',
-      external_id: '',
-      last_updated: '',
-      assessment: null,
-      attempts_remaining: null,
-      matching_score: 0 // Reset job object's matching_score to default
+      job_id: null, company_name: '', logo: '', title: '', location: '',
+      job_type: '', created_at: '', description: '', requirements: '', salary: null,
+      url: null, source: '', tag: '', contract_time: '', contract_type: '',
+      external_id: '', last_updated: '', assessment: null, attempts_remaining: null,
+      matching_score: 0
     };
-    this.matchingScore = null; // Reset the public matchingScore to null
+    this.matchingScore = null;
     this.progress = 0;
     this.errorMessage = null;
     this.isApplied = false;
     this.isDisliked = false;
     this.isSaved = false;
     this.loading = false;
-    this.setProgressBarState(); // Reset progress bar UI
+    this.setProgressBarState();
     this.cdr.detectChanges();
   }
 
   applyForJob(): void {
-    if (this.isApplied || !this.job?.job_id) {
-      return;
-    }
+    if (this.isApplied || !this.job?.job_id) return;
     this.isProcessing = true;
     this.authService.applyForJob(this.job.job_id)
       .pipe(takeUntil(this.destroy$))
@@ -468,37 +389,26 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   revokeApplication(): void {
-    if (!this.job.job_id) {
+    if (!this.job.job_id || !window.confirm('Do you want to Revoke this application?')) {
       return;
     }
 
-    const wantsToRevoke = window.confirm('Do you want to Revoke this application?');
-
-    if (wantsToRevoke) {
-      this.isProcessing = true;
-
-      this.authService.revokeApplication(this.job.job_id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            console.log('Application revoked successfully.');
-            this.isProcessing = false;
-            
-            this.jobService.clearCache();
-            this.applicationRevoked.emit(this.job.job_id);
-
-            alert('Application revoked successfully!');
-            // After revoking, clear the displayed job details
-            this.job = null; 
-            this.resetJob(); 
-          },
-          error: (err) => {
-            console.error('Failed to revoke application:', err);
-            this.isProcessing = false;
-            alert(err.error?.error || 'Failed to revoke application');
-          }
-        });
-    }
+    this.isProcessing = true;
+    this.authService.revokeApplication(this.job.job_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isProcessing = false;
+          this.jobService.clearCache();
+          this.applicationRevoked.emit(this.job.job_id);
+          alert('Application revoked successfully!');
+          this.resetJob(); 
+        },
+        error: (err) => {
+          this.isProcessing = false;
+          alert(err.error?.error || 'Failed to revoke application');
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -519,18 +429,15 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   private setProgressBarState(): void {
-    // Only update if matchingScore is explicitly set (not null/undefined) and non-negative
     if (this.matchingScore !== null && typeof this.matchingScore !== 'undefined' && this.matchingScore >= 0) { 
       this.updateProgressBar(this.matchingScore, this.progress);
     } else {
-      // If matchingScore is null or invalid, ensure progress bars are reset/hidden visually
-      this.updateProgressBar(0, this.progress); // Show 0 or handle a "not available" state in UI
+      this.updateProgressBar(0, this.progress);
     }
-    this.cdr.detectChanges(); // Ensure UI reflects state
+    this.cdr.detectChanges();
   }
 
   private updateProgressBar(percentage: number | null, companyPercentage: number): void { 
-    // Handle null percentage by treating it as 0 for calculation, but keep the `null` state for display logic
     const actualMatchingScore = Math.min(percentage || 0, 100); 
     const actualProgress = Math.min(companyPercentage, 100);
 
@@ -538,38 +445,27 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.matchingScoreFillColor = this.getFillColor(actualMatchingScore);
 
     if (this.isMobile) {
-      if (this.mobileBar && this.mobileBar.nativeElement) {
+      if (this.mobileBar?.nativeElement) {
         this.mobileBar.nativeElement.style.width = `${actualProgress}%`;
         this.mobileBar.nativeElement.style.backgroundColor = this.fillColor;
       }
-      if (this.mobileMatchingBar && this.mobileMatchingBar.nativeElement) {
-        // Only update if matchingScore is available, otherwise it might be visually "empty"
-        if (percentage !== null) {
-          this.mobileMatchingBar.nativeElement.style.width = `${actualMatchingScore}%`;
-          this.mobileMatchingBar.nativeElement.style.backgroundColor = this.matchingScoreFillColor;
-        } else {
-          this.mobileMatchingBar.nativeElement.style.width = `0%`; // Explicitly hide/empty if score is null
-        }
+      if (this.mobileMatchingBar?.nativeElement) {
+        this.mobileMatchingBar.nativeElement.style.width = percentage !== null ? `${actualMatchingScore}%` : '0%';
+        this.mobileMatchingBar.nativeElement.style.backgroundColor = this.matchingScoreFillColor;
       }
     } else {
       const radius = 4;
       const circumference = 2 * Math.PI * radius;
-      if (this.desktopMatchingLoader && this.desktopMatchingLoader.nativeElement) {
+      if (this.desktopMatchingLoader?.nativeElement) {
          if (percentage !== null) {
             const strokeLength = (actualMatchingScore / 100) * circumference;
-            this.matchingScoreStrokeDasharray = `${strokeLength} ${circumference - strokeLength}`;
-            this.desktopMatchingLoader.nativeElement.style.stroke = this.matchingScoreFillColor;
+            this.matchingScoreStrokeDasharray = `${strokeLength} ${circumference}`;
          } else {
-            // If score is null, set dash array to 0 to hide the filled part
             this.matchingScoreStrokeDasharray = `0 ${circumference}`;
-            this.desktopMatchingLoader.nativeElement.style.stroke = 'transparent'; // Or a base gray
          }
+         this.desktopMatchingLoader.nativeElement.style.stroke = this.matchingScoreFillColor;
       }
     }
-
     this.progress = Math.round(actualProgress);
-    // Note: this.matchingScore is updated by fetchMatchingScore.
-    // We avoid overwriting it here with `Math.round(actualMatchingScore)`
-    // if `percentage` was null. The public property holds the true state.
   }
 }

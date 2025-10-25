@@ -1,27 +1,41 @@
 <div class="job-cards-container">
   <div class="job-cards-job-cards-main-container">
+    <!-- Loading state indicator -->
     <div *ngIf="isLoading" class="job-cards-loading">
       <span>Loading jobs...</span>
     </div>
+
+    <!-- Error message display -->
     <div *ngIf="errorMessage && !isLoading" class="job-cards-error">
       <span>{{ errorMessage }}</span>
     </div>
-    <div *ngIf="!isLoading && !errorMessage && jobs.length === 0" class="job-cards-no-jobs">
-      <span>No jobs available at the moment.</span>
+
+    <!-- Message for when filters result in no matches -->
+    <div *ngIf="noMatchesFound && !isLoading && !errorMessage" class="job-cards-no-jobs">
+      <span>No jobs match your current filters.</span>
     </div>
+
+    <!-- Message for when there are no jobs in the current view (e.g., "Saved Jobs" is empty) -->
+    <div *ngIf="!isLoading && !errorMessage && !noMatchesFound && jobsToDisplay.length === 0" class="job-cards-no-jobs">
+      <span>No jobs available in this category.</span>
+    </div>
+
+    <!-- Job card list, displayed when there are jobs and no loading/error states -->
     <div
-      *ngFor="let job of jobs; index as i"
+      *ngFor="let job of jobsToDisplay; index as i"
       (click)="selectJob(job)"
       class="job-cards-job-cards-first-container"
       [ngClass]="{'clicked': selectedJobId === job.job_id}"
     >
       <div class="job-cards-job-card-job-details-container">
         <div class="job-cards-company-logo-container">
+          <!-- Display company logo if available -->
           <img *ngIf="job.logo; else initialsAvatar"
             alt="{{ job.company_name || 'Company' }} logo"
-            src="{{ job.logo || 'https://via.placeholder.com/24' }}"
+            [src]="job.logo"
             class="job-cards-company-image"
           />
+          <!-- Fallback to company initials if no logo -->
           <ng-template #initialsAvatar>
             <div class="avatar-icon">
               {{ job.initials }}
@@ -30,6 +44,7 @@
         </div>
         <div class="job-cards-role-company-location-main-container">
           <div class="job-cards-role-company-location-container">
+            <!-- Job Title -->
             <span class="job-cards-job-role-text">
               <ng-container *ngIf="text; else defaultText">
                 <ng-container *ngTemplateOutlet="text"></ng-container>
@@ -40,6 +55,7 @@
                 </div>
               </ng-template>
             </span>
+            <!-- Company Name -->
             <span class="job-cards-company-name-text">
               <ng-container *ngIf="text1; else defaultText1">
                 <ng-container *ngTemplateOutlet="text1"></ng-container>
@@ -50,6 +66,7 @@
                 </div>
               </ng-template>
             </span>
+            <!-- Location and Job Type -->
             <span class="job-cards-job-location-text">
               <ng-container *ngIf="text2; else defaultText2">
                 <ng-container *ngTemplateOutlet="text2"></ng-container>
