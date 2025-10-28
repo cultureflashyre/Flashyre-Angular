@@ -26,6 +26,10 @@
   (click)="showMoreFilters = false"
 ></div>
 <div id="candidate-home" class="candidate-home-container1">
+  <!-- [ADD THIS HTML SNIPPET FOR THE POPUP] -->
+  <div *ngIf="successMessage" class="success-popup">
+    {{ successMessage }}
+  </div>
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
