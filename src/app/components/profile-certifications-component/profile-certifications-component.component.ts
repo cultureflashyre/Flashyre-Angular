@@ -101,6 +101,17 @@ export class ProfileCertificationsComponent implements OnInit {
   scrollToLastCertification() {
       // Logic for scrolling remains the same
   }
+
+   public isFormEmpty(): boolean {
+    // The form is empty if there is only one certification form group
+    // and the user has not interacted with it yet (it's "pristine").
+    if (this.certifications.length === 1) {
+      const firstCertForm = this.certifications.at(0);
+      return firstCertForm ? firstCertForm.pristine : true;
+    }
+    // If there is more than one form, it's not empty.
+    return false;
+  }
   
   updateRenewalDateMin(index: number) {
       // This logic remains the same

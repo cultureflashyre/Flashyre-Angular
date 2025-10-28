@@ -136,22 +136,47 @@ export class ProfileBasicinformationComponent implements OnInit {
     this.resumeInput.nativeElement.click();
   }
 
-  onProfilePictureSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (this.validateProfilePicture(file)) {
-      this.profilePicture = file;
-      if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
-        URL.revokeObjectURL(this.imageSrc);
-      }
-      this.imageSrc = URL.createObjectURL(file);
-      this.cdr.detectChanges();
-    } else {
-      alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
-      this.profilePictureInput.nativeElement.value = '';
-    }
+onProfilePictureSelected(event: any) {
+  const file = event.target.files[0];
+  if (!file) {
+    return; // Exit if no file was selected
   }
+
+  if (this.validateProfilePicture(file)) {
+    this.profilePicture = file; // This sets the file that will be saved
+
+    // --- START: New and More Reliable FileReader Logic ---
+
+    // If the previous image was a temporary "blob" preview, we clean it up
+    // to prevent memory leaks from multiple selection changes.
+    if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
+      URL.revokeObjectURL(this.imageSrc);
+    }
+
+    // 1. Create a new FileReader object.
+    const reader = new FileReader();
+
+    // 2. Tell the reader what to do once it has finished reading the file.
+    reader.onload = () => {
+      // The result is the image content encoded as a string (a data URL).
+      // We assign this directly to our image source.
+      this.imageSrc = reader.result as string;
+
+      // 3. Manually tell Angular to update the screen. This ensures the
+      //    preview appears instantly after the file is read.
+      this.cdr.detectChanges();
+    };
+
+    // 4. Instruct the reader to start reading the selected image file.
+    reader.readAsDataURL(file);
+
+    // --- END: New and More Reliable FileReader Logic ---
+
+  } else {
+    alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
+    this.profilePictureInput.nativeElement.value = '';
+  }
+}
 
   onResumeSelected(event: any) {
     const file = event.target.files[0];

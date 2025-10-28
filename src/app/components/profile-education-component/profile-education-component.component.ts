@@ -132,6 +132,16 @@ export class ProfileEducationComponent implements OnInit {
       : null;
   }
 
+  public isFormEmpty(): boolean {
+    // The form is empty if there is only one education form group
+    // and the user has not interacted with it yet (it's "pristine").
+    if (this.educationForms.length === 1) {
+      return this.educationForms[0].pristine;
+    }
+    // If there is more than one form, it's not empty.
+    return false;
+  }
+
   addNewForm(): void {
     this.educationForms.push(this.createEducationForm());
     setTimeout(() => {

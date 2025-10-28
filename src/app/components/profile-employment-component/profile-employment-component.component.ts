@@ -137,6 +137,19 @@ private loadPositionsFromUserProfile(): void {
     const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+    
+  }
+
+  public isFormEmpty(): boolean {
+    // The form is considered empty if there's only one position block
+    // and all its fields are still empty strings.
+    if (this.positions.length === 1) {
+      const firstPosition = this.positions[0];
+      return !firstPosition.jobTitle && !firstPosition.companyName &&
+             !firstPosition.startDate && !firstPosition.endDate && !firstPosition.jobDetails;
+    }
+    // If there is more than one position block, the form is not empty.
+    return false;
   }
 
   saveEmployment(): Promise<boolean> {

@@ -168,8 +168,39 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // --- Navigation ---
-  onSaveAndNext() {
-    this.openAlert('Do you want to save your changes and proceed?', ['Cancel', 'Save & Next']);
+    onSaveAndNext() {
+    let formIsEmpty = false;
+    
+    // Check the state of the form for the current step
+    switch (this.currentStep) {
+      case 2: // Employment
+        if (this.employmentComponent) {
+          formIsEmpty = this.employmentComponent.isFormEmpty();
+        }
+        break;
+      case 3: // Education
+        if (this.educationComponent) {
+          formIsEmpty = this.educationComponent.isFormEmpty();
+        }
+        break;
+      case 5: // Certifications
+        if (this.certificationComponent) {
+          formIsEmpty = this.certificationComponent.isFormEmpty();
+        }
+        break;
+      // Step 1 (Basic Info) doesn't have a traditional form, so we always treat it as a "save" action.
+      default:
+        formIsEmpty = false;
+        break;
+    }
+
+    // If the form is empty, show the "skip" confirmation pop-up.
+    // Otherwise, show the regular "save" confirmation pop-up.
+    if (formIsEmpty) {
+      this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
+    } else {
+      this.openAlert('Do you want to save your changes and proceed?', ['Cancel', 'Save & Next']);
+    }
   }
 
   onPrevious() {
