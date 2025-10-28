@@ -100,7 +100,7 @@
             />
             
           </div>
-          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').dirty" class="error-text">
               <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
               <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
               <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
@@ -131,7 +131,7 @@
             />
             
           </div>
-          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
+          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').dirty" class="error-text">
               Passwords do not match.
             </div>
         </div>
