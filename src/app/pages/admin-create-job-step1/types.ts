@@ -56,7 +56,7 @@ export interface RawMCQItemFromBackend {
   mcq_item_id: number; // Primary Key of MCQItem model
   job_mcq_id: number; // Primary Key of JobMCQ model it belongs to
   question_number: number;
-  question_text: string; // The raw text including Q, options, and answer
+  question_text: string; // The raw text including Q, options, and answer 
 }
 export interface JobMcqGroupFromBackend {
   job_mcq_id: number; // ID of the JobMCQ object

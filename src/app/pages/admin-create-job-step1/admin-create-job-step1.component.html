@@ -918,6 +918,9 @@
             <div *ngIf="jobForm.get('job_description')?.touched && jobForm.get('job_description')?.errors?.required" class="field-error-message">
           Enter Job Description
         </div>
+         <div *ngIf="jobForm.get('job_description')?.touched && jobForm.get('job_description')?.errors?.maxlength" class="field-error-message">
+              The job description cannot exceed 5000 characters.
+            </div>
           </div>
         </div>
       </form>

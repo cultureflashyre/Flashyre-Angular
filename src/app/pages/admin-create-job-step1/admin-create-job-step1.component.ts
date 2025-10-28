@@ -372,10 +372,20 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       },
       error: (error) => {
         console.error('File upload error:', error);
-        this.showErrorPopup(`File upload or processing failed: ${error?.message || 'Unknown error'}`);
+        const errorMessage = error?.message || 'An unknown error occurred during file processing.';
+        
+        // Check for the specific text extraction failure message from the backend
+        if (errorMessage.includes('Text extraction failed')) {
+            this.openAlert('Please provide the file in standard format and try again later', ['OK']);
+        } else {
+            // Handle other errors (e.g., file size, format, network) with a general alert
+            this.openAlert(`File upload failed: ${errorMessage}`, ['OK']);
+        }
+        
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = false;
+        this.clearFileInput(); // Clear the file input on failure
       }
     });
     this.subscriptions.add(uploadSub);
@@ -1009,7 +1019,12 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.checkEmpty('editor');
       if (this.jobForm.invalid) {
         // Use the EXISTING showErrorPopup for validation errors
-        this.showErrorPopup('Please fill all required fields correctly.');
+        let alertMessage = 'Please fill all required fields correctly.'; // Default message
+        if (this.jobForm.get('job_description')?.hasError('maxlength')) {
+            alertMessage = 'The job description cannot exceed 5000 characters.';
+        }
+        this.openAlert(alertMessage, ['OK']);
+
         // (The rest of the scrolling logic to find the invalid field remains the same)
         const errors = this.jobForm.errors;
         const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid) || (errors?.['relevantExceedsTotal'] || errors?.['invalidBudgetRange'] ? 'relevant_experience_max' : null);
