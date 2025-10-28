@@ -21,7 +21,8 @@
         class="preference-component-button button" 
         (click)="addNewPreference()" 
         [title]="remainingPreferences > 0 ? remainingPreferences + ' preferences remaining' : 'Maximum preferences reached'"
-        [disabled]="preferences.length >= 3">
+        [disabled]="preferences.length >= 3"
+        [class.grey-out]="preferences.length >= 3">
         <span class="preference-component-text11">
           <ng-container>
             <ng-template #defaultButton2>
@@ -39,6 +40,9 @@
       </button>
     </div>
   </div>
+  <span class="preference-limit-message">
+  You can save up to <strong>3 preferences</strong> only.
+  </span>
   <div *ngFor="let preference of preferences" class="preference-component-container13" [class.expanded]="preference.expanded" (click)="applyPreferenceToFilters(preference)" style="cursor: pointer;"
   title="Click to load this preference into the filters">
     <div class="preference-component-container14">

@@ -58,10 +58,11 @@
   padding-bottom: 0px;
   justify-content: center;
   background-color: #05356C;
+  cursor: pointer;
 }
  
 .preference-component-button:hover {
-  cursor: pointer;
+  
   transform: scale(1.05);
   transition: all 0.8s;
   background-color: 0A4992;
@@ -438,6 +439,17 @@
 .preference-component-container13 {
   overflow: hidden;
   transition: height 0.3s;
+}
+
+.preference-limit-message {
+  width: auto;
+  color: #F10400;
+  font-size: 12px;
+}
+
+.grey-out {
+  background-color: #ccc; /*This will change the background color of the button to grey*/
+  cursor: not-allowed; /*This will change the cursor to a "not-allowed" symbol when hovering over the button*/
 }
  
 @media(max-width: 991px) {

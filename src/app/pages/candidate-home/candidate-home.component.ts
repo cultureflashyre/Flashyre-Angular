@@ -72,6 +72,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   showMoreFilters: boolean = false;
   public initialFilterTab: 'filters' | 'preferences' = 'filters';
   isLoading: boolean = true;
+  public successMessage: string = '';
   
   // Application state
   processingApplications: { [key: number]: boolean } = {};
@@ -534,22 +535,32 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.processingApplications[jobId] = true;
     this.authService.applyForJob(jobId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.applicationSuccess[jobId] = true;
           this.appliedJobIds.push(jobId);
+
+          // --- Set the success message for the popup ---
+          this.successMessage = "You have successfully applied and you will receive an email notification. Further updates will be provided by the company shortly.";
+          
+          // Hide the success message after 5 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+
+          // Remove the job card from the view after 2 seconds
           setTimeout(() => {
             this.jobService.removeJobFromCache(jobId);
             this.jobs = this.jobs.filter(job => job.job_id !== jobId);
-            this.filteredJobs = this.filteredJobs.filter(job => job.job_id !== jobId); // Also remove from filtered list
+            this.filteredJobs = this.filteredJobs.filter(job => job.job_id !== jobId);
             this.displayedJobs = this.displayedJobs.filter(job => job.job_id !== jobId);
           }, 2000);
         },
-        (error) => {
+        error: (error) => {
           this.processingApplications[jobId] = false;
           alert(error.error?.error || 'Failed to apply for this job');
         }
-      );
+      });
   }
 
   private parseNumericFilter(input: string): number | null {
