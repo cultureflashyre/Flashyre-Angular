@@ -82,22 +82,26 @@ export class SignupCorporate1 implements OnInit {
     );
   }
 
-  phoneExistsValidator(): AsyncValidatorFn {
+ phoneExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
       if (!phone) return of(null);
-      return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
+      // FROM: return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
+      // TO:
+      return this.http.get(`${this.baseUrl}api/auth/check-phone/?phone=${phone}`).pipe(
         map((res: any) => (res.exists ? { phoneExists: true } : null)),
         catchError(() => of(null))
       );
     };
   }
     
-  emailExistsValidator(): AsyncValidatorFn {
+ emailExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
       if (!email) return of(null);
-      return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
+      // FROM: return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
+      // TO:
+      return this.http.get(`${this.baseUrl}api/auth/check-email/?email=${email}`).pipe(
         map((res: any) => (res.exists ? { emailExists: true } : null)),
         catchError(() => of(null))
       );

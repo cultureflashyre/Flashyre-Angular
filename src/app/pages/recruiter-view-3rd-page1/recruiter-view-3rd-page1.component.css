@@ -1479,7 +1479,7 @@
   max-height: 815px;
   overflow-x: hidden;
   overflow-y: scroll;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 8px;
   flex-direction: column;
   scroll-behavior: smooth;

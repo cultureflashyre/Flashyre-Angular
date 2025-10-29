@@ -453,7 +453,7 @@
   overflow-y: scroll;
   align-items: flex-start;
   flex-direction: column;
-  scrollbar-width: none;
+  scrollbar-width: thin;
 }
  
 .assessment-taken-page3-qa-container1 {

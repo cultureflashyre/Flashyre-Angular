@@ -73,6 +73,16 @@
         </div>
       </div>
       <div class="assessment-taken-page2-container3">
+              <!-- Loading indicator -->
+        <div *ngIf="loading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading Assessment Results...</p>
+        </div>
+        <!-- Show message if assessments array is empty -->
+        <div *ngIf="!loading && assessmentData?.length === 0" class="no-assessments-message">
+          No assessments taken yet.
+        </div>
+
         <div class="assessment-taken-page2-container4">
           <div
             *ngFor="let attempt of attempts; let i = index"
@@ -207,3 +217,45 @@
     [assessmentData]="selectedAttempt"
     (back)="closeDetailView()">
   </assessment-detailed-results>
+
+  <!-- Styles for pagination and loading indicators -->
+<style>
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+  align-items: center;
+  align-content: center;
+}
+
+.small-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container, .loading-more {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.load-more-container {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
