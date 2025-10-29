@@ -84,7 +84,9 @@ private loadPositionsFromUserProfile(): void {
   // Remove a position
   removePosition(index: number) {
     if (this.positions.length > 1) {
-      this.positions.splice(index, 1);
+      if (window.confirm('Are you sure to remove')) {
+        this.positions.splice(index, 1);
+      }
     }
   }
 

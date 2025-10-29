@@ -153,10 +153,9 @@ export class ProfileEducationComponent implements OnInit {
   }
 
   removeForm(index: number): void {
-    // If the form has an ID, it means it exists in the database.
-    // We will handle its deletion on the backend during the sync.
-    // For now, just remove it from the UI.
-    this.educationForms.splice(index, 1);
+    if (window.confirm('Are you sure to remove')) {
+      this.educationForms.splice(index, 1);
+    }
   }
 
   saveEducation(): Promise<boolean> {

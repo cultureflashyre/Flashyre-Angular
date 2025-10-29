@@ -601,6 +601,11 @@ button.profile-certifications-component-remove-certification--text {
   text-decoration-thickness: 5px;          /* Adds spacing above and below the line */
 }
 
+.error-message {
+  font-size: 12px;
+  color: #F10400;
+}
+
 
  
 @media(max-width: 1200px) {

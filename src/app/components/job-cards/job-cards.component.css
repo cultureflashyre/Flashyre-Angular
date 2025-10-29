@@ -163,6 +163,12 @@
 .job-cards-text3 {
   display: inline-block;
 }
+
+.job-cards-no-jobs {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+}
  
 
  
