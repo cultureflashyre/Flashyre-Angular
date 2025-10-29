@@ -32,6 +32,9 @@
   class="candidate-job-detail-view-container1"
 >
   <div id="main-container" class="candidate-job-detail-view-main-container">
+    <navbar-for-candidate-view
+    rootClassName="navbar-for-candidate-viewroot-class-name1"
+  ></navbar-for-candidate-view>
     <div
       id="details-container"
       class="candidate-job-detail-view-details-container"
@@ -421,7 +424,7 @@
         ></job-cards>
         <div class="candidate-job-detail-view-container5">
           <candidate-job-details
-            [jobId]="selectedJobId"
+            [job]="selectedJob"
             [activeTab]="activeTab"
             (applicationRevoked)="onApplicationRevoked($event)"
             (jobAppliedSuccess)="onJobApplied($event)"
@@ -435,7 +438,4 @@
       </div>
     </div>
   </div>
-  <navbar-for-candidate-view
-    rootClassName="navbar-for-candidate-viewroot-class-name1"
-  ></navbar-for-candidate-view>
 </div>
