@@ -2,6 +2,49 @@
     display: contents; 
   }
 
+  /* Add this to your flashyre-assessment11.component.css */
+
+/* Expired section styling */
+.expired-section {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  background-color: #f5f5f5;
+}
+
+.expired-section .flashyre-assessment11-dropdown-toggle2 {
+  cursor: not-allowed !important;
+  background-color: #f5f5f5;
+}
+
+.expired-section .flashyre-assessment11-dropdown-toggle2:hover {
+  background-color: #f5f5f5 !important;
+  color: #595959 !important;
+  fill: #595959 !important;
+}
+
+/* Visual indicator for section timer */
+.section-timer-warning {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    color: #f10400;
+  }
+  50% {
+    color: #ff6b6b;
+  }
+  100% {
+    color: #f10400;
+  }
+}
+
+/* Add warning color when section timer is low (less than 2 minutes) */
+.flashyre-assessment11-timer.low-time {
+  animation: pulse 1s infinite;
+}
+
   .flashyre-assessment11-previous-next-button-main-container1 button {
     display: inline-block;
     margin: 0 5px;
