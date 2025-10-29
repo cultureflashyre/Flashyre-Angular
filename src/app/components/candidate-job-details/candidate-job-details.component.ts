@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() rootClassName: string = 'candidate-default-root';
-  @Input() jobId: number | null = null;
+  @Input() job: any | null = null;
   @Input() text: TemplateRef<any> | null = null;
   @Input() text1: TemplateRef<any> | null = null;
   @Input() text2: TemplateRef<any> | null = null;
@@ -32,28 +32,28 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
   @ViewChild('desktopMatchingLoader') desktopMatchingLoader: ElementRef;
 
-  job: any = {
-    job_id: null,
-    company_name: '',
-    logo: '',
-    title: '',
-    location: '',
-    job_type: '',
-    created_at: '',
-    description: '',
-    requirements: '',
-    salary: null,
-    url: null,
-    source: '',
-    tag: '',
-    contract_time: '',
-    contract_type: '',
-    external_id: '',
-    last_updated: '',
-    assessment: null,
-    attempts_remaining: null,
-    matching_score: 0 // Initialize for template safety
-  };
+  // job: any = {
+  //   job_id: null,
+  //   company_name: '',
+  //   logo: '',
+  //   title: '',
+  //   location: '',
+  //   job_type: '',
+  //   created_at: '',
+  //   description: '',
+  //   requirements: '',
+  //   salary: null,
+  //   url: null,
+  //   source: '',
+  //   tag: '',
+  //   contract_time: '',
+  //   contract_type: '',
+  //   external_id: '',
+  //   last_updated: '',
+  //   assessment: null,
+  //   attempts_remaining: null,
+  //   matching_score: 0 // Initialize for template safety
+  // };
   userProfile: any = {};
   loading: boolean = false;
   errorMessage: string | null = null;
@@ -93,6 +93,35 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     });
   }
 
+  get dateLabel(): string {
+    switch (this.activeTab) {
+      case 'applied':
+        return 'Applied';
+      case 'saved':
+        return 'Saved';
+      default:
+        return 'Posted';
+    }
+  }
+
+  /**
+   * Returns the correct date value from the job object based on the active tab.
+   * Assumes job object has 'applied_at' for applied jobs and 'saved_at' for saved jobs.
+   */
+  get displayDate(): string | null { // The return type now allows null
+    switch (this.activeTab) {
+      case 'applied':
+        // This data now comes directly from the backend API
+        return this.job.applied_at;
+      case 'saved':
+        // Per requirements, do not show any date for saved jobs
+        return 'Saved';
+      default:
+        // For the "recommended" tab, show the original posted date
+        return this.job.created_at;
+    }
+  }
+
   ngOnInit() {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.attemptsFromNavigation = params['attempts'] !== undefined ? +params['attempts'] : null;
@@ -102,7 +131,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.loadUserProfile();
 
     this.jobService.jobInteraction$.pipe(takeUntil(this.destroy$)).subscribe(interaction => {
-      if (this.jobId && interaction.jobId === this.jobId.toString()) {
+      if (this.job && this.job.job_id && interaction.jobId === this.job.job_id.toString()) {
         if (interaction.type === 'dislike') {
           this.isDisliked = interaction.state;
         } else if (interaction.type === 'save') {
@@ -123,21 +152,23 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['jobId']) {
-      const newJobId = changes['jobId'].currentValue;
-      if (newJobId) {
-        this.matchingScore = null; 
-        this.setProgressBarState();
+    if (changes['job']) {
+      const newJob = changes['job'].currentValue;
+      if (newJob) {
+        this.loading = true; // Briefly show loading
+        this.errorMessage = null;
+        this.successMessage = null;
+        this.isApplied = false;
 
-        this.fetchJobDetails(newJobId);
-        this.fetchMatchingScore(newJobId);
+        // Directly use the passed job object
+        this.matchingScore = null;
+        this.fetchMatchingScore(newJob.job_id); // Fetch score for the new job
+        this.fetchInteractionStatus(); // Check if disliked/saved
+        this.setProgressBarState();
+        this.loading = false; // Turn off loading
       } else {
         this.resetJob();
       }
-    }
-    
-    if (changes['activeTab'] && !changes['activeTab'].firstChange && this.jobId) {
-        this.fetchInteractionStatus();
     }
   }
 
@@ -172,44 +203,44 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     }
   }
 
-  private fetchJobDetails(jobId: number): void {
-    this.loading = true;
-    this.errorMessage = null;
-    this.successMessage = null;
-    this.isApplied = false;
+  // private fetchJobDetails(jobId: number): void {
+  //   this.loading = true;
+  //   this.errorMessage = null;
+  //   this.successMessage = null;
+  //   this.isApplied = false;
 
-    this.jobService.getJobById(jobId).subscribe({
-      next: (data) => {
-        this.job = {
-          ...this.job, // Retain default structure
-          ...data,
-          attempts_remaining: (data.attempts_remaining !== null && data.attempts_remaining !== undefined) 
-            ? data.attempts_remaining 
-            : this.attemptsFromNavigation,
-          matching_score: 0 // Keep as 0, as public matchingScore holds the true value
-        };
-        this.loading = false;
+  //   this.jobService.getJobById(jobId).subscribe({
+  //     next: (data) => {
+  //       this.job = {
+  //         ...this.job, // Retain default structure
+  //         ...data,
+  //         attempts_remaining: (data.attempts_remaining !== null && data.attempts_remaining !== undefined) 
+  //           ? data.attempts_remaining 
+  //           : this.attemptsFromNavigation,
+  //         matching_score: 0 // Keep as 0, as public matchingScore holds the true value
+  //       };
+  //       this.loading = false;
         
-        if (this.activeTab !== 'applied') {
-          this.fetchInteractionStatus();
-        } else {
-          this.isDisliked = false;
-          this.isSaved = false;
-        }
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.resetJob();
-        this.errorMessage = `Job with ID ${jobId} not found. Please select another job.`;
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  //       if (this.activeTab !== 'applied') {
+  //         this.fetchInteractionStatus();
+  //       } else {
+  //         this.isDisliked = false;
+  //         this.isSaved = false;
+  //       }
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (err) => {
+  //       this.resetJob();
+  //       this.errorMessage = `Job with ID ${jobId} not found. Please select another job.`;
+  //       this.loading = false;
+  //       this.cdr.detectChanges();
+  //     }
+  //   });
+  // }
 
   private async fetchInteractionStatus(): Promise<void> {
     const userId = localStorage.getItem('user_id');
-    const jobIdStr = this.jobId?.toString();
+    const jobIdStr = this.job?.job_id?.toString();
 
     if (!userId || !jobIdStr) {
       this.isDisliked = false;
@@ -237,7 +268,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
 
     // Fetch saved status from API
     this.authService.getSavedJobs(userId).subscribe(response => {
-      this.isSaved = response.saved_jobs.includes(this.jobId);
+      this.isSaved = response.saved_jobs.includes(this.job.job_id);
       this.cdr.detectChanges();
     });
   }
@@ -249,7 +280,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       return;
     }
     const userId = localStorage.getItem('user_id');
-    const jobIdStr = this.jobId?.toString();
+    const jobIdStr = this.job?.job_id?.toString();
     if (!userId || !jobIdStr || this.isProcessingDislike) return;
 
     this.isProcessingDislike = true; 
@@ -287,7 +318,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       return;
     }
     const userId = localStorage.getItem('user_id');
-    const jobIdStr = this.jobId?.toString();
+    const jobIdStr = this.job?.job_id?.toString();
     if (!userId || !jobIdStr || this.isProcessingSave) return;
 
     this.isProcessingSave = true; 
@@ -349,24 +380,37 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     await this.cacheDislikedJobs(userId, cachedJobs);
   }
 
+  // private resetJob(): void {
+  //    this.job = {
+  //      job_id: null, company_name: '', logo: '', title: '', location: '',
+  //      job_type: '', created_at: '', description: '', requirements: '', salary: null,
+  //      url: null, source: '', tag: '', contract_time: '', contract_type: '',
+  //      external_id: '', last_updated: '', assessment: null, attempts_remaining: null,
+  //      matching_score: 0
+  //    };
+  //   this.matchingScore = null;
+  //   this.progress = 0;
+  //   this.errorMessage = null;
+  //   this.isApplied = false;
+  //   this.isDisliked = false;
+  //   this.isSaved = false;
+  //   this.loading = false;
+  //   this.setProgressBarState();
+  //   this.cdr.detectChanges();
+  // }
+
   private resetJob(): void {
-    this.job = {
-      job_id: null, company_name: '', logo: '', title: '', location: '',
-      job_type: '', created_at: '', description: '', requirements: '', salary: null,
-      url: null, source: '', tag: '', contract_time: '', contract_type: '',
-      external_id: '', last_updated: '', assessment: null, attempts_remaining: null,
-      matching_score: 0
-    };
-    this.matchingScore = null;
-    this.progress = 0;
-    this.errorMessage = null;
-    this.isApplied = false;
-    this.isDisliked = false;
-    this.isSaved = false;
-    this.loading = false;
-    this.setProgressBarState();
-    this.cdr.detectChanges();
-  }
+  this.job = null; // Clear the input job
+  this.matchingScore = null;
+  this.progress = 0;
+  this.errorMessage = null;
+  this.isApplied = false;
+  this.isDisliked = false;
+  this.isSaved = false;
+  this.loading = false;
+  this.setProgressBarState();
+  this.cdr.detectChanges();
+}
 
   applyForJob(): void {
     if (this.isApplied || !this.job?.job_id) return;

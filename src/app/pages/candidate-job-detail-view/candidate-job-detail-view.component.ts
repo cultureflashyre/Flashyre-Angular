@@ -36,6 +36,7 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
 })
 export class CandidateJobDetailView implements OnInit, OnDestroy {
   selectedJobId: number | null = null;
+  selectedJob: any | null = null;
   public activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
 
   isLoading: boolean = true;
@@ -287,18 +288,36 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
       applied: this.jobService.fetchAppliedJobDetails()
     }).subscribe({
       next: (results) => {
-        // Populate both master and filtered lists initially
-        this.masterRecommendedJobs = this.filteredRecommendedJobs = results.recommended;
+        // --- NEW FUNCTIONALITY 1: PERSISTENT FILTERING ---
+        const savedAndAppliedIds = new Set([
+          ...results.saved.map(j => j.job_id),
+          ...results.applied.map(j => j.job_id)
+        ]);
+
+        const filteredRecommended = results.recommended.filter(job => !savedAndAppliedIds.has(job.job_id));
+
+        // --- NEW FUNCTIONALITY 2: DATE SORTING ---
+        // Sort recommended jobs by posted date (descending)
+        filteredRecommended.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        
+        // Sort saved jobs by saved date (descending) - assuming 'saved_at' property exists
+        results.saved.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
+        
+        // Sort applied jobs by applied date (descending) - assuming 'applied_at' property exists
+        results.applied.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+
+        // Populate both master and filtered lists with the processed data
+        this.masterRecommendedJobs = this.filteredRecommendedJobs = filteredRecommended;
         this.masterSavedJobs = this.filteredSavedJobs = results.saved;
         this.masterAppliedJobs = this.filteredAppliedJobs = results.applied;
         
-        console.log('All jobs fetched successfully:', {
+        console.log('All jobs fetched, filtered, and sorted successfully:', {
           recommended: this.masterRecommendedJobs.length,
           saved: this.masterSavedJobs.length,
           applied: this.masterAppliedJobs.length
         });
 
-        // Run the filter pipeline to apply any default filters and update the view
+        // Run the filter pipeline to apply any search filters and update the view
         this.runFilterPipeline();
         this.isLoading = false;
       },
@@ -315,24 +334,28 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   }
 
   private setInitialJobSelection(): void {
-    const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
+  const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
+  
+  if (jobIdFromUrl) {
+    const numericJobId = parseInt(jobIdFromUrl, 10);
+    // CORRECTED: 'jobFromUrl' is correctly defined and used here
+    const jobFromUrl = this.jobsToDisplay.find(job => job.job_id === numericJobId);
     
-    if (jobIdFromUrl) {
-      const numericJobId = parseInt(jobIdFromUrl, 10);
-      const jobExists = this.jobsToDisplay.some(job => job.job_id === numericJobId);
-      
-      if (jobExists) {
-        this.selectedJobId = numericJobId;
-        return;
-      }
-    }
-    
-    if (this.jobsToDisplay.length > 0) {
-      this.selectedJobId = this.jobsToDisplay[0].job_id;
-    } else {
-      this.selectedJobId = null;
+    if (jobFromUrl) {
+      this.selectedJobId = numericJobId;
+      this.selectedJob = jobFromUrl;
+      return;
     }
   }
+  
+  if (this.jobsToDisplay.length > 0) {
+    this.selectedJobId = this.jobsToDisplay[0].job_id;
+    this.selectedJob = this.jobsToDisplay[0];
+  } else {
+    this.selectedJobId = null;
+    this.selectedJob = null;
+  }
+}
 
   // Updates the displayed jobs based on the active tab's filtered list
   private updateJobsToDisplay(): void {
@@ -366,27 +389,41 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
 
   // Event handlers modify the master lists, then re-run filters
   onJobApplied(appliedJob: any): void {
-    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
-    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
-    this.masterAppliedJobs.unshift(appliedJob);
-    this.runFilterPipeline();
-  }
+  // Add an application date to the job object for immediate sorting
+  appliedJob.applied_at = new Date().toISOString();
+
+  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
+  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
+  
+  // Add to applied list and re-sort
+  this.masterAppliedJobs.unshift(appliedJob);
+  this.masterAppliedJobs.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+  
+  this.runFilterPipeline();
+}
 
   onJobSaved(savedJob: any): void {
-    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
-    if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
-      this.masterSavedJobs.unshift(savedJob);
-    }
-    this.runFilterPipeline();
+  // Add a saved date to the job object for immediate sorting
+  savedJob.saved_at = new Date().toISOString();
+
+  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
+  if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
+    // Add to saved list and re-sort
+    this.masterSavedJobs.unshift(savedJob);
+    this.masterSavedJobs.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
   }
+  this.runFilterPipeline();
+}
 
   onJobUnsaved(unsavedJob: any): void {
-    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
-    if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
-      this.masterRecommendedJobs.unshift(unsavedJob);
-    }
-    this.runFilterPipeline();
+  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
+  if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
+    // Add back to recommended list and re-sort
+    this.masterRecommendedJobs.unshift(unsavedJob);
+    this.masterRecommendedJobs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }
+  this.runFilterPipeline();
+}
 
   onJobDisliked(dislikedJob: any): void {
     this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== dislikedJob.job_id);
@@ -425,5 +462,6 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   
   onJobSelected(job: any): void {
     this.selectedJobId = job?.job_id ?? null;
+    this.selectedJob = job;
   }
 }

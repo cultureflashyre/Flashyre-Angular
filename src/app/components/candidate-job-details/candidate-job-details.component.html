@@ -4,7 +4,7 @@
   [ngClass]="rootClassName"
 >
   <!-- Display a message if no job is selected -->
-  <div *ngIf="!jobId && !errorMessage && !loading" class="no-job-selected-message">
+  <div *ngIf="!job && !errorMessage && !loading" class="no-job-selected-message">
     <span>No jobs are available at the moment.</span>
   </div>
 
@@ -17,7 +17,7 @@
   </div>
 
   <!-- Main loading state for the entire job details pane -->
-  <div *ngIf="loading && jobId" class="candidate-job-details-loading-pane">
+  <div *ngIf="loading && job" class="candidate-job-details-loading-pane">
     <p>Loading job details...</p>
   </div>
 
@@ -25,7 +25,7 @@
   <div
     id="job-details-main-container"
     class="candidate-job-details-job-details-main-container"
-    *ngIf="job && jobId && !errorMessage && !loading"
+    *ngIf="job && !errorMessage && !loading"
   >
     <div class="candidate-job-details-job-details-container">
       <!-- Company, Role, and Location Details -->
@@ -86,8 +86,13 @@
             <ng-template #defaultText2>
               <div class="candidate-job-details-fragment4">
                 <span class="candidate-job-details-text13">
-                  {{ job.location }} ({{ job.job_type }}) | Posted {{ job.created_at | date: 'shortDate' }}
-                </span>
+  {{ job.location }} ({{ job.job_type }})
+  
+  <!-- This container will only render if displayDate has a value (i.e., not null) -->
+  <ng-container *ngIf="displayDate">
+    | {{ dateLabel }} {{ displayDate | date: 'shortDate' }}
+  </ng-container>
+</span>
               </div>
             </ng-template>
             <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
