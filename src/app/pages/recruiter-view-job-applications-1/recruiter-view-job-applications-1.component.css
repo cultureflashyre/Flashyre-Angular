@@ -1,6 +1,179 @@
 :host { 
   display: contents; 
 }
+
+/* Update the button container styles */
+.recruiter-view-job-applications1-view-jd-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 0;
+}
+
+.recruiter-view-job-applications1-view-jd-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #41327B;
+  border: 1px solid #41327B;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recruiter-view-job-applications1-view-jd-button:hover {
+  background-color: #41327B;
+  color: #ffffff;
+  transform: scale(0.98);
+}
+
+.recruiter-view-job-applications1-view-jd-button:active {
+  transform: scale(1.02);
+}
+
+.recruiter-view-job-applications1-document-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+/* Add these styles to recruiter-view-job-applications-1.component.css */
+
+/* Button Container */
+.recruiter-view-job-applications1-view-jd-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+
+/* Main Button Style */
+.recruiter-view-job-applications1-view-jd-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #41327B;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recruiter-view-job-applications1-view-jd-button:hover {
+  background-color: #332661;
+  transform: scale(0.98);
+}
+
+.recruiter-view-job-applications1-view-jd-button:active {
+  transform: scale(1.02);
+}
+
+.recruiter-view-job-applications1-document-icon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+/* Alternative Link Style (icon + text) */
+.recruiter-view-job-applications1-jd-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.recruiter-view-job-applications1-view-jd-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.recruiter-view-job-applications1-view-jd-link:hover {
+  background-color: #f0f0f0;
+}
+
+.recruiter-view-job-applications1-jd-icon {
+  width: 20px;
+  height: 20px;
+  color: #41327B;
+}
+
+.recruiter-view-job-applications1-jd-link-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #41327B;
+}
+
+.recruiter-view-job-applications1-view-jd-link:hover .recruiter-view-job-applications1-jd-link-text {
+  color: #2563EB;
+  text-decoration: underline;
+}
+
+.recruiter-view-job-applications1-view-jd-link:hover .recruiter-view-job-applications1-jd-icon {
+  color: #2563EB;
+}
+
+.recruiter-view-job-applications1-no-jd-text {
+  font-size: 14px;
+  color: #6b6c6d;
+  font-style: italic;
+}
+
+/* Responsive Styles */
+@media(max-width: 991px) {
+  .recruiter-view-job-applications1-view-jd-button {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+  
+  .recruiter-view-job-applications1-document-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media(max-width: 767px) {
+  .recruiter-view-job-applications1-view-jd-button-container {
+    padding: 0 8px;
+  }
+  
+  .recruiter-view-job-applications1-view-jd-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
+@media(max-width: 479px) {
+  .recruiter-view-job-applications1-view-jd-button {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  .recruiter-view-job-applications1-document-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
  
 .recruiter-view-job-applications1-container {
   width: 100%;
@@ -646,8 +819,36 @@
   align-items: flex-start;
   flex-direction: row;
   justify-content: flex-end;
+  
 }
- 
+ .recruiter-view-job-applications1-view-jd-button {
+  color: #41327b;
+  width: auto;
+  height: 40px;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+  border-color: #41327B;
+  padding-left: 12px;
+  border-radius: 3px;
+  padding-right: 12px;
+  border-width: 1px; /* Ensure border is visible like other buttons */
+  background-color: #FFFFFF; /* Ensure background is white */
+}
+
+.recruiter-view-job-applications1-view-jd-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+
+.recruiter-view-job-applications1-view-jd-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+
 .recruiter-view-job-applications1-screening-call-invite-button {
   color: rgb(65, 50, 123);
   width: auto;

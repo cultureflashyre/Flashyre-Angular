@@ -1,6 +1,30 @@
 :host { 
   display: contents; 
 }
+/* components/recruiter-flow-large-card.component.css */
+.recruiter-flow-large-card-view-jd-btn {
+  margin-left: 12px;               /* space after the job title */
+  display: inline-flex;            /* keep icon + text aligned */
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #41327B;
+  background: transparent;
+  border: 1px solid #41327B;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.recruiter-flow-large-card-view-jd-btn:hover {
+  background: #41327B;
+  color: #fff;
+}
+.recruiter-flow-large-card-view-jd-icon {
+  width: 16px;
+  height: 16px;
+}
  
 .recruiter-flow-large-card-container1 {
   width: auto;
