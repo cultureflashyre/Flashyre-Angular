@@ -68,6 +68,7 @@
               <ng-template #defaultText13>
                 <div class="signup-corporate1-fragment12">
                   <span class="signup-corporate1-text12">Company Name</span>
+
                 </div>
               </ng-template>
               <ng-container *ngTemplateOutlet="text13 ? text13 : defaultText13"></ng-container>
@@ -109,9 +110,9 @@
             <span *ngIf="signupForm.get('phone_number').errors?.required">Phone number is required.</span>
             <span *ngIf="signupForm.get('phone_number').errors?.pattern">Phone number must be exactly 10 digits.</span>
           </div>
-          <div *ngIf="signupForm.get('phone_number').errors?.phoneExists" class="error-text">
-            Phone number already exists.
-          </div>
+        <div *ngIf="signupForm.get('phone_number').errors?.phoneExists" class="error-text">
+    Phone number already exists.
+  </div>
         </div>
         <div id="email-container" class="signup-corporate1-email-container">
           <span id="signup-email" class="signup-corporate1-email-text">
@@ -136,8 +137,8 @@
             <span *ngIf="signupForm.get('email').errors?.email">Please enter a valid email.</span>
           </div>
           <div *ngIf="signupForm.get('email').errors?.emailExists" class="error-text">
-            Email already exists.
-          </div>
+    Email already exists.
+  </div>
         </div>
 <div id="password-container" class="signup-corporate1-password-container1">
   <div id="password" class="signup-corporate1-password1">
@@ -163,7 +164,7 @@
       class="signup-corporate1-password-input1 input"
     />
   </div>
-  <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched" class="error-text">
+  <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').dirty" class="error-text">
     <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
     <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
     <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>

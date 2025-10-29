@@ -10,6 +10,8 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 export class AssessmentAttemptsListComponent implements OnInit {
   @Input() assessmentId!: string;
   @Output() back = new EventEmitter<void>();
+    @Output() loaded = new EventEmitter<void>(); // <-- 1. ADD THIS NEW OUTPUT PROPERTY
+
 
   assessmentData: any;
   assessment_title: string = '';
@@ -21,6 +23,8 @@ export class AssessmentAttemptsListComponent implements OnInit {
   selectedAttempt: any = null;
   loading: boolean = false;
   errorMessage: string = '';
+
+  isLoading: boolean = true;
 
   constructor(
     private assessmentTakenService: AssessmentTakenService,
@@ -47,6 +51,8 @@ export class AssessmentAttemptsListComponent implements OnInit {
       this.attempts_remaining = data.attempts_remaining ?? 0;
       this.attempts = Array.isArray(data.attempts) ? data.attempts : [];
       this.loading = false;
+      this.loaded.emit(); // <-- 2. EMIT THE SIGNAL ON SUCCESS
+
       
       // Add this block to check URL parameters after data loads
       this.route.queryParams.subscribe(params => {
@@ -60,6 +66,8 @@ export class AssessmentAttemptsListComponent implements OnInit {
     error: (error) => {
       this.errorMessage = 'Failed to load assessment data.';
       this.loading = false;
+      this.loaded.emit(); // <-- 3. ALSO EMIT THE SIGNAL ON ERROR
+
     }
   });
 }
