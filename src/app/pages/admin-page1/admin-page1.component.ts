@@ -67,6 +67,14 @@ export class AdminPage1 implements OnInit {
     }
 
     const files = Array.from(input.files);
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']; // Only PDF and DOC
+const hasInvalidType = files.some(file => !allowedTypes.includes(file.type));
+
+  if (hasInvalidType) {
+    this.showErrorPopup('upload only pdf or word document'); // Your custom error message
+    this.cvUploader.nativeElement.value = ''; // Clear the input
+    return; // Stop the function here
+  }
     const validFiles: File[] = [];
     const maxFileSize = 5 * 1024 * 1024; // 5 MB
     const maxTotalSize = MAX_TOTAL_UPLOAD_SIZE_MB * 1024 * 1024; // Convert MB to bytes
