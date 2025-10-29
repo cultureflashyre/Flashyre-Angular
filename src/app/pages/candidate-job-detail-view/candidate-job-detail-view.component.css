@@ -901,6 +901,12 @@
   background-color: #f8f9fa;
   border-radius: 8px;
 }
+
+.no-jobs-message-container {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+}
  
 @media(max-width: 1200px) {
   .candidate-job-detail-view-main-container {

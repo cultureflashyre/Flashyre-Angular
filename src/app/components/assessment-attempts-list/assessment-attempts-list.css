@@ -471,6 +471,13 @@ body {
   font-weight: 500; /* Font weight */
   color: #474748; /* Default text color */
 }
+
+.assessment-taken-page2-re-attempt-container:disabled {
+  background-color: #cccccc; /* Greys out the button */
+  color: #666666;      /* Changes text color for better readability */
+  cursor: not-allowed;  /* Disables the cursor, showing a 'not-allowed' icon */
+  opacity: 0.6;         /* Makes the button slightly transparent */
+}
  
 @media(max-width: 991px) {
   .assessment-taken-page2-cloud-architecture-main-container {

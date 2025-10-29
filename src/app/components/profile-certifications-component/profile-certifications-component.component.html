@@ -80,6 +80,9 @@
                   placeholder="Enter certificate name"
                 />
               </div>
+              <div *ngIf="cert.get('certificate_name')?.invalid && cert.get('certificate_name')?.touched" class="error-message">
+                <div *ngIf="cert.get('certificate_name')?.hasError('pattern')">Certificate name must include letters.</div>
+              </div>
             </div>
           </div>
 
@@ -121,6 +124,9 @@
                   type="text"
                   placeholder="Enter issuing institute"
                 />
+              </div>
+              <div *ngIf="cert.get('issuing_institute')?.invalid && cert.get('issuing_institute')?.touched" class="error-message">
+                <div *ngIf="cert.get('issuing_institute')?.hasError('pattern')">Issuing institute must include letters.</div>
               </div>
             </div>
           </div>
@@ -258,6 +264,9 @@
               type="text"
               placeholder="Enter credentials"
             />
+          </div>
+          <div *ngIf="cert.get('credentials')?.invalid && cert.get('credentials')?.touched" class="error-message">
+            <div *ngIf="cert.get('credentials')?.hasError('pattern')">Credentials must include letters.</div>
           </div>
         </div>
 

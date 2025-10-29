@@ -425,6 +425,11 @@
   text-decoration-thickness: 5px;
 }
 
+.error-message {
+  font-size: 12px;
+  color: #F10400;
+}
+
 @media (max-width: 1200px) {
   .profile-employment-component-container {
     width: 720px;

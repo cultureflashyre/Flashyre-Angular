@@ -79,11 +79,11 @@ export class ProfileCertificationsComponent implements OnInit {
   createCertificationGroup(): FormGroup {
     return this.fb.group({
       certifications_id: [null], // <<< ADD THE ID CONTROL
-      certificate_name: ['', Validators.required],
-      issuing_institute: ['', Validators.required],
+      certificate_name: ['', [Validators.required, Validators.pattern('.*[a-zA-Z]+.*')]],
+      issuing_institute: ['', [Validators.required, Validators.pattern('.*[a-zA-Z]+.*')]],
       issued_date: ['', Validators.required],
       renewal_date: [''],
-      credentials: ['', Validators.required],
+      credentials: ['', [Validators.required, Validators.pattern('.*[a-zA-Z]+.*')]],
     });
   }
 
@@ -94,7 +94,9 @@ export class ProfileCertificationsComponent implements OnInit {
 
   removeCertification(index: number) {
     if (this.certifications.length > 1) {
-      this.certifications.removeAt(index);
+      if(window.confirm('Are you sure to remove')) {
+        this.certifications.removeAt(index);
+      }
     }
   }
 

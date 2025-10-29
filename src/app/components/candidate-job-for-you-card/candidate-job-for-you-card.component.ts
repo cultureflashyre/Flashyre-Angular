@@ -264,21 +264,26 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
   }
 
   onSave(event: MouseEvent): void {
-    event.stopPropagation();
-    if (!this.jobId) {
-      console.warn('Cannot save: jobId is not available.');
-      return;
-    }
-    if (this.isDisliked) {
-      alert('You cannot save a job that is disliked. Please remove the dislike first.');
-      return;
-    }
-    const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      console.error('Cannot save: User ID not found.');
-      return;
-    }
+  event.stopPropagation();
+  if (!this.jobId) {
+    console.warn('Cannot save: jobId is not available.');
+    return;
+  }
+  if (this.isDisliked) {
+    alert('You cannot save a job that is disliked. Please remove the dislike first.');
+    return;
+  }
+  const userId = localStorage.getItem('user_id');
+  if (!userId) {
+    console.error('Cannot save: User ID not found.');
+    return;
+  }
 
+  const confirmationMessage = this.isSaved
+    ? 'Are you sure you want to unsave this job?'
+    : 'Are you sure you want to save this job?';
+
+  if (confirm(confirmationMessage)) {
     const action = this.isSaved
       ? this.authService.removeSavedJob(userId, this.jobId)
       : this.authService.saveJob(userId, this.jobId);
@@ -287,12 +292,13 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
       next: () => {
         this.isSaved = !this.isSaved;
         this.jobService.notifyJobInteraction(this.jobId, 'save', this.isSaved);
-        alert(this.isSaved ? 'Job saved successfully!' : 'Job unsaved successfully!');
+        // The alert has been removed from here as the confirmation is now handled before the action
         this.cdr.detectChanges();
       },
       error: (error) => console.error('Error updating save status:', error),
     });
   }
+}
   
   // --- Helper and UI Methods ---
   isImage(src: string): boolean {
