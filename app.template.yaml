@@ -1,0 +1,24 @@
+runtime: python313
+entrypoint: serve
+
+handlers:
+  # ... (your other handlers remain unchanged)
+  - url: /assets
+    static_dir: assets
+  - url: /favicon.ico
+    static_files: favicon.ico
+    upload: favicon.ico
+  - url: /(.*\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff2?))
+    static_files: \1
+    upload: (.*\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff2?))
+
+  # Catch-all handler
+  - url: /.*
+    static_files: index.html
+    upload: index.html
+    http_headers:
+      Content-Security-Policy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' __BACKEND_API_URL__;"
+      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+      X-Content-Type-Options: "nosniff"
+      X-Frame-Options: "SAMEORIGIN"
+      Referrer-Policy: "strict-origin-when-cross-origin"

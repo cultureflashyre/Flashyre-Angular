@@ -6,6 +6,6 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 @NgModule({
   declarations: [TimerFormatPipe, SafeHtmlPipe],
   imports: [CommonModule],
-  exports: [TimerFormatPipe]
+  exports: [TimerFormatPipe, SafeHtmlPipe]
 })
 export class SharedPipesModule {}

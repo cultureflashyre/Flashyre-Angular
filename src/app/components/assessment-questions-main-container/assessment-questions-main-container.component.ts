@@ -1,4 +1,6 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+//import { TimerFormatPipe } from 'src/app/pipe/timer-format.pipe'
+//import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe'
 
 @Component({
   selector: 'assessment-questions-main-container',

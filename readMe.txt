@@ -18,3 +18,18 @@ The production alias is typically set up by default in angular.json.
 Staging (uses environment.staging.ts)	
 ng serve --configuration=staging or ng build --configuration=staging	
 Requires you to define the staging configuration in angular.json.
+
+---------------------------------------------------------------
+---------------------------------------------------------------
+After you have built the application based on the environment,
+run the following script deploy.sh, using the appropriate backend 
+URL, to create the correct app.yaml file in the required folder. 
+---------------------------------------------------------------
+---------------------------------------------------------------
+Run the deployment script with the correct environment variable:
+
+For Production
+BACKEND_URL="https://your-production-api.appspot.com" ./deploy.sh
+
+For Staging
+BACKEND_URL="https://your-staging-api.appspot.com" ./deploy.sh

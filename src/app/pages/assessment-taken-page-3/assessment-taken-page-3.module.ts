@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common'
 
 import { ComponentsModule } from '../../components/components.module'
 import { AssessmentTakenPage3 } from './assessment-taken-page-3.component'
-
+import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe'
+import { SharedPipesModule } from 'src/app/shared/shared-pipes.module'
 const routes = [
   {
     path: '',
@@ -14,7 +15,7 @@ const routes = [
 
 @NgModule({
   declarations: [AssessmentTakenPage3],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [SharedPipesModule, CommonModule, ComponentsModule, RouterModule.forChild(routes)],
   exports: [AssessmentTakenPage3],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
