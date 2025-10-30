@@ -97,6 +97,38 @@
   </ng-template>
 </navbar-for-admin-view>
 
+<div class="popup-overlay" *ngIf="showAddSkillPopup">
+  <div class="popup-content">
+    <h3>Add New Skills</h3>
+    <!-- MODIFIED: Updated instructional text -->
+    <p class="popup-note">
+      Enter one or more skills separated by a comma. 15 AI-generated questions will be created for each new skill.To add more questions later, use the "✨ Add Question with AI" button.
+    </p>
+    
+    <div class="popup-input-group">
+      <label for="new-skill-input">Skill Names</label>
+      <!-- MODIFIED: Changed from <input> to <textarea> for better UX -->
+      <textarea 
+        id="new-skill-input" 
+        class="popup-textarea" 
+        placeholder="e.g., JavaScript, React, Node.js"
+        rows="3"
+        [(ngModel)]="newSkillName" 
+        [ngModelOptions]="{standalone: true}"
+      ></textarea>
+    </div>
+
+    <div class="popup-actions">
+      <button class="popup-button cancel" (click)="closeAddSkillPopup()">Cancel</button>
+      <button class="popup-button generate" (click)="onAddNewSkillSubmit()" [disabled]="!newSkillName.trim() || isAddingNewSkill">
+        <span *ngIf="!isAddingNewSkill">Generate Questions</span>
+        <span *ngIf="isAddingNewSkill" class="button-spinner-container">
+          <span class="tab-spinner"></span> Generating...
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
 <ng-container *ngIf="!isLoading; else loadingTemplate">
 
   <app-alert-message
@@ -259,6 +291,11 @@
                 (click)="navigateCarousel('prev')">
                 <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
               </div>
+              <!-- === NEW: ADD SKILL BUTTON (+) === -->
+        <div id="add-skill-button" class="arrow-container add-skill-button" title="Add a new skill" (click)="openAddSkillPopup()">
+          <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
+        </div>
+        <!-- === END OF NEW BUTTON === -->
 
               <!-- Dynamic looping through skill sections -->
               <div *ngIf="activeTab === 'ai-generated'" class="admin-create-job-step3-container18">

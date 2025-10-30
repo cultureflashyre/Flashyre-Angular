@@ -134,6 +134,12 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   isAllCodingSelected: boolean = false;
   codingProblemsSelectedCount: number = 0;
 
+   // === NEW PROPERTIES FOR ADD SKILL POPUP ===
+  showAddSkillPopup: boolean = false;
+  newSkillName: string = ''; // This will now hold a comma-separated string
+  isAddingNewSkill: boolean = false;
+  // === END OF NEW PROPERTIES ===  
+
    // NEW: Flag to prevent multiple sequential generation loops
   private isGeneratingSequentially = false;
 
@@ -203,10 +209,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     // Define observables for initial data fetches
     const mcqStatus$ = this.jobService.checkMcqStatus(this.jobUniqueId, token).pipe(
       catchError(err => {
-        console.error('Failed to get MCQ generation status:', err);
-        // Do not show popup here, let final catchError handle it or just log.
-        // It's possible status is empty, which is not an error.
-        return of({ skills: {} }); // Provide a default empty structure
+        console.error('Failed to get MCQ generation status from DB:', err);
+        return of({ skills: {} }); // Default empty structure
       })
     );
 
@@ -379,6 +383,140 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       })
     );
   }
+
+  /**
+   * Opens the 'Add New Skill' popup.
+   */
+  openAddSkillPopup(): void {
+    this.newSkillName = ''; // Reset input field
+    this.showAddSkillPopup = true;
+  }
+
+  /**
+   * Closes the 'Add New Skill' popup.
+   */
+  closeAddSkillPopup(): void {
+    if (this.isAddingNewSkill) return; // Prevent closing while processing
+    this.showAddSkillPopup = false;
+  }
+
+   /**
+   * MODIFIED: Handles the submission of new skills from the popup.
+   * It now adds all skill tabs to the UI at once before starting the sequential generation.
+   */
+  onAddNewSkillSubmit(): void {
+    if (this.isAddingNewSkill) return;
+
+    // 1. Parse and Validate the input string (same as before)
+    const skillNames = this.newSkillName
+      .split(',')
+      .map(skill => skill.trim())
+      .filter(skill => skill.length > 0);
+
+    if (skillNames.length === 0) {
+      this.showErrorPopup('Please enter at least one valid skill name.');
+      return;
+    }
+
+    const existingSkillNames = new Set(this.skillSections.map(s => s.skillName.toLowerCase()));
+    const newValidSkills = [];
+    for (const skill of skillNames) {
+      if (existingSkillNames.has(skill.toLowerCase())) {
+        this.showErrorPopup(`The skill "${skill}" already exists.`);
+        return;
+      }
+      newValidSkills.push(skill);
+    }
+
+    // 2. === NEW LOGIC: Add ALL new skill tabs to the UI at once ===
+    const firstNewSkillIndex = this.skillSections.length;
+
+    for (const skillName of newValidSkills) {
+      const newSection: SkillSection = {
+        skillName,
+        questions: [],
+        totalCount: 0,
+        selectedCount: 0,
+        isAllSelected: false,
+        generationStatus: 'loading', // Set status to 'loading' immediately
+      };
+      this.skillSections.push(newSection);
+    }
+
+    // 3. Update the UI to show all new tabs with spinners
+    this.closeAddSkillPopup();
+    setTimeout(() => {
+      this.calculateCarouselState();
+      // Scroll to the first of the newly added tabs
+      if (this.skillTrack?.nativeElement) {
+          const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
+          if (firstNewTabElement) {
+              const newScrollPosition = firstNewTabElement.offsetLeft;
+              this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
+          }
+      }
+      this.activeSectionIndex = firstNewSkillIndex; // Select the first new skill tab
+      this.cdr.detectChanges();
+    }, 100);
+
+    // 4. Start the background processing for the list of skills
+    this.processNewSkillsSequentially(newValidSkills);
+  }
+
+  /**
+   * MODIFIED: Processes a list of new skills one by one.
+   * This function NO LONGER adds tabs to the UI. It only finds the existing placeholder tabs and updates them.
+   * @param skillsToProcess An array of validated, non-duplicate skill names.
+   */
+  private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
+    this.isAddingNewSkill = true;
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      this.isAddingNewSkill = false;
+      return;
+    }
+
+    console.log(`Starting background generation for: ${skillsToProcess.join(', ')}`);
+
+    for (const skillName of skillsToProcess) {
+      // Find the placeholder section that we already created in the UI
+      const sectionToUpdate = this.skillSections.find(
+        s => s.skillName === skillName && s.generationStatus === 'loading'
+      );
+      
+      // Safety check in case the section is not found
+      if (!sectionToUpdate) {
+        console.warn(`Could not find placeholder for skill "${skillName}". Skipping.`);
+        continue;
+      }
+
+      try {
+        // Await the API call for the current skill in the loop
+        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, skillName, token).toPromise();
+        
+        const newQuestions = this.processMcqItems(response.data);
+        
+        // Update the existing section with the results
+        sectionToUpdate.questions = newQuestions;
+        sectionToUpdate.totalCount = newQuestions.length;
+        sectionToUpdate.generationStatus = 'completed'; // Change status
+        this.updateCounts();
+        this.cdr.detectChanges(); // Refresh the UI for this specific tab
+
+      } catch (err: any) {
+        console.error(`Failed to generate questions for new skill: ${skillName}`, err);
+        this.showErrorPopup(`Error for skill "${skillName}": ${err.message}`);
+        
+        // Update status to 'failed' on error
+        sectionToUpdate.generationStatus = 'failed';
+        this.cdr.detectChanges(); // Refresh the UI for this specific tab
+      }
+    }
+
+    this.isAddingNewSkill = false;
+    console.log("Finished background generation for all new skills.");
+  }
   
   /**
    * NEW: Applies assessment details to the form and pre-selects questions.
@@ -438,13 +576,13 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * NEW: Asynchronously generates MCQs for all pending skills, one by one.
    * Updates the UI in real-time as each skill's questions are fetched.
    */
-   private async generateRemainingSkillsSequentially(): Promise<void> {
+    private async generateRemainingSkillsSequentially(): Promise<void> {
     if (this.isGeneratingSequentially) {
-      console.log("Already generating sequentially. Skipping.");
+      console.log("Sequential generation is already in progress. Skipping.");
       return;
     }
     this.isGeneratingSequentially = true;
-    console.log("Starting sequential generation for pending skills.");
+    console.log("Starting sequential generation for skills in 'pending' state.");
 
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -453,33 +591,41 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    for (const section of this.skillSections) {
-      if (section.generationStatus === 'pending') {
-        try {
-          console.log(`Generating questions for skill: ${section.skillName}`);
-          section.generationStatus = 'loading';
-          this.cdr.detectChanges(); // Update UI to show 'loading' state
-          
-          const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
-          const newQuestions = this.processMcqItems(response.data);
-          
-          // Append new questions
-          section.questions = [...section.questions, ...newQuestions];
-          section.totalCount = section.questions.length;
-          section.generationStatus = 'completed';
-          this.updateCountsForSection(section); // Update section counts
-          this.updateCounts(); // Update total counts
-          this.cdr.detectChanges(); // Update UI with new questions and 'completed' state
-          console.log(`Completed generation for skill: ${section.skillName}. Added ${newQuestions.length} questions.`);
-        } catch (error) {
-          section.generationStatus = 'failed';
-          console.error(`Failed to generate questions for ${section.skillName}:`, error);
-          this.cdr.detectChanges(); // Update UI to show 'failed' state
-        }
+    // Filter for skills that are genuinely pending
+    const pendingSections = this.skillSections.filter(s => s.generationStatus === 'pending');
+    console.log(`Found ${pendingSections.length} skills to process.`);
+
+    for (const section of pendingSections) {
+      try {
+        console.log(`Generating questions for skill: ${section.skillName}`);
+        section.generationStatus = 'loading';
+        this.cdr.detectChanges(); // Update UI to show spinner for this tab
+        
+        // This service call now returns the new questions in the response
+        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
+        
+        // **CRUCIAL UPDATE**: Process the returned data
+        const newQuestions = this.processMcqItems(response.data);
+        
+        // Append new questions to the section
+        section.questions = [...section.questions, ...newQuestions];
+        section.totalCount = section.questions.length;
+        section.generationStatus = 'completed'; // Mark as complete
+        this.updateCountsForSection(section);
+        this.updateCounts(); // Update total counts
+        this.cdr.detectChanges(); // Refresh UI with new questions
+        console.log(`SUCCESS: Completed generation for '${section.skillName}'. Added ${newQuestions.length} questions.`);
+
+      } catch (error: any) {
+        section.generationStatus = 'failed';
+        console.error(`FAILED to generate questions for '${section.skillName}':`, error);
+        this.showErrorPopup(`Could not generate questions for ${section.skillName}: ${error.message || 'Server error'}`);
+        this.cdr.detectChanges(); // Update UI to show failure icon
       }
     }
+    
     this.isGeneratingSequentially = false;
-    console.log("Finished sequential generation.");
+    console.log("Finished sequential generation process.");
   }
   
   // ... (rest of the component code, largely unchanged)

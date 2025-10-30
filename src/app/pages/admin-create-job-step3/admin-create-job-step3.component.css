@@ -4,6 +4,165 @@
   display: contents; 
 }
 
+.add-skill-button {
+  background-color: #f0eefc; /* A lighter purple */
+  border-color: #c4b5fd;
+}
+.add-skill-button:hover:not(.disabled) {
+  background-color: #ede9fe;
+}
+.plus-icon {
+  width: 20px; /* Slightly larger for better visual balance */
+  height: 20px;
+  color: #41327b;
+}
+
+/* === NEW: Popup Modal Styles === */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Ensure it's on top */
+  backdrop-filter: blur(4px);
+}
+
+.popup-content {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.popup-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #18191c;
+  margin: 0;
+}
+
+.popup-note {
+  font-size: 13px;
+  color: #667085;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.popup-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popup-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+.popup-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.popup-input:focus {
+  outline: none;
+  border-color: #41327b;
+  box-shadow: 0 0 0 3px rgba(65, 50, 123, 0.1);
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.popup-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.popup-button.cancel {
+  background-color: #ffffff;
+  color: #344054;
+  border: 1px solid #d0d5dd;
+}
+
+.popup-button.cancel:hover {
+  background-color: #f9fafb;
+}
+
+.popup-button.generate {
+  background-color: #41327b;
+  color: #ffffff;
+}
+
+.popup-button.generate:hover:not(:disabled) {
+  background-color: #352866;
+}
+
+.popup-button:disabled {
+  background-color: #e4e7ec;
+  color: #98a2b3;
+  cursor: not-allowed;
+}
+
+.button-spinner-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.popup-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  font-family: inherit; /* Inherit the font from the parent */
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 60px; /* Give it a decent starting height */
+}
+
+.popup-textarea:focus {
+  outline: none;
+  border-color: #41327b;
+  box-shadow: 0 0 0 3px rgba(65, 50, 123, 0.1);
+}
+
+/* Renamed from .popup-input to be more generic */
+.popup-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
 .tab-spinner {
   width: 14px;
   height: 14px;
