@@ -430,6 +430,18 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     this.router.navigate(['/create-job-post-1st-page']);
   }
 
+  public viewJobDescription(job: JobPost): void {
+    if (job && job.job_description_url) {
+      // Open the URL in a new browser tab
+      window.open(job.job_description_url, '_blank');
+    } else {
+      // Fallback in case the function is called on a job without a URL
+      console.warn('Attempted to view a job description, but no URL was found.', job);
+      this.showErrorPopup('No job description document is attached to this post.');
+    }
+  }
+
+
   viewJobApplications(jobId: string | number): void {
     if (jobId) {
       this.router.navigate(['/recruiter-view-job-applications-1', jobId]);

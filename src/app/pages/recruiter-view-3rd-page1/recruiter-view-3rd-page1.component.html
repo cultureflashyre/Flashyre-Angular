@@ -1048,6 +1048,17 @@
                     >
                       {{ getDisplayDate(job) }}
                     </span>
+                            <!-- MODIFICATION START: "View JD" link is added here -->
+        <span 
+            *ngIf="job.job_description_url" 
+            (click)="viewJobDescription(job)" 
+            class="recruiter-view3rd-page1-view-jd-text" 
+            title="View Job Description"
+        >
+            View JD
+        </span>
+        <!-- MODIFICATION END -->
+
                     </div>
                   </div>
                 </div>

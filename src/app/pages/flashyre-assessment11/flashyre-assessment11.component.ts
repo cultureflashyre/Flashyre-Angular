@@ -24,12 +24,7 @@ interface SelectedAnswer {
 })
 export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
-
-  // --- MODIFICATION START ---
-  // Get a reference to the instance of the app-code-editor component in the template
   @ViewChild(CodeEditorComponent) private codeEditorComponent: CodeEditorComponent;
-  // --- MODIFICATION END ---
-
   @ContentChild('endTestText') endTestText: TemplateRef<any>;
   @Input() logoSrc: string = '/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png';
   @Input() rootClassName: string = '';
@@ -59,6 +54,10 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
   sectionTimers: { [section_id: number]: number } = {};
+  
+  // NEW: Track which sections have expired
+  expiredSections: Set<number> = new Set();
+  
   isCodingSection = false;
   results: string[] = [];
   codingSubmissions: { [problem_id: number]: { id: number, score: number } } = {};
@@ -99,7 +98,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.scrollToActiveQuestion();
   }
 
- async ngOnInit(): Promise<void> {
+  async ngOnInit(): Promise<void> {
     this.violationSubscription = this.proctoringService.violation$.subscribe(() => {
       this.terminateTest(true);
     });
@@ -108,7 +107,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.userId = localStorage.getItem('user_id');
     
     if (assessmentId && this.userId) {
-      // FIX: The unconditional call to start video recording has been removed from here.
       this.fetchAssessmentData(+assessmentId);
       this.startTime = new Date();
     } else {
@@ -143,16 +141,14 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.cleanupResources();
   }
 
- fetchAssessmentData(assessmentId: number): void {
+  fetchAssessmentData(assessmentId: number): void {
     this.spinner.show();
     this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
-      next: async (data) => { // Make sure 'async' is here
+      next: async (data) => {
         console.log('Raw API response:', data);
         this.assessmentData = data;
         
         try {
-          // Step 1: Check for Proctoring (Tab Switching) independently.
-          // This is controlled by the "Proctored" checkbox.
           if (data.proctored?.toUpperCase() === 'YES') {
             console.log("Assessment is Proctored. Starting tab switch monitoring.");
             this.proctoringService.startMonitoring();
@@ -160,8 +156,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
             console.log("Assessment is NOT Proctored. Tab switching will be allowed.");
           }
 
-          // Step 2: Separately check for Video Recording.
-          // This is controlled by the "Allow Video Recording" checkbox.
           if (data.video_recording?.toUpperCase() === 'YES') {
             console.log("Video recording is required. Starting camera...");
             await this.videoRecorder.startRecording(this.userId, String(assessmentId));
@@ -173,7 +167,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
             console.error('Failed to conditionally start assessment services:', error);
         }
 
-        // The rest of the function remains the same
         this.sections = [];
         this.processCustomizations(data.sections);
         this.totalSections = this.sections.length;
@@ -197,7 +190,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       console.log('Processing section:', section.name);
       const sectionEntry = {
         name: section.name,
-      section_id: section.section ? section.section.section_id : null,   //Add 
+        section_id: section.section ? section.section.section_id : null,
         duration: section.duration_per_section,
         questions: section.questions || [],
         coding_problem: section.coding_problem,
@@ -230,6 +223,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     }, 1000);
   }
 
+  // UPDATED: Section timer with auto-navigation
   startSectionTimer(): void {
     if (this.sectionTimerInterval) {
       clearInterval(this.sectionTimerInterval);
@@ -237,9 +231,26 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.sectionTimerInterval = setInterval(() => {
       if (this.sectionTimer > 0) {
         this.sectionTimer--;
+        // Save the current section's remaining time
+        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+        this.sectionTimers[sectionKey] = this.sectionTimer;
       } else {
+        // Section timer expired
         clearInterval(this.sectionTimerInterval);
         this.sectionTimerInterval = null;
+        
+        // Mark this section as expired
+        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+        this.expiredSections.add(sectionKey);
+        
+        // Auto-navigate to next section or submit if last section
+        if (this.currentSectionIndex < this.totalSections - 1) {
+          console.log('Section timer expired, moving to next section');
+          this.nextSection();
+        } else {
+          console.log('Last section timer expired, auto-submitting assessment');
+          this.terminateTest();
+        }
       }
     }, 1000);
   }
@@ -256,15 +267,35 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  // UPDATED: Check if section is accessible
+  isSectionAccessible(section: any): boolean {
+    const sectionKey = section.section_id || section.coding_id_id;
+    return !this.expiredSections.has(sectionKey);
+  }
+
+  // UPDATED: Select section with timer persistence
   selectSection(section: any): void {
     console.log('Selected section:', JSON.stringify(section, null, 2));
+    
+    // Check if trying to access an expired section
+    const sectionKey = section.section_id || section.coding_id_id;
+    if (this.expiredSections.has(sectionKey)) {
+      console.warn('Cannot access expired section:', section.name);
+      alert('This section time has expired. You cannot return to it.');
+      return;
+    }
+    
+    // Save current section's timer before switching
     if (this.currentSection) {
-      this.sectionTimers[this.currentSection.section_id || this.currentSection.coding_id_id] = this.sectionTimer;
+      const currentSectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+      this.sectionTimers[currentSectionKey] = this.sectionTimer;
+      console.log(`Saved timer for section ${this.currentSection.name}: ${this.sectionTimer} seconds`);
     }
 
     this.currentSection = section;
     this.currentSectionIndex = this.sections.indexOf(section);
     this.isCodingSection = section.type === 'coding';
+    
     if (!this.isCodingSection) {
       this.currentQuestions = section.questions;
       this.currentQuestionIndex = 0;
@@ -275,28 +306,33 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.showTestResults = true;
     }
 
-    this.sectionTimer = this.sectionTimers[section.section_id || section.coding_id_id] !== undefined 
-      ? this.sectionTimers[section.section_id || section.coding_id_id] 
-      : section.duration * 60;
+    // FIXED: Restore saved timer or use full duration
+    if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
+      this.sectionTimer = this.sectionTimers[sectionKey];
+      console.log(`Restored timer for section ${section.name}: ${this.sectionTimer} seconds`);
+    } else {
+      this.sectionTimer = section.duration * 60;
+      this.sectionTimers[sectionKey] = this.sectionTimer;
+      console.log(`Initialized timer for section ${section.name}: ${this.sectionTimer} seconds`);
+    }
 
     clearInterval(this.sectionTimerInterval);
     this.startSectionTimer();
   }
 
   updateCurrentQuestion(): void {
-  if (this.currentQuestions && this.currentQuestions.length > 0) {
-    this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
-    this.updateCurrentOptions();
-    this.checkIfLastQuestionInSection();
-    this.scrollToActiveQuestion();
-    this.hasQuestions = true; // Set to true when questions are available
-  } else {
-    this.currentQuestion = { question: 'No questions available' };
-    this.currentOptions = [];
-    this.hasQuestions = false; // Set to false when no questions are available
+    if (this.currentQuestions && this.currentQuestions.length > 0) {
+      this.currentQuestion = this.currentQuestions[this.currentQuestionIndex];
+      this.updateCurrentOptions();
+      this.checkIfLastQuestionInSection();
+      this.scrollToActiveQuestion();
+      this.hasQuestions = true;
+    } else {
+      this.currentQuestion = { question: 'No questions available' };
+      this.currentOptions = [];
+      this.hasQuestions = false;
+    }
   }
-
-}
 
   scrollLeft(): void {
     if (this.numbersContainer) {
@@ -455,7 +491,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
   showEndTestWarning(): void {
     if (this.currentSection) {
-      this.sectionTimers[this.currentSection.section_id || this.currentSection.coding_id_id] = this.sectionTimer;
+      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+      this.sectionTimers[sectionKey] = this.sectionTimer;
     }
     this.showWarningPopup = true;
   }
@@ -464,27 +501,27 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.showWarningPopup = false;
   }
 
-prepareSubmissionData(): any {
-  return {
-    assessmentId: this.assessmentData.assessment_id,
-    userId: this.userId,
-    // FIX: Provide the required callback function to map()
-    responses: Object.keys(this.selectedAnswers).map((questionId) => ({
-      questionId: +questionId,
-      sectionId: this.selectedAnswers[+questionId].section_id,
-      answer: this.selectedAnswers[+questionId].answer,
-    })),
-    codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
-      problemId: +problemId,
-      submissionId: this.codingSubmissions[+problemId].id,
-      score: this.codingSubmissions[+problemId].score
-    })),
-    startTime: this.startTime,
-    endTime: new Date().toISOString(),
-    submissionType: 'manual',
-    videoPath: this.videoPath,
-  };
-}
+  prepareSubmissionData(): any {
+    return {
+      assessmentId: this.assessmentData.assessment_id,
+      userId: this.userId,
+      responses: Object.keys(this.selectedAnswers).map((questionId) => ({
+        questionId: +questionId,
+        sectionId: this.selectedAnswers[+questionId].section_id,
+        answer: this.selectedAnswers[+questionId].answer,
+      })),
+      codingSubmissions: Object.keys(this.codingSubmissions).map((problemId) => ({
+        problemId: +problemId,
+        submissionId: this.codingSubmissions[+problemId].id,
+        score: this.codingSubmissions[+problemId].score
+      })),
+      startTime: this.startTime,
+      endTime: new Date().toISOString(),
+      submissionType: 'manual',
+      videoPath: this.videoPath,
+    };
+  }
+
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
@@ -501,8 +538,23 @@ prepareSubmissionData(): any {
 
   nextSection(): void {
     if (this.currentSectionIndex < this.totalSections - 1) {
-      this.currentSectionIndex++;
-      this.selectSection(this.sections[this.currentSectionIndex]);
+      // Find next accessible section
+      let nextIndex = this.currentSectionIndex + 1;
+      while (nextIndex < this.totalSections) {
+        const nextSection = this.sections[nextIndex];
+        const nextSectionKey = nextSection.section_id || nextSection.coding_id_id;
+        
+        if (!this.expiredSections.has(nextSectionKey)) {
+          this.currentSectionIndex = nextIndex;
+          this.selectSection(this.sections[nextIndex]);
+          return;
+        }
+        nextIndex++;
+      }
+      
+      // If all remaining sections are expired, auto-submit
+      console.log('All remaining sections are expired, auto-submitting');
+      this.terminateTest();
     }
   }
 
@@ -536,16 +588,14 @@ prepareSubmissionData(): any {
   handleHideResults(): void {
     this.showTestResults = false;
     
-    // Use a short setTimeout to allow Angular's change detection to update the layout
-    // BEFORE we command the editor to resize. This is a robust way to handle this.
     setTimeout(() => {
       if (this.codeEditorComponent) {
         this.codeEditorComponent.onResize();
       }
-    }, 10); // 10ms is enough to push this to the next browser render cycle.
+    }, 10);
   }
 
- onRunCode(event: { source_code: string, language_id: number }) {
+  onRunCode(event: { source_code: string, language_id: number }) {
     const data = {
       problem_id: this.currentSection.coding_id_id,
       source_code: event.source_code,
@@ -555,14 +605,7 @@ prepareSubmissionData(): any {
     this.trialAssessmentService.runCode(data).subscribe({
       next: (response) => {
         console.log('Run code response:', JSON.stringify(response, null, 2));
-        
-        // ** THE FIX **
-        // The problem was that the code was trying to re-format the results with a .map() function,
-        // which caused the 'undefined' error. The backend already returns a simple array of strings,
-        // which is what the app-test-results component expects.
-        // The fix is to assign the 'results' array from the response directly to our local 'results' variable.
         this.results = response.results || ['No results available'];
-
         this.showTestResults = true;
       },
       error: (error) => {
@@ -573,29 +616,28 @@ prepareSubmissionData(): any {
     });
   }
 
-onSubmitCode(event: { source_code: string, language_id: number }) {
-  // FIX: Construct the 'data' object with the required properties.
-  const data = {
-    problem_id: this.currentSection.coding_id_id,
-    source_code: event.source_code,
-    language_id: event.language_id
-  };
-  console.log('Sending submit code request:', JSON.stringify(data, null, 2));
-  this.trialAssessmentService.submitCode(data).subscribe({
-    next: (response) => {
-      console.log('Submit code response:', JSON.stringify(response, null, 2));
-      this.results = response.results || ['No results available'];
-      this.codingSubmissions[this.currentSection.coding_id_id] = {
-        id: response.id,
-        score: response.score
-      };
-      this.showTestResults = true;
-    },
-    error: (error) => {
-      console.error('Submit code error:', error);
-      this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
-      this.showTestResults = true;
-    }
-  });
-}
+  onSubmitCode(event: { source_code: string, language_id: number }) {
+    const data = {
+      problem_id: this.currentSection.coding_id_id,
+      source_code: event.source_code,
+      language_id: event.language_id
+    };
+    console.log('Sending submit code request:', JSON.stringify(data, null, 2));
+    this.trialAssessmentService.submitCode(data).subscribe({
+      next: (response) => {
+        console.log('Submit code response:', JSON.stringify(response, null, 2));
+        this.results = response.results || ['No results available'];
+        this.codingSubmissions[this.currentSection.coding_id_id] = {
+          id: response.id,
+          score: response.score
+        };
+        this.showTestResults = true;
+      },
+      error: (error) => {
+        console.error('Submit code error:', error);
+        this.results = [`Error submitting code: ${error.status} ${error.statusText}`];
+        this.showTestResults = true;
+      }
+    });
+  }
 }

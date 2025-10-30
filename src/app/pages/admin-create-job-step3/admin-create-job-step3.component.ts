@@ -565,24 +565,74 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     }));
   }
 
-  private parseQuestionText(rawText: string): ParsedDetails {
-    const questionMatch = rawText.match(/^([\s\S]*?)(?=\s*a\))/i);
-    const optionsRegex = /\b([a-d])\)\s*([\s\S]*?)(?=\s*[a-d]\)|Correct:|$)/gi;
-    const optionsMatch: any[] = [];
-    let match;
-    while ((match = optionsRegex.exec(rawText)) !== null) {
-      optionsMatch.push(match);
-    }
-    const correctMatch = rawText.match(/Correct:\s*([a-d])/i);
-    const difficultyMatch = rawText.match(/\(?(Easy|Medium|Hard)\)?$/i);
+  /**
+     * Parses the raw question text from the database into a structured object by first removing metadata.
+     * @param rawText The full string containing the question, options, answer, and difficulty.
+     * @returns A `ParsedDetails` object with clean data.
+     */
+    private parseQuestionText(rawText: string): ParsedDetails {
+        if (!rawText) {
+            return { question: 'Error: Empty question text.', options: [], correctAnswer: '', difficulty: 'Medium' };
+        }
 
-    return {
-      question: questionMatch ? questionMatch[1].replace(/✨/g, '').trim() : 'Could not parse question',
-      options: optionsMatch.map(m => m[2].trim()),
-      correctAnswer: correctMatch ? correctMatch[1].toLowerCase() : '',
-      difficulty: difficultyMatch ? difficultyMatch[1] : 'Medium'
-    };
-  }
+        let textToParse = rawText;
+
+        // 1. Find and extract the correct answer letter.
+        let correctAnswer = '';
+        const answerMatch = textToParse.match(/Correct Answer:\s*([a-d])/i);
+        if (answerMatch) {
+            correctAnswer = answerMatch[1].toLowerCase();
+            // IMPORTANT: Remove the "Correct Answer" part from the string to prevent it from being included in the last option.
+            textToParse = textToParse.substring(0, answerMatch.index).trim();
+        }
+
+        // 2. Find and extract difficulty.
+        let difficulty = 'Medium'; // Default
+        const difficultyMatch = textToParse.match(/\s*\((Easy|Medium|Hard)\)$/i); // Look for (Difficulty) at the very end
+        if (difficultyMatch) {
+            difficulty = difficultyMatch[1].charAt(0).toUpperCase() + difficultyMatch[1].slice(1).toLowerCase();
+            // Remove the difficulty part from the string.
+            textToParse = textToParse.substring(0, difficultyMatch.index).trim();
+        }
+
+        // `textToParse` is now clean and should only contain the question and options.
+
+        // 3. Extract the main question. It's everything before the first option marker 'a)'.
+        let question = `Question could not be parsed: ${rawText.substring(0, 50)}...`;
+        const firstOptionIndex = textToParse.toLowerCase().indexOf('a)');
+        
+        if (firstOptionIndex !== -1) {
+            question = textToParse.substring(0, firstOptionIndex).replace(/^Q\d+\.\s*/, '').trim();
+        } else {
+             // Fallback if 'a)' is somehow missing
+            question = textToParse.trim();
+        }
+
+        // 4. Extract the options from the now-clean string.
+        const options: string[] = [];
+        // This regex is safer now because "Correct Answer" is gone. It will find text between option markers.
+        const optionsRegex = /\b([a-d])\)\s*([\s\S]*?)(?=\s*[a-d]\)|$)/gi;
+        let optionParseResult;
+        const tempOptions: { [key: string]: string } = {};
+
+        while ((optionParseResult = optionsRegex.exec(textToParse)) !== null) {
+            const letter = optionParseResult[1].toLowerCase();
+            const text = optionParseResult[2].trim();
+            tempOptions[letter] = text;
+        }
+        
+        // Ensure options are always returned in order a, b, c, d
+        for (const letter of ['a', 'b', 'c', 'd']) {
+            options.push(tempOptions[letter] || '');
+        }
+
+        return {
+            question,
+            options,
+            correctAnswer,
+            difficulty
+        };
+    }
 
 
   private initializeForm(): void {

@@ -410,6 +410,19 @@
             id="screening-assessment-interview-main-container"
             class="recruiter-view-job-applications1-screening-assessment-interview-main-container"
           >
+          <!-- --- MODIFICATION START --- -->
+            <!-- This button will only show if the job_description_url exists. -->
+            <button
+              *ngIf="job?.job_description_url"
+              id="view-jd-button"
+              type="button"
+              class="recruiter-view-job-applications1-view-jd-button button"
+              (click)="openJD(job.job_description_url)"
+            >
+              View JD
+            </button>
+            <!-- --- MODIFICATION END --- -->
+
             <button
               *ngIf="selectedTab === 'applied'"
               id="screening-call-invite-button"

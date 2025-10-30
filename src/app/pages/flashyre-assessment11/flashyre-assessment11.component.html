@@ -40,50 +40,55 @@
         class="flashyre-assessment11-sections-questions-previous-next-containers"
       >
         <div
-          data-thq="thq-dropdown"
-          class="flashyre-assessment11-sections-dropdown list-item"
-        >
-          <div
-            data-thq="thq-dropdown-toggle"
-            class="flashyre-assessment11-dropdown-toggle1"
-          >
-            <span
-              id="sections-text"
-              class="flashyre-assessment11-sections-text"
-            >
-              {{ currentSection?.name || 'Sections' }}
-            </span>
-            <div
-              data-thq="thq-dropdown-arrow"
-              class="flashyre-assessment11-dropdown-arrow"
-            >
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                class="flashyre-assessment11-icon10"
-              >
-                <path
-                  d="M36 18L24 30L12 18"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-          </div>
-          <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
-            <li *ngFor="let section of sections" (click)="selectSection(section)">
-              <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
-                <span id="section-A-text" class="flashyre-assessment11-section-a-text">
-                  {{ section.name }}
-                </span>
-              </div>
-            </li>
-          </ul>
-        </div>  
+  data-thq="thq-dropdown"
+  class="flashyre-assessment11-sections-dropdown list-item"
+>
+  <div
+    data-thq="thq-dropdown-toggle"
+    class="flashyre-assessment11-dropdown-toggle1"
+  >
+    <span
+      id="sections-text"
+      class="flashyre-assessment11-sections-text"
+    >
+      {{ currentSection?.name || 'Sections' }}
+    </span>
+    <div
+      data-thq="thq-dropdown-arrow"
+      class="flashyre-assessment11-dropdown-arrow"
+    >
+      <svg
+        width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        class="flashyre-assessment11-icon10"
+      >
+        <path
+          d="M36 18L24 30L12 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
+    <li *ngFor="let section of sections" 
+        (click)="isSectionAccessible(section) ? selectSection(section) : null"
+        [class.expired-section]="!isSectionAccessible(section)"
+        [style.cursor]="isSectionAccessible(section) ? 'pointer' : 'not-allowed'"
+        [style.opacity]="isSectionAccessible(section) ? '1' : '0.5'">
+      <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
+        <span id="section-A-text" class="flashyre-assessment11-section-a-text">
+          {{ section.name }}
+          <span *ngIf="!isSectionAccessible(section)" style="color: red; margin-left: 8px;">(Expired)</span>
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>  
         <div
           id="question-numbers-main-container"
           class="flashyre-assessment11-question-numbers-main-container"

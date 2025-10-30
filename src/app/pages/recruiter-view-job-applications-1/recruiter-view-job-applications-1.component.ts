@@ -258,6 +258,31 @@ export class RecruiterViewJobApplications1 implements OnInit {
     }
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * Opens the job description URL in a new tab.
+   * @param url The relative URL of the job description file.
+   */
+  openJD(url: string): void {
+    if (!url) {
+      alert('No Job Description document available for this job.');
+      return;
+    }
+    
+    let fullUrl: string;
+
+    // Check if the URL is absolute. If so, use it directly.
+    if (url.startsWith('http')) {
+      fullUrl = url;
+    } else {
+      // If it's a relative path, construct the full URL.
+      fullUrl = `${this.apiUrl}media/${url}`;
+    }
+    
+    window.open(fullUrl, '_blank');
+  }
+  // --- MODIFICATION END ---
+
   navigateToRecruiterHome() {
     this.router.navigate(['/recruiter-view-3rd-page1']);
   }

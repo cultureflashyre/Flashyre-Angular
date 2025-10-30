@@ -2,6 +2,21 @@
   display: contents; 
 }
 
+.recruiter-view3rd-page1-view-jd-text {
+  fill: #05356C;
+  color: #05356C;
+  cursor: pointer;
+  transition: all 0.7s;
+}
+
+.recruiter-view3rd-page1-view-jd-text:hover {
+  transform: scale(0.9);
+}
+
+.recruiter-view3rd-page1-view-jd-text:active {
+  transform: scale(1.05);
+}
+
 /* --- Alert and Popup Styles --- */
 .alert {
   padding: 20px;
