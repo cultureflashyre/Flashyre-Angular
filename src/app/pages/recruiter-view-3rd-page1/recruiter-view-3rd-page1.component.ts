@@ -44,6 +44,8 @@ type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
   ]
 })
 export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
+  public isAdmin: boolean = false;
+
   recruiterProfile: any = {};
   defaultProfilePicture: string = environment.defaultProfilePicture;
   chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
@@ -85,6 +87,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
 
   // General State management
   recruiterId: string | null = null;
+  userType: string | null = null;
   private displayPage = 0;
   private jobsPerPage = 10;
   isLoading = true;
@@ -110,6 +113,14 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       this.loadUserProfile();
+
+      // <<< MODIFICATION START: Check user role from the loaded profile
+      // This assumes the user's role is stored in the profile object.
+      this.userType = localStorage.getItem('userType')
+      if (this.userType === 'admin') {
+          this.isAdmin = true;
+      }
+
       this.recruiterId = localStorage.getItem('user_id');
     }
     if (this.recruiterId) {
@@ -406,7 +417,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
 
   editJob(job: JobPost): void {
     this.workflowService.startEditWorkflow(job.unique_id);
-    this.router.navigate(['/create-job-post-1st-page', job.unique_id]);
+    this.router.navigate(['/admin-create-job-step1', job.unique_id]);
   }
 
   getPostedDaysAgo(dateStr: string): string {
@@ -427,7 +438,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   }
 
   navigateToCreateJobPost(): void {
-    this.router.navigate(['/create-job-post-1st-page']);
+    this.router.navigate(['/admin-create-job-step1']);
   }
 
   public viewJobDescription(job: JobPost): void {

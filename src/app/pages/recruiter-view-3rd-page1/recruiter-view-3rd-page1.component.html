@@ -85,15 +85,14 @@
                 >
                   Home
                 </a>
-                <!--<a
-                  href="https://www.teleporthq.io"
-                  id="recruiter-jobs-posted-link"
-                  target="_blank"
-                  rel="noreferrer noopener"
+                <a
+                  *ngIf="isAdmin"
+                  [routerLink]="['/admin-page1']"
+                  id="recruiter-invite-link"
                   class="recruiter-view3rd-page1-jobs-for-you-link thq-body-small button"
                 >
-                  Job Posted
-                </a> -->
+                  Invite
+                </a>
                 <div
                   id="notification-container"
                   class="recruiter-view3rd-page1-container11"

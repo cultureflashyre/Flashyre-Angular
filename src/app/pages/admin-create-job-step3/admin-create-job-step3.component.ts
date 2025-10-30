@@ -1067,7 +1067,7 @@ onAlertButtonClicked(action: string) {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/admin-create-job-step1']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 2000);
   }
 
@@ -1151,7 +1151,7 @@ onAlertButtonClicked(action: string) {
           this.showSuccessPopup('Draft saved successfully!');
           
           setTimeout(() => {
-            this.router.navigate(['/admin-create-job-step1']);
+            this.router.navigate(['/recruiter-view-3rd-page1']);
           }, 2000);
         },
         error: (err) => {

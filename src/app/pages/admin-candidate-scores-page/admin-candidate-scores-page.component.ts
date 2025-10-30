@@ -39,7 +39,7 @@ export class AdminCandidateScoresPageComponent implements OnInit {
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     if (!this.jobUniqueId) {
       console.error('No active job found in workflow. Redirecting...');
-      this.router.navigate(['/admin-create-job-step1']);
+      this.router.navigate(['/recruiter-view-3rd-page1']);
       return;
     }
     this.loadCandidates(); // Load candidates for the job

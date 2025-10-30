@@ -238,7 +238,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/admin-create-job-step1']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
 
@@ -254,7 +254,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => {
-        this.router.navigate(['/admin-create-job-step1']);
+        this.router.navigate(['/recruiter-view-3rd-page1']);
     }, 3000);
   }
 

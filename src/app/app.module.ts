@@ -64,7 +64,7 @@ const routes = [
         './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
       ).then((m) => m.RecruiterView3rdPage1Module),
       canActivate: [AuthGuard],
-      data: { roles: ['recruiter'] },
+      data: { roles: ['recruiter','admin'] },
       
   },
   {
@@ -73,6 +73,8 @@ const routes = [
       import(
         './pages/recruiter-view-job-applications-1/recruiter-view-job-applications-1.module'
       ).then((m) => m.RecruiterViewJobApplications1Module),
+            canActivate: [AuthGuard],
+      data: { roles: ['recruiter','admin'] },
   },
   {
     path: 'signup-candidate',
@@ -335,7 +337,7 @@ const routes = [
   loadChildren: () => import('./pages/admin-create-job-step1/admin-create-job-step1.module').then(
         (m) => m.AdminCreateJobStep1Module),
                   canActivate: [AuthGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['admin', 'recruiter'] },
 },
 {
   path: 'admin-create-job-step2',
