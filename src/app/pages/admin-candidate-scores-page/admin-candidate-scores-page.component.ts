@@ -1,4 +1,5 @@
 // src/app/pages/admin-candidate-scores-page/admin-candidate-scores-page.component.ts
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
@@ -26,7 +27,8 @@ export class AdminCandidateScoresPageComponent implements OnInit {
     private workflowService: AdminJobCreationWorkflowService, // Workflow service for job ID
     private router: Router, // Router for navigation
     private authService: CorporateAuthService, // Authentication service
-    private jobDescriptionService: AdminJobDescriptionService // Service for job-related API calls
+    private jobDescriptionService: AdminJobDescriptionService, // Service for job-related API calls
+    private http: HttpClient
   ) {
     // Initialize candidates with selected property
     this.candidates = this.candidates.map(c => ({ ...c, selected: false }));
@@ -131,10 +133,43 @@ export class AdminCandidateScoresPageComponent implements OnInit {
 
   // Download individual candidate resume (placeholder - implement API call if needed)
   downloadCandidateResume(candidate: any): void {
-    // Implement logic to download resume (e.g., via API or direct file path)
-    console.log('Downloading resume for:', candidate.name);
-    // Example: window.open(candidate.cv_file_path, '_blank');
+  if (!candidate || !candidate.cv_file_path) {
+    console.error('Resume file path is not available for candidate:', candidate.name);
+    this.error = `Resume for ${candidate.name} is not available.`;
+    return;
   }
+
+  // Use HttpClient to fetch the file as a blob
+  this.http.get(candidate.cv_file_path, { responseType: 'blob' }).subscribe({
+    next: (blob) => {
+      // Create a URL for the blob data
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a temporary anchor element
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Extract the original filename from the URL
+      const filename = candidate.cv_file_path.split('/').pop();
+      link.download = filename || `resume_${candidate.name.replace(/\s+/g, '_')}.pdf`;
+      
+      // Programmatically click the link to trigger the download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up by removing the link and revoking the object URL
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('Download initiated for:', candidate.name);
+    },
+    error: (err) => {
+      console.error('Failed to download resume:', err);
+      this.error = `Could not download resume for ${candidate.name}. Please try again.`;
+    }
+  });
+}
+
 
   // Navigate back to job setup (step 4)
   onBackToJobSetup(): void {
