@@ -400,41 +400,72 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     this.showAddSkillPopup = false;
   }
 
-  /**
-   * Handles the submission of a new skill from the popup.
+   /**
+   * MODIFIED: Handles the submission of new skills from the popup.
+   * It now adds all skill tabs to the UI at once before starting the sequential generation.
    */
- onAddNewSkillSubmit(): void {
+  onAddNewSkillSubmit(): void {
     if (this.isAddingNewSkill) return;
 
-    // 1. Parse and Validate the input string
+    // 1. Parse and Validate the input string (same as before)
     const skillNames = this.newSkillName
       .split(',')
       .map(skill => skill.trim())
-      .filter(skill => skill.length > 0); // Remove empty strings
+      .filter(skill => skill.length > 0);
 
     if (skillNames.length === 0) {
       this.showErrorPopup('Please enter at least one valid skill name.');
       return;
     }
 
-    // Check for duplicates against existing skills
     const existingSkillNames = new Set(this.skillSections.map(s => s.skillName.toLowerCase()));
     const newValidSkills = [];
     for (const skill of skillNames) {
       if (existingSkillNames.has(skill.toLowerCase())) {
         this.showErrorPopup(`The skill "${skill}" already exists.`);
-        return; // Stop processing if any skill is a duplicate
+        return;
       }
       newValidSkills.push(skill);
     }
 
-    // Close popup and start the generation process
+    // 2. === NEW LOGIC: Add ALL new skill tabs to the UI at once ===
+    const firstNewSkillIndex = this.skillSections.length;
+
+    for (const skillName of newValidSkills) {
+      const newSection: SkillSection = {
+        skillName,
+        questions: [],
+        totalCount: 0,
+        selectedCount: 0,
+        isAllSelected: false,
+        generationStatus: 'loading', // Set status to 'loading' immediately
+      };
+      this.skillSections.push(newSection);
+    }
+
+    // 3. Update the UI to show all new tabs with spinners
     this.closeAddSkillPopup();
+    setTimeout(() => {
+      this.calculateCarouselState();
+      // Scroll to the first of the newly added tabs
+      if (this.skillTrack?.nativeElement) {
+          const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
+          if (firstNewTabElement) {
+              const newScrollPosition = firstNewTabElement.offsetLeft;
+              this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
+          }
+      }
+      this.activeSectionIndex = firstNewSkillIndex; // Select the first new skill tab
+      this.cdr.detectChanges();
+    }, 100);
+
+    // 4. Start the background processing for the list of skills
     this.processNewSkillsSequentially(newValidSkills);
   }
 
   /**
-   * Processes a list of new skills one by one, providing real-time UI updates.
+   * MODIFIED: Processes a list of new skills one by one.
+   * This function NO LONGER adds tabs to the UI. It only finds the existing placeholder tabs and updates them.
    * @param skillsToProcess An array of validated, non-duplicate skill names.
    */
   private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
@@ -446,56 +477,45 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    for (const skillName of skillsToProcess) {
-      // 1. Add optimistic UI placeholder
-      const newSection: SkillSection = {
-        skillName,
-        questions: [],
-        totalCount: 0,
-        selectedCount: 0,
-        isAllSelected: false,
-        generationStatus: 'loading',
-      };
-      this.skillSections.push(newSection);
-      
-      // Update carousel and make the new tab active
-      setTimeout(() => {
-        this.calculateCarouselState();
-        this.currentScrollIndex = this.maxScrollIndex > 0 ? this.maxScrollIndex : 0;
-        this.updateScrollPosition();
-        this.activeSectionIndex = this.skillSections.length - 1;
-        this.cdr.detectChanges();
-      }, 100);
+    console.log(`Starting background generation for: ${skillsToProcess.join(', ')}`);
 
-      // 2. Call API for the current skill in the loop
+    for (const skillName of skillsToProcess) {
+      // Find the placeholder section that we already created in the UI
+      const sectionToUpdate = this.skillSections.find(
+        s => s.skillName === skillName && s.generationStatus === 'loading'
+      );
+      
+      // Safety check in case the section is not found
+      if (!sectionToUpdate) {
+        console.warn(`Could not find placeholder for skill "${skillName}". Skipping.`);
+        continue;
+      }
+
       try {
+        // Await the API call for the current skill in the loop
         const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, skillName, token).toPromise();
         
         const newQuestions = this.processMcqItems(response.data);
         
-        // Update the section with the results
-        const sectionToUpdate = this.skillSections.find(s => s.skillName === skillName);
-        if (sectionToUpdate) {
-          sectionToUpdate.questions = newQuestions;
-          sectionToUpdate.totalCount = newQuestions.length;
-          sectionToUpdate.generationStatus = 'completed';
-          this.updateCounts();
-          this.cdr.detectChanges();
-        }
+        // Update the existing section with the results
+        sectionToUpdate.questions = newQuestions;
+        sectionToUpdate.totalCount = newQuestions.length;
+        sectionToUpdate.generationStatus = 'completed'; // Change status
+        this.updateCounts();
+        this.cdr.detectChanges(); // Refresh the UI for this specific tab
+
       } catch (err: any) {
         console.error(`Failed to generate questions for new skill: ${skillName}`, err);
         this.showErrorPopup(`Error for skill "${skillName}": ${err.message}`);
         
         // Update status to 'failed' on error
-        const sectionToUpdate = this.skillSections.find(s => s.skillName === skillName);
-        if (sectionToUpdate) {
-          sectionToUpdate.generationStatus = 'failed';
-          this.cdr.detectChanges();
-        }
+        sectionToUpdate.generationStatus = 'failed';
+        this.cdr.detectChanges(); // Refresh the UI for this specific tab
       }
     }
 
     this.isAddingNewSkill = false;
+    console.log("Finished background generation for all new skills.");
   }
   
   /**
