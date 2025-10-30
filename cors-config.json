@@ -1,6 +1,10 @@
 [
   {
-    "origin": ["http://localhost:4200"],
+    "origin": [
+      "http://localhost:4200",
+      "http://flashyre-dev-473115.el.r.appspot.com",
+      "http://flashyre-testing-473116.el.r.appspot.com"
+      ],
     "method": ["GET"],
     "responseHeader": ["Content-Type"],
     "maxAgeSeconds": 3600
