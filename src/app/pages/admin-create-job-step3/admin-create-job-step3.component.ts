@@ -134,6 +134,12 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   isAllCodingSelected: boolean = false;
   codingProblemsSelectedCount: number = 0;
 
+  // === NEW PROPERTIES FOR ADD SKILL POPUP ===
+  showAddSkillPopup: boolean = false;
+  newSkillName: string = '';
+  isAddingNewSkill: boolean = false;
+  // === END OF NEW PROPERTIES ===  
+
    // NEW: Flag to prevent multiple sequential generation loops
   private isGeneratingSequentially = false;
 
@@ -373,6 +379,106 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           this.isLoading = false;
           this.spinner.hide('main-spinner');
           this.cdr.detectChanges(); // Update UI with error state
+        }
+      })
+    );
+  }
+
+  /**
+   * Opens the 'Add New Skill' popup.
+   */
+  openAddSkillPopup(): void {
+    this.newSkillName = ''; // Reset input field
+    this.showAddSkillPopup = true;
+  }
+
+  /**
+   * Closes the 'Add New Skill' popup.
+   */
+  closeAddSkillPopup(): void {
+    this.showAddSkillPopup = false;
+  }
+
+  /**
+   * Handles the submission of a new skill from the popup.
+   */
+  onAddNewSkillSubmit(): void {
+    const trimmedSkillName = this.newSkillName.trim();
+
+    // 1. Validation
+    if (!trimmedSkillName) {
+      this.showErrorPopup('Skill name cannot be empty.');
+      return;
+    }
+    if (this.skillSections.some(s => s.skillName.toLowerCase() === trimmedSkillName.toLowerCase())) {
+      this.showErrorPopup('This skill already exists in the list.');
+      return;
+    }
+
+    this.isAddingNewSkill = true;
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error.');
+      this.isAddingNewSkill = false;
+      return;
+    }
+    
+    // 2. Add a placeholder section to the UI immediately
+    const newSection: SkillSection = {
+      skillName: trimmedSkillName,
+      questions: [],
+      totalCount: 0,
+      selectedCount: 0,
+      isAllSelected: false,
+      generationStatus: 'loading', // Show spinner
+    };
+    this.skillSections.push(newSection);
+    this.closeAddSkillPopup(); // Close popup immediately for better UX
+    
+    // Scroll to the end of the carousel to show the new tab
+    setTimeout(() => {
+        this.calculateCarouselState();
+        if (this.maxScrollIndex > 0) {
+            this.currentScrollIndex = this.maxScrollIndex;
+            this.updateScrollPosition();
+        }
+        this.activeSectionIndex = this.skillSections.length - 1; // Make the new tab active
+        this.cdr.detectChanges();
+    }, 100);
+
+
+    // 3. Call the API to generate questions
+    this.subscriptions.add(
+      this.jobService.generateMcqForSkill(this.jobUniqueId, trimmedSkillName, token).pipe(
+        finalize(() => {
+          this.isAddingNewSkill = false;
+        })
+      ).subscribe({
+        next: (response) => {
+          console.log(`Successfully generated questions for new skill: ${trimmedSkillName}`, response);
+          const newQuestions = this.processMcqItems(response.data);
+          
+          // Find the section we just added and update it
+          const sectionToUpdate = this.skillSections.find(s => s.skillName === trimmedSkillName);
+          if (sectionToUpdate) {
+            sectionToUpdate.questions = newQuestions;
+            sectionToUpdate.totalCount = newQuestions.length;
+            sectionToUpdate.generationStatus = 'completed';
+            this.updateCounts();
+            this.cdr.detectChanges();
+          }
+          this.showSuccessPopup(`15 questions generated for ${trimmedSkillName}.`);
+        },
+        error: (err) => {
+          console.error(`Failed to generate questions for new skill: ${trimmedSkillName}`, err);
+          this.showErrorPopup(`Error generating questions: ${err.message}`);
+          
+          // Update the status to 'failed' on error
+          const sectionToUpdate = this.skillSections.find(s => s.skillName === trimmedSkillName);
+          if (sectionToUpdate) {
+            sectionToUpdate.generationStatus = 'failed';
+            this.cdr.detectChanges();
+          }
         }
       })
     );
