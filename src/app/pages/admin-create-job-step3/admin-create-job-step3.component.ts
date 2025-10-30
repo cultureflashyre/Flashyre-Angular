@@ -203,10 +203,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     // Define observables for initial data fetches
     const mcqStatus$ = this.jobService.checkMcqStatus(this.jobUniqueId, token).pipe(
       catchError(err => {
-        console.error('Failed to get MCQ generation status:', err);
-        // Do not show popup here, let final catchError handle it or just log.
-        // It's possible status is empty, which is not an error.
-        return of({ skills: {} }); // Provide a default empty structure
+        console.error('Failed to get MCQ generation status from DB:', err);
+        return of({ skills: {} }); // Default empty structure
       })
     );
 
@@ -438,13 +436,13 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * NEW: Asynchronously generates MCQs for all pending skills, one by one.
    * Updates the UI in real-time as each skill's questions are fetched.
    */
-   private async generateRemainingSkillsSequentially(): Promise<void> {
+    private async generateRemainingSkillsSequentially(): Promise<void> {
     if (this.isGeneratingSequentially) {
-      console.log("Already generating sequentially. Skipping.");
+      console.log("Sequential generation is already in progress. Skipping.");
       return;
     }
     this.isGeneratingSequentially = true;
-    console.log("Starting sequential generation for pending skills.");
+    console.log("Starting sequential generation for skills in 'pending' state.");
 
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -453,33 +451,41 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    for (const section of this.skillSections) {
-      if (section.generationStatus === 'pending') {
-        try {
-          console.log(`Generating questions for skill: ${section.skillName}`);
-          section.generationStatus = 'loading';
-          this.cdr.detectChanges(); // Update UI to show 'loading' state
-          
-          const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
-          const newQuestions = this.processMcqItems(response.data);
-          
-          // Append new questions
-          section.questions = [...section.questions, ...newQuestions];
-          section.totalCount = section.questions.length;
-          section.generationStatus = 'completed';
-          this.updateCountsForSection(section); // Update section counts
-          this.updateCounts(); // Update total counts
-          this.cdr.detectChanges(); // Update UI with new questions and 'completed' state
-          console.log(`Completed generation for skill: ${section.skillName}. Added ${newQuestions.length} questions.`);
-        } catch (error) {
-          section.generationStatus = 'failed';
-          console.error(`Failed to generate questions for ${section.skillName}:`, error);
-          this.cdr.detectChanges(); // Update UI to show 'failed' state
-        }
+    // Filter for skills that are genuinely pending
+    const pendingSections = this.skillSections.filter(s => s.generationStatus === 'pending');
+    console.log(`Found ${pendingSections.length} skills to process.`);
+
+    for (const section of pendingSections) {
+      try {
+        console.log(`Generating questions for skill: ${section.skillName}`);
+        section.generationStatus = 'loading';
+        this.cdr.detectChanges(); // Update UI to show spinner for this tab
+        
+        // This service call now returns the new questions in the response
+        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
+        
+        // **CRUCIAL UPDATE**: Process the returned data
+        const newQuestions = this.processMcqItems(response.data);
+        
+        // Append new questions to the section
+        section.questions = [...section.questions, ...newQuestions];
+        section.totalCount = section.questions.length;
+        section.generationStatus = 'completed'; // Mark as complete
+        this.updateCountsForSection(section);
+        this.updateCounts(); // Update total counts
+        this.cdr.detectChanges(); // Refresh UI with new questions
+        console.log(`SUCCESS: Completed generation for '${section.skillName}'. Added ${newQuestions.length} questions.`);
+
+      } catch (error: any) {
+        section.generationStatus = 'failed';
+        console.error(`FAILED to generate questions for '${section.skillName}':`, error);
+        this.showErrorPopup(`Could not generate questions for ${section.skillName}: ${error.message || 'Server error'}`);
+        this.cdr.detectChanges(); // Update UI to show failure icon
       }
     }
+    
     this.isGeneratingSequentially = false;
-    console.log("Finished sequential generation.");
+    console.log("Finished sequential generation process.");
   }
   
   // ... (rest of the component code, largely unchanged)
