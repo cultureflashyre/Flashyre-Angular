@@ -138,6 +138,30 @@
   align-items: center;
   gap: 8px;
 }
+.popup-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  font-family: inherit; /* Inherit the font from the parent */
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 60px; /* Give it a decent starting height */
+}
+
+.popup-textarea:focus {
+  outline: none;
+  border-color: #41327b;
+  box-shadow: 0 0 0 3px rgba(65, 50, 123, 0.1);
+}
+
+/* Renamed from .popup-input to be more generic */
+.popup-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
 
 .tab-spinner {
   width: 14px;

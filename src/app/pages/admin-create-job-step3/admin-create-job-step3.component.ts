@@ -134,9 +134,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   isAllCodingSelected: boolean = false;
   codingProblemsSelectedCount: number = 0;
 
-  // === NEW PROPERTIES FOR ADD SKILL POPUP ===
+   // === NEW PROPERTIES FOR ADD SKILL POPUP ===
   showAddSkillPopup: boolean = false;
-  newSkillName: string = '';
+  newSkillName: string = ''; // This will now hold a comma-separated string
   isAddingNewSkill: boolean = false;
   // === END OF NEW PROPERTIES ===  
 
@@ -396,25 +396,48 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * Closes the 'Add New Skill' popup.
    */
   closeAddSkillPopup(): void {
+    if (this.isAddingNewSkill) return; // Prevent closing while processing
     this.showAddSkillPopup = false;
   }
 
   /**
    * Handles the submission of a new skill from the popup.
    */
-  onAddNewSkillSubmit(): void {
-    const trimmedSkillName = this.newSkillName.trim();
+ onAddNewSkillSubmit(): void {
+    if (this.isAddingNewSkill) return;
 
-    // 1. Validation
-    if (!trimmedSkillName) {
-      this.showErrorPopup('Skill name cannot be empty.');
+    // 1. Parse and Validate the input string
+    const skillNames = this.newSkillName
+      .split(',')
+      .map(skill => skill.trim())
+      .filter(skill => skill.length > 0); // Remove empty strings
+
+    if (skillNames.length === 0) {
+      this.showErrorPopup('Please enter at least one valid skill name.');
       return;
     }
-    if (this.skillSections.some(s => s.skillName.toLowerCase() === trimmedSkillName.toLowerCase())) {
-      this.showErrorPopup('This skill already exists in the list.');
-      return;
+
+    // Check for duplicates against existing skills
+    const existingSkillNames = new Set(this.skillSections.map(s => s.skillName.toLowerCase()));
+    const newValidSkills = [];
+    for (const skill of skillNames) {
+      if (existingSkillNames.has(skill.toLowerCase())) {
+        this.showErrorPopup(`The skill "${skill}" already exists.`);
+        return; // Stop processing if any skill is a duplicate
+      }
+      newValidSkills.push(skill);
     }
 
+    // Close popup and start the generation process
+    this.closeAddSkillPopup();
+    this.processNewSkillsSequentially(newValidSkills);
+  }
+
+  /**
+   * Processes a list of new skills one by one, providing real-time UI updates.
+   * @param skillsToProcess An array of validated, non-duplicate skill names.
+   */
+  private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
     this.isAddingNewSkill = true;
     const token = this.authService.getJWTToken();
     if (!token) {
@@ -422,66 +445,57 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       this.isAddingNewSkill = false;
       return;
     }
-    
-    // 2. Add a placeholder section to the UI immediately
-    const newSection: SkillSection = {
-      skillName: trimmedSkillName,
-      questions: [],
-      totalCount: 0,
-      selectedCount: 0,
-      isAllSelected: false,
-      generationStatus: 'loading', // Show spinner
-    };
-    this.skillSections.push(newSection);
-    this.closeAddSkillPopup(); // Close popup immediately for better UX
-    
-    // Scroll to the end of the carousel to show the new tab
-    setTimeout(() => {
+
+    for (const skillName of skillsToProcess) {
+      // 1. Add optimistic UI placeholder
+      const newSection: SkillSection = {
+        skillName,
+        questions: [],
+        totalCount: 0,
+        selectedCount: 0,
+        isAllSelected: false,
+        generationStatus: 'loading',
+      };
+      this.skillSections.push(newSection);
+      
+      // Update carousel and make the new tab active
+      setTimeout(() => {
         this.calculateCarouselState();
-        if (this.maxScrollIndex > 0) {
-            this.currentScrollIndex = this.maxScrollIndex;
-            this.updateScrollPosition();
-        }
-        this.activeSectionIndex = this.skillSections.length - 1; // Make the new tab active
+        this.currentScrollIndex = this.maxScrollIndex > 0 ? this.maxScrollIndex : 0;
+        this.updateScrollPosition();
+        this.activeSectionIndex = this.skillSections.length - 1;
         this.cdr.detectChanges();
-    }, 100);
+      }, 100);
 
-
-    // 3. Call the API to generate questions
-    this.subscriptions.add(
-      this.jobService.generateMcqForSkill(this.jobUniqueId, trimmedSkillName, token).pipe(
-        finalize(() => {
-          this.isAddingNewSkill = false;
-        })
-      ).subscribe({
-        next: (response) => {
-          console.log(`Successfully generated questions for new skill: ${trimmedSkillName}`, response);
-          const newQuestions = this.processMcqItems(response.data);
-          
-          // Find the section we just added and update it
-          const sectionToUpdate = this.skillSections.find(s => s.skillName === trimmedSkillName);
-          if (sectionToUpdate) {
-            sectionToUpdate.questions = newQuestions;
-            sectionToUpdate.totalCount = newQuestions.length;
-            sectionToUpdate.generationStatus = 'completed';
-            this.updateCounts();
-            this.cdr.detectChanges();
-          }
-          this.showSuccessPopup(`15 questions generated for ${trimmedSkillName}.`);
-        },
-        error: (err) => {
-          console.error(`Failed to generate questions for new skill: ${trimmedSkillName}`, err);
-          this.showErrorPopup(`Error generating questions: ${err.message}`);
-          
-          // Update the status to 'failed' on error
-          const sectionToUpdate = this.skillSections.find(s => s.skillName === trimmedSkillName);
-          if (sectionToUpdate) {
-            sectionToUpdate.generationStatus = 'failed';
-            this.cdr.detectChanges();
-          }
+      // 2. Call API for the current skill in the loop
+      try {
+        const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, skillName, token).toPromise();
+        
+        const newQuestions = this.processMcqItems(response.data);
+        
+        // Update the section with the results
+        const sectionToUpdate = this.skillSections.find(s => s.skillName === skillName);
+        if (sectionToUpdate) {
+          sectionToUpdate.questions = newQuestions;
+          sectionToUpdate.totalCount = newQuestions.length;
+          sectionToUpdate.generationStatus = 'completed';
+          this.updateCounts();
+          this.cdr.detectChanges();
         }
-      })
-    );
+      } catch (err: any) {
+        console.error(`Failed to generate questions for new skill: ${skillName}`, err);
+        this.showErrorPopup(`Error for skill "${skillName}": ${err.message}`);
+        
+        // Update status to 'failed' on error
+        const sectionToUpdate = this.skillSections.find(s => s.skillName === skillName);
+        if (sectionToUpdate) {
+          sectionToUpdate.generationStatus = 'failed';
+          this.cdr.detectChanges();
+        }
+      }
+    }
+
+    this.isAddingNewSkill = false;
   }
   
   /**

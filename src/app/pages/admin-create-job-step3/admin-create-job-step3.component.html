@@ -99,20 +99,23 @@
 
 <div class="popup-overlay" *ngIf="showAddSkillPopup">
   <div class="popup-content">
-    <h3>Add New Skill</h3>
-    <p class="popup-note">Enter a single skill below. 15 AI-generated questions will be created for it. To add more questions later, use the "✨ Add Question with AI" button.</p>
+    <h3>Add New Skills</h3>
+    <!-- MODIFIED: Updated instructional text -->
+    <p class="popup-note">
+      Enter one or more skills separated by a comma. 15 AI-generated questions will be created for each new skill.To add more questions later, use the "✨ Add Question with AI" button.
+    </p>
     
     <div class="popup-input-group">
-      <label for="new-skill-input">Skill Name</label>
-      <input 
-        type="text" 
+      <label for="new-skill-input">Skill Names</label>
+      <!-- MODIFIED: Changed from <input> to <textarea> for better UX -->
+      <textarea 
         id="new-skill-input" 
-        class="popup-input" 
-        placeholder="e.g., JavaScript"
+        class="popup-textarea" 
+        placeholder="e.g., JavaScript, React, Node.js"
+        rows="3"
         [(ngModel)]="newSkillName" 
         [ngModelOptions]="{standalone: true}"
-        (keyup.enter)="onAddNewSkillSubmit()"
-      />
+      ></textarea>
     </div>
 
     <div class="popup-actions">
@@ -126,7 +129,6 @@
     </div>
   </div>
 </div>
-
 <ng-container *ngIf="!isLoading; else loadingTemplate">
 
   <app-alert-message
