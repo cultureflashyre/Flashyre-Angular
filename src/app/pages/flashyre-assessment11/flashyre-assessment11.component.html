@@ -4,7 +4,7 @@
     <assessment-warning-popup
       [sections]="sections"
       [userResponses]="userResponses"
-      [sectionTimers]="sectionTimers"
+      [globalTimer]="timer" 
       (endTestConfirmed)="terminateTest()"
       (closePopup)="handleCloseWarningPopup()"
       (questionNavigate)="handleQuestionNavigation($event)"
@@ -19,7 +19,7 @@
         src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
         class="flashyre-assessment11-logo"
       />
-      <span id="timer" class="flashyre-assessment11-timer">{{ sectionTimer | timerFormat }}</span>      
+      <span id="timer" class="flashyre-assessment11-timer">{{ timer | timerFormat }}</span>      
       <button
         id="end-test-button"
         type="button" 
@@ -75,19 +75,16 @@
     </div>
   </div>
   <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
-    <li *ngFor="let section of sections" 
-        (click)="isSectionAccessible(section) ? selectSection(section) : null"
-        [class.expired-section]="!isSectionAccessible(section)"
-        [style.cursor]="isSectionAccessible(section) ? 'pointer' : 'not-allowed'"
-        [style.opacity]="isSectionAccessible(section) ? '1' : '0.5'">
-      <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
-        <span id="section-A-text" class="flashyre-assessment11-section-a-text">
-          {{ section.name }}
-          <span *ngIf="!isSectionAccessible(section)" style="color: red; margin-left: 8px;">(Expired)</span>
-        </span>
-      </div>
-    </li>
-  </ul>
+            <li *ngFor="let section of sections" 
+                (click)="selectSection(section)"
+                style="cursor: pointer;">
+              <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
+                <span id="section-A-text" class="flashyre-assessment11-section-a-text">
+                  {{ section.name }}
+                </span>
+              </div>
+            </li>
+          </ul>
 </div>  
         <div
           id="question-numbers-main-container"

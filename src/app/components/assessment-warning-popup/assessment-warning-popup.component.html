@@ -100,9 +100,9 @@
                 <ng-container>
                   <ng-template #defaultText8>
                     <div class="assessment-warning-popup-fragment25">
-                      <span class="assessment-warning-popup-time-text1">
-                        {{ sections.length > 0 ? (sectionTimers[sections[0].section_id] | timerFormat) : '--:--' }}
-                      </span>
+                      <span id="time-text" class="assessment-warning-popup-time-text1">
+                {{ globalTimer | timerFormat }}
+              </span>
                     </div>
                   </ng-template>
                   <ng-container
@@ -343,45 +343,6 @@
                     </ng-template>
                     <ng-container
                       *ngTemplateOutlet="text5 ? text5 : defaultText5"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-              <div
-                id="time-remaining-container"
-                class="assessment-warning-popup-time-remaining-container"
-              >
-                <span
-                  id="remaining-time-text"
-                  class="assessment-warning-popup-remaining-time-text2"
-                >
-                  <ng-container>
-                    <ng-template #defaultText6>
-                      <div class="assessment-warning-popup-fragment12">
-                        <span class="assessment-warning-popup-text13">
-                          Remaining Time: 
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text6 ? text6 : defaultText6"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-                <span
-                  id="time-text"
-                  class="assessment-warning-popup-time-text2"
-                >
-                  <ng-container>
-                    <ng-template #defaultText9>
-                      <div class="assessment-warning-popup-fragment26">
-                        <span class="assessment-warning-popup-text27">
-                          {{ sectionTimers[section.section_id] | timerFormat }}
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text9 ? text9 : defaultText9"
                     ></ng-container>
                   </ng-container>
                 </span>

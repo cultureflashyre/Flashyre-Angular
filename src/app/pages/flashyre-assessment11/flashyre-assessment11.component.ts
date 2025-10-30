@@ -40,11 +40,10 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   sections: any[] = [];
   currentSection: any;
   currentQuestions: any[] = [];
-  timer: number;
+  timer: number; // This is now the single source of truth for the timer
   userId: string | null;
   startTime: Date;
   videoPath: string | null;
-  sectionTimer: number = 0;
   currentQuestion: any = {};
   userResponses: { [key: string]: any } = {};
   currentOptions: any[] = [];
@@ -53,10 +52,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
   selectedAnswers: { [question_id: number]: SelectedAnswer } = {};
   questionStates: { [key: number]: 'unvisited' | 'visited' | 'answered' } = {};
-  sectionTimers: { [section_id: number]: number } = {};
-  
-  // NEW: Track which sections have expired
-  expiredSections: Set<number> = new Set();
   
   isCodingSection = false;
   results: string[] = [];
@@ -65,7 +60,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   showTestResults = false;
 
   private timerSubscription: Subscription;
-  private sectionTimerInterval: any;
   private timerInterval: any;
   private violationSubscription: Subscription;
   private isCleanedUp = false;
@@ -124,9 +118,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
         this.timerSubscription.unsubscribe();
       }
       clearInterval(this.timerInterval);
-      if (this.sectionTimerInterval) {
-        clearInterval(this.sectionTimerInterval);
-      }
       this.videoPath = await this.videoRecorder.stopRecording();
       this.proctoringService.stopMonitoring();
     } catch (error) {
@@ -170,7 +161,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
         this.sections = [];
         this.processCustomizations(data.sections);
         this.totalSections = this.sections.length;
-        this.timer = data.total_assessment_duration * 60;
+        this.timer = data.total_assessment_duration * 60; // Initialize global timer
         this.trialAssessmentService.updateTimer(this.timer);
         this.startTimer();
         this.selectSection(this.sections[0]);
@@ -207,7 +198,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.timerSubscription = this.trialAssessmentService.timer$.subscribe((time) => {
       this.timer = time;
       if (this.timer <= 0) {
-        this.terminateTest();
+        this.terminateTest(); // Terminate test when the global timer runs out
       }
     });
     this.decrementTimer();
@@ -219,38 +210,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
         this.trialAssessmentService.updateTimer(this.timer - 1);
       } else {
         clearInterval(this.timerInterval);
-      }
-    }, 1000);
-  }
-
-  // UPDATED: Section timer with auto-navigation
-  startSectionTimer(): void {
-    if (this.sectionTimerInterval) {
-      clearInterval(this.sectionTimerInterval);
-    }
-    this.sectionTimerInterval = setInterval(() => {
-      if (this.sectionTimer > 0) {
-        this.sectionTimer--;
-        // Save the current section's remaining time
-        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-        this.sectionTimers[sectionKey] = this.sectionTimer;
-      } else {
-        // Section timer expired
-        clearInterval(this.sectionTimerInterval);
-        this.sectionTimerInterval = null;
-        
-        // Mark this section as expired
-        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-        this.expiredSections.add(sectionKey);
-        
-        // Auto-navigate to next section or submit if last section
-        if (this.currentSectionIndex < this.totalSections - 1) {
-          console.log('Section timer expired, moving to next section');
-          this.nextSection();
-        } else {
-          console.log('Last section timer expired, auto-submitting assessment');
-          this.terminateTest();
-        }
       }
     }, 1000);
   }
@@ -267,30 +226,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // UPDATED: Check if section is accessible
-  isSectionAccessible(section: any): boolean {
-    const sectionKey = section.section_id || section.coding_id_id;
-    return !this.expiredSections.has(sectionKey);
-  }
-
-  // UPDATED: Select section with timer persistence
   selectSection(section: any): void {
     console.log('Selected section:', JSON.stringify(section, null, 2));
-    
-    // Check if trying to access an expired section
-    const sectionKey = section.section_id || section.coding_id_id;
-    if (this.expiredSections.has(sectionKey)) {
-      console.warn('Cannot access expired section:', section.name);
-      alert('This section time has expired. You cannot return to it.');
-      return;
-    }
-    
-    // Save current section's timer before switching
-    if (this.currentSection) {
-      const currentSectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-      this.sectionTimers[currentSectionKey] = this.sectionTimer;
-      console.log(`Saved timer for section ${this.currentSection.name}: ${this.sectionTimer} seconds`);
-    }
 
     this.currentSection = section;
     this.currentSectionIndex = this.sections.indexOf(section);
@@ -305,19 +242,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.results = [];
       this.showTestResults = true;
     }
-
-    // FIXED: Restore saved timer or use full duration
-    if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
-      this.sectionTimer = this.sectionTimers[sectionKey];
-      console.log(`Restored timer for section ${section.name}: ${this.sectionTimer} seconds`);
-    } else {
-      this.sectionTimer = section.duration * 60;
-      this.sectionTimers[sectionKey] = this.sectionTimer;
-      console.log(`Initialized timer for section ${section.name}: ${this.sectionTimer} seconds`);
-    }
-
-    clearInterval(this.sectionTimerInterval);
-    this.startSectionTimer();
   }
 
   updateCurrentQuestion(): void {
@@ -490,10 +414,6 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showEndTestWarning(): void {
-    if (this.currentSection) {
-      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-      this.sectionTimers[sectionKey] = this.sectionTimer;
-    }
     this.showWarningPopup = true;
   }
 
@@ -538,23 +458,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
 
   nextSection(): void {
     if (this.currentSectionIndex < this.totalSections - 1) {
-      // Find next accessible section
-      let nextIndex = this.currentSectionIndex + 1;
-      while (nextIndex < this.totalSections) {
-        const nextSection = this.sections[nextIndex];
-        const nextSectionKey = nextSection.section_id || nextSection.coding_id_id;
-        
-        if (!this.expiredSections.has(nextSectionKey)) {
-          this.currentSectionIndex = nextIndex;
-          this.selectSection(this.sections[nextIndex]);
-          return;
-        }
-        nextIndex++;
-      }
-      
-      // If all remaining sections are expired, auto-submit
-      console.log('All remaining sections are expired, auto-submitting');
-      this.terminateTest();
+      this.currentSectionIndex++;
+      this.selectSection(this.sections[this.currentSectionIndex]);
     }
   }
 

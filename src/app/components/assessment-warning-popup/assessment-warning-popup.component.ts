@@ -1,12 +1,11 @@
 import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'assessment-warning-popup',
   templateUrl: 'assessment-warning-popup.component.html',
   styleUrls: ['assessment-warning-popup.component.css'],
 })
-export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit, OnDestroy {
+export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
   // --- Element Refs for Donut Chart ---
   @ViewChild('attemptedPath') attemptedPath: ElementRef;
@@ -16,7 +15,7 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   // --- Inputs & Outputs ---
   @Input() sections: any[] = [];
   @Input() userResponses: { [key: string]: any } = {};
-  @Input() sectionTimers: { [section_id: number]: number } = {};
+  @Input() globalTimer: number; // MODIFIED: To receive the main timer value
   @Output() endTestConfirmed = new EventEmitter<void>();
   @Output() closePopup = new EventEmitter<void>();
   @Output() questionNavigate = new EventEmitter<{section: any, questionIndex: number}>();
@@ -51,16 +50,7 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   @Input() button1: TemplateRef<any>;
   @Input() questionNumber1Button: TemplateRef<any>;
 
-  private timerSubscription: Subscription;
-
   constructor() {}
-
-  ngOnInit(): void {
-    // Start countdown timer every second
-    this.timerSubscription = interval(1000).subscribe(() => {
-      this.countdownTimers();
-    });
-  }
 
   ngAfterViewInit(): void {
     this.calculateSummary();
@@ -74,30 +64,6 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
     }
   }
 
-  ngOnDestroy(): void {
-    // Cleanup timer subscription to avoid memory leaks
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
-  }
-
-  // Decrease each section timer by 1 second if above 0
-  countdownTimers(): void {
-    if (!this.sectionTimers) return;
-
-    let updated = false;
-    Object.keys(this.sectionTimers).forEach(sectionId => {
-      if (this.sectionTimers[sectionId] > 0) {
-        this.sectionTimers[sectionId] = this.sectionTimers[sectionId] - 1;
-        updated = true;
-      }
-    });
-
-    // If timers changed, optionally trigger change detection or other logic here
-    // Angular's binding will update the displayed time because sectionTimers are updated
-  }
-
-  // --- Existing methods below ---
   calculateSummary(): void {
     if (!this.sections || this.sections.length === 0) return;
 
@@ -206,48 +172,42 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   }
 
   scrollLeft(event: Event): void {
-  const clickedElement = event.target as HTMLElement;
-  const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
-  const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
-  
-  if (numbersContainer) {
-    numbersContainer.scrollBy({
-      left: -100,
-      behavior: 'smooth'
-    });
+    const clickedElement = event.target as HTMLElement;
+    const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
+    const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
+    
+    if (numbersContainer) {
+      numbersContainer.scrollBy({
+        left: -100,
+        behavior: 'smooth'
+      });
+    }
   }
-}
 
-scrollRight(event: Event): void {
-  const clickedElement = event.target as HTMLElement;
-  const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
-  const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
-  
-  if (numbersContainer) {
-    numbersContainer.scrollBy({
-      left: 100,
-      behavior: 'smooth'
-    });
+  scrollRight(event: Event): void {
+    const clickedElement = event.target as HTMLElement;
+    const parentContainer = clickedElement.closest('.assessment-warning-popup-question-numbers-main-container');
+    const numbersContainer = parentContainer?.querySelector('.assessment-warning-popup-numbers-main-container') as HTMLElement;
+    
+    if (numbersContainer) {
+      numbersContainer.scrollBy({
+        left: 100,
+        behavior: 'smooth'
+      });
+    }
   }
-}
 
- navigateToSectionQuestion(selectedSection: any, questionIndex: number): void {
-    // Validate the section and question index
+  navigateToSectionQuestion(selectedSection: any, questionIndex: number): void {
     if (!selectedSection || !selectedSection.questions || questionIndex < 0 || questionIndex >= selectedSection.questions.length) {
       console.error('Invalid section or question index');
       return;
     }
 
-    // Emit the navigation event to parent component
     this.questionNavigate.emit({
       section: selectedSection,
       questionIndex: questionIndex
     });
 
-    // Optional: Close the popup after navigation
-    // this.closePopup(); // Uncomment if you have a close popup method
-    this.closePopup.emit(); // Make sure you have this method in your component
-
+    this.closePopup.emit();
   }
-
 }
