@@ -76,11 +76,11 @@ export class AdminCandidateScoresPageComponent implements OnInit {
   }
 
   // Toggle select all checkbox
-  toggleSelectAll(): void {
-    const newValue = !this.isAllSelected;
-    this.candidates.forEach(candidate => candidate.selected = newValue);
-    this.isAllSelected = newValue;
+onSelectAllChange(isSelected: boolean): void {
+  if (this.candidates) {
+    this.candidates.forEach(candidate => candidate.selected = isSelected);
   }
+}
 
   // Update select all state when individual checkboxes change
   updateSelectAllState(): void {

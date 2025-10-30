@@ -117,7 +117,7 @@
           id="select-checkbox"
           class="admin-candidate-scores-page-select-checkbox1"
           [(ngModel)]="isAllSelected"
-          (ngModelChange)="toggleSelectAll()"
+          (ngModelChange)="onSelectAllChange($event)"
           [disabled]="loading || candidates.length === 0"
         />
         <span
