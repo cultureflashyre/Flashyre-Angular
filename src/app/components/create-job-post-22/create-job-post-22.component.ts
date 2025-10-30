@@ -1,6 +1,6 @@
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { McqAssessmentService } from '../../services/mcq-assessment.service';
@@ -50,6 +50,18 @@ interface UploadedSkillSection {
   selectedCount: number;
 }
 
+// NEW: Custom Validator Function
+/**
+ * Custom validator to check if the time is not "00:00".
+ * @param control The form control to validate.
+ * @returns A validation error object if the time is "00:00", otherwise null.
+ */
+export function timeNotZeroValidator(control: AbstractControl): ValidationErrors | null {
+  if (control.value === '00:00') {
+    return { timeIsZero: true }; // Return an error object
+  }
+  return null; // No error
+}
 
 @Component({
   selector: 'create-job-post22',
@@ -623,7 +635,11 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
       allowPhoneAccess: [true],
       allowVideoRecording: [true],
       difficulty: [0.6], // Stored as a decimal (0.0 - 1.0)
-      timeLimit: ['01:00', [Validators.required, Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)]], // HH:MM format
+      timeLimit: ['01:00', [
+        Validators.required, 
+        Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+        timeNotZeroValidator 
+      ]], // HH:MM format
     });
   }
 
@@ -1016,15 +1032,53 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
   }
 
   /**
+   * Inspects the form controls and returns the highest priority validation error message.
+   * @returns A string containing the specific error message.
+   */
+  private getFormValidationErrorMessage(): string {
+    const controls = this.assessmentForm.controls;
+
+    // Check for Assessment Name errors first
+    if (controls['assessmentName'].errors) {
+      if (controls['assessmentName'].errors['required']) {
+        return 'Assessment Name is required.';
+      }
+      if (controls['assessmentName'].errors['pattern']) {
+        return 'Please enter a valid Assessment Name (letters and numbers only).';
+      }
+    }
+
+    // Check for Time Limit errors
+    if (controls['timeLimit'].errors) {
+      if (controls['timeLimit'].errors['required']) {
+        return 'Time Limit is required.';
+      }
+      if (controls['timeLimit'].errors['pattern']) {
+        return 'Please enter the Time Limit in a valid HH:MM format.';
+      }
+      // Check for the custom "00:00" error
+      if (controls['timeLimit'].errors['timeIsZero']) {
+        return 'Time Limit cannot be 00:00.';
+      }
+    }
+
+    // A fallback generic message if a specific one isn't found
+    return 'Please fill in all required settings correctly.';
+  }
+
+  /**
    * Handles the 'Next' button click.
    * Validates the form, constructs the payload, and either creates or updates the assessment.
    */
   onNext(): void {
     this.assessmentForm.markAllAsTouched(); // Mark fields as touched to show validation errors
+    // MODIFICATION: Replaced the generic error message with a call to the new helper function.
     if (this.assessmentForm.invalid) {
-      this.showErrorPopup('Please fill in all required settings (e.g., Assessment Name).');
+      const errorMessage = this.getFormValidationErrorMessage();
+      this.showErrorPopup(errorMessage);
       return;
     }
+    
     if (this.totalSelectedCount === 0) {
       this.showErrorPopup('Please select at least one question to proceed.');
       return;

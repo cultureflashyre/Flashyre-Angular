@@ -86,9 +86,16 @@
             <div id="time-limit-container" class="create-job-post-22-time-limit-container2">
               <span id="time-limit-text" class="create-job-post-22-time-limit-text2">Set time limit *</span>
               <input type="text" id="time-input" placeholder="HH:MM" class="create-job-post-22-time-input2 input" formControlName="timeLimit" />
-              <div class="field-error-message" *ngIf="assessmentForm.get('timeLimit')?.touched && assessmentForm.get('timeLimit')?.errors">
+              <div class="field-error-message" 
+              *ngIf="assessmentForm.get('timeLimit')?.touched && (assessmentForm.get('timeLimit')?.hasError('required') || assessmentForm.get('timeLimit')?.hasError('pattern'))"
+              >
                 Valid HH:MM format required.
               </div>
+
+                <div class="field-error-message" 
+                *ngIf="assessmentForm.get('timeLimit')?.touched && assessmentForm.get('timeLimit')?.hasError('timeIsZero')">
+                  time can not be 00:00
+                </div>
             </div>
           </div>
         </div>

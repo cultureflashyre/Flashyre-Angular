@@ -4,7 +4,7 @@
 
 
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, forkJoin, of, Observable } from 'rxjs'; // Import Observable
 import { switchMap, tap, finalize, catchError, map } from 'rxjs/operators'; // Import map
@@ -74,6 +74,18 @@ interface CodingProblem {
   example: string;
   test_cases: CodingTestCase[];
   isSelected: boolean;
+}
+
+/**
+ * Custom validator to check if the time value is not '00:00'.
+ * @param control The form control to validate.
+ * @returns A validation error object if the time is '00:00', otherwise null.
+ */
+export function timeNotZeroValidator(control: AbstractControl): ValidationErrors | null {
+  if (control.value && control.value === '00:00') {
+    return { timeIsZero: true }; // Return a specific error key
+  }
+  return null;
 }
 
 @Component({
@@ -637,14 +649,51 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
 
   private initializeForm(): void {
     this.assessmentForm = this.fb.group({
-      assessmentName: ['', [Validators.required, Validators.maxLength(50), Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$')]],
+      assessmentName: ['', 
+        [Validators.required, Validators.maxLength(50), Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$')]],
       shuffleQuestions: [true],
       isProctored: [true],
       allowPhoneAccess: [true],
       allowVideoRecording: [true],
       difficulty: [0.6],
-      timeLimit: ['01:00', [Validators.required, Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)]],
+      timeLimit: ['01:00', 
+        [Validators.required, 
+          Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+          timeNotZeroValidator 
+        ]],
     });
+  }
+
+  /**
+   * NEW: Generates a detailed error message string from form validation errors.
+   * @returns A string listing all current validation errors.
+   */
+  private getFormValidationErrors(): string {
+    const errors: string[] = [];
+    const controls = this.assessmentForm.controls;
+  
+    if (controls.assessmentName.errors) {
+      if (controls.assessmentName.errors.required) {
+        errors.push('Assessment Name is required.');
+      }
+      if (controls.assessmentName.errors.pattern) {
+        errors.push('Please enter a correct Assessment name (letters and numbers only).');
+      }
+    }
+  
+    if (controls.timeLimit.errors) {
+      if (controls.timeLimit.errors.required) {
+        errors.push('Time Limit is required.');
+      }
+      if (controls.timeLimit.errors.pattern) {
+        errors.push('Time Limit must be in HH:MM format.');
+      }
+      if (controls.timeLimit.errors.timeIsZero) { // Check for the custom error key
+        errors.push('Time Limit cannot be 00:00.');
+      }
+    }
+  
+    return errors.join(' \n'); // Join with a newline for better readability in the popup
   }
 
   // loadExistingAssessment and fetchNewMcqList are less critical now with loadAllInitialData
@@ -973,6 +1022,14 @@ onAlertButtonClicked(action: string) {
 
   onSaveDraft(): void {
     this.assessmentForm.markAllAsTouched();
+
+    if (this.assessmentForm.invalid) {
+      // MODIFICATION: Also use the dynamic error message for saving drafts
+      const errorMessages = this.getFormValidationErrors();
+      this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
+      return;
+    }
+
     if (this.totalSelectedCount === 0) {
       this.showErrorPopup('Please select at least one question before saving.');
       return;
@@ -989,7 +1046,9 @@ onAlertButtonClicked(action: string) {
   onNext(): void {
     this.assessmentForm.markAllAsTouched();
     if (this.assessmentForm.invalid) {
-      this.showErrorPopup('Please fill in all required fields correctly.');
+      // MODIFICATION: Call the new helper to get specific error messages
+      const errorMessages = this.getFormValidationErrors();
+      this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
       return;
     }
     if (this.totalSelectedCount === 0) {
@@ -1106,7 +1165,9 @@ onAlertButtonClicked(action: string) {
     this.assessmentForm.markAllAsTouched();
     
     if (this.assessmentForm.invalid) {
-      this.showErrorPopup('Please fill in all required fields correctly.');
+      // MODIFICATION: Call the new helper to get specific error messages
+      const errorMessages = this.getFormValidationErrors();
+      this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
       return;
     }
     
