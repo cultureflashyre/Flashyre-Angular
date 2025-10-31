@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, NgZone, Render
 import { DOCUMENT } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // MODIFIED: Import ActivatedRoute
 import { Subject, Observable, of, fromEvent, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -51,6 +51,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   alertButtons: string[] = [];
   private actionContext: { action: string } | null = null;
 
+  // ADDED: Properties to manage edit mode
+  isEditMode: boolean = false;
+  currentJobUniqueId: string | null = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -58,6 +62,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     private jobDescriptionService: AdminJobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private router: Router,
+    private route: ActivatedRoute, // MODIFIED: Inject ActivatedRoute
     private ngZone: NgZone,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
@@ -144,18 +149,28 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     );
 
     if (!this.corporateAuthService.isLoggedIn()) {
-      this.showErrorPopup('Please log in to create a job post.');
+      this.showErrorPopup('Please log in to create or edit a job post.');
       this.router.navigate(['/login-corporate']);
       return;
     }
 
-    const workflowId = this.workflowService.getCurrentJobId();
-    if (workflowId) {
-      console.log('Resuming existing admin job post with unique_id:', workflowId);
-      this.loadJobPostForEditing(workflowId);
+    // --- MODIFIED: Handle edit mode from route parameter ---
+    this.currentJobUniqueId = this.route.snapshot.paramMap.get('id'); // Get 'id' from route
+    if (this.currentJobUniqueId) {
+      this.isEditMode = true;
+      console.log('Edit mode detected for unique_id:', this.currentJobUniqueId);
+      this.loadJobPostForEditing(this.currentJobUniqueId);
     } else {
-      this.resetForm();
+      // If no ID in route, check for workflow ID (for resuming drafts)
+      const workflowId = this.workflowService.getCurrentJobId();
+      if (workflowId) {
+        console.log('Resuming existing admin job post with unique_id from workflow service:', workflowId);
+        this.loadJobPostForEditing(workflowId);
+      } else {
+        this.resetForm(); // Start a fresh form if no ID is found
+      }
     }
+    // --- END MODIFIED ---
 
     this.subscriptions.add(
       this.jobForm.get('total_experience_max')!.valueChanges.pipe(
@@ -206,9 +221,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         error: (err) => {
           this.isSubmitting = false;
           this.spinner.hide('main-spinner');
-          this.showErrorPopup('Something went wrong. Please try again later.');
+          this.showErrorPopup('Failed to load existing job data. Please try again later.');
           console.error(`Failed to load existing job data for ID ${uniqueId}:`, err);
-          this.workflowService.clearWorkflow(); // Clear broken workflow
+          // MODIFIED: Navigate to a sensible default page on error, like a job list
+          this.router.navigate(['/admin-job-posts']);
         }
       })
     );
@@ -363,8 +379,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.spinner.show('main-spinner');
     const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
-        this.jobData = response;
-        this.populateForm(response);
+        // If in edit mode, preserve the original unique_id from the route
+        const currentUniqueId = this.isEditMode ? this.currentJobUniqueId : response.unique_id;
+        this.jobData = { ...response, unique_id: currentUniqueId! };
+        this.populateForm(this.jobData);
         this.showSuccessPopup('File uploaded and processed successfully.');
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
@@ -373,19 +391,15 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       error: (error) => {
         console.error('File upload error:', error);
         const errorMessage = error?.message || 'An unknown error occurred during file processing.';
-        
-        // Check for the specific text extraction failure message from the backend
         if (errorMessage.includes('Text extraction failed')) {
             this.openAlert('Please provide the file in standard format and try again later', ['OK']);
         } else {
-            // Handle other errors (e.g., file size, format, network) with a general alert
             this.openAlert(`File upload failed: ${errorMessage}`, ['OK']);
         }
-        
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = false;
-        this.clearFileInput(); // Clear the file input on failure
+        this.clearFileInput();
       }
     });
     this.subscriptions.add(uploadSub);
@@ -409,7 +423,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     let unique_id_val: string = '', job_description_url_val: string = '';
 
     if ('job_details' in jobData) {
-      // Data is from AI response after file upload
       const aiJobData = jobData as Omit<AIJobResponse, 'mcqs'>;
       const details = aiJobData.job_details;
       const [minExp, maxExp] = this.parseExperience(details.experience?.value || '0-0 years');
@@ -432,7 +445,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description_url_val = aiJobData.file_url || '';
     } else {
-      // Data is from DB (getJobPost)
       const details = jobData as JobDetails;
       role = details.role;
       const dbLocationString = details.location || '';
@@ -487,6 +499,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.populateSkills(skills);
       this.setJobDescription(job_description);
       this.updateExperienceUI();
+      // MODIFIED: Mark form as pristine to avoid validation errors on load
+      this.jobForm.markAsPristine();
+      this.jobForm.markAsUntouched();
     }
   }
 
@@ -808,43 +823,21 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.router.navigate(['/login-corporate']);
       return;
     }
-    this.jobForm.markAllAsTouched();
-    this.checkEmpty('editor');
-    if (this.jobForm.invalid) {
-      const errors = this.jobForm.errors;
-      if (errors?.['relevantExceedsTotal']) {
-        this.showErrorPopup('Relevant experience cannot exceed total experience.');
-      } else if (errors?.['invalidBudgetRange']) {
-        this.showErrorPopup('Minimum budget cannot exceed maximum budget.');
-      } else if (this.jobForm.get('min_budget')?.errors?.invalidNumber || this.jobForm.get('max_budget')?.errors?.invalidNumber) {
-        this.showErrorPopup('Please enter valid positive numbers for budget (e.g., 99000000000 or 99e9).');
-      } else {
-        this.showErrorPopup('Please fill all required fields correctly.');
-      }
-      const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid) || (errors?.['relevantExceedsTotal'] || errors?.['invalidBudgetRange'] ? 'relevant_experience_max' : null);
-      if (firstInvalidControl) {
-        let element: HTMLElement | null = this.document.querySelector(`[formControlName="${firstInvalidControl}"]`);
-        if (!element) {
-          if (firstInvalidControl === 'skills') element = this.document.getElementById('tagInput');
-          else if (firstInvalidControl === 'job_description') element = this.document.getElementById('editor');
-          else if (firstInvalidControl === 'location') element = this.locationInput.nativeElement;
-          else if (firstInvalidControl === 'relevant_experience_max') element = this.document.getElementById('relevant_rangeIndicator');
-          else if (firstInvalidControl === 'min_budget' || firstInvalidControl === 'max_budget') element = this.document.getElementById('min-max-budget-container');
-        }
-        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
-    }
+    // Validation is handled in onSubmitAttempt, so we proceed directly
     this.isSubmitting = true;
     this.spinner.show('main-spinner');
     const formValues = this.jobForm.getRawValue();
     const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
     const userProfileString = localStorage.getItem('userProfile');
-    let companyName = 'Freelancer';
+    let companyName = 'Flashyre'; // MODIFIED: Default company name for Admin
     if (userProfileString) {
       try {
         const userProfile = JSON.parse(userProfileString);
-        if (userProfile.latest_company_name && userProfile.latest_company_name.trim() !== '') {
+        // Admins might post for the main company, not their own 'latest_company_name'
+        // This can be adjusted based on business logic. For now, we'll use a default.
+        if (userProfile.user_type === 'admin' && userProfile.company_name) {
+          companyName = userProfile.company_name;
+        } else if (userProfile.latest_company_name && userProfile.latest_company_name.trim() !== '') {
           companyName = userProfile.latest_company_name;
         }
       } catch (e) {
@@ -858,23 +851,26 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
         secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
       },
-      status: 'draft',
+      status: this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft', // Preserve status if editing
       companyName: companyName
     };
 
-    const existingUniqueId = this.jobForm.get('unique_id')?.value;
     let saveOperation: Observable<{ unique_id: string }>;
 
-    if (existingUniqueId) {
-      saveOperation = this.jobDescriptionService.updateJobPost(existingUniqueId, jobDetails, token);
+    // MODIFIED: Use the reliable `isEditMode` flag
+    if (this.isEditMode && this.currentJobUniqueId) {
+      saveOperation = this.jobDescriptionService.updateJobPost(this.currentJobUniqueId, jobDetails, token);
     } else {
+      // Ensure unique_id is not sent for new posts
+      if (jobDetails.unique_id) delete jobDetails.unique_id;
       saveOperation = this.jobDescriptionService.saveJobPost(jobDetails, token);
     }
 
     const saveSub = saveOperation.subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        this.showSuccessPopup(`Job post ${existingUniqueId ? 'updated' : 'saved'}. Proceeding to assessment setup.`);
+        // MODIFIED: Dynamic success message
+        this.showSuccessPopup(`Job post ${this.isEditMode ? 'updated' : 'saved'}. Proceeding to assessment setup.`);
         this.workflowService.startWorkflow(response.unique_id);
         this.spinner.hide('main-spinner');
         this.router.navigate(['/admin-create-job-step2']);
@@ -890,6 +886,15 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   }
 
   onCancelConfirmed(): void {
+    // MODIFIED: Differentiate between cancelling an edit and cancelling a new draft
+    if (this.isEditMode) {
+        this.showSuccessPopup('Job post editing cancelled.');
+        // Navigate back to the admin job list (assuming this route exists)
+        setTimeout(() => { this.router.navigate(['/admin-job-posts']); }, 2000);
+        return; // Exit without deleting
+    }
+
+    // --- Original logic for cancelling a new draft creation ---
     const token = this.corporateAuthService.getJWTToken();
     const uniqueId = this.jobForm.get('unique_id')?.value;
 
@@ -901,7 +906,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
           this.showSuccessPopup('Job post draft deleted.');
           this.workflowService.clearWorkflow();
           this.resetForm();
-          setTimeout(() => { this.router.navigate(['/admin-create-job-step1']); }, 2000);
+          // Stay on the page to create a new one, or navigate away:
+          // setTimeout(() => { this.router.navigate(['/admin-dashboard']); }, 2000);
         },
         error: (err) => {
           this.spinner.hide('main-spinner');
@@ -913,7 +919,6 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.showSuccessPopup('Job post creation cancelled.');
       this.workflowService.clearWorkflow();
       this.resetForm();
-      setTimeout(() => { this.router.navigate(['/admin-create-job-step1']); }, 2000);
     }
   }
 
@@ -952,6 +957,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.locationSuggestions = [];
     this.showLocationSuggestions = false;
     this.workflowService.clearWorkflow();
+    
+    // ADDED: Reset edit mode state
+    this.isEditMode = false;
+    this.currentJobUniqueId = null;
   }
 
   ngOnDestroy(): void {
@@ -983,49 +992,42 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   }
 
   onAlertButtonClicked(action: string) {
-    this.showAlert = false; // Hide the alert first
-
-    // If the user clicked "Cancel" or "No", do nothing further
+    this.showAlert = false;
     if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
       this.actionContext = null;
       return;
     }
-    
-    // If the user confirmed, check what action we were confirming
     if (this.actionContext) {
       switch (this.actionContext.action) {
         case 'submit':
-          this.onSubmitConfirmed(); // Call the actual submit logic
+          this.onSubmitConfirmed();
           break;
         case 'cancel':
-          this.onCancelConfirmed(); // Call the actual cancel logic
+          this.onCancelConfirmed();
           break;
       }
-      // Clear the context after the action is taken
       this.actionContext = null;
     }
   }
   
-  // New method called by the "Cancel" button in the HTML
   onCancelAttempt(): void {
       this.actionContext = { action: 'cancel' };
-      this.openAlert('Are you sure you want to cancel? Any unsaved changes will be lost.', ['No', 'Yes']);
+      // MODIFIED: Show different message when editing
+      const message = this.isEditMode 
+        ? 'Are you sure you want to cancel? Your changes will not be saved.'
+        : 'Are you sure you want to cancel? Any unsaved changes will be lost.';
+      this.openAlert(message, ['No', 'Yes']);
   }
 
-  // New method called by the "Next" button in the HTML
   onSubmitAttempt(): void {
-      // 1. Perform all form validation first
       this.jobForm.markAllAsTouched();
       this.checkEmpty('editor');
       if (this.jobForm.invalid) {
-        // Use the EXISTING showErrorPopup for validation errors
-        let alertMessage = 'Please fill all required fields correctly.'; // Default message
+        let alertMessage = 'Please fill all required fields correctly.';
         if (this.jobForm.get('job_description')?.hasError('maxlength')) {
             alertMessage = 'The job description cannot exceed 5000 characters.';
         }
         this.openAlert(alertMessage, ['OK']);
-
-        // (The rest of the scrolling logic to find the invalid field remains the same)
         const errors = this.jobForm.errors;
         const firstInvalidControl = Object.keys(this.jobForm.controls).find(key => this.jobForm.controls[key].invalid) || (errors?.['relevantExceedsTotal'] || errors?.['invalidBudgetRange'] ? 'relevant_experience_max' : null);
         if (firstInvalidControl) {
@@ -1037,11 +1039,13 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
             }
             element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        return; // Stop if the form is invalid
+        return;
       }
-
-      // 2. If validation passes, show the confirmation alert
       this.actionContext = { action: 'submit' };
-      this.openAlert('Do you want to save this job post and proceed?', ['Cancel', 'Save & Next']);
+      // MODIFIED: Show different message when editing
+      const message = this.isEditMode
+        ? 'Do you want to save the changes to this job post and proceed?'
+        : 'Do you want to save this job post and proceed?';
+      this.openAlert(message, ['Cancel', 'Save & Next']);
   }
 }

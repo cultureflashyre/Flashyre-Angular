@@ -1,3 +1,5 @@
+// src/app/pages/admin-create-job-step2/admin-create-job-step2.component.ts
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -19,26 +21,25 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   userProfile: any = {};
   jobUniqueId: string | null = null;
   isGenerating: boolean = false;
-  hasGenerated: boolean = false;
+  hasGenerated: boolean = false; // This flag tracks if MCQs exist for the current job.
   isLoading: boolean = true;
   private subscriptions = new Subscription();
+  
+  // --- UI State Properties ---
   showPopup: boolean = false;
   popupMessage: string = '';
   popupType: 'success' | 'error' = 'success';
-  rawp46g: string = ' ';
-  rawliiy: string = ' ';
 
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
   private actionContext: { action: string } | null = null;
 
-  // File Upload variables
+  // --- File Upload Properties ---
   showUploadPopup = false;
   uploadedFileName: string | null = null;
   selectedExcelFile: File | null = null;
   isUploading = false;
-  uploadedExcelFileUrl: string | null = null;
 
   constructor(
     private title: Title,
@@ -52,17 +53,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.title.setTitle('Admin Step 2: Generate Assessment - Flashyre');
+    this.title.setTitle('Admin Step 2: Assessment Setup - Flashyre');
     this.meta.addTags([
-      {
-        property: 'og:title',
-        content: 'Admin Step 2: Generate Assessment - Flashyre',
-      },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
-      },
+      { property: 'og:title', content: 'Admin Step 2: Assessment Setup - Flashyre' },
     ]);
 
     if (!this.corporateAuthService.isLoggedIn()) {
@@ -71,19 +64,213 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       return;
     }
 
+    // This is the key for both "create" and "edit" modes.
+    // In "edit" mode, the workflow service must be pre-populated with the job's ID.
     this.jobUniqueId = this.workflowService.getCurrentJobId();
 
-    if (!this.jobUniqueId || this.jobUniqueId === 'undefined') {
+    if (!this.jobUniqueId) {
       this.showErrorPopup('No active job post found. Redirecting to Step 1.');
-      setTimeout(() => {
-        this.router.navigate(['/admin-create-job-step1']);
-      }, 1000);
+      this.router.navigate(['/admin-create-job-step1']);
       return;
     }
 
+    // This method enables the "edit" functionality by checking the job's current state.
     this.checkInitialMcqStatus();
+    this.loadUserProfile();
   }
 
+  /**
+   * Checks if MCQs already exist for the current job when the page loads.
+   * This pre-fills the UI state for the edit mode.
+   */
+  private checkInitialMcqStatus(): void {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!this.jobUniqueId || !token) {
+        this.isLoading = false;
+        return;
+    }
+
+    this.isLoading = true;
+    const sub = this.jobDescriptionService.checkMcqStatus(this.jobUniqueId, token)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          // CORRECTED LOGIC:
+          // We check the 'status' property from the response. If it's anything
+          // other than 'not_started', it means questions exist.
+          this.hasGenerated = response.status !== 'not_started';
+        },
+        error: (err) => {
+          this.hasGenerated = false; // Default to 'not generated' on error
+          console.error('Failed to check MCQ status:', err);
+          this.showErrorPopup('Could not verify existing assessment questions.');
+        }
+      });
+    this.subscriptions.add(sub);
+  }
+
+  /**
+   * Handles the 'Generate with AI' / 'Regenerate' button click.
+   * This logic works for both initial generation and regeneration in edit mode.
+   */
+  onGenerateAi(): void {
+    if (!this.jobUniqueId || this.isGenerating) return;
+
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication error. Please log in again.');
+      return;
+    }
+
+    this.isGenerating = true;
+    this.spinner.show('ai-spinner');
+
+    this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
+      .pipe(finalize(() => {
+        this.isGenerating = false;
+        this.spinner.hide('ai-spinner');
+      }))
+      .subscribe({
+        next: (response) => {
+          this.hasGenerated = true; // Update state after successful generation
+          this.selectedExcelFile = null; // Clear any selected file to avoid conflicts
+          this.uploadedFileName = null;
+          this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
+        },
+        error: (err) => {
+          this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
+        }
+      });
+  }
+  
+  // --- File Upload Logic ---
+  openUploadPopup() { this.showUploadPopup = true; }
+  closeUploadPopup() { this.showUploadPopup = false; }
+
+  downloadTemplate() {
+    const templateUrl = environment.mcq_upload_template;
+    const link = document.createElement('a');
+    link.href = templateUrl;
+    link.download = 'flashyre_mcq_questions_template.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (!file.name.match(/\.(xlsx|xls)$/)) {
+        this.showErrorPopup('Invalid file type. Please upload an Excel file (.xlsx, .xls).');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        this.showErrorPopup('File size exceeds 5MB limit.');
+        return;
+      }
+      this.selectedExcelFile = file;
+      this.uploadedFileName = file.name;
+      this.hasGenerated = true; // Enable 'Next' as soon as a file is selected
+      this.closeUploadPopup();
+    }
+  }
+
+  // --- Footer Navigation and Action Handling ---
+  onPrevious(): void {
+    // Navigate back to step 1, preserving the job ID for edit context.
+    this.router.navigate(['/admin-create-job-step1', this.jobUniqueId]);
+  }
+
+  onNext(): void {
+    if (!this.hasGenerated) {
+      this.showErrorPopup('Please generate or upload questions before proceeding.');
+      return;
+    }
+    
+    // If a file was selected, upload it. Otherwise, proceed directly.
+    if (this.selectedExcelFile) {
+      this.isUploading = true;
+      this.spinner.show('ai-spinner', { template: `<p style='color: white; font-size: 18px;'>Processing your file...</p>` });
+      const token = this.corporateAuthService.getJWTToken();
+
+      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token)
+        .pipe(finalize(() => {
+          this.isUploading = false;
+          this.spinner.hide('ai-spinner');
+        }))
+        .subscribe({
+          next: () => {
+            this.showSuccessPopup('File uploaded and questions processed!');
+            this.router.navigate(['/admin-create-job-step3']);
+          },
+          error: (error) => {
+            this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
+          }
+        });
+
+    } else {
+      // Path for AI-generated questions or when re-confirming an existing state.
+      this.router.navigate(['/admin-create-job-step3']);
+    }
+  }
+  
+  onSkip() {
+    this.openAlert('Are you sure you want to skip adding an assessment?', ['Cancel', 'Skip']);
+  }
+
+  onCancel() {
+    this.openAlert('Are you sure you want to cancel? Your changes will not be saved.', ['No', 'Yes, Cancel']);
+  }
+  
+  onSaveDraft() {
+    this.openAlert('Do you want to save your progress and exit?', ['Cancel', 'Save & Exit']);
+  }
+
+  // --- Alert Handling ---
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    switch (action.toLowerCase()) {
+      case 'skip':
+        this.onSkipConfirmed();
+        break;
+      case 'yes, cancel':
+        this.onCancelConfirmed();
+        break;
+      case 'save & exit':
+        this.onSaveDraftConfirmed();
+        break;
+    }
+  }
+
+  // --- Confirmed Action Handlers ---
+  private onSkipConfirmed(): void {
+    // In an edit flow, skipping might imply deleting existing questions.
+    // For now, we navigate to the next step as requested.
+    this.router.navigate(['/admin-create-job-step3']);
+  }
+
+  private onCancelConfirmed(): void {
+    // In an edit flow, "cancel" should discard changes and navigate back to the job list.
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Job post editing cancelled.');
+    setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
+  }
+  
+  private onSaveDraftConfirmed(): void {
+    // "Save Draft" means exiting the flow but keeping all data as is.
+    this.workflowService.clearWorkflow();
+    this.showSuccessPopup('Your draft has been saved.');
+    setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
+  }
+
+  // --- Utility and Lifecycle Methods ---
   showSuccessPopup(message: string) {
     this.popupMessage = message;
     this.popupType = 'success';
@@ -103,243 +290,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.popupMessage = '';
   }
 
-  /**
-   * CORRECTED: This method now correctly checks the new status object.
-   */
-  private checkInitialMcqStatus(): void {
-    if (!this.jobUniqueId || this.jobUniqueId === 'undefined') {
-      this.hasGenerated = false;
-      this.isLoading = false;
-      return;
-    }
-
-    const token = this.corporateAuthService.getJWTToken();
-    if (!this.jobUniqueId || !token) {
-        this.isLoading = false;
-        return;
-    }
-
-    this.isLoading = true;
-    const sub = this.jobDescriptionService.checkMcqStatus(this.jobUniqueId, token)
-      .pipe(finalize(() => this.isLoading = false))
-      .subscribe({
-        next: (response) => {
-          // Check if the process has started or is completed.
-          this.hasGenerated = response.status !== 'not_started';
-        },
-        error: (err) => {
-          this.hasGenerated = false;
-          console.error('Failed to check MCQ status:', err);
-          this.showErrorPopup('Could not verify existing assessment questions.');
-        }
-      });
-    this.subscriptions.add(sub);
-  }
-
-  onGenerateAi(): void {
-    if (!this.jobUniqueId || this.jobUniqueId === 'undefined') {
-      this.showErrorPopup('Invalid job ID. Please return to Step 1.');
-      return;
-    }
-    if (this.isGenerating) return;
-
-    const token = this.corporateAuthService.getJWTToken();
-    if (!token) {
-      this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-corporate']);
-      return;
-    }
-
-    this.isGenerating = true;
-    this.spinner.show('ai-spinner');
-
-    const generateSub = this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
-      .pipe(
-        finalize(() => {
-          this.isGenerating = false;
-          this.spinner.hide('ai-spinner');
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          this.hasGenerated = true; 
-          this.showSuccessPopup('MCQ generation has started! You can proceed to the next step.');
-        },
-        error: (err) => {
-          this.hasGenerated = false;
-          this.showErrorPopup(`Error: ${err.message || 'Could not start question generation.'}`);
-        }
-      });
-    this.subscriptions.add(generateSub);
-  }
-  
-  onUploadManually(): void {
-    this.showSuccessPopup('Manual upload is not yet implemented. You can now proceed.');
-    this.hasGenerated = true;
-  }
-
-  openUploadPopup() {
-    this.showUploadPopup = true;
-  }
-
-  closeUploadPopup() {
-    this.showUploadPopup = false;
-  }
-
-  downloadTemplate() {
-    const templateUrl = environment.mcq_upload_template;
-    const link = document.createElement('a');
-    link.href = templateUrl;
-    link.download = 'mcq_question_upload_template_flashyre_mcq_questions_template.xlsx';
-    link.click();
-  }
-
-  onFileSelected(event: Event) {
-    this.hasGenerated = true;
-
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.uploadedFileName = file.name;
-      this.selectedExcelFile = input.files[0];
-    }
-  }
-
-  onCancel(): void {
-    this.actionContext = { action: 'cancel' };
-    this.openAlert('Are you sure you want to cancel? This will delete the job post draft.', ['No', 'Yes, Cancel']);
-  }
-
-  onPrevious(): void {
-    this.actionContext = { action: 'previous' };
-    this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
-  }
-
-  onSkip(): void {
-    this.actionContext = { action: 'skip' };
-    this.openAlert('Are you sure you want to skip adding an assessment?', ['Cancel', 'Skip']);
-  }
-
-  onSaveDraft(): void {
-    this.actionContext = { action: 'saveDraft' };
-    this.openAlert('Do you want to save this as a draft and exit?', ['Cancel', 'Save Draft']);
-  }
-
-  onNext(): void {
-    if (!this.hasGenerated) {
-      this.showErrorPopup('Please generate or upload questions before proceeding.');
-      return;
-    }
-    this.actionContext = { action: 'next' };
-    this.openAlert('Proceed to the next step?', ['Cancel', 'Next']);
-  }
-
-  onCancelConfirmed(): void {
-    this.workflowService.clearWorkflow();
-    this.showSuccessPopup('Job post creation cancelled.');
-    setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
-    }, 3000);
-  }
-
-  onPreviousConfirmed(): void {
-    this.router.navigate(['/admin-create-job-step1']);
-  }
-
-  onSkipConfirmed(): void {
-    this.router.navigate(['/admin-create-job-step3']);
-  }
-
-  onSaveDraftConfirmed(): void {
-    this.workflowService.clearWorkflow();
-    this.showSuccessPopup('Your draft has been saved.');
-    setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
-    }, 3000);
-  }
-
-  onNextConfirmed(): void {
-    if (this.selectedExcelFile) {
-      this.isUploading = true;
-      // Show spinner with a specific message for file processing
-      this.spinner.show('ai-spinner', {
-        bdColor: "rgba(0, 0, 0, 0.8)",
-        size: "medium",
-        color: "#fff",
-        type: "ball-scale-multiple",
-        template: "<p style='color: white; font-size: 18px;'>Processing your file...</p>"
-      });
-      
-      const token = this.authService.getJWTToken();
-
-      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token)
-        .pipe(
-          finalize(() => {
-            // This ensures spinner is hidden and flags are reset, even on error
-            this.isUploading = false;
-            this.spinner.hide('ai-spinner');
-          })
-        )
-        .subscribe({
-          next: (response) => {
-            this.hasGenerated = true; // Mark as generated
-            
-            // Store the complete MCQ data in the workflow service.
-            if (response.uploaded_mcqs) {
-              console.log("Storing uploaded MCQs in workflow service:", response.uploaded_mcqs);
-              this.workflowService.setUploadedMcqs(response.uploaded_mcqs);
-            } else {
-              console.warn("Upload successful, but no MCQ data was returned from the backend.");
-            }
-            
-            // Navigate AFTER data has been received and stored.
-            this.router.navigate(['/admin-create-job-step3']);
-          },
-          error: (error) => {
-            this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
-          }
-        });
-
-    } else if (this.jobUniqueId && this.hasGenerated) {
-      // Handle navigation for AI-generated questions
-      this.router.navigate(['/admin-create-job-step3']);
-    } else {
-      this.showErrorPopup('Please generate or upload questions before proceeding.');
-    }
-  }
-
-  
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) this.userProfile = JSON.parse(profileData);
   }
 
-  private openAlert(message: string, buttons: string[]) {
-    this.alertMessage = message;
-    this.alertButtons = buttons;
-    this.showAlert = true;
-  }
-
-  onAlertButtonClicked(action: string) {
-    this.showAlert = false;
-    if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
-      this.actionContext = null;
-      return;
-    }
-    
-    if (this.actionContext) {
-      switch (this.actionContext.action) {
-        case 'cancel': this.onCancelConfirmed(); break;
-        case 'previous': this.onPreviousConfirmed(); break;
-        case 'skip': this.onSkipConfirmed(); break;
-        case 'saveDraft': this.onSaveDraftConfirmed(); break;
-        case 'next': this.onNextConfirmed(); break;
-      }
-      this.actionContext = null;
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -576,7 +576,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * NEW: Asynchronously generates MCQs for all pending skills, one by one.
    * Updates the UI in real-time as each skill's questions are fetched.
    */
-    private async generateRemainingSkillsSequentially(): Promise<void> {
+  private async generateRemainingSkillsSequentially(): Promise<void> {
     if (this.isGeneratingSequentially) {
       console.log("Sequential generation is already in progress. Skipping.");
       return;
