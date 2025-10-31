@@ -308,8 +308,8 @@
             </div>        <!-- === END OF NEW BUTTON === -->
 
               <!-- Dynamic looping through skill sections -->
-              <div *ngIf="activeTab === 'ai-generated'" class="admin-create-job-step3-container18">
-  <div class="skill-scroll-track">
+              <div #skillViewport *ngIf="activeTab === 'ai-generated'" class="admin-create-job-step3-container18">
+  <div #skillTrack class="skill-scroll-track">
     <div *ngFor="let section of skillSections; let i = index" 
          class="admin-create-job-step3-language-tab" 
          [ngClass]="{'active-section': i === activeSectionIndex}" 
@@ -330,8 +330,8 @@
   </div>
 </div>
 
-              <div *ngIf="activeTab === 'uploaded'" class="admin-create-job-step3-container18">
-                <div class="skill-scroll-track">
+              <div #skillViewport *ngIf="activeTab === 'uploaded'" class="admin-create-job-step3-container18">
+  <div #skillTrack class="skill-scroll-track">
                   <div class="admin-create-job-step3-language-tab" 
                       *ngFor="let section of uploadedSkillSections; let i = index" 
                       [ngClass]="{'active-section': i === activeUploadedSectionIndex}" 
@@ -393,9 +393,47 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="activeSection.questions.length === 0" class="no-questions-message">
+                <div *ngIf="activeSection.generationStatus === 'loading'" class="status-container">
+    <div class="tab-spinner large-spinner"></div>
+    <p class="status-text">Generating questions for {{ activeSection.skillName }}...</p>
+  </div>
+
+  <!-- 2. FAILED STATE -->
+  <div *ngIf="activeSection.generationStatus === 'failed'" class="status-container">
+    <div class="status-icon error-icon">!</div>
+    <p class="status-text error-text">
+      Failed to generate questions for {{ activeSection.skillName }}.<br>
+      You can try again using the "✨ Add Question with AI" button.
+    </p>
+  </div>
+
+  <!-- 3. COMPLETED STATE (Contains the existing question list) -->
+  <ng-container *ngIf="activeSection.generationStatus === 'completed'">
+    <div id="select-all-container" class="admin-create-job-step3-select-all-container">
+      <div id="check-box-container" class="admin-create-job-step3-check-box-container">
+        <input type="checkbox" id="select-all-checkbox" class="admin-create-job-step3-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
+      </div>
+      <label for="select-all-checkbox" id="select-all-text" class="admin-create-job-step3-select-all-text">Select all ({{ activeSection.questions.length }})</label>
+    </div>
+    
+    <div id="questions-main-container" class="admin-create-job-step3-questions-main-container2">
+      <!-- Looping through each question in the active section -->
+      <div *ngFor="let question of activeSection.questions; let i = index" id="questions-container" class="admin-create-job-step3-questions-container">
+        <!-- ... (The entire *ngFor loop with question details remains exactly the same) ... -->
+      </div>
+      
+      <!-- MODIFIED: This message now only shows if generation is complete AND there are zero questions -->
+      <div *ngIf="activeSection.questions.length === 0" class="no-questions-message">
+        No questions were generated for this skill. You can try adding more.
+      </div>
+    </div>
+
+    <div *ngIf="activeSection.questions.length === 0" class="no-questions-message">
                     No questions found for this skill.
                 </div>
+  </ng-container>
+
+                
               </div>
             </ng-container>
 
