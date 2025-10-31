@@ -5,16 +5,17 @@
 }
 
 .add-skill-button {
-  background-color: #f0eefc; /* A lighter purple */
-  border-color: #c4b5fd;
+  background-color: #41327b; /* Dark purple primary color */
+  border-color: #41327b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .add-skill-button:hover:not(.disabled) {
-  background-color: #ede9fe;
+  background-color: #352866; /* Even darker shade for hover */
 }
 .plus-icon {
-  width: 20px; /* Slightly larger for better visual balance */
+  width: 20px;
   height: 20px;
-  color: #41327b;
+  color: #ffffff; /* White icon color for contrast */
 }
 
 /* === NEW: Popup Modal Styles === */

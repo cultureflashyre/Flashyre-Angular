@@ -242,9 +242,15 @@
             <span id="selected-text" class="admin-create-job-step3-selected-text">(Selected {{ totalSelectedCount }} / {{ totalQuestionCount }})</span>
           </div>
           <div class="admin-create-job-step3-container17">
-            <button id="add-questions-with-ai-button" type="button" class="admin-create-job-step3-add-questions-with-ai-button button" (click)="addMoreAiQuestions()" [disabled]="isSubmitting">
-              <span id="add-questions-with-ai-text" class="admin-create-job-step3-add-questions-with-ai-text">✨ {{ isSubmitting ? 'Generating...' : 'Add Question with AI' }}</span>
-            </button>
+            <button 
+            *ngIf="activeTab === 'ai-generated'"
+            id="add-questions-with-ai-button" 
+            type="button" 
+            class="admin-create-job-step3-add-questions-with-ai-button button" 
+            (click)="addMoreAiQuestions()" 
+            [disabled]="isSubmitting">
+            <span id="add-questions-with-ai-text" class="admin-create-job-step3-add-questions-with-ai-text">✨ {{ isSubmitting ? 'Generating...' : 'Add Question with AI' }}</span>
+          </button>
             <!-- Upload button is re-added visually but disabled as functionality is not needed yet 
             <div id="upload-file-button-container" class="admin-create-job-step3-upload-file-button-container" >
               <svg id="upload-icon" viewBox="0 0 48 48" class="admin-create-job-step3-upload-icon"><path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -292,10 +298,14 @@
                 <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
               </div>
               <!-- === NEW: ADD SKILL BUTTON (+) === -->
-        <div id="add-skill-button" class="arrow-container add-skill-button" title="Add a new skill" (click)="openAddSkillPopup()">
-          <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
-        </div>
-        <!-- === END OF NEW BUTTON === -->
+        <div 
+              *ngIf="activeTab === 'ai-generated'"
+              id="add-skill-button" 
+              class="arrow-container add-skill-button" 
+              title="Add a new skill" 
+              (click)="openAddSkillPopup()">
+              <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
+            </div>        <!-- === END OF NEW BUTTON === -->
 
               <!-- Dynamic looping through skill sections -->
               <div *ngIf="activeTab === 'ai-generated'" class="admin-create-job-step3-container18">
