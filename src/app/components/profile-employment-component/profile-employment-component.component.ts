@@ -30,6 +30,7 @@ export class ProfileEmploymentComponent {
       startDate: '',
       endDate: '',
       jobDetails: '',
+       errors: {},
     },
   ];
 
@@ -56,6 +57,7 @@ private loadPositionsFromUserProfile(): void {
           startDate: emp.start_date || '',
           endDate: emp.end_date || '',
           jobDetails: emp.job_details || '',
+          errors: {},
         }));
       }
     } catch (error) {
@@ -73,6 +75,7 @@ private loadPositionsFromUserProfile(): void {
       startDate: '',
       endDate: '',
       jobDetails: '',
+      errors: {}, 
     });
     // Force change detection and scroll to bottom after DOM update
     this.cdr.detectChanges();
@@ -154,24 +157,76 @@ private loadPositionsFromUserProfile(): void {
     return false;
   }
 
-  saveEmployment(): Promise<boolean> {
-    return new Promise((resolve) => {
-      const positions = this.getPositions();
-      this.employmentService.saveEmployment(positions).subscribe(
-        (response) => {
-          console.log('Employment saved successfully:', response);
-          this.resetForm(); // Reset form after saving
-          // Do NOT navigate here; let parent handle navigation
-          resolve(true);
-        },
-        (error) => {
-          console.error('Error saving employment:', error);
-          alert('Error saving employment: ' + (error.error?.detail || 'Fill all required fields'));
-          resolve(false);
-        }
-      );
-    });
+  public validatePositions(): boolean {
+  // If the entire form section is empty, it's valid for skipping.
+  if (this.isFormEmpty()) {
+    return true;
   }
+
+  let isOverallValid = true;
+
+  for (const position of this.positions) {
+    // Reset previous errors for this position
+    position.errors = {};
+
+    // If the position is partially filled, all mandatory fields are required
+    const isPartiallyFilled = position.jobTitle || position.companyName || position.startDate || position.endDate || position.jobDetails;
+
+    if (isPartiallyFilled) {
+      if (!position.jobTitle) {
+        position.errors.jobTitle = 'Job Title is mandatory';
+        isOverallValid = false;
+      }
+      if (!position.companyName) {
+        position.errors.companyName = 'Company Name is mandatory';
+        isOverallValid = false;
+      }
+      if (!position.startDate) {
+        position.errors.startDate = 'Start Date is mandatory';
+        isOverallValid = false;
+      }
+      if (!position.jobDetails) {
+        position.errors.jobDetails = 'Job Details are mandatory';
+        isOverallValid = false;
+      }
+    }
+  }
+
+  return isOverallValid;
+}
+
+saveEmployment(): Promise<boolean> {
+  return new Promise((resolve) => {
+    // First, run validation.
+    if (!this.validatePositions()) {
+      // If validation fails, resolve as false and stop.
+      // The error messages will now be displayed in the UI.
+      console.log('Validation failed. User must fill all required fields.');
+      resolve(false);
+      return;
+    }
+
+    // If the form is valid but completely empty, treat as a successful skip.
+    if (this.isFormEmpty()) {
+      resolve(true);
+      return;
+    }
+
+    const positions = this.getPositions();
+    this.employmentService.saveEmployment(positions).subscribe(
+      (response) => {
+        console.log('Employment saved successfully:', response);
+        this.resetForm();
+        resolve(true);
+      },
+      (error) => {
+        console.error('Error saving employment:', error);
+        alert('Error saving employment: ' + (error.error?.detail || 'Fill all required fields'));
+        resolve(false);
+      }
+    );
+  });
+}
   
 
   goToPrevious() {

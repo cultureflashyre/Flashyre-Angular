@@ -53,7 +53,8 @@
             pattern=".*[a-zA-Z]+.*"
             required
           />
-          <div *ngIf="jobTitleModel.invalid && (jobTitleModel.dirty || jobTitleModel.touched)" class="error-message">
+<div *ngIf="position.errors?.jobTitle" class="error-message">
+  {{ position.errors.jobTitle }}
             <div *ngIf="jobTitleModel.errors?.['pattern']">Job title must include letters.</div>
           </div>
         </div>
@@ -79,7 +80,8 @@
             pattern=".*[a-zA-Z]+.*"
             required
           />
-          <div *ngIf="companyNameModel.invalid && (companyNameModel.dirty || companyNameModel.touched)" class="error-message">
+<div *ngIf="position.errors?.companyName" class="error-message">
+  {{ position.errors.companyName }}
             <div *ngIf="companyNameModel.errors?.['pattern']">Company name must include letters.</div>
           </div>
         </div>
@@ -118,6 +120,9 @@
             [max]="getTodayDate()"
             required
           />
+          <div *ngIf="position.errors?.startDate" class="error-message">
+  {{ position.errors.startDate }}
+</div>
         </div>
         <div
           id="candidate-job-end-date-container"
@@ -172,7 +177,8 @@
         required
         rows="4"
       ></textarea>
-      <div *ngIf="jobDetailsModel.invalid && (jobDetailsModel.dirty || jobDetailsModel.touched)" class="error-message">
+<div *ngIf="position.errors?.jobDetails" class="error-message">
+  {{ position.errors.jobDetails }}
         <div *ngIf="jobDetailsModel.errors?.['pattern']">Job details must include letters.</div>
       </div>
       </div>

@@ -55,6 +55,8 @@
     style="display: none;"
   />
 </div>
+    <span *ngIf="profilePictureError" class="error-message">{{ profilePictureError }}</span>
+
       </div>
       <div
         id="candidate-details-container"
@@ -111,6 +113,8 @@
               style="display: none;"
             />
           </div>
+                <span *ngIf="resumeError" class="error-message">{{ resumeError }}</span>
+
         </div>
         <div
           id="first-last-name-container"

@@ -11,6 +11,14 @@
   align-items: flex-start;
   flex-direction: column;
 }
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+  width: 100%; /* Ensure it takes full width of its container */
+}
  
 .profile-certifications-component-profile-certification-container {
   gap: 24px;
@@ -59,7 +67,8 @@
 .profile-certifications-component-certificate-name-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -127,7 +136,8 @@
 .profile-certifications-component-certificate-issuing-institute-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -206,7 +216,8 @@
   flex: 0 0 auto;
   width: 324px;
   gap: 24px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -276,7 +287,8 @@
 .profile-certifications-component-renewal-date-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -345,7 +357,8 @@
 .profile-certifications-component-credentials-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

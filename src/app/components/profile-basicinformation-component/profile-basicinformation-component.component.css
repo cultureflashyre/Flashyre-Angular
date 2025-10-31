@@ -2,6 +2,13 @@
   display: contents;
 }
 
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
 .profile-basicinformation-component-container {
   gap: 24px;
   width: 728px;

@@ -128,7 +128,7 @@
 .profile-employment-component-start-date-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

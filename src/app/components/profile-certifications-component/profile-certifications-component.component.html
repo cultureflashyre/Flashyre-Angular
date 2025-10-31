@@ -80,8 +80,9 @@
                   placeholder="Enter certificate name"
                 />
               </div>
-              <div *ngIf="cert.get('certificate_name')?.invalid && cert.get('certificate_name')?.touched" class="error-message">
-                <div *ngIf="cert.get('certificate_name')?.hasError('pattern')">Certificate name must include letters.</div>
+ <div *ngIf="cert.get('certificate_name')?.invalid && cert.get('certificate_name')?.touched" class="error-message">
+        Certificate name is mandatory.      
+                  <div *ngIf="cert.get('certificate_name')?.hasError('pattern')">Certificate name must include letters.</div>
               </div>
             </div>
           </div>
@@ -125,8 +126,9 @@
                   placeholder="Enter issuing institute"
                 />
               </div>
-              <div *ngIf="cert.get('issuing_institute')?.invalid && cert.get('issuing_institute')?.touched" class="error-message">
-                <div *ngIf="cert.get('issuing_institute')?.hasError('pattern')">Issuing institute must include letters.</div>
+<div *ngIf="cert.get('issuing_institute')?.invalid && cert.get('issuing_institute')?.touched" class="error-message">
+        Issuing institute is mandatory.
+                        <div *ngIf="cert.get('issuing_institute')?.hasError('pattern')">Issuing institute must include letters.</div>
               </div>
             </div>
           </div>
@@ -179,6 +181,9 @@
                     class="profile-certifications-component-form3 input"
                   />
                 </div>
+           <div *ngIf="cert.get('issued_date')?.invalid && cert.get('issued_date')?.touched" class="error-message">
+        Issued date is mandatory.
+    </div>     
               </div>
             </div>
 
@@ -265,8 +270,9 @@
               placeholder="Enter credentials"
             />
           </div>
-          <div *ngIf="cert.get('credentials')?.invalid && cert.get('credentials')?.touched" class="error-message">
-            <div *ngIf="cert.get('credentials')?.hasError('pattern')">Credentials must include letters.</div>
+ <div *ngIf="cert.get('credentials')?.invalid && cert.get('credentials')?.touched" class="error-message">
+        Credentials are mandatory.
+                    <div *ngIf="cert.get('credentials')?.hasError('pattern')">Credentials must include letters.</div>
           </div>
         </div>
 
