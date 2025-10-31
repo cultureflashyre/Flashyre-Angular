@@ -114,40 +114,67 @@ export class ProfileCertificationsComponent implements OnInit {
     // If there is more than one form, it's not empty.
     return false;
   }
+
+  public validateForms(): boolean {
+  // If the entire section is empty (untouched), it's valid for skipping.
+  if (this.isFormEmpty()) {
+    return true;
+  }
+
+  let isOverallValid = true;
+
+  // Loop through each certification form group
+  this.certifications.controls.forEach(control => {
+    const form = control as FormGroup;
+    // Only validate forms that the user has interacted with (are not pristine).
+    if (!form.pristine) {
+      if (form.invalid) {
+        // If a form is touched but invalid, mark all its fields to show errors.
+        form.markAllAsTouched();
+        isOverallValid = false;
+      }
+    }
+  });
+
+  return isOverallValid;
+}
   
   updateRenewalDateMin(index: number) {
       // This logic remains the same
   }
 
-  saveCertifications(): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.certificationForm.markAllAsTouched(); // Trigger validation messages on all fields
+saveCertifications(): Promise<boolean> {
+  return new Promise((resolve) => {
+    // First, run our custom validation.
+    if (!this.validateForms()) {
+      alert('Please fill out all required certification fields correctly.');
+      resolve(false);
+      return; // Stop execution if validation fails.
+    }
 
-      if (this.certificationForm.valid) {
-        // The payload is now the entire array of certification values
-        const payload = this.certificationForm.value.certifications.map((cert: any) => ({
-            ...cert,
-            renewal_date: cert.renewal_date || null // Ensure empty renewal date is sent as null
-        }));
+    // If the form is valid but completely empty, treat it as a successful skip.
+    if (this.isFormEmpty()) {
+      resolve(true);
+      return;
+    }
 
-        this.certificationService.saveCertifications(payload).subscribe({
-          next: () => {
-            console.log('All certifications saved successfully');
-            // We don't need to reset the form here, the parent component handles navigation.
-            // The latest data will be loaded from localStorage on next init.
-            resolve(true);
-          },
-          error: (error) => {
-            console.error('Error saving certifications:', error);
-            alert('Error saving certifications: ' + (error.message || 'Unknown error'));
-            resolve(false);
-          }
-        });
-      } else {
-        console.log('Certification form is invalid');
-        alert('Please fill out all required certification fields correctly.');
+    // If validation passes, proceed with saving.
+    const payload = this.certificationForm.value.certifications.map((cert: any) => ({
+        ...cert,
+        renewal_date: cert.renewal_date || null
+    }));
+
+    this.certificationService.saveCertifications(payload).subscribe({
+      next: () => {
+        console.log('All certifications saved successfully');
+        resolve(true);
+      },
+      error: (error) => {
+        console.error('Error saving certifications:', error);
+        alert('Error saving certifications: ' + (error.message || 'Unknown error'));
         resolve(false);
       }
     });
-  }
+  });
+}
 }

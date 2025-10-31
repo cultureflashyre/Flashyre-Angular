@@ -34,6 +34,8 @@ export class ProfileBasicinformationComponent implements OnInit {
   // --- MODIFICATION START ---
   // This will hold the name of the *existing* resume from the backend.
   resumeFileName: string = ''; 
+  resumeError: string = '';
+profilePictureError: string = '';
   // --- MODIFICATION END ---
 
   imageSrc: string = '';
@@ -128,6 +130,20 @@ export class ProfileBasicinformationComponent implements OnInit {
     );
   }
 
+  public validateInputs(): boolean {
+  let isValid = true;
+  this.profilePictureError = '';
+  this.resumeError = '';
+
+  // Check if there is neither a newly selected resume nor an existing one.
+  if (!this.resume && !this.resumeFileName) {
+    this.resumeError = 'Resume field is mandatory';
+    isValid = false;
+  }
+
+  return isValid;
+}
+
   triggerProfilePictureUpload() {
     this.profilePictureInput.nativeElement.click();
   }
@@ -143,7 +159,10 @@ onProfilePictureSelected(event: any) {
   }
 
   if (this.validateProfilePicture(file)) {
+        this.profilePictureError = ''; // Clear error on valid selection
+
     this.profilePicture = file; // This sets the file that will be saved
+    
 
     // --- START: New and More Reliable FileReader Logic ---
 
@@ -181,6 +200,7 @@ onProfilePictureSelected(event: any) {
   onResumeSelected(event: any) {
     const file = event.target.files[0];
     if (file && this.validateResume(file)) {
+      this.resumeError = ''; 
       this.resume = file;
       // --- MODIFICATION START ---
       // When a new file is selected, clear the old file name to show the new one.

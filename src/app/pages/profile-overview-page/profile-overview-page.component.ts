@@ -215,52 +215,63 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   async onSaveAndNextConfirmed() {
     console.log('onSaveAndNext confirmed, currentStep:', this.currentStep);
     this.isSaving = true;
-    let success = false;
+    let wasSaveSuccessful = false;
 
-    if (this.currentStep < 6) {
-      const previousStep = this.currentStep;
-      this.currentStep++;
-      if (this.currentStep === 4) {
-        this.currentStep = 5; // Skip step 4
+    try {
+      // --- Step 1: Perform validation and save data based on the current step ---
+      switch (this.currentStep) {
+        case 1:
+          // First, validate. If it fails, exit immediately.
+          if (!this.profileComponent || !this.profileComponent.validateInputs()) {
+            this.isSaving = false;
+            return;
+          }
+          const result = await this.profileComponent.saveProfile();
+          wasSaveSuccessful = result.success;
+          if (result.success) {
+            this.showSuccessPopup("Successfully Saved");
+          } else {
+            this.showErrorPopup(result.message || 'Failed to save profile.');
+          }
+          break;
+        case 2:
+          wasSaveSuccessful = await this.employmentComponent.saveEmployment();
+          if (wasSaveSuccessful) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save employment details.');
+          break;
+        case 3:
+          wasSaveSuccessful = await this.educationComponent.saveEducation();
+          if (wasSaveSuccessful) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save education details.');
+          break;
+        case 5:
+          wasSaveSuccessful = await this.certificationComponent.saveCertifications();
+          if (wasSaveSuccessful) {
+            this.showSuccessPopup("Successfully Saved");
+          } else {
+            this.showErrorPopup("Failed to upload");
+          }
+          break;
       }
 
-      try {
-        switch (previousStep) {
-          case 1:
-            const result = await this.profileComponent.saveProfile();
-            success = result.success;
-            if (result.success) {
-                this.showSuccessPopup("Successfully Saved");
-            } else {
-              this.showErrorPopup(result.message || 'Failed to save profile.');
-            }
-            break;
-          case 2:
-            success = await this.employmentComponent.saveEmployment();
-            if (success) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save employment details.');
-            break;
-          case 3:
-            success = await this.educationComponent.saveEducation();
-            if (success) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save education details.');
-            break;
-          case 5:
-            success = await this.certificationComponent.saveCertifications();
-            if (success) {
-                this.showSuccessPopup("Successfully Saved");
-            } else {
-                this.showErrorPopup("Failed to upload");
-            }
-            setTimeout(() => {
-              if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
-              else this.router.navigate(['candidate-home']);
-            }, 3000);
-            break;
+      // --- Step 2: Navigate to the next step ONLY if the save was successful ---
+      if (wasSaveSuccessful) {
+        if (this.currentStep === 5) {
+          // Special case for the last step to navigate away
+          setTimeout(() => {
+            if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
+            else this.router.navigate(['candidate-home']);
+          }, 3000);
+        } else if (this.currentStep < 6) {
+          // For all other steps, advance to the next one
+          this.currentStep++;
+          if (this.currentStep === 4) {
+            this.currentStep = 5; // Skip step 4
+          }
         }
-      } catch (error) {
-        this.showErrorPopup('An unexpected error occurred.');
-      } finally {
-        this.isSaving = false;
       }
+    } catch (error) {
+      this.showErrorPopup('An unexpected error occurred.');
+    } finally {
+      this.isSaving = false;
     }
   }
 

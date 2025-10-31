@@ -38,25 +38,40 @@
                 </ng-container>
               </span>
               <div class="profile-education-dates-container">
-              <div class="profile-education-component-form1 input">
-                <input
-                  type="date"
-                  formControlName="startDate"
-                  class="profile-education-component-select"
-                  [max]="todayDate"
-                  required
-                />
-              </div>
-            <div class="profile-education-component-form2 input">
-              <input
-                type="date"
-                formControlName="endDate"
-                class="profile-education-component-select"
-                [min]="form.get('startDate')?.value"
-                required
-              />
+              <div class="date-input-wrapper">
+      <div class="profile-education-component-form1 input">
+        <input
+          type="date"
+          formControlName="startDate"
+          class="profile-education-component-select"
+          [max]="todayDate"
+          required
+        />
+      </div>
+      <div *ngIf="form.get('startDate')?.invalid && form.get('startDate')?.touched" class="error-message">
+        Start date is mandatory.
+      </div>
+    </div>
+  
+             <div class="date-input-wrapper">
+      <div class="profile-education-component-form2 input">
+        <input
+          type="date"
+          formControlName="endDate"
+          class="profile-education-component-select"
+          [min]="form.get('startDate')?.value"
+          required
+        />
+      </div>
+      <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="error-message">
+        End date is mandatory.
+      </div>
+    </div>
+   
             </div>
-            </div>
+           <div *ngIf="form.hasError('dateRangeInvalid') && form.get('endDate')?.touched" class="error-message" style="width: 100%; text-align: left; margin-left: 5px;">
+    End date cannot be before the start date.
+  </div>
             </div>
           </div>
 
@@ -77,7 +92,11 @@
                   <option value="" disabled selected>Select</option>
                   <option *ngFor="let uni of universities" [value]="uni.id">{{ uni.name }}</option>
                 </select>
+  
               </div>
+            <div *ngIf="form.get('university')?.invalid && form.get('university')?.touched" class="error-message">
+    University is mandatory.
+  </div>
             </div>
             <div id="education-input-container-{{i}}" class="profile-education-component-education-container">
               <span id="education-text-{{i}}" class="profile-education-component-education-text2">
@@ -94,8 +113,11 @@
                 <select formControlName="educationLevel" class="profile-education-component-select">
                   <option value="" disabled selected>Select</option>
                   <option *ngFor="let level of educationLevels" [value]="level.id">{{ level.name }}</option>
-                </select>
+                </select> 
               </div>
+                              <div *ngIf="form.get('educationLevel')?.invalid && form.get('educationLevel')?.touched" class="error-message">
+    Education level is mandatory.
+  </div>
             </div>
           </div>
 
@@ -117,6 +139,9 @@
                   <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
                 </select>
               </div>
+                            <div *ngIf="form.get('course')?.invalid && form.get('course')?.touched" class="error-message">
+    Course is mandatory.
+  </div>
             </div>
             <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">
               <span id="education-specialization-dropdown-{{i}}" class="profile-education-component-specialisation-text">
@@ -135,6 +160,9 @@
                   <option *ngFor="let spec of specializations" [value]="spec.id">{{ spec.name }}</option>
                 </select>
               </div>
+               <div *ngIf="form.get('specialization')?.invalid && form.get('specialization')?.touched" class="error-message">
+    Specialization is mandatory.
+  </div>
             </div>
           </div>
 

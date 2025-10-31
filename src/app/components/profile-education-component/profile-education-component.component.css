@@ -17,6 +17,19 @@
   position: auto;
 }
 
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block; /* Ensures it takes its own line */
+}
+
+.date-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
 .profile-education-component-profile-education-container {
   gap: 24px;
   flex: 0 0 auto;
@@ -37,10 +50,11 @@
 
 .profile-education-dates-container {
    width: 100%;
-   height: 48px;
+   min-height: 48px;
    gap: 24px;
    display: flex;
   flex-direction: row;
+  align-items: flex-start;
 }
 
 .profile-education-component-education-text1 {
@@ -59,7 +73,7 @@
   gap: 24px;
   flex: 0 0 auto;
   width: 672px;
-  height: 76px;
+  height: auto;
   display: flex;
   position: relative;
   align-items: center;
@@ -69,7 +83,7 @@
 .profile-education-component-duration-container2 {
   flex: 0 0 auto;
   width: 100%;
-  height: 76px;
+  height: auto;
   display: flex;
   position: relative;
   align-items: flex-start;
@@ -174,7 +188,7 @@
 .profile-education-component-university-institute-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -231,7 +245,7 @@
 .profile-education-component-education-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -297,7 +311,7 @@
 .profile-education-component-course-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -354,7 +368,7 @@
 .profile-education-component-specialisation-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

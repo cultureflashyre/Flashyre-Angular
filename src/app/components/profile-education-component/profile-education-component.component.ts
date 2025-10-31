@@ -142,6 +142,28 @@ export class ProfileEducationComponent implements OnInit {
     return false;
   }
 
+  public validateForms(): boolean {
+  // If the entire section is empty (untouched), it's valid for skipping.
+  if (this.isFormEmpty()) {
+    return true;
+  }
+
+  let isOverallValid = true;
+
+  for (const form of this.educationForms) {
+    // Only validate forms that the user has interacted with (are not pristine).
+    if (!form.pristine) {
+      if (form.invalid) {
+        // If a form is touched but invalid, mark all its fields to show errors.
+        form.markAllAsTouched();
+        isOverallValid = false;
+      }
+    }
+  }
+
+  return isOverallValid;
+}
+
   addNewForm(): void {
     this.educationForms.push(this.createEducationForm());
     setTimeout(() => {
@@ -158,49 +180,51 @@ export class ProfileEducationComponent implements OnInit {
     }
   }
 
-  saveEducation(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // Mark all fields as touched to trigger validation messages
-      this.educationForms.forEach(form => form.markAllAsTouched());
+saveEducation(): Promise<boolean> {
+  return new Promise((resolve) => {
+    // First, run our custom validation.
+    if (!this.validateForms()) {
+      this.errorMessage = 'Please fill out all required fields correctly.';
+      resolve(false);
+      return; // Stop execution if validation fails.
+    }
 
-      const invalidForms = this.educationForms.filter(form => form.invalid);
-      if (invalidForms.length > 0) {
-        this.errorMessage = 'Please fill out all required fields correctly.';
-        resolve(false);
-        return;
-      }
+    // If the form is valid but completely empty, treat it as a successful skip.
+    if (this.isFormEmpty()) {
+      resolve(true);
+      return;
+    }
 
-      // Map the form data to the payload expected by the backend
-      const payload = this.educationForms.map(form => {
-        const formValue = form.value;
-        return {
-          id: formValue.id, // Include the ID
-          select_start_date: formValue.startDate || null,
-          select_end_date: formValue.endDate || null,
-          university: this.universities.find(u => u.id === +formValue.university)?.name,
-          education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
-          course: this.courses.find(c => c.id === +formValue.course)?.name,
-          specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
-        };
-      });
-
-      console.log('Sending payload to backend:', payload);
-
-      // Call the service with the entire payload
-      this.educationService.saveEducation(payload).subscribe({
-        next: (response) => {
-          console.log('All educations saved successfully:', response);
-          this.errorMessage = null;
-          resolve(true);
-        },
-        error: (error) => {
-          console.error('Error saving educations:', error);
-          this.errorMessage = error.message || 'An unknown error occurred while saving.';
-          resolve(false);
-        }
-      });
+    // If validation passes, proceed with saving.
+    const payload = this.educationForms.map(form => {
+      const formValue = form.value;
+      return {
+        id: formValue.id,
+        select_start_date: formValue.startDate || null,
+        select_end_date: formValue.endDate || null,
+        university: this.universities.find(u => u.id === +formValue.university)?.name,
+        education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
+        course: this.courses.find(c => c.id === +formValue.course)?.name,
+        specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
+      };
     });
-  }
+
+    console.log('Sending payload to backend:', payload);
+
+    this.educationService.saveEducation(payload).subscribe({
+      next: (response) => {
+        console.log('All educations saved successfully:', response);
+        this.errorMessage = null;
+        resolve(true);
+      },
+      error: (error) => {
+        console.error('Error saving educations:', error);
+        this.errorMessage = error.message || 'An unknown error occurred while saving.';
+        resolve(false);
+      }
+    });
+  });
+}
 
   goToPrevious(): void {
     this.router.navigate(['/profile-employment-page']);
