@@ -477,6 +477,8 @@ body {
   color: #666666;      /* Changes text color for better readability */
   cursor: not-allowed;  /* Disables the cursor, showing a 'not-allowed' icon */
   opacity: 0.6;         /* Makes the button slightly transparent */
+  transition: none;
+  transform: none;
 }
  
 @media(max-width: 991px) {

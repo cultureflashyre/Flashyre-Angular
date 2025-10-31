@@ -1792,6 +1792,13 @@
   overflow: visible !important; /* Allow popup to extend beyond */
   z-index: 999; /* Keep as-is */
 }
+
+.candidate-home-text129:disabled {
+  background-color: #f0f0f0;  /* A light grey background to look inactive */
+  color: #a0a0a0;           /* A muted grey text color */
+  cursor: not-allowed;       /* Shows a "not-allowed" circle with a slash on hover */
+  border: 1px solid #d0d0d0; /* A matching grey border */
+}
  
 @media(max-width: 1200px) {
   .candidate-home-container1 {

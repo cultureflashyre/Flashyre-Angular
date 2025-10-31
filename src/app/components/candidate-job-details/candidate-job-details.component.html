@@ -1,3 +1,11 @@
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
 <div
   id="candidate-job-details"
   class="candidate-job-details-container1"

@@ -3,6 +3,8 @@ import { Title, Meta } from '@angular/platform-browser';
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 import { AuthService } from '../../services/candidate.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { JobsService } from '../../services/job.service'; // [ADDED] Import the JobsService
+
 
 interface UserProfile {
   first_name: string;
@@ -34,7 +36,9 @@ export class AssessmentTakenPage implements OnInit {
     private assessmentTakenService: AssessmentTakenService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private jobsService: JobsService // [ADDED] Inject the JobsService
+
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
@@ -44,6 +48,14 @@ export class AssessmentTakenPage implements OnInit {
   }
 
    ngOnInit() {
+
+    // [ADDED] This is the crucial fix.
+    // When this page loads, we know the user has just completed an assessment.
+    // We signal the JobsService to mark its job list cache as "dirty".
+    // The next time the user navigates to the candidate-home page, the service will be forced
+    // to fetch a fresh list from the server, reflecting the new assessment status.
+    this.jobsService.invalidateCache();
+
     this.loadUserProfile();
     
     this.route.queryParams.subscribe(params => {
