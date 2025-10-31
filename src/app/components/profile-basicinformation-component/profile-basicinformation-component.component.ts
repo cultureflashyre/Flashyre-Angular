@@ -135,12 +135,6 @@ profilePictureError: string = '';
   this.profilePictureError = '';
   this.resumeError = '';
 
-  // Check if there is neither a newly selected picture nor an existing one.
-  if (!this.profilePicture && !this.imageSrc) {
-    this.profilePictureError = 'upload profile picture';
-    isValid = false;
-  }
-
   // Check if there is neither a newly selected resume nor an existing one.
   if (!this.resume && !this.resumeFileName) {
     this.resumeError = 'Resume field is mandatory';
