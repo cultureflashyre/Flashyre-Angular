@@ -412,7 +412,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   onAddNewSkillSubmit(): void {
     if (this.isAddingNewSkill) return;
 
-    // 1. Parse and validate the input string
+    // ... (input validation logic is unchanged)
     const skillNames = this.newSkillName
       .split(',')
       .map(skill => skill.trim())
@@ -434,18 +434,19 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     }
     
     if (newValidSkills.length === 0) {
-        return; // All submitted skills were duplicates
+        return;
     }
+
+    // MODIFIED: Step 1 - Capture the current state BEFORE making changes.
+    const lastSkillIndexBeforeAdding = this.skillSections.length > 0 ? this.skillSections.length - 1 : 0;
+    const firstNewSkillIndex = this.skillSections.length;
 
     this.isAddingNewSkill = true;
 
-    // 2. PERSIST: Call the new service to register the entire queue on the backend first.
     this.subscriptions.add(
       this.jobService.registerSkillsForMcq(this.jobUniqueId, newValidSkills).subscribe({
         next: () => {
-          // 3. PROCESS: Only on success, update the UI and start the generation.
-          const firstNewSkillIndex = this.skillSections.length;
-
+          // Add new skills to the UI with a 'pending' status
           for (const skillName of newValidSkills) {
             const newSection: SkillSection = {
               skillName,
@@ -453,29 +454,30 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
               totalCount: 0,
               selectedCount: 0,
               isAllSelected: false,
-              // Add to UI with 'pending' status, which the generator will pick up.
               generationStatus: 'pending', 
             };
             this.skillSections.push(newSection);
           }
 
-          // Update the UI to show all new tabs (they will be in 'pending' state)
           this.showAddSkillPopup = false;
+
+          // Use setTimeout to ensure the DOM has updated with the new tabs
           setTimeout(() => {
+            // Recalculate carousel state with the new items
             this.calculateCarouselState();
-            // Scroll to the first of the newly added tabs
-            if (this.skillTrack?.nativeElement) {
-                const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
-                if (firstNewTabElement) {
-                    const newScrollPosition = firstNewTabElement.offsetLeft;
-                    this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
-                }
-            }
+
+            // MODIFIED: Step 2 - Restore the scroll position to the last known good state.
+            // This makes the last skill from the previous list the first visible item.
+            this.currentScrollIndex = lastSkillIndexBeforeAdding;
+            this.updateScrollPosition();
+            
+            // MODIFIED: Step 3 - Set the *active* tab to the first new skill,
+            // which provides a clear visual cue without moving the scrollbar again.
             this.activeSectionIndex = firstNewSkillIndex;
             this.cdr.detectChanges();
           }, 100);
 
-          // Kick off the sequential generator, which will find and process these 'pending' skills.
+          // Kick off the generation process
           this.generateRemainingSkillsSequentially();
           this.isAddingNewSkill = false;
         },
@@ -486,7 +488,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       })
     );
   }
-
 
   
 
