@@ -1,11 +1,10 @@
-// src/app/pages/admin-create-job-step2/admin-create-job-step2.component.ts
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+
 import { AdminJobDescriptionService } from '../../services/admin-job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
@@ -21,11 +20,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   userProfile: any = {};
   jobUniqueId: string | null = null;
   isGenerating: boolean = false;
-  hasGenerated: boolean = false; // This flag tracks if MCQs exist for the current job.
+  hasGenerated: boolean = false;
   isLoading: boolean = true;
+  isEditMode: boolean = false; // Explicitly track if we are in "edit" mode
+
   private subscriptions = new Subscription();
   
-  // --- UI State Properties ---
   showPopup: boolean = false;
   popupMessage: string = '';
   popupType: 'success' | 'error' = 'success';
@@ -33,9 +33,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
-  private actionContext: { action: string } | null = null;
 
-  // --- File Upload Properties ---
   showUploadPopup = false;
   uploadedFileName: string | null = null;
   selectedExcelFile: File | null = null;
@@ -45,6 +43,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     private title: Title,
     private meta: Meta,
     private router: Router,
+    private route: ActivatedRoute, // Inject ActivatedRoute to read URL parameters
     private jobDescriptionService: AdminJobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private workflowService: AdminJobCreationWorkflowService,
@@ -64,24 +63,35 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       return;
     }
 
-    // This is the key for both "create" and "edit" modes.
-    // In "edit" mode, the workflow service must be pre-populated with the job's ID.
-    this.jobUniqueId = this.workflowService.getCurrentJobId();
+    // --- EDITING LOGIC ---
+    // Determine if we are creating or editing by checking for a job ID from the
+    // route parameters and the workflow service.
+    const jobIdFromRoute = this.route.snapshot.paramMap.get('jobId');
+    const jobIdFromWorkflow = this.workflowService.getCurrentJobId();
 
-    if (!this.jobUniqueId) {
+    this.jobUniqueId = jobIdFromRoute || jobIdFromWorkflow;
+
+    if (this.jobUniqueId) {
+      this.isEditMode = true;
+      // Ensure workflow service is in sync if the ID came from the URL
+      //if (this.jobUniqueId !== jobIdFromWorkflow) {
+      //  this.workflowService.setCurrentJobId(this.jobUniqueId);
+      //}
+      // This is the core function for "editing": it fetches the current assessment state.
+      this.checkInitialMcqStatus();
+    } else {
+      this.isEditMode = false;
       this.showErrorPopup('No active job post found. Redirecting to Step 1.');
       this.router.navigate(['/admin-create-job-step1']);
       return;
     }
 
-    // This method enables the "edit" functionality by checking the job's current state.
-    this.checkInitialMcqStatus();
     this.loadUserProfile();
   }
 
   /**
-   * Checks if MCQs already exist for the current job when the page loads.
-   * This pre-fills the UI state for the edit mode.
+   * Fetches the MCQ status for the current job to pre-populate the UI.
+   * This is the key function that enables editing capabilities.
    */
   private checkInitialMcqStatus(): void {
     const token = this.corporateAuthService.getJWTToken();
@@ -95,13 +105,13 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
-          // CORRECTED LOGIC:
-          // We check the 'status' property from the response. If it's anything
-          // other than 'not_started', it means questions exist.
+          // If questions exist (status is not 'not_started'), update the UI state.
+          // This will show "Regenerate" and enable the "Next" button.
           this.hasGenerated = response.status !== 'not_started';
+          console.log("In ADMIN-create Job - 2: ", this.hasGenerated);
         },
         error: (err) => {
-          this.hasGenerated = false; // Default to 'not generated' on error
+          this.hasGenerated = false; // On error, assume no questions exist.
           console.error('Failed to check MCQ status:', err);
           this.showErrorPopup('Could not verify existing assessment questions.');
         }
@@ -110,8 +120,8 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles the 'Generate with AI' / 'Regenerate' button click.
-   * This logic works for both initial generation and regeneration in edit mode.
+   * Handles the 'Generate with AI' or 'Regenerate' button click.
+   * The same logic works for both creating and updating the assessment.
    */
   onGenerateAi(): void {
     if (!this.jobUniqueId || this.isGenerating) return;
@@ -119,6 +129,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in again.');
+      this.router.navigate(['/login-corporate']);
       return;
     }
 
@@ -132,7 +143,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       }))
       .subscribe({
         next: (response) => {
-          this.hasGenerated = true; // Update state after successful generation
+          this.hasGenerated = true; // Update state after generation
           this.selectedExcelFile = null; // Clear any selected file to avoid conflicts
           this.uploadedFileName = null;
           this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
@@ -143,14 +154,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       });
   }
   
-  // --- File Upload Logic ---
   openUploadPopup() { this.showUploadPopup = true; }
   closeUploadPopup() { this.showUploadPopup = false; }
 
   downloadTemplate() {
-    const templateUrl = environment.mcq_upload_template;
     const link = document.createElement('a');
-    link.href = templateUrl;
+    link.href = environment.mcq_upload_template;
     link.download = 'flashyre_mcq_questions_template.xlsx';
     document.body.appendChild(link);
     link.click();
@@ -176,9 +185,8 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     }
   }
 
-  // --- Footer Navigation and Action Handling ---
   onPrevious(): void {
-    // Navigate back to step 1, preserving the job ID for edit context.
+    // Navigate back to step 1, passing the job ID to maintain the editing context.
     this.router.navigate(['/admin-create-job-step1', this.jobUniqueId]);
   }
 
@@ -188,7 +196,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       return;
     }
     
-    // If a file was selected, upload it. Otherwise, proceed directly.
+    // If a new file was selected, upload it. This will overwrite any previous assessment.
     if (this.selectedExcelFile) {
       this.isUploading = true;
       this.spinner.show('ai-spinner', { template: `<p style='color: white; font-size: 18px;'>Processing your file...</p>` });
@@ -208,9 +216,8 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
             this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
           }
         });
-
     } else {
-      // Path for AI-generated questions or when re-confirming an existing state.
+      // If no new file was chosen, proceed with the existing assessment.
       this.router.navigate(['/admin-create-job-step3']);
     }
   }
@@ -227,7 +234,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.openAlert('Do you want to save your progress and exit?', ['Cancel', 'Save & Exit']);
   }
 
-  // --- Alert Handling ---
   private openAlert(message: string, buttons: string[]) {
     this.alertMessage = message;
     this.alertButtons = buttons;
@@ -249,28 +255,22 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     }
   }
 
-  // --- Confirmed Action Handlers ---
   private onSkipConfirmed(): void {
-    // In an edit flow, skipping might imply deleting existing questions.
-    // For now, we navigate to the next step as requested.
     this.router.navigate(['/admin-create-job-step3']);
   }
 
   private onCancelConfirmed(): void {
-    // In an edit flow, "cancel" should discard changes and navigate back to the job list.
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post editing cancelled.');
     setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
   }
   
   private onSaveDraftConfirmed(): void {
-    // "Save Draft" means exiting the flow but keeping all data as is.
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
   }
 
-  // --- Utility and Lifecycle Methods ---
   showSuccessPopup(message: string) {
     this.popupMessage = message;
     this.popupType = 'success';

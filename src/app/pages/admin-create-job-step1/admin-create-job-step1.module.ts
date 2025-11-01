@@ -13,6 +13,10 @@ const routes = [
   {
     path: '',
     component: AdminCreateJobStep1Component
+  },
+  {
+    path: ':id',
+    component: AdminCreateJobStep1Component
   }
 ];
 
