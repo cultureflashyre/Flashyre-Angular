@@ -4,17 +4,64 @@
   display: contents; 
 }
 
+.status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px; /* Add significant padding to center it vertically */
+  min-height: 300px; /* Ensure it takes up space */
+  text-align: center;
+  border-top: 1px solid #f2f4f7;
+}
+
+.status-text {
+  font-size: 14px;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.large-spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.status-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.error-icon {
+  background-color: #d92d20; /* Red */
+}
+
+.error-text {
+  color: #b42318; /* Darker red for text */
+}
+
+
 .add-skill-button {
-  background-color: #f0eefc; /* A lighter purple */
-  border-color: #c4b5fd;
+  background-color: #41327b; /* Dark purple primary color */
+  border-color: #41327b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .add-skill-button:hover:not(.disabled) {
-  background-color: #ede9fe;
+  background-color: #352866; /* Even darker shade for hover */
 }
+
 .plus-icon {
-  width: 20px; /* Slightly larger for better visual balance */
+  width: 20px;
   height: 20px;
-  color: #41327b;
+  color: #ffffff; /* White icon color for contrast */
 }
 
 /* === NEW: Popup Modal Styles === */
@@ -251,12 +298,13 @@
   margin-top: 40px;
   align-items: center;
   flex-direction: column;
-  padding: 40px 80px;
+  padding: 24px;
   background-color: #f9fafb;
 }
 
 /* Primary content wrapper - TWO COLUMN LAYOUT */
 .admin-create-job-step3-create-job-post22-main-container {
+  width: 100%;
   display: flex;
   flex-direction: row; /* Side by side layout */
   gap: 32px;
@@ -281,6 +329,7 @@
 /* Right column: Questions section - TAKES REMAINING SPACE */
 .admin-create-job-step3-questions-main-container1 {
   flex: 1;
+  width: 70%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -652,17 +701,31 @@
 
 .arrow-container.disabled {
   opacity: 0.4;
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 
 .nav-arrow-icon {
   width: 18px;
   height: 18px;
-  color: #667085;
+  color: #41327b;
+}
+
+.skill-viewport {
+  overflow: hidden;
+  position: relative;
+}
+
+.skill-track {
+  display: flex; /* This helps in laying out items horizontally */
+  transition: transform 0.4s ease-in-out;
 }
 
 .admin-create-job-step3-container18 {
-  overflow: hidden;
+  width: 100%;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  overflow-y: hidden;
+  scrollbar-width: none;
   flex: 1;
 }
 
@@ -807,6 +870,7 @@
   color: #18191c;
   line-height: 1.5;
   cursor: pointer;
+  white-space: pre-wrap; 
 }
 
 /* Options */
@@ -833,6 +897,7 @@
   font-size: 13px;
   color: #667085;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 /* Marks and Difficulty */
@@ -879,6 +944,8 @@
   color: #98a2b3;
   text-align: center;
   padding: 40px 20px;
+  border-top: 1px solid #f2f4f7; /* Add a separator */
+
 }
 
 /* Alert Popup */
@@ -946,6 +1013,14 @@
   justify-content: center;
   font-size: 16px;
   color: #667085;
+}
+
+.arrow-container {
+  background-color: #7c3aed;
+}
+
+.nav-arrow-icon {
+  color: #FFFFFF;
 }
 
 /* Responsive Design */
