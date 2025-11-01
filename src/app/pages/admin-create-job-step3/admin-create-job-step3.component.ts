@@ -1109,7 +1109,8 @@ onAlertButtonClicked(action: string) {
   get totalQuestionCount(): number {
     const aiCount = this.skillSections?.reduce((acc, section) => acc + section.totalCount, 0) || 0;
     const uploadedCount = this.uploadedSkillSections?.reduce((acc, section) => acc + section.totalCount, 0) || 0;
-    return aiCount + uploadedCount;
+    const codingCount = this.codingProblems?.length || 0;
+    return aiCount + uploadedCount + codingCount;
   }
 
   selectSection(index: number) {
