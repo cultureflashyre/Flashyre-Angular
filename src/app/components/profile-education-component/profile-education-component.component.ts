@@ -134,30 +134,42 @@ export class ProfileEducationComponent implements OnInit {
 
   public isFormEmpty(): boolean {
     // The form is empty if there is only one education form group
-    // and the user has not interacted with it yet (it's "pristine").
+    // and all of its fields are empty.
     if (this.educationForms.length === 1) {
-      return this.educationForms[0].pristine;
+      const singleForm = this.educationForms[0];
+      const formValues = singleForm.value;
+      
+      // We check the values directly instead of relying on the pristine state.
+      return !formValues.startDate && 
+             !formValues.endDate &&
+             !formValues.university &&
+             !formValues.educationLevel &&
+             !formValues.course &&
+             !formValues.specialization;
     }
     // If there is more than one form, it's not empty.
     return false;
   }
 
-  public validateForms(): boolean {
-  // If the entire section is empty (untouched), it's valid for skipping.
-  if (this.isFormEmpty()) {
-    return true;
-  }
-
+public validateForms(): boolean {
   let isOverallValid = true;
 
   for (const form of this.educationForms) {
-    // Only validate forms that the user has interacted with (are not pristine).
-    if (!form.pristine) {
-      if (form.invalid) {
-        // If a form is touched but invalid, mark all its fields to show errors.
-        form.markAllAsTouched();
-        isOverallValid = false;
-      }
+    const formValues = form.value;
+    // Check if any field in the form has a value.
+    const isPartiallyFilled = 
+      formValues.startDate || 
+      formValues.endDate ||
+      formValues.university ||
+      formValues.educationLevel ||
+      formValues.course ||
+      formValues.specialization;
+
+    // A form is considered invalid only if it's partially filled but fails validation.
+    // Completely empty forms will be skipped.
+    if (isPartiallyFilled && form.invalid) {
+      form.markAllAsTouched(); // Show errors only for this specific invalid form.
+      isOverallValid = false;
     }
   }
 
@@ -182,21 +194,34 @@ export class ProfileEducationComponent implements OnInit {
 
 saveEducation(): Promise<boolean> {
   return new Promise((resolve) => {
-    // First, run our custom validation.
+    // Step 1: Validate all forms. The updated validateForms() now correctly
+    // ignores completely blank forms and only validates partially filled ones.
     if (!this.validateForms()) {
-      this.errorMessage = 'Please fill out all required fields correctly.';
       resolve(false);
-      return; // Stop execution if validation fails.
+      return; // Stop if validation fails on a partially filled form.
     }
 
-    // If the form is valid but completely empty, treat it as a successful skip.
-    if (this.isFormEmpty()) {
-      resolve(true);
+    // Step 2: Filter out the completely empty forms so they are not sent to the backend.
+    const formsToSave = this.educationForms.filter(form => {
+      const formValues = form.value;
+      // This condition ensures we only include forms that have some data.
+      return formValues.startDate || 
+             formValues.endDate ||
+             formValues.university ||
+             formValues.educationLevel ||
+             formValues.course ||
+             formValues.specialization;
+    });
+
+    // Step 3: If there are no forms with data, treat it as a successful skip.
+    if (formsToSave.length === 0) {
+      console.log('No education data to save. Skipping.');
+      resolve(true); // Allow navigation to the next page.
       return;
     }
 
-    // If validation passes, proceed with saving.
-    const payload = this.educationForms.map(form => {
+    // Step 4: Create the payload using only the valid, non-empty forms.
+    const payload = formsToSave.map(form => {
       const formValue = form.value;
       return {
         id: formValue.id,
