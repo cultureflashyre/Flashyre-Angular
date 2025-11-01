@@ -45,6 +45,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   filteredJobs: any[] = []; // Jobs after search filters are applied
   displayedJobs: any[] = []; // Paginated jobs for the view
   appliedJobIds: number[] = [];
+  allAssessments: any[] = [];
   
   // Main search bar models
   searchJobTitle: string = '';
@@ -93,7 +94,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
   filterPosition = { top: 0, left: 0 };
 
-  private apiUrl = environment.apiUrl + 'api/jobs/';
+  private apiUrl = environment.apiUrl; // removed ( + 'api/jobs/')
 
   constructor(
     private title: Title,
@@ -112,7 +113,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserProfile();
-    this.initializeJobs();
+    // this.initializeJobs();
+    // this.loadAllAssessments();
+    this.loadInitialData();
   }
 
   ngAfterViewInit(): void {
@@ -146,6 +149,37 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     if (this.observer) {
       this.observer.disconnect();
     }
+  }
+
+  private loadInitialData(): void {
+    this.isLoading = true;
+
+    // Define the two API calls we need to make
+    const jobs$ = this.jobService.fetchJobs();
+    // const assessments$ = this.http.get<any[]>(`${this.apiUrl}api/assessments/assessment-list/`);
+    
+    const assessments$ = this.jobService.fetchAssessments();
+    
+    // Use forkJoin to run them in parallel and wait for both to complete
+    forkJoin({
+      jobs: jobs$,
+      assessments: assessments$
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: ({ jobs, assessments }) => {
+        // This code block only runs AFTER both API calls are successful
+        this.allAssessments = assessments;
+        console.log('Assessments and jobs loaded successfully.');
+        
+        // Now that we have all the data, proceed with filtering and displaying jobs
+        this.filterAndDisplayJobs(jobs);
+      },
+      error: (error) => {
+        console.error('Error fetching initial data (jobs or assessments):', error);
+        this.isLoading = false; // Stop loading on error
+      }
+    });
   }
 
   // ==============================================================================
@@ -333,12 +367,26 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   // ==================== DATA LOADING & UTILITY METHODS ==========================
   // ==============================================================================
 
-  private initializeJobs(): void {
-    this.isLoading = true;
-    // --- [REMOVED] The problematic call to loadJobsFromCache() was removed ---
-    // The logic is now streamlined to always fetch fresh data, which is simpler and more reliable.
-    this.fetchJobsFromAPI();
-  }
+  // private loadAllAssessments(): void {
+  //   this.http.get<any[]>(`${this.apiUrl}api/assessments/assessment-list/`)
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.allAssessments = data;
+  //         console.log('All assessments loaded for navigation.');
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching the list of all assessments:', error);
+  //       }
+  //     });
+  // }
+
+  // private initializeJobs(): void {
+  //   this.isLoading = true;
+  //   // --- [REMOVED] The problematic call to loadJobsFromCache() was removed ---
+  //   // The logic is now streamlined to always fetch fresh data, which is simpler and more reliable.
+  //   this.fetchJobsFromAPI();
+  // }
 
   private loadJobsFromCache(): void {
     this.jobService.getJobs()
@@ -350,17 +398,17 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private fetchJobsFromAPI(): void {
-    this.jobService.fetchJobs()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        jobs => this.filterAndDisplayJobs(jobs),
-        error => {
-          console.error('Error fetching jobs:', error);
-          this.isLoading = false;
-        }
-      );
-  }
+  // private fetchJobsFromAPI(): void {
+  //   this.jobService.fetchJobs()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe(
+  //       jobs => this.filterAndDisplayJobs(jobs),
+  //       error => {
+  //         console.error('Error fetching jobs:', error);
+  //         this.isLoading = false;
+  //       }
+  //     );
+  // }
 
   private parseNumbersFromString(input: string): number[] {
     if (!input || typeof input !== 'string') {
@@ -527,8 +575,25 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     if (profileData) this.userProfile = JSON.parse(profileData);
   }
 
-  navigateToAssessment(assessment: number): void {
-    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
+  navigateToAssessment(assessmentId: number): void {
+    // 1. Find the full assessment object from the list we fetched earlier.
+    const selectedAssessment = this.allAssessments.find(a => a.assessment_id === assessmentId);
+
+    // 2. Check if the assessment was found.
+    if (!selectedAssessment) {
+      console.error("Assessment details not found for id:", assessmentId, "Please ensure the assessment list is loaded.");
+      // Optionally, show an alert to the user.
+      alert("Could not start the assessment. Please try again later.");
+      return;
+    }
+
+    // 3. Serialize the full object into a JSON string.
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // 4. Navigate to the correct page with the correct query parameter ('data').
+    this.router.navigate(['/flashyre-assessment-rules-card'], { 
+      queryParams: { data: assessmentDataString } 
+    });
   }
 
   applyForJob(jobId: number, index: number): void {

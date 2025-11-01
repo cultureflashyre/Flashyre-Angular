@@ -604,6 +604,32 @@ body {
   color: #666666;
 }
 
+.candidate-job-for-you-card-icon14,
+.candidate-job-for-you-card-icon16 {
+  fill: #05356c;
+  color: #05356c;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease, fill 0.2s ease;
+  cursor: pointer; /* pointer cursor */
+}
+
+.candidate-job-for-you-card-icon14:hover,
+.candidate-job-for-you-card-icon16:hover {
+  transform: scale(1.1); /* slight grow */
+}
+
+/* Filled state for disliked and saved icons */
+.candidate-job-for-you-card-icon14.filled {
+  fill: #e74c3c; /* example: red fill for dislike */
+  color: #e74c3c;
+}
+
+.candidate-job-for-you-card-icon16.filled {
+  fill: #2ecc71; /* example: green fill for save */
+  color: #2ecc71;
+}
+
 /* Responsive styles */
 @media(max-width: 991px) {
   .candidate-job-details-container1 {

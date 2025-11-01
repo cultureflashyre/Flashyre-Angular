@@ -21,6 +21,11 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
 
   isDisliked: boolean = false;
   isSaved: boolean = false;
+  
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+
   shouldRender: boolean = true;
   private dislikedCacheName = 'disliked-jobs-cache-v1';
 
@@ -231,18 +236,54 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
   }
   
   onDislike(event: MouseEvent): void {
-    event.stopPropagation();
-    if (!this.jobId) {
-      console.warn('Cannot dislike: jobId is not available.');
-      return;
+  event.stopPropagation();
+  if (!this.jobId) {
+    console.warn('Cannot dislike: jobId is not available.');
+    return;
+  }
+  if (this.isSaved) {
+    // Show an informational alert if the job is saved
+    this.openAlert('You cannot dislike a job that is saved. Please unsave it first.', ['Close']);
+    return;
+  }
+  const userId = localStorage.getItem('user_id');
+  if (!userId) {
+    console.error('Cannot dislike: User ID not found.');
+    return;
+  }
+
+  // Show a confirmation alert based on the current dislike status
+  if (this.isDisliked) {
+    this.openAlert('Are you sure you want to remove the dislike for this job?', ['Cancel', 'Remove Dislike']);
+  } else {
+    this.openAlert('Are you sure you want to dislike this job?', ['Cancel', 'Dislike']);
+  }
+}
+
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    switch(action.toLowerCase()) {
+      case 'dislike':
+      case 'remove dislike':
+        this.onDislikeConfirmed();
+        break;
+      case 'cancel':
+      case 'close':
+        // Do nothing, the popup is already closed.
+        break;
     }
-    if (this.isSaved) {
-      alert('You cannot dislike a job that is saved. Please unsave it first.');
-      return;
-    }
+  }
+
+  private onDislikeConfirmed(): void {
     const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      console.error('Cannot dislike: User ID not found.');
+    if (!userId || !this.jobId) {
+      console.error('User ID or Job ID missing for confirmed dislike.');
       return;
     }
 
@@ -256,7 +297,6 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
         this.isDisliked = !wasDisliked;
         this.updateDislikedJobsCache(userId, this.jobId, wasDisliked ? 'remove' : 'add');
         this.jobService.notifyJobInteraction(this.jobId, 'dislike', this.isDisliked);
-        alert(wasDisliked ? 'Dislike removed.' : 'Job disliked successfully.');
         this.cdr.detectChanges();
       },
       error: (error) => console.error('Error updating dislike status:', error),
@@ -279,25 +319,19 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
     return;
   }
 
-  const confirmationMessage = this.isSaved
-    ? 'Are you sure you want to unsave this job?'
-    : 'Are you sure you want to save this job?';
+  // The confirmation logic has been removed. The action is now performed directly.
+  const action = this.isSaved
+    ? this.authService.removeSavedJob(userId, this.jobId)
+    : this.authService.saveJob(userId, this.jobId);
 
-  if (confirm(confirmationMessage)) {
-    const action = this.isSaved
-      ? this.authService.removeSavedJob(userId, this.jobId)
-      : this.authService.saveJob(userId, this.jobId);
-
-    action.subscribe({
-      next: () => {
-        this.isSaved = !this.isSaved;
-        this.jobService.notifyJobInteraction(this.jobId, 'save', this.isSaved);
-        // The alert has been removed from here as the confirmation is now handled before the action
-        this.cdr.detectChanges();
-      },
-      error: (error) => console.error('Error updating save status:', error),
-    });
-  }
+  action.subscribe({
+    next: () => {
+      this.isSaved = !this.isSaved;
+      this.jobService.notifyJobInteraction(this.jobId, 'save', this.isSaved);
+      this.cdr.detectChanges();
+    },
+    error: (error) => console.error('Error updating save status:', error),
+  });
 }
   
   // --- Helper and UI Methods ---
