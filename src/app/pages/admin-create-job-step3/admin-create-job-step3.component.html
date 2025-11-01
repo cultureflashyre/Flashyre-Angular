@@ -319,7 +319,7 @@
       <span class="skill-tab-name">{{ section.skillName }}</span>
 
       <!-- Loading/Error Indicators -->
-      <span *ngIf="section.generationStatus === 'loading' || section.generationStatus === 'pending'" class="tab-spinner"></span>
+      <span *ngIf="section.generationStatus === 'loading' || section.generationStatus === 'pending' || section.generationStatus === 'in_progress'" class="tab-spinner"></span>
       <span *ngIf="section.generationStatus === 'failed'" class="tab-error-icon">!</span>
       
       <!-- Question Count (only if completed) -->
@@ -393,7 +393,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="activeSection.generationStatus === 'loading'" class="status-container">
+                <div *ngIf="activeSection.generationStatus === 'loading' || activeSection.generationStatus === 'in_progress'" class="status-container">
     <div class="tab-spinner large-spinner"></div>
     <p class="status-text">Generating questions for {{ activeSection.skillName }}...</p>
   </div>

@@ -6,8 +6,8 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription, forkJoin, of, Observable } from 'rxjs'; // Import Observable
-import { switchMap, tap, finalize, catchError, map } from 'rxjs/operators'; // Import map
+import { Subscription, forkJoin, of, Observable, timer } from 'rxjs'; // Import Observable
+import { switchMap, tap, finalize, catchError, map, takeWhile } from 'rxjs/operators'; // Import map
 import { AdminJobDescriptionService } from '../../services/admin-job-description.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
@@ -38,7 +38,7 @@ interface SkillSection {
   totalCount: number;
   selectedCount: number;
   isAllSelected: boolean;
-  generationStatus: 'pending' | 'loading' | 'completed' | 'failed';
+  generationStatus: 'pending' | 'loading' | 'completed' | 'failed'| 'in_progress';
 }
 
 interface UploadedQuestion {
@@ -103,6 +103,10 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   private subscriptions = new Subscription();
   private jobUniqueId: string;
   private currentAssessmentId: string | null = null;
+
+   // MODIFIED: Add a new property to manage the polling subscriptions
+  private pollingSubscription: Subscription;
+  private isPollingActive: boolean = true; // Flag to control the polling loop
   
   assessmentForm: FormGroup;
   skillSections: SkillSection[] = [];
@@ -364,6 +368,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           this.spinner.hide('main-spinner');
           this.cdr.detectChanges(); // Ensure final UI update after spinner hides
           this.generateRemainingSkillsSequentially(); // Start generating pending skills in background
+          this.pollForCompletedSkills(); // MODIFIED: Start polling for any 'in_progress' skills.
           
           // Small delay for DOM to settle before calculating carousel state
           setTimeout(() => {
@@ -461,6 +466,91 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
 
     // 4. Start the background processing for the list of skills
     this.processNewSkillsSequentially(newValidSkills);
+  }
+
+
+  /**
+   * MODIFIED: New method to poll for skills that are already being processed by the backend.
+   * This handles the scenario where the user reloads the page.
+   */
+  private pollForCompletedSkills(): void {
+    const token = this.authService.getJWTToken();
+    if (!token) return;
+
+    // The polling will continue as long as the component is alive and there are skills in progress
+    this.pollingSubscription = timer(5000, 10000) // Start after 5s, then poll every 10s
+      .pipe(
+        // The takeWhile operator keeps the timer running as long as isPollingActive is true
+        takeWhile(() => this.isPollingActive),
+        // switchMap cancels previous pending requests and switches to a new inner observable
+        switchMap(() => {
+          // Check if there are any skills still in a loading or in-progress state
+          const skillsToPoll = this.skillSections.filter(
+            s => s.generationStatus === 'in_progress' || s.generationStatus === 'loading'
+          );
+
+          // If no skills need polling, stop the timer.
+          if (skillsToPoll.length === 0) {
+            this.isPollingActive = false;
+            return of(null); // Return an empty observable to terminate this cycle
+          }
+          
+          // Otherwise, call the backend to get the latest statuses
+          return this.jobService.checkMcqStatus(this.jobUniqueId, token);
+        })
+      )
+      .subscribe({
+        next: (statusResponse) => {
+          // If the response is null, it means polling was stopped.
+          if (!statusResponse || !statusResponse.skills) return;
+
+          // Check the latest statuses from the API response
+          Object.keys(statusResponse.skills).forEach(skillName => {
+            const newStatus = statusResponse.skills[skillName];
+            const section = this.skillSections.find(s => s.skillName === skillName);
+
+            // If a skill has finished, update its status and fetch its questions
+            if (section && section.generationStatus !== 'completed' && newStatus === 'completed') {
+              console.log(`Polling detected '${skillName}' is complete. Fetching questions.`);
+              section.generationStatus = 'completed';
+              this.fetchQuestionsForCompletedSkill(section);
+            }
+          });
+        },
+        error: err => {
+          console.error('Error during status polling:', err);
+          // Stop polling on error to prevent repeated failed requests
+          this.isPollingActive = false;
+        }
+      });
+    
+    // Also add this subscription to the main subscriptions object to be cleaned up on destroy
+    this.subscriptions.add(this.pollingSubscription);
+  }
+
+  /**
+   * MODIFIED: New helper method to fetch questions for a single skill that has just completed generation.
+   */
+  private fetchQuestionsForCompletedSkill(section: SkillSection): void {
+    const token = this.authService.getJWTToken();
+    if (!token) return;
+
+    this.jobService.job_post_mcqs_list_api(this.jobUniqueId, token, section.skillName).subscribe({
+      next: (mcqResponse) => {
+        if (mcqResponse.data && mcqResponse.data[section.skillName]) {
+          const newQuestions = this.processMcqItems(mcqResponse.data[section.skillName].mcq_items);
+          section.questions = newQuestions;
+          section.totalCount = newQuestions.length;
+          this.updateCounts();
+          this.cdr.detectChanges(); // Manually trigger change detection to update the UI
+        }
+      },
+      error: (err) => {
+        console.error(`Failed to fetch questions for completed skill '${section.skillName}':`, err);
+        section.generationStatus = 'failed'; // Mark as failed if questions can't be fetched
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   /**
@@ -1366,6 +1456,7 @@ onAlertButtonClicked(action: string) {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.isPollingActive = false;
   }
   
   loadUserProfile(): void {
