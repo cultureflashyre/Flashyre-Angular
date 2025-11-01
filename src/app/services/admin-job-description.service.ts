@@ -197,6 +197,18 @@ export class AdminJobDescriptionService {
       );
   }
 
+  // MODIFIED: Add a new method to register the entire skill queue on the backend
+  // before starting the generation process.
+  registerSkillsForMcq(jobUniqueId: string, skills: string[]): Observable<any> {
+    const payload = { skills };
+    return this.http.post(
+      `${this.baseUrl}/job-post/${jobUniqueId}/register-skills/`,
+      payload,
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   /**
    * MODIFIED: Can now fetch all MCQs or MCQs for a single skill.
    * @param skillName - Optional skill name to fetch questions for.

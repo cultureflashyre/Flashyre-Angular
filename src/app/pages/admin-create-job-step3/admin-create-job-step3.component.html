@@ -395,7 +395,12 @@
                 </div>
                 <div *ngIf="activeSection.generationStatus === 'loading' || activeSection.generationStatus === 'in_progress'" class="status-container">
     <div class="tab-spinner large-spinner"></div>
-    <p class="status-text">Generating questions for {{ activeSection.skillName }}...</p>
+    <p *ngIf="activeSection.generationStatus === 'loading' || activeSection.generationStatus === 'in_progress'" class="status-text">
+                      Generating questions for {{ activeSection.skillName }}...
+                    </p>
+    <p *ngIf="activeSection.generationStatus === 'pending'" class="status-text">
+                      Queued for generation for {{ activeSection.skillName }}...
+                    </p>
   </div>
 
   <!-- 2. FAILED STATE -->

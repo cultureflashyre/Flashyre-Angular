@@ -412,7 +412,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   onAddNewSkillSubmit(): void {
     if (this.isAddingNewSkill) return;
 
-    // 1. Parse and Validate the input string (same as before)
+    // 1. Parse and validate the input string
     const skillNames = this.newSkillName
       .split(',')
       .map(skill => skill.trim())
@@ -432,41 +432,63 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       }
       newValidSkills.push(skill);
     }
-
-    // 2. === NEW LOGIC: Add ALL new skill tabs to the UI at once ===
-    const firstNewSkillIndex = this.skillSections.length;
-
-    for (const skillName of newValidSkills) {
-      const newSection: SkillSection = {
-        skillName,
-        questions: [],
-        totalCount: 0,
-        selectedCount: 0,
-        isAllSelected: false,
-        generationStatus: 'loading', // Set status to 'loading' immediately
-      };
-      this.skillSections.push(newSection);
+    
+    if (newValidSkills.length === 0) {
+        return; // All submitted skills were duplicates
     }
 
-    // 3. Update the UI to show all new tabs with spinners
-    this.closeAddSkillPopup();
-    setTimeout(() => {
-      this.calculateCarouselState();
-      // Scroll to the first of the newly added tabs
-      if (this.skillTrack?.nativeElement) {
-          const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
-          if (firstNewTabElement) {
-              const newScrollPosition = firstNewTabElement.offsetLeft;
-              this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
-          }
-      }
-      this.activeSectionIndex = firstNewSkillIndex; // Select the first new skill tab
-      this.cdr.detectChanges();
-    }, 100);
+    this.isAddingNewSkill = true;
 
-    // 4. Start the background processing for the list of skills
-    this.processNewSkillsSequentially(newValidSkills);
+    // 2. PERSIST: Call the new service to register the entire queue on the backend first.
+    this.subscriptions.add(
+      this.jobService.registerSkillsForMcq(this.jobUniqueId, newValidSkills).subscribe({
+        next: () => {
+          // 3. PROCESS: Only on success, update the UI and start the generation.
+          const firstNewSkillIndex = this.skillSections.length;
+
+          for (const skillName of newValidSkills) {
+            const newSection: SkillSection = {
+              skillName,
+              questions: [],
+              totalCount: 0,
+              selectedCount: 0,
+              isAllSelected: false,
+              // Add to UI with 'pending' status, which the generator will pick up.
+              generationStatus: 'pending', 
+            };
+            this.skillSections.push(newSection);
+          }
+
+          // Update the UI to show all new tabs (they will be in 'pending' state)
+          this.showAddSkillPopup = false;
+          setTimeout(() => {
+            this.calculateCarouselState();
+            // Scroll to the first of the newly added tabs
+            if (this.skillTrack?.nativeElement) {
+                const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
+                if (firstNewTabElement) {
+                    const newScrollPosition = firstNewTabElement.offsetLeft;
+                    this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
+                }
+            }
+            this.activeSectionIndex = firstNewSkillIndex;
+            this.cdr.detectChanges();
+          }, 100);
+
+          // Kick off the sequential generator, which will find and process these 'pending' skills.
+          this.generateRemainingSkillsSequentially();
+          this.isAddingNewSkill = false;
+        },
+        error: (err) => {
+          this.showErrorPopup(`Failed to register skills: ${err.message}`);
+          this.isAddingNewSkill = false;
+        }
+      })
+    );
   }
+
+
+  
 
 
   /**
@@ -899,6 +921,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
         ]],
     });
   }
+
+  
 
   /**
    * NEW: Generates a detailed error message string from form validation errors.
