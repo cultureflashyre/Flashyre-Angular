@@ -104,35 +104,45 @@ export class ProfileCertificationsComponent implements OnInit {
       // Logic for scrolling remains the same
   }
 
-   public isFormEmpty(): boolean {
-    // The form is empty if there is only one certification form group
-    // and the user has not interacted with it yet (it's "pristine").
-    if (this.certifications.length === 1) {
-      const firstCertForm = this.certifications.at(0);
-      return firstCertForm ? firstCertForm.pristine : true;
+ public isFormEmpty(): boolean {
+  // A form is considered empty only if there is one certification group
+  // and all of its relevant fields are empty.
+  if (this.certifications.length === 1) {
+    const singleForm = this.certifications.at(0);
+    if (singleForm) {
+      const formValues = singleForm.value;
+      // We check the values directly instead of relying on the pristine state.
+      return !formValues.certificate_name &&
+             !formValues.issuing_institute &&
+             !formValues.issued_date &&
+             !formValues.renewal_date &&
+             !formValues.credentials;
     }
-    // If there is more than one form, it's not empty.
-    return false;
   }
+  // If there is more than one form, it's not considered empty.
+  return false;
+}
 
-  public validateForms(): boolean {
-  // If the entire section is empty (untouched), it's valid for skipping.
-  if (this.isFormEmpty()) {
-    return true;
-  }
-
+public validateForms(): boolean {
   let isOverallValid = true;
 
-  // Loop through each certification form group
   this.certifications.controls.forEach(control => {
     const form = control as FormGroup;
-    // Only validate forms that the user has interacted with (are not pristine).
-    if (!form.pristine) {
-      if (form.invalid) {
-        // If a form is touched but invalid, mark all its fields to show errors.
-        form.markAllAsTouched();
-        isOverallValid = false;
-      }
+    const formValues = form.value;
+    
+    // Check if any field in the form has a value.
+    const isPartiallyFilled = 
+      formValues.certificate_name || 
+      formValues.issuing_institute ||
+      formValues.issued_date ||
+      formValues.renewal_date ||
+      formValues.credentials;
+
+    // A form is considered invalid only if it's partially filled but fails validation.
+    // Completely empty forms will be skipped and not validated.
+    if (isPartiallyFilled && form.invalid) {
+      form.markAllAsTouched(); // Show errors only for this specific invalid form.
+      isOverallValid = false;
     }
   });
 
@@ -145,28 +155,43 @@ export class ProfileCertificationsComponent implements OnInit {
 
 saveCertifications(): Promise<boolean> {
   return new Promise((resolve) => {
-    // First, run our custom validation.
+    // Step 1: Validate all forms. The updated validateForms() now correctly
+    // ignores completely blank forms and only validates partially filled ones.
     if (!this.validateForms()) {
-      alert('Please fill out all required certification fields correctly.');
+      alert('Please fill out all required fields for any certification you have started.');
       resolve(false);
-      return; // Stop execution if validation fails.
+      return; // Stop if validation fails.
     }
 
-    // If the form is valid but completely empty, treat it as a successful skip.
-    if (this.isFormEmpty()) {
-      resolve(true);
+    // Step 2: Filter out the completely empty forms so they are not sent to the backend.
+    const formsToSave = this.certifications.controls.filter(control => {
+      const formValues = control.value;
+      return formValues.certificate_name || 
+             formValues.issuing_institute ||
+             formValues.issued_date ||
+             formValues.renewal_date ||
+             formValues.credentials;
+    });
+
+    // Step 3: If, after filtering, there are no forms left to save, treat it as a successful skip.
+    if (formsToSave.length === 0) {
+      console.log('No certification data to save. Skipping.');
+      resolve(true); // Allow navigation.
       return;
     }
 
-    // If validation passes, proceed with saving.
-    const payload = this.certificationForm.value.certifications.map((cert: any) => ({
-        ...cert,
-        renewal_date: cert.renewal_date || null
-    }));
+    // Step 4: Create the payload using only the valid, non-empty forms.
+    const payload = formsToSave.map(form => {
+      const formValue = form.value;
+      return {
+        ...formValue,
+        renewal_date: formValue.renewal_date || null
+      };
+    });
 
     this.certificationService.saveCertifications(payload).subscribe({
       next: () => {
-        console.log('All certifications saved successfully');
+        console.log('Certifications saved successfully');
         resolve(true);
       },
       error: (error) => {

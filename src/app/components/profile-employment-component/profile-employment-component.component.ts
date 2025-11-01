@@ -197,37 +197,42 @@ private loadPositionsFromUserProfile(): void {
 
 saveEmployment(): Promise<boolean> {
   return new Promise((resolve) => {
-    // First, run validation.
+    // Step 1: Filter out any positions that are completely empty.
+    const positionsToSave = this.positions.filter(p => {
+      return p.jobTitle || p.companyName || p.startDate || p.endDate || p.jobDetails;
+    });
+
+    // Step 2: If the filtered list is empty, it's a successful skip.
+    if (positionsToSave.length === 0) {
+      console.log('No employment data to save. Skipping.');
+      resolve(true); // Allow navigation to the next page.
+      return;
+    }
+
+    // Step 3: Run validation on the remaining (partially or fully filled) forms.
+    // The existing validatePositions() function correctly handles this by checking for
+    // partially filled forms and adding errors.
     if (!this.validatePositions()) {
-      // If validation fails, resolve as false and stop.
-      // The error messages will now be displayed in the UI.
-      console.log('Validation failed. User must fill all required fields.');
-      resolve(false);
+      console.log('Validation failed. User must fill all required fields for partially completed forms.');
+      resolve(false); // Stop navigation.
       return;
     }
 
-    // If the form is valid but completely empty, treat as a successful skip.
-    if (this.isFormEmpty()) {
-      resolve(true);
-      return;
-    }
-
-    const positions = this.getPositions();
-    this.employmentService.saveEmployment(positions).subscribe(
-      (response) => {
+    // Step 4: If validation passes, send only the filtered data to the service.
+    this.employmentService.saveEmployment(positionsToSave).subscribe({
+      next: (response) => {
         console.log('Employment saved successfully:', response);
         this.resetForm();
-        resolve(true);
+        resolve(true); // Success
       },
-      (error) => {
+      error: (error) => {
         console.error('Error saving employment:', error);
-        alert('Error saving employment: ' + (error.error?.detail || 'Fill all required fields'));
-        resolve(false);
+        alert('Error saving employment: ' + (error.error?.detail || 'An unknown error occurred.'));
+        resolve(false); // Error
       }
-    );
+    });
   });
 }
-  
 
   goToPrevious() {
     this.router.navigate(['/profile-basic-information']);
