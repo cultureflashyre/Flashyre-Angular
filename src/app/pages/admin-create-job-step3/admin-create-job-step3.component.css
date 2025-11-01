@@ -707,7 +707,7 @@
 .nav-arrow-icon {
   width: 18px;
   height: 18px;
-  color: #667085;
+  color: #41327b;
 }
 
 .skill-viewport {
@@ -870,6 +870,7 @@
   color: #18191c;
   line-height: 1.5;
   cursor: pointer;
+  white-space: pre-wrap; 
 }
 
 /* Options */
@@ -896,6 +897,7 @@
   font-size: 13px;
   color: #667085;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 /* Marks and Difficulty */
