@@ -10,7 +10,7 @@ import { RecruiterPreferenceService } from '../../services/recruiter-preference.
 import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
 import { JobCreationWorkflowService } from 'src/app/services/job-creation-workflow.service';
-
+import { AdminJobCreationWorkflowService } from 'src/app/services/admin-job-creation-workflow.service';
 // Define the type for job statuses
 type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
 
@@ -101,6 +101,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     private recruiterService: RecruiterDataService,
     private router: Router,
     private workflowService: JobCreationWorkflowService,
+    private adminWorkflowService: AdminJobCreationWorkflowService,
     private corporateAuthService: CorporateAuthService,
     private recruiterPreferenceService: RecruiterPreferenceService,
   ) {
@@ -416,7 +417,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   }
 
   editJob(job: JobPost): void {
-    this.workflowService.startEditWorkflow(job.unique_id);
+    this.adminWorkflowService.startEditWorkflow(job.unique_id);
     this.router.navigate(['/admin-create-job-step1', job.unique_id]);
   }
 

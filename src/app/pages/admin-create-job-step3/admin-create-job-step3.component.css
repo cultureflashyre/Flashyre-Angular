@@ -64,6 +64,33 @@
   color: #ffffff; /* White icon color for contrast */
 }
 
+.add-new-skill-for-ai-mcq-container {
+  padding: 8px 16px;
+  align-items: center;
+  gap: 8px;
+  display: flex;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.add-new-skill-for-ai-mcq-container:hover:not([disabled]) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+.add-new-skill-for-ai-mcq-container[disabled] {
+  background: #d0d5dd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 /* === NEW: Popup Modal Styles === */
 .popup-overlay {
   position: fixed;

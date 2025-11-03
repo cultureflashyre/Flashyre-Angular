@@ -74,23 +74,23 @@
   padding: 0 24px;
   font-size: 16px;
   font-weight: 500;
-  color: #18191C;
-  background-color: #FFFFFF;
-  border: 1px solid #D9D9D9;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
     
 }
 
 .admin-create-job-step4-cancel-button:hover:not(:disabled) {
-  background-color: #F4F4F4;
-  border-color: #ACACAD;
+  cursor: pointer;
+  transform: scale(0.90);
 }
 
 .admin-create-job-step4-cancel-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.admin-create-job-step4-cancel-text {
+  color: #41327b;
 }
 
 /* Previous Button */
@@ -99,22 +99,22 @@
   padding: 0 24px;
   font-size: 16px;
   font-weight: 500;
-  color: #18191C;
-  background-color: #FFFFFF;
-  border: 1px solid #D9D9D9;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .admin-create-job-step4-previous-button:hover:not(:disabled) {
-  background-color: #F4F4F4;
-  border-color: #ACACAD;
+  cursor: pointer;
+  transform: scale(0.90);
 }
 
 .admin-create-job-step4-previous-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.admin-create-job-step4-previous-text {
+  color: rgb(65, 50, 123);
 }
 
 /* Save Draft Button */

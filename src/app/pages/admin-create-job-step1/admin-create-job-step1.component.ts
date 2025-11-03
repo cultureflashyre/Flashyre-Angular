@@ -224,7 +224,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
           this.showErrorPopup('Failed to load existing job data. Please try again later.');
           console.error(`Failed to load existing job data for ID ${uniqueId}:`, err);
           // MODIFIED: Navigate to a sensible default page on error, like a job list
-          this.router.navigate(['/admin-job-posts']);
+          this.router.navigate(['/recruiter-view-3rd-page1']);
         }
       })
     );
@@ -890,7 +890,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     if (this.isEditMode) {
         this.showSuccessPopup('Job post editing cancelled.');
         // Navigate back to the admin job list (assuming this route exists)
-        setTimeout(() => { this.router.navigate(['/admin-job-posts']); }, 2000);
+        setTimeout(() => { this.router.navigate(['/recruiter-view-3rd-page1']); }, 2000);
         return; // Exit without deleting
     }
 

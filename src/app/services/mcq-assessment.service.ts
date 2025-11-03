@@ -37,34 +37,17 @@ export class McqAssessmentService {
     );
   }
 
-  saveAssessment(payload: AssessmentPayload, token: string): Observable<AssessmentSaveResponse> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    const endpoint = `${this.apiUrl}api/mcq-assessments/create/`;
-
-    return this.http.post<{ status: string; data: AssessmentSaveResponse; errors?: any }>(endpoint, payload, { headers }).pipe(
-      map(response => {
-        if (response.status === 'success' && response.data) {
-          return response.data;
-        }
-        if (response.errors) {
-            const allErrorValues: unknown[] = Object.values(response.errors);
-            const flattenedErrors: string[] = allErrorValues.reduce<string[]>((acc: string[], val: unknown) => {
-                if (Array.isArray(val)) {
-                    return acc.concat(val.map(String));
-                }
-                return acc.concat(String(val));
-            }, [] as string[]);
-            const errorMessages = flattenedErrors.join(' ');
-            throw new Error(errorMessages || 'Assessment saving failed due to validation errors.');
-        }
-        throw new Error('Failed to save assessment or unexpected response structure from server.');
-      }),
-      catchError(this.handleError)
-    );
-  }
+    saveAssessment(payload: any, token: string): Observable<any> {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+        const endpoint = `${this.apiUrl}api/mcq-assessments/create/`;
+    
+        return this.http.post<any>(endpoint, payload, { headers }).pipe(
+          catchError(this.handleError)
+        );
+    }
 
   getAssessmentDetails(assessmentId: string, token: string): Observable<AssessmentDetailResponse> {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
@@ -72,14 +55,16 @@ export class McqAssessmentService {
     return this.http.get<AssessmentDetailResponse>(endpoint, { headers });
   }
 
-  updateAssessment(assessmentId: string, payload: AssessmentPayload, token: string): Observable<AssessmentDetailResponse> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    const endpoint = `${this.apiUrl}api/mcq-assessments/${assessmentId}/`;
-    return this.http.put<AssessmentDetailResponse>(endpoint, payload, { headers });
-  }
+    updateAssessment(assessmentId: string, payload: any, token: string): Observable<any> {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+        const endpoint = `${this.apiUrl}api/mcq-assessments/${assessmentId}/`;
+        return this.http.put<any>(endpoint, payload, { headers }).pipe(
+            catchError(this.handleError)
+        );
+    }
   
   /**
    * THIS IS THE MISSING METHOD - NOW ADDED
@@ -101,7 +86,7 @@ export class McqAssessmentService {
     );
   }
 
-  getLatestAssessmentForJob(jobUniqueId: string, token: string, source: string): Observable<AssessmentDetailResponse | null> {
+  getLatestAssessmentForJob(jobUniqueId: string, token: string, source: string = 'all'): Observable<AssessmentDetailResponse | null> {
       const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
       // Append `source` query parameter
       const endpoint = `${this.apiUrl}api/mcq-assessments/job/${jobUniqueId}/latest/?source=${encodeURIComponent(source)}`;
@@ -109,9 +94,9 @@ export class McqAssessmentService {
       return this.http.get<AssessmentDetailResponse>(endpoint, { headers }).pipe(
           catchError(err => {
               if (err.status === 404) {
-                  return of(null); // No assessment found is not an error
+                  return of(null); // No assessment found is not an error, return null
               }
-              return throwError(() => err);
+              return throwError(() => err); // Re-throw other errors
           })
       );
   }
@@ -136,38 +121,21 @@ export class McqAssessmentService {
     );
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    // ... (This function remains unchanged)
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `A client-side error occurred: ${error.error.message}`;
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was:`, error.error);
-
-      if (error.status === 0) {
-        errorMessage = 'Cannot connect to the server. Please check your network connection or if the server is running.';
-      } else if (error.error && typeof error.error === 'string') {
-        errorMessage = error.error;
-      } else if (error.error && error.error.message && typeof error.error.message === 'string') {
-        errorMessage = error.error.message;
-      } else if (error.error && error.error.detail && typeof error.error.detail === 'string') {
-        errorMessage = error.error.detail;
-      } else if (error.error && error.error.errors && typeof error.error.errors === 'object') {
-        const errors = error.error.errors;
-        const messages = Object.keys(errors)
-          .map(key => {
-            const errorValue = errors[key];
-            const errorText = Array.isArray(errorValue) ? errorValue.join(', ') : String(errorValue);
-            return `${key}: ${errorText}`;
-          })
-          .join('; ');
-        errorMessage = messages || `Validation errors occurred (Status: ${error.status})`;
-      } else {
-        errorMessage = `Server error (Status: ${error.status}). Please try again later.`;
-      }
+    private handleError(error: HttpErrorResponse): Observable<never> {
+        let errorMessage = 'An unknown error occurred!';
+        if (error.error instanceof ErrorEvent) {
+          errorMessage = `A client-side error occurred: ${error.error.message}`;
+        } else {
+          if (error.status === 0) {
+            errorMessage = 'Cannot connect to the server. Please check your network connection.';
+          } else if (error.error && typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else {
+            errorMessage = `Server error (Status: ${error.status}). Please try again later.`;
+          }
+        }
+        return throwError(() => new Error(errorMessage));
     }
-    return throwError(() => new Error(errorMessage));
-  }
 }

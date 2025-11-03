@@ -301,10 +301,11 @@
         <div 
               *ngIf="activeTab === 'ai-generated'"
               id="add-skill-button" 
-              class="arrow-container add-skill-button" 
+              class="add-new-skill-for-ai-mcq-container add-skill-button" 
               title="Add a new skill" 
               (click)="openAddSkillPopup()">
               <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
+              <span class="add-skill-text">Add Skills</span>
             </div>        <!-- === END OF NEW BUTTON === -->
 
               <!-- Dynamic looping through skill sections -->

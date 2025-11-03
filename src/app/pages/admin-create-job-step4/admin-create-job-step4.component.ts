@@ -1,12 +1,9 @@
-// src/app/pages/admin-create-job-step4/admin-create-job-step4.component.ts
-
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
-// MODIFICATION: Import the InterviewService and its data models
 import { InterviewService, InterviewStage, InterviewStageData } from '../../services/interview.service';
 
 @Component({
@@ -15,35 +12,56 @@ import { InterviewService, InterviewStage, InterviewStageData } from '../../serv
   styleUrls: ['./admin-create-job-step4.component.css']
 })
 export class AdminCreateJobStep4Component implements OnInit {
-  userProfile: any = {};
   interviewForm: FormGroup;
   jobUniqueId: string | null = null;
   isLoading = true;
   isSubmitting = false;
-  minDate = new Date();
+  isEditMode = false; // To track if we are in edit mode
   minDateString: string;
-  showDropdown = false;
-  
+
   // Alert and Popup properties
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
-  private actionContext: { action: string } | null = null;
+  private pendingAction: string = ''; // To manage which action is pending confirmation
+  private stageToRemoveIndex: number | null = null;
   showPopup = false;
   popupMessage = '';
   popupType: 'success' | 'error' = 'success';
+  
+  // General State management
+  recruiterProfile: any = {};
+  public isAdmin: boolean = false;
+  recruiterId: string | null = null;
+  userType: string | null = null;
+
+  showDropdown = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private workflowService: AdminJobCreationWorkflowService,
     private authService: CorporateAuthService,
-    // MODIFICATION: Replaced AdminJobDescriptionService with InterviewService for consistency
-    private interviewService: InterviewService 
+    private interviewService: InterviewService
   ) {}
 
   ngOnInit(): void {
+        if (typeof window !== 'undefined' && window.localStorage) {
+      this.loadUserProfile();
+
+      // <<< MODIFICATION START: Check user role from the loaded profile
+      // This assumes the user's role is stored in the profile object.
+      this.userType = localStorage.getItem('userType')
+      if (this.userType === 'admin') {
+          this.isAdmin = true;
+      }
+
+      this.recruiterId = localStorage.getItem('user_id');
+    }
+
     this.jobUniqueId = this.workflowService.getCurrentJobId();
+    this.isEditMode = this.workflowService.getIsEditMode(); // Check if in edit mode
+
     if (!this.jobUniqueId) {
       this.showErrorPopup('No active job creation flow found. Please start again.');
       this.router.navigate(['/admin-create-job-step1']);
@@ -51,17 +69,21 @@ export class AdminCreateJobStep4Component implements OnInit {
     }
     const today = new Date();
     this.minDateString = today.toISOString().split('T')[0];
-    
+
     this.interviewForm = this.fb.group({
       stages: this.fb.array([])
     });
 
-    // MODIFICATION: Instead of adding a blank stage, we now load existing stages.
+    // Load existing stages if editing, otherwise add a blank stage
     this.loadInterviewStages();
   }
-  
-  // --- NEW: Data Loading and Form Population Logic (from Recruiter component) ---
 
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) this.recruiterProfile = JSON.parse(profileData);
+  }
+
+  // --- START: DATA LOADING LOGIC (from Recruiter component) ---
   private loadInterviewStages(): void {
     const token = this.authService.getJWTToken();
     if (!this.jobUniqueId || !token) {
@@ -74,15 +96,12 @@ export class AdminCreateJobStep4Component implements OnInit {
     this.interviewService.getInterviewStages(this.jobUniqueId, token).subscribe({
         next: (stagesData) => {
             if (stagesData && stagesData.length > 0) {
-                // Clear any default stages
                 this.stages.clear();
-                // Populate the form array with data from the backend
                 stagesData.forEach(stage => {
                     this.stages.push(this.createStageGroupWithData(stage));
                 });
             } else {
-                // If no stages exist, add one empty default stage
-                this.addStage();
+                this.addStage(); // If no stages exist, add one empty default stage
             }
             this.isLoading = false;
         },
@@ -95,9 +114,7 @@ export class AdminCreateJobStep4Component implements OnInit {
     });
   }
 
-  // NEW: Helper method to create a form group from existing data
   private createStageGroupWithData(data: InterviewStageData): FormGroup {
-    // Determine if the stage name is a standard one or custom
     const standardStages = ['Screening', 'Technical interview - 1', 'Technical interview - 2', 'HR interview'];
     const isCustom = !standardStages.includes(data.stage_name);
 
@@ -109,12 +126,10 @@ export class AdminCreateJobStep4Component implements OnInit {
       assigned_to: [data.assigned_to, [Validators.required, Validators.email]]
     });
 
-    // Add validator and listener logic for the 'Customize' option
     const customNameControl = stageGroup.get('custom_stage_name');
     if (isCustom) {
         customNameControl?.setValidators(Validators.required);
     }
-    
     stageGroup.get('stage_name')?.valueChanges.subscribe(value => {
         if (value === 'Customize') {
             customNameControl?.setValidators(Validators.required);
@@ -123,61 +138,10 @@ export class AdminCreateJobStep4Component implements OnInit {
         }
         customNameControl?.updateValueAndValidity();
     });
-
     return stageGroup;
   }
 
-  // --- POPUP AND ALERT HANDLING (Unchanged) ---
-
-  showSuccessPopup(message: string) {
-    this.popupMessage = message;
-    this.popupType = 'success';
-    this.showPopup = true;
-    setTimeout(() => this.closePopup(), 5000);
-  }
-
-  showErrorPopup(message: string) {
-    this.popupMessage = message;
-    this.popupType = 'error';
-    this.showPopup = true;
-    setTimeout(() => this.closePopup(), 5000);
-  }
-
-  closePopup() {
-    this.showPopup = false;
-  }
-
-  private openAlert(message: string, buttons: string[]) {
-    this.alertMessage = message;
-    this.alertButtons = buttons;
-    this.showAlert = true;
-  }
-
-  onAlertButtonClicked(action: string) {
-    this.showAlert = false;
-    if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
-      this.actionContext = null;
-      return;
-    }
-    
-    if (this.actionContext) {
-      switch (this.actionContext.action) {
-        case 'cancel':
-          this.onCancelConfirmed();
-          break;
-        case 'previous':
-          this.onPreviousConfirmed();
-          break;
-        case 'save':
-          this.onSaveJobAndAssessmentConfirmed();
-          break;
-      }
-      this.actionContext = null;
-    }
-  }
-  
-  // --- FORM ARRAY MANAGEMENT (Unchanged) ---
-  
+    // --- FORM ARRAY MANAGEMENT (Unchanged) ---
   get stages(): FormArray {
     return this.interviewForm.get('stages') as FormArray;
   }
@@ -207,11 +171,16 @@ export class AdminCreateJobStep4Component implements OnInit {
   }
 
   removeStage(index: number): void {
-    if (this.stages.length > 1) {
-      this.stages.removeAt(index);
-    } else {
+    if (this.stages.length <= 1) {
       this.showErrorPopup('You must have at least one interview stage.');
+      return;
     }
+    // Store the index of the stage to be removed
+    this.stageToRemoveIndex = index;
+    // Set the pending action
+    this.pendingAction = 'removeStage';
+    // Open the alert with a confirmation message
+    this.openAlert('You are about to remove a stage, are you sure?', ['Cancel', 'Remove']);
   }
 
   validateDateInput(event: Event, stageControl: AbstractControl) {
@@ -225,8 +194,190 @@ export class AdminCreateJobStep4Component implements OnInit {
       dateControl.updateValueAndValidity();
     }
   }
-  
-  // --- UI AND FOOTER ACTIONS (Unchanged) ---
+
+  // --- FOOTER AND ALERT HANDLING ---
+  onSubmit(): void {
+    this.onSaveJobAndAssessment();
+  }
+
+  onCancel(): void {
+    this.pendingAction = 'cancel';
+    this.openAlert('Are you sure you want to cancel? All unsaved changes will be lost.', ['No', 'Yes, Cancel']);
+  }
+
+  onPrevious(): void {
+    this.pendingAction = 'previous';
+    this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
+  }
+
+  onSaveDraft(): void {
+    this.pendingAction = 'saveDraft';
+    this.openAlert('You are about to save this as a draft.', ['Cancel', 'Save Draft']);
+  }
+
+  onSkip(): void {
+    this.pendingAction = 'skip';
+    this.openAlert('You are about to skip the interview process. You can add it later.', ['Cancel', 'Continue']);
+  }
+
+  onSaveJobAndAssessment(): void {
+    if (this.interviewForm.invalid) {
+      this.showErrorPopup('Please fill all required fields correctly.');
+      this.interviewForm.markAllAsTouched();
+      return;
+    }
+    this.pendingAction = 'save';
+    const message = this.isEditMode ? 'Are you sure you want to update and finalize this job post?' : 'Are you sure you want to finalize and save this job post?';
+    this.openAlert(message, ['Cancel', 'Save']);
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    const confirmed = !['cancel', 'no'].includes(action.toLowerCase());
+
+    if (confirmed) {
+        switch (this.pendingAction) {
+            case 'cancel': this.onCancelConfirmed(); break;
+            case 'previous': this.onPreviousConfirmed(); break;
+            case 'saveDraft': this.onSaveDraftConfirmed(); break;
+            case 'skip': this.onSkipConfirmed(); break;
+            case 'save': this.onSaveJobAndAssessmentConfirmed(); break;
+            case 'removeStage': this.onRemoveStageConfirmed(); break;
+        }
+    }
+    this.pendingAction = '';
+    if(!confirmed && this.pendingAction === 'removeStage') {
+      this.stageToRemoveIndex = null;
+    }
+  }
+
+  private onRemoveStageConfirmed(): void {
+    // Check if the index is valid before removing
+    if (this.stageToRemoveIndex !== null && this.stages.length > 1) {
+      this.stages.removeAt(this.stageToRemoveIndex);
+    }
+    // Reset the index
+    this.stageToRemoveIndex = null;
+  }
+
+  // --- ACTION CONFIRMATION LOGIC ---
+  onCancelConfirmed(): void {
+    this.workflowService.clearWorkflow();
+    this.router.navigate(['/recruiter-view-3rd-page1']); // Or an admin dashboard route
+  }
+
+  onPreviousConfirmed(): void {
+    this.router.navigate(['/admin-create-job-step3']);
+  }
+
+  onSaveDraftConfirmed(): void {
+    if (!this.jobUniqueId || !this.authService.getJWTToken()) {
+      this.showErrorPopup('Cannot save draft: Missing Job ID or authentication.');
+      return;
+    }
+    this.isSubmitting = true;
+    const payload = this.preparePayload();
+
+    this.interviewService.saveDraftStages(this.jobUniqueId, payload, this.authService.getJWTToken()!).subscribe({
+      next: () => {
+        this.showSuccessPopup('Draft saved successfully!');
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']); // Or an admin dashboard route
+        }, 3000);
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.showErrorPopup(`Draft save failed: ${err.message || 'Server error'}`);
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  onSkipConfirmed(): void {
+    if (!this.jobUniqueId || !this.authService.getJWTToken()) {
+      this.showErrorPopup('Cannot finalize: Missing Job ID or authentication.');
+      return;
+    }
+    this.isSubmitting = true;
+    // An empty array skips the interview process but still finalizes the job
+    this.interviewService.finalizeJobPost(this.jobUniqueId, [], this.authService.getJWTToken()!).subscribe({
+      next: () => {
+        this.showSuccessPopup('Job finalized without interview stages!');
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']);
+        }, 3000);
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.showErrorPopup(`Finalization failed: ${err.message || 'Server error'}`);
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  onSaveJobAndAssessmentConfirmed(): void {
+    if (!this.jobUniqueId || !this.authService.getJWTToken()) {
+      this.showErrorPopup('Cannot save: Missing Job ID or authentication.');
+      return;
+    }
+    this.isSubmitting = true;
+    const payload = this.preparePayload();
+
+    this.interviewService.finalizeJobPost(this.jobUniqueId, payload, this.authService.getJWTToken()!).subscribe({
+      next: () => {
+        const message = this.isEditMode ? 'Job Updated Successfully!' : 'Job Created Successfully!';
+        this.showSuccessPopup(message);
+        setTimeout(() => {
+          this.workflowService.clearWorkflow();
+          this.router.navigate(['/recruiter-view-3rd-page1']);
+        }, 3000);
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.showErrorPopup(`Finalization failed: ${err.message || 'Server error'}`);
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  private preparePayload(): InterviewStage[] {
+    const formStages = this.stages.value;
+    return formStages.map((stage: any, index: number) => ({
+      stage_name: stage.stage_name === 'Customize' ? stage.custom_stage_name : stage.stage_name,
+      stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
+      mode: stage.mode,
+      assigned_to: stage.assigned_to,
+      order: index + 1,
+      user_id: localStorage.getItem('user_id')
+    }));
+  }
+
+  // --- UTILITY METHODS (Popups) ---
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  private showSuccessPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'success';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 3000);
+  }
+
+  private showErrorPopup(message: string) {
+    this.popupMessage = message;
+    this.popupType = 'error';
+    this.showPopup = true;
+    setTimeout(() => this.closePopup(), 5000);
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
 
   toggleDropdown(): void {
     if (!(this.isSubmitting || this.interviewForm.invalid)) {
@@ -242,77 +393,6 @@ export class AdminCreateJobStep4Component implements OnInit {
     }
   }
 
-  onCancel(): void {
-    this.actionContext = { action: 'cancel' };
-    this.openAlert('Are you sure you want to cancel? All unsaved changes will be lost.', ['No', 'Yes, Cancel']);
-  }
-
-  onPrevious(): void {
-    this.actionContext = { action: 'previous' };
-    this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
-  }
-
-  onSaveJobAndAssessment(): void {
-    this.showDropdown = false;
-    if (this.interviewForm.invalid) {
-      this.showErrorPopup('Please fill all required fields correctly.');
-      this.interviewForm.markAllAsTouched();
-      return;
-    }
-    this.actionContext = { action: 'save' };
-    this.openAlert('Are you sure you want to finalize and save this job post?', ['Cancel', 'Save']);
-  }
-  
-  onSubmit(): void {
-    this.onSaveJobAndAssessment();
-  }
-
-  onCancelConfirmed(): void {
-    this.workflowService.clearWorkflow();
-    this.router.navigate(['/recruiter-view-3rd-page1']);
-  }
-
-  onPreviousConfirmed(): void {
-    this.router.navigate(['/admin-create-job-step3']);
-  }
-
-  // --- MODIFIED: Save/Submit Logic ---
-  onSaveJobAndAssessmentConfirmed(): void {
-    if (!this.jobUniqueId) { this.showErrorPopup('Job ID is missing.'); return; }
-    const token = this.authService.getJWTToken();
-    if (!token) { this.showErrorPopup('Authentication failed.'); return; }
-
-    this.isSubmitting = true;
-    const formStages = this.stages.value;
-    
-    // NOTE: The payload type is now explicitly 'InterviewStage[]' from the imported service
-    const payload: InterviewStage[] = formStages.map((stage: any, index: number) => ({
-      stage_name: stage.stage_name === 'Customize' ? stage.custom_stage_name : stage.stage_name,
-      stage_date: formatDate(stage.stage_date, 'yyyy-MM-dd', 'en-US'),
-      mode: stage.mode,
-      assigned_to: stage.assigned_to,
-      order: index + 1,
-      user_id: localStorage.getItem('user_id')
-    }));
-
-    // MODIFICATION: Call the finalizeJobPost method from the InterviewService
-    this.interviewService.finalizeJobPost(this.jobUniqueId, payload, token).subscribe({
-      next: () => {
-        this.showSuccessPopup('Successfully Created!');
-        setTimeout(() => {
-          this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
-          this.closePopup();
-        }, 5000);
-        this.isSubmitting = false;
-      },
-      error: (err) => {
-        this.showErrorPopup(`Finalization failed: ${err.message || 'An unknown server error occurred.'}`);
-        this.isSubmitting = false;
-      }
-    });
-  }
-  
   onViewScore(): void {
     this.showDropdown = false;
     this.router.navigate(['/admin-candidate-scores']);

@@ -1,7 +1,4 @@
-//sample-3
-
-
-
+// src/app/pages/admin-create-job-step3/admin-create-job-step3.component.ts
 
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
@@ -15,6 +12,7 @@ import { AdminJobCreationWorkflowService } from '../../services/admin-job-creati
 import { MCQItem as IMcqItem } from '../admin-create-job-step1/types';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { McqAssessmentService } from 'src/app/services/mcq-assessment.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 // Interface to hold the structured parts of a parsed question
 interface ParsedDetails {
@@ -197,14 +195,11 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // --- MODIFICATION START ---
-    // Check for pre-loaded data from Step 2 to avoid race condition
     const preloadedUploadedMcqs = this.workflowService.getUploadedMcqs();
     if (preloadedUploadedMcqs) {
       console.log("Found pre-loaded uploaded MCQs from workflow service.", preloadedUploadedMcqs);
       this.workflowService.clearUploadedMcqs(); // Consume the data
     }
-    // --- MODIFICATION END ---
 
     // Define observables for initial data fetches
     const mcqStatus$ = this.jobService.checkMcqStatus(this.jobUniqueId, token).pipe(
@@ -214,8 +209,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    // --- MODIFICATION START ---
-    // If we have pre-loaded data, use it. Otherwise, fetch from API.
     const uploadedQuestions$ = preloadedUploadedMcqs 
       ? of({ data: preloadedUploadedMcqs }) // Wrap pre-loaded data in an observable
       : this.jobService.getUploadedQuestions(this.jobUniqueId, token).pipe(
@@ -224,7 +217,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
             return of({ data: {} });
           })
         );
-    // --- MODIFICATION END ---
 
     const codingProblems$ = this.jobService.getAllCodingAssessmentQuestions(token).pipe(
       catchError(err => {
@@ -302,14 +294,23 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           if (this.currentAssessmentId) {
             assessmentFetch$ = this.jobService.getAssessmentDetails(this.currentAssessmentId, token);
           } else {
-            // If no currentAssessmentId, check for the latest AI assessment
-            assessmentFetch$ = this.mcqService.getLatestAssessmentForJob(this.jobUniqueId, token, 'ai_generated');
+            // =========================================================================
+            // === THIS IS THE KEY CHANGE TO ENABLE EDIT FUNCTIONALITY =================
+            // =========================================================================
+            // This call fetches the latest assessment for the job, regardless of question source.
+            // It's the correct approach for both starting a new assessment (returns null/404)
+            // and editing an existing one (returns the assessment data).
+            assessmentFetch$ = this.jobService.getLatestAssessmentForJob(this.jobUniqueId, token);
           }
           return assessmentFetch$.pipe(
             catchError(err => {
-              console.warn("Could not load details for existing assessment or latest AI assessment.", err);
-              // It's fine if there's no existing assessment, so return null
-              return of(null);
+              // A 404 Not Found error is expected when creating a new job, as no assessment exists yet.
+              if (err instanceof HttpErrorResponse && err.status === 404) {
+                 console.warn("No existing assessment found. This is normal for a new job creation flow.");
+                 return of(null); // Return null to continue the stream without error.
+              }
+              console.warn("Could not load existing assessment details. Proceeding with a new assessment.", err);
+              return of(null); // On other errors, also proceed as if creating a new assessment.
             })
           );
         }),
@@ -407,7 +408,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   onAddNewSkillSubmit(): void {
     if (this.isAddingNewSkill) return;
 
-    // 1. Parse and Validate the input string (same as before)
     const skillNames = this.newSkillName
       .split(',')
       .map(skill => skill.trim())
@@ -428,7 +428,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       newValidSkills.push(skill);
     }
 
-    // 2. === NEW LOGIC: Add ALL new skill tabs to the UI at once ===
     const firstNewSkillIndex = this.skillSections.length;
 
     for (const skillName of newValidSkills) {
@@ -443,11 +442,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       this.skillSections.push(newSection);
     }
 
-    // 3. Update the UI to show all new tabs with spinners
     this.closeAddSkillPopup();
     setTimeout(() => {
       this.calculateCarouselState();
-      // Scroll to the first of the newly added tabs
       if (this.skillTrack?.nativeElement) {
           const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
           if (firstNewTabElement) {
@@ -455,19 +452,13 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
               this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
           }
       }
-      this.activeSectionIndex = firstNewSkillIndex; // Select the first new skill tab
+      this.activeSectionIndex = firstNewSkillIndex;
       this.cdr.detectChanges();
     }, 100);
 
-    // 4. Start the background processing for the list of skills
     this.processNewSkillsSequentially(newValidSkills);
   }
 
-  /**
-   * MODIFIED: Processes a list of new skills one by one.
-   * This function NO LONGER adds tabs to the UI. It only finds the existing placeholder tabs and updates them.
-   * @param skillsToProcess An array of validated, non-duplicate skill names.
-   */
   private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
     this.isAddingNewSkill = true;
     const token = this.authService.getJWTToken();
@@ -480,37 +471,32 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     console.log(`Starting background generation for: ${skillsToProcess.join(', ')}`);
 
     for (const skillName of skillsToProcess) {
-      // Find the placeholder section that we already created in the UI
       const sectionToUpdate = this.skillSections.find(
         s => s.skillName === skillName && s.generationStatus === 'loading'
       );
       
-      // Safety check in case the section is not found
       if (!sectionToUpdate) {
         console.warn(`Could not find placeholder for skill "${skillName}". Skipping.`);
         continue;
       }
 
       try {
-        // Await the API call for the current skill in the loop
         const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, skillName, token).toPromise();
         
         const newQuestions = this.processMcqItems(response.data);
         
-        // Update the existing section with the results
         sectionToUpdate.questions = newQuestions;
         sectionToUpdate.totalCount = newQuestions.length;
-        sectionToUpdate.generationStatus = 'completed'; // Change status
+        sectionToUpdate.generationStatus = 'completed';
         this.updateCounts();
-        this.cdr.detectChanges(); // Refresh the UI for this specific tab
+        this.cdr.detectChanges();
 
       } catch (err: any) {
         console.error(`Failed to generate questions for new skill: ${skillName}`, err);
         this.showErrorPopup(`Error for skill "${skillName}": ${err.message}`);
         
-        // Update status to 'failed' on error
         sectionToUpdate.generationStatus = 'failed';
-        this.cdr.detectChanges(); // Refresh the UI for this specific tab
+        this.cdr.detectChanges();
       }
     }
 
@@ -518,10 +504,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     console.log("Finished background generation for all new skills.");
   }
   
-  /**
-   * NEW: Applies assessment details to the form and pre-selects questions.
-   * This is a unified method to be called after any assessment details are fetched (either initial or latest).
-   */
   private applyAssessmentDetails(assessmentDetails: any): void {
       if (!assessmentDetails) {
         console.log("No assessment details to apply.");
@@ -538,11 +520,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           allowVideoRecording: assessmentDetails.has_video_recording,
           difficulty: assessmentDetails.difficulty,
           timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
-      }, { emitEvent: false }); // Prevent infinite loops if form control value changes trigger other logic
-      this.cdr.detectChanges(); // Update UI with form values
+      }, { emitEvent: false });
+      this.cdr.detectChanges();
 
-
-      // Pre-select Uploaded MCQs
       if (assessmentDetails.selected_mcqs && this.uploadedSkillSections.length > 0) {
           const selectedUploadedIds = new Set(assessmentDetails.selected_mcqs.map((q: any) => q.mcq_item_details.id));
           this.uploadedSkillSections.forEach(section => {
@@ -556,7 +536,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           this.cdr.detectChanges();
       }
       
-      // Pre-select Coding Problems
       if (assessmentDetails.selected_coding_problems && this.codingProblems.length > 0) {
         const selectedCodingIds = new Set(assessmentDetails.selected_coding_problems.map((p: any) => p.coding_problem_details.id));
         
@@ -565,17 +544,13 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
             problem.isSelected = true;
           }
         });
-        this.onCodingProblemSelectionChange(); // Update counts and 'select all' state
+        this.onCodingProblemSelectionChange();
         this.cdr.detectChanges();
       }
-      this.updateCounts(); // Update all combined counts
-      this.cdr.detectChanges(); // Explicitly detect changes after selections are applied
+      this.updateCounts();
+      this.cdr.detectChanges();
   }
   
-  /**
-   * NEW: Asynchronously generates MCQs for all pending skills, one by one.
-   * Updates the UI in real-time as each skill's questions are fetched.
-   */
   private async generateRemainingSkillsSequentially(): Promise<void> {
     if (this.isGeneratingSequentially) {
       console.log("Sequential generation is already in progress. Skipping.");
@@ -591,7 +566,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // Filter for skills that are genuinely pending
     const pendingSections = this.skillSections.filter(s => s.generationStatus === 'pending');
     console.log(`Found ${pendingSections.length} skills to process.`);
 
@@ -599,52 +573,33 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       try {
         console.log(`Generating questions for skill: ${section.skillName}`);
         section.generationStatus = 'loading';
-        this.cdr.detectChanges(); // Update UI to show spinner for this tab
+        this.cdr.detectChanges();
         
-        // This service call now returns the new questions in the response
         const response = await this.jobService.generateMcqForSkill(this.jobUniqueId, section.skillName, token).toPromise();
         
-        // **CRUCIAL UPDATE**: Process the returned data
         const newQuestions = this.processMcqItems(response.data);
         
-        // Append new questions to the section
         section.questions = [...section.questions, ...newQuestions];
         section.totalCount = section.questions.length;
-        section.generationStatus = 'completed'; // Mark as complete
+        section.generationStatus = 'completed';
         this.updateCountsForSection(section);
-        this.updateCounts(); // Update total counts
-        this.cdr.detectChanges(); // Refresh UI with new questions
+        this.updateCounts();
+        this.cdr.detectChanges();
         console.log(`SUCCESS: Completed generation for '${section.skillName}'. Added ${newQuestions.length} questions.`);
 
       } catch (error: any) {
         section.generationStatus = 'failed';
         console.error(`FAILED to generate questions for '${section.skillName}':`, error);
         this.showErrorPopup(`Could not generate questions for ${section.skillName}: ${error.message || 'Server error'}`);
-        this.cdr.detectChanges(); // Update UI to show failure icon
+        this.cdr.detectChanges();
       }
     }
     
     this.isGeneratingSequentially = false;
     console.log("Finished sequential generation process.");
   }
-  
-  // ... (rest of the component code, largely unchanged)
 
-  // Example of using cdr.detectChanges() in a setter if you had one
-  // set activeTab(value: 'ai-generated' | 'uploaded' | 'coding-problem') {
-  //   this._activeTab = value;
-  //   this.cdr.detectChanges();
-  // }
-  // get activeTab() { return this._activeTab; }
-
-
-  /**
-   * Helper function to extract options from the full question text.
-   * Assumes the format where options follow the question text.
-   */
   private extractOptionsFromQuestionText(questionText: string): string[] {
-    // console.log('[extractOptionsFromQuestionText] Input questionText:', questionText); // Too verbose, uncomment for debug
-
     const options: string[] = [];
     const optionLabels = ['a)', 'b)', 'c)', 'd)'];
     let remainingText = questionText.toLowerCase();
@@ -652,8 +607,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     for (let i = 0; i < optionLabels.length; i++) {
       const start = remainingText.indexOf(optionLabels[i]);
       if (start < 0) {
-        // console.log(`[extractOptionsFromQuestionText] No option "${optionLabels[i]}" found, breaking.`); // Too verbose
-        break; // no more options
+        break;
       }
       let end = remainingText.length;
       for (let j = i + 1; j < optionLabels.length; j++) {
@@ -665,29 +619,20 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       }
       const optionText = questionText.substring(start, end).trim();
       if (optionText) {
-        // console.log(`[extractOptionsFromQuestionText] Extracted option: "${optionText}"`); // Too verbose
         options.push(optionText);
       }
     }
-
-    // console.log('[extractOptionsFromQuestionText] Final options array:', options); // Too verbose
     return options.length ? options : [];
   }
 
-  /**
-   * Helper to extract the 'Correct: x)' answer from question text.
-   */
   private extractCorrectAnswerFromQuestionText(questionText: string): string {
-    // console.log('[extractCorrectAnswerFromQuestionText] Input questionText:', questionText); // Too verbose
     const correctIndex = questionText.indexOf('correct:');
     if (correctIndex < 0) {
-      // console.log('[extractCorrectAnswerFromQuestionText] "Correct:" not found in question text.'); // Too verbose
       return '';
     }
     let correctPart = questionText.substring(correctIndex + 8).trim();
     const match = correctPart.match(/[a-d]\)?/i);
     const answer = match ? match[0] : correctPart;
-    // console.log(`[extractCorrectAnswerFromQuestionText] Parsed answer: "${answer}"`); // Too verbose
     return answer;
   }
 
@@ -702,7 +647,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const correctMatch = rawText.match(/Correct Answer:\s*([a-d])/i);
-
     const difficultyMatch = rawText.match(/\(?\b(Easy|Medium|Hard)\b\)?$/i);
 
     return {
@@ -723,52 +667,36 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     }));
   }
 
-  /**
-     * Parses the raw question text from the database into a structured object by first removing metadata.
-     * @param rawText The full string containing the question, options, answer, and difficulty.
-     * @returns A `ParsedDetails` object with clean data.
-     */
     private parseQuestionText(rawText: string): ParsedDetails {
         if (!rawText) {
             return { question: 'Error: Empty question text.', options: [], correctAnswer: '', difficulty: 'Medium' };
         }
 
         let textToParse = rawText;
-
-        // 1. Find and extract the correct answer letter.
         let correctAnswer = '';
         const answerMatch = textToParse.match(/Correct Answer:\s*([a-d])/i);
         if (answerMatch) {
             correctAnswer = answerMatch[1].toLowerCase();
-            // IMPORTANT: Remove the "Correct Answer" part from the string to prevent it from being included in the last option.
             textToParse = textToParse.substring(0, answerMatch.index).trim();
         }
 
-        // 2. Find and extract difficulty.
-        let difficulty = 'Medium'; // Default
-        const difficultyMatch = textToParse.match(/\s*\((Easy|Medium|Hard)\)$/i); // Look for (Difficulty) at the very end
+        let difficulty = 'Medium';
+        const difficultyMatch = textToParse.match(/\s*\((Easy|Medium|Hard)\)$/i);
         if (difficultyMatch) {
             difficulty = difficultyMatch[1].charAt(0).toUpperCase() + difficultyMatch[1].slice(1).toLowerCase();
-            // Remove the difficulty part from the string.
             textToParse = textToParse.substring(0, difficultyMatch.index).trim();
         }
 
-        // `textToParse` is now clean and should only contain the question and options.
-
-        // 3. Extract the main question. It's everything before the first option marker 'a)'.
         let question = `Question could not be parsed: ${rawText.substring(0, 50)}...`;
         const firstOptionIndex = textToParse.toLowerCase().indexOf('a)');
         
         if (firstOptionIndex !== -1) {
             question = textToParse.substring(0, firstOptionIndex).replace(/^Q\d+\.\s*/, '').trim();
         } else {
-             // Fallback if 'a)' is somehow missing
             question = textToParse.trim();
         }
 
-        // 4. Extract the options from the now-clean string.
         const options: string[] = [];
-        // This regex is safer now because "Correct Answer" is gone. It will find text between option markers.
         const optionsRegex = /\b([a-d])\)\s*([\s\S]*?)(?=\s*[a-d]\)|$)/gi;
         let optionParseResult;
         const tempOptions: { [key: string]: string } = {};
@@ -779,7 +707,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
             tempOptions[letter] = text;
         }
         
-        // Ensure options are always returned in order a, b, c, d
         for (const letter of ['a', 'b', 'c', 'd']) {
             options.push(tempOptions[letter] || '');
         }
@@ -791,7 +718,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
             difficulty
         };
     }
-
 
   private initializeForm(): void {
     this.assessmentForm = this.fb.group({
@@ -810,10 +736,6 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  /**
-   * NEW: Generates a detailed error message string from form validation errors.
-   * @returns A string listing all current validation errors.
-   */
   private getFormValidationErrors(): string {
     const errors: string[] = [];
     const controls = this.assessmentForm.controls;
@@ -834,36 +756,25 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
       if (controls.timeLimit.errors.pattern) {
         errors.push('Time Limit must be in HH:MM format.');
       }
-      if (controls.timeLimit.errors.timeIsZero) { // Check for the custom error key
+      if (controls.timeLimit.errors.timeIsZero) {
         errors.push('Time Limit cannot be 00:00.');
       }
     }
   
-    return errors.join(' \n'); // Join with a newline for better readability in the popup
+    return errors.join(' \n');
   }
 
-  // loadExistingAssessment and fetchNewMcqList are less critical now with loadAllInitialData
-  // They are only called by checkAndLoadAssessment, which is itself largely superseded
   private loadExistingAssessment(assessmentId: string): void {
-    // This method's core logic is now largely integrated into loadAllInitialData
-    // and applyAssessmentDetails. This version might be redundant or require re-thinking
-    // its purpose if it's meant to *replace* the initial load.
     console.warn("loadExistingAssessment is called, consider if it's redundant with loadAllInitialData.");
-    // For now, it will simply re-call the main orchestration if needed or rely on it.
     this.loadAllInitialData();
   }
 
   private fetchNewMcqList(): void {
-    // This method's core logic is now largely integrated into loadAllInitialData
     console.warn("fetchNewMcqList is called, consider if it's redundant with loadAllInitialData.");
-    // For now, it will simply re-call the main orchestration if needed or rely on it.
     this.loadAllInitialData();
   }
 
-
   ngAfterViewInit(): void {
-    // These calls are also handled in finalize of loadAllInitialData,
-    // but a slight delay here can help if browser rendering is slow
     setTimeout(() => {
       this.updateSliderFill();
       this.calculateCarouselState();
@@ -950,9 +861,8 @@ onAlertButtonClicked(action: string) {
   }
 
   private checkAndLoadAssessment(): void {
-    // This method is now likely redundant as loadAllInitialData covers its concerns.
     console.warn("checkAndLoadAssessment is called, consider if it's redundant with loadAllInitialData.");
-    this.loadAllInitialData(); // Fallback to main orchestration
+    this.loadAllInitialData();
   }
 
   private calculateCarouselState(): void {
@@ -973,9 +883,8 @@ onAlertButtonClicked(action: string) {
     if (trackWidth <= viewportWidth) {
       this.maxScrollIndex = 0;
     } else {
-      // Corrected line: Cast firstElementChild to HTMLElement
       const firstChildElement = this.skillTrack.nativeElement.firstElementChild as HTMLElement;
-      const firstChildWidth = firstChildElement?.offsetWidth || 1; // Use optional chaining for safety
+      const firstChildWidth = firstChildElement?.offsetWidth || 1;
       
       this.maxScrollIndex = this.skillSections.length - Math.floor(viewportWidth / firstChildWidth);
       if (this.maxScrollIndex < 0) this.maxScrollIndex = 0;
@@ -1117,7 +1026,7 @@ onAlertButtonClicked(action: string) {
     if (this.activeTab === 'ai-generated') {
       this.activeSectionIndex = index;
     } else {
-      this.activeUploadedSectionIndex = index; // This path might be wrong for selectSection
+      this.activeUploadedSectionIndex = index;
     }
     this.cdr.detectChanges();
   }
@@ -1171,7 +1080,6 @@ onAlertButtonClicked(action: string) {
     this.assessmentForm.markAllAsTouched();
 
     if (this.assessmentForm.invalid) {
-      // MODIFICATION: Also use the dynamic error message for saving drafts
       const errorMessages = this.getFormValidationErrors();
       this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
       return;
@@ -1193,7 +1101,6 @@ onAlertButtonClicked(action: string) {
   onNext(): void {
     this.assessmentForm.markAllAsTouched();
     if (this.assessmentForm.invalid) {
-      // MODIFICATION: Call the new helper to get specific error messages
       const errorMessages = this.getFormValidationErrors();
       this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
       return;
@@ -1298,6 +1205,7 @@ onAlertButtonClicked(action: string) {
           this.showSuccessPopup('Draft saved successfully!');
           
           setTimeout(() => {
+            this.workflowService.clearWorkflow();
             this.router.navigate(['/recruiter-view-3rd-page1']);
           }, 2000);
         },
@@ -1312,7 +1220,6 @@ onAlertButtonClicked(action: string) {
     this.assessmentForm.markAllAsTouched();
     
     if (this.assessmentForm.invalid) {
-      // MODIFICATION: Call the new helper to get specific error messages
       const errorMessages = this.getFormValidationErrors();
       this.showErrorPopup(errorMessages || 'Please fill in all required fields correctly.');
       return;

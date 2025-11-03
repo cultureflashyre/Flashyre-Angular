@@ -54,7 +54,7 @@
     <ng-template #text4>
       <div class="candidate-home-fragment17">
         <span class="candidate-home-text107">
-          {{ userProfile.first_name }} {{ userProfile.last_name }}
+          {{ recruiterProfile.first_name }} {{ recruiterProfile.last_name }}
         </span>
       </div>
     </ng-template>
@@ -276,6 +276,24 @@
           <span id="previous-text" class="admin-create-job-step4-previous-text">
             Previous
           </span>
+        </button>
+
+        <button
+          type="button"
+          class="admin-create-job-step4-save-draft-button button"
+          (click)="onSaveDraft()"
+          [disabled]="isSubmitting"
+        >
+          Save Draft
+        </button>
+
+        <button
+          type="button"
+          class="admin-create-job-step4-skip-button button"
+          (click)="onSkip()"
+          [disabled]="isSubmitting"
+        >
+          Skip
         </button>
 
         <!-- Dropdown container -->

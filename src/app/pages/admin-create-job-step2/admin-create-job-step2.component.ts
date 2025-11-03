@@ -1,3 +1,4 @@
+// src/app/pages/admin-create-job-step2/admin-create-job-step2.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +23,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   isGenerating: boolean = false;
   hasGenerated: boolean = false;
   isLoading: boolean = true;
-  isEditMode: boolean = false; // Explicitly track if we are in "edit" mode
+  isEditMode: boolean = false;
 
   private subscriptions = new Subscription();
   
@@ -43,12 +44,12 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     private title: Title,
     private meta: Meta,
     private router: Router,
-    private route: ActivatedRoute, // Inject ActivatedRoute to read URL parameters
+    private route: ActivatedRoute,
     private jobDescriptionService: AdminJobDescriptionService,
     private corporateAuthService: CorporateAuthService,
     private workflowService: AdminJobCreationWorkflowService,
     private spinner: NgxSpinnerService,
-    private authService: AuthService,
+    private authService: AuthService, // Note: This service was unused in the original admin file. Keeping it for consistency.
   ) {}
 
   ngOnInit(): void {
@@ -63,35 +64,40 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       return;
     }
 
-    // --- EDITING LOGIC ---
-    // Determine if we are creating or editing by checking for a job ID from the
-    // route parameters and the workflow service.
+    // --- REVISED EDITING LOGIC ---
     const jobIdFromRoute = this.route.snapshot.paramMap.get('jobId');
     const jobIdFromWorkflow = this.workflowService.getCurrentJobId();
 
-    this.jobUniqueId = jobIdFromRoute || jobIdFromWorkflow;
-
-    if (this.jobUniqueId) {
-      this.isEditMode = true;
-      // Ensure workflow service is in sync if the ID came from the URL
-      //if (this.jobUniqueId !== jobIdFromWorkflow) {
-      //  this.workflowService.setCurrentJobId(this.jobUniqueId);
-      //}
-      // This is the core function for "editing": it fetches the current assessment state.
-      this.checkInitialMcqStatus();
+    if (jobIdFromRoute) {
+      // If job ID is in the URL, we are definitely editing.
+      // Start or update the workflow to reflect this.
+      this.jobUniqueId = jobIdFromRoute;
+      this.workflowService.startEditWorkflow(this.jobUniqueId);
     } else {
-      this.isEditMode = false;
+      // If not in URL, rely on the workflow service.
+      this.jobUniqueId = jobIdFromWorkflow;
+    }
+
+    // Now, determine the mode from the single source of truth: the workflow service.
+    this.isEditMode = this.workflowService.getIsEditMode();
+    
+    if (!this.jobUniqueId) {
       this.showErrorPopup('No active job post found. Redirecting to Step 1.');
       this.router.navigate(['/admin-create-job-step1']);
       return;
     }
 
+    // For both new and edit modes, check the initial MCQ status.
+    // In "new" mode, it will report no questions.
+    // In "edit" mode, it will report if questions already exist.
+    this.checkInitialMcqStatus();
+    
     this.loadUserProfile();
   }
 
   /**
-   * Fetches the MCQ status for the current job to pre-populate the UI.
-   * This is the key function that enables editing capabilities.
+   * Fetches the MCQ status for the current job.
+   * This is the core function that enables pre-filling the UI for editing.
    */
   private checkInitialMcqStatus(): void {
     const token = this.corporateAuthService.getJWTToken();
@@ -108,7 +114,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
           // If questions exist (status is not 'not_started'), update the UI state.
           // This will show "Regenerate" and enable the "Next" button.
           this.hasGenerated = response.status !== 'not_started';
-          console.log("In ADMIN-create Job - 2: ", this.hasGenerated);
         },
         error: (err) => {
           this.hasGenerated = false; // On error, assume no questions exist.
@@ -187,7 +192,11 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
 
   onPrevious(): void {
     // Navigate back to step 1, passing the job ID to maintain the editing context.
-    this.router.navigate(['/admin-create-job-step1', this.jobUniqueId]);
+    if(this.jobUniqueId) {
+        this.router.navigate(['/admin-create-job-step1', this.jobUniqueId]);
+    } else {
+        this.router.navigate(['/admin-create-job-step1']);
+    }
   }
 
   onNext(): void {
@@ -202,13 +211,17 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       this.spinner.show('ai-spinner', { template: `<p style='color: white; font-size: 18px;'>Processing your file...</p>` });
       const token = this.corporateAuthService.getJWTToken();
 
-      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token)
+      this.jobDescriptionService.uploadExcelFile(this.selectedExcelFile, this.jobUniqueId!, token!)
         .pipe(finalize(() => {
           this.isUploading = false;
           this.spinner.hide('ai-spinner');
         }))
         .subscribe({
-          next: () => {
+          next: (response) => {
+            // New: Pass uploaded MCQs to the next step via the workflow service
+            if (response.uploaded_mcqs) {
+              this.workflowService.setUploadedMcqs(response.uploaded_mcqs);
+            }
             this.showSuccessPopup('File uploaded and questions processed!');
             this.router.navigate(['/admin-create-job-step3']);
           },
@@ -227,7 +240,10 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    this.openAlert('Are you sure you want to cancel? Your changes will not be saved.', ['No', 'Yes, Cancel']);
+    const message = this.isEditMode 
+      ? 'Are you sure you want to cancel? Your changes will not be saved.' 
+      : 'Are you sure you want to cancel this new job post?';
+    this.openAlert(message, ['No', 'Yes, Cancel']);
   }
   
   onSaveDraft() {
@@ -261,14 +277,17 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
 
   private onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
-    this.showSuccessPopup('Job post editing cancelled.');
-    setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
+    const message = this.isEditMode ? 'Job post editing cancelled.' : 'Job post creation cancelled.';
+    this.showSuccessPopup(message);
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 2000);
   }
   
   private onSaveDraftConfirmed(): void {
+    // Note: The backend must handle the "draft" status on Step 1.
+    // This action simply exits the flow.
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
-    setTimeout(() => this.router.navigate(['/admin-job-posts']), 2000);
+    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 2000);
   }
 
   showSuccessPopup(message: string) {
