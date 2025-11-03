@@ -1754,6 +1754,80 @@
 .right-arrow {
   margin-left: 5px;
 }
+
+.coding-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.problem-card, .submission-card {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.problem-card h3, .submission-card h3 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.problem-card h4 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.code-block {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
+
+.no-submission-message {
+  font-style: italic;
+  color: #777;
+}
+
+/* Make sure preformatted text wraps correctly */
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* New styles for the coding submission status */
+.submission-status-container {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: #e9f7ef; /* Light green background from MCQ */
+  border-left: 5px solid #28a745; /* Green side border */
+}
+
+.submission-correct-text {
+  color: #155724; /* Dark green text from MCQ */
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* New styles for the incorrect coding submission status */
+.submission-status-container.incorrect {
+  background-color: #f8d7da; /* Light red background */
+  border-left-color: #dc3545; /* Darker red border */
+}
+
+.submission-incorrect-text {
+  color: #721c24; /* Dark red text */
+  font-weight: bold;
+  font-size: 16px;
+}
  
 @media(max-width: 991px) {
   .assessment-taken-page3-cloud-architecture-main-container {
