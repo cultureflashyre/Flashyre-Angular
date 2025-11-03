@@ -46,8 +46,14 @@ export class AssessmentTakenService {
   }
 
 fetchAssessmentScore(assessmentId: string): Observable<any> {
-  const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
-  return this.http.get(url);
+  try {
+    const headers = this.getAuthHeaders();
+    const url = `${this.baseUrl}assessment/get-assessment-score/${assessmentId}/`;
+    return this.http.get(url, { headers });
+  } catch (error) {
+    // If getAuthHeaders fails (e.g., no token), return an observable that emits an error
+    return new Observable(observer => observer.error('Authentication failed'));
+  }
 }
 
  // --- NEW METHODS FOR AI RECOMMENDATION ---

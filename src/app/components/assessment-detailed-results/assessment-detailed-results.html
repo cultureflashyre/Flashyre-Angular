@@ -176,64 +176,104 @@
 </div>
 
     <!-- Questions for selected section -->
-    <div *ngIf="selectedSection" class="selected-section-questions">
-      <div *ngFor="let question of groupedQuestions[selectedSection]; let qi = index">
-        <!-- New: Wrap in card -->
-        <div class="question-card">
-          <div class="assessment-taken-page3-question-number-container1">
-            <span class="assessment-taken-page3-text33">
-              Question {{ qi + 1 }}/{{ groupedQuestions[selectedSection].length }}
-            </span>
-          </div>
-          <div class="assessment-taken-page3-question-container1">
-            <span class="assessment-taken-page3-text34">
-              {{ question.question_text }}
-            </span>
-            <img *ngIf="question.question_image" [src]="question.question_image" class="question-image" />
-          </div>
-          <div class="assessment-taken-page3-options-container1">
+    <!-- Questions for selected section -->
+<div *ngIf="selectedSection" class="selected-section-questions">
 
-
-              <div *ngFor="let opt of getOptions(question); let optIdx = index" 
-              class="assessment-taken-page3-option-container10">
-                <input
-                  type="radio"
-                  [name]="'radio-' + question.questionNumber"
-                  [checked]="logRadioStatus(question, opt, question.questionNumber - 1)"
-                  disabled
-                  class="assessment-taken-page3-radiobutton13"
-                />
-                <div class="assessment-taken-page3-container15">
-                  <label>{{ opt.value }}</label>
-                  <span *ngIf="getOptionStatus(question, opt) === 'correct'"
-                        class="assessment-taken-page3-correct-incorrect-text16">
-                    Correct
-                  </span>
-                  <span *ngIf="getOptionStatus(question, opt) === 'incorrect'"
-                        class="assessment-taken-page3-correct-incorrect-text17">
-                    Incorrect
-                  </span>
-                </div>
-              </div>
-
-          </div>
-          <div class="assessment-taken-page3-explianation-container1">
-              <div class="assessment-taken-page3-container16">
-                <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
-                <span class="assessment-taken-page3-correct-option-text1">
-                  {{ getCorrectOptionLetter(question) }}
-                </span>
-              </div>
-              <div class="assessment-taken-page3-container17">
-                <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
-                <span class="assessment-taken-page3-correct-answer-explained-text1">
-                  {{ question.q_answer_explained || 'No explanation provided.' }}
-                </span>
-              </div>
-            </div>
+  <!-- ====================================================== -->
+  <!-- VIEW 1: RENDER THIS BLOCK IF IT'S AN MCQ SECTION       -->
+  <!-- ====================================================== -->
+  <ng-container *ngIf="!isCodingSection(selectedSection)">
+    <div *ngFor="let question of groupedQuestions[selectedSection]; let qi = index">
+      <!-- (This is your existing question card code, no changes needed inside) -->
+      <div class="question-card">
+        <div class="assessment-taken-page3-question-number-container1">
+          <span class="assessment-taken-page3-text33">
+            Question {{ qi + 1 }}/{{ groupedQuestions[selectedSection].length }}
+          </span>
         </div>
+        <div class="assessment-taken-page3-question-container1">
+          <span class="assessment-taken-page3-text34">
+            {{ question.question_text }}
+          </span>
+          <img *ngIf="question.question_image" [src]="question.question_image" class="question-image" />
+        </div>
+        <div class="assessment-taken-page3-options-container1">
+          <div *ngFor="let opt of getOptions(question); let optIdx = index" class="assessment-taken-page3-option-container10">
+            <input type="radio" [name]="'radio-' + question.questionNumber" [checked]="logRadioStatus(question, opt, question.questionNumber - 1)" disabled class="assessment-taken-page3-radiobutton13" />
+            <div class="assessment-taken-page3-container15">
+              <label>{{ opt.value }}</label>
+              <span *ngIf="getOptionStatus(question, opt) === 'correct'" class="assessment-taken-page3-correct-incorrect-text16">
+                Correct
+              </span>
+              <span *ngIf="getOptionStatus(question, opt) === 'incorrect'" class="assessment-taken-page3-correct-incorrect-text17">
+                Incorrect
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="assessment-taken-page3-explianation-container1">
+            <div class="assessment-taken-page3-container16">
+              <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
+              <span class="assessment-taken-page3-correct-option-text1">
+                {{ getCorrectOptionLetter(question) }}
+              </span>
+            </div>
+            <div class="assessment-taken-page3-container17">
+              <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
+              <span class="assessment-taken-page3-correct-answer-explained-text1">
+                {{ question.q_answer_explained || 'No explanation provided.' }}
+              </span>
+            </div>
+          </div>
       </div>
     </div>
+  </ng-container>
+
+  <!-- ====================================================== -->
+  <!-- VIEW 2: RENDER THIS BLOCK IF IT'S THE CODING SECTION   -->
+  <!-- ====================================================== -->
+  <ng-container *ngIf="isCodingSection(selectedSection)">
+    <div class="coding-details-container">
+      
+      <!-- Problem Description -->
+      <div class="problem-card">
+        <h3>Problem: {{ codingSectionsMap[selectedSection].problem_details.title }}</h3>
+        <p [innerHTML]="codingSectionsMap[selectedSection].problem_details.description"></p>
+        
+        <h4>Input Format</h4>
+        <p>{{ codingSectionsMap[selectedSection].problem_details.input_format }}</p>
+
+        <h4>Output Format</h4>
+        <p>{{ codingSectionsMap[selectedSection].problem_details.output_format }}</p>
+
+        <h4>Constraints</h4>
+        <pre>{{ codingSectionsMap[selectedSection].problem_details.constraints }}</pre>
+
+        <h4>Example</h4>
+        <pre>{{ codingSectionsMap[selectedSection].problem_details.example }}</pre>
+      </div>
+
+      <!-- User's Submission -->
+      <div class="submission-card">
+        <h3>Your Submission</h3>
+        <div *ngIf="codingSectionsMap[selectedSection].user_submission; else noSubmission">
+          <pre class="code-block"><code>{{ codingSectionsMap[selectedSection].user_submission.source_code }}</code></pre>
+          <div *ngIf="codingSectionsMap[selectedSection].user_submission.score === 100" class="submission-status-container">
+            <span class="submission-correct-text">Correct</span>
+          </div>
+          <div *ngIf="codingSectionsMap[selectedSection].user_submission.score < 100" class="submission-status-container incorrect">
+            <span class="submission-incorrect-text">Incorrect</span>
+          </div>
+        </div>
+        <ng-template #noSubmission>
+          <p class="no-submission-message">You did not submit a solution for this problem during the assessment.</p>
+        </ng-template>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>
   </div>
         
         <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0 || totalQuestions === 0" class="no-questions-message">

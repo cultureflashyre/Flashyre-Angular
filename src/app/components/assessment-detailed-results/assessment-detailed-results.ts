@@ -25,6 +25,8 @@ export class AssessmentDetailedResults implements OnChanges  {
     recommendation: any = null;
     recommendationStatus: 'NOT_STARTED' | 'PENDING' | 'COMPLETE' | 'FAILED' = 'NOT_STARTED';
     private pollingSubscription: Subscription | null = null;
+
+    codingSectionsMap: { [key: string]: any } = {};
     // --- END NEW PROPERTIES ---
 
 
@@ -54,16 +56,14 @@ export class AssessmentDetailedResults implements OnChanges  {
       this.questions = this.assessmentData.detailed_questions || [];
       this.totalQuestions = this.questions.length;
 
-      // Assign global question numbers
-      let index = 1;
-      this.questions.forEach(q => {
-        q.questionNumber = index++;
-      });
-
-      // Group questions by section, preserving order
+      // Reset properties for the new attempt data
       this.sectionOrder = [];
+      this.groupedQuestions = {};
+      this.codingSectionsMap = {};
+
+      // 1. Process MCQ sections
       this.groupedQuestions = this.questions.reduce((acc: { [key: string]: any[] }, q: any) => {
-        const sectionName = q.section || 'Unnamed Section';  // Fallback if section is missing
+        const sectionName = q.section || 'Unnamed Section';
         if (!acc[sectionName]) {
           acc[sectionName] = [];
           this.sectionOrder.push(sectionName);
@@ -72,14 +72,20 @@ export class AssessmentDetailedResults implements OnChanges  {
         return acc;
       }, {});
 
-      // Set default selected section to the first one
+      // 2. Process Coding sections
+      const codingSections = this.assessmentData.coding_sections || [];
+      codingSections.forEach((codingSection: any) => {
+        const sectionName = codingSection.section_name;
+        if (sectionName) {
+          this.sectionOrder.push(sectionName);
+          this.codingSectionsMap[sectionName] = codingSection;
+        }
+      });
+
+      // 3. Set default selected section
       this.selectedSection = this.sectionOrder[0] || null;
 
-      // Kick off the recommendation fetching process
       this.initiateRecommendationCheck();
-      this.questions.forEach((q, idx) => {
-        console.log(`Q${idx+1} correct:`, q.q_correct_answer, 'explanation:', q.q_answer_explained);
-      });
     }
   }
 
@@ -241,5 +247,9 @@ onReattempt() {
   // New: Method to handle section selection
   selectSection(section: string) {
     this.selectedSection = section;
+  }
+
+  isCodingSection(sectionName: string | null): boolean {
+    return !!sectionName && sectionName in this.codingSectionsMap;
   }
 }
