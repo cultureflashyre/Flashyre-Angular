@@ -24,6 +24,25 @@
       >
         <nav id="header-links" class="navbar-for-candidate-view-links">
           <a
+            id="navbar-home-link"
+            rel="noreferrer noopener"
+            class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
+            [routerLink]="['/candidate-home']"
+          >
+            <ng-container>
+              <ng-template #defaultHomeLink>
+                <div class="navbar-for-candidate-view-fragment17">
+                  <span class="navbar-for-candidate-view-text17">
+                    Home
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="homeLink ? homeLink : defaultHomeLink"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <a
             id="navbar-dashboard-link"
             class="navbar-for-candidate-view-dashboard-link thq-body-small button"
           >
@@ -79,7 +98,7 @@
             id="navbar-jobs-for-you-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
-            [routerLink]="['/candidate-home']"
+            [routerLink]="['/candidate-job-detail-view']"
           >
             <ng-container>
               <ng-template #defaultLink4>
@@ -560,7 +579,7 @@
               <div
                 id="jobs-for-you-container"
                 class="navbar-for-candidate-view-jobs-for-container"
-                [routerLink]="['/candidate-home']"
+                [routerLink]="['/candidate-job-detail-view']"
               >
                 <svg
                   id="briefcase-icon"

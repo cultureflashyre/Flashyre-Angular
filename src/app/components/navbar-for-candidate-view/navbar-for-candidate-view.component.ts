@@ -73,6 +73,8 @@ export class NavbarForCandidateView {
   text6: TemplateRef<any>
   @Input()
   link2Url: string = ''
+  @Input() 
+  homeLink: TemplateRef<any>
   
   constructor(
     private authService: AuthService,
