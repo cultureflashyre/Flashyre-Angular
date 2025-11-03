@@ -627,6 +627,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       next: (response) => {
         console.log('Submit code response:', JSON.stringify(response, null, 2));
         this.results = response.results || ['No results available'];
+         this.results = ['Code submitted successfully'];
         this.codingSubmissions[this.currentSection.coding_id_id] = {
           id: response.id,
           score: response.score
