@@ -377,11 +377,15 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.isSubmitting = true;
     this.isFileUploadCompletedSuccessfully = false;
     this.spinner.show('main-spinner');
+
     const uploadSub = this.jobDescriptionService.uploadFile(file, token).subscribe({
       next: (response) => {
         // If in edit mode, preserve the original unique_id from the route
-        const currentUniqueId = this.isEditMode ? this.currentJobUniqueId : response.unique_id;
-        this.jobData = { ...response, unique_id: currentUniqueId! };
+        //const currentUniqueId = this.isEditMode ? this.currentJobUniqueId : response.unique_id;
+        this.currentJobUniqueId = response.unique_id;
+        this.isEditMode = true;
+
+        this.jobData = { ...response, unique_id: this.currentJobUniqueId! };
         this.populateForm(this.jobData);
         this.showSuccessPopup('File uploaded and processed successfully.');
         this.isSubmitting = false;
@@ -835,7 +839,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         const userProfile = JSON.parse(userProfileString);
         // Admins might post for the main company, not their own 'latest_company_name'
         // This can be adjusted based on business logic. For now, we'll use a default.
-        if (userProfile.user_type === 'admin' && userProfile.company_name) {
+        if (userProfile.company_name) {
           companyName = userProfile.company_name;
         } else if (userProfile.latest_company_name && userProfile.latest_company_name.trim() !== '') {
           companyName = userProfile.latest_company_name;
@@ -852,7 +856,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
       },
       status: this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft', // Preserve status if editing
-      companyName: companyName
+      company_name: companyName
     };
 
     let saveOperation: Observable<{ unique_id: string }>;
@@ -869,6 +873,15 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const saveSub = saveOperation.subscribe({
       next: (response) => {
         this.isSubmitting = false;
+
+        if (!this.isEditMode) {
+          // 1. Store the new unique_id returned by the create operation.
+          this.currentJobUniqueId = response.unique_id;
+          
+          // 2. Set the component to edit mode. Any further saves without leaving the
+          //    page will now correctly be treated as updates.
+          this.isEditMode = true;
+        }
         // MODIFIED: Dynamic success message
         this.showSuccessPopup(`Job post ${this.isEditMode ? 'updated' : 'saved'}. Proceeding to assessment setup.`);
         this.workflowService.startWorkflow(response.unique_id);
