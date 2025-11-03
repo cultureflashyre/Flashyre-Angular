@@ -29,6 +29,10 @@ export class LogInPage implements OnInit {
   showPassword: boolean = false;
   errorMessage: string = '';
 
+    // Properties for the alert message
+  showLoginSuccessAlert = false;
+  loginSuccessMessage = '';
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -57,12 +61,10 @@ export class LogInPage implements OnInit {
     console.log('onSubmit called', {
       formValues: this.loginForm.value,
       isValid: this.loginForm.valid,
-      isInvalid: this.loginForm.invalid
     });
 
     if (this.loginForm.invalid) {
       this.errorMessage = 'Please enter both email and password';
-      console.log('Setting errorMessage:', this.errorMessage);
       this.cdr.detectChanges();
       return;
     }
@@ -72,26 +74,54 @@ export class LogInPage implements OnInit {
       ? this.corporateAuthService.loginCorporate(email, password)
       : this.authService.login(email, password);
 
-    // Inside log-in-page.component.ts onSubmit()
     loginObservable.subscribe({
       next: (response: any) => {
         if (response.message === 'Login successful' && response.access) {
           this.errorMessage = '';
           localStorage.setItem('jwtToken', response.access);
-          this.loginSubmit.emit(response);
+
+          let roleMessage = '';
+          switch (response.role) {
+            case 'candidate':
+              roleMessage = 'You are logged in as Candidate.';
+              break;
+            case 'recruiter':
+              roleMessage = 'You are logged in as Recruiter.';
+              break;
+            case 'admin':
+              roleMessage = 'You are logged in as Admin.';
+              break;
+            default:
+              roleMessage = 'Login successful.';
+              break;
+          }
+          this.loginSuccessMessage = roleMessage;
+          this.showLoginSuccessAlert = true;
+          this.cdr.detectChanges(); // Immediately show the alert message
+
+          // Set a timeout to hide the message and then emit the login event
+          setTimeout(() => {
+            this.showLoginSuccessAlert = false;
+            // --- MOVE THE EMIT CALL HERE ---
+            this.loginSubmit.emit(response);
+            this.cdr.detectChanges(); // Update the view after hiding the alert
+          }, 5000); // 5-second delay
+
         } else {
           this.errorMessage = response.error || 'Invalid Email or Password';
           this.cdr.detectChanges();
-          // DO NOT emit loginSubmit on error
         }
       },
       error: (err) => {
         this.errorMessage = 'Invalid Email or Password';
         this.cdr.detectChanges();
-        // DO NOT emit loginSubmit in error block
       }
     });
+  }
 
+    // Function to close the alert manually if needed
+  onAlertClose() {
+    this.showLoginSuccessAlert = false;
   }
 
   togglePasswordVisibility() {

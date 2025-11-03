@@ -1,3 +1,13 @@
+<!-- Alert Message Component Integration -->
+<div *ngIf="showLoginSuccessAlert">
+  <app-alert-message
+    [message]="loginSuccessMessage"
+    [buttons]="[]"
+    (close)="onAlertClose()">
+  </app-alert-message>
+</div>
+
+
 <div id="login-page" class="log-in-page-container1" [ngClass]="rootClassName">
   <div id="login-page-container" class="log-in-page-container2">
     <h1 id="flashyre-welcome-page" class="log-in-page-text10">
