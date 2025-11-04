@@ -17,6 +17,10 @@
                 <div class="status-icon passed">✓</div>
                 <div>{{ result }}</div>
             </div>
+     <div *ngIf="result.includes('Code submitted successfully')" class="submission-success">
+        <div class="status-icon passed">✓</div>
+        <div>{{ result }}</div>
+    </div>       
             <div *ngIf="result.includes('Wrong Answer') || result.includes('Compilation Error') || result.includes('Runtime Error') || result.includes('Time Limit Exceeded')" class="test-case failed">
                 <div class="status-icon failed">✗</div>
                 <div>{{ result }}</div>
@@ -29,8 +33,7 @@
                 <div class="status-icon failed">⚠</div>
                 <div>{{ result }}</div>
             </div>
-            <div *ngIf="!result.includes('Accepted') && !result.includes('Wrong Answer') && !result.includes('Compilation Error') && !result.includes('Runtime Error') && !result.includes('Time Limit Exceeded') && !result.includes('Language Mismatch') && !result.includes('Judge0 API Error') && !result.includes('Network Error') && !result.includes('Submission Failed') && !result.includes('User does not exist') && !result.includes('endpoint not found')" class="error-message">
-                <div class="status-icon failed">⚠</div>
+<div *ngIf="!result.includes('Accepted') && !result.includes('Wrong Answer') && !result.includes('Compilation Error') && !result.includes('Runtime Error') && !result.includes('Time Limit Exceeded') && !result.includes('Language Mismatch') && !result.includes('Judge0 API Error') && !result.includes('Network Error') && !result.includes('Submission Failed') && !result.includes('User does not exist') && !result.includes('endpoint not found') && !result.includes('Code submitted successfully')" class="error-message">                <div class="status-icon failed">⚠</div>
                 <div>{{ result }}</div>
             </div>
         </div>

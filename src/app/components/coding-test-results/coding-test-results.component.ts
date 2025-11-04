@@ -23,7 +23,7 @@ export class CodingTestResultsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['results']) {
-      console.log('TestResultsComponent received results:', this.results);
+      console.log('TestResultsComponent received new results:', this.results);
       this.isMinimized = false;
       // When new results arrive, we don't need to manage visibility here anymore.
       this.cdr.detectChanges();
