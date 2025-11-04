@@ -1,6 +1,11 @@
 import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
+interface CodingSubmission {
+  id: number;
+  score: number;
+}
+
 @Component({
   selector: 'assessment-warning-popup',
   templateUrl: 'assessment-warning-popup.component.html',
@@ -17,6 +22,9 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   @Input() sections: any[] = [];
   @Input() userResponses: { [key: string]: any } = {};
   @Input() sectionTimers: { [section_id: number]: number } = {};
+  // MODIFICATION START: Add a new input to receive coding submission data
+  @Input() codingSubmissions: { [problem_id: number]: CodingSubmission } = {};
+
   @Output() endTestConfirmed = new EventEmitter<void>();
   @Output() closePopup = new EventEmitter<void>();
   @Output() questionNavigate = new EventEmitter<{section: any, questionIndex: number}>();
@@ -68,7 +76,8 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sections'] || changes['userResponses']) {
+    // MODIFICATION: Rerun summary calculation if codingSubmissions change
+    if (changes['sections'] || changes['userResponses'] || changes['codingSubmissions']) {
       this.calculateSummary();
       this.drawChart();
     }
@@ -84,17 +93,11 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   // Decrease each section timer by 1 second if above 0
   countdownTimers(): void {
     if (!this.sectionTimers) return;
-
-    let updated = false;
     Object.keys(this.sectionTimers).forEach(sectionId => {
       if (this.sectionTimers[sectionId] > 0) {
-        this.sectionTimers[sectionId] = this.sectionTimers[sectionId] - 1;
-        updated = true;
+        this.sectionTimers[sectionId]--;
       }
     });
-
-    // If timers changed, optionally trigger change detection or other logic here
-    // Angular's binding will update the displayed time because sectionTimers are updated
   }
 
   // --- Existing methods below ---
@@ -105,12 +108,19 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
     let attempted = 0;
 
     this.sections.forEach(sec => {
-      total += sec.questions.length;
-      sec.questions.forEach((q: { question_id: PropertyKey }) => {
-        if (this.userResponses.hasOwnProperty(q.question_id)) {
+      if (sec.type === 'coding') {
+        total++; // Each coding section is one question
+        if (this.codingSubmissions.hasOwnProperty(sec.coding_id_id)) {
           attempted++;
         }
-      });
+      } else {
+        total += sec.questions.length;
+        sec.questions.forEach((q: { question_id: PropertyKey }) => {
+          if (this.userResponses.hasOwnProperty(q.question_id)) {
+            attempted++;
+          }
+        });
+      }
     });
 
     this.totalQuestions = total;
@@ -120,6 +130,9 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
     if (total > 0) {
       this.attemptedPercentage = ((attempted / total) * 100).toFixed(1) + '%';
       this.unattemptedPercentage = ((this.unattemptedQuestions / total) * 100).toFixed(1) + '%';
+    } else {
+      this.attemptedPercentage = '0.0%';
+      this.unattemptedPercentage = '0.0%';
     }
   }
 
@@ -184,13 +197,25 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
     ].join(' ');
   }
 
-  hasAnswered(questionId: string): boolean {
-    return this.userResponses.hasOwnProperty(questionId);
+    // MODIFICATION: Renamed for clarity and to handle both types
+  isAttempted(section: any, questionId?: string): boolean {
+    if (section.type === 'coding') {
+      return this.codingSubmissions.hasOwnProperty(section.coding_id_id);
+    }
+    return questionId ? this.userResponses.hasOwnProperty(questionId) : false;
+  }
+  
+  // MODIFICATION: Use the new `isAttempted` logic
+  getUnattemptedCount(section: any): number {
+    if (section.type === 'coding') {
+      return this.isAttempted(section) ? 0 : 1;
+    }
+    if (!section || !section.questions) return 0;
+    return section.questions.filter((q: { question_id: string }) => !this.isAttempted(section, q.question_id)).length;
   }
 
-  getUnattemptedCount(section: any): number {
-    if (!section || !section.questions) return 0;
-    return section.questions.filter((q: { question_id: string }) => !this.hasAnswered(q.question_id)).length;
+  hasAnswered(questionId: string): boolean {
+    return this.userResponses.hasOwnProperty(questionId);
   }
 
   isSectionComplete(section: any): boolean {
@@ -231,23 +256,12 @@ scrollRight(event: Event): void {
   }
 }
 
- navigateToSectionQuestion(selectedSection: any, questionIndex: number): void {
-    // Validate the section and question index
-    if (!selectedSection || !selectedSection.questions || questionIndex < 0 || questionIndex >= selectedSection.questions.length) {
-      console.error('Invalid section or question index');
-      return;
-    }
-
-    // Emit the navigation event to parent component
+  navigateToSectionQuestion(selectedSection: any, questionIndex: number): void {
     this.questionNavigate.emit({
       section: selectedSection,
       questionIndex: questionIndex
     });
-
-    // Optional: Close the popup after navigation
-    // this.closePopup(); // Uncomment if you have a close popup method
-    this.closePopup.emit(); // Make sure you have this method in your component
-
+    this.closePopup.emit();
   }
 
 }

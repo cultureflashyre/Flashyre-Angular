@@ -7,6 +7,8 @@ import { AdminAuthService } from 'src/app/services/admin-auth.service';
   styleUrls: ['navbar-for-admin-view.component.css'],
 })
 export class NavbarForAdminView {
+  public isAdmin: boolean = false;
+  userType: string | null = null;
 
   userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
@@ -86,6 +88,11 @@ export class NavbarForAdminView {
 
   ngOnInit(): void {
     this.loadUserProfile();
+
+      this.userType = localStorage.getItem('userType')
+      if (this.userType === 'admin') {
+          this.isAdmin = true;
+      }
   }
 
   getColorFromString(str: string): string {

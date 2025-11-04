@@ -41,6 +41,7 @@
             </ng-container>
           </a>
           <a
+          *ngIf="isAdmin"
             [attr.href]="link2Url"
             id="navbar-upskill-link"
             class="navbar-for-candidate-view-upskill-link thq-body-small button"
@@ -49,6 +50,7 @@
               <ng-template #defaultLink2>
                 <div class="navbar-for-candidate-view-fragment15">
                   <a 
+                  
                   [routerLink]="['/admin-page1']" 
                   class="navbar-for-candidate-view-text15">
                   Invite

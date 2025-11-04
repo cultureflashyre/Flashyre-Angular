@@ -387,23 +387,27 @@
                 </span>
               </div>
             </div>
+
+
             <div
               id="section-details-container"
               class="assessment-warning-popup-section-details-container"
             >
+              <!-- Case 1: Display for MCQ Sections -->
+              <ng-container *ngIf="section.type === 'mcq'">
               <div
                 id="question-numbers-main-container"
                 class="assessment-warning-popup-question-numbers-main-container"
               >
                 <svg
-  id="backward-arrow-icon"
-  width="32"
-  height="32"
-  viewBox="0 0 32 32"
-  class="assessment-warning-popup-backward-arrow-icon"
-  fill="currentColor"
-  (click)="scrollLeft($event)"
->
+                  id="backward-arrow-icon"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                  class="assessment-warning-popup-backward-arrow-icon"
+                  fill="currentColor"
+                  (click)="scrollLeft($event)"
+                >
                   <path
                     d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"
                     fill="currentColor"
@@ -415,144 +419,182 @@
                   #numbersContainer
                 >
                   <button
-  *ngFor="let question of section.questions; let j = index"
-  id="question-number1-button"
-  type="button"
-  class="assessment-warning-popup-question-number1-button button"
-  [class.answered]="hasAnswered(question.question_id)"
-  (click)="navigateToSectionQuestion(section, j)"
->
-  <span>
-    <ng-container>
-      <ng-template #defaultQuestionNumber1Button>
-        <div class="assessment-warning-popup-fragment14">
-          <span class="assessment-warning-popup-text15">
-            {{ j + 1 }}
-          </span>
-        </div>
-      </ng-template>
-      <ng-container
-        *ngTemplateOutlet="questionNumber1Button ? questionNumber1Button : defaultQuestionNumber1Button"
-      ></ng-container>
-    </ng-container>
-  </span>
-</button>
+                    *ngFor="let question of section.questions; let j = index"
+                    type="button"
+                    class="assessment-warning-popup-question-number1-button button"
+                    [class.answered]="isAttempted(section, question.question_id)"
+                    (click)="navigateToSectionQuestion(section, j)"
+                  >
+                    <span>
+                      <ng-container>
+                        <ng-template #defaultQuestionNumber1Button>
+                          <div class="assessment-warning-popup-fragment14">
+                            <span class="assessment-warning-popup-text15">
+                              {{ j + 1 }}
+                            </span>
+                          </div>
+                        </ng-template>
+                        <ng-container
+                          *ngTemplateOutlet="questionNumber1Button ? questionNumber1Button : defaultQuestionNumber1Button"
+                        ></ng-container>
+                      </ng-container>
+                    </span>
+                  </button>
                 </div>
                 <svg
-  id="forward-arrow-icon"
-  width="32"
-  height="32"
-  viewBox="0 0 32 32"
-  class="assessment-warning-popup-forward-arrow-icon"
-  fill="currentColor"
-  (click)="scrollRight($event)"
->
+                  id="forward-arrow-icon"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                  class="assessment-warning-popup-forward-arrow-icon"
+                  fill="currentColor"
+                  (click)="scrollRight($event)"
+                >
                   <path
                     d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"
                     fill="currentColor"
                   ></path>
                 </svg>
               </div>
+              </ng-container>
+
+                    <!-- Case 2: Display for Coding Sections -->
+              <ng-container *ngIf="section.type === 'coding'">
+                <div
+                  id="coding-problem-container"
+                  class="assessment-warning-popup-numbers-main-container"
+                >
+                  <button
+                    type="button"
+                    class="assessment-warning-popup-question-number1-button button"
+                    [class.answered]="isAttempted(section)"
+                    (click)="navigateToSectionQuestion(section, 0)"
+                  >
+                    <span>Problem</span>
+                  </button>
+                </div>
+              </ng-container>
+
               <div
                 id="section-details"
                 class="assessment-warning-popup-section-details"
               >
                 <div
-  id="section-warnings-container"
-  class="assessment-warning-popup-section-warnings-container"
->
-  <!-- Condition 1: Show "No Questions" if question count is 0 -->
-  <div *ngIf="section.questions.length === 0" class="assessment-warning-popup-unattempted-container">
-    <span class="assessment-warning-popup-unattempted-text">
-      No Questions
-    </span>
-  </div>
+                  id="section-warnings-container"
+                  class="assessment-warning-popup-section-warnings-container"
+                >
 
-  <!-- Condition 2: Show existing logic only if questions exist -->
-  <ng-container *ngIf="section.questions.length > 0">
-    <div
-      *ngIf="!isSectionComplete(section)"
-      id="unattempted-container"
-      class="assessment-warning-popup-unattempted-container"
-    >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        id="warning-icon3"
-        class="assessment-warning-popup-warning-icon3"
-      >
-        <g
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        >
-          <path
-            d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
-          ></path>
-          <path
-            d="m12 17.01l.01-.011"
-            stroke-linejoin="round"
-          ></path>
-        </g>
-      </svg>
-      <span
-        id="unattempted-text"
-        class="assessment-warning-popup-unattempted-text"
-      >
-        <ng-container>
-          <ng-template #defaultText91>
-            <div class="assessment-warning-popup-fragment23">
-              <span class="assessment-warning-popup-text24">
-                {{ getUnattemptedCount(section) }} Unattempted
-              </span>
-            </div>
-          </ng-template>
-          <ng-container
-            *ngTemplateOutlet="text91 ? text91 : defaultText91"
-          ></ng-container>
-        </ng-container>
-      </span>
-    </div>
-    <div
-      *ngIf="isSectionComplete(section)"
-      id="completed-container"
-      class="assessment-warning-popup-completed-container"
-    >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        id="green-tick-icon2"
-        class="assessment-warning-popup-green-tick-icon2"
-        fill="currentColor"
-      >
-        <path
-          d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
-          fill="currentColor"
-        ></path>
-      </svg>
-      <span
-        id="completed-text"
-        class="assessment-warning-popup-completed-text"
-      >
-        <ng-container>
-          <ng-template #defaultText911>
-            <div class="assessment-warning-popup-fragment11">
-              <span class="assessment-warning-popup-text12">
-                Completed
-              </span>
-            </div>
-          </ng-template>
-          <ng-container
-            *ngTemplateOutlet="text911 ? text911 : defaultText911"
-          ></ng-container>
-        </ng-container>
-      </span>
-    </div>
-  </ng-container>
-</div>
+                          <!-- Show "Completed" if all questions in the section are answered -->
+                  <div
+                    *ngIf="isSectionComplete(section)"
+                    class="assessment-warning-popup-completed-container"
+                  >
+                    <svg ... class="assessment-warning-popup-green-tick-icon2"> ... </svg>
+                    <span class="assessment-warning-popup-completed-text">Completed</span>
+                  </div>
+                  <!-- Show "Unattempted" count otherwise -->
+                  <div
+                    *ngIf="!isSectionComplete(section)"
+                    class="assessment-warning-popup-unattempted-container"
+                  >
+                      <svg ... class="assessment-warning-popup-warning-icon3"> ... </svg>
+                    <span class="assessment-warning-popup-unattempted-text">
+                      {{ getUnattemptedCount(section) }} Unattempted
+                    </span>
+                  </div>
+
+                  <!-- Condition 1: Show "No Questions" if question count is 0 -->
+                  <div *ngIf="section.questions.length === 0" class="assessment-warning-popup-unattempted-container">
+                    <span class="assessment-warning-popup-unattempted-text">
+                      No Questions
+                    </span>
+                  </div>
+
+                  <!-- Condition 2: Show existing logic only if questions exist -->
+                  <ng-container *ngIf="section.questions.length > 0">
+                    <div
+                      *ngIf="!isSectionComplete(section)"
+                      id="unattempted-container"
+                      class="assessment-warning-popup-unattempted-container"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        id="warning-icon3"
+                        class="assessment-warning-popup-warning-icon3"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        >
+                          <path
+                            d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
+                          ></path>
+                          <path
+                            d="m12 17.01l.01-.011"
+                            stroke-linejoin="round"
+                          ></path>
+                        </g>
+                      </svg>
+                      <span
+                        id="unattempted-text"
+                        class="assessment-warning-popup-unattempted-text"
+                      >
+                        <ng-container>
+                          <ng-template #defaultText91>
+                            <div class="assessment-warning-popup-fragment23">
+                              <span class="assessment-warning-popup-text24">
+                                {{ getUnattemptedCount(section) }} Unattempted
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="text91 ? text91 : defaultText91"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                    <div
+                      *ngIf="isSectionComplete(section)"
+                      id="completed-container"
+                      class="assessment-warning-popup-completed-container"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        id="green-tick-icon2"
+                        class="assessment-warning-popup-green-tick-icon2"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span
+                        id="completed-text"
+                        class="assessment-warning-popup-completed-text"
+                      >
+                        <ng-container>
+                          <ng-template #defaultText911>
+                            <div class="assessment-warning-popup-fragment11">
+                              <span class="assessment-warning-popup-text12">
+                                Completed
+                              </span>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngTemplateOutlet="text911 ? text911 : defaultText911"
+                          ></ng-container>
+                        </ng-container>
+                      </span>
+                    </div>
+                  </ng-container>
+                </div>
                 <div
                   id="num-of-questions-container"
                   class="assessment-warning-popup-num-of-questions-container"
@@ -578,7 +620,9 @@
                     id="questions-text"
                     class="assessment-warning-popup-questions-text"
                   >
-                    <ng-container>
+                  <ng-container *ngIf="section.type === 'coding'">1 Problem</ng-container>
+
+                    <ng-container *ngIf="section.type === 'mcq'">
                       <ng-template #defaultText92>
                         <div class="assessment-warning-popup-fragment10">
                           <span class="assessment-warning-popup-text11">
