@@ -1,3 +1,5 @@
+//files contains chanegs to save code when navigating between the coding assessment question
+
 import { Component, ContentChild, Input, TemplateRef, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, Inject } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { TrialAssessmentService } from '../../services/trial-assessment.service';

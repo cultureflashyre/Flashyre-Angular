@@ -4,6 +4,7 @@
     <assessment-warning-popup
       [sections]="sections"
       [userResponses]="userResponses"
+      [codingSubmissions]="codingSubmissions"
       [sectionTimers]="sectionTimers"
       (endTestConfirmed)="terminateTest()"
       (closePopup)="handleCloseWarningPopup()"
@@ -40,55 +41,55 @@
         class="flashyre-assessment11-sections-questions-previous-next-containers"
       >
         <div
-  data-thq="thq-dropdown"
-  class="flashyre-assessment11-sections-dropdown list-item"
->
-  <div
-    data-thq="thq-dropdown-toggle"
-    class="flashyre-assessment11-dropdown-toggle1"
-  >
-    <span
-      id="sections-text"
-      class="flashyre-assessment11-sections-text"
-    >
-      {{ currentSection?.name || 'Sections' }}
-    </span>
-    <div
-      data-thq="thq-dropdown-arrow"
-      class="flashyre-assessment11-dropdown-arrow"
-    >
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 48 48"
-        class="flashyre-assessment11-icon10"
-      >
-        <path
-          d="M36 18L24 30L12 18"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></path>
-      </svg>
-    </div>
-  </div>
-  <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
-    <li *ngFor="let section of sections" 
-        (click)="isSectionAccessible(section) ? selectSection(section) : null"
-        [class.expired-section]="!isSectionAccessible(section)"
-        [style.cursor]="isSectionAccessible(section) ? 'pointer' : 'not-allowed'"
-        [style.opacity]="isSectionAccessible(section) ? '1' : '0.5'">
-      <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
-        <span id="section-A-text" class="flashyre-assessment11-section-a-text">
-          {{ section.name }}
-          <span *ngIf="!isSectionAccessible(section)" style="color: red; margin-left: 8px;">(Expired)</span>
-        </span>
-      </div>
-    </li>
-  </ul>
-</div>  
+          data-thq="thq-dropdown"
+          class="flashyre-assessment11-sections-dropdown list-item"
+        >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="flashyre-assessment11-dropdown-toggle1"
+          >
+            <span
+              id="sections-text"
+              class="flashyre-assessment11-sections-text"
+            >
+              {{ currentSection?.name || 'Sections' }}
+            </span>
+            <div
+              data-thq="thq-dropdown-arrow"
+              class="flashyre-assessment11-dropdown-arrow"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                class="flashyre-assessment11-icon10"
+              >
+                <path
+                  d="M36 18L24 30L12 18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <ul data-thq="thq-dropdown-list" class="flashyre-assessment11-sections-dropdown-list">
+            <li *ngFor="let section of sections" 
+                (click)="isSectionAccessible(section) ? selectSection(section) : null"
+                [class.expired-section]="!isSectionAccessible(section)"
+                [style.cursor]="isSectionAccessible(section) ? 'pointer' : 'not-allowed'"
+                [style.opacity]="isSectionAccessible(section) ? '1' : '0.5'">
+              <div data-thq="thq-dropdown-toggle" class="flashyre-assessment11-dropdown-toggle2">
+                <span id="section-A-text" class="flashyre-assessment11-section-a-text">
+                  {{ section.name }}
+                  <span *ngIf="!isSectionAccessible(section)" style="color: red; margin-left: 8px;">(Expired)</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>  
         <div
           id="question-numbers-main-container"
           class="flashyre-assessment11-question-numbers-main-container"
@@ -141,49 +142,64 @@
             ></path>
           </svg>
         </div>
-        <!-- Replace your previous-next-button-main-container div with this improved version -->
+        
+        <!-- MODIFICATION START: Previous/Next buttons now visible for all sections -->
         <div
-        id="previous-next-button-main-container"
-        class="flashyre-assessment11-previous-next-button-main-container1"
-        *ngIf="!isCodingSection"
+          id="previous-next-button-main-container"
+          class="flashyre-assessment11-previous-next-button-main-container1"
         >
-        <!-- Previous button - always visible -->
-        <button
-          id="previous-button1"
-          type="button"
-          (click)="previousQuestion()"
-          class="flashyre-assessment11-previous-button1 button"
-        >
-          Previous
-        </button>
-
-        <!-- Next button - only visible when NOT on last question of section -->
-        <ng-container *ngIf="!isLastQuestionInSection">
+          <!-- Previous button: visible on all but the very first section -->
           <button
-            id="next-button"
+            *ngIf="currentSectionIndex > 0"
+            id="previous-button1"
             type="button"
-            (click)="nextQuestion()"
-            class="flashyre-assessment11-next-button1 button"
+            (click)="previousSection()"
+            class="flashyre-assessment11-previous-button1 button"
           >
-            Next
+            Previous
           </button>
-        </ng-container>
 
-        <!-- Next Section button - only visible on last question of non-last section -->
-        <ng-container *ngIf="isLastQuestionInSection && currentSectionIndex < totalSections - 1">
-          <button
-            id="next-section-button"
-            type="button"
-            (click)="nextSection()"
-            class="flashyre-assessment11-next-section-button1 button"
-          >
-            Next Section
-          </button>
-        </ng-container>
+          <!-- For MCQ sections -->
+          <ng-container *ngIf="!isCodingSection">
+            <!-- Next Question button -->
+            <button
+              *ngIf="!isLastQuestionInSection"
+              id="next-button"
+              type="button"
+              (click)="nextQuestion()"
+              class="flashyre-assessment11-next-button1 button"
+            >
+              Next
+            </button>
+            <!-- Next Section button -->
+            <button
+              *ngIf="isLastQuestionInSection && currentSectionIndex < totalSections - 1"
+              id="next-section-button"
+              type="button"
+              (click)="nextSection()"
+              class="flashyre-assessment11-next-section-button1 button"
+            >
+              Next Section
+            </button>
+          </ng-container>
 
-        <!-- Submit button - only visible on last question of last section -->
-        <ng-container *ngIf="isLastQuestionInSection && currentSectionIndex === totalSections - 1">
+          <!-- For Coding sections -->
+          <ng-container *ngIf="isCodingSection">
+            <!-- Next Section button for coding -->
+            <button
+              *ngIf="currentSectionIndex < totalSections - 1"
+              id="next-section-button-coding"
+              type="button"
+              (click)="nextSection()"
+              class="flashyre-assessment11-next-button1 button"
+            >
+              Next
+            </button>
+          </ng-container>
+
+          <!-- Submit button: visible on the last question of the last section -->
           <button
+            *ngIf="(isLastQuestionInSection || isCodingSection) && currentSectionIndex === totalSections - 1"
             id="submit-button"
             type="button"
             (click)="showEndTestWarning()"
@@ -191,8 +207,8 @@
           >
             Submit
           </button>
-        </ng-container>
         </div>
+        <!-- MODIFICATION END -->
       </div>
       <div
         id="question-answer-container"
@@ -227,6 +243,7 @@
                 class="flashyre-assessment11-image"
               />
             </div>
+            <!-- This button is redundant with top-level nav, consider removing -->
             <button
               id="previous-button"
               type="button"
@@ -240,6 +257,7 @@
             <app-problem-description [problem]="currentSection.problemData"></app-problem-description>
           </ng-container>
         </div>
+        <!-- This button is redundant with top-level nav, consider removing -->
         <button
           id="next-button1"
           type="button"
@@ -254,7 +272,6 @@
             id="answers-container"
             class="flashyre-assessment11-answers-container"
           >
-
             <ng-container *ngIf="!isCodingSection">
               <div
                 *ngIf="hasQuestions"
@@ -354,52 +371,30 @@
                 </div>
             </ng-container>
 
+            <!-- MODIFICATION START: Added inputs and outputs for code persistence -->
             <ng-container *ngIf="isCodingSection">
               <div class="coding-section">
-                <app-code-editor [problemId]="currentSection.coding_id_id" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+                <app-code-editor 
+                  [problemId]="currentSection.coding_id_id"
+                  [initialCode]="codingSolutions[currentSection.coding_id_id]?.code"
+                  [initialLanguage]="codingSolutions[currentSection.coding_id_id]?.language"
+                  (codeChange)="onCodeChange($event)"
+                  (runCode)="onRunCode($event)" 
+                  (submitCode)="onSubmitCode($event)">
+                </app-code-editor>
                 <app-test-results *ngIf="showTestResults" [results]="results"  (hideResults)="handleHideResults()"></app-test-results>
               </div>
             </ng-container>
+            <!-- MODIFICATION END -->
           </div>
         </div>
       </div>
+      <!-- This bottom navigation is redundant with the top one, consider removing for cleaner UI -->
       <div
         id="previous-next-button-main-container"
         class="flashyre-assessment11-previous-next-button-main-container2"
-        *ngIf="!isCodingSection"
       >
-        <button
-          id="previous-button2"
-          type="button"
-          (click)="previousQuestion()"
-          class="flashyre-assessment11-previous-button3 button"
-        >
-          Previous
-        </button>
-        <button
-          id="next-button2"
-          type="button"
-          (click)="nextQuestion()"
-          class="flashyre-assessment11-next-button3 button"
-        >
-          Next
-        </button>
-        <button
-          id="next-section-button"
-          type="button"
-          (click)="nextSection()"
-          class="flashyre-assessment11-next-section-button2 button"
-        >
-          Next Section
-        </button>
-        <button
-        id="submit-button"
-        type="button"
-        (click)="showEndTestWarning()"
-        class="flashyre-assessment11-submit-button1 button"
-      >
-        Submit
-      </button>
+        <!-- Content removed as it's now handled by the top navigation bar -->
       </div>
     </div>
 </div>
