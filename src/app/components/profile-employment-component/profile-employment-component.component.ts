@@ -40,6 +40,15 @@ export class ProfileEmploymentComponent {
     private employmentService: EmploymentService,
   ) {}
 
+   public sanitizeAlphaNumeric(event: Event, position: any, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    const sanitizedValue = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
+    position[fieldName] = sanitizedValue;
+    if (input.value !== sanitizedValue) {
+      input.value = sanitizedValue;
+    }
+  }
+
   ngOnInit(): void {
     this.loadPositionsFromUserProfile();
   }
