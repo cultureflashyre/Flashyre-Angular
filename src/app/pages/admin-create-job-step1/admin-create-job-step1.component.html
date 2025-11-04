@@ -266,6 +266,7 @@
                   placeholder="Enter Role"
                   class="admin-create-job-step1-role-input-field input"
                   formControlName="role"
+                  (input)="sanitizeAlphaNumericInput($event)"
                 />
                 <div *ngIf="jobForm.get('role')?.touched && jobForm.get('role')?.errors?.required" class="field-error-message">
               Enter the Job Role

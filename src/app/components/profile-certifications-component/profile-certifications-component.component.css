@@ -34,7 +34,7 @@
   border-radius: 8px;
   flex-direction: column;
   scroll-behavior: smooth;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   background-color: #FFFFFF;
 }
  
