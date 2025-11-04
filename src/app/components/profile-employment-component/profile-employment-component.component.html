@@ -48,14 +48,17 @@
             placeholder="Enter Job Title"
             class="profile-employment-component-job-title-input input"
             [(ngModel)]="position.jobTitle"
+            (input)="sanitizeAlphaNumeric($event, position, 'jobTitle')"
             name="jobTitle-{{i}}"
             #jobTitleModel="ngModel"
-            pattern=".*[a-zA-Z]+.*"
+            pattern="[a-zA-Z0-9 ]*"
             required
           />
 <div *ngIf="position.errors?.jobTitle" class="error-message">
-  {{ position.errors.jobTitle }}
-            <div *ngIf="jobTitleModel.errors?.['pattern']">Job title must include letters.</div>
+            {{ position.errors.jobTitle }}
+          </div>
+          <div *ngIf="jobTitleModel.touched && jobTitleModel.errors?.['pattern']" class="error-message">
+            Only letters and numbers are allowed.
           </div>
         </div>
         <div
@@ -75,14 +78,17 @@
             placeholder="Enter Company Name"
             class="profile-employment-component-company-name-input input"
             [(ngModel)]="position.companyName"
+            (input)="sanitizeAlphaNumeric($event, position, 'companyName')"
             name="companyName-{{i}}"
             #companyNameModel="ngModel"
-            pattern=".*[a-zA-Z]+.*"
+            pattern="[a-zA-Z0-9 ]*"
             required
           />
 <div *ngIf="position.errors?.companyName" class="error-message">
-  {{ position.errors.companyName }}
-            <div *ngIf="companyNameModel.errors?.['pattern']">Company name must include letters.</div>
+            {{ position.errors.companyName }}
+          </div>
+          <div *ngIf="companyNameModel.touched && companyNameModel.errors?.['pattern']" class="error-message">
+            Only letters and numbers are allowed.
           </div>
         </div>
       </div>

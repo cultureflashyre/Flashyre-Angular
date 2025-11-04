@@ -162,6 +162,7 @@
       formControlName="password"
       placeholder="Enter Password"
       class="signup-corporate1-password-input1 input"
+       maxlength="15"
     />
   </div>
   <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').dirty" class="error-text">
@@ -197,6 +198,7 @@
       formControlName="confirm_password"
       placeholder="Confirm Password"
       class="signup-corporate1-password-input2 input"
+       maxlength="15"
     />
   </div>
   <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
