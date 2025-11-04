@@ -84,8 +84,13 @@
   class="assessment-taken-page3-re-attempt-container button"
   [disabled]="assessmentData.attempts_remaining <= 0"
   (click)="onReattempt()"
+  [style.background-color]="isReattempting ? '#cccccc' : ''"
+  [style.color]="isReattempting ? '#666666' : ''"
+  [style.cursor]="isReattempting ? 'not-allowed' : ''"
+
 >
-  Re-attempt
+  <span *ngIf="!isReattempting">Re-attempt</span>
+  <span *ngIf="isReattempting">Loading...</span>
 </button>
           <span
             id="attempts-remaining-text"

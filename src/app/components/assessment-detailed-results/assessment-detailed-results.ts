@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewC
 import { Title, Meta } from '@angular/platform-browser'
 import { Router } from '@angular/router';
 import { AssessmentTakenService } from '../../services/assessment-taken.service'; // Import the service
+import { JobsService } from '../../services/job.service';
 import { Subscription, interval, of } from 'rxjs';
 import { switchMap, startWith, catchError } from 'rxjs/operators';
 
@@ -14,6 +15,7 @@ export class AssessmentDetailedResults implements OnChanges  {
     @Input() assessmentData: any;  // This will receive the selected attempt object
     @ViewChild('capsuleContainer') capsuleContainer!: ElementRef;
     @Output() back = new EventEmitter<void>();
+    public isReattempting = false;
 
     questions: any[] = [];
     groupedQuestions: { [key: string]: any[] } = {};  // Grouped by section
@@ -35,7 +37,7 @@ export class AssessmentDetailedResults implements OnChanges  {
     rawrm7v: string = ' '
     rawvn2j: string = ' '
     rawvdwg: string = ' '
-    constructor(private title: Title, private meta: Meta, private router: Router, private assessmentTakenService: AssessmentTakenService // Inject service
+    constructor(private title: Title, private meta: Meta, private router: Router, private assessmentTakenService: AssessmentTakenService, private jobsService: JobsService // Inject service
 ) {
       this.title.setTitle('Assessment-Detailed-Results - Flashyre')
       this.meta.addTags([
@@ -164,10 +166,43 @@ export class AssessmentDetailedResults implements OnChanges  {
 }
 
 onReattempt() {
-    // Navigate to assessment rules page with the assessment ID
-    this.router.navigate(['/flashyre-assessment-rules-card'], { 
-      queryParams: { id: this.assessmentData.assessment_id } 
-    });
+      const assessmentIdToFind = this.assessmentData?.assessment_id;
+
+      if (!assessmentIdToFind) {
+        console.error('Cannot re-attempt: Assessment ID is missing from the data.');
+        alert('An error occurred. Missing assessment ID.');
+        return;
+      }
+      
+      // --- [CHANGE 1] ---
+      // Set loading state to true
+      this.isReattempting = true;
+      
+      const numericAssessmentId = parseInt(assessmentIdToFind, 10);
+
+      this.jobsService.fetchAssessments().subscribe({
+        next: (allAssessments) => {
+          const selectedAssessment = allAssessments.find(a => a.assessment_id === numericAssessmentId);
+
+          if (selectedAssessment) {
+            const assessmentDataString = JSON.stringify(selectedAssessment);
+            this.router.navigate(['/flashyre-assessment-rules-card'], {
+              queryParams: { data: assessmentDataString }
+            });
+          } else {
+            console.error(`Assessment with ID ${numericAssessmentId} not found.`);
+            alert('Could not start the assessment. Details not found.');
+            this.isReattempting = false; // <-- Reset on failure
+          }
+        },
+        error: (error) => {
+          console.error('Failed to fetch the list of assessments for re-attempt:', error);
+          alert('An error occurred while fetching assessment data. Please try again later.');
+          // --- [CHANGE 2] ---
+          // Re-enable button on error
+          this.isReattempting = false;
+        }
+      });
   }
 
 

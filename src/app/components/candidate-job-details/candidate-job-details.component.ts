@@ -21,6 +21,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @Input() button: TemplateRef<any> | null = null;
   @Input() button1: TemplateRef<any> | null = null;
   @Input() activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
+  @Input() allAssessments: any[] = [];
   @Output() applicationRevoked = new EventEmitter<number>();
   @Output() jobAppliedSuccess = new EventEmitter<any>(); // Emits the full job object
   @Output() jobSaved = new EventEmitter<any>();
@@ -203,8 +204,25 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
     this.setProgressBarState();
   }
 
-  navigateToAssessment(assessment: number): void {
-    this.router.navigate(['/flashyre-assessment-rules-card'], { queryParams: { id: assessment } });
+  navigateToAssessment(assessmentId: number): void {
+    // 1. Find the full assessment object from the list passed by the parent.
+    const selectedAssessment = this.allAssessments.find(a => a.assessment_id === assessmentId);
+
+    // 2. Check if the assessment was found.
+    if (!selectedAssessment) {
+      console.error("Assessment details not found for id:", assessmentId, "Please ensure the assessment list is loaded.");
+      // Optionally, show an alert to the user.
+      alert("Could not start the assessment. Please try again later.");
+      return;
+    }
+
+    // 3. Serialize the full object into a JSON string.
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // 4. Navigate to the correct page with the correct query parameter ('data').
+    this.router.navigate(['/flashyre-assessment-rules-card'], { 
+      queryParams: { data: assessmentDataString } 
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

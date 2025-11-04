@@ -427,6 +427,7 @@
             *ngIf="jobsToDisplay.length > 0"
             [job]="selectedJob"
             [activeTab]="activeTab"
+            [allAssessments]="allAssessments"
             (applicationRevoked)="onApplicationRevoked($event)"
             (jobAppliedSuccess)="onJobApplied($event)"
             (jobSaved)="onJobSaved($event)"
