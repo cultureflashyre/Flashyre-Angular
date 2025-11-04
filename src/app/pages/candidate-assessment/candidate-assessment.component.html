@@ -1,3 +1,5 @@
+<ngx-spinner *ngIf="isLoading$ | async"></ngx-spinner>
+
 <div id="candidate-assessment" class="candidate-assessment-container10">
     <div class="candidate-assessment-container11">
       <navbar-for-candidate-view
@@ -95,7 +97,7 @@
         <span class="candidate-assessment-text117">Logout</span>
       </div>
     </ng-template>
-  </navbar-for-candidate-view>
+      </navbar-for-candidate-view>
       <div id="details-container" class="candidate-assessment-details-container">
         <div id="main-container" class="candidate-assessment-main-container">
           <div
@@ -103,13 +105,13 @@
             class="candidate-assessment-profile-container"
           >
             <candidate-profile-short [placeholderImageAlt]="'Image of ' + candidateName">
-  <ng-template #text>
-    <span>{{ candidateName }}</span>
-  </ng-template>
-  <ng-template #text1>
-    <span>{{ candidateJobRole }}</span>
-  </ng-template>
-</candidate-profile-short>
+              <ng-template #text>
+                <span>{{ candidateName }}</span>
+              </ng-template>
+              <ng-template #text1>
+                <span>{{ candidateJobRole }}</span>
+              </ng-template>
+            </candidate-profile-short>
             <candidate-profile-score
               rootClassName="candidate-profile-scoreroot-class-name2"
             >
@@ -137,6 +139,7 @@
             </recruiter-job-posted1>
           </div>
           <div
+          *ngIf="assessments$ | async as assessments; else loadingOrError"
             id="assessment-available-main-container"
             class="candidate-assessment-assessment-available-main-container"
           >
@@ -147,6 +150,7 @@
               Assessments Available
             </span>
             <div
+            *ngIf="assessments.length > 0; else noAssessmentsTemplate"
               id="assessments-main-container"
               class="candidate-assessment-assessments-main-container"
             >
@@ -199,7 +203,7 @@
                   type="button"
                   id="lets-go1-button"
                   class="candidate-assessment-lets-go1-button button"
-                  (click)="startAssessment(assessment.assessment_id)"
+                  (click)="startAssessment(assessment)"
                   [disabled]="assessment.attempts_remaining === 0"
                   [title]="assessment.attempts_remaining === 0 ? 'Attempts remaining: 0' : 'Start assessment'"
                 >
@@ -212,3 +216,21 @@
       </div>
     </div>
   </div>
+
+  <!-- 
+  Template #1: This will be displayed if the 'assessments$' observable has not yet emitted
+  data or has thrown an error. Because we have a dedicated spinner, we can leave this empty.
+-->
+<ng-template #loadingOrError>
+  <!-- Spinner is handled globally above, so this can remain empty or contain a placeholder skeleton UI -->
+</ng-template>
+
+<!-- 
+  Template #2: This template is shown by the inner *ngIf when the 'assessments' array
+  has loaded but is empty.
+-->
+<ng-template #noAssessmentsTemplate>
+  <div class="no-assessments-container">
+    <p class="no-assessments-text">No assessments are available at this time.</p>
+  </div>
+</ng-template>

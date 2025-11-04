@@ -2,6 +2,7 @@
 export const environment = {
   production: true,
   apiUrl: '',
+  websocketUrl: '',
 
   defaultProfilePicture: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/profile-placeholder.jpg',
   defaultCompanyIcon: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/company_icon.png',

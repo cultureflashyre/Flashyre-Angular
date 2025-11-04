@@ -6,6 +6,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:8000/',
+  websocketUrl: 'http://localhost:8000/',
 
   defaultProfilePicture: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/profile-placeholder.jpg',
   defaultCompanyIcon: 'https://storage.googleapis.com/flashyre-staging-b1/default_images/company_icon.png',
