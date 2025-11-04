@@ -34,7 +34,7 @@
   scroll-behavior: smooth;
   overflow-y: scroll;
   overflow-x: hidden;
-  scrollbar-width: none;
+  scrollbar-width: thin;
 }
 
 .profile-employment-component-employment-text {

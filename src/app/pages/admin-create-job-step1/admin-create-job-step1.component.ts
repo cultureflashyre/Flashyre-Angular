@@ -101,6 +101,25 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     });
   }
 
+   public sanitizeAlphaNumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const caretPosition = input.selectionStart;
+    const originalValue = input.value;
+    const sanitizedValue = originalValue.replace(/[^a-zA-Z0-9 ]/g, '');
+
+    if (originalValue !== sanitizedValue) {
+      const diff = originalValue.length - sanitizedValue.length;
+      // Use patchValue to update the form model without triggering a loop
+      this.jobForm.get('role')?.patchValue(sanitizedValue, { emitEvent: false });
+      // Update the input element's value directly
+      input.value = sanitizedValue;
+      // Restore the cursor position
+      if (caretPosition) {
+        input.setSelectionRange(caretPosition - diff, caretPosition - diff);
+      }
+    }
+  }
+
   showSuccessPopup(message: string) {
     this.popupMessage = message;
     this.popupType = 'success';
@@ -709,6 +728,20 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const skillsSuggestionsDiv = this.document.getElementById('skillsSuggestions') as HTMLDivElement;
     if (!tagInput || !tagContainer || !skillsSuggestionsDiv) {
       if (this.isViewInitialized) console.warn('Skill input elements not found!'); return;
+      tagInput.addEventListener('input', (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const caretPosition = input.selectionStart;
+    const originalValue = input.value;
+    const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, ''); // Only allows letters and spaces
+
+    if (originalValue !== sanitizedValue) {
+        const diff = originalValue.length - sanitizedValue.length;
+        input.value = sanitizedValue;
+        if (caretPosition) {
+            input.setSelectionRange(caretPosition - diff, caretPosition - diff);
+        }
+    }
+});
     }
     let activeSuggestionIndex = -1;
     const showAvailableSuggestions = (suggestedSkills: string[]) => {
@@ -769,22 +802,39 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       }
     };
     const skillInputSub = fromEvent(tagInput, 'input').pipe(
-      map(event => (event.target as HTMLInputElement).value),
-      debounceTime(this.SKILL_DEBOUNCE_DELAY), distinctUntilChanged(),
-      tap(term => { this.isLoadingSkills = !!term.trim(); if (!term.trim()) showAvailableSuggestions([]); }),
-      switchMap(term => {
-        if (!term.trim()) return of([]);
-        return this.skillService.searchSkills(term).pipe(
-          map((apiSkills: ApiSkill[]) => apiSkills.map(s => s.name)),
-          catchError(() => { this.isLoadingSkills = false; this.showErrorPopup('Error fetching skills.'); return of([]); })
-        );
-      })
-    ).subscribe(skillNames => {
-      this.isLoadingSkills = false;
-      const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
-      const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
-      showAvailableSuggestions(filteredForDisplay.slice(0, 10));
-    });
+  // This new map operator sanitizes the input in real-time
+  map(event => {
+    const input = event.target as HTMLInputElement;
+    const originalValue = input.value;
+    // This regex removes anything that is NOT a letter or a space
+    const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, '');
+
+    if (originalValue !== sanitizedValue) {
+      const caretPosition = input.selectionStart;
+      const diff = originalValue.length - sanitizedValue.length;
+      input.value = sanitizedValue;
+      if (caretPosition) {
+        input.setSelectionRange(caretPosition - diff, caretPosition - diff);
+      }
+    }
+    return sanitizedValue; // Pass the clean value to the next step
+  }),
+  debounceTime(this.SKILL_DEBOUNCE_DELAY), 
+  distinctUntilChanged(),
+  tap(term => { this.isLoadingSkills = !!term.trim(); if (!term.trim()) showAvailableSuggestions([]); }),
+  switchMap(term => {
+    if (!term.trim()) return of([]);
+    return this.skillService.searchSkills(term).pipe(
+      map((apiSkills: ApiSkill[]) => apiSkills.map(s => s.name)),
+      catchError(() => { this.isLoadingSkills = false; this.showErrorPopup('Error fetching skills.'); return of([]); })
+    );
+  })
+).subscribe(skillNames => {
+  this.isLoadingSkills = false;
+  const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
+  const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
+  showAvailableSuggestions(filteredForDisplay.slice(0, 10));
+});
     this.subscriptions.add(skillInputSub);
     tagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
