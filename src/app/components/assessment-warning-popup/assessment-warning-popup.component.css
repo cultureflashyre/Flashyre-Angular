@@ -27,7 +27,7 @@
 .assessment-warning-popup-assessment-warning-popup-main-container {
   gap: 16px;
   width: 50%;
-  height: auto;
+  height: 100vh;
   display: flex;
   box-shadow: 5px 5px 10px 0px #b3b3b3;
   align-items: center;
