@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'; // Add this import
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
+import { JobsService } from '../../services/job.service';
 
 @Component({
   selector: 'assessment-attempts-list',
@@ -10,7 +11,9 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 export class AssessmentAttemptsListComponent implements OnInit {
   @Input() assessmentId!: string;
   @Output() back = new EventEmitter<void>();
-    @Output() loaded = new EventEmitter<void>(); // <-- 1. ADD THIS NEW OUTPUT PROPERTY
+  @Output() loaded = new EventEmitter<void>(); // <-- 1. ADD THIS NEW OUTPUT PROPERTY
+
+  public isReattempting = false;
 
 
   assessmentData: any;
@@ -29,7 +32,8 @@ export class AssessmentAttemptsListComponent implements OnInit {
   constructor(
     private assessmentTakenService: AssessmentTakenService,
     private router: Router, // Inject Router here
-     private route: ActivatedRoute
+     private route: ActivatedRoute,
+     private jobsService: JobsService
   ) {}
 
   ngOnInit() {
@@ -126,11 +130,43 @@ export class AssessmentAttemptsListComponent implements OnInit {
 }
 
   onReattempt() {
-  // Navigate to assessment rules page with the current assessment ID
-  this.router.navigate(['/flashyre-assessment-rules-card'], { 
-    queryParams: { id: this.assessmentId } 
-  });
-}
+    if (!this.assessmentId) {
+        console.error('Cannot re-attempt: Assessment ID is missing.');
+        alert('An error occurred. Missing assessment ID.');
+        return;
+    }
+    
+    // --- [CHANGE 1] ---
+    // Set loading state to true and disable the button immediately
+    this.isReattempting = true;
+
+    const targetAssessmentId = parseInt(this.assessmentId, 10);
+
+    this.jobsService.fetchAssessments().subscribe({
+      next: (allAssessments) => {
+        const selectedAssessment = allAssessments.find(a => a.assessment_id === targetAssessmentId);
+
+        if (selectedAssessment) {
+          const assessmentDataString = JSON.stringify(selectedAssessment);
+          this.router.navigate(['/flashyre-assessment-rules-card'], {
+            queryParams: { data: assessmentDataString }
+          });
+          // On successful navigation, the component is destroyed, so no need to reset the flag.
+        } else {
+          console.error(`Assessment with ID ${targetAssessmentId} not found.`);
+          alert('Could not start the assessment. Details not found.');
+          this.isReattempting = false; // <-- Reset on failure
+        }
+      },
+      error: (error) => {
+        console.error('Failed to fetch the list of assessments for re-attempt:', error);
+        alert('An error occurred while fetching assessment data. Please try again later.');
+        // --- [CHANGE 2] ---
+        // If the API call fails, re-enable the button
+        this.isReattempting = false;
+      }
+    });
+  }
 
   goBack() {
     this.router.navigate(['/assessment-taken-page']);

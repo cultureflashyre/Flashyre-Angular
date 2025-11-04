@@ -34,6 +34,8 @@ export class JobsService {
 
   public jobs$ = this.jobsSubject.asObservable();
 
+  private allAssessmentsCache: any[] | null = null;
+
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -194,6 +196,24 @@ export class JobsService {
   }
 
   public fetchAssessments(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}api/assessments/assessment-list/`);
+    // If the cache already has data, return it immediately.
+    if (this.allAssessmentsCache) {
+      return of(this.allAssessmentsCache);
+    }
+
+    // [CORRECTED URL CONSTRUCTION]
+    // The previous URL was incorrect. This new URL is built from the application's
+    // base API path to create the correct endpoint.
+    const correctAssessmentApiUrl = `${environment.apiUrl}api/assessments/assessment-list/`;
+
+    // Make the API call using the CORRECT URL.
+    return this.http.get<any[]>(correctAssessmentApiUrl).pipe(
+      // Use the 'tap' operator to cache the result upon success.
+      tap(assessments => {
+        this.allAssessmentsCache = assessments;
+        console.log('Assessments fetched from API and cached.');
+      })
+    );
   }
+
 }

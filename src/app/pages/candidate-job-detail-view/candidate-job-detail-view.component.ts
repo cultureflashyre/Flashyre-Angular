@@ -55,6 +55,8 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   // This list is bound to the job-cards component
   public jobsToDisplay: any[] = [];
 
+  public allAssessments: any[] = [];
+
   // Properties for Filtering and Preferences
   private destroy$ = new Subject<void>();
 
@@ -285,9 +287,13 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
     forkJoin({
       recommended: this.jobService.fetchJobs(),
       saved: this.jobService.fetchSavedJobs(userId),
-      applied: this.jobService.fetchAppliedJobDetails()
+      applied: this.jobService.fetchAppliedJobDetails(),
+      assessments: this.jobService.fetchAssessments() // Fetch all assessments
     }).subscribe({
       next: (results) => {
+        // --- [ADD THIS LINE] ---
+        this.allAssessments = results.assessments; // Store the fetched assessments
+
         // --- NEW FUNCTIONALITY 1: PERSISTENT FILTERING ---
         const savedAndAppliedIds = new Set([
           ...results.saved.map(j => j.job_id),
