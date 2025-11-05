@@ -10,7 +10,7 @@
       ],
     "method": ["GET", "OPTIONS"],
     "responseHeader": ["Content-Type"],
-    "maxAgeSeconds": 3600
+    "maxAgeSeconds": 172800
   }
 ]
 

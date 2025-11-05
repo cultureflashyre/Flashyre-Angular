@@ -122,8 +122,8 @@
 .avatar-icon {
   width: 40px;
   height: 40px;
-  background-color: #cecece; /* You may set this dynamically in TS */
-  color: rgb(109, 109, 109);
+  background-color: #CFCCDE; /* You may set this dynamically in TS */
+  color: #41327B;
   border-radius: 50%;
   display: flex;
   align-items: center;
