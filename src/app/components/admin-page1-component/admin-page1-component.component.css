@@ -2,6 +2,38 @@
   display: contents; 
 }
 
+/* --- NEW: Styles for the "Last Invite Sent" column --- */
+.last-invite-sent-container {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+}
+/* --- END NEW --- */
+
+/* --- MODIFIED: Added styles for the new header row --- */
+.table-header-row {
+  display: flex;
+  width: 100%;
+  padding: 0 var(--dl-layout-space-oneandhalfunits);
+  height: 40px;
+  align-items: center;
+  font-weight: 600;
+  color: #05356C;
+  border-bottom: 1px solid #CBCBCB;
+  box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.header-name { width: 35%; }
+.header-cv { width: 20%; text-align: center; }
+.header-invite { width: 20%; text-align: center; }
+.header-status { width: 12.5%; text-align: center; }
+.header-remove { width: 12.5%; text-align: center; }
+/* --- END MODIFIED --- */
+
+
 /* --- Alert and Popup Styles --- */
 .alert {
   padding: 20px;
@@ -447,7 +479,7 @@
   width: 100%;
   height: 20%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   border-color: #CBCBCB;
   border-width: 1px;
   padding-left: var(--dl-layout-space-oneandhalfunits);
@@ -456,12 +488,13 @@
   border-left-width: 0px;
   border-right-width: 0px;
   border-bottom-width: 1px;
+  box-sizing: border-box; 
 }
  
 .admin-page1-component-candidate-name-check-box-container {
   gap: 16px;
   flex: 0 0 auto;
-  width: 45%;
+  width: 35%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -479,7 +512,7 @@
 .admin-page1-component-cv-main-container {
   gap: 8px;
   flex: 0 0 auto;
-  width: 27%;
+  width: 20%;
   height: 100%;
   display: flex;
   transition: 0.3s;
@@ -510,7 +543,7 @@
  
 .admin-page1-component-warning-green-tick-remove-icon-container {
   flex: 0 0 auto;
-  width: 27%;
+  width: 25%;
   height: 100%;
   display: flex;
   align-items: center;

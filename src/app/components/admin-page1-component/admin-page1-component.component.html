@@ -120,7 +120,7 @@
             id="start-process-text"
             class="admin-page1-component-start-process-text"
           >
-            Start Process
+            Send Invite
           </span>
         </button>
         <button
@@ -134,6 +134,15 @@
           </span>
         </button>
       </div>
+    </div>
+
+     <!-- MODIFIED: Added a dedicated header row for column titles -->
+    <div class="table-header-row">
+      <span class="header-name">Candidate Name</span>
+      <span class="header-cv">View CV</span>
+      <span class="header-invite">Last Invite Sent</span>
+      <span class="header-status">Registered</span>
+      <span class="header-remove">Remove</span>
     </div>
     
     <!-- NEW: Loading and Empty State Handling -->
@@ -199,6 +208,12 @@
             View CV
           </span>
         </a>
+        <!-- NEW: "Last Invite Sent" Column -->
+        <div class="last-invite-sent-container">
+          <span>
+            {{ candidate.email_sent_date ? (candidate.email_sent_date | date:'dd-MMM-yy') : '-' }}
+          </span>
+        </div>
         <div
           id="warning-green-tick-remove-icon-container"
           class="admin-page1-component-warning-green-tick-remove-icon-container"
@@ -207,7 +222,6 @@
             id="warning-green-tick-container"
             class="admin-page1-component-warning-green-tick-container"
           >
-            <!-- Conditionally displayed icons based on candidate registration status -->
             <svg
               *ngIf="candidate.has_account !== 'Yes'"
               id="warning-icon"
@@ -244,7 +258,6 @@
               ></path>
             </svg>
           </div>
-          <!-- Individual remove button -->
           <svg
             id="remove-icon"
             width="24"
