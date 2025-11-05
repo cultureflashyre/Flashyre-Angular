@@ -31,7 +31,7 @@ Step 4: Applying the Configuration: The gsutil cors set cors.json gs://[your-buc
 Step 5: Verification: Following the update, the download functionality was tested and confirmed to be fully restored and operational across all specified environments.
 
 #run
-#gcloud storage buckets update gs://your-bucket-name --cors-file=cors.json
+#gcloud storage buckets update gs://your-bucket-name --cors-file=cors-config.json
 
 #test
 #gcloud storage buckets describe gs://your-bucket-name --format="value(cors)"
