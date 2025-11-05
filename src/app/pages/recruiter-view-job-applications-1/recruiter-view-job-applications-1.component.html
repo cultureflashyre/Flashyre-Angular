@@ -639,9 +639,7 @@
             About the job:
           </span>
           <br class="recruiter-view-job-applications1-text38" />
-          <span>
-            {{ job?.description }}
-          </span>
+          <div [innerHTML]="safeJobDescription"></div>
           <br />
           <br />
           <span class="recruiter-view-job-applications1-text37">Minimum qualifications:</span>

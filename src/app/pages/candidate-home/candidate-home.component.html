@@ -529,10 +529,16 @@
                 </div>
               </ng-template>
               <ng-template #text2>
-                <div class="candidate-home-fragment33">
-                  <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
-                </div>
-              </ng-template>
+  <div class="candidate-home-fragment33">
+    <span class="candidate-home-text125">
+      {{ (job.total_experience_min != null && job.total_experience_max != null) ? 
+         (job.total_experience_min === job.total_experience_max ? 
+            job.total_experience_min + ' Years' : 
+            job.total_experience_min + '-' + job.total_experience_max + ' Years') : 
+         'Not specified' }}
+    </span>
+  </div>
+</ng-template>
               <ng-template #text3>
                 <div class="candidate-home-fragment34">
                   <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
@@ -540,7 +546,7 @@
               </ng-template>
               <ng-template #text4>
                 <div class="candidate-home-fragment35">
-                  <span class="candidate-home-text127">{{ job.description }}</span>
+                  <div class="candidate-home-text127" [innerHTML]="job.safeDescription"></div>
                 </div>
               </ng-template>
               <ng-template #button>

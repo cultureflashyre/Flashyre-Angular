@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
+import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/candidate.service';
@@ -102,7 +102,8 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private jobService: JobsService
+    private jobService: JobsService,
+    private sanitizer: DomSanitizer
   ) {
     this.title.setTitle('Candidate-Home - Flashyre');
     this.meta.addTags([
@@ -501,9 +502,13 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   this.isLoadingMore = true;
   const startIndex = this.currentPage * this.jobsPerPage;
   const endIndex = startIndex + this.jobsPerPage;
-  const nextJobs = sourceList.slice(startIndex, endIndex);
+  let nextJobs = sourceList.slice(startIndex, endIndex);
   
   if (nextJobs.length > 0) {
+    nextJobs = nextJobs.map(job => ({
+      ...job,
+      safeDescription: this.sanitizer.bypassSecurityTrustHtml(job.description || '')
+    }));
     this.displayedJobs = [...this.displayedJobs, ...nextJobs];
     this.currentPage++;
     this.fetchAndAssignMatchScores(nextJobs);
