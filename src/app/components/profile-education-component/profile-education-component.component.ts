@@ -44,6 +44,9 @@ export class ProfileEducationComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
+  showRemoveConfirmation = false;
+  formToRemoveIndex: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private educationService: EducationService,
@@ -186,11 +189,31 @@ public validateForms(): boolean {
     }, 0);
   }
 
-  removeForm(index: number): void {
-    if (window.confirm('Are you sure to remove')) {
-      this.educationForms.splice(index, 1);
-    }
+  // removeForm(index: number): void {
+  //   if (window.confirm('Are you sure to remove')) {
+  //     this.educationForms.splice(index, 1);
+  //   }
+  // }
+
+promptRemoveForm(index: number): void {
+    this.formToRemoveIndex = index;
+    this.showRemoveConfirmation = true;
   }
+
+  handleRemoveConfirmation(button: string): void {
+    if (button.toLowerCase() === 'remove') {
+      if (this.formToRemoveIndex !== null) {
+        this.educationForms.splice(this.formToRemoveIndex, 1);
+      }
+    }
+    this.closeRemoveConfirmationModal();
+  }
+
+  closeRemoveConfirmationModal(): void {
+    this.showRemoveConfirmation = false;
+    this.formToRemoveIndex = null;
+  }
+
 
 saveEducation(): Promise<boolean> {
   return new Promise((resolve) => {

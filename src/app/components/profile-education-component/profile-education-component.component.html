@@ -167,7 +167,7 @@
           </div>
 
           <!-- Conditionally display Remove button only when there are multiple forms -->
-          <button *ngIf="educationForms.length > 1" class="remove-button" (click)="removeForm(i)">- Remove Education</button>
+          <button *ngIf="educationForms.length > 1" class="remove-button" (click)="promptRemoveForm(i)">- Remove Education</button>
         </form>
         <!-- Add a horizontal line between positions, except after the last one -->
         <hr *ngIf="i < educationForms.length - 1" class="position-divider" />
@@ -186,4 +186,11 @@
       </ng-container>
     </span>
   </div>
+ <app-alert-message
+    *ngIf="showRemoveConfirmation"
+    [message]="'Are you sure you want to remove this education?'"
+    [buttons]="['Cancel', 'Remove']"
+    (buttonClicked)="handleRemoveConfirmation($event)"
+    (close)="closeRemoveConfirmationModal()"
+  ></app-alert-message>
 </div>

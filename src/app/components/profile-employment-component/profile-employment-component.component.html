@@ -193,7 +193,7 @@
       <button
         *ngIf="positions.length > 1"
         type="button"
-        (click)="removePosition(i)"
+        (click)="promptRemovePosition(i)"
         class="profile-employment-component-remove-position button"
       >
         - Remove Position
@@ -223,4 +223,12 @@
       </ng-container>
     </span>
   </div>
+
+  <app-alert-message
+    *ngIf="showRemoveConfirmation"
+    [message]="'Are you sure you want to remove this position?'"
+    [buttons]="['Cancel', 'Remove']"
+    (buttonClicked)="handleRemoveConfirmation($event)"
+    (close)="closeRemoveConfirmationModal()"
+  ></app-alert-message>
 </div>

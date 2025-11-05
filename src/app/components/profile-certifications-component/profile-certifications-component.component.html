@@ -280,7 +280,7 @@
           <button
             *ngIf="certifications.length > 1"
             type="button"
-            (click)="removeCertification(i)"
+            (click)="promptRemoveCertification(i)"
             class="profile-certifications-component-remove-certification--text button"
           >
             - Remove Certification
@@ -301,4 +301,11 @@
       </button>
     </form>
   </div>
+  <app-alert-message
+    *ngIf="showRemoveConfirmation"
+    [message]="'Are you sure you want to remove this certification?'"
+    [buttons]="['Cancel', 'Remove']"
+    (buttonClicked)="handleRemoveConfirmation($event)"
+    (close)="closeRemoveConfirmationModal()"
+  ></app-alert-message>
 </div>
