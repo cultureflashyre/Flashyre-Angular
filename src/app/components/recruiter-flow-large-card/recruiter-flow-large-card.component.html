@@ -12,7 +12,7 @@
       class="recruiter-flow-large-card-company-name-logo-container"
     >
       <img
-      *ngIf="imageSrc; else initialsAvatar"
+      *ngIf="isImage(imageSrc); else initialsAvatar"
         id="company-image"
         [attr.alt]="imageAlt"
         [attr.src]="imageSrc"

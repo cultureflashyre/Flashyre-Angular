@@ -553,8 +553,8 @@
 .initials-avatar {
   width: 48px;
   height: 48px;
-  background-color: #4CAF50; /* adjust color or make dynamic */
-  color: white;
+  background-color: #7AD184; /* adjust color or make dynamic */
+  color: #1F882B;
   font-weight: bold;
   font-size: 20px;
   border-radius: 50%;
@@ -1554,13 +1554,13 @@
 .avatar-icon {
   width: 30px;
   height: 30px;
-  background-color: #2196F3;  /* Or use dynamic color logic */
-  color: white;
+  background-color: #CFCCDE;  /* Or use dynamic color logic */
+  color: #41327B;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14x;
   font-weight: bold;
   user-select: none;
 }

@@ -1,4 +1,14 @@
-<ngx-spinner *ngIf="isLoading$ | async"></ngx-spinner>
+<ngx-spinner
+*ngIf="isLoading$ | async"
+  name="main-spinner"
+  bdColor="rgba(51, 51, 51, 0.8)"
+  size="medium"
+  color="#fff"
+  type="line-scale"
+  [fullScreen]="true"
+>
+<p style="color: white; font-size: 18px;">Fetching Assessment...</p>
+</ngx-spinner>
 
 <div id="candidate-assessment" class="candidate-assessment-container10">
     <div class="candidate-assessment-container11">

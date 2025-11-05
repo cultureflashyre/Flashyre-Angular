@@ -52,6 +52,7 @@ export class AssessmentDataService {
     this.http.get<any[]>(`${this.baseUrl}api/assessments/assessment-list/`).pipe(
       tap(data => {
         // On success, update the BehaviorSubject with the new data.
+        console.log("Fetched Assessments...", data);
         this._assessments$.next(data);
         this._loading$.next(false); // Set loading to false
       }),
