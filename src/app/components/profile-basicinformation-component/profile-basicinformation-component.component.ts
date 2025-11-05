@@ -4,6 +4,7 @@ import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, Element
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'profile-basicinformation-component',
@@ -39,7 +40,8 @@ profilePictureError: string = '';
   // --- MODIFICATION END ---
 
   imageSrc: string = '';
-  defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
+  
+  defaultImageSrc: string =   environment.defaultProfilePicture;
   imageAlt: string = 'Profile Picture';
 
   constructor(
