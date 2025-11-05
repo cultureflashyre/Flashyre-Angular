@@ -91,7 +91,7 @@ export class AdminPage2Component implements OnInit, OnDestroy {
         label = 'Yesterday';
       } else {
         // Format date as 'dd:MM:yy' as requested
-        label = this.datePipe.transform(dateStr, 'dd:MM:yy', 'UTC')!;
+        label = this.datePipe.transform(dateStr, 'dd:MMM:yy', 'UTC')!;
       }
       filters.push({ label, value: dateStr });
     });

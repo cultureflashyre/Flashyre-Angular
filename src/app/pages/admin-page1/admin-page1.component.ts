@@ -3,7 +3,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { AdminService } from '../../services/admin.service';
 import { AdminPage1Component as AdminPage1ChildComponent } from '../../components/admin-page1-component/admin-page1-component.component';
 
-const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
+// const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
 const MAX_TOTAL_UPLOAD_SIZE_MB = 25; // New constant for total upload size limit
 
 @Component({
@@ -14,9 +14,9 @@ const MAX_TOTAL_UPLOAD_SIZE_MB = 25; // New constant for total upload size limit
 export class AdminPage1 implements OnInit {
   userProfile: any = {};
 
-  public activeView: 'resumes' | 'jobDescription' = 'resumes';
+  // public activeView: 'resumes' | 'jobDescription' = 'resumes';
   public isUploadingCVs: boolean = false;
-  public isUploadingJd: boolean = false;
+  // public isUploadingJd: boolean = false;
 
   // Add these properties
   showAlert = false;
@@ -29,7 +29,7 @@ export class AdminPage1 implements OnInit {
 
   @ViewChild(AdminPage1ChildComponent) adminPage1Component!: AdminPage1ChildComponent;
   @ViewChild('cvUploader') cvUploader!: ElementRef;
-  @ViewChild('jdUploader') jdUploader!: ElementRef;
+  // @ViewChild('jdUploader') jdUploader!: ElementRef;
 
   constructor(
     private title: Title,
@@ -54,10 +54,10 @@ export class AdminPage1 implements OnInit {
 
     this.loadUserProfile();
 
-    const activeJobId = sessionStorage.getItem(ACTIVE_JOB_ID_KEY);
-    if (activeJobId) {
-      this.activeView = 'jobDescription';
-    }
+    // const activeJobId = sessionStorage.getItem(ACTIVE_JOB_ID_KEY);
+    // if (activeJobId) {
+    //   this.activeView = 'jobDescription';
+    // }
   }
 
   onCvFilesSelected(event: Event): void {
@@ -124,33 +124,33 @@ const hasInvalidType = files.some(file => !allowedTypes.includes(file.type));
     this.cvUploader.nativeElement.value = '';
   }
 
-  onJdFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
+  // onJdFileSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (!input.files || input.files.length === 0) {
+  //     return;
+  //   }
 
-    const file = input.files[0];
-    this.isUploadingJd = true;
+  //   const file = input.files[0];
+  //   this.isUploadingJd = true;
 
-    this.adminService.uploadJd(file).subscribe({
-      next: (response) => {
-        this.showSuccessPopup(`Successfully processed JD for role: ${response.role}. The view will now switch.`);
-        sessionStorage.setItem(ACTIVE_JOB_ID_KEY, response.job_id.toString());
-        this.activeView = 'jobDescription';
-      },
-      error: (err) => {
-        console.error('JD upload failed:', err);
-        const errorMessage = err.error?.error || 'An unknown server error occurred. Please try again.';
-        this.showErrorPopup(`JD upload failed: ${errorMessage}`);
-      },
-      complete: () => {
-        this.isUploadingJd = false;
-      }
-    });
+  //   this.adminService.uploadJd(file).subscribe({
+  //     next: (response) => {
+  //       this.showSuccessPopup(`Successfully processed JD for role: ${response.role}. The view will now switch.`);
+  //       sessionStorage.setItem(ACTIVE_JOB_ID_KEY, response.job_id.toString());
+  //       this.activeView = 'jobDescription';
+  //     },
+  //     error: (err) => {
+  //       console.error('JD upload failed:', err);
+  //       const errorMessage = err.error?.error || 'An unknown server error occurred. Please try again.';
+  //       this.showErrorPopup(`JD upload failed: ${errorMessage}`);
+  //     },
+  //     complete: () => {
+  //       this.isUploadingJd = false;
+  //     }
+  //   });
 
-    this.jdUploader.nativeElement.value = '';
-  }
+  //   this.jdUploader.nativeElement.value = '';
+  // }
 
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
@@ -195,9 +195,9 @@ const hasInvalidType = files.some(file => !allowedTypes.includes(file.type));
         case 'cvUpload':
           this.cvUploadConfirmed();
           break;
-        case 'jdUpload':
-          this.jdUploadConfirmed();
-          break;
+        // case 'jdUpload':
+        //   this.jdUploadConfirmed();
+        //   break;
       }
       this.actionContext = null;
     }
@@ -210,10 +210,10 @@ const hasInvalidType = files.some(file => !allowedTypes.includes(file.type));
     this.openAlert('You are about to upload CVs. Do you want to continue?', ['Cancel', 'Upload']);
   }
 
-  onJdUploadAttempt() {
-    this.actionContext = { action: 'jdUpload' };
-    this.openAlert('You are about to upload a Job Description. Do you want to continue?', ['Cancel', 'Upload']);
-  }
+  // onJdUploadAttempt() {
+  //   this.actionContext = { action: 'jdUpload' };
+  //   this.openAlert('You are about to upload a Job Description. Do you want to continue?', ['Cancel', 'Upload']);
+  // }
 
   // --- Confirmed Actions ---
 
@@ -221,7 +221,7 @@ const hasInvalidType = files.some(file => !allowedTypes.includes(file.type));
     this.cvUploader.nativeElement.click();
   }
 
-  private jdUploadConfirmed() {
-    this.jdUploader.nativeElement.click();
-  }
+  // private jdUploadConfirmed() {
+  //   this.jdUploader.nativeElement.click();
+  // }
 }
