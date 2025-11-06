@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser';
+import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -14,6 +14,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
   private apiUrl = environment.apiUrl;
 
   job: any = null;
+  safeJobDescription: SafeHtml;
   candidates: any[] = [];
   allCandidates: any[] = [];
   filteredAndSortedCandidates: any[] = [];
@@ -45,7 +46,8 @@ export class RecruiterViewJobApplications1 implements OnInit {
     private meta: Meta,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {
     this.title.setTitle('Recruiter-View-Job-Applications-1 - Flashyre');
     this.meta.addTags([
@@ -76,6 +78,7 @@ export class RecruiterViewJobApplications1 implements OnInit {
           (data: any) => {
 
             this.job = data;
+            this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(this.job?.description || '');
             console.log("Displaying Job Details: ", this.job);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
             

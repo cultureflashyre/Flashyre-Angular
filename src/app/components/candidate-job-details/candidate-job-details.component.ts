@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/candidate.service';
@@ -28,6 +29,8 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   @Output() jobUnsaved = new EventEmitter<any>();
   @Output() jobDisliked = new EventEmitter<any>();
   @Output() jobUndisliked = new EventEmitter<any>();
+
+  safeJobDescription: SafeHtml;
 
   @ViewChild('mobileBar') mobileBar: ElementRef;
   @ViewChild('mobileMatchingBar') mobileMatchingBar: ElementRef;
@@ -86,6 +89,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   alertButtons: string[] = [];
 
   constructor(
+    private sanitizer: DomSanitizer,
     private jobService: JobsService,
     private router: Router,
     private route: ActivatedRoute,
@@ -239,6 +243,9 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         this.fetchMatchingScore(newJob.job_id); // Fetch score for the new job
         this.fetchInteractionStatus(); // Check if disliked/saved
         this.setProgressBarState();
+
+        this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(newJob.description || '');
+        
         this.loading = false; // Turn off loading
       } else {
         this.resetJob();

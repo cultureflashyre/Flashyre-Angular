@@ -1,15 +1,3 @@
-<ngx-spinner
-*ngIf="isLoading$ | async"
-  name="main-spinner"
-  bdColor="rgba(51, 51, 51, 0.8)"
-  size="medium"
-  color="#fff"
-  type="line-scale"
-  [fullScreen]="true"
->
-<p style="color: white; font-size: 18px;">Fetching Assessment...</p>
-</ngx-spinner>
-
 <div id="candidate-assessment" class="candidate-assessment-container10">
     <div class="candidate-assessment-container11">
       <navbar-for-candidate-view
@@ -149,7 +137,6 @@
             </recruiter-job-posted1>
           </div>
           <div
-          *ngIf="assessments$ | async as assessments; else loadingOrError"
             id="assessment-available-main-container"
             class="candidate-assessment-assessment-available-main-container"
           >
@@ -159,8 +146,20 @@
             >
               Assessments Available
             </span>
+            <div *ngIf="isLoading$ | async" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading assessments...</p>
+  </div>
+
+  <!-- EDIT 2: WRAPPED EXISTING CONTENT -->
+  <!-- This container hides the assessment list while loading is in progress. -->
+  <div *ngIf="!(isLoading$ | async)">
+    <!-- All the original logic below this line remains unchanged. -->
+    <div
+    *ngIf="assessments$ | async as assessments; else loadingOrError"
+    >
             <div
-            *ngIf="assessments.length > 0; else noAssessmentsTemplate"
+              *ngIf="assessments.length > 0; else noAssessmentsTemplate"
               id="assessments-main-container"
               class="candidate-assessment-assessments-main-container"
             >

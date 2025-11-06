@@ -16,7 +16,7 @@
   gap: var(--dl-space-space-oneandhalfunits);
   flex: 0 0 auto;
   width: 240px;
-  height: 322px;
+  height: auto;
   display: flex;
   align-items: center;
   padding-top: 24px;
@@ -54,7 +54,7 @@
   gap: 3px;
   flex: 0 0 auto;
   width: 168px;
-  height: 75px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -62,7 +62,7 @@
 }
  
 .candidate-profile-short-container3 {
-  gap: 0;
+  gap: 8px;
   flex: 0 0 auto;
   display: flex;
   align-self: center;
@@ -90,7 +90,7 @@
   fill: #18191C;
   color: #18191C;
   width: 168px;
-  height: 48px;
+  height: auto;
   display: flex;
   align-self: center;
   text-align: center;

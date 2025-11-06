@@ -245,7 +245,7 @@
               <span class="candidate-job-details-text16">About the job</span>
               <br class="candidate-job-details-text17" />
               <br />
-              <span class="candidate-job-details-text19">{{ job.description }}</span>
+              <div class="candidate-job-details-text19" [innerHTML]="safeJobDescription"></div>
               <br class="candidate-job-details-text20" />
               <br />
               <span>Minimum qualifications:</span>
