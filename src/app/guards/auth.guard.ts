@@ -66,7 +66,7 @@ export class AuthGuard implements CanActivate {
         break;
         case 'recruiter':
                         console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
         break;
         case 'admin':
                         console.log("Inside the SWITCH for ", userType);

@@ -15,9 +15,9 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'admin-create-job-step1',
-  templateUrl: './admin-create-job-step1.component.html',
-  styleUrls: ['./admin-create-job-step1.component.css']
+  selector: 'create-job',
+  templateUrl: './create-job.component.html',
+  styleUrls: ['./create-job.component.css']
 })
 export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDestroy {
   userProfile: any = {};
@@ -243,7 +243,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
           this.showErrorPopup('Failed to load existing job data. Please try again later.');
           console.error(`Failed to load existing job data for ID ${uniqueId}:`, err);
           // MODIFIED: Navigate to a sensible default page on error, like a job list
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         }
       })
     );
@@ -936,7 +936,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.showSuccessPopup(`Job post ${this.isEditMode ? 'updated' : 'saved'}. Proceeding to assessment setup.`);
         this.workflowService.startWorkflow(response.unique_id);
         this.spinner.hide('main-spinner');
-        this.router.navigate(['/admin-create-job-step2']);
+        this.router.navigate(['/create-job-step2']);
       },
       error: (error) => {
         this.isSubmitting = false;
@@ -953,7 +953,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     if (this.isEditMode) {
         this.showSuccessPopup('Job post editing cancelled.');
         // Navigate back to the admin job list (assuming this route exists)
-        setTimeout(() => { this.router.navigate(['/recruiter-view-3rd-page1']); }, 2000);
+        setTimeout(() => { this.router.navigate(['/job-post-list']); }, 2000);
         return; // Exit without deleting
     }
 

@@ -218,7 +218,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
         // 2. Set a 5-second timer to clear the workflow and navigate
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
           // Optional: hide the popup right before navigation
           this.successPopupMessage = '';
           this.showSuccessPopup = false; 
@@ -387,7 +387,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
 
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
           this.successPopupMessage = '';
           this.showSuccessPopup = false;
         }, 5000);
@@ -432,7 +432,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
         this.showSuccessPopup = true;
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
           this.showSuccessPopup = false;
         }, 5000);
         this.isSubmitting = false;

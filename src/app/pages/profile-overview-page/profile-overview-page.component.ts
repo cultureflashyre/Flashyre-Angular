@@ -257,7 +257,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentStep === 5) {
           // Special case for the last step to navigate away
           setTimeout(() => {
-            if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
+            if (this.navigationSource === 'recruiter') this.router.navigate(['job-post-list']);
             else this.router.navigate(['candidate-home']);
           }, 3000);
         } else if (this.currentStep < 6) {
@@ -293,7 +293,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.currentStep >= 6) {
       setTimeout(() => {
-        if (this.navigationSource === 'recruiter') this.router.navigate(['recruiter-view-3rd-page1']);
+        if (this.navigationSource === 'recruiter') this.router.navigate(['job-post-list']);
         else this.router.navigate(['candidate-home']);
       }, 1000);
     }

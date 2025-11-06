@@ -234,7 +234,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
           this.spinner.hide('main-spinner'); // Hide spinner on error
           console.error('Failed to load existing job data:', err);
           this.showErrorPopup(`Failed to load existing job data: ${err?.error?.message || err.message}`);
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         }
       })
     );
@@ -962,7 +962,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
             if (this.isEditMode) {
               // This case now handles saving a draft and exiting
               setTimeout(() => {
-                this.router.navigate(['/recruiter-view-3rd-page1']);
+                this.router.navigate(['/job-post-list']);
               }, 2000);
             } else {
               // This is for a brand new post
@@ -988,13 +988,13 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     if (this.isEditMode) {
       this.showSuccessPopup('Job post editing cancelled.');
       setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
       }, 2000);
     } else {
       this.showSuccessPopup('Job post creation cancelled.');
       this.resetForm();
       setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
       }, 2000);
     }
   }

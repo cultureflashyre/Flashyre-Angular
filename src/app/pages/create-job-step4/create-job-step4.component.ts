@@ -7,9 +7,9 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { InterviewService, InterviewStage, InterviewStageData } from '../../services/interview.service';
 
 @Component({
-  selector: 'admin-create-job-step4',
-  templateUrl: './admin-create-job-step4.component.html',
-  styleUrls: ['./admin-create-job-step4.component.css']
+  selector: 'create-job-step4',
+  templateUrl: './create-job-step4.component.html',
+  styleUrls: ['./create-job-step4.component.css']
 })
 export class AdminCreateJobStep4Component implements OnInit {
   interviewForm: FormGroup;
@@ -64,7 +64,7 @@ export class AdminCreateJobStep4Component implements OnInit {
 
     if (!this.jobUniqueId) {
       this.showErrorPopup('No active job creation flow found. Please start again.');
-      this.router.navigate(['/admin-create-job-step1']);
+      this.router.navigate(['/create-job']);
       return;
     }
     const today = new Date();
@@ -263,11 +263,11 @@ export class AdminCreateJobStep4Component implements OnInit {
   // --- ACTION CONFIRMATION LOGIC ---
   onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/recruiter-view-3rd-page1']); // Or an admin dashboard route
+    this.router.navigate(['/job-post-list']); // Or an admin dashboard route
   }
 
   onPreviousConfirmed(): void {
-    this.router.navigate(['/admin-create-job-step3']);
+    this.router.navigate(['/create-job-step3']);
   }
 
   onSaveDraftConfirmed(): void {
@@ -283,7 +283,7 @@ export class AdminCreateJobStep4Component implements OnInit {
         this.showSuccessPopup('Draft saved successfully!');
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']); // Or an admin dashboard route
+          this.router.navigate(['/job-post-list']); // Or an admin dashboard route
         }, 3000);
         this.isSubmitting = false;
       },
@@ -306,7 +306,7 @@ export class AdminCreateJobStep4Component implements OnInit {
         this.showSuccessPopup('Job finalized without interview stages!');
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         }, 3000);
         this.isSubmitting = false;
       },
@@ -331,7 +331,7 @@ export class AdminCreateJobStep4Component implements OnInit {
         this.showSuccessPopup(message);
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         }, 3000);
         this.isSubmitting = false;
       },

@@ -39,7 +39,7 @@ export class AdminCandidateScoresPageComponent implements OnInit {
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     if (!this.jobUniqueId) {
       console.error('No active job found in workflow. Redirecting...');
-      this.router.navigate(['/recruiter-view-3rd-page1']);
+      this.router.navigate(['/job-post-list']);
       return;
     }
     this.loadCandidates(); // Load candidates for the job
@@ -173,6 +173,6 @@ onSelectAllChange(isSelected: boolean): void {
 
   // Navigate back to job setup (step 4)
   onBackToJobSetup(): void {
-    this.router.navigate(['/admin-create-job-step4']);
+    this.router.navigate(['/create-job-step4']);
   }
 }

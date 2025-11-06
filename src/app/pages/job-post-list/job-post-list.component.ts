@@ -1,4 +1,4 @@
-// src/app/pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.component.ts
+// src/app/pages/job-post-list/job-post-list.component.ts
 
 import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
@@ -15,9 +15,9 @@ import { AdminJobCreationWorkflowService } from 'src/app/services/admin-job-crea
 type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
 
 @Component({
-  selector: 'recruiter-view3rd-page1',
-  templateUrl: 'recruiter-view-3rd-page1.component.html',
-  styleUrls: ['recruiter-view-3rd-page1.component.css'],
+  selector: 'job-post-list',
+  templateUrl: 'job-post-list.component.html',
+  styleUrls: ['job-post-list.component.css'],
   animations: [
     trigger('popupAnimation', [
       state('void', style({
@@ -105,9 +105,9 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
     private corporateAuthService: CorporateAuthService,
     private recruiterPreferenceService: RecruiterPreferenceService,
   ) {
-    this.title.setTitle('Recruiter-View-3rd-Page1 - Flashyre');
+    this.title.setTitle('job-post-list - Flashyre');
     this.meta.addTags([
-        { property: 'og:title', content: 'Recruiter-View-3rd-Page1 - Flashyre' },
+        { property: 'og:title', content: 'job-post-list - Flashyre' },
     ]);
   }
 
@@ -418,7 +418,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
 
   editJob(job: JobPost): void {
     this.adminWorkflowService.startEditWorkflow(job.unique_id);
-    this.router.navigate(['/admin-create-job-step1', job.unique_id]);
+    this.router.navigate(['/create-job', job.unique_id]);
   }
 
   getPostedDaysAgo(dateStr: string): string {
@@ -439,7 +439,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   }
 
   navigateToCreateJobPost(): void {
-    this.router.navigate(['/admin-create-job-step1']);
+    this.router.navigate(['/create-job']);
   }
 
   public viewJobDescription(job: JobPost): void {

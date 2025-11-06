@@ -166,12 +166,12 @@ export class Signupadmin implements OnInit {
 
           this.userProfileService.fetchUserProfile().subscribe({
             next: () => {
-              this.router.navigate(['/recruiter-view-3rd-page1'], { state: { source: 'admin' } });
+              this.router.navigate(['/job-post-list'], { state: { source: 'admin' } });
               this.spinner.hide();
             },
             error: (profileError) => {
               console.error('Error fetching profile', profileError);
-              this.router.navigate(['/recruiter-view-3rd-page1'], { state: { source: 'admin' } });
+              this.router.navigate(['/job-post-list'], { state: { source: 'admin' } });
               this.spinner.hide();
             }
           });

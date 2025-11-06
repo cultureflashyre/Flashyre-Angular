@@ -58,11 +58,11 @@ const routes = [
       
   },
   {
-    path: 'recruiter-view-3rd-page1',
+    path: 'job-post-list',
     loadChildren: () =>
       import(
-        './pages/recruiter-view-3rd-page1/recruiter-view-3rd-page1.module'
-      ).then((m) => m.RecruiterView3rdPage1Module),
+        './pages/job-post-list/job-post-list.module'
+      ).then((m) => m.JobPostListModule),
       canActivate: [AuthGuard],
       data: { roles: ['recruiter','admin'] },
       
@@ -248,45 +248,6 @@ const routes = [
     data: { roles: ['candidate'] },
   },
   {
-    path: 'create-job-post-1st-page',
-    loadChildren: () =>
-      import(
-        './pages/create-job-post-1st-page/create-job-post-1st-page.module'
-      ).then((m) => m.CreateJobPost1stPageModule),
-      canActivate: [AuthGuard],
-      data: { roles: ['recruiter'] },
-          
-  },
-  {
-    path: 'create-job-post-21-page',
-    loadChildren: () =>
-      import(
-        './pages/create-job-post-21-page/create-job-post-21-page.module'
-      ).then((m) => m.CreateJobPost21PageModule),
-  },
-  
-  {
-    path: 'create-job-post-22-page',
-    loadChildren: () =>
-      import(
-        './pages/create-job-post-22-page/create-job-post-22-page.module'
-      ).then((m) => m.CreateJobPost22PageModule),
-  },
-  {
-    path: 'create-job-post-2nd-page',
-    loadChildren: () =>
-      import(
-        './pages/create-job-post-2nd-page/create-job-post-2nd-page.module'
-      ).then((m) => m.CreateJobPost2ndPageModule),
-  },
-  {
-    path: 'create-job-post-3rd-page',
-    loadChildren: () =>
-      import(
-        './pages/create-job-post-3rd-page/create-job-post-3rd-page.module'
-      ).then((m) => m.CreateJobPost3rdPageModule),
-  },
-  {
     path: 'buffer-page', // New route
     loadChildren: () =>
       import('./buffer-page/buffer-page.module').then(
@@ -333,25 +294,25 @@ const routes = [
   },
   
   {
-  path: 'admin-create-job-step1',
-  loadChildren: () => import('./pages/admin-create-job-step1/admin-create-job-step1.module').then(
-        (m) => m.AdminCreateJobStep1Module),
+  path: 'create-job',
+  loadChildren: () => import('./pages/create-job/create-job.module').then(
+        (m) => m.CreateJobModule),
                   canActivate: [AuthGuard],
     data: { roles: ['admin', 'recruiter'] },
 },
 {
-  path: 'admin-create-job-step2',
-  loadChildren: () => import('./pages/admin-create-job-step2/admin-create-job-step2.module').then(m => m.AdminCreateJobStep2Module),
+  path: 'create-job-step2',
+  loadChildren: () => import('./pages/create-job-step2/create-job-step2.module').then(m => m.CreateJobStep2Module),
   canActivate: [AuthGuard]
 },
 {
-  path: 'admin-create-job-step3',
-  loadChildren: () => import('./pages/admin-create-job-step3/admin-create-job-step3.module').then(m => m.AdminCreateJobStep3Module),
+  path: 'create-job-step3',
+  loadChildren: () => import('./pages/create-job-step3/create-job-step3.module').then(m => m.CreateJobStep3Module),
   canActivate: [AuthGuard]
 },
 {
-  path: 'admin-create-job-step4',
-  loadChildren: () => import('./pages/admin-create-job-step4/dmin-create-job-step4.module').then(m => m.AdminCreateJobStep4Module),
+  path: 'create-job-step4',
+  loadChildren: () => import('./pages/create-job-step4/create-job-step4.module').then(m => m.CreateJobStep4Module),
   canActivate: [AuthGuard]
 },
 {

@@ -9,7 +9,7 @@ import { AdminJobDescriptionService } from '../../services/admin-job-description
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
-import { MCQItem as IMcqItem } from '../admin-create-job-step1/types';
+import { MCQItem as IMcqItem } from '../create-job/types';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { McqAssessmentService } from 'src/app/services/mcq-assessment.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -87,9 +87,9 @@ export function timeNotZeroValidator(control: AbstractControl): ValidationErrors
 }
 
 @Component({
-  selector: 'admin-create-job-step3',
-  templateUrl: 'admin-create-job-step3.component.html',
-  styleUrls: ['admin-create-job-step3.component.css'],
+  selector: 'create-job-step3',
+  templateUrl: 'create-job-step3.component.html',
+  styleUrls: ['create-job-step3.component.css'],
 })
 export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   userProfile: any = {};
@@ -171,7 +171,7 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
 
     if (!this.jobUniqueId) {
       this.showErrorPopup('Error: Job context is missing. Redirecting...');
-      this.router.navigate(['/admin-create-job-step1']);
+      this.router.navigate(['/create-job']);
       return;
     }
 
@@ -1113,15 +1113,15 @@ onAlertButtonClicked(action: string) {
     this.openAlert('Are you sure you want to save and proceed?', ['Cancel', 'Save & Next']);
   }
 
-  onPreviousConfirmed(): void { this.router.navigate(['/admin-create-job-step2']); }
+  onPreviousConfirmed(): void { this.router.navigate(['/create-job-step2']); }
 
-  onSkipConfirmed(): void { this.router.navigate(['/admin-create-job-step4']); }
+  onSkipConfirmed(): void { this.router.navigate(['/create-job-step4']); }
 
   onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
     setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
     }, 2000);
   }
 
@@ -1206,7 +1206,7 @@ onAlertButtonClicked(action: string) {
           
           setTimeout(() => {
             this.workflowService.clearWorkflow();
-            this.router.navigate(['/recruiter-view-3rd-page1']);
+            this.router.navigate(['/job-post-list']);
           }, 2000);
         },
         error: (err) => {
@@ -1261,7 +1261,7 @@ onAlertButtonClicked(action: string) {
           this.showSuccessPopup('Assessment saved successfully!');
           
           setTimeout(() => {
-            this.router.navigate(['/admin-create-job-step4']);
+            this.router.navigate(['/create-job-step4']);
           }, 2000);
         },
         error: (err) => {

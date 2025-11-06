@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { JobDetails, AIJobResponse } from '../pages/admin-create-job-step1/types';
+import { JobDetails, AIJobResponse } from '../pages/create-job/types';
 import { environment } from '../../environments/environment';
 
 

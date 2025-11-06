@@ -1,4 +1,4 @@
-// src/app/pages/admin-create-job-step1/types.ts
+// src/app/pages/create-job/types.ts
 export interface Skill {
   skill: string;
   skill_confidence: number;

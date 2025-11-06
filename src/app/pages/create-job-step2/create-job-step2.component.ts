@@ -1,4 +1,4 @@
-// src/app/pages/admin-create-job-step2/admin-create-job-step2.component.ts
+// src/app/pages/create-job-step2/create-job-step2.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,9 +13,9 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/services/candidate.service';
 
 @Component({
-  selector: 'admin-create-job-step2',
-  templateUrl: 'admin-create-job-step2.component.html',
-  styleUrls: ['admin-create-job-step2.component.css'],
+  selector: 'create-job-step2',
+  templateUrl: 'create-job-step2.component.html',
+  styleUrls: ['create-job-step2.component.css'],
 })
 export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   userProfile: any = {};
@@ -83,7 +83,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     
     if (!this.jobUniqueId) {
       this.showErrorPopup('No active job post found. Redirecting to Step 1.');
-      this.router.navigate(['/admin-create-job-step1']);
+      this.router.navigate(['/create-job']);
       return;
     }
 
@@ -193,9 +193,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   onPrevious(): void {
     // Navigate back to step 1, passing the job ID to maintain the editing context.
     if(this.jobUniqueId) {
-        this.router.navigate(['/admin-create-job-step1', this.jobUniqueId]);
+        this.router.navigate(['/create-job', this.jobUniqueId]);
     } else {
-        this.router.navigate(['/admin-create-job-step1']);
+        this.router.navigate(['/create-job']);
     }
   }
 
@@ -223,7 +223,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
               this.workflowService.setUploadedMcqs(response.uploaded_mcqs);
             }
             this.showSuccessPopup('File uploaded and questions processed!');
-            this.router.navigate(['/admin-create-job-step3']);
+            this.router.navigate(['/create-job-step3']);
           },
           error: (error) => {
             this.showErrorPopup(`Upload failed: ${error.message || 'Unknown error'}`);
@@ -231,7 +231,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
         });
     } else {
       // If no new file was chosen, proceed with the existing assessment.
-      this.router.navigate(['/admin-create-job-step3']);
+      this.router.navigate(['/create-job-step3']);
     }
   }
   
@@ -272,14 +272,14 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   private onSkipConfirmed(): void {
-    this.router.navigate(['/admin-create-job-step3']);
+    this.router.navigate(['/create-job-step3']);
   }
 
   private onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
     const message = this.isEditMode ? 'Job post editing cancelled.' : 'Job post creation cancelled.';
     this.showSuccessPopup(message);
-    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 2000);
+    setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
   }
   
   private onSaveDraftConfirmed(): void {
@@ -287,7 +287,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     // This action simply exits the flow.
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
-    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 2000);
+    setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
   }
 
   showSuccessPopup(message: string) {

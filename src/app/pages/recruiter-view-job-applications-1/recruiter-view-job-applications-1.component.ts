@@ -287,6 +287,6 @@ export class RecruiterViewJobApplications1 implements OnInit {
   // --- MODIFICATION END ---
 
   navigateToRecruiterHome() {
-    this.router.navigate(['/recruiter-view-3rd-page1']);
+    this.router.navigate(['/job-post-list']);
   }
 }

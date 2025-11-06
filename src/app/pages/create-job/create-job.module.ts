@@ -2,29 +2,37 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from '../../components/components.module';
-import { AdminCreateJobStep4Component } from './admin-create-job-step4.component';
+import { AdminCreateJobStep1Component } from './create-job.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // Define routes for the module
 const routes = [
   {
     path: '',
-    component: AdminCreateJobStep4Component
+    component: AdminCreateJobStep1Component
+  },
+  {
+    path: ':id',
+    component: AdminCreateJobStep1Component
   }
 ];
 
 @NgModule({
-  declarations: [AdminCreateJobStep4Component],
+  declarations: [AdminCreateJobStep1Component],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     HttpClientModule,
     ComponentsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes), // ← CRITICAL FIX: Changed from RouterModule to RouterModule.forChild(routes)
+    NgxSpinnerModule
   ],
-  exports: [AdminCreateJobStep4Component],
+  exports: [AdminCreateJobStep1Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminCreateJobStep4Module {}
+export class CreateJobModule {}

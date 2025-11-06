@@ -230,7 +230,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     this.showSuccessPopup('Job post creation cancelled.');
     // Added delay for navigation
     setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
     }, 3000);
   }
        */
@@ -258,7 +258,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     // Replaced MatSnackBar and added navigation delay
     this.showSuccessPopup('Your draft has been saved.');
     setTimeout(() => {
-        this.router.navigate(['/recruiter-view-3rd-page1']);
+        this.router.navigate(['/job-post-list']);
     }, 3000);
   }
        */
@@ -353,7 +353,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   onCancelConfirmed() {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Job post creation cancelled.');
-    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+    setTimeout(() => this.router.navigate(['/job-post-list']), 3000);
   }
 
   onSkipConfirmed() {
@@ -363,7 +363,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
   onSaveDraftConfirmed() {
     this.workflowService.clearWorkflow();
     this.showSuccessPopup('Your draft has been saved.');
-    setTimeout(() => this.router.navigate(['/recruiter-view-3rd-page1']), 3000);
+    setTimeout(() => this.router.navigate(['/job-post-list']), 3000);
   }
 
 

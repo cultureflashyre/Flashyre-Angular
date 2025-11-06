@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ComponentsModule } from '../../components/components.module';
-import { AdminCreateJobStep2 } from './admin-create-job-step2.component';
+import { AdminCreateJobStep2 } from './create-job-step2.component';
 
 // Define routes for the module
 const routes = [
@@ -26,4 +26,4 @@ const routes = [
   exports: [AdminCreateJobStep2],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminCreateJobStep2Module {}
+export class CreateJobStep2Module {}

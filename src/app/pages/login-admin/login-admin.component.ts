@@ -54,12 +54,12 @@ export class LoginAdmin implements OnInit {
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {
           this.errorMessage = '';
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         },
         error: (profileError) => {
           console.error('Error fetching profile', profileError);
           // Navigate anyway, but with a warning
-          this.router.navigate(['/recruiter-view-3rd-page1']);
+          this.router.navigate(['/job-post-list']);
         }
       });
     } else {

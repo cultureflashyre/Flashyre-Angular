@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ComponentsModule } from '../../components/components.module';
-import { AdminCreateJobStep3 } from './admin-create-job-step3.component';
+import { AdminCreateJobStep3 } from './create-job-step3.component';
 
 // Define routes for the module
 const routes = [
@@ -29,4 +29,4 @@ const routes = [
   exports: [AdminCreateJobStep3],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminCreateJobStep3Module {}
+export class CreateJobStep3Module {}
