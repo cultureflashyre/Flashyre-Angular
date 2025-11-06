@@ -90,7 +90,7 @@ export class AdminPage1Component implements OnInit {
       } else if (dateStr === yesterdayStr) {
         label = 'Yesterday';
       } else {
-        label = this.datePipe.transform(dateStr, 'dd:MM:yy', 'UTC')!;
+        label = this.datePipe.transform(dateStr, 'dd-MMM-yy', 'UTC')!;
       }
       return { label: label, value: dateStr };
     });
