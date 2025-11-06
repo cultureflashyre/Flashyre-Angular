@@ -27,6 +27,8 @@ export class ProfileCertificationsComponent implements OnInit {
 
   certificationForm: FormGroup;
   todayDate: string;
+  showRemoveConfirmation = false;
+  certificationToRemoveIndex: number | null = null;
 
   constructor(private fb: FormBuilder, private certificationService: CertificationService) {
     this.certificationForm = this.fb.group({
@@ -92,13 +94,25 @@ export class ProfileCertificationsComponent implements OnInit {
     setTimeout(() => this.scrollToLastCertification(), 0);
   }
 
-  removeCertification(index: number) {
-    if (this.certifications.length > 1) {
-      if(window.confirm('Are you sure to remove')) {
-        this.certifications.removeAt(index);
+   promptRemoveCertification(index: number): void {
+    this.certificationToRemoveIndex = index;
+    this.showRemoveConfirmation = true;
+  }
+
+  handleRemoveConfirmation(button: string): void {
+    if (button.toLowerCase() === 'remove') {
+      if (this.certificationToRemoveIndex !== null && this.certifications.length > 1) {
+        this.certifications.removeAt(this.certificationToRemoveIndex);
       }
     }
+    this.closeRemoveConfirmationModal();
   }
+
+  closeRemoveConfirmationModal(): void {
+    this.showRemoveConfirmation = false;
+    this.certificationToRemoveIndex = null;
+  }
+
 
   scrollToLastCertification() {
       // Logic for scrolling remains the same

@@ -34,6 +34,9 @@ export class ProfileEmploymentComponent {
     },
   ];
 
+  showRemoveConfirmation = false;
+  positionToRemoveIndex: number | null = null;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
@@ -94,12 +97,29 @@ private loadPositionsFromUserProfile(): void {
   }
 
   // Remove a position
-  removePosition(index: number) {
-    if (this.positions.length > 1) {
-      if (window.confirm('Are you sure to remove')) {
-        this.positions.splice(index, 1);
+ promptRemovePosition(index: number): void {
+    this.positionToRemoveIndex = index;
+    this.showRemoveConfirmation = true;
+  }
+
+  // REMOVE the old `cancelRemovePosition` and `confirmRemovePosition` methods
+  // and REPLACE them with these two new methods:
+
+  // This method handles the button click from the alert component
+  handleRemoveConfirmation(button: string): void {
+    if (button.toLowerCase() === 'remove') {
+      if (this.positionToRemoveIndex !== null && this.positions.length > 1) {
+        this.positions.splice(this.positionToRemoveIndex, 1);
       }
     }
+    // Always close the modal after a button is clicked
+    this.closeRemoveConfirmationModal();
+  }
+
+  // This method closes the modal and resets the state
+  closeRemoveConfirmationModal(): void {
+    this.showRemoveConfirmation = false;
+    this.positionToRemoveIndex = null;
   }
 
   // Scroll to the bottom of the component
