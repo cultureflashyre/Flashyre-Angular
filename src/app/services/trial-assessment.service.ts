@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject, catchError, tap, throwError, finalize, of } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../environments/environment';
 
@@ -69,31 +69,38 @@ export class TrialAssessmentService {
     this.timerSource.next(time);
   }
 
-  getAssessmentDetails(assessmentId: number): Observable<TrialAssessmentResponse> {
-    this.spinner.show();
-    const token = localStorage.getItem('token');
-    console.log('Using token:', token ? 'Token exists' : 'No token found');
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const url = `${environment.apiUrl}trial_assessments/?assessment_id=${assessmentId}`;
-    console.log('Making request to:', url);
-    return new Observable<TrialAssessmentResponse>((observer) => {
-      this.http.get<TrialAssessmentResponse>(url, { headers }).subscribe({
-        next: (response) => {
-          console.log('API Response:', response);
-          this.spinner.hide();
-          observer.next(response);
-          observer.complete();
-        },
-        error: (error) => {
-          console.error('API Error details:', error);
-          this.spinner.hide();
-          observer.error(error);
-        }
-      });
-    });
-  }
+// In trial-assessment.service.ts
+
+getAssessmentDetails(assessmentId: number): Observable<any> { // Return Observable<any> since shape varies
+  this.spinner.show();
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+  const url = `${environment.apiUrl}trial_assessments/?assessment_id=${assessmentId}`;
+  
+  console.log(`DEBUG: [Service] Making GET request to: ${url}`);
+
+  return this.http.get<any>(url, { headers }).pipe( // Expect 'any' type now
+    // This 'tap' will run for ANY successful (2xx) response from the backend
+    tap(response => {
+      console.log('DEBUG: [Service] Received SUCCESSFUL response from API (2xx status). Passing to component.', response);
+    }),
+    catchError((error: HttpErrorResponse) => {
+      // This will now ONLY run for real errors (4xx, 5xx, network failure)
+      console.error('DEBUG: [Service] Caught a REAL HTTP ERROR.', error);
+      
+      // We no longer need the special 403 check here because the backend sends 200 OK.
+      // Just pass the original error along to the component's error block.
+      return throwError(() => error);
+    }),
+    finalize(() => {
+      console.log('DEBUG: [Service] Finalize block executed. Hiding spinner.');
+      this.spinner.hide();
+    })
+  );
+}
+
 
   submitAssessment(data: any): Observable<any> {
     this.spinner.show();

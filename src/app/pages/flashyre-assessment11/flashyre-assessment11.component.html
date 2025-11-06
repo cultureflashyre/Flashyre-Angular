@@ -1,3 +1,18 @@
+<!-- ### MODIFICATION START: Added alert component and wrapper ### -->
+
+<!-- This alert will only display when the "NO_ATTEMPTS_REMAINING" error is caught -->
+<app-alert-message
+  *ngIf="showNoAttemptsAlert"
+  [message]="alertMessage"
+  [buttons]="showAlertButtons"
+>
+</app-alert-message>
+
+<!-- This wrapper hides the entire assessment UI while loading or if the above alert is active -->
+<div *ngIf="!isLoading && !showNoAttemptsAlert">
+
+  <!-- ### MODIFICATION END ### -->
+
 <div class="flashyre-assessment11-container">
   <!-- Popup Overlay -->
   <div class="popup-overlay" *ngIf="showWarningPopup">
@@ -398,3 +413,7 @@
       </div>
     </div>
 </div>
+
+<!-- ### MODIFICATION START: Closing tag for the wrapper ### -->
+</div>
+<!-- ### MODIFICATION END ### -->

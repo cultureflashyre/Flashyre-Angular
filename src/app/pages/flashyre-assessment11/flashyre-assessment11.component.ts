@@ -43,6 +43,13 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   @Input() rootClassName: string = '';
   @Input() logoAlt: string = 'image';
 
+  // ### MODIFICATION START: New properties for loading and alert state ###
+  isLoading = true; // Used to hide the assessment UI until data is successfully fetched
+  showNoAttemptsAlert = false;
+  alertMessage = '';
+  showAlertButtons: string[] = [];
+  // ### MODIFICATION END ###
+
   showWarningPopup = false;
   totalQuestionsInSection: number;
   isLastSection: boolean;
@@ -154,39 +161,77 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     this.closeFullscreen();
   }
 
-  fetchAssessmentData(assessmentId: number): void {
-    this.spinner.show();
-    this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
-      next: async (data) => {
-        this.assessmentData = data;
+// In flashyre-assessment11.component.ts
+
+fetchAssessmentData(assessmentId: number): void {
+  console.log(`DEBUG: [Component] fetchAssessmentData called for ID: ${assessmentId}`);
+  
+  this.trialAssessmentService.getAssessmentDetails(assessmentId).subscribe({
+    next: async (response: any) => {
+      console.log('DEBUG: [Component] Entered SUBSCRIBE "next" block. Raw response:', response);
+      this.isLoading = false;
+
+      // It's safer to check if response exists before accessing properties
+      if (!response || !response.status) {
+        console.error("DEBUG: [Component] Response is invalid or has no 'status' property. Navigating to error page.", response);
+        this.router.navigate(['/assessment-error']);
+        return; // Stop execution
+      }
+
+      console.log(`DEBUG: [Component] Response has a status property: '${response.status}'`);
+
+      if (response.status === 'NO_ATTEMPTS_REMAINING') {
+        console.log("DEBUG: [Component] Condition MET: response.status is 'NO_ATTEMPTS_REMAINING'.");
+        this.alertMessage = 'You have exhausted the maximum attempts for this assessment. You can no longer take this assessment.';
+        this.showAlertButtons = [];
+        this.showNoAttemptsAlert = true;
+        console.log("DEBUG: [Component] showNoAttemptsAlert set to true. Alert should be visible.");
+
+        setTimeout(() => {
+          console.log("DEBUG: [Component] 5-second timer finished. Navigating to /candidate-assessment.");
+          this.router.navigate(['/candidate-assessment']);
+        }, 5000);
+
+      } else if (response.status === 'SUCCESS') {
+        console.log("DEBUG: [Component] Condition MET: response.status is 'SUCCESS'.");
+        this.assessmentData = response;
         
+        // ... (rest of your success logic)
         try {
-          if (data.proctored?.toUpperCase() === 'YES') {
+          if (response.proctored?.toUpperCase() === 'YES') {
             this.proctoringService.startMonitoring();
             this.openFullscreen();
           }
-          if (data.video_recording?.toUpperCase() === 'YES') {
+          if (response.video_recording?.toUpperCase() === 'YES') {
             await this.videoRecorder.startRecording(this.userId, String(assessmentId));
           }
         } catch (error) {
-            console.error('Failed to conditionally start assessment services:', error);
+            console.error('[Component] Error during proctoring/video setup:', error);
         }
-
         this.sections = [];
-        this.processCustomizations(data.sections);
+        this.processCustomizations(response.sections);
         this.totalSections = this.sections.length;
-        this.timer = data.total_assessment_duration * 60;
+        this.timer = response.total_assessment_duration * 60;
         this.trialAssessmentService.updateTimer(this.timer);
         this.startTimer();
         this.selectSection(this.sections[0]);
-      },
-      error: (error) => {
-        console.error('Error fetching assessment data:', error);
-        this.spinner.hide();
-      },
-      complete: () => this.spinner.hide()
-    });
-  }
+
+      } else {
+        // This is the catch-all that is likely being triggered
+        console.error(`DEBUG: [Component] Condition FAILED: response.status was neither 'NO_ATTEMPTS_REMAINING' nor 'SUCCESS'. It was '${response.status}'.`);
+        console.error("DEBUG: [Component] Navigating to /assessment-error due to unexpected status.");
+        this.router.navigate(['/assessment-error']);
+      }
+    },
+    error: (error) => {
+      console.error('DEBUG: [Component] Entered SUBSCRIBE "error" block. This should only happen on 4xx/5xx errors.');
+      console.error('DEBUG: [Component] Full error object:', error);
+      this.isLoading = false;
+      this.router.navigate(['/assessment-error']);
+    }
+  });
+}
+
   
   openFullscreen() {
     if (this.elem.requestFullscreen) this.elem.requestFullscreen();
