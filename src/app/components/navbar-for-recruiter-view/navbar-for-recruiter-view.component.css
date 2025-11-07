@@ -3,7 +3,7 @@
 }
  
 .navbar-for-recruiter-view-container10 {
-  width: 1440px;
+  width: 100%;
   height: 72px;
   display: flex;
   position: fixed;
@@ -17,6 +17,7 @@
 }
  
 .navbar-for-recruiter-view-container11 {
+  width: 100%;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -24,7 +25,7 @@
 }
  
 .navbar-for-recruiter-view-navbar-interactive {
-  width: 1440px;
+  width: 100%;
   height: 72px;
   display: flex;
   align-items: center;

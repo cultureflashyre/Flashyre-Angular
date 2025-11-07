@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
-import { InterviewService, InterviewStage, InterviewStageData } from '../../services/interview.service';
+import { InterviewService, InterviewStage } from '../../services/interview.service';
 
 @Component({
   selector: 'create-job-step4',
@@ -114,7 +114,7 @@ export class AdminCreateJobStep4Component implements OnInit {
     });
   }
 
-  private createStageGroupWithData(data: InterviewStageData): FormGroup {
+  private createStageGroupWithData(data: InterviewStage): FormGroup {
     const standardStages = ['Screening', 'Technical interview - 1', 'Technical interview - 2', 'HR interview'];
     const isCustom = !standardStages.includes(data.stage_name);
 
