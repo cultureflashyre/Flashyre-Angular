@@ -93,6 +93,17 @@
           </span>
         </button>
       </form>
+      <div class="google-signin-container">
+    <div class="separator">OR</div>
+    <!-- This component renders the official Google button -->
+    <asl-google-signin-button
+      type='standard'
+      size='large'
+      theme='outline'
+      shape='rectangular'
+      width='320px'
+    ></asl-google-signin-button>
+</div>
       <!-- Error message display -->
       <div class="log-in-page-error-login-container" *ngIf="errorMessage">
         <span id="error-message-login" class="log-in-page-error-message-login">

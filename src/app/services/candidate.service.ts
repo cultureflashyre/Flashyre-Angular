@@ -279,4 +279,25 @@ export class AuthService {
       })
     );
   }
+
+  // --- NEW METHOD 1: Initial Google Auth Check ---
+  googleAuthCheck(idToken: string): Observable<any> {
+    // The user type is implicitly 'candidate' when using this service.
+    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken });
+  }
+
+  // --- NEW METHOD 2: Complete Google Signup ---
+  completeGoogleSignup(userData: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+  }): Observable<any> {
+    const payload = {
+      ...userData,
+      user_type: 'candidate' // Hardcoded for this service
+    };
+    return this.http.post(`${this.apiUrl}api/auth/google/complete/`, payload);
+  }
+
 }

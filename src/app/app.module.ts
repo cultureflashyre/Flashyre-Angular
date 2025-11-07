@@ -15,6 +15,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { environment } from '../environments/environment';
+
+
 const routes = [
   {
     path: '',
@@ -339,9 +343,24 @@ const routes = [
 @NgModule({
   declarations: [AppComponent],
   imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
-    ReactiveFormsModule, MatSnackBarModule],
+    ReactiveFormsModule, MatSnackBarModule,SocialLoginModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false, // Set to true if you want to automatically log in the user on page load
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.googleClientId)
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { catchError, of } from 'rxjs';
+import { SocialAuthService, GoogleLoginProvider,SocialUser } from '@abacritt/angularx-social-login';
+
 
 @Component({
   selector: 'log-in-page',
@@ -37,7 +39,8 @@ export class LogInPage implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private corporateAuthService: CorporateAuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private socialAuthService: SocialAuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,8 +57,41 @@ export class LogInPage implements OnInit {
         this.errorMessage = '';
         this.cdr.detectChanges();
       }
+    }); 
+    // --- ADDED: Google Sign-In Subscription Logic ---
+    // This is the new, correct way to handle Google Sign-In.
+    // It listens for a successful login from the <asl-google-signin-button> component
+    // in your HTML and then executes our logic.
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      console.log('Google user authenticated:', socialUser);
+      const idToken = socialUser.idToken;
+
+      const authObservable = this.userType === 'corporate'
+        ? this.corporateAuthService.googleAuthCheck(idToken)
+        : this.authService.googleAuthCheck(idToken);
+
+      authObservable.subscribe({
+        next: (response) => {
+          if (response.status === 'LOGIN_SUCCESS') {
+            this.errorMessage = '';
+            // The backend returns a full login response, so we emit it
+            // to the parent component (login-candidate.component).
+            this.loginSubmit.emit(response);
+          } else {
+            // This happens if a new user (not in your DB) tries to log in.
+            this.errorMessage = 'Account not found. Please sign up first.';
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.error || 'Google login failed. Please try again.';
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
+
+  
 
   onSubmit() {
     console.log('onSubmit called', {

@@ -3,14 +3,17 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, 
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { SocialAuthService, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { ThumbnailService } from '../../services/thumbnail.service'; // Import thumbnail service
 import { Console } from 'console';
+import { AuthService } from '../../services/candidate.service'; // Renamed to avoid conflict
+import { CorporateAuthService } from '../../services/corporate-auth.service';
 
-@Component({
+  @Component({
   selector: 'signup-candidate1',
   templateUrl: './signup-candidate1.component.html',
   styleUrls: ['./signup-candidate1.component.css'],
@@ -42,13 +45,22 @@ export class SignupCandidate1 implements OnInit {
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
+   // --- NEW STATE VARIABLES FOR GOOGLE SIGNUP ---
+  showPhonePopup: boolean = false;
+  isSubmittingPhone: boolean = false;
+  popupErrorMessage: string = '';
+  googleUserData: { email: string, first_name: string, last_name: string } | null = null;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
-    private thumbnailService: ThumbnailService // Inject ThumbnailService here
+    private thumbnailService: ThumbnailService, // Inject ThumbnailService here
+    private candidateAuthService: AuthService, // Aliased to avoid conflict
+    private corporateAuthService: CorporateAuthService,
+    private socialAuthService: SocialAuthService
   ) {}
 
   ngOnInit() {
@@ -72,8 +84,9 @@ export class SignupCandidate1 implements OnInit {
           Validators.maxLength(15)
         ]],
         confirm_password: ['', [Validators.required]],
-        user_type: ['candidate', Validators.required]  // default candidate or empty
-      },
+// --- NEW FORM CONTROLS ---
+      user_type_radio: ['candidate', Validators.required], // For the radio buttons
+      popup_phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]       },
       { validator: this.passwordMatchValidator }
     );
   }
@@ -126,6 +139,104 @@ export class SignupCandidate1 implements OnInit {
     this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
   }
 
+  // --- NEW GOOGLE SIGNUP FLOW METHODS ---
+  signUpWithGoogle(): void {
+    this.errorMessage = ''; // Clear previous errors
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(socialUser => {
+        const idToken = socialUser.idToken;
+        const selectedUserType = this.signupForm.get('user_type_radio').value;
+
+        const authObservable = selectedUserType === 'corporate'
+          ? this.corporateAuthService.googleAuthCheck(idToken)
+          : this.candidateAuthService.googleAuthCheck(idToken);
+
+        this.spinner.show();
+        authObservable.subscribe({
+          next: (response) => {
+            this.spinner.hide();
+            if (response.status === 'LOGIN_SUCCESS') {
+              // User already exists, handle login
+              this.handleSuccessfulAuth(response);
+            } else if (response.status === 'INCOMPLETE_SIGNUP') {
+              // New user, show popup to get phone number
+              this.googleUserData = {
+                email: response.email,
+                first_name: response.first_name,
+                last_name: response.last_name
+              };
+              this.showPhonePopup = true;
+            }
+          },
+          error: (err) => {
+            this.spinner.hide();
+            this.errorMessage = err.error?.error || 'An error occurred. Please try again.';
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Google Sign-Up error:', error);
+      });
+  }
+
+  onPhoneSubmit(): void {
+    if (this.signupForm.get('popup_phone_number').invalid) {
+      return;
+    }
+
+    this.isSubmittingPhone = true;
+    this.popupErrorMessage = '';
+    const selectedUserType = this.signupForm.get('user_type_radio').value;
+
+    const finalUserData = {
+      ...this.googleUserData,
+      phone_number: this.signupForm.get('popup_phone_number').value
+    };
+
+    const signupObservable = selectedUserType === 'corporate'
+      ? this.corporateAuthService.completeGoogleSignup(finalUserData)
+      : this.candidateAuthService.completeGoogleSignup(finalUserData);
+
+    signupObservable.subscribe({
+      next: (response) => {
+        this.isSubmittingPhone = false;
+        this.showPhonePopup = false;
+        this.handleSuccessfulAuth(response);
+      },
+      error: (err) => {
+        this.isSubmittingPhone = false;
+        this.popupErrorMessage = err.error?.error || 'Signup failed. Please check the phone number and try again.';
+      }
+    });
+  }
+  // --- REFACTORED SUCCESS HANDLER ---
+  private handleSuccessfulAuth(response: any): void {
+    console.log('Authentication successful', response);
+    this.errorMessage = '';
+    this.successMessage = response.message || 'Successfully Signed up';
+    
+    localStorage.setItem('jwtToken', response.access);
+    localStorage.setItem('refreshToken', response.refresh);
+    localStorage.setItem('user_id', response.user_id);
+    localStorage.setItem('userType', response.role);
+
+    this.userProfileService.fetchUserProfile().subscribe({
+      next: () => {
+        this.router.navigate(['/profile-overview-page'], { state: { source: response.role } });
+      },
+      error: (profileError) => {
+        console.error('Error fetching profile', profileError);
+        this.router.navigate(['/profile-overview-page'], { state: { source: response.role } });
+      }
+    });
+  }
+
+  cancelGoogleSignup(): void {
+    this.showPhonePopup = false;
+    this.googleUserData = null;
+    this.signupForm.get('popup_phone_number').reset();
+  }
+
   sanitizePhoneNumber(event: Event): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/\D/g, '').slice(0, 10);
@@ -134,11 +245,16 @@ export class SignupCandidate1 implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
+      // Only proceed if the main form (excluding popup) is valid
+    if (this.signupForm.get('first_name').invalid || this.signupForm.get('last_name').invalid || this.signupForm.get('phone_number').invalid || this.signupForm.get('email').invalid || this.signupForm.get('password').invalid || this.signupForm.get('confirm_password').invalid) {
+      return;
+    }
       this.spinner.show(); // Show spinner only when request starts
 
       const firstName = this.signupForm.get('first_name').value;
       const lastName = this.signupForm.get('last_name').value;
       const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+      const userType = this.signupForm.get('user_type_radio').value;
 
       const formData = {
         first_name: this.signupForm.get('first_name').value,
