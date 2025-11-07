@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { ComponentsModule } from '../../components/components.module';
@@ -15,16 +15,10 @@ const routes = [
   },
 ];
 
-@NgModule({
-  declarations: [ProfileEmploymentPage],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    RouterModule.forChild(routes),
-    HttpClientModule, // For HTTP requests
-    FormsModule, // For form handling
-  ],
-  exports: [ProfileEmploymentPage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [ProfileEmploymentPage],
+    exports: [ProfileEmploymentPage],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        ComponentsModule,
+        RouterModule.forChild(routes), // For HTTP requests
+        FormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ProfileEmploymentPageModule {}

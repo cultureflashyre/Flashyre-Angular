@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { BrowserModule } from '@angular/platform-browser'
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
@@ -340,29 +340,26 @@ const routes = [
   },
 ]
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
-    ReactiveFormsModule, MatSnackBarModule,SocialLoginModule],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false, // Set to true if you want to automatically log in the user on page load
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.googleClientId)
-          }
-        ],
-        onError: (err) => {
-          console.error(err);
-        }
-      } as SocialAuthServiceConfig,
-    }
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule, FormsModule,
+        ReactiveFormsModule, MatSnackBarModule, SocialLoginModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
+        {
+            provide: 'SocialAuthServiceConfig',
+            useValue: {
+                autoLogin: false, // Set to true if you want to automatically log in the user on page load
+                providers: [
+                    {
+                        id: GoogleLoginProvider.PROVIDER_ID,
+                        provider: new GoogleLoginProvider(environment.googleClientId)
+                    }
+                ],
+                onError: (err) => {
+                    console.error(err);
+                }
+            } as SocialAuthServiceConfig,
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {}

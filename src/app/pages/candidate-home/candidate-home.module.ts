@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { ComponentsModule } from '../../components/components.module';
@@ -14,16 +14,10 @@ const routes = [
   },
 ];
 
-@NgModule({
-  declarations: [CandidateHome],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    FormsModule,
-    HttpClientModule,
-    RouterModule.forChild(routes),
-  ],
-  exports: [CandidateHome],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [CandidateHome],
+    exports: [CandidateHome],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        ComponentsModule,
+        FormsModule,
+        RouterModule.forChild(routes)], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CandidateHomeModule {}

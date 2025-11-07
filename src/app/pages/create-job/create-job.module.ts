@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentsModule } from '../../components/components.module';
 import { AdminCreateJobStep1Component } from './create-job.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -20,19 +20,13 @@ const routes = [
   }
 ];
 
-@NgModule({
-  declarations: [AdminCreateJobStep1Component],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    HttpClientModule,
-    ComponentsModule,
-    RouterModule.forChild(routes), // ← CRITICAL FIX: Changed from RouterModule to RouterModule.forChild(routes)
-    NgxSpinnerModule
-  ],
-  exports: [AdminCreateJobStep1Component],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+@NgModule({ declarations: [AdminCreateJobStep1Component],
+    exports: [AdminCreateJobStep1Component],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSnackBarModule,
+        ComponentsModule,
+        RouterModule.forChild(routes), // ← CRITICAL FIX: Changed from RouterModule to RouterModule.forChild(routes)
+        NgxSpinnerModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CreateJobModule {}
