@@ -199,13 +199,21 @@
           >
             Sign Up
           </button>
+           <div class="google-signin-container">
+        <div class="separator">OR</div>
+        <asl-google-signin-button
+            class="google-button-wrapper"
+            type='standard'
+            size='large'
+            theme='outline'
+            shape='rectangular'
+            text='signup_with'
+            width='320px'
+        ></asl-google-signin-button>
+    </div>
           <!-- ADD GOOGLE SIGNUP SECTION -->
-          <div class="separator">OR</div>
-          <button type="button" class="google-signin-button" (click)="signUpWithGoogle()">
-            <img src="/assets/google-logo.svg" alt="Google logo" />
-            Sign up with Google
-          </button>
-          <!-- END GOOGLE SIGNUP SECTION -->
+      
+                  <!-- END GOOGLE SIGNUP SECTION -->
           <div *ngIf="errorMessage" class="signup-candidate1-error-signup-container">
             <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
           </div>

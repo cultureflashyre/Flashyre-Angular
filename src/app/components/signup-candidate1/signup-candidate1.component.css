@@ -2,6 +2,67 @@
   display: contents; 
 }
 
+asl-google-signin-button {
+  display: flex; /* Use flexbox to manage the button that renders inside */
+  min-height: 40px !important;
+  width: 100% !important;
+}
+
+
+/* --- FINAL CSS FOR GOOGLE SIGN-IN BUTTON LAYOUT --- */
+
+/* 
+  This is the main container. 
+  Use this to control the overall positioning and alignment.
+*/
+.google-signin-container {
+  /*
+    These are the key properties to make it work inside a flex container.
+  */
+  display: flex;             /* Make this a flex container itself */
+  flex-direction: column;    /* Stack the separator and button vertically */
+  align-items: center;       /* Center them horizontally */
+  width: 100%;               /* CRITICAL: It must take up the full width */
+  margin-top: 16px;          /* Space above the separator */
+  margin-bottom: 16px;       /* Space below the button */
+}
+
+/* The "OR" text separator styling */
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ACACAD;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ACACAD;
+}
+
+.separator:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: .5em;
+}
+
+/* 
+  This styles the <asl-google-signin-button> component itself.
+  NOTE: This will NOT change the inside of the button (font, color, etc.).
+  It is mainly useful for adding a bit of margin if needed, but centering
+  is best handled by the .google-signin-container.
+*/
+.google-button-wrapper {
+  /* This ensures the component is treated as a block, which helps with alignment */
+  display: block; 
+}
+
 /* src/app/components/signup-candidate1/signup-candidate1.component.css */
 
 /* --- STYLES FOR POPUP --- */
@@ -117,28 +178,6 @@
 .separator:not(:empty)::before { margin-right: .25em; }
 .separator:not(:empty)::after { margin-left: .25em; }
 
-.google-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 48px;
-  background-color: #FFFFFF;
-  color: #333;
-  border: 1px solid #ACACAD;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.google-signin-button:hover { background-color: #f7f7f7; }
-
-.google-signin-button img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
  
 .signup-candidate1-container {
   width: 100%;

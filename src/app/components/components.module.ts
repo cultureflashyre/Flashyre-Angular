@@ -125,6 +125,9 @@ import{Signupadmin} from './signup-admin/signup-admin.component'
 import { NavbarForAdminView } from './navbar-for-admin-view/navbar-for-admin-view.component';
 import { AlertMessageComponent } from './alert-message/alert-message.component';
 
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { environment } from '../../environments/environment';
+
 @NgModule({
   declarations: [
     HeaderContainer,
@@ -238,7 +241,24 @@ import { AlertMessageComponent } from './alert-message/alert-message.component';
     NavbarForAdminView,
     AlertMessageComponent,
   ],
-  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule, AceModule],
+  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,SharedPipesModule, AceModule, SocialLoginModule, GoogleSigninButtonModule],
+  providers: [
+      {
+        provide: 'SocialAuthServiceConfig',
+        useValue: {
+          autoLogin: false, // Set to true if you want to automatically log in the user on page load
+          providers: [
+            {
+              id: GoogleLoginProvider.PROVIDER_ID,
+              provider: new GoogleLoginProvider(environment.googleClientId)
+            }
+          ],
+          onError: (err) => {
+            console.error(err);
+          }
+        } as SocialAuthServiceConfig,
+      }
+    ],
   exports: [
     HeaderContainer,
     Navbar6,

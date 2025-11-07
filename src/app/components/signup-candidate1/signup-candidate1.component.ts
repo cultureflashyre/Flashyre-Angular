@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, 
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { SocialAuthService, GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider, SocialUser } from '@abacritt/angularx-social-login';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
@@ -64,6 +64,7 @@ export class SignupCandidate1 implements OnInit {
   ) {}
 
   ngOnInit() {
+    
     this.signupForm = this.fb.group(
       {
         first_name: ['', [Validators.required, 
@@ -89,7 +90,45 @@ export class SignupCandidate1 implements OnInit {
       popup_phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]       },
       { validator: this.passwordMatchValidator }
     );
+        // --- ADDED: Google Sign-Up Subscription Logic ---
+    // This is the new, correct way to handle Google Sign-Up.
+    // It listens for a successful authentication from the <asl-google-signin-button>
+    // in your HTML and then executes the multi-step signup logic.
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      this.errorMessage = ''; // Clear previous errors
+      const idToken = socialUser.idToken;
+      const selectedUserType = this.signupForm.get('user_type_radio').value;
+
+      const authObservable = selectedUserType === 'corporate'
+        ? this.corporateAuthService.googleAuthCheck(idToken)
+        : this.candidateAuthService.googleAuthCheck(idToken);
+
+      this.spinner.show();
+      authObservable.subscribe({
+        next: (response) => {
+          this.spinner.hide();
+          if (response.status === 'LOGIN_SUCCESS') {
+            // User already exists, handle as a successful login.
+            this.handleSuccessfulAuth(response);
+          } else if (response.status === 'INCOMPLETE_SIGNUP') {
+            // New user, show the popup to collect their phone number.
+            this.googleUserData = {
+              email: response.email,
+              first_name: response.first_name,
+              last_name: response.last_name
+            };
+            this.showPhonePopup = true;
+          }
+        },
+        error: (err) => {
+          this.spinner.hide();
+          this.errorMessage = err.error?.error || 'An error occurred. Please try again.';
+        }
+      });
+    });
   }
+ 
+  
 
   passwordMatchValidator(form: FormGroup) {
     return form.get('password').value === form.get('confirm_password').value
@@ -139,45 +178,6 @@ export class SignupCandidate1 implements OnInit {
     this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
   }
 
-  // --- NEW GOOGLE SIGNUP FLOW METHODS ---
-  signUpWithGoogle(): void {
-    this.errorMessage = ''; // Clear previous errors
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(socialUser => {
-        const idToken = socialUser.idToken;
-        const selectedUserType = this.signupForm.get('user_type_radio').value;
-
-        const authObservable = selectedUserType === 'corporate'
-          ? this.corporateAuthService.googleAuthCheck(idToken)
-          : this.candidateAuthService.googleAuthCheck(idToken);
-
-        this.spinner.show();
-        authObservable.subscribe({
-          next: (response) => {
-            this.spinner.hide();
-            if (response.status === 'LOGIN_SUCCESS') {
-              // User already exists, handle login
-              this.handleSuccessfulAuth(response);
-            } else if (response.status === 'INCOMPLETE_SIGNUP') {
-              // New user, show popup to get phone number
-              this.googleUserData = {
-                email: response.email,
-                first_name: response.first_name,
-                last_name: response.last_name
-              };
-              this.showPhonePopup = true;
-            }
-          },
-          error: (err) => {
-            this.spinner.hide();
-            this.errorMessage = err.error?.error || 'An error occurred. Please try again.';
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Google Sign-Up error:', error);
-      });
-  }
 
   onPhoneSubmit(): void {
     if (this.signupForm.get('popup_phone_number').invalid) {
@@ -244,17 +244,22 @@ export class SignupCandidate1 implements OnInit {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      // Only proceed if the main form (excluding popup) is valid
-    if (this.signupForm.get('first_name').invalid || this.signupForm.get('last_name').invalid || this.signupForm.get('phone_number').invalid || this.signupForm.get('email').invalid || this.signupForm.get('password').invalid || this.signupForm.get('confirm_password').invalid) {
-      return;
-    }
+    const isManualFormValid = 
+        this.signupForm.get('first_name').valid &&
+        this.signupForm.get('last_name').valid &&
+        this.signupForm.get('phone_number').valid &&
+        this.signupForm.get('email').valid &&
+        this.signupForm.get('password').valid &&
+        this.signupForm.get('confirm_password').valid &&
+        !this.signupForm.hasError('mismatch');
+
+    if (isManualFormValid) {
       this.spinner.show(); // Show spinner only when request starts
 
       const firstName = this.signupForm.get('first_name').value;
       const lastName = this.signupForm.get('last_name').value;
       const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
-      const userType = this.signupForm.get('user_type_radio').value;
+      const userType = this.signupForm.get('user_type_radio').value === 'corporate' ? 'recruiter' : 'candidate';
 
       const formData = {
         first_name: this.signupForm.get('first_name').value,
@@ -262,7 +267,7 @@ export class SignupCandidate1 implements OnInit {
         phone_number: this.signupForm.get('phone_number').value,
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
-        user_type: 'candidate',
+        user_type: userType, // The only change inside this object
         initials: initials  // Include initials here
       };
 
@@ -313,8 +318,17 @@ export class SignupCandidate1 implements OnInit {
           console.log('Error message set to:', this.errorMessage);
         }
       );
+    }else {
+        // --- ADDED: Mark fields as touched if form is invalid ---
+        // This ensures validation messages appear if the user clicks "Sign Up" on an empty form.
+        Object.values(this.signupForm.controls).forEach(control => {
+            control.markAsTouched();
+        });
+        console.log("Manual signup form is invalid.");
     }
   }
+
+  
 
  phoneExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
