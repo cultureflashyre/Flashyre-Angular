@@ -179,7 +179,7 @@
             id="candidate-name-text"
             class="admin-page1-component-candidate-name-text"
           >
-            {{ candidate.full_name || 'N/A' }}
+            {{ (candidate.full_name && candidate.full_name !== 'Processing...') ? candidate.full_name : 'Unable to parse file' }}
           </span>
         </div>
         <a
