@@ -6,7 +6,7 @@ import { formatDate } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
-import { InterviewService, InterviewStage, InterviewStageData } from '../../services/interview.service';
+import { InterviewService, InterviewStage } from '../../services/interview.service';
 
 @Component({
   selector: 'app-create-job-post-3rd-page',
@@ -95,7 +95,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
   }
 
   // ADD THIS NEW HELPER METHOD
-  private createStageGroupWithData(data: InterviewStageData): FormGroup {
+  private createStageGroupWithData(data: InterviewStage): FormGroup {
     // Determine if the stage name is a standard one or custom
     const standardStages = ['Screening', 'Technical interview - 1', 'Technical interview - 2', 'HR interview'];
     const isCustom = !standardStages.includes(data.stage_name);

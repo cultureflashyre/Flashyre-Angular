@@ -137,6 +137,269 @@
   font-style: italic;
 }
 
+.recruiter-view-job-applications1-languages-main-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+  gap: 8px;
+}
+
+/* Scrollable Viewport */
+.recruiter-view-job-applications1-container18 {
+  flex: 1;
+  overflow: hidden;
+}
+
+.skill-scroll-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Stage Tab/Capsule Styling */
+.recruiter-view-job-applications1-language-tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #F7F5FF; /* Very light purple background */
+  color: #333; /* Dark text for readability */
+  border-radius: 20px; /* Fully rounded corners */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  margin: 0 4px;
+}
+
+.recruiter-view-job-applications1-language-tab:hover {
+  background-color: #EAE6FF;
+  border-color: #DCD6FF;
+}
+
+.recruiter-view-job-applications1-language-tab.active-section {
+  background-color: transparent; /* Main dark purple color */
+  color: #05356C;
+  border-color: transparent;
+}
+
+.skill-tab-name {
+  font-weight: 500;
+}
+
+/* Remove Icon */
+.remove-stage-icon {
+  margin-left: 8px;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 4px;
+  border-radius: 50%;
+  color: #888;
+}
+
+.remove-stage-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.active-section .remove-stage-icon:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Arrow Styling */
+.arrow-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%; /* Makes them circular */
+  background-color: #EAE6FF; /* Light purple background */
+  flex-shrink: 0; /* Prevents arrows from shrinking */
+  transition: background-color 0.2s ease;
+}
+
+.arrow-container.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #F7F5FF;
+}
+
+.arrow-container:hover {
+  background-color: #DCD6FF; /* Slightly darker on hover */
+}
+
+.nav-arrow-icon {
+  width: 20px;
+  height: 20px;
+  color: #6A45E1;
+}
+
+.add-stage-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  background-color: #6A45E1; /* Main dark purple color */
+  color: white;
+  border-radius: 20px; /* Fully rounded corners */
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.add-stage-button:hover {
+  background-color: #3104c4; /* Darker purple on hover */
+}
+
+.add-stage-button .plus-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+/* Fixed Tabs (Applied and Add Stage) */
+.fixed-tab {
+  flex-shrink: 0;
+}
+
+/* "Add Stage" Button */
+.add-skill-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: #FFFFFF;
+  background-color: #2d04b3;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.add-skill-button .plus-icon {
+  color: #FFFFFF;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+.add-skill-button:hover {
+  background-color: #1972cb;
+}
+
+/* "No Candidates" Message */
+.no-candidates-message {
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.1em;
+  color: #666;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 600px;
+}
+
+.popup-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.form-fields-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.form-field-wrapper label {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-field-wrapper input,
+.form-field-wrapper select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.stage-field, .assigned-to-field {
+  flex-basis: 100%;
+}
+.date-field, .mode-field {
+  flex-basis: calc(50% - 10px);
+}
+
+.required-asterisk {
+  color: red;
+}
+
+.field-error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 4px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.popup-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.popup-button.cancel {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.popup-button.save {
+  background-color: #007bff;
+  color: white;
+}
+
+.popup-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 /* Responsive Styles */
 @media(max-width: 991px) {
   .recruiter-view-job-applications1-view-jd-button {
@@ -186,14 +449,13 @@
 .recruiter-view-job-applications1-recruiter-view-job-applicatins1-main-container {
   gap: 24px;
   flex: 0 0 auto;
-  width: 1440px;
+  width: 100%;
   height: auto;
   display: flex;
   align-self: center;
   align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
-  background-color: #F4F4F4;
 }
  
 .recruiter-view-job-applications1-fragment10 {
@@ -1243,6 +1505,7 @@
 }
  
 .recruiter-view-job-applications1-text37 {
+  margin-bottom: 8px;
   font-style: normal;
   font-weight: 700;
 }
