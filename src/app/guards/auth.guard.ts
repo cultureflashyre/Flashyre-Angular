@@ -70,7 +70,7 @@ export class AuthGuard implements CanActivate {
         break;
         case 'admin':
                         console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/admin-page1']);
+        this.router.navigate(['/job-post-list']);
         break;
         default:
                         console.log("Inside the SWITCH for ", userType);

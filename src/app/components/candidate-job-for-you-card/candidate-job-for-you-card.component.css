@@ -133,6 +133,20 @@
   user-select: none;
 }
 
+.avatar-icon-small {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  background-color: #CFCCDE; /* You may set this dynamically in TS */
+  color: #41327B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  user-select: none;
+}
+
 .candidate-job-for-you-card-container13 {
   gap: 16px;
   flex: 1; /* Grow to fill space */
