@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 // HttpClientModule is also good practice to have if any child makes HTTP requests
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 // ==============================================================================
 
 import { ComponentsModule } from '../../components/components.module';
@@ -23,20 +23,13 @@ const routes = [
   },
 ];
 
-@NgModule({
-  declarations: [CreateJobPost22Page],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    RouterModule.forChild(routes),
-
-    // --- ADDED IMPORTS ---
-    FormsModule,           // For [(ngModel)]
-    ReactiveFormsModule,   // For FormGroup and FormBuilder
-    MatSnackBarModule,     // For MatSnackBar
-    HttpClientModule,      // For services making HTTP calls
-  ],
-  exports: [CreateJobPost22Page],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [CreateJobPost22Page],
+    exports: [CreateJobPost22Page],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        ComponentsModule,
+        RouterModule.forChild(routes),
+        // --- ADDED IMPORTS ---
+        FormsModule, // For [(ngModel)]
+        ReactiveFormsModule, // For FormGroup and FormBuilder
+        MatSnackBarModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CreateJobPost22PageModule {}

@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ComponentsModule } from '../../components/components.module';
 import { AdminCreateJobStep3 } from './create-job-step3.component';
@@ -15,18 +15,13 @@ const routes = [
   }
 ];
 
-@NgModule({
-  declarations: [AdminCreateJobStep3],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    ComponentsModule,
-    RouterModule.forChild(routes),
-    NgxSpinnerModule // For the AI generation loading spinner
-  ],
-  exports: [AdminCreateJobStep3],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+@NgModule({ declarations: [AdminCreateJobStep3],
+    exports: [AdminCreateJobStep3],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ComponentsModule,
+        RouterModule.forChild(routes),
+        NgxSpinnerModule // For the AI generation loading spinner
+    ], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CreateJobStep3Module {}

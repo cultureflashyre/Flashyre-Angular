@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { ComponentsModule } from '../../components/components.module'
 import { FlashyreAssessment11 } from './flashyre-assessment11.component'
-import { HttpClientModule } from '@angular/common/http'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { NgxSpinnerModule } from 'ngx-spinner'
 import { SharedPipesModule } from '../../shared/shared-pipes.module' // Import the shared module
 import { FormsModule } from '@angular/forms'
@@ -17,20 +17,14 @@ const routes = [
   },
 ]
 
-@NgModule({
-  declarations: [FlashyreAssessment11], // Remove TimerFormatPipe from here
-  imports: [
-    CommonModule, 
-    ComponentsModule, 
-    RouterModule.forChild(routes), 
-    HttpClientModule,
-    NgxSpinnerModule,
-    SharedPipesModule, // Add the shared module here
-    FormsModule,
-    AceModule,
-    MarkdownModule.forChild()
-  ],
-  exports: [FlashyreAssessment11],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [FlashyreAssessment11],
+    exports: [FlashyreAssessment11],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        ComponentsModule,
+        RouterModule.forChild(routes),
+        NgxSpinnerModule,
+        SharedPipesModule, // Add the shared module here
+        FormsModule,
+        AceModule,
+        MarkdownModule.forChild()], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class FlashyreAssessment11Module {}
