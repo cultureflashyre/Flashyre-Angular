@@ -1,15 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, HostListener, ChangeDetectorRef, AfterViewInit } from '@angular/core';import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { InterviewService, InterviewStage } from 'src/app/services/interview.service';
+import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'recruiter-view-job-applications1',
   templateUrl: './recruiter-view-job-applications-1.component.html',
   styleUrls: ['./recruiter-view-job-applications-1.component.css'],
 })
-export class RecruiterViewJobApplications1 implements OnInit {
+export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
+
+  showAddStagePopup = false;
+  newStageForm: FormGroup;
+  minDateString: string;
+  isSubmitting = false;
+
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private pendingAction: string = '';
+  private pendingStageData: InterviewStage | null = null;
+
+  @ViewChild('stageViewport') stageViewport: ElementRef<HTMLDivElement>;
+  @ViewChild('stageTrack') stageTrack: ElementRef<HTMLDivElement>;
+
+  interviewStages: InterviewStage[] = [];
+  activeStage: any = { id: 'applied', stage_name: 'Applied' }; // Default to 'Applied'
+  nextStage: InterviewStage | null = null;
+  
+  currentScrollIndex = 0;
+  maxScrollIndex = 0;
 
   private apiUrl = environment.apiUrl;
 
@@ -19,14 +43,10 @@ export class RecruiterViewJobApplications1 implements OnInit {
   allCandidates: any[] = [];
   filteredAndSortedCandidates: any[] = [];
   moreCandidatesCount: number = 0;
-  selectedTab: string = 'applied';
   masterChecked: boolean = false;
   jobId: string | null;
 
   appliedCount: number = 0;
-  screeningCount: number = 0;
-  assessmentCount: number = 0;
-  interviewCount: number = 0;
 
   sortColumn: string = 'name';
   sortDirection: string = 'asc';
@@ -47,7 +67,12 @@ export class RecruiterViewJobApplications1 implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private interviewService: InterviewService, 
+    private authService: CorporateAuthService,   
+    private renderer: Renderer2,                 
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
   ) {
     this.title.setTitle('Recruiter-View-Job-Applications-1 - Flashyre');
     this.meta.addTags([
@@ -67,40 +92,44 @@ export class RecruiterViewJobApplications1 implements OnInit {
     this.jobId = this.route.snapshot.paramMap.get('jobId');
     
     this.fetchJobDetails();
+    this.fetchInterviewStages();
+
+    const today = new Date();
+    this.minDateString = today.toISOString().split('T')[0];
+    this.initializeNewStageForm();
+  }
+  
+
+  ngAfterViewInit(): void {
+      setTimeout(() => {
+          this.calculateCarouselState();
+      }, 200);
   }
 
   fetchJobDetails() {
     if (this.jobId) {
-      console.log("Attempting to fetch job for job_id: ", this.jobId);
-      this.http
-        .get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`)
-        .subscribe(
+      this.http.get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`).subscribe(
           (data: any) => {
-
             this.job = data;
             this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(this.job?.description || '');
-            console.log("Displaying Job Details: ", this.job);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
             
-            this.appliedCount = data.applied_count;
-            this.screeningCount = data.screening_count;
-            this.assessmentCount = data.assessment_count;
-            this.interviewCount = data.interview_count;
+            // This now dynamically updates counts
+            this.updateStageCounts();
             
             this.applyFiltersAndSorting();
             this.masterChecked = false;
           },
-          (error) => {
-            console.error('Error fetching job details:', error);
-          }
-        );
+          (error) => console.error('Error fetching job details:', error)
+      );
     }
   }
 
-  changeTab(tab: string) {
-    this.selectedTab = tab;
+  changeTab(stage: any) {
+    this.activeStage = stage;
     this.masterChecked = false;
     this.applyFiltersAndSorting();
+    this.calculateNextStage();
   }
 
   sortData(column: string) {
@@ -119,8 +148,8 @@ export class RecruiterViewJobApplications1 implements OnInit {
 
   applyFiltersAndSorting() {
     let results = [...this.allCandidates];
-
-    // 1. Apply Search Filters
+    
+    // Search filter logic (remains unchanged)
     if (this.searchJobTitle.trim()) {
       const searchTerm = this.searchJobTitle.toLowerCase().trim();
       results = results.filter(candidate =>
@@ -128,23 +157,19 @@ export class RecruiterViewJobApplications1 implements OnInit {
       );
     }
 
-    // 2. Filter based on the selected tab
-    let tabFilteredResults = results;
-    if (this.selectedTab !== 'applied') {
-        let statusFilter: string;
-        switch (this.selectedTab) {
-            case 'screening': statusFilter = 'Screening'; break;
-            case 'assessment': statusFilter = 'Assessment'; break;
-            case 'interview': statusFilter = 'Interview'; break;
-        }
-        tabFilteredResults = results.filter(c => c.status === statusFilter);
+    // --- MODIFICATION START: Conditional Filtering ---
+    // We only filter by a specific stage if the active tab is NOT the 'applied' tab.
+    // If it is the 'applied' tab, this block is skipped, and all candidates are shown.
+    if (this.activeStage.id !== 'applied') {
+      const activeStageName = this.activeStage.stage_name.toLowerCase();
+      results = results.filter(c => c.status.toLowerCase() === activeStageName);
     }
-
-    // 3. Sort the filtered list
-    tabFilteredResults.sort((a, b) => {
+    // --- MODIFICATION END ---
+    
+    // Sorting logic (remains unchanged)
+    results.sort((a, b) => {
       const isAsc = this.sortDirection === 'asc';
       let comparison = 0;
-
       switch (this.sortColumn) {
         case 'name':
           comparison = a.user.full_name.localeCompare(b.user.full_name);
@@ -153,20 +178,61 @@ export class RecruiterViewJobApplications1 implements OnInit {
           comparison = a.matching_score - b.matching_score;
           break;
         case 'status':
-          const statusOrder = { 'applied': 1, 'Screening': 2, 'Assessment': 3, 'Interview': 4 };
-          const orderA = statusOrder[a.status] || 99;
-          const orderB = statusOrder[b.status] || 99;
-          comparison = orderA - orderB;
+          comparison = a.status.localeCompare(b.status);
           break;
       }
       return comparison * (isAsc ? 1 : -1);
     });
 
-    this.filteredAndSortedCandidates = tabFilteredResults;
-
-    // 4. Apply pagination
+    this.filteredAndSortedCandidates = results;
     this.candidates = this.filteredAndSortedCandidates.slice(0, 5);
     this.moreCandidatesCount = this.filteredAndSortedCandidates.length - this.candidates.length;
+  }
+
+  sendInvite() {
+    const selectedCandidates = this.allCandidates.filter(c => c.isSelected);
+
+    if (selectedCandidates.length === 0) {
+      alert('Please select at least one candidate.');
+      return;
+    }
+    // Add a check to ensure nextStage is not null before proceeding
+    if (!this.nextStage) {
+      alert('This is the final stage, or the next stage is not defined. No invite can be sent.');
+      return;
+    }
+
+    const applicationIds = selectedCandidates.map(c => c.application_id).filter(id => id != null);
+
+    if (applicationIds.length === 0) {
+        alert('Could not send invite. No valid candidate IDs were selected.');
+        return;
+    }
+
+    // Define the stage name from the component property to use it consistently
+    const stageName = this.nextStage.stage_name;
+
+    this.http
+      .post(this.apiUrl + `api/recruiter/jobs/${this.jobId}/send-invites/`, {
+        application_ids: applicationIds,
+        invite_type: stageName, // Send the stage name
+      })
+      .subscribe(
+        () => {
+          // --- FIX #1 ---
+          // Use the 'stageName' variable we defined above.
+          alert(`${stageName} invites sent successfully.`);
+          this.fetchJobDetails();
+          this.fetchInterviewStages();
+        },
+        (error) => {
+          // --- FIX #2 & #3 ---
+          // Use the 'stageName' variable here as well.
+          console.error(`Error sending ${stageName} invites:`, error);
+          const errorDetail = error.error?.error || "Please try again.";
+          alert(`Failed to send ${stageName} invites: ${JSON.stringify(errorDetail)}`);
+        }
+      );
   }
 
   toggleAll(checked: boolean) {
@@ -190,67 +256,6 @@ export class RecruiterViewJobApplications1 implements OnInit {
   loadMoreCandidates() {
     this.candidates = this.filteredAndSortedCandidates;
     this.moreCandidatesCount = 0;
-  }
-
-  sendInvite() {
-    const selectedCandidates = this.allCandidates.filter(c => c.isSelected);
-
-    if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate to send an invite.');
-      return;
-    }
-
-    const applicationIds = selectedCandidates.map(c => c.application_id);
-    let inviteType: string;
-
-    switch (this.selectedTab) {
-      case 'applied':
-        inviteType = 'screening';
-        break;
-      case 'screening':
-        inviteType = 'assessment';
-        break;
-      case 'assessment':
-        inviteType = 'interview';
-        break;
-      default:
-        console.error('No invite action for this tab.');
-        return;
-    }
-
-    this.http
-      .post(this.apiUrl+`api/recruiter/jobs/${this.jobId}/send-invites/`, {
-        application_ids: applicationIds,
-        invite_type: inviteType,
-      })
-      .subscribe(
-        (response: any) => {
-          this.appliedCount = response.applied_count;
-          this.screeningCount = response.screening_count;
-          this.assessmentCount = response.assessment_count;
-          this.interviewCount = response.interview_count;
-
-          selectedCandidates.forEach(candidate => {
-            const found = this.allCandidates.find(c => c.application_id === candidate.application_id);
-            if (found) {
-                found.status = {
-                  'screening': 'Screening',
-                  'assessment': 'Assessment',
-                  'interview': 'Interview'
-                }[inviteType];
-                found.isSelected = false;
-            }
-          });
-
-          this.applyFiltersAndSorting();
-          this.masterChecked = false;
-          alert(`${inviteType.charAt(0).toUpperCase() + inviteType.slice(1)} invites sent successfully.`);
-        },
-        (error) => {
-          console.error(`Error sending ${inviteType} invites:`, error);
-          alert(`Failed to send ${inviteType} invites. Please try again.`);
-        }
-      );
   }
 
   openCV(url: string): void {
@@ -289,4 +294,246 @@ export class RecruiterViewJobApplications1 implements OnInit {
   navigateToRecruiterHome() {
     this.router.navigate(['/job-post-list']);
   }
+
+  fetchInterviewStages() {
+    const token = this.authService.getJWTToken();
+    if (this.jobId && token) {
+      console.log(`Attempting to fetch interview stages for job_id: ${this.jobId}`);
+      this.interviewService.getInterviewStages(this.jobId, token).subscribe(
+        (stages) => {
+          console.log('API call successful. Received stages:', stages);
+          if (!Array.isArray(stages)) {
+            console.error("The API did not return an array. Received:", stages);
+            this.interviewStages = [];
+            return;
+          }
+          this.interviewStages = stages.sort((a, b) => a.order - b.order);
+          console.log('Component property this.interviewStages set to:', this.interviewStages);
+          this.updateStageCounts();
+          this.calculateNextStage();
+          this.cdr.detectChanges();
+          setTimeout(() => this.calculateCarouselState(), 100);
+        },
+        (error) => {
+          console.error('Error fetching interview stages:', error);
+          this.interviewStages = [];
+        }
+      );
+    }
+  }
+
+  updateStageCounts() {
+      // Calculate counts for each stage
+      this.interviewStages.forEach(stage => {
+          stage['count'] = this.allCandidates.filter(c => c.status.toLowerCase() === stage.stage_name.toLowerCase()).length;
+      });
+      // Update applied count separately
+      this.appliedCount = this.allCandidates.length;
+  }
+  
+  // addStage() {
+  //   // Navigate to the edit page for interview stages
+  //   this.router.navigate(['/create-job-step4', this.jobId]);
+  // }
+
+  removeStage(stageToRemove: InterviewStage, event: MouseEvent) {
+    event.stopPropagation(); // Prevent the tab from being selected
+    
+    if (confirm(`Are you sure you want to remove the "${stageToRemove.stage_name}" stage?`)) {
+      const token = this.authService.getJWTToken();
+      if (!token) {
+        alert('Authentication error.');
+        return;
+      }
+      this.interviewService.deleteInterviewStage(stageToRemove.id, token).subscribe({
+        next: () => {
+          alert('Stage removed successfully.');
+          this.fetchInterviewStages(); // Refresh the list of stages
+        },
+        error: (err) => {
+          console.error('Error removing stage:', err);
+          alert('Failed to remove stage. Please try again.');
+        }
+      });
+    }
+  }
+  
+  calculateNextStage() {
+      if (this.activeStage.id === 'applied') {
+          this.nextStage = this.interviewStages.length > 0 ? this.interviewStages[0] : null;
+      } else {
+          const currentIndex = this.interviewStages.findIndex(s => s.id === this.activeStage.id);
+          if (currentIndex > -1 && currentIndex < this.interviewStages.length - 1) {
+              this.nextStage = this.interviewStages[currentIndex + 1];
+          } else {
+              this.nextStage = null; // Last stage or not found
+          }
+      }
+  }
+  
+  // Carousel logic (adapted from create-job-step3)
+  calculateCarouselState(): void {
+    if (!this.stageViewport?.nativeElement || !this.stageTrack?.nativeElement || this.interviewStages.length === 0) {
+      this.maxScrollIndex = 0;
+      return;
+    }
+    const trackWidth = this.stageTrack.nativeElement.scrollWidth;
+    const viewportWidth = this.stageViewport.nativeElement.offsetWidth;
+    
+    if (trackWidth <= viewportWidth) {
+      this.maxScrollIndex = 0;
+    } else {
+        const items = Array.from(this.stageTrack.nativeElement.children);
+        let cumulativeWidth = 0;
+        let visibleItems = 0;
+        for(const item of items) {
+            cumulativeWidth += (item as HTMLElement).offsetWidth;
+            if(cumulativeWidth > viewportWidth) break;
+            visibleItems++;
+        }
+      this.maxScrollIndex = Math.max(0, this.interviewStages.length - visibleItems);
+    }
+    if (this.currentScrollIndex > this.maxScrollIndex) {
+        this.currentScrollIndex = this.maxScrollIndex;
+    }
+    this.cdr.detectChanges();
+  }
+
+  updateScrollPosition(): void {
+    if (this.stageTrack?.nativeElement?.children.length > this.currentScrollIndex) {
+      const targetItem = this.stageTrack.nativeElement.children[this.currentScrollIndex] as HTMLElement;
+      if (targetItem) {
+        const newX = targetItem.offsetLeft;
+        this.renderer.setStyle(this.stageTrack.nativeElement, 'transform', `translateX(-${newX}px)`);
+      }
+    }
+  }
+
+  navigateCarousel(direction: 'prev' | 'next'): void {
+    const newIndex = direction === 'next' ? this.currentScrollIndex + 1 : this.currentScrollIndex - 1;
+    if (newIndex >= 0 && newIndex <= this.maxScrollIndex) {
+        this.currentScrollIndex = newIndex;
+        this.updateScrollPosition();
+    }
+  }
+
+  private initializeNewStageForm(): void {
+    this.newStageForm = this.fb.group({
+      stage_name: ['Screening', Validators.required],
+      custom_stage_name: [''],
+      stage_date: [null, Validators.required],
+      mode: ['Online', Validators.required],
+      assigned_to: ['', [Validators.required, Validators.email]]
+    });
+
+    // Add listener for the 'Customize' option
+    this.newStageForm.get('stage_name')?.valueChanges.subscribe(value => {
+      const customNameControl = this.newStageForm.get('custom_stage_name');
+      if (value === 'Customize') {
+        customNameControl?.setValidators(Validators.required);
+      } else {
+        customNameControl?.clearValidators();
+        customNameControl?.setValue(''); // Clear the custom name when not selected
+      }
+      customNameControl?.updateValueAndValidity();
+    });
+  }
+
+  // Method to open the popup (replaces old addStage logic)
+  addStage(): void {
+    this.initializeNewStageForm(); // Reset the form every time it's opened
+    this.showAddStagePopup = true;
+  }
+  
+  closeAddStagePopup(): void {
+    if (this.isSubmitting) return;
+    this.showAddStagePopup = false;
+  }
+
+  // Called when the popup's Save button is clicked
+  onSaveNewStage(): void {
+    // This log confirms the function is called. We can keep it for now.
+    console.log('onSaveNewStage() was called!'); 
+
+    // This check is important. If the form is somehow invalid, we stop here.
+    if (this.newStageForm.invalid) {
+      this.newStageForm.markAllAsTouched();
+      alert('Please fill all required fields correctly.');
+      return;
+    }
+    
+    // Prepare the data payload for the backend.
+    const formValue = this.newStageForm.value;
+    this.pendingStageData = {
+      id: 0, // ID is not needed for creation
+      stage_name: formValue.stage_name === 'Customize' ? formValue.custom_stage_name : formValue.stage_name,
+      stage_date: formatDate(formValue.stage_date, 'yyyy-MM-dd', 'en-US'),
+      mode: formValue.mode,
+      assigned_to: formValue.assigned_to,
+      order: 0, // The backend will calculate the correct order
+      user_id: null
+    };
+
+    // Set the pending action and open the confirmation popup.
+    this.pendingAction = 'addStageConfirm';
+    this.openAlert('Are you sure you want to add this stage?', ['No', 'Yes']);
+  }
+
+  onSaveNewStageConfirmed(): void {
+    if (!this.jobId || !this.pendingStageData) return;
+    
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      alert('Authentication error.');
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.interviewService.addInterviewStage(this.jobId, this.pendingStageData, token).subscribe({
+      next: () => {
+        this.showSuccessPopup('Stage added successfully!');
+        this.closeAddStagePopup();
+        this.fetchInterviewStages(); // Refresh the stage list
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        console.error('Failed to add stage:', err);
+        this.showErrorPopup(`Failed to add stage: ${err.error?.errors || 'Server error'}`);
+        this.isSubmitting = false;
+      }
+    });
+  }
+  
+  private showSuccessPopup(message: string) {
+    // This is a placeholder for your actual implementation. 
+    // If you don't have this method, add it.
+    console.log(`SUCCESS: ${message}`); 
+    // Your actual implementation would set properties to show a temporary banner.
+  }
+  
+  private showErrorPopup(message: string) {
+    // This is a placeholder for your actual implementation.
+    console.error(`ERROR: ${message}`);
+  }
+
+  // Alert handling logic
+  private openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    const confirmed = action.toLowerCase() === 'yes';
+
+    if (confirmed && this.pendingAction === 'addStageConfirm') {
+        this.onSaveNewStageConfirmed();
+    }
+
+    // Reset pending state
+    this.pendingAction = '';
+    this.pendingStageData = null;
+  }
+
 }

@@ -1,4 +1,75 @@
 <div class="recruiter-view-job-applications1-container">
+
+  <app-alert-message
+    *ngIf="showAlert"
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+
+  <div class="popup-overlay" *ngIf="showAddStagePopup">
+    <div class="popup-content">
+      <h3>Add New Interview Stage</h3>
+      
+      <!-- This form binds to the 'newStageForm' FormGroup in your component -->
+      <form [formGroup]="newStageForm" (ngSubmit)="onSaveNewStage()">
+        <div class="form-fields-container">
+          <!-- 1. Stage Name -->
+          <div class="form-field-wrapper stage-field">
+            <label for="stage-name-popup">Interview Stage <span class="required-asterisk">*</span></label>
+            <select *ngIf="newStageForm.get('stage_name')?.value !== 'Customize'" formControlName="stage_name" id="stage-name-popup">
+              <option value="Screening">Screening</option>
+              <option value="Technical interview - 1">Technical interview - 1</option>
+              <option value="Technical interview - 2">Technical interview - 2</option>
+              <option value="HR interview">HR interview</option>
+              <option value="Customize">Customize</option>
+            </select>
+            <input *ngIf="newStageForm.get('stage_name')?.value === 'Customize'" type="text" formControlName="custom_stage_name" placeholder="Enter Custom Stage Name" id="custom-stage-name-popup">
+            <div *ngIf="newStageForm.get('custom_stage_name')?.touched && newStageForm.get('custom_stage_name')?.errors?.required" class="field-error-message">
+              Custom name is required.
+            </div>
+          </div>
+          <!-- 2. Date Picker -->
+          <div class="form-field-wrapper date-field">
+            <label for="date-input-popup">Enter Date <span class="required-asterisk">*</span></label>
+            <input type="date" formControlName="stage_date" [min]="minDateString" id="date-input-popup">
+            <div *ngIf="newStageForm.get('stage_date')?.touched && newStageForm.get('stage_date')?.errors?.required" class="field-error-message">
+              Date is required.
+            </div>
+          </div>
+          <!-- 3. Mode Dropdown -->
+          <div class="form-field-wrapper mode-field">
+            <label for="mode-select-popup">Interview Mode <span class="required-asterisk">*</span></label>
+            <select formControlName="mode" id="mode-select-popup">
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
+            </select>
+          </div>
+          <!-- 4. Assigned To Input -->
+          <div class="form-field-wrapper assigned-to-field">
+            <label for="assigned-to-popup">Assigned To <span class="required-asterisk">*</span></label>
+            <input type="email" formControlName="assigned_to" placeholder="interviewer@company.com" id="assigned-to-popup">
+            <div *ngIf="newStageForm.get('assigned_to')?.touched && newStageForm.get('assigned_to')?.errors?.required" class="field-error-message">
+              Email is required.
+            </div>
+            <div *ngIf="newStageForm.get('assigned_to')?.touched && newStageForm.get('assigned_to')?.errors?.email" class="field-error-message">
+              Please enter a valid email.
+            </div>
+          </div>
+        </div>
+        
+        <!-- Popup Buttons -->
+        <div class="popup-actions">
+          <button type="button" class="popup-button cancel" (click)="closeAddStagePopup()">Cancel</button>
+          <button type="submit" class="popup-button save" [disabled]="newStageForm.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">Save</span>
+            <span *ngIf="isSubmitting">Saving...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div
     id="recruiter-view-job-applicatins-1-main-container"
     class="recruiter-view-job-applications1-recruiter-view-job-applicatins1-main-container"
@@ -223,62 +294,61 @@
             id="applied-sourced-selected-main-container"
             class="recruiter-view-job-applications1-applied-sourced-selected-main-container"
           >
-            <div
-              id="applied-sourced-selected-container"
-              class="recruiter-view-job-applications1-applied-sourced-selected-container"
-            >
-              <div
-                id="applied-container"
-                class="recruiter-view-job-applications1-applied-container"
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'applied'}"
-                (click)="changeTab('applied')"
-              >
-                <div
-                  id="applied-button-container"
-                  class="recruiter-view-job-applications1-applied-button-container"
-                >
-                  <span
-                    id="applied-text"
-                    class="recruiter-view-job-applications1-applied-text"
-                  >
-                   Applied ({{ appliedCount }})
-                  </span>
-                </div>
-              </div>
-              <div
-                id="screening-button-container" 
-                class="recruiter-view-job-applications1-sourced-button-container" 
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'screening'}"
-                (click)="changeTab('screening')"
-              >
-                <span
-                  id="screening-text"
-                  class="recruiter-view-job-applications1-sourced-text"
-                >
-                  Screening ({{ screeningCount }})
-                </span>
-              </div>
-              <div
-                id="assessment-button-container"
-                class="recruiter-view-job-applications1-selected-button-container"
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'assessment'}"
-                (click)="changeTab('assessment')"
-              >
-                <span class="recruiter-view-job-applications1-text35">
-                  Assessment ({{ assessmentCount }})
-                </span>
-              </div>
-              <div
-                id="interview-button-container"
-                class="recruiter-view-job-applications1-selected-button-container"
-                [ngClass]="{'recruiter-view-job-applications1-applied-button-container-active': selectedTab === 'interview'}"
-                (click)="changeTab('interview')"
-              >
-                <span class="recruiter-view-job-applications1-text35">
-                  Interview ({{ interviewCount }})
-                </span>
-              </div>
-            </div>
+            <div id="languages-main-container" class="recruiter-view-job-applications1-languages-main-container">
+  
+  <!-- Fixed "Applied" Tab -->
+  <div 
+    class="recruiter-view-job-applications1-language-tab fixed-tab"
+    [class.active-section]="activeStage.id === 'applied'"
+    (click)="changeTab({ id: 'applied', stage_name: 'Applied' })">
+    <span class="skill-tab-name">Applied ({{ appliedCount }})</span>
+  </div>
+
+  <div 
+    id="add-stage-button" 
+    class="add-new-skill-for-ai-mcq-container add-skill-button fixed-tab" 
+    title="Add a new interview stage" 
+    (click)="addStage()">
+    <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
+    <span class="add-skill-text">Add Stage</span>
+  </div>
+
+  <!-- Left Arrow -->
+  <div 
+    id="left-arrow-container" 
+    class="arrow-container left-arrow-shadow" 
+    [class.disabled]="currentScrollIndex === 0"
+    (click)="navigateCarousel('prev')">
+    <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
+  </div>
+  
+  <!-- Scrollable Stages Viewport -->
+  <div #stageViewport class="recruiter-view-job-applications1-container18">
+    <div #stageTrack class="skill-scroll-track">
+      <div *ngFor="let stage of interviewStages" 
+          class="recruiter-view-job-applications1-language-tab" 
+          [class.active-section]="stage.id === activeStage.id" 
+          (click)="changeTab(stage)">
+
+        <span class="skill-tab-name">{{ stage.stage_name }} ({{ stage.count }})</span>
+        
+        <!-- Remove Icon -->
+        <span class="remove-stage-icon" title="Remove Stage" (click)="removeStage(stage, $event)">×</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Arrow -->
+  <div 
+    id="right-arrow-container" 
+    class="arrow-container right-arrow-shadow" 
+    [class.disabled]="currentScrollIndex >= maxScrollIndex"
+    (click)="navigateCarousel('next')">
+    <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z" fill="currentColor"></path></svg>
+  </div>
+
+  
+</div>
           </div>
           <div
             id="job-title-location-experience-main-container"
@@ -424,36 +494,18 @@
             <!-- --- MODIFICATION END --- -->
 
             <button
-              *ngIf="selectedTab === 'applied'"
-              id="screening-call-invite-button"
-              type="button"
-              class="recruiter-view-job-applications1-screening-call-invite-button button"
-              (click)="sendInvite()"
-            >
-              Screening Call Invite
-            </button>
-            <button
-              *ngIf="selectedTab === 'screening'"
-              id="assessment-invite-button"
-              type="button"
-              class="recruiter-view-job-applications1-assessment-invite-button button"
-              (click)="sendInvite()"
-            >
-              Assessment Invite
-            </button>
-            <button
-              *ngIf="selectedTab === 'assessment'"
-              id="interview-invite-button"
-              type="button"
-              class="recruiter-view-job-applications1-interview-invite-button button"
-              (click)="sendInvite()"
-            >
-              Interview Invite
-            </button>
+  *ngIf="nextStage"
+  id="dynamic-invite-button"
+  type="button"
+  class="recruiter-view-job-applications1-screening-call-invite-button button"
+  (click)="sendInvite()">
+  Invite to {{ nextStage.stage_name }}
+</button>
           </div>
           <div
             id="candidate-details-main-container"
             class="recruiter-view-job-applications1-candidate-details-main-container"
+            *ngIf="candidates.length > 0; else noCandidates"
           >
             <div
               id="name-designation-matching-score-status-container"
@@ -622,6 +674,11 @@
               </div>
             </div>
           </div>
+          <ng-template #noCandidates>
+  <div class="no-candidates-message">
+    No candidates in {{ activeStage.stage_name }}.
+  </div>
+</ng-template>
           <span
             *ngIf="moreCandidatesCount > 0"
             id="more-candidates-text"
