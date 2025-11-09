@@ -31,7 +31,7 @@
     "monaco-editor": "^0.34.1",
     "next": "^12.1.10",
     "ng-ace-editor": "^0.2.3",
-    "ngx-device-detector": "^6.0.0",
+    "ngx-device-detector": "^7.0.0",
 
     "ngx-spinner": "^16.0.2",
     "react": "^17.0.2",
