@@ -1,3 +1,4 @@
+<!-- Main Page Container -->
 <div class="assessment-rules-page">
   <main class="assessment-card">
     <!-- Header Section -->
@@ -15,10 +16,9 @@
 
     <!-- Main Content Grid -->
     <div class="assessment-card__grid">
-      <!-- Left Column: Rules -->
+      <!-- Left Column: Rules (No changes here) -->
       <div class="assessment-card__rules">
         <h2>Rules for the Assessment</h2>
-
         <section class="rules-section">
           <h3>Test Details</h3>
           <ul>
@@ -29,7 +29,6 @@
             <li>Total time limit is <strong>{{ assessmentData?.total_duration || 'Unknown' }} minutes</strong>.</li>
           </ul>
         </section>
-
         <section class="rules-section">
           <h3>Test Taking</h3>
           <ul>
@@ -38,7 +37,6 @@
             <li>The test will automatically submit when the time limit is reached.</li>
           </ul>
         </section>
-
         <section class="rules-section">
           <h3>Scoring</h3>
           <ul>
@@ -46,7 +44,6 @@
             <li>Your final score will be displayed at the end of the test.</li>
           </ul>
         </section>
-
         <section class="rules-section">
           <h3>Important Notes</h3>
           <ul>
@@ -71,21 +68,62 @@
 
         <div class="confirmation-container">
           <p class="good-luck-text">Good luck!</p>
-          <label for="assessment-rule-checkbox" class="custom-checkbox">
-            <input type="checkbox" id="assessment-rule-checkbox" checked />
+          <label for="assessment-rule-checkbox" class="custom-checkbox" (click)="onLabelClick()">
+          <input type="checkbox"
+            id="assessment-rule-checkbox"
+            [checked]="rulesUnderstood"
+            (change)="onCheckboxChange($event)"
+            (click)="onInputClick($event)" /> 
             <span class="checkmark"></span>
             I have read and understood the assessment rules.
           </label>
-          <button
-            id="start-assessment-button"
-            type="button"
-            class="start-button"
-            (click)="startAssessment()"
-          >
-            Start Assessment
-          </button>
+          
+          <!-- MODIFIED: Button Group with new logic -->
+          <div class="button-group">
+            <!-- This button only appears if a system check is necessary -->
+            <button
+              *ngIf="showVideoRecordingRule"
+              type="button"
+              class="button button--secondary"
+              (click)="checkSystemRequirements()"
+              [disabled]="!rulesUnderstood || isCheckingRequirements"
+            >
+              <span *ngIf="!isCheckingRequirements">Check System</span>
+              <span *ngIf="isCheckingRequirements" class="button-spinner"></span>
+            </button>
+            
+            <button
+              type="button"
+              class="button button--primary"
+              [class.full-width]="!showVideoRecordingRule"
+              (click)="startAssessment()"
+              [disabled]="!systemRequirementsMet || !rulesUnderstood"
+            >
+              Start Assessment
+            </button>
+          </div>
+
+
+          <p *ngIf="systemRequirementsMet && showVideoRecordingRule" class="status-message--success">
+            ✓ System requirements met. You are ready to start.
+          </p>
+
         </div>
       </aside>
     </div>
   </main>
+
+  <!-- NEW: System Requirement Failed Overlay -->
+  <div class="system-req-popup-overlay" *ngIf="showSystemCheckOverlay">
+    <div class="system-req-popup-content">
+      <h3>System Requirement Check Failed</h3>
+      <p class="popup-note">
+        To proceed, please enable camera and microphone permissions in your browser. Look for an icon in your address bar to manage site settings.
+      </p>
+      <div class="popup-actions">
+        <button class="popup-button cancel" (click)="closeOverlay()">Go Back</button>
+        <button class="popup-button generate" (click)="retrySystemCheck()">Retry</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -5,12 +5,14 @@
   --success-color: #1F882B;
   --success-color-dark: #1A7325;
   --danger-color: #D93025;
+  --secondary-color: #6c757d;
+  --secondary-color-dark: #5a6268;
   --surface-color: #ffffff;
   --text-primary: #18191c;
   --text-secondary: #5a6474;
   --border-color: #d0d5dd;
   --page-background: #f4f5f7;
-  --font-family: 'Inter', sans-serif; /* A modern, clean font */
+  --font-family: 'Inter', sans-serif;
 }
 
 /* --- Base Page Styles --- */
@@ -61,7 +63,7 @@
 /* --- Card Content Layout --- */
 .assessment-card__grid {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* 2/3 for rules, 1/3 for actions */
+  grid-template-columns: 2fr 1fr;
   gap: 32px;
   padding: 32px;
 }
@@ -142,7 +144,7 @@
   line-height: 1.6;
 }
 
-/* --- Confirmation and Start Button --- */
+/* --- Confirmation and Buttons --- */
 .confirmation-container {
   margin-top: 24px;
 }
@@ -174,17 +176,18 @@
 .checkmark {
   height: 20px;
   width: 20px;
-  background-color: #fff;
+  background-color: #222222;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   transition: all 0.2s ease;
   flex-shrink: 0;
   position: relative;
+  pointer-events: none;
 }
 
 .custom-checkbox input:checked ~ .checkmark {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: #007bff; /* Your desired blue color */
+  border-color: #007bff;
 }
 
 .checkmark:after {
@@ -204,7 +207,19 @@
   display: block;
 }
 
-.start-button {
+/* --- NEW: Button Group --- */
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.button.full-width {
+  grid-column: 1 / -1; /* Span across all columns */
+}
+
+.button {
   width: 100%;
   padding: 12px 20px;
   border-radius: 8px;
@@ -212,28 +227,150 @@
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  background-color: var(--success-color);
+  transition: background-color 0.3s, box-shadow 0.3s, opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button--primary {
+  background-color: #17a2b8; /* Your desired teal color */
   color: white;
 }
 
-.start-button:hover:not(:disabled) {
-  background-color: var(--success-color-dark);
-  box-shadow: 0 4px 12px rgba(31, 136, 43, 0.2);
+.button--primary:hover:not(:disabled) {
+  background-color: #117a8b;
 }
 
-.start-button:disabled {
+.button--secondary {
+  background-color: #343a40; /* Your desired dark blue/grey color */
+  color: white;
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: #23272b;
+}
+
+.button:disabled {
   background-color: #e4e7ec;
   color: #98a2b3;
   cursor: not-allowed;
 }
 
+.status-message--success {
+    font-size: 14px;
+    color: var(--success-color);
+    text-align: center;
+    margin-top: 16px;
+}
+
+.button-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* --- NEW: System Requirement Overlay Styles --- */
+.system-req-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  backdrop-filter: blur(5px);
+  animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.system-req-popup-content {
+  background-color: #ced1d4;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  animation: fadeInContent 0.3s ease-out;
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.system-req-popup-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.popup-note {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.popup-button {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.popup-button.cancel {
+  background-color: #ffffff;
+  color: #344054;
+  border: 1px solid var(--border-color);
+}
+.popup-button.cancel:hover {
+  background-color: #f9fafb;
+}
+
+.popup-button.generate {
+  background-color: var(--primary-color);
+  color: #141010;
+}
+.popup-button.generate:hover:not(:disabled) {
+  background-color: var(--primary-color-dark);
+}
+
 /* --- Responsive Design --- */
 @media (max-width: 992px) {
   .assessment-card__grid {
-    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    grid-template-columns: 1fr;
   }
-
   .assessment-card__actions {
     margin-top: 16px;
   }
@@ -241,21 +378,25 @@
 
 @media (max-width: 767px) {
   .assessment-rules-page {
-    padding: 16px;
+    padding: 0;
   }
-
+  .assessment-card {
+    border-radius: 0;
+    min-height: 100vh;
+  }
   .assessment-card__header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     padding: 16px 24px;
   }
-  
   .assessment-card__grid {
     padding: 24px;
   }
-
   .assessment-card__rules h2 {
     font-size: 24px;
+  }
+  .button-group {
+    grid-template-columns: 1fr; /* Stack buttons on mobile */
   }
 }
