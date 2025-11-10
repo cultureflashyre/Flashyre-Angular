@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+// import { interval, Subscription } from 'rxjs';
 
 interface CodingSubmission {
   id: number;
@@ -11,7 +11,7 @@ interface CodingSubmission {
   templateUrl: 'assessment-warning-popup.component.html',
   styleUrls: ['assessment-warning-popup.component.css'],
 })
-export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit, OnDestroy {
+export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
   // --- Element Refs for Donut Chart ---
   @ViewChild('attemptedPath') attemptedPath: ElementRef;
@@ -59,16 +59,16 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   @Input() button1: TemplateRef<any>;
   @Input() questionNumber1Button: TemplateRef<any>;
 
-  private timerSubscription: Subscription;
+  // private timerSubscription: Subscription;
 
   constructor() {}
 
-  ngOnInit(): void {
-    // Start countdown timer every second
-    this.timerSubscription = interval(1000).subscribe(() => {
-      this.countdownTimers();
-    });
-  }
+  // ngOnInit(): void {
+  //   // Start countdown timer every second
+  //   this.timerSubscription = interval(1000).subscribe(() => {
+  //     this.countdownTimers();
+  //   });
+  // }
 
   ngAfterViewInit(): void {
     this.calculateSummary();
@@ -83,23 +83,23 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
     }
   }
 
-  ngOnDestroy(): void {
-    // Cleanup timer subscription to avoid memory leaks
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
-  }
+  // ngOnDestroy(): void {
+  //   // Cleanup timer subscription to avoid memory leaks
+  //   if (this.timerSubscription) {
+  //     this.timerSubscription.unsubscribe();
+  //   }
+  // }
 
   // Decrease each section timer by 1 second if above 0
-  countdownTimers(): void {
-    if (!this.sectionTimers) return;
-    Object.keys(this.sectionTimers).forEach(sectionId => {
-      console.log(`DEBUG: [CHILD Component] Section Timer for section ${sectionId}: ${this.sectionTimers[sectionId]} seconds remaining.`);
-      if (this.sectionTimers[sectionId] > 0) {
-        this.sectionTimers[sectionId]--;
-      }
-    });
-  }
+  // countdownTimers(): void {
+  //   if (!this.sectionTimers) return;
+  //   Object.keys(this.sectionTimers).forEach(sectionId => {
+  //     console.log(`DEBUG: [CHILD Component] Section Timer for section ${sectionId}: ${this.sectionTimers[sectionId]} seconds remaining.`);
+  //     if (this.sectionTimers[sectionId] > 0) {
+  //       this.sectionTimers[sectionId]--;
+  //     }
+  //   });
+  // }
 
   // --- Existing methods below ---
   calculateSummary(): void {

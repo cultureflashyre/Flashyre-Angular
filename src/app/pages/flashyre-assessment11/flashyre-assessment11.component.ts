@@ -210,6 +210,15 @@ fetchAssessmentData(assessmentId: number): void {
         }
         this.sections = [];
         this.processCustomizations(response.sections);
+
+        this.sections.forEach(section => {
+          const sectionKey = section.section_id || section.coding_id_id;
+          if (sectionKey) {
+            // Initialize the timer for this section.
+            this.sectionTimers[sectionKey] = section.duration * 60;
+          }
+        });
+
         this.totalSections = this.sections.length;
         this.timer = response.total_assessment_duration * 60;
         this.trialAssessmentService.updateTimer(this.timer);
