@@ -520,6 +520,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           allowVideoRecording: assessmentDetails.has_video_recording,
           difficulty: assessmentDetails.difficulty,
           timeLimit: this.minutesToHHMM(assessmentDetails.time_limit),
+          attemptsAllowed: assessmentDetails.attempts_allowed || 1 // Fallback to 1 if null
+
       }, { emitEvent: false });
       this.cdr.detectChanges();
 
@@ -733,6 +735,8 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
           Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
           timeNotZeroValidator 
         ]],
+      attemptsAllowed: [1, [Validators.required, Validators.min(1), Validators.max(10)]]
+
     });
   }
 
@@ -1163,6 +1167,8 @@ onAlertButtonClicked(action: string) {
       selected_coding_problem_ids: selectedCodingProblemIds,
       difficulty: this.assessmentForm.get('difficulty')?.value,
       time_limit: timeInMinutes,
+      attempts_allowed: this.assessmentForm.get('attemptsAllowed')?.value
+
     };
   }
 
