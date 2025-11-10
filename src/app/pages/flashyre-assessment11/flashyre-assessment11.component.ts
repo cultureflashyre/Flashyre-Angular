@@ -285,6 +285,7 @@ fetchAssessmentData(assessmentId: number): void {
         this.sectionTimer--;
         const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
         this.sectionTimers[sectionKey] = this.sectionTimer;
+        console.log(`DEBUG: [Component] Section Timer for section ${sectionKey}: ${this.sectionTimer} seconds remaining.`);
       } else {
         clearInterval(this.sectionTimerInterval);
         this.sectionTimerInterval = null;

@@ -376,7 +376,7 @@
                     <ng-template #defaultText9>
                       <div class="assessment-warning-popup-fragment26">
                         <span class="assessment-warning-popup-text27">
-                          {{ sectionTimers[section.section_id] | timerFormat }}
+                          {{ sectionTimers[section.section_id? section.section_id : section.coding_id_id] | timerFormat }}
                         </span>
                       </div>
                     </ng-template>

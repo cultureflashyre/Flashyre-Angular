@@ -94,6 +94,7 @@ export class AssessmentWarningPopup implements AfterViewInit, OnChanges, OnInit,
   countdownTimers(): void {
     if (!this.sectionTimers) return;
     Object.keys(this.sectionTimers).forEach(sectionId => {
+      console.log(`DEBUG: [CHILD Component] Section Timer for section ${sectionId}: ${this.sectionTimers[sectionId]} seconds remaining.`);
       if (this.sectionTimers[sectionId] > 0) {
         this.sectionTimers[sectionId]--;
       }
