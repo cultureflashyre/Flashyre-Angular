@@ -164,8 +164,19 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       case 'cancel':
         // Do nothing
         break;
+      case 'ok':
+        // Do nothing, just close the alert
+        break;
     }
   }
+
+
+    // --- MODIFICATION START ---
+  // This new handler is triggered when the employment component detects a short date range.
+  handleDateConfirmationRequest(): void {
+    this.openAlert('Is your entered Start Date and End Date correct?', ['OK']);
+  }
+  // --- MODIFICATION END ---
 
   // --- Navigation ---
     onSaveAndNext() {
@@ -176,7 +187,14 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       case 2: // Employment
         if (this.employmentComponent) {
           formIsEmpty = this.employmentComponent.isFormEmpty();
-        }
+          // --- MODIFICATION START ---
+          // Before showing the save confirmation, check if there's a short employment duration.
+          // If so, show the date warning instead of the regular save/skip prompt.
+          if (this.employmentComponent.checkForShortEmploymentDurations()) {
+            this.openAlert('Is your entered Start Date and End Date correct?', ['Cancel', 'Save & Next']);
+            return; // Stop further execution to wait for user input.
+
+        }}
         break;
       case 3: // Education
         if (this.educationComponent) {

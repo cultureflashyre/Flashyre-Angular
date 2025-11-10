@@ -151,6 +151,7 @@
           *ngIf="isStepVisible(2)"
           rootClassName="profile-employment-componentroot-class-name2"
           #employmentComponent
+          (requestDateConfirmation)="handleDateConfirmationRequest()"
         >
           <ng-template #text>
             <div class="profile-overview-page-fragment118">

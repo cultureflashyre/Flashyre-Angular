@@ -220,7 +220,7 @@ export class AdminCreateJobStep4Component implements OnInit {
       
       // Halt further execution to prevent the confirmation popup from showing.
       return; 
-    }l
+    }
     this.pendingAction = 'saveDraft';
     this.openAlert('You are about to save this as a draft.', ['Cancel', 'Save Draft']);
   }

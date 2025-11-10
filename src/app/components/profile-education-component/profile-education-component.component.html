@@ -28,50 +28,25 @@
           <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">
             <div id="duration-{{i}}" class="profile-education-component-duration-container2">
               <span id="duration-text-{{i}}" class="profile-education-component-duration-text">
-                <ng-container>
-                  <ng-template #defaultText2>
-                    <div class="profile-education-component-fragment21">
-                      <span class="profile-education-component-text27">Duration</span>
-                    </div>
-                  </ng-template>
-                  <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>
-                </ng-container>
+                <!-- Label changed from "Duration" to "Graduation Date" -->
+                Graduation Date
               </span>
               <div class="profile-education-dates-container">
-              <div class="date-input-wrapper">
-      <div class="profile-education-component-form1 input">
-        <input
-          type="date"
-          formControlName="startDate"
-          class="profile-education-component-select"
-          [max]="todayDate"
-          required
-        />
-      </div>
-      <div *ngIf="form.get('startDate')?.invalid && form.get('startDate')?.touched" class="error-message">
-        Start date is mandatory.
-      </div>
-    </div>
-  
-             <div class="date-input-wrapper">
-      <div class="profile-education-component-form2 input">
-        <input
-          type="date"
-          formControlName="endDate"
-          class="profile-education-component-select"
-          [min]="form.get('startDate')?.value"
-          required
-        />
-      </div>
-      <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="error-message">
-        End date is mandatory.
-      </div>
-    </div>
-   
-            </div>
-           <div *ngIf="form.hasError('dateRangeInvalid') && form.get('endDate')?.touched" class="error-message" style="width: 100%; text-align: left; margin-left: 5px;">
-    End date cannot be before the start date.
-  </div>
+                <!-- The "Start Date" input has been completely removed. -->
+                <div class="date-input-wrapper">
+                  <div class="profile-education-component-form2 input">
+                    <input
+                      type="date"
+                      formControlName="endDate"
+                      class="profile-education-component-select"
+                      [max]="todayDate"
+                    />
+                  </div>
+                  <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="error-message">
+                    Graduation date is mandatory.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

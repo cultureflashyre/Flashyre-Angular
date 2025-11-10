@@ -20,6 +20,9 @@ export class ProfileEmploymentComponent {
   @ContentChild('text3') text3: TemplateRef<any>;
   @ContentChild('text111') text111: TemplateRef<any>;
 
+  @Output() requestDateConfirmation = new EventEmitter<void>();
+
+
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
 
   positions: any[] = [
@@ -77,6 +80,37 @@ private loadPositionsFromUserProfile(): void {
     }
   }
 }
+
+// --- MODIFICATION START ---
+  /**
+   * Checks all positions for short employment durations.
+   * @returns {boolean} - True if any position has a duration of less than 90 days.
+   */
+  public checkForShortEmploymentDurations(): boolean {
+    const ninetyDaysInMs = 90 * 24 * 60 * 60 * 1000;
+    for (const position of this.positions) {
+      if (position.startDate && position.endDate) {
+        const start = new Date(position.startDate).getTime();
+        const end = new Date(position.endDate).getTime();
+        const difference = end - start;
+        if (difference >= 0 && difference < ninetyDaysInMs) {
+          return true; // Found a short duration
+        }
+      }
+    }
+    return false; // No short durations found
+  }
+
+  /**
+   * Called when a date input changes. Triggers a check for short durations.
+   */
+  public onDateChange(): void {
+    if (this.checkForShortEmploymentDurations()) {
+      this.requestDateConfirmation.emit();
+    }
+  }
+  // --- MODIFICATION END ---
+
 
   // Add a new empty position and scroll to the bottom
   addPosition() {
