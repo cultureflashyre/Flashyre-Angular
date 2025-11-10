@@ -211,6 +211,16 @@ export class AdminCreateJobStep4Component implements OnInit {
   }
 
   onSaveDraft(): void {
+    if (this.interviewForm.invalid) {
+      // If the form is invalid, show a specific error message.
+      this.showErrorPopup('Please fill out all required fields before saving a draft');
+      
+      // Mark all form controls as 'touched' to display validation errors in the UI.
+      this.interviewForm.markAllAsTouched();
+      
+      // Halt further execution to prevent the confirmation popup from showing.
+      return; 
+    }l
     this.pendingAction = 'saveDraft';
     this.openAlert('You are about to save this as a draft.', ['Cancel', 'Save Draft']);
   }

@@ -111,9 +111,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
-          // If questions exist (status is not 'not_started'), update the UI state.
-          // This will show "Regenerate" and enable the "Next" button.
+          // If the status is anything other than 'not_started', it means an
+          // assessment (either from AI or Excel) already exists.
           this.hasGenerated = response.status !== 'not_started';
+
+          // If the source was an Excel upload and a filename is provided,
+          // display it in the UI.
+          if (response.source === 'excel_upload' && response.filename) {
+            this.uploadedFileName = response.filename;
+          }
         },
         error: (err) => {
           this.hasGenerated = false; // On error, assume no questions exist.
