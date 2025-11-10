@@ -1,201 +1,261 @@
-:host { 
-  display: contents; 
+/* --- CSS Variables for Easy Theming --- */
+:root {
+  --primary-color: #41327b;
+  --primary-color-dark: #352866;
+  --success-color: #1F882B;
+  --success-color-dark: #1A7325;
+  --danger-color: #D93025;
+  --surface-color: #ffffff;
+  --text-primary: #18191c;
+  --text-secondary: #5a6474;
+  --border-color: #d0d5dd;
+  --page-background: #f4f5f7;
+  --font-family: 'Inter', sans-serif; /* A modern, clean font */
 }
- 
-.flashyre-assessment-rules-card-container {
-  width: 100%;
+
+/* --- Base Page Styles --- */
+.assessment-rules-page {
   display: flex;
-  min-height: 100vh;
-  align-items: flex-start;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  background-color: var(--page-background);
+  padding: 24px;
+  font-family: var(--font-family);
+  box-sizing: border-box;
 }
- 
-.flashyre-assessment-rules-card-fragment10 {
-  display: contents;
+
+/* --- Main Assessment Card --- */
+.assessment-card {
+  width: 100%;
+  max-width: 1100px;
+  background-color: var(--surface-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
- 
-.flashyre-assessment-rules-card-text10 {
-  display: inline-block;
+
+/* --- Card Header --- */
+.assessment-card__header {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.assessment-card__logo {
+  height: 40px;
+  width: auto;
+}
+
+.assessment-card__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+/* --- Card Content Layout --- */
+.assessment-card__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2/3 for rules, 1/3 for actions */
+  gap: 32px;
+  padding: 32px;
+}
+
+/* --- Rules Column (Left) --- */
+.assessment-card__rules h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.rules-section {
+  margin-bottom: 28px;
+}
+
+.rules-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: 12px;
+  border-left: 3px solid var(--primary-color);
+  padding-left: 12px;
+}
+
+.rules-section ul {
+  list-style-type: none;
+  padding-left: 15px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.rules-section ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.rules-section ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
   font-size: 18px;
 }
- 
-.flashyre-assessment-rules-card-fragment11 {
-  display: contents;
+
+/* --- Actions & Notes Column (Right) --- */
+.assessment-card__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--page-background);
+  border-radius: 12px;
+  padding: 24px;
 }
- 
-.flashyre-assessment-rules-card-text11 {
-  display: inline-block;
+
+.notes-container h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--text-primary);
 }
- 
-.flashyre-assessment-rules-card-fragment12 {
-  display: contents;
+
+.note-item--warning {
+  font-size: 14px;
+  color: var(--danger-color);
+  background-color: #fdeaea;
+  border-left: 3px solid var(--danger-color);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  line-height: 1.6;
 }
- 
-.flashyre-assessment-rules-card-text14 {
-  display: inline-block;
-  font-size: 32px;
+
+/* --- Confirmation and Start Button --- */
+.confirmation-container {
+  margin-top: 24px;
 }
- 
-.flashyre-assessment-rules-card-fragment13 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text15 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment14 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text16 {
-  color: rgb(241, 4, 0);
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment15 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text17 {
-  display: inline-block;
+
+.good-luck-text {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 20px;
 }
- 
-.flashyre-assessment-rules-card-fragment16 {
-  display: contents;
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 24px;
 }
- 
-.flashyre-assessment-rules-card-text20 {
-  display: inline-block;
+
+.custom-checkbox input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
- 
-.flashyre-assessment-rules-card-fragment17 {
-  display: contents;
+
+.checkmark {
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
 }
- 
-.flashyre-assessment-rules-card-text21 {
-  display: inline-block;
+
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
- 
-.flashyre-assessment-rules-card-fragment18 {
-  display: contents;
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
- 
-.flashyre-assessment-rules-card-text24 {
-  color: rgb(5, 53, 108);
-  display: inline-block;
+
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
 }
- 
-.flashyre-assessment-rules-card-fragment19 {
-  display: contents;
+
+.start-button {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  background-color: var(--success-color);
+  color: white;
 }
- 
-.flashyre-assessment-rules-card-text25 {
-  color: rgb(241, 4, 0);
-  display: inline-block;
+
+.start-button:hover:not(:disabled) {
+  background-color: var(--success-color-dark);
+  box-shadow: 0 4px 12px rgba(31, 136, 43, 0.2);
 }
- 
-.flashyre-assessment-rules-card-fragment20 {
-  display: contents;
+
+.start-button:disabled {
+  background-color: #e4e7ec;
+  color: #98a2b3;
+  cursor: not-allowed;
 }
- 
-.flashyre-assessment-rules-card-text26 {
-  display: inline-block;
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+  .assessment-card__grid {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+  }
+
+  .assessment-card__actions {
+    margin-top: 16px;
+  }
 }
- 
-.flashyre-assessment-rules-card-fragment21 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text27 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment22 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text30 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment23 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text31 {
-  display: inline-block;
-  font-size: 18px;
-}
- 
-.flashyre-assessment-rules-card-fragment24 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text32 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment25 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text33 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment26 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text34 {
-  display: inline-block;
-  font-size: 18px;
-}
- 
-.flashyre-assessment-rules-card-fragment27 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text35 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment28 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text36 {
-  display: inline-block;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-}
- 
-.flashyre-assessment-rules-card-fragment29 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text37 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment30 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text38 {
-  display: inline-block;
-}
- 
-.flashyre-assessment-rules-card-fragment31 {
-  display: contents;
-}
- 
-.flashyre-assessment-rules-card-text39 {
-  color: #ffffff;
-  display: inline-block;
+
+@media (max-width: 767px) {
+  .assessment-rules-page {
+    padding: 16px;
+  }
+
+  .assessment-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 24px;
+  }
+  
+  .assessment-card__grid {
+    padding: 24px;
+  }
+
+  .assessment-card__rules h2 {
+    font-size: 24px;
+  }
 }

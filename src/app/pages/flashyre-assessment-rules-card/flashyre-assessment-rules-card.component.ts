@@ -44,27 +44,26 @@ export class FlashyreAssessmentRulesCard implements OnInit {
   }
 
   ngOnInit() {
-  this.route.queryParams.subscribe(params => {
-    if (params['data']) {
-      try {
-        this.assessmentData = JSON.parse(params['data']);
+    this.route.queryParams.subscribe(params => {
+      if (params['data']) {
+        try {
+          this.assessmentData = JSON.parse(params['data']);
 
-        // Extract and assign assessment_id to assessmentId variable
-        if (this.assessmentData && this.assessmentData.assessment_id) {
-          this.assessmentId = this.assessmentData.assessment_id;
+          // Extract and assign assessment_id to assessmentId variable
+          if (this.assessmentData && this.assessmentData.assessment_id) {
+            this.assessmentId = this.assessmentData.assessment_id;
+          }
+
+        } catch (e) {
+          console.error('Error parsing assessment data', e);
+          this.router.navigate(['/candidate-assessment']);
         }
-
-      } catch (e) {
-        console.error('Error parsing assessment data', e);
+      } else {
+        console.error('Rules Card: No assessment data was found. Redirecting.');
         this.router.navigate(['/candidate-assessment']);
       }
-    } else {
-      console.error('Rules Card: No assessment data was found. Redirecting.');
-      this.router.navigate(['/candidate-assessment']);
-    }
-  });
-}
-
+    });
+  }
 
   fetchAssessmentData(assessmentId: number): void {
     this.isLoading = true;
@@ -100,7 +99,7 @@ export class FlashyreAssessmentRulesCard implements OnInit {
    * Starts the assessment after checking camera and microphone access.
    * Redirects to error page if camera/microphone is not accessible.
    */
- async startAssessment(): Promise<void> {
+  async startAssessment(): Promise<void> {
     if (!this.assessmentData || !this.assessmentId) {
       console.error('Error: "Start Assessment" was clicked before assessment data was loaded.');
       alert('Assessment data is not available. Cannot start.');
@@ -142,8 +141,6 @@ export class FlashyreAssessmentRulesCard implements OnInit {
     }
   }
 
- 
-
   get showProctoredRule(): boolean {
     return this.assessmentData?.proctored?.toUpperCase() === 'YES';
   }
@@ -160,5 +157,32 @@ export class FlashyreAssessmentRulesCard implements OnInit {
   get videoRecordingRuleNumber(): number {
     // If proctored rule shown before, video recording is #2 else #1
     return this.showProctoredRule ? 2 : 1;
+  }
+
+  // Getters from the original child component are now here
+  get sections() {
+    return this.assessmentData?.sections || [];
+  }
+
+  get totalDuration() {
+    return this.assessmentData?.total_duration || 0;
+  }
+
+  get totalQuestions() {
+    return this.assessmentData?.total_questions || 0;
+  }
+
+  get timeLimitDisplay() {
+    return this.totalDuration > 0
+      ? `The time limit for the test is ${this.totalDuration} minutes.`
+      : 'Time limit not provided.';
+  }
+
+  get answerWithinLimitDisplay() {
+    return `You must answer all ${this.totalQuestions} questions within the ${this.totalDuration}-minute time limit.`;
+  }
+
+  get autoSubmitMessage() {
+    return `The test will auto-submit after ${this.totalDuration} minutes, regardless of whether you have answered all the questions or not.`;
   }
 }
