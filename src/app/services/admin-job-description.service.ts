@@ -14,6 +14,14 @@ interface ExcelUploadResponse {
   unique_id: string;
   uploaded_mcqs: any; // Contains the newly created questions object
 }
+
+// NEW INTERFACE: Defines the structure of the detailed MCQ status response.
+export interface McqStatusResponse {
+  status: 'completed' | 'in_progress' | 'not_started';
+  source: 'ai_generated' | 'excel_upload' | 'none';
+  filename: string | null;
+  skills?: { [key: string]: string }; // Optional skills dictionary for AI source
+}
 // --- MODIFICATION END ---
 
 @Injectable({ providedIn: 'root' })
@@ -217,18 +225,18 @@ export class AdminJobDescriptionService {
       .pipe(catchError(this.handleError));
   }
 
+   // --- MODIFICATION START: Updated method signature ---
   /**
-   * MODIFIED: Fetches the detailed generation status for all skills from the cache.
+   * Fetches the detailed MCQ generation status, including source and filename.
    */
-  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ status: string; skills: { [key: string]: string } }> {
+  checkMcqStatus(jobUniqueId: string, token: string): Observable<McqStatusResponse> {
     return this.http
-      .get<{ status: string; data: { status: string; skills: { [key: string]: string } } }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
+      .get<{ status: string; data: McqStatusResponse }>(`${this.baseUrl}/job-post/${jobUniqueId}/mcq-status/`, { headers: this.bearer(token) })
       .pipe(
-        map(response => response.data),
+        map(response => response.data), // Extract the inner 'data' object which matches our interface
         catchError(this.handleError)
       );
   }
-
 
   saveAssessment(payload: any, token: string): Observable<{ assessment_uuid: string }> {
     return this.http
