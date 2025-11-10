@@ -14,6 +14,11 @@
   <!-- ### MODIFICATION END ### -->
 
 <div class="flashyre-assessment11-container">
+  <div *ngIf="showSuccessPopup" class="submission-success-popup">
+    {{ successPopupMessage }}
+  </div>
+  <!-- ### MODIFICATION END ### -->
+
   <!-- Popup Overlay -->
   <div class="popup-overlay" *ngIf="showWarningPopup">
     <assessment-warning-popup
