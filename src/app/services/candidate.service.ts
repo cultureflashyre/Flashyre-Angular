@@ -78,19 +78,27 @@ export class AuthService {
 
   // --- JOB APPLICATION METHODS ---
 
+  // --- MODIFICATION START ---
   /**
-   * Applies the current user to a specific job.
+   * Applies the current user to a specific job, now including their matching score.
    * @param jobId The ID of the job to apply for.
+   * @param matchingScore The calculated matching score for the candidate and job.
    * @returns An Observable of the API response.
    */
-  applyForJob(jobId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}api/apply/`, { job_post_id: jobId }, { headers: this.getAuthHeaders() }).pipe(
+  applyForJob(jobId: number, matchingScore: number | null | undefined): Observable<any> {
+    const payload = {
+      job_post_id: jobId,
+      matching_score: matchingScore
+    };
+
+    return this.http.post(`${this.apiUrl}api/apply/`, payload, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error('Error in applyForJob:', error);
         return throwError(() => new Error('Failed to apply for job'));
       })
     );
   }
+  // --- MODIFICATION END ---
 
   /**
    * Fetches all jobs the current user has applied for.

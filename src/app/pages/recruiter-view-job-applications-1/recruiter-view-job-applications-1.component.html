@@ -650,16 +650,17 @@
   </div>
                 </div>
                 <div
-                  id="matching-score-container"
-                  class="recruiter-view-job-applications1-matching-score-container"
-                >
-                  <span
-                    id="matching-score-percentage-text"
-                    class="recruiter-view-job-applications1-matching-score-percentage-text"
-                  >
-                    {{ candidate.matching_score }}
-                  </span>
-                </div>
+        id="matching-score-container"
+        class="recruiter-view-job-applications1-matching-score-container"
+      >
+        <span
+          id="matching-score-percentage-text"
+          class="recruiter-view-job-applications1-matching-score-percentage-text"
+        >
+          <!-- Display the real score from the database, defaulting to 0 if null/undefined, and add a '%' sign. -->
+          {{ (candidate.matching_score || 0) + '%' }}
+        </span>
+      </div>
                 <div
                   id="candidate-work-status-container"
                   class="recruiter-view-job-applications1-candidate-work-status-container"
