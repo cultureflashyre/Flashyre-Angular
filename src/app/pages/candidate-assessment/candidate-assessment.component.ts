@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 export class CandidateAssessment implements AfterViewInit {
   userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+  searchQuery: string = '';
 
   // The component now works with Observables provided by the service
   assessments$: Observable<any[]>;
@@ -57,6 +58,18 @@ export class CandidateAssessment implements AfterViewInit {
     this.assessments$ = this.assessmentDataService.assessments$;
     this.isLoading$ = this.assessmentDataService.loading$;
   }
+
+  getFilteredAssessments(): any[] {
+  if (!this.searchQuery || this.searchQuery.trim() === '') {
+    return this.currentAssessments;
+  }
+
+  const query = this.searchQuery.toLowerCase().trim();
+
+  return this.currentAssessments.filter(assessment =>
+    assessment.assessment_title.toLowerCase().includes(query)
+  );
+}
 
   ngAfterViewInit(): void {
     this.descriptions.changes.subscribe(() => {
