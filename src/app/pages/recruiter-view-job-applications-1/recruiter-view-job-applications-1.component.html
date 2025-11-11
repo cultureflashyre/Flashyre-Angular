@@ -295,6 +295,15 @@
             class="recruiter-view-job-applications1-applied-sourced-selected-main-container"
           >
             <div id="languages-main-container" class="recruiter-view-job-applications1-languages-main-container">
+
+              <!-- Left Arrow -->
+  <div 
+    id="left-arrow-container" 
+    class="arrow-container left-arrow-shadow" 
+    [class.disabled]="currentScrollIndex === 0"
+    (click)="navigateCarousel('prev')">
+    <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
+  </div>
   
   <!-- Fixed "Applied" Tab -->
   <div 
@@ -311,15 +320,6 @@
     (click)="addStage()">
     <svg viewBox="0 0 24 24" class="nav-arrow-icon plus-icon"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
     <span class="add-skill-text">Add Stage</span>
-  </div>
-
-  <!-- Left Arrow -->
-  <div 
-    id="left-arrow-container" 
-    class="arrow-container left-arrow-shadow" 
-    [class.disabled]="currentScrollIndex === 0"
-    (click)="navigateCarousel('prev')">
-    <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
   </div>
   
   <!-- Scrollable Stages Viewport -->
@@ -350,7 +350,7 @@
   
 </div>
           </div>
-          <div
+          <!-- <div
             id="job-title-location-experience-main-container"
             class="recruiter-view-job-applications1-job-title-location-experience-main-container"
           >
@@ -475,7 +475,7 @@
             >
               Search
             </button>
-          </div>
+          </div> -->
           <div
             id="screening-assessment-interview-main-container"
             class="recruiter-view-job-applications1-screening-assessment-interview-main-container"

@@ -630,6 +630,11 @@ body {
   color: #2ecc71;
 }
 
+.minimum-qualifiation {
+  font-weight: 600;
+  font-style: Bold;
+}
+
 /* Responsive styles */
 @media(max-width: 991px) {
   .candidate-job-details-container1 {

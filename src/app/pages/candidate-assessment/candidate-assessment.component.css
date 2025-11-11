@@ -910,6 +910,7 @@
   }
    
   .candidate-assessment-read-more-button {
+    width: 200px;
     color: #05356C;
     font-size: 14px;
     font-style: normal;
@@ -920,6 +921,7 @@
     cursor: pointer;
     text-decoration: underline;
     transition: 0.3s;
+    
   }
    
   .candidate-assessment-read-more-button:hover {
@@ -946,6 +948,61 @@
     transform: scale(1.05);
     transition: all 0.8s;
     background-color: 0A4992;
+  }
+
+  .candidate-assessment-search-container {
+  flex: 0 0 auto;
+  width: 295px;
+  height: 36px;
+  display: flex;
+  min-width: 200px;
+  align-self: flex-end;
+  align-items: center;
+  border-color: #A7A7A7;
+  border-width: 1px;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+
+.candidate-assessment-search-input {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 156px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.candidate-assessment-search-icon-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  align-items: flex-start;
+}
+
+.candidate-assessment-search-icon {
+  fill: #323232;
+  color: #323232;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+  .Name-search-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
    
   .candidate-assessment-lets-go1-button:active {
