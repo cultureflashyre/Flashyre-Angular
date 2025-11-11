@@ -50,6 +50,12 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   showAlertButtons: string[] = [];
   // ### MODIFICATION END ###
 
+  // ### MODIFICATION START ###
+  showSuccessPopup = false;
+  successPopupMessage = '';
+  private successPopupTimeout: any;
+  // ### MODIFICATION END ###
+
   showWarningPopup = false;
   totalQuestionsInSection: number;
   isLastSection: boolean;
@@ -159,6 +165,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     if (this.violationSubscription) this.violationSubscription.unsubscribe();
     this.cleanupResources();
     this.closeFullscreen();
+    if (this.successPopupTimeout) {
+      clearTimeout(this.successPopupTimeout);
+    }
   }
 
 // In flashyre-assessment11.component.ts
@@ -627,7 +636,19 @@ fetchAssessmentData(assessmentId: number): void {
         };
         this.showTestResults = true;
         this.spinner.hide();
-        alert('Code submitted successfully! Your score for this problem has been saved.');
+// Clear any previous timeout to reset the timer
+        if (this.successPopupTimeout) {
+          clearTimeout(this.successPopupTimeout);
+        }
+
+        // Set message and show the custom popup
+        this.successPopupMessage = 'Code submitted successfully! Your score has been saved.';
+        this.showSuccessPopup = true;
+
+        // Hide the popup after 5 seconds
+        this.successPopupTimeout = setTimeout(() => {
+          this.showSuccessPopup = false;
+        }, 5000);
       },
       error: (error) => {
         const errorResults = [`Error submitting code: ${error.status} ${error.statusText}`];

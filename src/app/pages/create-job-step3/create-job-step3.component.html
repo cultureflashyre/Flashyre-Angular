@@ -232,6 +232,26 @@
                 
             </div>
           </div>
+          <!-- ### MODIFICATION START: New "Number of Attempts" Field ### -->
+                    <div id="attempts-container" class="admin-create-job-step3-time-limit-container2">
+                        <label for="attempts-input" id="attempts-text" class="admin-create-job-step3-time-limit-text2">Number of attempts *</label>
+                        <input 
+                            type="number" 
+                            id="attempts-input" 
+                            placeholder="1" 
+                            min="1"
+                            max="10"
+                            class="admin-create-job-step3-time-input2 input" 
+                            formControlName="attemptsAllowed" 
+                        />
+                        <!-- Validation Messages -->
+                        <div class="field-error-message" *ngIf="assessmentForm.get('attemptsAllowed')?.touched && assessmentForm.get('attemptsAllowed')?.errors?.required">
+                            Number of attempts is required.
+                        </div>
+                        <div class="field-error-message" *ngIf="assessmentForm.get('attemptsAllowed')?.touched && (assessmentForm.get('attemptsAllowed')?.errors?.min || assessmentForm.get('attemptsAllowed')?.errors?.max)">
+                            Attempts must be between 1 and 10.
+                        </div>
+                    </div>
         </div>
       </div>
       <!-- Questions Main Section -->
