@@ -9,12 +9,10 @@
   display: flex;
   padding: 24px;
   align-items: center;
-  border: 0px solid transparent; /* Added transparent border */
   border-radius: 8px;
   flex-direction: column;
   justify-content: center;
   background-color: #FFFFFF;
-  position: auto;
 }
 
 .error-message {
@@ -51,10 +49,7 @@
 .profile-education-dates-container {
    width: 100%;
    min-height: 48px;
-   gap: 24px;
-   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+   display: block; /* Changed from flex to block */
 }
 
 .profile-education-component-education-text1 {
@@ -136,7 +131,7 @@
   width: 324px;
   height: 48px;
   display: flex;
-  align-self: flex-end;
+  align-self: flex-start;
   align-items: space-between;
   border-color: #A7A7A7;
   flex-direction: column;

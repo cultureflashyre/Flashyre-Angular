@@ -122,6 +122,7 @@
             id="employment-start-date-input-{{i}}"
             class="profile-employment-component-form1 input"
             [(ngModel)]="position.startDate"
+            (change)="onDateChange()"
             name="startDate-{{i}}"
             [max]="getTodayDate()"
             required
@@ -156,6 +157,7 @@
             id="employment-end-date-input-{{i}}"
             class="profile-employment-component-form2 input"
             [(ngModel)]="position.endDate"
+            (change)="onDateChange()"
             name="endDate-{{i}}"
             [min]="position.startDate"
           />

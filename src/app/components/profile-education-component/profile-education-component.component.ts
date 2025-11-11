@@ -78,7 +78,6 @@ export class ProfileEducationComponent implements OnInit {
                 const form = this.createEducationForm();
                 form.patchValue({
                   id: edu.id || null, // <<< POPULATE THE ID
-                  startDate: edu.start_date || '',
                   endDate: edu.end_date || '',
                   university: this.getDropdownIdByName(this.universities, edu.university),
                   educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
@@ -116,15 +115,15 @@ export class ProfileEducationComponent implements OnInit {
   }
 
   private createEducationForm(): FormGroup {
+    // Removed startDate control and the dateRangeValidator.
     return this.fb.group({
-      id: [null], // <<< ADD THE ID CONTROL
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      id: [null],
+      endDate: [''],
       university: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       educationLevel: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       course: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       specialization: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
-    }, { validators: this.dateRangeValidator });
+    });
   }
 
   private dateRangeValidator(form: FormGroup): { [key: string]: any } | null {
@@ -161,7 +160,6 @@ public validateForms(): boolean {
     const formValues = form.value;
     // Check if any field in the form has a value.
     const isPartiallyFilled = 
-      formValues.startDate || 
       formValues.endDate ||
       formValues.university ||
       formValues.educationLevel ||
@@ -228,8 +226,7 @@ saveEducation(): Promise<boolean> {
     const formsToSave = this.educationForms.filter(form => {
       const formValues = form.value;
       // This condition ensures we only include forms that have some data.
-      return formValues.startDate || 
-             formValues.endDate ||
+      return formValues.endDate ||
              formValues.university ||
              formValues.educationLevel ||
              formValues.course ||
@@ -244,18 +241,19 @@ saveEducation(): Promise<boolean> {
     }
 
     // Step 4: Create the payload using only the valid, non-empty forms.
-    const payload = formsToSave.map(form => {
-      const formValue = form.value;
-      return {
-        id: formValue.id,
-        select_start_date: formValue.startDate || null,
-        select_end_date: formValue.endDate || null,
-        university: this.universities.find(u => u.id === +formValue.university)?.name,
-        education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
-        course: this.courses.find(c => c.id === +formValue.course)?.name,
-        specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
-      };
-    });
+     // Payload now explicitly sets select_start_date to null.
+      const payload = formsToSave.map(form => {
+        const formValue = form.value;
+        return {
+          id: formValue.id,
+          select_start_date: null, // Always send null for the hidden start date
+          select_end_date: formValue.endDate || null,
+          university: this.universities.find(u => u.id === +formValue.university)?.name,
+          education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
+          course: this.courses.find(c => c.id === +formValue.course)?.name,
+          specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
+        };
+      });
 
     console.log('Sending payload to backend:', payload);
 
