@@ -502,7 +502,9 @@
       </button>
       <button 
         (click)="downloadAssessment()" 
-        [disabled]="isDownloading">
+        [disabled]="isDownloading || !job?.has_assessment"
+        [title]="job?.has_assessment ? 'Download assessment questions as PDF' : 'No assessment has been created for this job'"
+      >
         {{ isDownloading ? 'Downloading...' : 'Download Assessment' }}
       </button>
     </div>
@@ -577,6 +579,20 @@
                   <span *ngIf="sortColumn === 'score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
+               <!-- 1. ADD a new header for the Assessment Score column. -->
+    <div
+      id="assessment-score-container"
+      class="recruiter-view-job-applications1-assessment-score-container"
+      (click)="sortData('assessment_score')" style="cursor: pointer;"
+    >
+      <span
+        id="assessment-score-text"
+        class="recruiter-view-job-applications1-assessment-score-text"
+      >
+        Assessment Score
+        <span *ngIf="sortColumn === 'assessment_score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
+      </span>
+    </div>
               <div
                 id="status-container"
                 class="recruiter-view-job-applications1-status-container"
@@ -676,6 +692,17 @@
         >
           <!-- Display the real score from the database, defaulting to 0 if null/undefined, and add a '%' sign. -->
           {{ (candidate.matching_score || 0) + '%' }}
+        </span>
+      </div>
+      <div
+        id="assessment-score-cell-container"
+        class="recruiter-view-job-applications1-assessment-score-container"
+      >
+        <span
+          id="assessment-score-percentage-text"
+          class="recruiter-view-job-applications1-matching-score-percentage-text"
+        >
+          {{ candidate.assessment_score != null ? candidate.assessment_score + '%' : 'N/A' }}
         </span>
       </div>
                 <div

@@ -168,7 +168,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
    * Private helper method to construct and save the PDF document.
    * @param data The detailed assessment data from the API.
    */
-  private _generateAssessmentPdf(data: any): void {
+   private _generateAssessmentPdf(data: any): void {
     const doc = new jsPDF();
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
@@ -227,7 +227,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           }
           const correctAnswer = answerMatch ? answerMatch[1].toUpperCase() : 'N/A';
           
-          // Combine all parts into a single string for the table cell
+          // Combine all parts into a single, readable string for the table cell
           const fullQuestionBlock = `${question}\n\n${options}\n\nCorrect Answer: ${correctAnswer}`;
           
           return [index + 1, fullQuestionBlock];
@@ -280,7 +280,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
         yPos += 8;
 
         const addWrappedText = (label: string, text: string | null) => {
-          if (!text || text.trim() === 'N/A' || text.trim() === '') return; // Don't print empty/NA sections
+          if (!text || text.trim() === 'N/A' || text.trim() === '') return;
           doc.setFont('helvetica', 'bold');
           doc.text(label, margin, yPos);
           yPos += 6;
@@ -291,7 +291,6 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           yPos += (lines.length * 4) + 6;
         };
         
-        // Render all the details provided by the updated serializer
         addWrappedText('Description:', details.description);
         addWrappedText('Input Format:', details.input_format);
         addWrappedText('Output Format:', details.output_format);
@@ -306,7 +305,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     doc.save(fileName);
   }
 
-  
+
   fetchJobDetails() {
     if (this.jobId) {
       this.http.get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`).subscribe(
@@ -376,7 +375,10 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           comparison = a.user.full_name.localeCompare(b.user.full_name);
           break;
         case 'score':
-          comparison = a.matching_score - b.matching_score;
+           comparison = (a.matching_score || 0) - (b.matching_score || 0);
+          break;
+        case 'assessment_score': // NEW case for 'Assessment Score'
+          comparison = (a.assessment_score || 0) - (b.assessment_score || 0);
           break;
         case 'status':
           comparison = a.status.localeCompare(b.status);
