@@ -25,6 +25,8 @@
     "ace-builds": "^1.43.3",
     "chart.js": "^4.5.0",
     "core-js": "~3.0.1",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "jwt-decode": "^4.0.0",
     "marked": "^15.0.12",
     "monaco-editor": "^0.33.0",

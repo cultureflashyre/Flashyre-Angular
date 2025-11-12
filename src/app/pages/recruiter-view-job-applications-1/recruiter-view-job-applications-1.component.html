@@ -480,28 +480,45 @@
             id="screening-assessment-interview-main-container"
             class="recruiter-view-job-applications1-screening-assessment-interview-main-container"
           >
-          <!-- --- MODIFICATION START --- -->
-            <!-- This button will only show if the job_description_url exists. -->
-            <button
-              *ngIf="job?.job_description_url"
-              id="view-jd-button"
-              type="button"
-              class="recruiter-view-job-applications1-view-jd-button button"
-              (click)="openJD(job.job_description_url)"
-            >
-              View JD
-            </button>
-            <!-- --- MODIFICATION END --- -->
+          <div class="jd-dropdown-container">
+    <!-- Main button that now also acts as a dropdown toggle -->
+    <button
+      id="view-jd-dropdown-button"
+      type="button"
+      class="recruiter-view-job-applications1-view-jd-button button"
+      (click)="toggleJdDropdown($event)"
+      [disabled]="!job?.job_description_url"
+    >
+      View JD
+      <!-- Simple dropdown arrow -->
+      <span style="margin-left: 8px;">▼</span>
+    </button>
+    
+    <!-- The dropdown menu itself, shown conditionally -->
+    <div class="jd-dropdown-menu" *ngIf="showJdDropdown">
+      <button 
+        (click)="openJD(job.job_description_url)">
+        View JD
+      </button>
+      <button 
+        (click)="downloadAssessment()" 
+        [disabled]="isDownloading">
+        {{ isDownloading ? 'Downloading...' : 'Download Assessment' }}
+      </button>
+    </div>
+  </div>
+  <!-- --- MODIFICATION END --- -->
 
-            <button
-  *ngIf="nextStage"
-  id="dynamic-invite-button"
-  type="button"
-  class="recruiter-view-job-applications1-screening-call-invite-button button"
-  (click)="sendInvite()">
-  Invite to {{ nextStage.stage_name }}
-</button>
-          </div>
+  <button
+    *ngIf="nextStage"
+    id="dynamic-invite-button"
+    type="button"
+    class="recruiter-view-job-applications1-screening-call-invite-button button"
+    (click)="sendInvite()">
+    Invite to {{ nextStage.stage_name }}
+  </button>
+</div>
+
           <div
             id="candidate-details-main-container"
             class="recruiter-view-job-applications1-candidate-details-main-container"
