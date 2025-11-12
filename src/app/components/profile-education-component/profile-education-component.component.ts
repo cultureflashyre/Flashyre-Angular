@@ -1,9 +1,12 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ElementRef, Input, ContentChild, TemplateRef, NgZone, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EducationService } from '../../services/education.service';
-import { forkJoin } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { forkJoin, Subject, Observable, of, Subscription } from 'rxjs';
+import { tap, catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from '../../../environments/environment';
 
 interface DropdownItem {
   id: number;
@@ -23,7 +26,7 @@ interface ReferenceData {
   templateUrl: './profile-education-component.component.html',
   styleUrls: ['./profile-education-component.component.css']
 })
-export class ProfileEducationComponent implements OnInit {
+export class ProfileEducationComponent implements OnInit, OnDestroy {
   @ContentChild('text') text: TemplateRef<any>;
   @ContentChild('text1') text1: TemplateRef<any>;
   @ContentChild('text2') text2: TemplateRef<any>;
@@ -46,16 +49,65 @@ export class ProfileEducationComponent implements OnInit {
 
   showRemoveConfirmation = false;
   formToRemoveIndex: number | null = null;
+  private subscriptions = new Subscription(); 
+
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader;
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any;
+
+  private universityInput$ = new Subject<{ term: string, index: number }>();
+  universitySuggestions: google.maps.places.AutocompletePrediction[] = [];
+  showUniversitySuggestions = false;
+  isLoadingUniversities = false;
+  activeUniversityInputIndex: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private educationService: EducationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private ngZone: NgZone, // <-- Inject NgZone
+    @Inject(DOCUMENT) private document: Document
+
+  ) {
+        // --- Initialize the Google Maps Loader ---
+    this.loader = new Loader({
+      apiKey: this.googleMapsApiKey,
+      version: 'weekly',
+      libraries: ['places']
+    });
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
     this.errorMessage = null;
+
+        // --- Initialize Google Places Autocomplete Service ---
+    this.initializeGooglePlaces();
+
+    // --- Setup the observable pipeline for university input ---
+    this.subscriptions.add(
+      this.universityInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged((prev, curr) => prev.term === curr.term),
+        tap(({ index }) => {
+          this.isLoadingUniversities = true;
+          this.showUniversitySuggestions = true;
+          this.activeUniversityInputIndex = index; // Keep track of which input is active
+          if (this.google && !this.sessionToken) {
+            this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+          }
+        }),
+        switchMap(({ term }) => this.getUniversityPredictions(term))
+      ).subscribe(suggestions => {
+        this.isLoadingUniversities = false;
+        this.universitySuggestions = suggestions;
+      })
+    );
+
+    // Global listener to close suggestions when clicking outside
+    this.document.addEventListener('click', this.onDocumentClick.bind(this));
 
     const userProfileString = localStorage.getItem('userProfile');
 
@@ -79,7 +131,7 @@ export class ProfileEducationComponent implements OnInit {
                 form.patchValue({
                   id: edu.id || null, // <<< POPULATE THE ID
                   endDate: edu.end_date || '',
-                  university: this.getDropdownIdByName(this.universities, edu.university),
+                  university: edu.university, 
                   educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
                   course: this.getDropdownIdByName(this.courses, edu.course),
                   specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
@@ -108,6 +160,61 @@ export class ProfileEducationComponent implements OnInit {
     });
   }
   
+  private async initializeGooglePlaces(): Promise<void> {
+    try {
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Fatal error: Google Maps script could not be loaded.', error);
+      this.errorMessage = 'Could not load location services. Please try again.';
+    }
+  }
+
+  // Called from the template on user input
+  onUniversityInput(event: Event, index: number): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showUniversitySuggestions = false;
+      return;
+    }
+    this.universityInput$.next({ term, index });
+  }
+
+  // Fetches predictions from the Places API
+  private getUniversityPredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!this.placesService || !this.sessionToken) {
+      return of([]);
+    }
+    return new Observable(observer => {
+      this.placesService!.getPlacePredictions({
+        input: term,
+        types: ['university', 'school'], // Filter for educational institutions
+        sessionToken: this.sessionToken
+      }, (predictions, status) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            observer.next(predictions);
+          } else {
+            observer.next([]);
+          }
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  // Called when a user clicks a suggestion
+  selectUniversitySuggestion(suggestion: google.maps.places.AutocompletePrediction, index: number): void {
+    const form = this.educationForms[index];
+    if (form) {
+      form.patchValue({ university: suggestion.description });
+      form.get('university')?.markAsDirty();
+    }
+    this.showUniversitySuggestions = false;
+    this.activeUniversityInputIndex = null;
+    this.sessionToken = undefined; // VERY IMPORTANT: Reset token after selection for cost saving.
+  }
+
   private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | '' {
     if (!name) return '';
     const item = dropdownList.find(d => d.name.toLowerCase() === name.toLowerCase());
@@ -119,7 +226,7 @@ export class ProfileEducationComponent implements OnInit {
     return this.fb.group({
       id: [null],
       endDate: [''],
-      university: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      university: ['', [Validators.required]],
       educationLevel: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       course: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       specialization: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
@@ -193,7 +300,7 @@ public validateForms(): boolean {
   //   }
   // }
 
-promptRemoveForm(index: number): void {
+  promptRemoveForm(index: number): void {
     this.formToRemoveIndex = index;
     this.showRemoveConfirmation = true;
   }
@@ -248,7 +355,8 @@ saveEducation(): Promise<boolean> {
           id: formValue.id,
           select_start_date: null, // Always send null for the hidden start date
           select_end_date: formValue.endDate || null,
-          university: this.universities.find(u => u.id === +formValue.university)?.name,
+
+          university: formValue.university,
           education_level: this.educationLevels.find(e => e.id === +formValue.educationLevel)?.name,
           course: this.courses.find(c => c.id === +formValue.course)?.name,
           specialization: this.specializations.find(s => s.id === +formValue.specialization)?.name
@@ -272,6 +380,23 @@ saveEducation(): Promise<boolean> {
   });
 }
 
+  private onDocumentClick(): void {
+    // Hide suggestions if a click occurs anywhere in the document
+    if (this.showUniversitySuggestions) {
+      this.ngZone.run(() => {
+        this.showUniversitySuggestions = false;
+        this.activeUniversityInputIndex = null;
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    // --- Clean up subscriptions and listeners ---
+    this.subscriptions.unsubscribe();
+    this.sessionToken = undefined;
+    this.document.removeEventListener('click', this.onDocumentClick.bind(this));
+  }
+  
   goToPrevious(): void {
     this.router.navigate(['/profile-employment-page']);
   }

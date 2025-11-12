@@ -1,6 +1,11 @@
-import { Component, EventEmitter, Output, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router'; // Import Router
+import { Component, EventEmitter, Output, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef, OnInit, OnDestroy, NgZone, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 import { EmploymentService } from '../../services/employment.service';
+import { Subject, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -8,7 +13,7 @@ import { EmploymentService } from '../../services/employment.service';
   templateUrl: 'profile-employment-component.component.html',
   styleUrls: ['profile-employment-component.component.css'],
 })
-export class ProfileEmploymentComponent {
+export class ProfileEmploymentComponent implements OnInit, OnDestroy {
   saveAndNext() {
     throw new Error('Method not implemented.');
   }
@@ -19,10 +24,7 @@ export class ProfileEmploymentComponent {
   @ContentChild('text12') text12: TemplateRef<any>;
   @ContentChild('text3') text3: TemplateRef<any>;
   @ContentChild('text111') text111: TemplateRef<any>;
-
-  @Output() requestDateConfirmation = new EventEmitter<void>();
-
-
+  //@Output() requestDateConfirmation = new EventEmitter<void>();
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
 
   positions: any[] = [
@@ -39,14 +41,43 @@ export class ProfileEmploymentComponent {
 
   showRemoveConfirmation = false;
   positionToRemoveIndex: number | null = null;
+  private subscriptions = new Subscription();
+
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader;
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any;
+
+  private companyInput$ = new Subject<{ term: string, index: number }>();
+  companySuggestions: google.maps.places.AutocompletePrediction[] = [];
+  showCompanySuggestions = false;
+  isLoadingCompanies = false;
+  activeCompanyInputIndex: number | null = null;
+
+  showOverlapAlert = false;
+  overlapMessage = '';
+  conflictingJobIndices: { job1Index: number, job2Index: number } | null = null;
+
+  showShortTenureAlert = false;
+  shortTenureMessage = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
     private employmentService: EmploymentService,
-  ) {}
+    private ngZone: NgZone, // <-- Inject NgZone
+    @Inject(DOCUMENT) private document: Document
+  ) {
+        // --- Initialize the Google Maps Loader ---
+    this.loader = new Loader({
+      apiKey: this.googleMapsApiKey,
+      version: 'weekly',
+      libraries: ['places']
+    });
+  }
 
-   public sanitizeAlphaNumeric(event: Event, position: any, fieldName: string): void {
+  public sanitizeAlphaNumeric(event: Event, position: any, fieldName: string): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
     position[fieldName] = sanitizedValue;
@@ -56,7 +87,97 @@ export class ProfileEmploymentComponent {
   }
 
   ngOnInit(): void {
+    this.initializeGooglePlaces();
     this.loadPositionsFromUserProfile();
+
+    // --- Setup the observable pipeline for company name input ---
+    this.subscriptions.add(
+      this.companyInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged((prev, curr) => prev.term === curr.term),
+        tap(({ index }) => {
+          this.isLoadingCompanies = true;
+          this.showCompanySuggestions = true;
+          this.activeCompanyInputIndex = index;
+          if (this.google && !this.sessionToken) {
+            this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+          }
+        }),
+        switchMap(({ term }) => this.getCompanyPredictions(term))
+      ).subscribe(suggestions => {
+        this.isLoadingCompanies = false;
+        this.companySuggestions = suggestions;
+      })
+    );
+    
+    // Global listener to close suggestions
+    this.document.addEventListener('click', this.onDocumentClick.bind(this));
+  }
+
+  private async initializeGooglePlaces(): Promise<void> {
+    try {
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Fatal error: Google Maps script could not be loaded.', error);
+    }
+  }
+
+  onCompanyInput(event: Event, index: number): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showCompanySuggestions = false;
+      return;
+    }
+    this.companyInput$.next({ term, index });
+  }
+
+  private getCompanyPredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!this.placesService || !this.sessionToken) {
+      return of([]);
+    }
+    return new Observable(observer => {
+      this.placesService!.getPlacePredictions({
+        input: term,
+        types: ['establishment'], // This is a general type for businesses, organizations, etc.
+        sessionToken: this.sessionToken
+      }, (predictions, status) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            observer.next(predictions);
+          } else {
+            observer.next([]);
+          }
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  selectCompanySuggestion(suggestion: google.maps.places.AutocompletePrediction, index: number): void {
+    const position = this.positions[index];
+    if (position) {
+      // Directly update the model since we are using ngModel (Template-driven)
+      position.companyName = suggestion.description;
+    }
+    this.showCompanySuggestions = false;
+    this.activeCompanyInputIndex = null;
+    this.sessionToken = undefined; // IMPORTANT: Reset token for cost saving
+  }
+
+  private onDocumentClick(): void {
+    if (this.showCompanySuggestions) {
+      this.ngZone.run(() => {
+        this.showCompanySuggestions = false;
+        this.activeCompanyInputIndex = null;
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.sessionToken = undefined;
+    this.document.removeEventListener('click', this.onDocumentClick.bind(this));
   }
 
 private loadPositionsFromUserProfile(): void {
@@ -81,6 +202,34 @@ private loadPositionsFromUserProfile(): void {
   }
 }
 
+  /**
+   * Checks a single employment entry for a short duration (less than 6 months)
+   * and triggers an alert if the condition is met.
+   * This check only runs if both start and end dates are present.
+   * @param {number} currentIndex The index of the position to check.
+   */
+  private checkAndAlertForShortDuration(currentIndex: number): void {
+    const position = this.positions[currentIndex];
+
+    // The crucial check: only proceed if both dates are filled.
+    if (position.startDate && position.endDate) {
+      const startDate = new Date(position.startDate);
+      const endDate = new Date(position.endDate);
+      
+      // Calculate the difference in milliseconds, then convert to days.
+      const differenceInMs = endDate.getTime() - startDate.getTime();
+      const differenceInDays = Math.round(differenceInMs / (1000 * 60 * 60 * 24));
+
+      // Use ~182 days as the threshold for 6 months.
+      const sixMonthsInDays = 182;
+
+      if (differenceInDays >= 0 && differenceInDays < sixMonthsInDays) {
+        this.shortTenureMessage = `Short tenure employment detected: ${differenceInDays} days. Are you sure the start and end dates are correct?`;
+        this.showShortTenureAlert = true;
+      }
+    }
+  }
+
 // --- MODIFICATION START ---
   /**
    * Checks all positions for short employment durations.
@@ -102,15 +251,34 @@ private loadPositionsFromUserProfile(): void {
   }
 
   /**
-   * Called when a date input changes. Triggers a check for short durations.
+   * Called when a date input changes. Triggers checks for overlaps and short durations.
+   * @param {number} currentIndex The index of the position whose date was changed.
    */
-  public onDateChange(): void {
-    if (this.checkForShortEmploymentDurations()) {
-      this.requestDateConfirmation.emit();
+  public onDateChange(currentIndex: number): void {
+    // First, check for an immediate overlap.
+    const overlap = this.checkForInstantOverlap(currentIndex);
+    if (overlap) {
+      this.conflictingJobIndices = { job1Index: overlap.job1Index, job2Index: overlap.job2Index };
+      const { job1, job2 } = overlap;
+
+      const formatDate = (dateStr: string) => dateStr || 'Present';
+
+      this.overlapMessage = `Job ${job1.jobTitle || 'Untitled'} (from ${formatDate(job1.startDate)} to ${formatDate(job1.endDate)}) overlaps with Job ${job2.jobTitle || 'Untitled'} (from ${formatDate(job2.startDate)} to ${formatDate(job2.endDate)}).`;
+      
+      this.showOverlapAlert = true; // Display the alert immediately.
+      return; // Stop further processing.
     }
+
+    // If no overlap, proceed with the short employment duration check.
+    this.checkAndAlertForShortDuration(currentIndex);
   }
   // --- MODIFICATION END ---
 
+  handleShortTenureConfirmation(button: string): void {
+    // No specific action is needed for "Confirm" vs "Continue", just close the alert.
+    this.showShortTenureAlert = false;
+    this.shortTenureMessage = '';
+  }
 
   // Add a new empty position and scroll to the bottom
   addPosition() {
@@ -258,40 +426,154 @@ private loadPositionsFromUserProfile(): void {
   return isOverallValid;
 }
 
+  /**
+   * Checks the currently edited position against all others for date overlaps, instantly.
+   * This logic is now corrected to avoid false positives.
+   * @param {number} currentIndex - The index of the position being edited.
+   * @returns A conflict object if a true overlap is found, otherwise null.
+   */
+  private checkForInstantOverlap(currentIndex: number): { job1: any, job2: any, job1Index: number, job2Index: number } | null {
+    const currentJob = this.positions[currentIndex];
+
+    // Do not proceed if the current job's start date is not set.
+    if (!currentJob || !currentJob.startDate) {
+      return null;
+    }
+
+    for (let i = 0; i < this.positions.length; i++) {
+      // Don't compare a job against itself.
+      if (i === currentIndex) {
+        continue;
+      }
+
+      const otherJob = this.positions[i];
+
+      // Don't compare against another record that doesn't have a start date yet.
+      if (!otherJob.startDate) {
+        continue;
+      }
+
+      // --- CORRECTED LOGIC ---
+
+      // Define the range for the 'other' job. An empty end date means it's an active job,
+      // so we use a far-future date for a correct comparison.
+      const start2 = new Date(otherJob.startDate);
+      const end2 = otherJob.endDate ? new Date(otherJob.endDate) : new Date('9999-12-31');
+
+      // Define the range for the 'current' job being edited.
+      // THE FIX: If the end date is missing on the *job being edited*, we treat its range
+      // as a single day (start date = end date). This is because the user hasn't finished
+      // entering the data, and we must not assume it's an "active job" until it is saved.
+      const start1 = new Date(currentJob.startDate);
+      const end1 = currentJob.endDate ? new Date(currentJob.endDate) : start1; // <-- This line is the critical fix.
+
+      // The standard overlap condition: (StartA <= EndB) and (EndA >= StartB)
+      if (start1 <= end2 && end1 >= start2) {
+        // A true overlap was found. Return the conflicting jobs.
+        return {
+          job1: currentJob,
+          job2: otherJob,
+          job1Index: currentIndex,
+          job2Index: i,
+        };
+      }
+    }
+
+    return null; // No overlap was found.
+  }
+
+  // --- NEW: Method to check for overlapping employment dates ---
+  private checkForOverlappingDates(): { job1: any, job2: any, job1Index: number, job2Index: number } | null {
+    const filledPositions = this.positions.filter(p => p.startDate);
+
+    for (let i = 0; i < filledPositions.length; i++) {
+      for (let j = i + 1; j < filledPositions.length; j++) {
+        const job1 = filledPositions[i];
+        const job2 = filledPositions[j];
+
+        const start1 = new Date(job1.startDate);
+        // If endDate is null or empty, use a very future date to represent an ongoing job.
+        const end1 = job1.endDate ? new Date(job1.endDate) : new Date('9999-12-31');
+
+        const start2 = new Date(job2.startDate);
+        const end2 = job2.endDate ? new Date(job2.endDate) : new Date('9999-12-31');
+
+        // The condition for overlap: (StartA <= EndB) and (EndA >= StartB)
+        if (start1 <= end2 && end1 >= start2) {
+          return {
+            job1,
+            job2,
+            job1Index: this.positions.indexOf(job1),
+            job2Index: this.positions.indexOf(job2),
+          };
+        }
+      }
+    }
+    return null; // No overlap found
+  }
+  
+  // --- NEW: Handler for the overlap alert buttons ---
+  handleOverlapAction(button: string): void {
+    if (button.toLowerCase() === 'remove the last entered job' && this.conflictingJobIndices) {
+      // We assume the "last entered" job is the one with the higher index in the array.
+      const indexToRemove = Math.max(this.conflictingJobIndices.job1Index, this.conflictingJobIndices.job2Index);
+      
+      if (this.positions.length > 1) {
+        this.positions.splice(indexToRemove, 1);
+      } else {
+        // If it's the last remaining position block, just clear its fields
+        this.positions[indexToRemove] = { id: null, jobTitle: '', companyName: '', startDate: '', endDate: '', jobDetails: '', errors: {} };
+      }
+    }
+
+    // For "Continue editing the job" or closing the alert, just hide the modal and reset state.
+    this.showOverlapAlert = false;
+    this.overlapMessage = '';
+    this.conflictingJobIndices = null;
+  }
+
+// --- MODIFIED: `saveEmployment` method now includes the overlap check ---
 saveEmployment(): Promise<boolean> {
   return new Promise((resolve) => {
-    // Step 1: Filter out any positions that are completely empty.
-    const positionsToSave = this.positions.filter(p => {
-      return p.jobTitle || p.companyName || p.startDate || p.endDate || p.jobDetails;
-    });
+    const positionsToSave = this.positions.filter(p => 
+      p.jobTitle || p.companyName || p.startDate || p.jobDetails
+    );
 
-    // Step 2: If the filtered list is empty, it's a successful skip.
     if (positionsToSave.length === 0) {
       console.log('No employment data to save. Skipping.');
-      resolve(true); // Allow navigation to the next page.
+      resolve(true);
       return;
     }
 
-    // Step 3: Run validation on the remaining (partially or fully filled) forms.
-    // The existing validatePositions() function correctly handles this by checking for
-    // partially filled forms and adding errors.
     if (!this.validatePositions()) {
-      console.log('Validation failed. User must fill all required fields for partially completed forms.');
-      resolve(false); // Stop navigation.
+      console.log('Validation failed for required fields.');
+      resolve(false);
       return;
     }
 
-    // Step 4: If validation passes, send only the filtered data to the service.
+    // --- NEW: Overlap validation check ---
+      const overlap = this.checkForOverlappingDates();
+      if (overlap) {
+        this.conflictingJobIndices = { job1Index: overlap.job1Index, job2Index: overlap.job2Index };
+        const { job1, job2 } = overlap;
+        const formatDate = (dateStr: string) => dateStr || 'Present';
+        this.overlapMessage = `Job ${job1.jobTitle || 'Untitled'} (from ${formatDate(job1.startDate)} to ${formatDate(job1.endDate)}) overlaps with Job ${job2.jobTitle || 'Untitled'} (from ${formatDate(job2.startDate)} to ${formatDate(job2.endDate)}).`;
+        this.showOverlapAlert = true;
+        resolve(false);
+        return;
+      }
+    // --- End of overlap check ---
+
     this.employmentService.saveEmployment(positionsToSave).subscribe({
       next: (response) => {
         console.log('Employment saved successfully:', response);
         this.resetForm();
-        resolve(true); // Success
+        resolve(true);
       },
       error: (error) => {
         console.error('Error saving employment:', error);
         alert('Error saving employment: ' + (error.error?.detail || 'An unknown error occurred.'));
-        resolve(false); // Error
+        resolve(false);
       }
     });
   });

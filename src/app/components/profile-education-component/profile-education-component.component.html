@@ -62,13 +62,29 @@
                   <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
                 </ng-container>
               </span>
-              <div class="profile-education-component-form3 input">
-                <select formControlName="university" class="profile-education-component-select">
-                  <option value="" disabled selected>Select</option>
-                  <option *ngFor="let uni of universities" [value]="uni.id">{{ uni.name }}</option>
-                </select>
-  
+
+              <div class="profile-education-component-form3 input autocomplete-container">
+                <input
+                  type="text"
+                  placeholder="Type a university or institute..."
+                  formControlName="university"
+                  class="profile-education-component-select"
+                  (input)="onUniversityInput($event, i)"
+                  (click)="$event.stopPropagation()"
+                />
+                <!-- Suggestions List -->
+                <div *ngIf="showUniversitySuggestions && activeUniversityInputIndex === i" class="suggestions-list">
+                  <div *ngIf="isLoadingUniversities" class="suggestion-item">Loading...</div>
+                  <div *ngFor="let suggestion of universitySuggestions" class="suggestion-item" (click)="selectUniversitySuggestion(suggestion, i)">
+                    {{ suggestion.description }}
+                  </div>
+                  <div *ngIf="!isLoadingUniversities && universitySuggestions.length === 0" class="suggestion-item">
+                    No matches found.
+                  </div>
+                </div>
               </div>
+
+
             <div *ngIf="form.get('university')?.invalid && form.get('university')?.touched" class="error-message">
     University is mandatory.
   </div>

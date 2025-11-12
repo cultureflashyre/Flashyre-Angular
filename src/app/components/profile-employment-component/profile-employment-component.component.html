@@ -61,9 +61,10 @@
             Only letters and numbers are allowed.
           </div>
         </div>
+        
         <div
           id="candidate-company-name-container"
-          class="profile-employment-component-company-name-container"
+          class="profile-employment-component-company-name-container autocomplete-container" 
         >
           <span
             id="employment-company-name"
@@ -78,19 +79,37 @@
             placeholder="Enter Company Name"
             class="profile-employment-component-company-name-input input"
             [(ngModel)]="position.companyName"
-            (input)="sanitizeAlphaNumeric($event, position, 'companyName')"
+            
+            (input)="onCompanyInput($event, i)"
+            (click)="$event.stopPropagation()"
+
             name="companyName-{{i}}"
             #companyNameModel="ngModel"
-            pattern="[a-zA-Z0-9 ]*"
             required
           />
-<div *ngIf="position.errors?.companyName" class="error-message">
+
+          <!-- START: NEW SUGGESTIONS LIST BLOCK -->
+          <div *ngIf="showCompanySuggestions && activeCompanyInputIndex === i" class="suggestions-list">
+            <div *ngIf="isLoadingCompanies" class="suggestion-item">Loading...</div>
+            <div *ngFor="let suggestion of companySuggestions" class="suggestion-item" (click)="selectCompanySuggestion(suggestion, i)">
+              {{ suggestion.description }}
+            </div>
+            <div *ngIf="!isLoadingCompanies && companySuggestions.length === 0" class="suggestion-item">
+              No matches found.
+            </div>
+          </div>
+          <!-- END: NEW SUGGESTIONS LIST BLOCK -->
+
+          <div *ngIf="position.errors?.companyName" class="error-message">
             {{ position.errors.companyName }}
           </div>
+          <!-- Note: The pattern validation might be removed if you want to allow company names with special characters from Google API -->
           <div *ngIf="companyNameModel.touched && companyNameModel.errors?.['pattern']" class="error-message">
             Only letters and numbers are allowed.
           </div>
         </div>
+
+
       </div>
 
       <div id="date-selector" class="profile-employment-component-date-selector">
@@ -122,7 +141,7 @@
             id="employment-start-date-input-{{i}}"
             class="profile-employment-component-form1 input"
             [(ngModel)]="position.startDate"
-            (change)="onDateChange()"
+            (change)="onDateChange(i)"
             name="startDate-{{i}}"
             [max]="getTodayDate()"
             required
@@ -157,7 +176,7 @@
             id="employment-end-date-input-{{i}}"
             class="profile-employment-component-form2 input"
             [(ngModel)]="position.endDate"
-            (change)="onDateChange()"
+            (change)="onDateChange(i)"
             name="endDate-{{i}}"
             [min]="position.startDate"
           />
@@ -233,4 +252,22 @@
     (buttonClicked)="handleRemoveConfirmation($event)"
     (close)="closeRemoveConfirmationModal()"
   ></app-alert-message>
+
+    <app-alert-message
+    *ngIf="showOverlapAlert"
+    [message]="overlapMessage"
+    [buttons]="['Remove the last entered job', 'Continue editing the job']"
+    (buttonClicked)="handleOverlapAction($event)"
+    (close)="handleOverlapAction('close')"
+  ></app-alert-message>
+
+  <app-alert-message
+    *ngIf="showShortTenureAlert"
+    [message]="shortTenureMessage"
+    [buttons]="['Confirm Dates', 'Continue Editing']"
+    (buttonClicked)="handleShortTenureConfirmation($event)"
+    (close)="handleShortTenureConfirmation('close')"
+  ></app-alert-message>
+
 </div>
+
