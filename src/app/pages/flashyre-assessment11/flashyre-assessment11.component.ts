@@ -590,24 +590,42 @@ fetchAssessmentData(assessmentId: number): void {
       language_id: event.language_id
     };
     this.spinner.show();
+
+    // Step 1: Perform the original "Run Code" action to get immediate feedback for the user.
     this.trialAssessmentService.runCode(data).subscribe({
-      next: (response) => {
-        const currentResults = response.results || ['No results available'];
-        this.results = currentResults; // Update the view
-        
-        // MODIFICATION: Save the results to our state dictionary
-        this.codingResults[problemId] = currentResults; 
-        
+      next: (runResponse) => {
+        // This is the original functionality and remains unchanged for the user.
+        // The user sees the spinner stop and the test results appear.
+        const currentResults = runResponse.results || ['No results available'];
+        this.results = currentResults;
+        this.codingResults[problemId] = currentResults;
         this.showTestResults = true;
         this.spinner.hide();
-      },
-      error: (error) => {
-        const errorResults = [`Error running code: ${error.status} ${error.statusText}`];
-        this.results = errorResults; // Update the view
-        
-        // MODIFICATION: Save the error results to our state dictionary
-        this.codingResults[problemId] = errorResults;
 
+        // Step 2: Chain a second, "fire-and-forget" call to submit the code silently in the background.
+        this.trialAssessmentService.submitCode(data).subscribe({
+          next: (submitResponse) => {
+            // This is the NEW, silent part. We update our component's state with the
+            // permanent submission record, ensuring the user's work is saved.
+            // NO UI popups are triggered here.
+            console.log(`Background submission successful for problem ${problemId}. ID: ${submitResponse.id}`);
+            this.codingSubmissions[problemId] = {
+              id: submitResponse.id,
+              score: submitResponse.score
+            };
+          },
+          error: (submitError) => {
+            // If the background save fails, we only log it to the console.
+            // We do not show an error to the user, as their primary "Run Code" action was successful.
+            console.error(`Background submission failed silently for problem ${problemId}:`, submitError);
+          }
+        });
+      },
+      error: (runError) => {
+        // This is the original error handling if the primary "Run Code" action fails.
+        const errorResults = [`Error running code: ${runError.status} ${runError.statusText}`];
+        this.results = errorResults;
+        this.codingResults[problemId] = errorResults;
         this.showTestResults = true;
         this.spinner.hide();
       }
