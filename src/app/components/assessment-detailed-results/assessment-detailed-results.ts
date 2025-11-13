@@ -56,7 +56,7 @@ export class AssessmentDetailedResults implements OnChanges  {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['assessmentData'] && this.assessmentData) {
       this.questions = this.assessmentData.detailed_questions || [];
-      this.totalQuestions = this.questions.length;
+       this.totalQuestions = (this.assessmentData.detailed_questions?.length || 0) + (this.assessmentData.coding_sections?.length || 0);
 
       // Reset properties for the new attempt data
       this.sectionOrder = [];
