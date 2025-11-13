@@ -1,7 +1,15 @@
 :host { 
     display: contents; 
   }
-   
+  
+  .profile-info-line {
+  display: block; /* or inline-block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px; /* Adjust this width to fit your layout */
+}
+
   .candidate-assessment-container10 {
     gap: 24px;
     width: 100%;

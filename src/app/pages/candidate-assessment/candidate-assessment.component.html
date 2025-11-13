@@ -107,9 +107,19 @@
                 <span>{{ candidateName }}</span>
               </ng-template>
               <ng-template #text1>
-                <span>{{ candidateJobRole }}</span>
+                <span 
+                    class="profile-info-line" 
+                    [title]="userProfile.latest_job_title 
+                      ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                      : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--')">
+                        {{ userProfile.latest_job_title 
+                          ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                          : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
+                </span>
               </ng-template>
             </candidate-profile-short>
+
+            <!--
             <candidate-profile-score
               rootClassName="candidate-profile-scoreroot-class-name2"
             >
@@ -121,6 +131,8 @@
                 </div>
               </ng-template>
             </candidate-profile-score>
+            
+
             <recruiter-job-posted1
               rootClassName="recruiter-job-posted1root-class-name13"
             >
@@ -135,6 +147,8 @@
                 </div>
               </ng-template>
             </recruiter-job-posted1>
+            -->
+            
           </div>
           <div
             id="assessment-available-main-container"

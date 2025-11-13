@@ -2,6 +2,14 @@
   display: contents; 
 }
 
+.profile-info-line {
+  display: block; /* or inline-block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px; /* Adjust this width to fit your layout */
+}
+
 .success-popup {
   position: fixed;
   top: 80px; /* Adjust this value to position it below your navbar */

@@ -40,6 +40,7 @@
                       formControlName="endDate"
                       class="profile-education-component-select"
                       [max]="todayDate"
+                      (change)="onGraduationDateChange(i)"
                     />
                   </div>
                   <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="error-message">
@@ -184,4 +185,13 @@
     (buttonClicked)="handleRemoveConfirmation($event)"
     (close)="closeRemoveConfirmationModal()"
   ></app-alert-message>
+
+  <app-alert-message
+  *ngIf="showDateProximityAlert"
+  [message]="dateProximityMessage"
+  [buttons]="['OK']"
+  (buttonClicked)="handleDateProximityConfirmation()"
+  (close)="handleDateProximityConfirmation()"
+></app-alert-message>
+
 </div>

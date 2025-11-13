@@ -134,16 +134,19 @@
             <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
           </ng-template>
           <ng-template #text1>
-            <span>
-
-              
-                                {{ userProfile.latest_job_title 
+            <span 
+                class="profile-info-line" 
+                [title]="userProfile.latest_job_title 
                   ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
-                  : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
-                
+                  : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--')">
+                    {{ userProfile.latest_job_title 
+                      ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                      : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
             </span>
           </ng-template>
         </candidate-profile-short>
+
+        <!--
         <candidate-profile-score
           rootClassName="candidate-profile-scoreroot-class-name"
         >
@@ -153,6 +156,8 @@
             </div>
           </ng-template>
         </candidate-profile-score>
+
+
         <recruiter-job-posted1
           rootClassName="recruiter-job-posted1root-class-name"
         >
@@ -167,6 +172,8 @@
             </div>
           </ng-template>
         </recruiter-job-posted1>
+        -->
+
       </div>
       <div id="jobs-container" class="candidate-home-jobs-container1">
         <div

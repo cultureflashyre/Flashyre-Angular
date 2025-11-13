@@ -31,12 +31,13 @@ export class ProfileBasicinformationComponent implements OnInit {
   phoneNumber: string = '';
   profilePicture: File | null = null;
   resume: File | null = null;
+  profile_completion_score: number = 0;
   
   // --- MODIFICATION START ---
   // This will hold the name of the *existing* resume from the backend.
   resumeFileName: string = ''; 
   resumeError: string = '';
-profilePictureError: string = '';
+  profilePictureError: string = '';
   // --- MODIFICATION END ---
 
   imageSrc: string = '';
@@ -62,6 +63,7 @@ profilePictureError: string = '';
         this.email = userProfile.email || '';
         this.phoneNumber = userProfile.phone_number || '';
         this.imageSrc = userProfile.profile_picture_url || '';
+        this.profile_completion_score = userProfile.profile_completion_score || 0;
         
         // --- MODIFICATION START ---
         // If a resume URL exists in local storage, extract the file name to display it.
@@ -101,6 +103,7 @@ profilePictureError: string = '';
         this.email = response.email || '';
         this.phoneNumber = response.phone_number || '';
         this.imageSrc = response.profile_picture_url || '';
+        this.profile_completion_score = response.profile_completion_score || 0;
 
         // --- MODIFICATION START ---
         // The backend now sends the resume_url, so we process it here.

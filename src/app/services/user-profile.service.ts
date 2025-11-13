@@ -15,6 +15,7 @@ export interface UserProfile {
   education_level: string | null;
   specialization: string | null;
   initials?: string; // Add initials as optional property
+  profile_completion_score: number;
 }
 
 @Injectable({

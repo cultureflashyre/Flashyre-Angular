@@ -62,6 +62,9 @@ export class ProfileEducationComponent implements OnInit, OnDestroy {
   showUniversitySuggestions = false;
   isLoadingUniversities = false;
   activeUniversityInputIndex: number | null = null;
+  
+  showDateProximityAlert = false;
+  dateProximityMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -233,6 +236,67 @@ export class ProfileEducationComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Triggered when the user changes the graduation date input.
+   * @param {number} index The index of the form being edited.
+   */
+  onGraduationDateChange(index: number): void {
+    this.checkGraduationDateProximity(index);
+  }
+
+  /**
+   * Checks if the entered graduation date is within one year of any other entry.
+   * If it is, a non-blocking warning is displayed.
+   * @param {number} currentIndex The index of the education form to check.
+   */
+  private checkGraduationDateProximity(currentIndex: number): void {
+    const currentForm = this.educationForms[currentIndex];
+    const currentGraduationDateValue = currentForm.get('endDate')?.value;
+
+    // Only proceed if the current form has a valid date.
+    if (!currentGraduationDateValue) {
+      return;
+    }
+
+    const currentGraduationTime = new Date(currentGraduationDateValue).getTime();
+
+    // Loop through all other forms to compare dates.
+    for (let i = 0; i < this.educationForms.length; i++) {
+      // Don't compare the form against itself.
+      if (i === currentIndex) {
+        continue;
+      }
+
+      const otherForm = this.educationForms[i];
+      const otherGraduationDateValue = otherForm.get('endDate')?.value;
+
+      // Only compare if the other form also has a valid date.
+      if (otherGraduationDateValue) {
+        const otherGraduationTime = new Date(otherGraduationDateValue).getTime();
+        
+        // Calculate the absolute difference in milliseconds, then convert to days.
+        const differenceInMs = Math.abs(currentGraduationTime - otherGraduationTime);
+        const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+
+        // If the difference is one year (365 days) or less, show the warning.
+        if (differenceInDays <= 365) {
+          this.dateProximityMessage = 'Warning: The graduation year entered is within one year of another education entry.';
+          this.showDateProximityAlert = true;
+          return; // Exit after finding the first proximity.
+        }
+      }
+    }
+  }
+
+  /**
+   * Handles the confirmation from the date proximity alert.
+   * Since it's a non-blocking warning, it simply closes the alert.
+   */
+  handleDateProximityConfirmation(): void {
+    this.showDateProximityAlert = false;
+    this.dateProximityMessage = '';
+  }
+  
   private dateRangeValidator(form: FormGroup): { [key: string]: any } | null {
     const startDate = form.get('startDate')?.value;
     const endDate = form.get('endDate')?.value;

@@ -10,6 +10,8 @@ export class CandidateProfileShort {
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
   public avatarBgColor: string = '#6c757d'; // default fallback color
 
+  public scoreColor: string;
+
   @Input()
   placeholderImageAlt: string = 'Image of John Doe'
   @Input()
@@ -27,6 +29,17 @@ export class CandidateProfileShort {
 
   ngOnInit(): void {    
     this.loadUserProfile();
+  }
+
+  // --- MODIFICATION: Create a new function to set the color based on the score ---
+  setScoreColor(score: number): void {
+    if (score >= 90) {
+      this.scoreColor = '#059669'; // Dark Green
+    } else if (score >= 80) {
+      this.scoreColor = '#16A34A'; // Green
+    } else {
+      this.scoreColor = '#F97316'; // Orange
+    }
   }
 
   getColorFromString(str: string): string {
@@ -50,9 +63,16 @@ export class CandidateProfileShort {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
+
       if (this.userProfile.initials) {
         this.avatarBgColor = this.getColorFromString(this.userProfile.initials);
       }
+
+      // --- MODIFICATION: Call the new function after loading the profile score ---
+      if (this.userProfile.profile_completion_score !== null && this.userProfile.profile_completion_score !== undefined) {
+        this.setScoreColor(this.userProfile.profile_completion_score);
+      }
+
     } else {
       console.log("User Profile NOT fetched");
     }
