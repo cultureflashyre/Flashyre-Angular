@@ -944,6 +944,32 @@
           Cancel
         </span>
       </button>
+       <button
+        type="button"
+        id="save-draft-button"
+        name="save-draft-button"
+        class="admin-create-job-step1-save-draft-button button"
+        (click)="onSaveDraftAttempt()"
+        [disabled]="isSubmitting"
+      >
+        <span id="save-draft-text" class="admin-create-job-step1-save-draft-text">
+          {{ isSubmitting ? 'Saving...' : 'Save Draft' }}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        id="submit-button"
+        name="submit-button"
+        class="admin-create-job-step1-submit-button button"
+        (click)="onSubmitAttempt()"
+        [disabled]="isSubmitting"
+      >
+        <span id="submit-text" class="admin-create-job-step1-submit-text">
+          {{ isSubmitting ? 'Saving...' : 'Next' }}
+        </span>
+      </button>
+    </div>
       <button
         type="button"
         id="submit-button"
@@ -959,4 +985,3 @@
     </div>
     </div>
   </div>
-</div>

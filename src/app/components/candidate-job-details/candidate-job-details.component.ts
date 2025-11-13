@@ -477,7 +477,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
   applyForJob(): void {
     if (this.isApplied || !this.job?.job_id) return;
     this.isProcessing = true;
-    this.authService.applyForJob(this.job.job_id)
+    this.authService.applyForJob(this.job.job_id,this.job.matching_score)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
        next: () => {

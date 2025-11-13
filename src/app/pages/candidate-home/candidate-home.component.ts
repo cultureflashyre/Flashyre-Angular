@@ -601,24 +601,38 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * MODIFIED: This method now finds the full job object from the `displayedJobs` array
+   * to access its `matching_score` and passes it to the auth service.
+   * @param jobId The ID of the job to apply for.
+   * @param index The index of the job in the `displayedJobs` array.
+   */
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
-    this.authService.applyForJob(jobId)
+    
+    // Find the job in the displayed list to get its matching score
+    const jobToApply = this.displayedJobs[index];
+    if (!jobToApply) {
+      console.error(`Could not find job with ID ${jobId} at index ${index} to apply.`);
+      this.processingApplications[jobId] = false;
+      return;
+    }
+
+    // Call the updated service method with the score
+    this.authService.applyForJob(jobId, jobToApply.matching_score)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           this.applicationSuccess[jobId] = true;
           this.appliedJobIds.push(jobId);
 
-          // --- Set the success message for the popup ---
           this.successMessage = "You have successfully applied and you will receive an email notification. Further updates will be provided by the company shortly.";
           
-          // Hide the success message after 5 seconds
           setTimeout(() => {
             this.successMessage = '';
           }, 5000);
 
-          // Remove the job card from the view after 2 seconds
           setTimeout(() => {
             this.jobService.removeJobFromCache(jobId);
             this.jobs = this.jobs.filter(job => job.job_id !== jobId);

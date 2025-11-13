@@ -480,28 +480,47 @@
             id="screening-assessment-interview-main-container"
             class="recruiter-view-job-applications1-screening-assessment-interview-main-container"
           >
-          <!-- --- MODIFICATION START --- -->
-            <!-- This button will only show if the job_description_url exists. -->
-            <button
-              *ngIf="job?.job_description_url"
-              id="view-jd-button"
-              type="button"
-              class="recruiter-view-job-applications1-view-jd-button button"
-              (click)="openJD(job.job_description_url)"
-            >
-              View JD
-            </button>
-            <!-- --- MODIFICATION END --- -->
+          <div class="jd-dropdown-container">
+    <!-- Main button that now also acts as a dropdown toggle -->
+    <button
+      id="view-jd-dropdown-button"
+      type="button"
+      class="recruiter-view-job-applications1-view-jd-button button"
+      (click)="toggleJdDropdown($event)"
+      [disabled]="!job?.job_description_url"
+    >
+      View JD
+      <!-- Simple dropdown arrow -->
+      <span style="margin-left: 8px;">▼</span>
+    </button>
+    
+    <!-- The dropdown menu itself, shown conditionally -->
+    <div class="jd-dropdown-menu" *ngIf="showJdDropdown">
+      <button 
+        (click)="openJD(job.job_description_url)">
+        View JD
+      </button>
+      <button 
+        (click)="downloadAssessment()" 
+        [disabled]="isDownloading || !job?.has_assessment"
+        [title]="job?.has_assessment ? 'Download assessment questions as PDF' : 'No assessment has been created for this job'"
+      >
+        {{ isDownloading ? 'Downloading...' : 'Download Assessment' }}
+      </button>
+    </div>
+  </div>
+  <!-- --- MODIFICATION END --- -->
 
-            <button
-  *ngIf="nextStage"
-  id="dynamic-invite-button"
-  type="button"
-  class="recruiter-view-job-applications1-screening-call-invite-button button"
-  (click)="sendInvite()">
-  Invite to {{ nextStage.stage_name }}
-</button>
-          </div>
+  <button
+    *ngIf="nextStage"
+    id="dynamic-invite-button"
+    type="button"
+    class="recruiter-view-job-applications1-screening-call-invite-button button"
+    (click)="sendInvite()">
+    Invite to {{ nextStage.stage_name }}
+  </button>
+</div>
+
           <div
             id="candidate-details-main-container"
             class="recruiter-view-job-applications1-candidate-details-main-container"
@@ -560,6 +579,20 @@
                   <span *ngIf="sortColumn === 'score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
+               <!-- 1. ADD a new header for the Assessment Score column. -->
+    <div
+      id="assessment-score-container"
+      class="recruiter-view-job-applications1-assessment-score-container"
+      (click)="sortData('assessment_score')" style="cursor: pointer;"
+    >
+      <span
+        id="assessment-score-text"
+        class="recruiter-view-job-applications1-assessment-score-text"
+      >
+        Assessment Score
+        <span *ngIf="sortColumn === 'assessment_score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
+      </span>
+    </div>
               <div
                 id="status-container"
                 class="recruiter-view-job-applications1-status-container"
@@ -650,16 +683,28 @@
   </div>
                 </div>
                 <div
-                  id="matching-score-container"
-                  class="recruiter-view-job-applications1-matching-score-container"
-                >
-                  <span
-                    id="matching-score-percentage-text"
-                    class="recruiter-view-job-applications1-matching-score-percentage-text"
-                  >
-                    {{ candidate.matching_score }}
-                  </span>
-                </div>
+        id="matching-score-container"
+        class="recruiter-view-job-applications1-matching-score-container"
+      >
+        <span
+          id="matching-score-percentage-text"
+          class="recruiter-view-job-applications1-matching-score-percentage-text"
+        >
+          <!-- Display the real score from the database, defaulting to 0 if null/undefined, and add a '%' sign. -->
+          {{ (candidate.matching_score || 0) + '%' }}
+        </span>
+      </div>
+      <div
+        id="assessment-score-cell-container"
+        class="recruiter-view-job-applications1-assessment-score-container"
+      >
+        <span
+          id="assessment-score-percentage-text"
+          class="recruiter-view-job-applications1-matching-score-percentage-text"
+        >
+          {{ candidate.assessment_score != null ? candidate.assessment_score + '%' : 'N/A' }}
+        </span>
+      </div>
                 <div
                   id="candidate-work-status-container"
                   class="recruiter-view-job-applications1-candidate-work-status-container"

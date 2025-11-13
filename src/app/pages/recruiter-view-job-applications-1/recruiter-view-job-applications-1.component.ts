@@ -7,6 +7,12 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { formatDate } from '@angular/common';
 
+// --- MODIFICATION START ---
+// Import jsPDF and the autoTable plugin for PDF generation.
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+// --- MODIFICATION END ---
+
 @Component({
   selector: 'recruiter-view-job-applications1',
   templateUrl: './recruiter-view-job-applications-1.component.html',
@@ -18,6 +24,9 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
   newStageForm: FormGroup;
   minDateString: string;
   isSubmitting = false;
+
+  showJdDropdown = false;
+  isDownloading = false;
 
   showAlert = false;
   alertMessage = '';
@@ -59,6 +68,15 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
   defaultCompanyIcon: string = environment.defaultCompanyIcon;
   fhThumbnailIcon: string = environment.fh_logo_thumbnail;
   chcsThumbnailIcon: string = environment.chcs_logo_thumbnail;
+
+  // Add a HostListener to close the dropdown when clicking outside of it.
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.jd-dropdown-container')) {
+      this.showJdDropdown = false;
+    }
+  }
     
 
   constructor(
@@ -86,6 +104,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
     ]);
+    
   }
 
   ngOnInit() {
@@ -105,6 +124,187 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           this.calculateCarouselState();
       }, 200);
   }
+
+  /**
+   * Toggles the visibility of the JD/Assessment dropdown menu.
+   * @param event The mouse click event.
+   */
+  toggleJdDropdown(event: MouseEvent): void {
+    event.stopPropagation(); // Prevents the document:click listener from immediately closing it.
+    this.showJdDropdown = !this.showJdDropdown;
+  }
+
+  /**
+   * Initiates the process of downloading the assessment questions as a PDF.
+   */
+  downloadAssessment(): void {
+    const token = this.authService.getJWTToken();
+    if (!this.jobId || !token) {
+      alert('Cannot download assessment. Job context or authentication is missing.');
+      return;
+    }
+
+    this.isDownloading = true;
+    this.showJdDropdown = false; // Close the dropdown
+
+    this.interviewService.getAssessmentDetailsForJob(this.jobId, token).subscribe({
+      next: (assessmentData) => {
+        if (!assessmentData) {
+          alert('No assessment details found for this job.');
+          return;
+        }
+        this._generateAssessmentPdf(assessmentData);
+        this.isDownloading = false;
+      },
+      error: (err) => {
+        console.error('Failed to download assessment details:', err);
+        alert(`Failed to download assessment: ${err.error?.message || 'Server error'}`);
+        this.isDownloading = false;
+      }
+    });
+  }
+
+  /**
+   * Private helper method to construct and save the PDF document.
+   * @param data The detailed assessment data from the API.
+   */
+   private _generateAssessmentPdf(data: any): void {
+    const doc = new jsPDF();
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    const margin = 14;
+    let yPos = 20;
+
+    // --- PDF Header ---
+    doc.setFontSize(18);
+    doc.text(`Assessment Questions for: ${this.job?.title || 'Job'}`, margin, yPos);
+    yPos += 10;
+    doc.setFontSize(12);
+    doc.text(`Assessment Name: ${data.name}`, margin, yPos);
+    yPos += 15;
+
+    // --- MCQs Section ---
+    if (data.selected_mcqs && data.selected_mcqs.length > 0) {
+      // 1. Group MCQs by skill name
+      const mcqsBySkill = data.selected_mcqs.reduce((acc: any, q: any) => {
+        const skill = q.mcq_item_details?.skill_name || 'General Questions';
+        if (!acc[skill]) {
+          acc[skill] = [];
+        }
+        acc[skill].push(q);
+        return acc;
+      }, {});
+
+      // 2. Iterate through each skill group and create a table
+      for (const skill in mcqsBySkill) {
+        // Check for page break before adding a new section header
+        if (yPos > pageHeight - 40) {
+          doc.addPage();
+          yPos = 20;
+        }
+        
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Skill Section: ${skill}`, margin, yPos);
+        yPos += 4;
+        doc.line(margin, yPos, pageWidth - margin, yPos); // Add a separator line
+        yPos += 8;
+        doc.setFont('helvetica', 'normal');
+
+        const mcqBody = mcqsBySkill[skill].map((q: any, index: number) => {
+          const details = q.mcq_item_details;
+          const questionText = details.question_text || '';
+          
+          // Regex to parse all parts of the MCQ text
+          const questionMatch = questionText.match(/^(.*?)(?=\s*a\))/i);
+          const optionsMatch = questionText.match(/\s*a\)(.*?)\s*b\)(.*?)\s*c\)(.*?)\s*d\)(.*?)(?=Correct Answer:)/i);
+          const answerMatch = questionText.match(/Correct Answer:\s*([a-d])/i);
+
+          const question = questionMatch ? questionMatch[1].trim() : 'Could not parse question';
+          let options = 'Could not parse options.';
+          if (optionsMatch) {
+            options = `a) ${optionsMatch[1].trim()}\nb) ${optionsMatch[2].trim()}\nc) ${optionsMatch[3].trim()}\nd) ${optionsMatch[4].trim()}`;
+          }
+          const correctAnswer = answerMatch ? answerMatch[1].toUpperCase() : 'N/A';
+          
+          // Combine all parts into a single, readable string for the table cell
+          const fullQuestionBlock = `${question}\n\n${options}\n\nCorrect Answer: ${correctAnswer}`;
+          
+          return [index + 1, fullQuestionBlock];
+        });
+
+        autoTable(doc, {
+          head: [['#', 'Question Details']],
+          body: mcqBody,
+          startY: yPos,
+          theme: 'grid',
+          headStyles: { fillColor: [5, 53, 108] },
+          styles: { cellPadding: 3, fontSize: 9, valign: 'top' },
+          columnStyles: {
+            0: { cellWidth: 10, halign: 'center' },
+          }
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 15;
+      }
+    }
+
+    // --- Coding Problems Section ---
+    if (data.selected_coding_problems && data.selected_coding_problems.length > 0) {
+      if (yPos > pageHeight - 60) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Coding Problems', margin, yPos);
+      yPos += 4;
+      doc.line(margin, yPos, pageWidth - margin, yPos);
+      yPos += 10;
+
+      data.selected_coding_problems.forEach((p: any, index: number) => {
+        const details = p.coding_problem_details;
+        if (!details) return;
+
+        // Estimate height to check for page break
+        const descriptionLines = doc.splitTextToSize(details.description || '', 170).length;
+        const estimatedHeight = 20 + (descriptionLines * 5);
+        if (yPos + estimatedHeight > pageHeight - 20) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${index + 1}. ${details.title}`, margin, yPos);
+        yPos += 8;
+
+        const addWrappedText = (label: string, text: string | null) => {
+          if (!text || text.trim() === 'N/A' || text.trim() === '') return;
+          doc.setFont('helvetica', 'bold');
+          doc.text(label, margin, yPos);
+          yPos += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          const lines = doc.splitTextToSize(text, pageWidth - (margin * 2));
+          doc.text(lines, margin, yPos);
+          yPos += (lines.length * 4) + 6;
+        };
+        
+        addWrappedText('Description:', details.description);
+        addWrappedText('Input Format:', details.input_format);
+        addWrappedText('Output Format:', details.output_format);
+        addWrappedText('Constraints:', details.constraints);
+        addWrappedText('Example:', details.example);
+        yPos += 5;
+      });
+    }
+
+    // --- Save the PDF ---
+    const fileName = `Assessment_Questions_${this.job?.title.replace(/\s/g, '_') || 'Job'}.pdf`;
+    doc.save(fileName);
+  }
+
 
   fetchJobDetails() {
     if (this.jobId) {
@@ -175,7 +375,10 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
           comparison = a.user.full_name.localeCompare(b.user.full_name);
           break;
         case 'score':
-          comparison = a.matching_score - b.matching_score;
+           comparison = (a.matching_score || 0) - (b.matching_score || 0);
+          break;
+        case 'assessment_score': // NEW case for 'Assessment Score'
+          comparison = (a.assessment_score || 0) - (b.assessment_score || 0);
           break;
         case 'status':
           comparison = a.status.localeCompare(b.status);

@@ -16,20 +16,18 @@ export class AdminCreateJobStep4Component implements OnInit {
   jobUniqueId: string | null = null;
   isLoading = true;
   isSubmitting = false;
-  isEditMode = false; // To track if we are in edit mode
+  isEditMode = false;
   minDateString: string;
 
-  // Alert and Popup properties
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
-  private pendingAction: string = ''; // To manage which action is pending confirmation
+  private pendingAction: string = '';
   private stageToRemoveIndex: number | null = null;
   showPopup = false;
   popupMessage = '';
   popupType: 'success' | 'error' = 'success';
   
-  // General State management
   recruiterProfile: any = {};
   public isAdmin: boolean = false;
   recruiterId: string | null = null;
@@ -46,21 +44,17 @@ export class AdminCreateJobStep4Component implements OnInit {
   ) {}
 
   ngOnInit(): void {
-        if (typeof window !== 'undefined' && window.localStorage) {
+    if (typeof window !== 'undefined' && window.localStorage) {
       this.loadUserProfile();
-
-      // <<< MODIFICATION START: Check user role from the loaded profile
-      // This assumes the user's role is stored in the profile object.
-      this.userType = localStorage.getItem('userType')
+      this.userType = localStorage.getItem('userType');
       if (this.userType === 'admin') {
           this.isAdmin = true;
       }
-
       this.recruiterId = localStorage.getItem('user_id');
     }
 
     this.jobUniqueId = this.workflowService.getCurrentJobId();
-    this.isEditMode = this.workflowService.getIsEditMode(); // Check if in edit mode
+    this.isEditMode = this.workflowService.getIsEditMode();
 
     if (!this.jobUniqueId) {
       this.showErrorPopup('No active job creation flow found. Please start again.');
@@ -74,7 +68,6 @@ export class AdminCreateJobStep4Component implements OnInit {
       stages: this.fb.array([])
     });
 
-    // Load existing stages if editing, otherwise add a blank stage
     this.loadInterviewStages();
   }
 
@@ -83,11 +76,10 @@ export class AdminCreateJobStep4Component implements OnInit {
     if (profileData) this.recruiterProfile = JSON.parse(profileData);
   }
 
-  // --- START: DATA LOADING LOGIC (from Recruiter component) ---
   private loadInterviewStages(): void {
     const token = this.authService.getJWTToken();
     if (!this.jobUniqueId || !token) {
-        this.addStage(); // Add one empty stage if we can't load
+        this.addStage();
         this.isLoading = false;
         return;
     }
@@ -101,14 +93,14 @@ export class AdminCreateJobStep4Component implements OnInit {
                     this.stages.push(this.createStageGroupWithData(stage));
                 });
             } else {
-                this.addStage(); // If no stages exist, add one empty default stage
+                this.addStage();
             }
             this.isLoading = false;
         },
         error: (err) => {
             console.error("Failed to load interview stages:", err);
             this.showErrorPopup('Could not load existing interview stages.');
-            this.addStage(); // Add a default stage on error
+            this.addStage();
             this.isLoading = false;
         }
     });
@@ -141,7 +133,6 @@ export class AdminCreateJobStep4Component implements OnInit {
     return stageGroup;
   }
 
-    // --- FORM ARRAY MANAGEMENT (Unchanged) ---
   get stages(): FormArray {
     return this.interviewForm.get('stages') as FormArray;
   }
@@ -170,18 +161,33 @@ export class AdminCreateJobStep4Component implements OnInit {
     this.stages.push(this.createStageGroup());
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * MODIFIED: Clears the form row if it's the last one, otherwise prompts for removal.
+   */
   removeStage(index: number): void {
-    if (this.stages.length <= 1) {
-      this.showErrorPopup('You must have at least one interview stage.');
-      return;
+    // If it's the last stage, just clear its values instead of removing it.
+    if (this.stages.length === 1) {
+      const lastStage = this.stages.at(index) as FormGroup;
+      // Reset the form group to its initial state.
+      lastStage.reset({
+        stage_name: 'Screening',
+        custom_stage_name: '',
+        stage_date: null,
+        mode: 'Online',
+        assigned_to: ''
+      });
+      // Mark the form as pristine and untouched to remove any validation error styles.
+      lastStage.markAsPristine();
+      lastStage.markAsUntouched();
+    } else {
+      // Original logic for when there are multiple stages: prompt for confirmation.
+      this.stageToRemoveIndex = index;
+      this.pendingAction = 'removeStage';
+      this.openAlert('You are about to remove a stage, are you sure?', ['Cancel', 'Remove']);
     }
-    // Store the index of the stage to be removed
-    this.stageToRemoveIndex = index;
-    // Set the pending action
-    this.pendingAction = 'removeStage';
-    // Open the alert with a confirmation message
-    this.openAlert('You are about to remove a stage, are you sure?', ['Cancel', 'Remove']);
   }
+  // --- MODIFICATION END ---
 
   validateDateInput(event: Event, stageControl: AbstractControl) {
     const inputElement = event.target as HTMLInputElement;
@@ -195,8 +201,9 @@ export class AdminCreateJobStep4Component implements OnInit {
     }
   }
 
-  // --- FOOTER AND ALERT HANDLING ---
   onSubmit(): void {
+    // This function is linked to the form's (ngSubmit) but we handle submission
+    // via button clicks directly. We can keep it pointing to the main save action.
     this.onSaveJobAndAssessment();
   }
 
@@ -210,37 +217,37 @@ export class AdminCreateJobStep4Component implements OnInit {
     this.openAlert('Do you want to go back to the previous step?', ['Cancel', 'Go Back']);
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * MODIFIED: Directly opens a confirmation prompt without checking form validity first.
+   */
   onSaveDraft(): void {
-    if (this.interviewForm.invalid) {
-      // If the form is invalid, show a specific error message.
-      this.showErrorPopup('Please fill out all required fields before saving a draft');
-      
-      // Mark all form controls as 'touched' to display validation errors in the UI.
-      this.interviewForm.markAllAsTouched();
-      
-      // Halt further execution to prevent the confirmation popup from showing.
-      return; 
-    }
     this.pendingAction = 'saveDraft';
-    this.openAlert('You are about to save this as a draft.', ['Cancel', 'Save Draft']);
+    // This message is adjusted for saving a draft with potentially no interview process.
+    this.openAlert('Are you sure you want to save the job as a draft without a complete interview process?', ['Cancel', 'Save Draft']);
   }
 
-  onSkip(): void {
-    this.pendingAction = 'skip';
-    this.openAlert('You are about to skip the interview process. You can add it later.', ['Cancel', 'Continue']);
-  }
-
+  /**
+   * MODIFIED: Checks form validity to decide which confirmation message to show.
+   */
   onSaveJobAndAssessment(): void {
+    this.toggleDropdown(); // Close the dropdown menu
+
     if (this.interviewForm.invalid) {
-      this.showErrorPopup('Please fill all required fields correctly.');
-      this.interviewForm.markAllAsTouched();
-      return;
+      // If the form is invalid or empty, show the specific confirmation prompt.
+      this.pendingAction = 'saveEmpty';
+      this.openAlert('You are about to save the job without an interview process.', ['Cancel', 'Post Job']);
+    } else {
+      // If the form is valid, use the standard confirmation prompt.
+      this.pendingAction = 'save';
+      const message = this.isEditMode ? 'Are you sure you want to update and finalize this job post?' : 'Are you sure you want to finalize and save this job post?';
+      this.openAlert(message, ['Cancel', 'Save']);
     }
-    this.pendingAction = 'save';
-    const message = this.isEditMode ? 'Are you sure you want to update and finalize this job post?' : 'Are you sure you want to finalize and save this job post?';
-    this.openAlert(message, ['Cancel', 'Save']);
   }
 
+  /**
+   * MODIFIED: Handles the new 'saveEmpty' pending action and 'Post Job' button click.
+   */
   onAlertButtonClicked(action: string) {
     this.showAlert = false;
     const confirmed = !['cancel', 'no'].includes(action.toLowerCase());
@@ -252,6 +259,8 @@ export class AdminCreateJobStep4Component implements OnInit {
             case 'saveDraft': this.onSaveDraftConfirmed(); break;
             case 'skip': this.onSkipConfirmed(); break;
             case 'save': this.onSaveJobAndAssessmentConfirmed(); break;
+            // New case for when user confirms posting with an empty/invalid form via the 'Post Job' button.
+            case 'saveEmpty': this.onSaveJobAndAssessmentConfirmed(); break;
             case 'removeStage': this.onRemoveStageConfirmed(); break;
         }
     }
@@ -260,40 +269,44 @@ export class AdminCreateJobStep4Component implements OnInit {
       this.stageToRemoveIndex = null;
     }
   }
-
+  // --- MODIFICATION END ---
+  
   private onRemoveStageConfirmed(): void {
-    // Check if the index is valid before removing
     if (this.stageToRemoveIndex !== null && this.stages.length > 1) {
       this.stages.removeAt(this.stageToRemoveIndex);
     }
-    // Reset the index
     this.stageToRemoveIndex = null;
   }
 
-  // --- ACTION CONFIRMATION LOGIC ---
   onCancelConfirmed(): void {
     this.workflowService.clearWorkflow();
-    this.router.navigate(['/job-post-list']); // Or an admin dashboard route
+    this.router.navigate(['/job-post-list']);
   }
 
   onPreviousConfirmed(): void {
     this.router.navigate(['/create-job-step3']);
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * MODIFIED: The payload is now an empty array if the form is invalid.
+   */
   onSaveDraftConfirmed(): void {
     if (!this.jobUniqueId || !this.authService.getJWTToken()) {
       this.showErrorPopup('Cannot save draft: Missing Job ID or authentication.');
       return;
     }
     this.isSubmitting = true;
-    const payload = this.preparePayload();
+    
+    // If the form is invalid (e.g., empty), we save an empty array of stages.
+    const payload = this.interviewForm.valid ? this.preparePayload() : [];
 
     this.interviewService.saveDraftStages(this.jobUniqueId, payload, this.authService.getJWTToken()!).subscribe({
       next: () => {
         this.showSuccessPopup('Draft saved successfully!');
         setTimeout(() => {
           this.workflowService.clearWorkflow();
-          this.router.navigate(['/job-post-list']); // Or an admin dashboard route
+          this.router.navigate(['/job-post-list']);
         }, 3000);
         this.isSubmitting = false;
       },
@@ -303,6 +316,7 @@ export class AdminCreateJobStep4Component implements OnInit {
       }
     });
   }
+  // --- MODIFICATION END ---
 
   onSkipConfirmed(): void {
     if (!this.jobUniqueId || !this.authService.getJWTToken()) {
@@ -327,13 +341,20 @@ export class AdminCreateJobStep4Component implements OnInit {
     });
   }
 
+  // --- MODIFICATION START ---
+  /**
+   * MODIFIED: If the form is invalid, an empty array is sent as the payload.
+   */
   onSaveJobAndAssessmentConfirmed(): void {
     if (!this.jobUniqueId || !this.authService.getJWTToken()) {
       this.showErrorPopup('Cannot save: Missing Job ID or authentication.');
       return;
     }
     this.isSubmitting = true;
-    const payload = this.preparePayload();
+    
+    // If the form is invalid, we finalize with an empty array of stages.
+    // Otherwise, we prepare the payload from the valid form data.
+    const payload = this.interviewForm.valid ? this.preparePayload() : [];
 
     this.interviewService.finalizeJobPost(this.jobUniqueId, payload, this.authService.getJWTToken()!).subscribe({
       next: () => {
@@ -351,6 +372,7 @@ export class AdminCreateJobStep4Component implements OnInit {
       }
     });
   }
+  // --- MODIFICATION END ---
 
   private preparePayload(): InterviewStage[] {
     const formStages = this.stages.value;
@@ -364,7 +386,6 @@ export class AdminCreateJobStep4Component implements OnInit {
     }));
   }
 
-  // --- UTILITY METHODS (Popups) ---
   private openAlert(message: string, buttons: string[]) {
     this.alertMessage = message;
     this.alertButtons = buttons;
@@ -390,7 +411,7 @@ export class AdminCreateJobStep4Component implements OnInit {
   }
 
   toggleDropdown(): void {
-    if (!(this.isSubmitting || this.interviewForm.invalid)) {
+    if (!this.isSubmitting) {
       this.showDropdown = !this.showDropdown;
     }
   }

@@ -385,6 +385,23 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     }
   }
 
+  private checkExperienceRanges(): void {
+    const { 
+      total_experience_min, total_experience_max,
+      relevant_experience_min, relevant_experience_max 
+    } = this.jobForm.value;
+
+    if (
+      total_experience_min === relevant_experience_min &&
+      total_experience_max === relevant_experience_max
+    ) {
+      this.openAlert(
+        'The Total and Relevant Experience ranges are identical. This is valid, but you may want to review it if a distinction is needed.',
+        ['Close']
+      );
+    }
+  }
+
   private _performUpload(file: File): void {
     if (!file) return;
     const token = this.corporateAuthService.getJWTToken();
@@ -410,6 +427,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = true;
+        setTimeout(() => {
+          this.checkExperienceRanges();
+        }, 100);
       },
       error: (error) => {
         console.error('File upload error:', error);
@@ -692,6 +712,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.jobForm.get(type === 'total' ? 'total_experience_min' : 'relevant_experience_min')?.markAsDirty();
         this.jobForm.get(type === 'total' ? 'total_experience_max' : 'relevant_experience_max')?.markAsDirty();
         this.jobForm.updateValueAndValidity();
+        this.checkExperienceRanges();
       }
       isDragging = false;
       currentMarker = null;
@@ -1054,6 +1075,73 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     this.showAlert = true;
   }
 
+   private onSaveDraftConfirmed(): void {
+    const token = this.corporateAuthService.getJWTToken();
+    if (!token) {
+      this.showErrorPopup('Authentication required. Please log in.');
+      this.router.navigate(['/login-corporate']);
+      return;
+    }
+    
+    this.isSubmitting = true;
+    this.spinner.show('main-spinner');
+
+    // Get whatever data is in the form, valid or not.
+    const formValues = this.jobForm.getRawValue();
+    const locationString = Array.isArray(formValues.location) ? formValues.location.join(', ') : (typeof formValues.location === 'string' ? formValues.location : '');
+
+    const userProfileString = localStorage.getItem('userProfile');
+    let companyName = 'Flashyre'; 
+    if (userProfileString) {
+      try {
+        const userProfile = JSON.parse(userProfileString);
+        if (userProfile.company_name) {
+          companyName = userProfile.company_name;
+        }
+      } catch (e) { console.error('Failed to parse userProfile from localStorage', e); }
+    }
+    
+    const jobDetails: JobDetails = {
+      ...formValues,
+      location: locationString,
+      skills: {
+        primary: (formValues.skills || []).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
+        secondary: [] // Secondary can be empty for drafts
+      },
+      status: 'draft', // Explicitly set status to draft
+      company_name: companyName
+    };
+
+    let saveOperation: Observable<{ unique_id: string }>;
+
+    if (this.isEditMode && this.currentJobUniqueId) {
+      saveOperation = this.jobDescriptionService.updateJobPost(this.currentJobUniqueId, jobDetails, token);
+    } else {
+      if (jobDetails.unique_id) delete jobDetails.unique_id;
+      saveOperation = this.jobDescriptionService.saveJobPost(jobDetails, token);
+    }
+
+    const saveSub = saveOperation.subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
+        this.showSuccessPopup('Draft saved successfully!');
+        
+        // Navigate to the job list page after a short delay.
+        setTimeout(() => {
+          this.router.navigate(['/job-post-list']);
+        }, 2000);
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        this.spinner.hide('main-spinner');
+        console.error('Job post draft saving failed:', error);
+        this.showErrorPopup(`Draft saving failed: ${error.message || 'Unknown error'}`);
+      }
+    });
+    this.subscriptions.add(saveSub);
+  }
+
   onAlertButtonClicked(action: string) {
     this.showAlert = false;
     if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
@@ -1064,6 +1152,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       switch (this.actionContext.action) {
         case 'submit':
           this.onSubmitConfirmed();
+          break;
+        case 'saveDraft':
+          this.onSaveDraftConfirmed();
           break;
         case 'cancel':
           this.onCancelConfirmed();
@@ -1080,6 +1171,11 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         ? 'Are you sure you want to cancel? Your changes will not be saved.'
         : 'Are you sure you want to cancel? Any unsaved changes will be lost.';
       this.openAlert(message, ['No', 'Yes']);
+  }
+
+  onSaveDraftAttempt(): void {
+    this.actionContext = { action: 'saveDraft' };
+    this.openAlert('Are you sure you want to save this job as a draft?', ['Cancel', 'Save Draft']);
   }
 
   onSubmitAttempt(): void {

@@ -2,6 +2,28 @@
   display: contents; 
 }
 
+.admin-create-job-step1-save-draft-button {
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #ffffff;
+  color: #05356C;
+  border: 1px solid #05356C;
+}
+
+.admin-create-job-step1-save-draft-button:hover:not(:disabled) {
+  background-color: #f5f8fa;
+  transform: translateY(-1px);
+}
+
+.admin-create-job-step1-save-draft-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* --- Alert and Popup Styles --- */
 .alert {
   padding: 20px;

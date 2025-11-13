@@ -30,6 +30,8 @@ export class InterviewService {
 
   // CORRECTED: The base URL for this service points to the /api/interview/ path
   private apiUrl = `${environment.apiUrl}api/interview/`;
+  private recruiterApiUrl = `${environment.apiUrl}api/recruiter/`; 
+
 
   constructor(private http: HttpClient) {}
 
@@ -37,6 +39,19 @@ export class InterviewService {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/stages/`;
     return this.http.get<InterviewStage[]>(endpoint, { headers });
+  }
+
+  /**
+   * Fetches the full details of the latest assessment for a given job.
+   * @param jobId The primary key (ID) of the JobPost.
+   * @param token The user's authentication token.
+   * @returns An Observable containing the detailed assessment data.
+   */
+  getAssessmentDetailsForJob(jobId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    // This line has been corrected to use the 'recruiterApiUrl'
+    const endpoint = `${this.recruiterApiUrl}jobs/${jobId}/assessment-details/`;
+    return this.http.get<any>(endpoint, { headers });
   }
 
   finalizeJobPost(jobUniqueId: string, stages: InterviewStage[], token: string): Observable<any> {
