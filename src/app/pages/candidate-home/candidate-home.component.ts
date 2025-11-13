@@ -79,6 +79,11 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   processingApplications: { [key: number]: boolean } = {};
   applicationSuccess: { [key: number]: boolean } = {};
   
+  showAssessmentAlert = false;
+  assessmentAlertMessage = '';
+  assessmentAlertButtons: string[] = [];
+  private jobToProcess: any = null; // To store job context for the alert
+
   // RxJS & Observer
   private observer: IntersectionObserver | null = null;
   private destroy$ = new Subject<void>();
@@ -602,16 +607,16 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // --- MODIFICATION START ---
-  /**
-   * MODIFIED: This method now finds the full job object from the `displayedJobs` array
-   * to access its `matching_score` and passes it to the auth service.
+/**
+   * MODIFIED: This method now applies for the job immediately.
+   * After a successful application, it checks if an assessment is associated with the job
+   * and, if so, displays a prompt for the user to take it now or later.
    * @param jobId The ID of the job to apply for.
    * @param index The index of the job in the `displayedJobs` array.
    */
   applyForJob(jobId: number, index: number): void {
     this.processingApplications[jobId] = true;
     
-    // Find the job in the displayed list to get its matching score
     const jobToApply = this.displayedJobs[index];
     if (!jobToApply) {
       console.error(`Could not find job with ID ${jobId} at index ${index} to apply.`);
@@ -619,7 +624,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // Call the updated service method with the score
+    // --- The application is now sent immediately and unconditionally ---
     this.authService.applyForJob(jobId, jobToApply.matching_score)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -627,24 +632,83 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
           this.applicationSuccess[jobId] = true;
           this.appliedJobIds.push(jobId);
 
-          this.successMessage = "You have successfully applied and you will receive an email notification. Further updates will be provided by the company shortly.";
+          // Show the main success message immediately
+          this.successMessage = "You have successfully applied and you will receive an email notification.";
           
           setTimeout(() => {
             this.successMessage = '';
           }, 5000);
 
+          // Schedule the removal of the job card from the UI
           setTimeout(() => {
             this.jobService.removeJobFromCache(jobId);
-            this.jobs = this.jobs.filter(job => job.job_id !== jobId);
-            this.filteredJobs = this.filteredJobs.filter(job => job.job_id !== jobId);
             this.displayedJobs = this.displayedJobs.filter(job => job.job_id !== jobId);
           }, 2000);
+
+          // --- [NEW LOGIC] After successful application, check if we need to show the assessment prompt ---
+          if (jobToApply.assessment != null && (jobToApply.attempts_remaining || 0) > 0) {
+            this.jobToProcess = jobToApply; // Store context for the handler
+            // Update the message to reflect that the application is complete
+            this.assessmentAlertMessage = 'You have successfully applied! Take the assessment now to complete your application.';
+            this.assessmentAlertButtons = ['Later', 'Assessment Now'];
+            this.showAssessmentAlert = true; // Show the prompt
+          }
         },
         error: (error) => {
           this.processingApplications[jobId] = false;
           alert(error.error?.error || 'Failed to apply for this job');
         }
       });
+  }
+
+  /**
+   * MODIFIED: This method now checks for an assessment before applying.
+   * If an assessment is required and attempts are available, it prompts the user.
+   * Otherwise, it proceeds with the direct application.
+   * @param jobId The ID of the job to apply for.
+   * @param index The index of the job in the `displayedJobs` array.
+   */
+  applyForJob_ALETRNATIVE(jobId: number, index: number): void {
+    const jobToApply = this.displayedJobs[index];
+
+    if (!jobToApply) {
+      console.error(`Could not find job with ID ${jobId} at index ${index}.`);
+      return;
+    }
+
+    // --- CONDITIONAL ASSESSMENT CHECK ---
+    if (jobToApply.assessment != null && (jobToApply.attempts_remaining || 0) > 0) {
+      // The job has an assessment and the user has attempts left.
+      this.jobToProcess = jobToApply; // Store the job for the handler
+      this.assessmentAlertMessage = 'Take the assessment now to complete your application.';
+      this.assessmentAlertButtons = ['Later', 'Assessment Now'];
+      this.showAssessmentAlert = true; // Show the alert
+    
+    } else {
+      // --- DIRECT APPLICATION FLOW (No assessment or no attempts left) ---
+      this.processingApplications[jobId] = true;
+
+      this.authService.applyForJob(jobId, jobToApply.matching_score)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.applicationSuccess[jobId] = true;
+            this.appliedJobIds.push(jobId);
+            this.successMessage = "You have successfully applied and you will receive an email notification.";
+            
+            setTimeout(() => { this.successMessage = ''; }, 5000);
+
+            setTimeout(() => {
+              this.jobService.removeJobFromCache(jobId);
+              this.displayedJobs = this.displayedJobs.filter(job => job.job_id !== jobId);
+            }, 2000);
+          },
+          error: (error) => {
+            this.processingApplications[jobId] = false;
+            alert(error.error?.error || 'Failed to apply for this job');
+          }
+        });
+    }
   }
 
   private parseNumericFilter(input: string): number | null {
@@ -659,6 +723,19 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     return null;
   }
 
+  handleAssessmentAlertAction(button: string): void {
+    this.showAssessmentAlert = false; // Hide the alert regardless of the choice
+
+    if (button.toLowerCase() === 'assessment now' && this.jobToProcess) {
+      const assessmentId = this.jobToProcess.assessment;
+      // Navigate to the assessment rules page with the assessment_id as a route parameter.
+      //is.router.navigate(['/flashyre-assessment-rules-card', assessmentId]);
+      this.navigateToAssessment(assessmentId);
+    }
+
+    // Reset the context job if the user clicks "Later" or "Assessment Now"
+    this.jobToProcess = null;
+  }
 
 
   getRandomImage(): string {

@@ -669,12 +669,14 @@
             </ng-template>
             <ng-template #text1>
               <div class="recruiter-view3rd-page1-fragment21">
-                <span class="recruiter-view3rd-page1-text33">
-
-                                {{ recruiterProfile.latest_job_title 
-                  ? recruiterProfile.latest_job_title + ' @ ' + recruiterProfile.latest_company_name 
-                  : (recruiterProfile.latest_education_level ? recruiterProfile.latest_education_level + ' from ' + recruiterProfile.latest_university : '--') }}
-                
+                <span 
+                    class="profile-info-line" 
+                    [title]="recruiterProfile.latest_job_title 
+                      ? recruiterProfile.latest_job_title + ' @ ' + recruiterProfile.latest_company_name 
+                      : (recruiterProfile.latest_education_level ? recruiterProfile.latest_education_level + ' from ' + recruiterProfile.latest_university : '--')">
+                        {{ recruiterProfile.latest_job_title 
+                          ? recruiterProfile.latest_job_title + ' @ ' + recruiterProfile.latest_company_name 
+                          : (recruiterProfile.latest_education_level ? recruiterProfile.latest_education_level + ' from ' + recruiterProfile.latest_university : '--') }}
                 </span>
               </div>
             </ng-template>

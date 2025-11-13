@@ -236,6 +236,7 @@ private loadPositionsFromUserProfile(): void {
    * @returns {boolean} - True if any position has a duration of less than 90 days.
    */
   public checkForShortEmploymentDurations(): boolean {
+
     const ninetyDaysInMs = 90 * 24 * 60 * 60 * 1000;
     for (const position of this.positions) {
       if (position.startDate && position.endDate) {
@@ -256,7 +257,20 @@ private loadPositionsFromUserProfile(): void {
    */
   public onDateChange(currentIndex: number): void {
     // First, check for an immediate overlap.
+    const position = this.positions[currentIndex];
+    // Priority 1: Ensure Start Date is not after End Date. This is a hard error.
+    if (position.startDate && position.endDate) {
+      if (new Date(position.startDate) > new Date(position.endDate)) {
+        // Set the error and stop further date checks.
+        position.errors.endDate = 'End Date cannot be earlier than Start Date.';
+        return; 
+      }
+    }
+    // If the dates are valid, we must clear any previous error.
+    delete position.errors.endDate;
+
     const overlap = this.checkForInstantOverlap(currentIndex);
+
     if (overlap) {
       this.conflictingJobIndices = { job1Index: overlap.job1Index, job2Index: overlap.job2Index };
       const { job1, job2 } = overlap;
@@ -420,6 +434,12 @@ private loadPositionsFromUserProfile(): void {
         position.errors.jobDetails = 'Job Details are mandatory';
         isOverallValid = false;
       }
+
+      if (position.startDate && position.endDate && new Date(position.startDate) > new Date(position.endDate)) {
+        position.errors.endDate = 'End Date cannot be earlier than Start Date.';
+        isOverallValid = false;
+      }
+
     }
   }
 

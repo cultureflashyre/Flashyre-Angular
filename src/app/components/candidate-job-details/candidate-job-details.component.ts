@@ -483,7 +483,7 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
        next: () => {
           this.isApplied = true;
           this.isProcessing = false;
-          this.openAlert('You have successfully applied for this job!', ['Close']);
+          //is.openAlert('You have successfully applied for this job!', ['Close']);
           this.jobService.removeJobFromCache(this.job.job_id); 
           this.jobAppliedSuccess.emit(this.job); 
         },

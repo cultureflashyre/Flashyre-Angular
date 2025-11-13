@@ -25,11 +25,21 @@
   [@popupAnimation]
   (click)="showMoreFilters = false"
 ></div>
+
 <div id="candidate-home" class="candidate-home-container1">
   <!-- [ADD THIS HTML SNIPPET FOR THE POPUP] -->
   <div *ngIf="successMessage" class="success-popup">
     {{ successMessage }}
   </div>
+
+    <app-alert-message
+      *ngIf="showAssessmentAlert"
+      [message]="assessmentAlertMessage"
+      [buttons]="assessmentAlertButtons"
+      (buttonClicked)="handleAssessmentAlertAction($event)"
+      (close)="handleAssessmentAlertAction('Later')">
+    </app-alert-message>
+
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
@@ -536,16 +546,16 @@
                 </div>
               </ng-template>
               <ng-template #text2>
-  <div class="candidate-home-fragment33">
-    <span class="candidate-home-text125">
-      {{ (job.total_experience_min != null && job.total_experience_max != null) ? 
-         (job.total_experience_min === job.total_experience_max ? 
-            job.total_experience_min + ' Years' : 
-            job.total_experience_min + '-' + job.total_experience_max + ' Years') : 
-         'Not specified' }}
-    </span>
-  </div>
-</ng-template>
+                <div class="candidate-home-fragment33">
+                  <span class="candidate-home-text125">
+                    {{ (job.total_experience_min != null && job.total_experience_max != null) ? 
+                      (job.total_experience_min === job.total_experience_max ? 
+                          job.total_experience_min + ' Years' : 
+                          job.total_experience_min + '-' + job.total_experience_max + ' Years') : 
+                      'Not specified' }}
+                  </span>
+                </div>
+              </ng-template>
               <ng-template #text3>
                 <div class="candidate-home-fragment34">
                   <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>

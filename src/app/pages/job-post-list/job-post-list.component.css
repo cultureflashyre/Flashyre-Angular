@@ -2,6 +2,16 @@
   display: contents; 
 }
 
+.profile-info-line {
+  display: block; /* or inline-block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px; /*Adjust this width to fit your layout */
+  display: inline-block;
+}
+
+
 .recruiter-view3rd-page1-view-jd-text {
   fill: #05356C;
   color: #05356C;
@@ -869,9 +879,7 @@
   display: contents;
 }
  
-.recruiter-view3rd-page1-text33 {
-  display: inline-block;
-}
+
  
 .recruiter-view3rd-page1-fragment22 {
   display: contents;

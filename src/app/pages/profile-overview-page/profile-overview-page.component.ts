@@ -40,6 +40,9 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   imageSrc: string = '';
   defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
   
+  userType: 'candidate' | 'recruiter' | 'admin' = 'candidate'; // Default value
+  isCandidate: boolean = true;
+
   navigationSource: 'candidate' | 'recruiter' = 'candidate'; // default
 
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
@@ -78,14 +81,14 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
      // Get userType from localStorage instead of navigation state
     const storedUserType = localStorage.getItem('userType');
 
-    if (storedUserType === 'candidate' || storedUserType === 'recruiter') {
-      this.navigationSource = storedUserType;
-      console.log('Navigating from userType stored locally:', this.navigationSource);
+    if (storedUserType && ['candidate', 'recruiter', 'admin'].includes(storedUserType)) {
+      this.userType = storedUserType as 'candidate' | 'recruiter' | 'admin';
+      console.log('User type set to:', this.userType);
     } else {
-      // fallback or default value
-      this.navigationSource = 'candidate';
-      console.log('No userType found in localStorage, defaulting to:', this.navigationSource);
+      this.userType = 'candidate'; // Fallback or default value
+      console.log('No valid userType found in localStorage, defaulting to:', this.userType);
     }
+    this.isCandidate = this.userType === 'candidate';
 
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
@@ -275,14 +278,16 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentStep === 5) {
           // Special case for the last step to navigate away
           setTimeout(() => {
-            if (this.navigationSource === 'recruiter') this.router.navigate(['job-post-list']);
+            if (this.userType === 'recruiter') this.router.navigate(['job-post-list']);
             else this.router.navigate(['candidate-home']);
           }, 3000);
         } else if (this.currentStep < 6) {
           // For all other steps, advance to the next one
           this.currentStep++;
-          if (this.currentStep === 4) {
-            this.currentStep = 5; // Skip step 4
+          if (this.currentStep === 3 && !this.isCandidate) {
+            this.currentStep = 5; // Skip Education step for non-candidates
+          } else if (this.currentStep === 4) {
+            this.currentStep = 5; // Skip step 4 (existing logic)
           }
         }
       }
@@ -297,7 +302,11 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     if (this.currentStep > 1) {
       this.currentStep--;
       if (this.currentStep === 4) {
-        this.currentStep = 3; // Skip step 4
+        this.currentStep = 3; // Skip back over step 4
+      }
+      // If user is not a candidate and we landed on step 3, go back to step 2
+      if (this.currentStep === 3 && !this.isCandidate) {
+        this.currentStep = 2;
       }
     }
   }
@@ -305,13 +314,15 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   onSkipConfirmed() {
     if (this.currentStep < 6) {
       this.currentStep++;
-      if (this.currentStep === 4) {
-        this.currentStep = 5; // Skip step 4
+      if (this.currentStep === 3 && !this.isCandidate) {
+        this.currentStep = 5; // Skip Education step for non-candidates
+      } else if (this.currentStep === 4) {
+        this.currentStep = 5; // Skip step 4 (existing logic)
       }
     }
     if (this.currentStep >= 6) {
       setTimeout(() => {
-        if (this.navigationSource === 'recruiter') this.router.navigate(['job-post-list']);
+        if (this.userType === 'recruiter') this.router.navigate(['job-post-list']);
         else this.router.navigate(['candidate-home']);
       }, 1000);
     }

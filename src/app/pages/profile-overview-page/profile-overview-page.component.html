@@ -80,22 +80,27 @@
         <progress-bar-step1
           *ngIf="isStepVisible(1)"
           rootClassName="progress-bar-step1root-class-name4"
+          [userType]="userType"
         ></progress-bar-step1>
         <progress-bar-step2
           *ngIf="isStepVisible(2)"
           rootClassName="progress-bar-step2root-class-name2"
+          [userType]="userType"
         ></progress-bar-step2>
         <progress-bar-step3
-          *ngIf="isStepVisible(3)"
+          *ngIf="isStepVisible(3) && isCandidate"
           rootClassName="progress-bar-step3root-class-name4"
+          [userType]="userType"
         ></progress-bar-step3>
         <progress-bar-step4
           *ngIf="isStepVisible(5)"
           rootClassName="progress-bar-step4root-class-name2"
+          [userType]="userType"
         ></progress-bar-step4>
         <progress-bar-step5
           *ngIf="isStepVisible(6)"
           rootClassName="progress-bar-step5root-class-name"
+          [userType]="userType"
         ></progress-bar-step5>
     
         <!-- Step 1: Basic Information -->
@@ -196,7 +201,7 @@
     
         <!-- Step 3: Education -->
         <profile-education-component
-          *ngIf="isStepVisible(3)"
+          *ngIf="isStepVisible(3) && isCandidate"
           rootClassName="profile-education-componentroot-class-name1"
           #educationComponent
         >

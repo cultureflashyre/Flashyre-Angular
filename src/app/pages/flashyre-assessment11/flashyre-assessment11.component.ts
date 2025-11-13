@@ -46,6 +46,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   // ### MODIFICATION START: New properties for loading and alert state ###
   isLoading = true; // Used to hide the assessment UI until data is successfully fetched
   showNoAttemptsAlert = false;
+  showErrorRedirectAlert = false;
   alertMessage = '';
   showAlertButtons: string[] = [];
   // ### MODIFICATION END ###
@@ -124,6 +125,33 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
     ]);
   }
 
+
+  /**
+   * Displays a user-friendly message for 3 seconds and then redirects to the home page.
+   * This is used for unrecoverable errors.
+   * @param logMessage A detailed message to log to the console for debugging.
+   */
+  private handleFatalErrorAndRedirect(logMessage: string): void {
+    console.error(logMessage); // Log the specific error for debugging.
+
+    // Ensure all other popups are hidden to avoid overlap.
+    this.isLoading = false;
+    this.showNoAttemptsAlert = false;
+    this.showWarningPopup = false;
+    this.showSuccessPopup = false;
+    
+    // Set the message and show the new alert.
+    this.alertMessage = 'Something went wrong, your data is safe, redirecting you to home page';
+    this.showAlertButtons = []; // No buttons needed for a timed alert.
+    this.showErrorRedirectAlert = true;
+
+    // Redirect the user after 3 seconds.
+    setTimeout(() => {
+      this.router.navigate(['/candidate-home']);
+    }, 3000);
+  }
+
+
   ngAfterViewInit(): void {
     this.scrollToActiveQuestion();
   }
@@ -141,8 +169,7 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       this.fetchAssessmentData(+assessmentId);
       this.startTime = new Date();
     } else {
-      console.error('No assessment ID or user ID provided');
-      this.router.navigate(['/assessment-error']);
+      this.handleFatalErrorAndRedirect('No assessment ID or user ID provided in ngOnInit.');
     }
   }
 
@@ -183,7 +210,7 @@ fetchAssessmentData(assessmentId: number): void {
       // It's safer to check if response exists before accessing properties
       if (!response || !response.status) {
         console.error("DEBUG: [Component] Response is invalid or has no 'status' property. Navigating to error page.", response);
-        this.router.navigate(['/assessment-error']);
+        this.handleFatalErrorAndRedirect('Error fetching assessment data from service. Try again after sometime');
         return; // Stop execution
       }
 
@@ -238,14 +265,14 @@ fetchAssessmentData(assessmentId: number): void {
         // This is the catch-all that is likely being triggered
         console.error(`DEBUG: [Component] Condition FAILED: response.status was neither 'NO_ATTEMPTS_REMAINING' nor 'SUCCESS'. It was '${response.status}'.`);
         console.error("DEBUG: [Component] Navigating to /assessment-error due to unexpected status.");
-        this.router.navigate(['/assessment-error']);
+        this.handleFatalErrorAndRedirect('Error fetching assessment data from service. Try again after sometime');
       }
     },
     error: (error) => {
       console.error('DEBUG: [Component] Entered SUBSCRIBE "error" block. This should only happen on 4xx/5xx errors.');
       console.error('DEBUG: [Component] Full error object:', error);
       this.isLoading = false;
-      this.router.navigate(['/assessment-error']);
+      this.handleFatalErrorAndRedirect('Error fetching assessment data from service. Try again after sometime');
     }
   });
 }
@@ -452,7 +479,7 @@ fetchAssessmentData(assessmentId: number): void {
       }
     } catch (error) {
       console.error('Termination failed:', error);
-      this.router.navigate(['/assessment-error']);
+      this.handleFatalErrorAndRedirect('Your Assessment has been submitted, redirecting to home page.');
     }
   }
 

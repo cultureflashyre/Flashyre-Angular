@@ -8,5 +8,13 @@ import { Component, Input } from '@angular/core'
 export class ProgressBarStep1 {
   @Input()
   rootClassName: string = ''
+
+  @Input()
+  userType: string = 'candidate'; // Default to 'candidate'
+
   constructor() {}
+
+  get isCandidate(): boolean {
+    return this.userType === 'candidate';
+  }
 }

@@ -180,6 +180,9 @@
             name="endDate-{{i}}"
             [min]="position.startDate"
           />
+          <div *ngIf="position.errors?.endDate" class="error-message">
+  {{ position.errors.endDate }}
+</div>
         </div>
       </div>
 

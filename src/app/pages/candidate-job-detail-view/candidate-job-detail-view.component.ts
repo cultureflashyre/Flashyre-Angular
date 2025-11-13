@@ -3,7 +3,7 @@
 import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { JobsService } from '../../services/job.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
@@ -82,11 +82,16 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
   filterPosition = { top: 0, left: 0 };
 
+  showAssessmentAlert = false;
+  assessmentAlertMessage = '';
+  assessmentAlertButtons: string[] = [];
+
   constructor(
     private title: Title,
     private meta: Meta,
     private route: ActivatedRoute,
-    private jobService: JobsService
+    private jobService: JobsService,
+    private router: Router,
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -393,20 +398,75 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   selectSavedTab(): void { this.selectTab('saved'); }
   selectAppliedTab(): void { this.selectTab('applied'); }
 
-  // Event handlers modify the master lists, then re-run filters
+  /**
+   * MODIFIED: This method now also checks if the successfully applied job
+   * has an assessment and triggers the prompt if necessary.
+   */
   onJobApplied(appliedJob: any): void {
-  // Add an application date to the job object for immediate sorting
-  appliedJob.applied_at = new Date().toISOString();
+    // Add an application date to the job object for immediate sorting
+    appliedJob.applied_at = new Date().toISOString();
 
-  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
-  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    // The existing logic to move the job between lists remains the same
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    this.masterAppliedJobs.unshift(appliedJob);
+    this.masterAppliedJobs.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+    
+    this.runFilterPipeline();
+
+    // --- [NEW LOGIC] After handling the UI lists, check for the assessment ---
+    if (appliedJob.assessment != null && (appliedJob.attempts_remaining || 0) > 0) {
+      this.assessmentAlertMessage = 'You have successfully applied! Take the assessment now to complete your application.';
+      this.assessmentAlertButtons = ['Later', 'Assessment Now'];
+      this.showAssessmentAlert = true;
+    }
+  }
+
+
+  /**
+   * Navigates to the assessment rules page with the full assessment object.
+   * It looks up the assessment details from the `allAssessments` list.
+   * @param assessmentId The ID of the assessment to navigate to.
+   */
+  navigateToAssessment(assessmentId: number): void {
+    // 1. Find the full assessment object from the master list stored in this component.
+    const selectedAssessment = this.allAssessments.find(a => a.assessment_id === assessmentId);
+
+    // 2. Check if the assessment was found.
+    if (!selectedAssessment) {
+      console.error("Assessment details not found for id:", assessmentId);
+      // Optionally, show an alert to the user.
+      alert("Could not start the assessment. Details not found. Please try again later.");
+      return;
+    }
+
+    // 3. Serialize the full object into a JSON string.
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // 4. Navigate to the rules page with the serialized data as a query parameter.
+    this.router.navigate(['/flashyre-assessment-rules-card'], { 
+      queryParams: { data: assessmentDataString } 
+    });
+  }
   
-  // Add to applied list and re-sort
-  this.masterAppliedJobs.unshift(appliedJob);
-  this.masterAppliedJobs.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
-  
-  this.runFilterPipeline();
-}
+    /**
+   * Handles the user's choice from the assessment prompt.
+   * @param button The text of the button clicked ('Later' or 'Assessment Now').
+   */
+  handleAssessmentAlertAction(button: string): void {
+    this.showAssessmentAlert = false; // Always hide the alert
+
+    if (button.toLowerCase() === 'assessment now') {
+      // Find the assessment ID from the currently selected job
+      const assessmentId = this.selectedJob?.assessment;
+      if (assessmentId) {
+        this.navigateToAssessment(assessmentId);
+      } else {
+        console.error("Could not navigate to assessment: assessment ID is missing from the selected job.");
+      }
+    }
+    // If the user clicks 'Later', no action is required.
+  }
 
   onJobSaved(savedJob: any): void {
   // Add a saved date to the job object for immediate sorting

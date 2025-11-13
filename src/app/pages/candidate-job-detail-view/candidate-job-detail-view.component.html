@@ -31,6 +31,16 @@
   id="candidate-job-detail-view"
   class="candidate-job-detail-view-container1"
 >
+
+  <app-alert-message
+    *ngIf="showAssessmentAlert"
+    [message]="assessmentAlertMessage"
+    [buttons]="assessmentAlertButtons"
+    (buttonClicked)="handleAssessmentAlertAction($event)"
+    (close)="handleAssessmentAlertAction('Later')">
+  </app-alert-message>
+
+
   <div id="main-container" class="candidate-job-detail-view-main-container">
     <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name1"
@@ -380,6 +390,7 @@
             </ng-container>
           </span>
         </div>
+        <!--
         <div
           id="preference-container"
           class="candidate-job-detail-view-preference-container">
@@ -387,6 +398,7 @@
             Preference (4)
           </span>
         </div>
+        -->
         <div
           id="saved-container"
           class="candidate-job-detail-view-saved-container"

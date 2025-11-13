@@ -8,6 +8,12 @@
 >
 </app-alert-message>
 
+<app-alert-message
+  *ngIf="showErrorRedirectAlert"
+  [message]="alertMessage"
+  [buttons]="[]">
+</app-alert-message>
+
 <!-- This wrapper hides the entire assessment UI while loading or if the above alert is active -->
 <div *ngIf="!isLoading && !showNoAttemptsAlert">
 

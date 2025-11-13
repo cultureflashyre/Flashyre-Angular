@@ -14,7 +14,7 @@
   <title>Responsive Progress Bar</title>
   </head>
 <body>
-  <div class='progress-bar'>
+  <div class='progress-bar' [class.non-candidate]="!isCandidate">
     <div class='step'>
       <div class='step-circle'>&#10003;</div>
       <span>Basic Information</span>
@@ -23,7 +23,7 @@
       <div class='step-circle'>&#10003;</div>
       <span>Employment</span>
     </div>
-    <div class='step'>
+    <div class='step' *ngIf="isCandidate">
       <div class='step-circle'>&#10003;</div>
       <span>Education</span>
     </div>

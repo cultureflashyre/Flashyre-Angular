@@ -9,4 +9,11 @@ export class ProgressBarStep2 {
   @Input()
   rootClassName: string = ''
   constructor() {}
+
+    @Input()
+  userType: string = 'candidate'; // Default to 'candidate'
+
+    get isCandidate(): boolean {
+    return this.userType === 'candidate';
+  }
 }
