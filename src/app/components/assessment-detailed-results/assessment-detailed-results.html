@@ -281,7 +281,7 @@
 </div>
   </div>
         
-        <div *ngIf="!assessmentData?.detailed_questions || assessmentData?.detailed_questions?.length === 0 || totalQuestions === 0" class="no-questions-message">
+        <div *ngIf="totalQuestions === 0" class="no-questions-message">
           No questions attended.
         </div>
       </div>
