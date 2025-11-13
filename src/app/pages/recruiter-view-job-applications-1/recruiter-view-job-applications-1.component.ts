@@ -9,7 +9,7 @@ import { formatDate } from '@angular/common';
 
 // --- MODIFICATION START ---
 // Import jsPDF and the autoTable plugin for PDF generation.
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 // --- MODIFICATION END ---
 
