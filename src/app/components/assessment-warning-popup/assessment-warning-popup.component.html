@@ -97,19 +97,21 @@
                 </ng-container>
               </span>
               <span id="time-text" class="assessment-warning-popup-time-text1">
-                <ng-container>
-                  <ng-template #defaultText8>
-                    <div class="assessment-warning-popup-fragment25">
-                      <span class="assessment-warning-popup-time-text1">
-                        {{ sections.length > 0 ? (sectionTimers[sections[0].section_id] | timerFormat) : '--:--' }}
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text8 ? text8 : defaultText8"
-                  ></ng-container>
-                </ng-container>
-              </span>
+  <ng-container>
+    <ng-template #defaultText8>
+      <div class="assessment-warning-popup-fragment25">
+        <span class="assessment-warning-popup-time-text1">
+          <!-- MODIFICATION START: This logic now checks for section_id OR coding_id_id -->
+          {{ sections.length > 0 ? (sectionTimers[sections[0].section_id ? sections[0].section_id : sections[0].coding_id_id] | timerFormat) : '--:--' }}
+          <!-- MODIFICATION END -->
+        </span>
+      </div>
+    </ng-template>
+    <ng-container
+      *ngTemplateOutlet="text8 ? text8 : defaultText8"
+    ></ng-container>
+  </ng-container>
+</span>
             </div>
           </div>
           <svg
