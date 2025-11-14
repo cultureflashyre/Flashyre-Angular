@@ -498,7 +498,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.router.navigate(['/job-post-list']);
   }
 
-  fetchInterviewStages() {
+   fetchInterviewStages() {
     const token = this.authService.getJWTToken();
     if (this.jobId && token) {
       console.log(`Attempting to fetch interview stages for job_id: ${this.jobId}`);
@@ -510,8 +510,24 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
             this.interviewStages = [];
             return;
           }
-          this.interviewStages = stages.sort((a, b) => a.order - b.order);
-          console.log('Component property this.interviewStages set to:', this.interviewStages);
+          
+          const sortedStages = stages.sort((a, b) => a.order - b.order);
+
+          // De-duplication Logic: Ensure each stage name appears only once.
+          const uniqueStageNames = new Set<string>();
+          const uniqueStages = sortedStages.filter(stage => {
+            if (uniqueStageNames.has(stage.stage_name)) {
+              return false; // This stage name is a duplicate, so we skip it.
+            } else {
+              uniqueStageNames.add(stage.stage_name);
+              return true; // This is the first time we've seen this stage name, so we keep it.
+            }
+          });
+          // End of De-duplication Logic
+
+          this.interviewStages = uniqueStages; // Assign the de-duplicated array to the component property.
+          
+          console.log('Component property this.interviewStages set to (unique):', this.interviewStages);
           this.updateStageCounts();
           this.calculateNextStage();
           this.cdr.detectChanges();
