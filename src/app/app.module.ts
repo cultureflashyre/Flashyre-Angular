@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { BrowserModule } from '@angular/platform-browser'
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ComponentsModule } from './components/components.module'
 import { AppComponent } from './app.component'
@@ -336,14 +336,11 @@ const routes = [
   },
 ]
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [ NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule,HttpClientModule, FormsModule,
-    ReactiveFormsModule, MatSnackBarModule],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // Register interceptor
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [NgxSpinnerModule, BrowserAnimationsModule, BrowserModule, RouterModule.forRoot(routes), ComponentsModule, FormsModule,
+        ReactiveFormsModule, MatSnackBarModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}

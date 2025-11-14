@@ -2,7 +2,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentsModule } from '../../components/components.module'; // Import ComponentsModule for navbar
 import { AdminCandidateScoresPageComponent } from './admin-candidate-scores-page.component';
 import { FormsModule } from '@angular/forms'; // Add FormsModule for ngModel
@@ -14,16 +14,11 @@ const routes = [
   }
 ];
 
-@NgModule({
-  declarations: [AdminCandidateScoresPageComponent],
-  imports: [
-    CommonModule,
-    ComponentsModule, // For navbar
-    RouterModule.forChild(routes),
-    HttpClientModule,
-    FormsModule // Enable ngModel binding
-  ],
-  exports: [AdminCandidateScoresPageComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+@NgModule({ declarations: [AdminCandidateScoresPageComponent],
+    exports: [AdminCandidateScoresPageComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
+        ComponentsModule, // For navbar
+        RouterModule.forChild(routes),
+        FormsModule // Enable ngModel binding
+    ], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AdminCandidateScoresPageModule {}
