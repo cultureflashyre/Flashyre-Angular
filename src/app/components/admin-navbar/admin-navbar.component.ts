@@ -1,9 +1,17 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RecruiterProfile } from '../recruiter-profile/recruiter-profile.component';
 
 @Component({
-  selector: 'admin-navbar',
-  templateUrl: 'admin-navbar.component.html',
-  styleUrls: ['admin-navbar.component.css'],
+    selector: 'admin-navbar',
+    templateUrl: 'admin-navbar.component.html',
+    styleUrls: ['admin-navbar.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        RecruiterProfile,
+    ],
 })
 export class AdminNavbar {
   @ContentChild('profile')

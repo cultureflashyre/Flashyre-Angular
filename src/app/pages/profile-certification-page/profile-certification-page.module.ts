@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [ProfileCertificationPage],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [ProfileCertificationPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-navbar5',
-  templateUrl: 'navbar5.component.html',
-  styleUrls: ['navbar5.component.css'],
+    selector: 'app-navbar5',
+    templateUrl: 'navbar5.component.html',
+    styleUrls: ['navbar5.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf],
 })
 export class Navbar5 {
   @Input()

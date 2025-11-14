@@ -5,11 +5,14 @@ import { ProfileService } from '../../services/profile.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'profile-basicinformation-component',
-  templateUrl: './profile-basicinformation-component.component.html',
-  styleUrls: ['./profile-basicinformation-component.component.css'],
+    selector: 'profile-basicinformation-component',
+    templateUrl: './profile-basicinformation-component.component.html',
+    styleUrls: ['./profile-basicinformation-component.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class ProfileBasicinformationComponent implements OnInit {
   @Input() rootClassName: string = '';

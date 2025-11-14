@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [RecruiterView4thPage],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [RecruiterView4thPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

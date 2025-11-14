@@ -1,10 +1,18 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { AuthService } from '../../services/candidate.service'; // Import AuthService
 import { AdminAuthService } from 'src/app/services/admin-auth.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 @Component({
-  selector: 'navbar-for-admin-view',
-  templateUrl: 'navbar-for-admin-view.component.html',
-  styleUrls: ['navbar-for-admin-view.component.css'],
+    selector: 'navbar-for-admin-view',
+    templateUrl: 'navbar-for-admin-view.component.html',
+    styleUrls: ['navbar-for-admin-view.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        RouterLink,
+        NgTemplateOutlet,
+    ],
 })
 export class NavbarForAdminView {
   public isAdmin: boolean = false;

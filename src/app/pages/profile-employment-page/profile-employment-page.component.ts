@@ -5,8 +5,22 @@ import { Router } from '@angular/router';
 import { EmploymentService } from '../../services/employment.service';
 import { ProfileEmploymentComponent } from '../../components/profile-employment-component/profile-employment-component.component';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { ProgressBarStep2 } from 'src/app/components/progress-bar-step-2/progress-bar-step-2.component';
+import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
+
 @Component({
   selector: 'profile-employment-page',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, ProgressBarStep2,
+    ProfileEmploymentComponent,
+    ProfileCreationNavigation2,
+  ],
   templateUrl: 'profile-employment-page.component.html',
   styleUrls: ['profile-employment-page.component.css'],
 })

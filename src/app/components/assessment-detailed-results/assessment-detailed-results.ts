@@ -7,9 +7,10 @@ import { Subscription, interval, of } from 'rxjs';
 import { switchMap, startWith, catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'assessment-detailed-results',
-  templateUrl: 'assessment-detailed-results.html',
-  styleUrls: ['assessment-detailed-results.css'],
+    selector: 'assessment-detailed-results',
+    templateUrl: 'assessment-detailed-results.html',
+    styleUrls: ['assessment-detailed-results.css'],
+    standalone: true,
 })
 export class AssessmentDetailedResults implements OnChanges  {
     @Input() assessmentData: any;  // This will receive the selected attempt object

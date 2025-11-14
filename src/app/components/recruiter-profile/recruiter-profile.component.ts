@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-profile',
-  templateUrl: 'recruiter-profile.component.html',
-  styleUrls: ['recruiter-profile.component.css'],
+    selector: 'recruiter-profile',
+    templateUrl: 'recruiter-profile.component.html',
+    styleUrls: ['recruiter-profile.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterProfile implements OnInit {
   recruiterProfile: any = {};

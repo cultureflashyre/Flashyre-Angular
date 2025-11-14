@@ -1,11 +1,14 @@
 // src/app/components/create-job-post-footer-2/create-job-post-footer-2.component.ts
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'create-job-post-footer2',
-  templateUrl: 'create-job-post-footer-2.component.html',
-  styleUrls: ['create-job-post-footer-2.component.css'],
+    selector: 'create-job-post-footer2',
+    templateUrl: 'create-job-post-footer-2.component.html',
+    styleUrls: ['create-job-post-footer-2.component.css'],
+    standalone: true,
+    imports: [NgClass],
 })
 export class CreateJobPostFooter2 {
   /**

@@ -1,6 +1,6 @@
 // src/app/components/create-job-post-22/create-job-post-22.component.ts
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { McqAssessmentService } from '../../services/mcq-assessment.service';
@@ -8,6 +8,9 @@ import { JobDescriptionService } from '../../services/job-description.service';
 import { JobCreationWorkflowService } from '../../services/job-creation-workflow.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { MCQItem as IMcqItem } from '../../pages/create-job-post-1st-page/types';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { NgClass, DecimalPipe } from '@angular/common';
+import { CreateJobPostFooter2 } from '../create-job-post-footer-2/create-job-post-footer-2.component';
 
 // Interface to hold the structured parts of a parsed question
 interface ParsedDetails {
@@ -64,9 +67,18 @@ export function timeNotZeroValidator(control: AbstractControl): ValidationErrors
 }
 
 @Component({
-  selector: 'create-job-post22',
-  templateUrl: 'create-job-post-22.component.html',
-  styleUrls: ['create-job-post-22.component.css'],
+    selector: 'create-job-post22',
+    templateUrl: 'create-job-post-22.component.html',
+    styleUrls: ['create-job-post-22.component.css'],
+    standalone: true,
+    imports: [
+        AlertMessageComponent,
+        NgClass,
+        FormsModule,
+        ReactiveFormsModule,
+        CreateJobPostFooter2,
+        DecimalPipe,
+    ],
 })
 export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Implements AfterViewInit 
   // Input property for the unique job identifier

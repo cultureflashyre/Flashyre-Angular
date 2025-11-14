@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-component',
-  templateUrl: 'component.component.html',
-  styleUrls: ['component.component.css'],
+    selector: 'app-component',
+    templateUrl: 'component.component.html',
+    styleUrls: ['component.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class AppComponent {
   @ContentChild('settings')

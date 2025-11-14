@@ -1,8 +1,20 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { EmailAndMobileNumberComponent } from 'src/app/components/email-and-mobile-number-component/email-and-mobile-number-component.component'
+import { DateSelector1 } from 'src/app/components/date-selector1/date-selector1.component'
+import { ProfileCreationNavigation1 } from 'src/app/components/profile-creation-navigation1/profile-creation-navigation1.component'
+
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    EmailAndMobileNumberComponent, DateSelector1, ProfileCreationNavigation1,
+  ],
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css'],
 })

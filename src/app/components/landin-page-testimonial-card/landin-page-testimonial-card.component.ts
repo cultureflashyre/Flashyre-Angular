@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'landin-page-testimonial-card',
-  templateUrl: 'landin-page-testimonial-card.component.html',
-  styleUrls: ['landin-page-testimonial-card.component.css'],
+    selector: 'landin-page-testimonial-card',
+    templateUrl: 'landin-page-testimonial-card.component.html',
+    styleUrls: ['landin-page-testimonial-card.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class LandinPageTestimonialCard {
   @ContentChild('heading')

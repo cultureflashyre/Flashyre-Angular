@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'verify-email-sms-popup',
-  templateUrl: 'verify-email-sms-popup.component.html',
-  styleUrls: ['verify-email-sms-popup.component.css'],
+    selector: 'verify-email-sms-popup',
+    templateUrl: 'verify-email-sms-popup.component.html',
+    styleUrls: ['verify-email-sms-popup.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class VerifyEmailSMSPopup {
   @Input()

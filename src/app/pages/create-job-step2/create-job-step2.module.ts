@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { ComponentsModule } from '../../components/components.module';
+ 
 import { AdminCreateJobStep2 } from './create-job-step2.component';
 
 // Define routes for the module
@@ -17,7 +17,7 @@ const routes = [
 @NgModule({ declarations: [AdminCreateJobStep2],
     exports: [AdminCreateJobStep2],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
-        ComponentsModule,
+         
         RouterModule.forChild(routes),
         NgxSpinnerModule // For the AI generation loading spinner
     ], providers: [provideHttpClient(withInterceptorsFromDi())] })

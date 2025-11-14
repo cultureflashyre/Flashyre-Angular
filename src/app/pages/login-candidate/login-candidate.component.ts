@@ -5,8 +5,19 @@ import { UserProfileService } from '../../services/user-profile.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { LoginPageNavbar } from 'src/app/components/login-page-navbar/login-page-navbar.component';
+import { LogInPage } from 'src/app/components/log-in-page/log-in-page.component';
+
 @Component({
   selector: 'login-candidate',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    LoginPageNavbar, LogInPage,
+  ],
   templateUrl: 'login-candidate.component.html',
   styleUrls: ['login-candidate.component.css'],
 })

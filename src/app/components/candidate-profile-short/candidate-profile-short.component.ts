@@ -1,9 +1,18 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'candidate-profile-short',
-  templateUrl: 'candidate-profile-short.component.html',
-  styleUrls: ['candidate-profile-short.component.css'],
+    selector: 'candidate-profile-short',
+    templateUrl: 'candidate-profile-short.component.html',
+    styleUrls: ['candidate-profile-short.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgIf,
+        NgTemplateOutlet,
+        RouterLink,
+    ],
 })
 export class CandidateProfileShort {
   userProfile: any = {}; // To store user profile data

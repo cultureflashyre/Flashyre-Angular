@@ -5,6 +5,14 @@ import { AuthService } from '../../services/candidate.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JobsService } from '../../services/job.service'; // [ADDED] Import the JobsService
 
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { AssessmentAttemptsListComponent } from 'src/app/components/assessment-attempts-list/assessment-attempts-list';
 
 interface UserProfile {
   first_name: string;
@@ -13,6 +21,12 @@ interface UserProfile {
 
 @Component({
   selector: 'assessment-taken-page',
+  standalone: true,
+  imports: [
+    RouterModule, CommonModule, CommonModule, FormsModule,
+    AssessmentAttemptsListComponent,
+    NavbarForCandidateView,
+  ],
   templateUrl: 'assessment-taken-page.component.html',
   styleUrls: ['assessment-taken-page.component.css']
 })

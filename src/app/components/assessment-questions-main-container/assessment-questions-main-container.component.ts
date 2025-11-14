@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'assessment-questions-main-container',
-  templateUrl: 'assessment-questions-main-container.component.html',
-  styleUrls: ['assessment-questions-main-container.component.css'],
+    selector: 'assessment-questions-main-container',
+    templateUrl: 'assessment-questions-main-container.component.html',
+    styleUrls: ['assessment-questions-main-container.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class AssessmentQuestionsMainContainer {
   @ContentChild('aiGeneratedText')

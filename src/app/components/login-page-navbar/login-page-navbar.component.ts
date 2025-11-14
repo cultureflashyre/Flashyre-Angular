@@ -1,9 +1,13 @@
 import { Component, Input } from '@angular/core'
+import { NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'login-page-navbar',
-  templateUrl: 'login-page-navbar.component.html',
-  styleUrls: ['login-page-navbar.component.css'],
+    selector: 'login-page-navbar',
+    templateUrl: 'login-page-navbar.component.html',
+    styleUrls: ['login-page-navbar.component.css'],
+    standalone: true,
+    imports: [NgClass, RouterLink],
 })
 export class LoginPageNavbar {
   @Input()

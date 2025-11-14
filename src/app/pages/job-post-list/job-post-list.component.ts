@@ -11,11 +11,24 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { environment } from 'src/environments/environment';
 import { JobCreationWorkflowService } from 'src/app/services/job-creation-workflow.service';
 import { AdminJobCreationWorkflowService } from 'src/app/services/admin-job-creation-workflow.service';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
+import { RecruiterProfile } from 'src/app/components/recruiter-profile/recruiter-profile.component';
+
 // Define the type for job statuses
 type JobStatus = 'final' | 'draft' | 'pause' | 'deleted';
 
 @Component({
   selector: 'job-post-list',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    AlertMessageComponent, MoreFiltersAndPreferenceComponent, RecruiterProfile,
+  ],
   templateUrl: 'job-post-list.component.html',
   styleUrls: ['job-post-list.component.css'],
   animations: [

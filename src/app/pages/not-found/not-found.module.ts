@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [NotFound],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [NotFound],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

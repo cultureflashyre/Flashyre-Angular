@@ -7,6 +7,14 @@ import { CorporateAuthService } from 'src/app/services/corporate-auth.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { formatDate } from '@angular/common';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { NavbarForRecruiterView } from 'src/app/components/navbar-for-recruiter-view/navbar-for-recruiter-view.component';
+import { RecruiterFlowLargeCard } from 'src/app/components/recruiter-flow-large-card/recruiter-flow-large-card.component';
+
 // --- MODIFICATION START ---
 // Import jsPDF and the autoTable plugin for PDF generation.
 import { jsPDF } from 'jspdf';
@@ -15,6 +23,10 @@ import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'recruiter-view-job-applications1',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    AlertMessageComponent, NavbarForRecruiterView, RecruiterFlowLargeCard,
+  ],
   templateUrl: './recruiter-view-job-applications-1.component.html',
   styleUrls: ['./recruiter-view-job-applications-1.component.css'],
 })

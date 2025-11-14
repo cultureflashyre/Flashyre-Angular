@@ -1,10 +1,20 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { PreferenceComponent } from '../preference-component/preference-component.component';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { Morefilterscomponent1 } from '../morefilterscomponent1/morefilterscomponent1.component';
 
 @Component({
-  selector: 'more-filters-and-preference-component',
-  templateUrl: 'more-filters-and-preference-component.component.html',
-  styleUrls: ['more-filters-and-preference-component.component.css'],
+    selector: 'more-filters-and-preference-component',
+    templateUrl: 'more-filters-and-preference-component.component.html',
+    styleUrls: ['more-filters-and-preference-component.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        NgIf,
+        Morefilterscomponent1,
+        PreferenceComponent,
+    ],
 })
 export class MoreFiltersAndPreferenceComponent implements OnInit, OnChanges {
 

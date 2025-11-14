@@ -1,8 +1,18 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component'
 @Component({
   selector: 'assessment-taken-page2',
+  standalone: true,
+  imports: [ CommonModule, RouterModule, FormsModule,
+    NavbarForCandidateView,
+  ],
   templateUrl: './assessment-taken-page-2.component.html',
   styleUrls: ['./assessment-taken-page-2.component.css'],
 })

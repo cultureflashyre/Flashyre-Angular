@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [BufferPage],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [BufferPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

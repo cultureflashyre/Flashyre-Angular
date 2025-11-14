@@ -1,10 +1,18 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { AuthService } from '../../services/candidate.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'navbar-for-candidate-view1',
-  templateUrl: 'navbar-for-candidate-view1.component.html',
-  styleUrls: ['navbar-for-candidate-view1.component.css'],
+    selector: 'navbar-for-candidate-view1',
+    templateUrl: 'navbar-for-candidate-view1.component.html',
+    styleUrls: ['navbar-for-candidate-view1.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        RouterLink,
+        NgTemplateOutlet,
+    ],
 })
 export class NavbarForCandidateView1 {
 

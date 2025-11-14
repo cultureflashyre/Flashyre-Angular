@@ -3,9 +3,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 
 @Component({
-  selector: 'app-problem-description',
-  templateUrl: './problem-description.component.html',
-  styleUrls: ['./problem-description.component.css']
+    selector: 'app-problem-description',
+    templateUrl: './problem-description.component.html',
+    styleUrls: ['./problem-description.component.css'],
+    standalone: true
 })
 export class ProblemDescriptionComponent {
   @Input() problem: any = {};

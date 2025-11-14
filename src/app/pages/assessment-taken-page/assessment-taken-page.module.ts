@@ -2,7 +2,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ComponentsModule } from '../../components/components.module';
 import { AssessmentTakenPage } from './assessment-taken-page.component';
 import { FormsModule } from '@angular/forms';
 
@@ -12,7 +11,7 @@ import { FormsModule } from '@angular/forms';
     ],
     exports: [AssessmentTakenPage],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
-        ComponentsModule,
+        
         FormsModule,
         RouterModule.forChild([{ path: '', component: AssessmentTakenPage }])], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AssessmentTakenPageModule {}

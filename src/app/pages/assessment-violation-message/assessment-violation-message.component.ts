@@ -2,8 +2,22 @@ import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 import { Router } from '@angular/router'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component'
+
 @Component({
   selector: 'assessment-violation-message',
+    standalone: true,
+    imports: [
+      // 4. List all its dependencies here
+      CommonModule, // For *ngIf, *ngFor, etc.
+      FormsModule,  // For [(ngModel)]
+      RouterModule,
+      NavbarForCandidateView,
+    ],
   templateUrl: 'assessment-violation-message.component.html',
   styleUrls: ['assessment-violation-message.component.css'],
 })

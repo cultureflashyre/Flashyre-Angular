@@ -1,10 +1,24 @@
 import { Component, ViewChild } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { ProgressBarStep1 } from 'src/app/components/progress-bar-step-1/progress-bar-step-1.component';
 import { ProfileBasicinformationComponent } from '../../components/profile-basicinformation-component/profile-basicinformation-component.component';
+import { ProfileCreationNavigation1 } from 'src/app/components/profile-creation-navigation1/profile-creation-navigation1.component';
+
 
 @Component({
   selector: 'profile-basic-information',
+  standalone: true,
+    imports: [ RouterModule, FormsModule, CommonModule,
+      NavbarForCandidateView1, ProgressBarStep1, ProfileBasicinformationComponent,
+      ProfileCreationNavigation1,
+      ],
   templateUrl: './profile-basic-information.component.html',
   styleUrls: ['./profile-basic-information.component.css'],
 })

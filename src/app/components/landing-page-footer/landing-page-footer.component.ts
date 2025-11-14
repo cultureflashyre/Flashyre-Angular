@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'landing-page-footer',
-  templateUrl: 'landing-page-footer.component.html',
-  styleUrls: ['landing-page-footer.component.css'],
+    selector: 'landing-page-footer',
+    templateUrl: 'landing-page-footer.component.html',
+    styleUrls: ['landing-page-footer.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class LandingPageFooter {
   @Input()

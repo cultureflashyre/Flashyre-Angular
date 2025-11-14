@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { ComponentsModule } from '../../components/components.module';
+ 
 import { ProfileOverviewPage } from './profile-overview-page.component';
 
 const routes = [
@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [ProfileOverviewPage, ], // Add components to declarations
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [ProfileOverviewPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

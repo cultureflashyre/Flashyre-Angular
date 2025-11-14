@@ -8,7 +8,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { lastValueFrom } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { AssessmentWarningPopup } from 'src/app/components/assessment-warning-popup/assessment-warning-popup.component';
+import { ProblemDescriptionComponent } from 'src/app/components/problem-description/problem-description.component';
 import { CodeEditorComponent } from '../../components/code-editor/code-editor.component';
+import { CodingTestResultsComponent } from 'src/app/components/coding-test-results/coding-test-results.component';
 
 interface SelectedAnswer {
   answer: string;
@@ -32,6 +41,11 @@ interface CodingSubmission {
 
 @Component({
   selector: 'app-flashyre-assessment11',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    AlertMessageComponent, AssessmentWarningPopup, 
+    ProblemDescriptionComponent, CodeEditorComponent, CodingTestResultsComponent,
+  ],
   templateUrl: './flashyre-assessment11.component.html',
   styleUrls: ['./flashyre-assessment11.component.css'],
 })

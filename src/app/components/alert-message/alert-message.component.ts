@@ -1,9 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-alert-message',
-  templateUrl: 'alert-message.component.html',
-  styleUrls: ['alert-message.component.css'],
+    selector: 'app-alert-message',
+    templateUrl: 'alert-message.component.html',
+    styleUrls: ['alert-message.component.css'],
+    standalone: true,
+    imports: [NgClass],
 })
 export class AlertMessageComponent {
   @Input() message: string = '';

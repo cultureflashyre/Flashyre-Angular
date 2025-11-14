@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
  import { RouterModule } from '@angular/router';
  import { CommonModule } from '@angular/common';
  
- import { ComponentsModule } from '../../components/components.module';
+  
  import { ProfileLastPage1 } from './profile-last-page1.component';
  
  const routes = [
@@ -14,7 +14,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
  
  @NgModule({
    declarations: [ProfileLastPage1],
-   imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+   imports: [CommonModule,   RouterModule.forChild(routes)],
    exports: [ProfileLastPage1],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],
  })

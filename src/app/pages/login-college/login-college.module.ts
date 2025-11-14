@@ -14,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [LoginCollege],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [LoginCollege],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

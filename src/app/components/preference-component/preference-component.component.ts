@@ -2,10 +2,13 @@ import { Component, Input, ContentChild, TemplateRef, OnInit, Output, EventEmitt
 import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 import { MoreFiltersAndPreferenceComponent } from '../more-filters-and-preference-component/more-filters-and-preference-component.component';
 import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
+import { NgTemplateOutlet } from '@angular/common';
 @Component({
-  selector: 'preference-component',
-  templateUrl: 'preference-component.component.html',
-  styleUrls: ['preference-component.component.css'],
+    selector: 'preference-component',
+    templateUrl: 'preference-component.component.html',
+    styleUrls: ['preference-component.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class PreferenceComponent implements OnInit {
 

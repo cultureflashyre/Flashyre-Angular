@@ -7,8 +7,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { JobCardsComponent } from 'src/app/components/job-cards/job-cards.component';
+import { CandidateJobDetailsComponent } from 'src/app/components/candidate-job-details/candidate-job-details.component';
+
+
 @Component({
   selector: 'candidate-job-detail-view',
+      standalone: true,
+    imports: [ RouterModule, FormsModule, CommonModule,
+    MoreFiltersAndPreferenceComponent, AlertMessageComponent, 
+    NavbarForCandidateView, JobCardsComponent, 
+    CandidateJobDetailsComponent,
+    ],
   templateUrl: './candidate-job-detail-view.component.html',
   styleUrls: ['./candidate-job-detail-view.component.css'],
   // Animation for the filter popup

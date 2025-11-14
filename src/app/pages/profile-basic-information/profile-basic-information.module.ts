@@ -16,6 +16,6 @@ const routes = [
 @NgModule({ declarations: [ProfileBasicInformation],
     exports: [ProfileBasicInformation],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
-        ComponentsModule,
+         
         RouterModule.forChild(routes)], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ProfileBasicInformationModule {}

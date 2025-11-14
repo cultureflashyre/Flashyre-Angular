@@ -12,8 +12,30 @@ import { ProfileEmploymentComponent } from '../../components/profile-employment-
 import { ProfileEducationComponent } from '../../components/profile-education-component/profile-education-component.component';
 import { ProfileCertificationsComponent } from '../../components/profile-certifications-component/profile-certifications-component.component';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { ProgressBarStep1 } from 'src/app/components/progress-bar-step-1/progress-bar-step-1.component';
+import { ProgressBarStep2 } from 'src/app/components/progress-bar-step-2/progress-bar-step-2.component';
+import { ProgressBarStep3 } from 'src/app/components/progress-bar-step-3/progress-bar-step-3.component';
+import { ProgressBarStep4 } from 'src/app/components/progress-bar-step-4/progress-bar-step-4.component';
+import { ProgressBarStep5 } from 'src/app/components/progress-bar-step-5/progress-bar-step-5.component';
+import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
+import { profile } from 'console';
+
 @Component({
   selector: 'profile-overview-page',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, AlertMessageComponent,
+    ProgressBarStep1, ProgressBarStep3, ProgressBarStep4,
+    ProgressBarStep2, ProgressBarStep5, ProfileCreationNavigation2,
+    ProfileBasicinformationComponent, ProfileEmploymentComponent,
+    ProfileEducationComponent, ProfileCertificationsComponent,
+  ],
   templateUrl: './profile-overview-page.component.html',
   styleUrls: ['./profile-overview-page.component.css'],
 })

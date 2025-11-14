@@ -16,7 +16,7 @@ const routes = [
 
 @NgModule({
   declarations: [RecruiterViewJobApplications1],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes), FormsModule, ReactiveFormsModule],
+  imports: [CommonModule,   RouterModule.forChild(routes), FormsModule, ReactiveFormsModule],
   exports: [RecruiterViewJobApplications1],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

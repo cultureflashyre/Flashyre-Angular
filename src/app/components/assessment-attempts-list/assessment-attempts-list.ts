@@ -2,11 +2,15 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'; // Add this import
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 import { JobsService } from '../../services/job.service';
+import { AssessmentDetailedResults } from '../assessment-detailed-results/assessment-detailed-results';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'assessment-attempts-list',
-  templateUrl: 'assessment-attempts-list.html',
-  styleUrls: ['assessment-attempts-list.css']
+    selector: 'assessment-attempts-list',
+    templateUrl: 'assessment-attempts-list.html',
+    styleUrls: ['assessment-attempts-list.css'],
+    standalone: true,
+    imports: [AssessmentDetailedResults, DatePipe]
 })
 export class AssessmentAttemptsListComponent implements OnInit {
   @Input() assessmentId!: string;

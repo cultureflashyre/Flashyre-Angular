@@ -14,8 +14,19 @@ import { JobDetails, AIJobResponse } from './types';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+
 @Component({
   selector: 'create-job',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForAdminView, AlertMessageComponent,
+  ],
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.css']
 })

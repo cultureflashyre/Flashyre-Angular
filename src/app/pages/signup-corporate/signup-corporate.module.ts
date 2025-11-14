@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'; // Added for reactive forms
 
-import { ComponentsModule } from '../../components/components.module';
+ 
 import { SignupCorporate } from './signup-corporate.component';
 
 const routes = [
@@ -17,7 +17,7 @@ const routes = [
   declarations: [SignupCorporate],
   imports: [
     CommonModule,
-    ComponentsModule,
+     
     RouterModule.forChild(routes),
     ReactiveFormsModule, // Added
   ],

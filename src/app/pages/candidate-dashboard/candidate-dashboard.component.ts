@@ -1,8 +1,19 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { FlashyreDashboard } from 'src/app/components/flashyre-dashboard/flashyre-dashboard.component'
+
+
 @Component({
   selector: 'candidate-dashboard',
+    standalone: true,
+    imports: [ RouterModule, FormsModule, CommonModule,
+      FlashyreDashboard
+    ],
   templateUrl: 'candidate-dashboard.component.html',
   styleUrls: ['candidate-dashboard.component.css'],
 })

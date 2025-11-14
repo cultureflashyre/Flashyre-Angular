@@ -9,8 +9,27 @@ import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import * as XLSX from 'xlsx'; // Import xlsx for Excel export
 
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+
 @Component({
   selector: 'admin-candidate-scores-page',
+  standalone: true,
+  imports: [
+    // 4. List all its dependencies here
+    CommonModule, // For *ngIf, *ngFor, etc.
+    FormsModule,  // For [(ngModel)]
+    RouterModule,
+    NavbarForAdminView,
+
+    // Add the shared components your HTML template needs
+
+  ],
   templateUrl: './admin-candidate-scores-page.component.html',
   styleUrls: ['./admin-candidate-scores-page.component.css']
 })

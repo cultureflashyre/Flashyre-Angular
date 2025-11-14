@@ -2,11 +2,15 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router'; // Import Router for navigation
 import { ProctoringService } from '../../services/proctoring.service'; // Import SystemRequirementService
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { FlashyreNavbar } from '../flashyre-navbar/flashyre-navbar.component';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'flashyre-dashboard',
-  templateUrl: 'flashyre-dashboard.component.html',
-  styleUrls: ['flashyre-dashboard.component.css'],
+    selector: 'flashyre-dashboard',
+    templateUrl: 'flashyre-dashboard.component.html',
+    styleUrls: ['flashyre-dashboard.component.css'],
+    standalone: true,
+    imports: [FlashyreNavbar, NgTemplateOutlet],
 })
 export class FlashyreDashboard {
   @ContentChild('text5112')

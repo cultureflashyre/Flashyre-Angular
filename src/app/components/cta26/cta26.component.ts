@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-cta26',
-  templateUrl: 'cta26.component.html',
-  styleUrls: ['cta26.component.css'],
+    selector: 'app-cta26',
+    templateUrl: 'cta26.component.html',
+    styleUrls: ['cta26.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class CTA26 {
   @ContentChild('heading1')

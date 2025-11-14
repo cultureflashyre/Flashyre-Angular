@@ -2,9 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { VideoRecorderService } from '../../services/video-recorder.service';
- 
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
 @Component({
   selector: 'error-system-requirement-failed',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+  ],
   templateUrl: 'error-system-requirement-failed.component.html',
   styleUrls: ['error-system-requirement-failed.component.css'],
 })

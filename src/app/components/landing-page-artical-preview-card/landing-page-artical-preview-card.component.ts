@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'landing-page-artical-preview-card',
-  templateUrl: 'landing-page-artical-preview-card.component.html',
-  styleUrls: ['landing-page-artical-preview-card.component.css'],
+    selector: 'landing-page-artical-preview-card',
+    templateUrl: 'landing-page-artical-preview-card.component.html',
+    styleUrls: ['landing-page-artical-preview-card.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class LandingPageArticalPreviewCard {
   @ContentChild('text1')

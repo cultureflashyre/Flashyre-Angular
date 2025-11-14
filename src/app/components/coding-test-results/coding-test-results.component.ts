@@ -1,11 +1,14 @@
 // an-assessment/src/app/coding-test-results/coding-test-results.component.ts
 
 import { Component, Input, OnChanges, SimpleChanges, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-test-results',
-  templateUrl: './coding-test-results.component.html',
-  styleUrls: ['./coding-test-results.component.css']
+    selector: 'app-test-results',
+    templateUrl: './coding-test-results.component.html',
+    styleUrls: ['./coding-test-results.component.css'],
+    standalone: true,
+    imports: [NgClass]
 })
 export class CodingTestResultsComponent implements OnChanges {
   @Input() results: string[] = [];

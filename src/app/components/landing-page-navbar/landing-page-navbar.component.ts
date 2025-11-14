@@ -1,9 +1,17 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'landing-page-navbar',
-  templateUrl: 'landing-page-navbar.component.html',
-  styleUrls: ['landing-page-navbar.component.css'],
+    selector: 'landing-page-navbar',
+    templateUrl: 'landing-page-navbar.component.html',
+    styleUrls: ['landing-page-navbar.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        RouterLink,
+    ],
 })
 export class LandingPageNavbar {
   @ContentChild('text2')

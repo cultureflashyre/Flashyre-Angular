@@ -12,8 +12,24 @@ import { AdminJobCreationWorkflowService } from '../../services/admin-job-creati
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/services/candidate.service';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NgxSpinner } from 'ngx-spinner';
+import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progress-bar-2-code.component';
+import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
+
+
 @Component({
   selector: 'create-job-step2',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NgxSpinner, NavbarForAdminView, AlertMessageComponent,
+    ProgressBar2Code, CreateJobPostFooter2,
+  ],
   templateUrl: 'create-job-step2.component.html',
   styleUrls: ['create-job-step2.component.css'],
 })

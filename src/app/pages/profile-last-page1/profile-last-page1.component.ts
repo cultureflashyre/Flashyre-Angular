@@ -3,8 +3,18 @@ import { Component } from '@angular/core'
  import { Router } from '@angular/router';
  import { UserProfileService } from '../../services/user-profile.service'; 
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { ProgressBarStep5 } from 'src/app/components/progress-bar-step-5/progress-bar-step-5.component';
  @Component({
    selector: 'profile-last-page1',
+   standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, ProgressBarStep5,
+  ],
    templateUrl: 'profile-last-page1.component.html',
    styleUrls: ['profile-last-page1.component.css'],
  })

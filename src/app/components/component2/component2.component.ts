@@ -1,9 +1,13 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-component2',
-  templateUrl: 'component2.component.html',
-  styleUrls: ['component2.component.css'],
+    selector: 'app-component2',
+    templateUrl: 'component2.component.html',
+    styleUrls: ['component2.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, FormsModule],
 })
 export class Component2 {
   @ContentChild('selectText')

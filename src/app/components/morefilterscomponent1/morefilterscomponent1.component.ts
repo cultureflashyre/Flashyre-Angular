@@ -1,10 +1,18 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-morefilterscomponent1',
-  templateUrl: 'morefilterscomponent1.component.html',
-  styleUrls: ['morefilterscomponent1.component.css'],
+    selector: 'app-morefilterscomponent1',
+    templateUrl: 'morefilterscomponent1.component.html',
+    styleUrls: ['morefilterscomponent1.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        FormsModule,
+    ],
 })
 export class Morefilterscomponent1 implements OnChanges {
   // ContentChild for labels and button texts

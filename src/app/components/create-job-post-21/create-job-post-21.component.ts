@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'create-job-post21',
-  templateUrl: 'create-job-post-21.component.html',
-  styleUrls: ['create-job-post-21.component.css'],
+    selector: 'create-job-post21',
+    templateUrl: 'create-job-post-21.component.html',
+    styleUrls: ['create-job-post-21.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class CreateJobPost21 {
   @ContentChild('text2')

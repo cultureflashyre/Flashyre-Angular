@@ -6,11 +6,21 @@ import { AuthService } from '../../services/candidate.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { NgClass, NgTemplateOutlet, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'candidate-job-details',
-  templateUrl: './candidate-job-details.component.html',
-  styleUrls: ['./candidate-job-details.component.css'],
+    selector: 'candidate-job-details',
+    templateUrl: './candidate-job-details.component.html',
+    styleUrls: ['./candidate-job-details.component.css'],
+    standalone: true,
+    imports: [
+        AlertMessageComponent,
+        NgClass,
+        NgTemplateOutlet,
+        DecimalPipe,
+        DatePipe,
+    ],
 })
 export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() rootClassName: string = 'candidate-default-root';

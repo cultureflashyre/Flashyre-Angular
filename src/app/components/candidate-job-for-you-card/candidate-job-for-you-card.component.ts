@@ -4,11 +4,19 @@ import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'candidate-job-for-you-card',
-  templateUrl: './candidate-job-for-you-card.component.html',
-  styleUrls: ['./candidate-job-for-you-card.component.css'],
+    selector: 'candidate-job-for-you-card',
+    templateUrl: './candidate-job-for-you-card.component.html',
+    styleUrls: ['./candidate-job-for-you-card.component.css'],
+    standalone: true,
+    imports: [
+        AlertMessageComponent,
+        NgClass,
+        NgTemplateOutlet,
+    ],
 })
 export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 

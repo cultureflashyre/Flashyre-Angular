@@ -1,10 +1,11 @@
 // src/app/components/admin-jd-extended-component/admin-jd-extended-component.ts
 
 import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, HostListener, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { JobDescription } from '../../services/admin.service'; // Ensure correct path
+import { JobDescription } from '../../services/admin.service';
+import { NgClass } from '@angular/common'; // Ensure correct path
 
 // Interface for managing the state of a range slider instance
 interface RangeSliderState {
@@ -19,9 +20,15 @@ interface RangeSliderState {
 }
 
 @Component({
-  selector: 'admin-jd-extended-component',
-  templateUrl: 'admin-jd-extended-component.component.html',
-  styleUrls: ['admin-jd-extended-component.component.css'],
+    selector: 'admin-jd-extended-component',
+    templateUrl: 'admin-jd-extended-component.component.html',
+    styleUrls: ['admin-jd-extended-component.component.css'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        NgClass,
+    ],
 })
 export class AdminJdExtendedComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   // --- NEW: Inputs to control the component's mode and data ---

@@ -2,14 +2,18 @@
 
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AdminService, SourcedCandidate } from '../../services/admin.service';
+import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 // Define a type that extends the base SourcedCandidate with a 'selected' property for UI state management
 type SelectableSourcedCandidate = SourcedCandidate & { selected: boolean };
 
 @Component({
-  selector: 'admin-candidate-sourced-component',
-  templateUrl: 'admin-candidate-sourced-component.component.html',
-  styleUrls: ['admin-candidate-sourced-component.component.css'],
+    selector: 'admin-candidate-sourced-component',
+    templateUrl: 'admin-candidate-sourced-component.component.html',
+    styleUrls: ['admin-candidate-sourced-component.component.css'],
+    standalone: true,
+    imports: [NgClass, FormsModule],
 })
 export class AdminCandidateSourcedComponent implements OnChanges {
   // --- Input property to receive the active job ID from the parent ---

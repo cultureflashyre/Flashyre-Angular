@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ComponentsModule } from '../../components/components.module';
 import { AdminCreateJobStep1Component } from './create-job.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
 
 // Define routes for the module
 const routes = [
@@ -26,7 +26,8 @@ const routes = [
         FormsModule,
         ReactiveFormsModule,
         MatSnackBarModule,
-        ComponentsModule,
+        NavbarForAdminView,
+        
         RouterModule.forChild(routes), // ← CRITICAL FIX: Changed from RouterModule to RouterModule.forChild(routes)
         NgxSpinnerModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CreateJobModule {}

@@ -8,8 +8,18 @@ import { AuthService } from '../../services/candidate.service'; // Import AuthSe
 import { AssessmentDataService } from 'src/app/services/assessment-data.service';
 import { Observable } from 'rxjs';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { CandidateProfileShort } from 'src/app/components/candidate-profile-short/candidate-profile-short.component';
 @Component({
   selector: 'candidate-assessment',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+NavbarForCandidateView, CandidateProfileShort,
+  ],
   templateUrl: 'candidate-assessment.component.html',
   styleUrls: ['candidate-assessment.component.css'],
 })

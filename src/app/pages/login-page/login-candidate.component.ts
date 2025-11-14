@@ -5,8 +5,15 @@ import { UserProfileService } from '../../services/user-profile.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
 @Component({
   selector: 'login-candidate',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    ],
   templateUrl: 'login-candidate.component.html',
   styleUrls: ['login-candidate.component.css'],
 })

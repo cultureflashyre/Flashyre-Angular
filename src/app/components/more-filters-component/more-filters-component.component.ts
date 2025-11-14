@@ -1,9 +1,13 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'more-filters-component',
-  templateUrl: 'more-filters-component.component.html',
-  styleUrls: ['more-filters-component.component.css'],
+    selector: 'more-filters-component',
+    templateUrl: 'more-filters-component.component.html',
+    styleUrls: ['more-filters-component.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, FormsModule],
 })
 export class MoreFiltersComponent {
   @ContentChild('text31311')

@@ -1,96 +1,71 @@
-import { Injectable } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../services/candidate.service';
+// src/app/guards/auth.guard.ts
+import { inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
   exp: number;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard  {
-  constructor(
-    private authService: AuthService, 
-    private router: Router
-  ) {}
+// Helper function to check for token expiration
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded = jwtDecode<JwtPayload>(token);
+    return new Date(decoded.exp * 1000) < new Date();
+  } catch {
+    return true; // Treat a malformed token as expired
+  }
+};
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    console.log('AuthGuard#canActivate called');
-    console.log('Attempting to access route URL:', state.url);
+export const authGuard: CanActivateFn = (route, state) => {
+  // Use inject() to get dependencies inside the functional guard
+  const router = inject(Router);
 
-    const token = localStorage.getItem('jwtToken');
-    const userType = localStorage.getItem('userType');  // e.g., 'candidate', 'admin', 'corporate'
+  console.log('Functional AuthGuard executing for route:', state.url);
 
-    console.log('Stored token:', token);
-    console.log('Stored userType:', userType);
+  const token = localStorage.getItem('jwtToken');
+  const userType = localStorage.getItem('userType'); // e.g., 'candidate', 'admin', 'recruiter'
 
-    const expectedRoles: string[] = route.data['roles'];
-    console.log('Expected roles for this route:', expectedRoles);
+  console.log('Stored token:', token);
+  console.log('Stored userType:', userType);
 
-    if (!token || this.isTokenExpired(token)) {
-      console.log('No token found, user is not logged in.');
+  const expectedRoles: string[] = route.data['roles'];
+  console.log('Expected roles for this route:', expectedRoles);
 
-    const expectedRoles: string[] = route.data['roles'];
-    console.log('Expected roles for this route:', expectedRoles);
+  // 1. Check if the user is logged in (token exists and is not expired)
+  if (!token || isTokenExpired(token)) {
+    console.log('No token found or token is expired. User is not logged in.');
 
-      if (expectedRoles && expectedRoles.length === 1) {
-      let roleToRedirect = expectedRoles[0];
-        if (roleToRedirect === 'recruiter') {
-            roleToRedirect = 'corporate';
-        }
-
-        console.log(`Redirecting to login page for role: login-${roleToRedirect} with returnUrl: ${state.url}`);
-        this.router.navigate([`/login-${roleToRedirect}`], { queryParams: { returnUrl: state.url } });
-      } else {
-        console.log(`Redirecting to default candidate login with returnUrl: ${state.url}`);
-        this.router.navigate([`/login-${userType || 'candidate'}`], { queryParams: { returnUrl: state.url } });
-      }
-      return false;
-    }
-
-    //if (expectedRoles && !expectedRoles.includes(userType)) {
-    //  console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to /forbidden.`);
-    //  this.router.navigate(['/forbidden']);
-   //   return false;
-   // }
-
-    if (expectedRoles && !expectedRoles.includes(userType)) {
-    console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to userType specific page.`);
-
-    switch(userType) {
-        case 'candidate':
-            console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/candidate-home']);
-        break;
-        case 'recruiter':
-                        console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/job-post-list']);
-        break;
-        case 'admin':
-                        console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/job-post-list']);
-        break;
-        default:
-                        console.log("Inside the SWITCH for ", userType);
-        this.router.navigate(['/forbidden']);
-        break;
-    }
-    return false;
+    let roleToRedirect = 'candidate'; // Default redirect
+    if (expectedRoles && expectedRoles.length > 0) {
+      roleToRedirect = expectedRoles[0] === 'recruiter' ? 'corporate' : expectedRoles[0];
     }
 
+    console.log(`Redirecting to login page for role: login-${roleToRedirect} with returnUrl: ${state.url}`);
+    router.navigate([`/login-${roleToRedirect}`], { queryParams: { returnUrl: state.url } });
+    return false; // Block access
+  }
 
-    console.log('All checks passed. Route access granted.');
-    return true;
-  }
+  // 2. Check if the logged-in user has the correct role for the route
+  if (expectedRoles && !expectedRoles.includes(userType)) {
+    console.log(`Role mismatch: userType=${userType} is not in expected roles [${expectedRoles}]. Redirecting to user-specific home.`);
 
-    private isTokenExpired(token: string): boolean {
-    try {
-        const decoded = jwtDecode<JwtPayload>(token);
-        return new Date(decoded.exp * 1000) < new Date();
-    } catch {
-        return true;
+    // Redirect based on the user's actual role to prevent them from being stuck
+    switch (userType) {
+      case 'candidate':
+        router.navigate(['/candidate-home']);
+        break;
+      case 'recruiter':
+      case 'admin':
+        router.navigate(['/job-post-list']);
+        break;
+      default:
+        router.navigate(['/']); // Redirect to a safe default page
+        break;
     }
-    }
-}
+    return false; // Block access
+  }
+
+  console.log('All checks passed. Route access granted.');
+  return true; // Grant access
+};

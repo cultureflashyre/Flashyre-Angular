@@ -9,8 +9,24 @@ import { JobsService } from '../../services/job.service';
 import { environment } from '../../../environments/environment';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { CandidateProfileShort } from 'src/app/components/candidate-profile-short/candidate-profile-short.component';
+import { CandidateJobForYouCard } from 'src/app/components/candidate-job-for-you-card/candidate-job-for-you-card.component';
+
+
 @Component({
   selector: 'candidate-home',
+    standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    MoreFiltersAndPreferenceComponent, AlertMessageComponent,
+    NavbarForCandidateView, CandidateProfileShort, CandidateJobForYouCard,
+  ],
   templateUrl: 'candidate-home.component.html',
   styleUrls: ['candidate-home.component.css'],
   animations: [

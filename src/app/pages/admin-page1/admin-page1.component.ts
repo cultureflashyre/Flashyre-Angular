@@ -3,11 +3,25 @@ import { Title, Meta } from '@angular/platform-browser';
 import { AdminService } from '../../services/admin.service';
 import { AdminPage1Component as AdminPage1ChildComponent } from '../../components/admin-page1-component/admin-page1-component.component';
 
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+
+import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { AdminPage1Component } from '../../components/admin-page1-component/admin-page1-component.component';
 // const ACTIVE_JOB_ID_KEY = 'active_job_processing_id';
 const MAX_TOTAL_UPLOAD_SIZE_MB = 25; // New constant for total upload size limit
 
 @Component({
   selector: 'admin-page1',
+  standalone: true,
+  imports: [
+    CommonModule, RouterModule,
+    NavbarForAdminView, AlertMessageComponent,
+    AdminPage1Component,
+
+  ],
   templateUrl: 'admin-page1.component.html',
   styleUrls: ['admin-page1.component.css'],
 })

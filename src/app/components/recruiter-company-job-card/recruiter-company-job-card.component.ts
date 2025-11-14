@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-company-job-card',
-  templateUrl: 'recruiter-company-job-card.component.html',
-  styleUrls: ['recruiter-company-job-card.component.css'],
+    selector: 'recruiter-company-job-card',
+    templateUrl: 'recruiter-company-job-card.component.html',
+    styleUrls: ['recruiter-company-job-card.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterCompanyJobCard {
   @ContentChild('text')

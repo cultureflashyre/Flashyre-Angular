@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-navbar4',
-  templateUrl: 'navbar4.component.html',
-  styleUrls: ['navbar4.component.css'],
+    selector: 'app-navbar4',
+    templateUrl: 'navbar4.component.html',
+    styleUrls: ['navbar4.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class Navbar4 {
   @ContentChild('link3')

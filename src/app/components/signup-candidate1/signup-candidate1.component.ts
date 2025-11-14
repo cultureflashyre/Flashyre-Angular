@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
@@ -12,12 +12,22 @@ import { Console } from 'console';
 import { AuthService } from '../../services/candidate.service'; // Renamed to avoid conflict
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SocialAuthService, GoogleLoginProvider, SocialUser } from '@abacritt/angularx-social-login';
+import { NgClass } from '@angular/common';
 
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 
 @Component({
-  selector: 'signup-candidate1',
-  templateUrl: './signup-candidate1.component.html',
-  styleUrls: ['./signup-candidate1.component.css'],
+    selector: 'signup-candidate1',
+    templateUrl: './signup-candidate1.component.html',
+    styleUrls: ['./signup-candidate1.component.css'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        NgClass,
+        RouterLink,
+        GoogleSigninButtonModule,
+    ],
 })
 export class SignupCandidate1 implements OnInit {
 

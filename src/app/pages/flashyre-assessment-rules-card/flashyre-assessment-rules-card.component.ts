@@ -6,8 +6,15 @@ import { VideoRecorderService } from '../../services/video-recorder.service';
 // ProctoringService is imported but not used, which is fine.
 import { ProctoringService } from '../../services/proctoring.service';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
 @Component({
   selector: 'flashyre-assessment-rules-card',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+  ],
   templateUrl: 'flashyre-assessment-rules-card.component.html',
   styleUrls: ['flashyre-assessment-rules-card.component.css'],
 })

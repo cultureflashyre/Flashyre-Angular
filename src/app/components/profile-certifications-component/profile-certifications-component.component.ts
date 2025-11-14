@@ -1,11 +1,15 @@
 import { Component, Input, ContentChild, TemplateRef, OnInit, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CertificationService } from 'src/app/services/certification.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 @Component({
-  selector: 'profile-certifications-component',
-  templateUrl: './profile-certifications-component.component.html',
-  styleUrls: ['./profile-certifications-component.component.css']
+    selector: 'profile-certifications-component',
+    templateUrl: './profile-certifications-component.component.html',
+    styleUrls: ['./profile-certifications-component.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, AlertMessageComponent]
 })
 export class ProfileCertificationsComponent implements OnInit {
   @ContentChild('text1') text1: TemplateRef<any>;

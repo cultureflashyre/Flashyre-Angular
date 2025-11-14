@@ -1,10 +1,22 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core'
 import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { RecruiterProfile } from '../recruiter-profile/recruiter-profile.component';
+import { RecruiterJobPosted } from '../recruiter-job-posted/recruiter-job-posted.component';
 
 @Component({
-  selector: 'navbar-for-recruiter-view',
-  templateUrl: 'navbar-for-recruiter-view.component.html',
-  styleUrls: ['navbar-for-recruiter-view.component.css'],
+    selector: 'navbar-for-recruiter-view',
+    templateUrl: 'navbar-for-recruiter-view.component.html',
+    styleUrls: ['navbar-for-recruiter-view.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        RouterLink,
+        NgTemplateOutlet,
+        NgIf,
+        RecruiterProfile,
+    ],
 })
 export class NavbarForRecruiterView implements OnInit {
 

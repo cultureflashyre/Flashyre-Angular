@@ -3,8 +3,22 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ProfileEducationComponent } from '../../components/profile-education-component/profile-education-component.component';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { ProgressBarStep3 } from 'src/app/components/progress-bar-step-3/progress-bar-step-3.component';
+import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
+
 @Component({
   selector: 'profile-education-page-duplicate',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, ProgressBarStep3,
+    ProfileEducationComponent,
+    ProfileCreationNavigation2,
+  ],
   templateUrl: 'profile-education-page-duplicate.component.html',
   styleUrls: ['profile-education-page-duplicate.component.css'],
 })

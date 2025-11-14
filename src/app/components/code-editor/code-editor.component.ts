@@ -5,11 +5,14 @@ import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-monokai';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-code-editor',
-  templateUrl: './code-editor.component.html',
-  styleUrls: ['./code-editor.component.css']
+    selector: 'app-code-editor',
+    templateUrl: './code-editor.component.html',
+    styleUrls: ['./code-editor.component.css'],
+    standalone: true,
+    imports: [FormsModule]
 })
 export class CodeEditorComponent implements AfterViewInit, OnChanges {
   @Input() problemId: number = 0;

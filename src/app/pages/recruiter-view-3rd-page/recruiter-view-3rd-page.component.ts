@@ -1,8 +1,22 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForRecruiterView } from 'src/app/components/navbar-for-recruiter-view/navbar-for-recruiter-view.component'
+import { RecruiterProfile } from 'src/app/components/recruiter-profile/recruiter-profile.component'
+import { WriteAJobPostForRecruiter } from 'src/app/components/write-a-job-post-for-recruiter/write-a-job-post-for-recruiter.component'
+import { RecruiterFlowJobPostedCard } from 'src/app/components/recruiter-flow-job-posted-card/recruiter-flow-job-posted-card.component'
+
 @Component({
   selector: 'recruiter-view3rd-page',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForRecruiterView, RecruiterProfile,
+    WriteAJobPostForRecruiter, RecruiterFlowJobPostedCard,
+  ],
   templateUrl: 'recruiter-view-3rd-page.component.html',
   styleUrls: ['recruiter-view-3rd-page.component.css'],
 })

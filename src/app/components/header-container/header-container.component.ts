@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'header-container',
-  templateUrl: 'header-container.component.html',
-  styleUrls: ['header-container.component.css'],
+    selector: 'header-container',
+    templateUrl: 'header-container.component.html',
+    styleUrls: ['header-container.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class HeaderContainer {
   @ContentChild('timer')

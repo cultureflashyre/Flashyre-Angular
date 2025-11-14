@@ -3,8 +3,6 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 
-
-import { ComponentsModule } from '../../components/components.module'
 import { CandidateAssessment } from './candidate-assessment.component'
 
 const routes = [
@@ -16,7 +14,7 @@ const routes = [
 
 @NgModule({
   declarations: [CandidateAssessment],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes), FormsModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule],
   exports: [CandidateAssessment],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

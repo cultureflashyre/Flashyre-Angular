@@ -1,14 +1,23 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { catchError, of } from 'rxjs';
-import { SocialAuthService, GoogleLoginProvider,SocialUser } from '@abacritt/angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider,SocialUser, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'log-in-page',
-  templateUrl: './log-in-page.component.html',
-  styleUrls: ['./log-in-page.component.css']
+    selector: 'log-in-page',
+    templateUrl: './log-in-page.component.html',
+    styleUrls: ['./log-in-page.component.css'],
+    standalone: true,
+    imports: [
+      AlertMessageComponent, NgClass, 
+      NgTemplateOutlet, FormsModule, 
+      ReactiveFormsModule, RouterLink,
+    GoogleSigninButtonModule ,]
 })
 export class LogInPage implements OnInit {
   @ContentChild('text11') text11: TemplateRef<any>;

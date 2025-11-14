@@ -1,11 +1,14 @@
 // src/app/components/job-cards/job-cards.component.ts
 
 import { Component, OnInit, Output, EventEmitter, Input, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'job-cards',
-  templateUrl: './job-cards.component.html',
-  styleUrls: ['./job-cards.component.css'],
+    selector: 'job-cards',
+    templateUrl: './job-cards.component.html',
+    styleUrls: ['./job-cards.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class JobCardsComponent implements OnInit, OnChanges {
   // --- INPUTS ---

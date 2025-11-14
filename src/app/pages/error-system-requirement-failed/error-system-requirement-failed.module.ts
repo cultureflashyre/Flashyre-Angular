@@ -15,7 +15,7 @@ const routes = [
 
 @NgModule({
   declarations: [ErrorSystemRequirementFailed],
-  imports: [CommonModule, ComponentsModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,   RouterModule.forChild(routes)],
   exports: [ErrorSystemRequirementFailed],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

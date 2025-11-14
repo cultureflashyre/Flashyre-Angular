@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'flashyre-assessment-rules',
-  templateUrl: 'flashyre-assessment-rules.component.html',
-  styleUrls: ['flashyre-assessment-rules.component.css'],
+    selector: 'flashyre-assessment-rules',
+    templateUrl: 'flashyre-assessment-rules.component.html',
+    styleUrls: ['flashyre-assessment-rules.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class FlashyreAssessmentRules {
   // === FIX: THIS CODE IS NEW ===================================

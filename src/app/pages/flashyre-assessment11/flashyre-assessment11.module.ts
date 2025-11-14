@@ -20,7 +20,7 @@ const routes = [
 @NgModule({ declarations: [FlashyreAssessment11],
     exports: [FlashyreAssessment11],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
-        ComponentsModule,
+         
         RouterModule.forChild(routes),
         NgxSpinnerModule,
         SharedPipesModule, // Add the shared module here

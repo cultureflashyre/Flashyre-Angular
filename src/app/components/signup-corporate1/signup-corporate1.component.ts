@@ -1,20 +1,23 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
-import { ThumbnailService } from '../../services/thumbnail.service';  // Import ThumbnailService
+import { ThumbnailService } from '../../services/thumbnail.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';  // Import ThumbnailService
 
 
 @Component({
-  selector: 'signup-corporate1',
-  templateUrl: './signup-corporate1.component.html',
-  styleUrls: ['./signup-corporate1.component.css']
+    selector: 'signup-corporate1',
+    templateUrl: './signup-corporate1.component.html',
+    styleUrls: ['./signup-corporate1.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, RouterLink]
 })
 export class SignupCorporate1 implements OnInit {
 

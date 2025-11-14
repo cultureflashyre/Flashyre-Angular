@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ElementRef, Input, ContentChild, TemplateRef, NgZone, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EducationService } from '../../services/education.service';
 import { forkJoin, Subject, Observable, of, Subscription } from 'rxjs';
 import { tap, catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 interface DropdownItem {
   id: number;
@@ -22,9 +23,11 @@ interface ReferenceData {
 }
 
 @Component({
-  selector: 'profile-education-component',
-  templateUrl: './profile-education-component.component.html',
-  styleUrls: ['./profile-education-component.component.css']
+    selector: 'profile-education-component',
+    templateUrl: './profile-education-component.component.html',
+    styleUrls: ['./profile-education-component.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, AlertMessageComponent]
 })
 export class ProfileEducationComponent implements OnInit, OnDestroy {
   @ContentChild('text') text: TemplateRef<any>;

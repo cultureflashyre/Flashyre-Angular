@@ -1,9 +1,11 @@
 // src/app/components/admin-page1-component/admin-page1-component.component.ts
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { AdminService, Candidate } from '../../services/admin.service';
 import { forkJoin } from 'rxjs';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { FormsModule } from '@angular/forms';
 
 export interface DateFilter {
   label: string; 
@@ -11,10 +13,12 @@ export interface DateFilter {
 }
 
 @Component({
-  selector: 'admin-page1-component',
-  templateUrl: 'admin-page1-component.component.html',
-  styleUrls: ['admin-page1-component.component.css'],
-  providers: [DatePipe] 
+    selector: 'admin-page1-component',
+    templateUrl: 'admin-page1-component.component.html',
+    styleUrls: ['admin-page1-component.component.css'],
+    providers: [DatePipe],
+    standalone: true,
+    imports: [AlertMessageComponent, NgClass, FormsModule, DatePipe]
 })
 export class AdminPage1Component implements OnInit {
   @Input() rootClassName: string = '';

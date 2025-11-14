@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'navbar-for-recruiter-view1076721',
-  templateUrl: 'navbar-for-recruiter-view-107672-1.component.html',
-  styleUrls: ['navbar-for-recruiter-view-107672-1.component.css'],
+    selector: 'navbar-for-recruiter-view1076721',
+    templateUrl: 'navbar-for-recruiter-view-107672-1.component.html',
+    styleUrls: ['navbar-for-recruiter-view-107672-1.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class NavbarForRecruiterView1076721 {
   @ContentChild('text3')

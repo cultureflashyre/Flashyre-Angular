@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'profile-header-component1',
-  templateUrl: 'profile-header-component1.component.html',
-  styleUrls: ['profile-header-component1.component.css'],
+    selector: 'profile-header-component1',
+    templateUrl: 'profile-header-component1.component.html',
+    styleUrls: ['profile-header-component1.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class ProfileHeaderComponent1 {
   @ContentChild('link3')

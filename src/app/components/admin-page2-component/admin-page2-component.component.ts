@@ -1,10 +1,12 @@
 // src/app/components/admin-page2-component/admin-page2-component.ts
 
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { DatePipe } from '@angular/common'; // --- NEW: Import DatePipe ---
+import { DatePipe, NgClass, AsyncPipe } from '@angular/common'; // --- NEW: Import DatePipe ---
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminService, JobDescription } from '../../services/admin.service';
+import { AdminJdExtendedComponent } from '../admin-jd-extended-component/admin-jd-extended-component.component';
+import { AdminCandidateSourcedComponent } from '../admin-candidate-sourced-component/admin-candidate-sourced-component.component';
 
 // --- NEW: Interface for our dynamic filter objects ---
 export interface CandidateFilter {
@@ -13,10 +15,13 @@ export interface CandidateFilter {
 }
 
 @Component({
-  selector: 'admin-page2-component',
-  templateUrl: 'admin-page2-component.component.html',
-  styleUrls: ['admin-page2-component.component.css'],
-  providers: [DatePipe] // --- NEW: Add DatePipe to the component's providers ---
+    selector: 'admin-page2-component',
+    templateUrl: 'admin-page2-component.component.html',
+    styleUrls: ['admin-page2-component.component.css'],
+    providers: [DatePipe] // --- NEW: Add DatePipe to the component's providers ---
+    ,
+    standalone: true,
+    imports: [NgClass, AdminJdExtendedComponent, AdminCandidateSourcedComponent, AsyncPipe]
 })
 export class AdminPage2Component implements OnInit, OnDestroy {
   // --- MODIFIED: State Properties ---

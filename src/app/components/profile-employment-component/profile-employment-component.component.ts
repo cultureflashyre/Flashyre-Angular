@@ -1,17 +1,26 @@
 import { Component, EventEmitter, Output, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef, OnInit, OnDestroy, NgZone, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 import { EmploymentService } from '../../services/employment.service';
 import { Subject, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from '../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 
 @Component({
-  selector: 'profile-employment-component',
-  templateUrl: 'profile-employment-component.component.html',
-  styleUrls: ['profile-employment-component.component.css'],
+    selector: 'profile-employment-component',
+    templateUrl: 'profile-employment-component.component.html',
+    styleUrls: ['profile-employment-component.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        FormsModule,
+        AlertMessageComponent,
+    ],
 })
 export class ProfileEmploymentComponent implements OnInit, OnDestroy {
   saveAndNext() {

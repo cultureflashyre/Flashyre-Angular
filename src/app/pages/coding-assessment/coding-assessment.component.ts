@@ -3,11 +3,23 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@ang
 import { ActivatedRoute } from '@angular/router';
 import { CodingAssessmentService } from '../../services/coding-assessment.service';
 import { UserProfileService } from '../../services/user-profile.service';
-import { CodingTestResultsComponent } from '../../components/coding-test-results/coding-test-results.component';
 import { Subscription, timer } from 'rxjs';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { ProblemDescriptionComponent } from 'src/app/components/problem-description/problem-description.component';
+import { CodeEditorComponent } from 'src/app/components/code-editor/code-editor.component';
+import { CodingTestResultsComponent } from 'src/app/components/coding-test-results/coding-test-results.component';
 
 @Component({
   selector: 'app-coding-assessment',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    ProblemDescriptionComponent, CodeEditorComponent,
+    CodingTestResultsComponent,
+  ],
   templateUrl: './coding-assessment.component.html',
   styleUrls: ['./coding-assessment.component.css']
 })

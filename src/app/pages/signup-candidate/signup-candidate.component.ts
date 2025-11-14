@@ -1,8 +1,20 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { SignupPageNavbar } from 'src/app/components/signup-page-navbar/signup-page-navbar.component'
+import { SignupCandidate1 } from 'src/app/components/signup-candidate1/signup-candidate1.component'
+
+
 @Component({
   selector: 'signup-candidate',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    SignupCandidate1, SignupPageNavbar,
+  ],
   templateUrl: 'signup-candidate.component.html',
   styleUrls: ['signup-candidate.component.css'],
 })

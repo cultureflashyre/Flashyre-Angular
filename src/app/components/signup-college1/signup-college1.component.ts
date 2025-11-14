@@ -1,9 +1,17 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'signup-college1',
-  templateUrl: 'signup-college1.component.html',
-  styleUrls: ['signup-college1.component.css'],
+    selector: 'signup-college1',
+    templateUrl: 'signup-college1.component.html',
+    styleUrls: ['signup-college1.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        NgTemplateOutlet,
+        FormsModule,
+    ],
 })
 export class SignupCollege1 {
   @ContentChild('text6')

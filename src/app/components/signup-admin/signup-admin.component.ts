@@ -1,19 +1,27 @@
 import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { AdminAuthService } from '../../services/admin-auth.service'; // Using the dedicated service
-import { ThumbnailService } from '../../services/thumbnail.service'; // Import your thumbnail service
+import { ThumbnailService } from '../../services/thumbnail.service';
+import { NgClass } from '@angular/common'; // Import your thumbnail service
 
 @Component({
-  selector: 'signup-admin1',
-  templateUrl: './signup-admin.component.html',
-  styleUrls: ['./signup-admin.component.css'],
+    selector: 'signup-admin1',
+    templateUrl: './signup-admin.component.html',
+    styleUrls: ['./signup-admin.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterLink,
+    ],
 })
 export class Signupadmin implements OnInit {
 
