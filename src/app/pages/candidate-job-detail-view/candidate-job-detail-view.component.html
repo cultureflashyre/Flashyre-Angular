@@ -1,90 +1,93 @@
 <!-- candidate-job-detail-view.component.html -->
 
 <!-- Filter Popup and Backdrop -->
-<div
-  *ngIf="showMoreFilters"
-  [@popupAnimation]
+@if (showMoreFilters) {
+  <div
+    [@popupAnimation]
   [ngStyle]="{
     position: 'absolute',
     top: filterPosition.top + 'px',
     left: filterPosition.left + 'px',
     zIndex: 1002
   }"
-  class="filter-popup-wrapper"
-  (click)="$event.stopPropagation()"
->
-  <more-filters-and-preference-component
-    [callerType]="'candidate'"
-    (closeEvent)="showMoreFilters = false"
-    (applyFiltersEvent)="onApplyFilters($event)"
-    [initialTab]="initialFilterTab"
-  ></more-filters-and-preference-component>
-</div>
-<div
-  *ngIf="showMoreFilters"
-  class="filter-backdrop"
-  [@popupAnimation]
-  (click)="showMoreFilters = false"
-></div>
+    class="filter-popup-wrapper"
+    (click)="$event.stopPropagation()"
+    >
+    <more-filters-and-preference-component
+      [callerType]="'candidate'"
+      (closeEvent)="showMoreFilters = false"
+      (applyFiltersEvent)="onApplyFilters($event)"
+      [initialTab]="initialFilterTab"
+    ></more-filters-and-preference-component>
+  </div>
+}
+@if (showMoreFilters) {
+  <div
+    class="filter-backdrop"
+    [@popupAnimation]
+    (click)="showMoreFilters = false"
+  ></div>
+}
 
 <div
   id="candidate-job-detail-view"
   class="candidate-job-detail-view-container1"
->
+  >
 
-  <app-alert-message
-    *ngIf="showAssessmentAlert"
-    [message]="assessmentAlertMessage"
-    [buttons]="assessmentAlertButtons"
-    (buttonClicked)="handleAssessmentAlertAction($event)"
-    (close)="handleAssessmentAlertAction('Later')">
-  </app-alert-message>
+  @if (showAssessmentAlert) {
+    <app-alert-message
+      [message]="assessmentAlertMessage"
+      [buttons]="assessmentAlertButtons"
+      (buttonClicked)="handleAssessmentAlertAction($event)"
+      (close)="handleAssessmentAlertAction('Later')">
+    </app-alert-message>
+  }
 
 
   <div id="main-container" class="candidate-job-detail-view-main-container">
     <navbar-for-candidate-view
-    rootClassName="navbar-for-candidate-viewroot-class-name1"
-  ></navbar-for-candidate-view>
+      rootClassName="navbar-for-candidate-viewroot-class-name1"
+    ></navbar-for-candidate-view>
     <div
       id="details-container"
       class="candidate-job-detail-view-details-container"
-    >
+      >
       <div
         id="job-search-for-candidate-main-conatiner"
         class="candidate-job-detail-view-job-search-container"
-      >
+        >
         <header
           id="job-search-container"
           class="candidate-job-detail-view-container2"
-        >
+          >
           <header
             data-thq="thq-navbar"
             class="candidate-job-detail-view-navbar-interactive"
-          >
+            >
             <div
               data-thq="thq-navbar-nav"
               class="candidate-job-detail-view-desktop-menu"
-            >
+              >
               <nav
                 id="job-search-location-experience-container"
                 class="candidate-job-detail-view-links1"
-              >
+                >
                 <div
                   id="candidate-job-location-experience-container"
                   class="candidate-job-detail-view-container3"
-                >
+                  >
                   <!-- Job Title Input -->
                   <div
                     id="job-title-container"
                     class="candidate-job-detail-view-job-title-container1"
-                  >
+                    >
                     <svg
                       id="job-search-icon"
                       width="32"
                       height="32"
                       viewBox="0 0 32 32"
                       class="candidate-job-detail-view-search-icon1"
-                    >
+                      >
                       <path
                         d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
                         fill="currentColor"
@@ -96,363 +99,366 @@
                       class="candidate-job-detail-view-job-title-text1"
                       placeholder="Job title, Keyword..."
                       [(ngModel)]="searchJobTitle"
-                    />
-                  </div>
-                  <!-- Location Input -->
-                  <div
-                    id="location-container"
-                    class="candidate-job-detail-view-location-container1"
-                  >
+                      />
+                    </div>
+                    <!-- Location Input -->
+                    <div
+                      id="location-container"
+                      class="candidate-job-detail-view-location-container1"
+                      >
+                      <svg
+                        id="location-icon"
+                        width="1024"
+                        height="1024"
+                        viewBox="0 0 1024 1024"
+                        class="candidate-job-detail-view-location-icon1"
+                        >
+                        <path
+                          d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <input
+                        type="text"
+                        id="search-location-input"
+                        class="candidate-job-detail-view-location-text"
+                        placeholder="Your Location"
+                        [(ngModel)]="searchLocation"
+                        />
+                      </div>
+                      <!-- Experience Input -->
+                      <div
+                        id="experience-container"
+                        class="candidate-job-detail-view-experience-container1"
+                        >
+                        <svg
+                          id="briefcase-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          class="candidate-job-detail-view-briefcase-icon1"
+                          >
+                          <path
+                            d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
+                            fill="currentColor"
+                          ></path>
+                        </svg>
+                        <input
+                          type="text"
+                          id="search-experience-input"
+                          class="candidate-job-detail-view-experence-text"
+                          placeholder="Experience"
+                          [(ngModel)]="searchExperience"
+                          />
+                        </div>
+                      </div>
+                    </nav>
+                    <!-- Filter Icon with click handler -->
                     <svg
-                      id="location-icon"
-                      width="1024"
-                      height="1024"
-                      viewBox="0 0 1024 1024"
-                      class="candidate-job-detail-view-location-icon1"
-                    >
-                      <path
-                        d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
-                        fill="currentColor"
-                      ></path>
-                      <path
-                        d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    <input
-                      type="text"
-                      id="search-location-input"
-                      class="candidate-job-detail-view-location-text"
-                      placeholder="Your Location"
-                      [(ngModel)]="searchLocation"
-                    />
-                  </div>
-                  <!-- Experience Input -->
-                  <div
-                    id="experience-container"
-                    class="candidate-job-detail-view-experience-container1"
-                  >
-                    <svg
-                      id="briefcase-icon"
+                      #filterIcon
+                      id="filter-icon"
                       width="24"
                       height="24"
                       viewBox="0 0 24 24"
-                      class="candidate-job-detail-view-briefcase-icon1"
-                    >
-                       <path
-                          d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
-                          fill="currentColor"
-                        ></path>
-                    </svg>
-                    <input
-                      type="text"
-                      id="search-experience-input"
-                      class="candidate-job-detail-view-experence-text"
-                      placeholder="Experience"
-                      [(ngModel)]="searchExperience"
-                    />
-                  </div>
-                </div>
-              </nav>
-              <!-- Filter Icon with click handler -->
-              <svg
-                #filterIcon
-                id="filter-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                class="candidate-job-detail-view-filter-icon1"
-                (click)="openFiltersPopup('filters')"
-              >
-                <path
-                  d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
-                  fill="none"
-                  color="currentColor"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-              <!-- Buttons with click handlers -->
-              <div
-                id="search-preference-button"
-                class="candidate-job-detail-view-buttons1"
-              >
-                <button
-                  id="search-button"
-                  type="button"
-                  class="candidate-job-detail-view-search-button1 button"
-                  (click)="onSearch()"
-                >
-                  <span
-                    id="search-text"
-                    class="candidate-job-detail-view-search-text1"
-                  >
-                    Search
-                  </span>
-                </button>
-                <button
-                  id="preference-button"
-                  type="button"
-                  class="candidate-job-detail-view-preference-button1 button"
-                  (click)="openFiltersPopup('preferences')"
-                >
-                  <span
-                    id="preference-text"
-                    class="candidate-job-detail-view-preference-text1"
-                  >
-                    Preference
-                  </span>
-                </button>
-              </div>
-            </div>
-             <!-- Mobile view -->
-            <div
-              data-thq="thq-burger-menu"
-              class="candidate-job-detail-view-burger-menu"
-            >
-              <span
-                id="jobs-title-search-bar"
-                class="candidate-job-detail-view-job-title-text2"
-              >
-                Job title, skills...
-              </span>
-              <svg
-                id="job-search-icon-navbar"
-                viewBox="0 0 32 32"
-                class="candidate-job-detail-view-search-icon2"
-              >
-                <path
-                  d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </div>
-            <div
-              data-thq="thq-mobile-menu"
-              class="candidate-job-detail-view-mobile-menu"
-            >
-              <div class="candidate-job-detail-view-nav">
-                <div class="candidate-job-detail-view-top">
-                  <div
-                    data-thq="thq-close-menu"
-                    class="candidate-job-detail-view-close-menu"
-                  >
-                    <svg
-                      viewBox="0 0 1024 1024"
-                      class="candidate-job-detail-view-close-icon"
-                    >
+                      class="candidate-job-detail-view-filter-icon1"
+                      (click)="openFiltersPopup('filters')"
+                      >
                       <path
-                        d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+                        d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
+                        fill="none"
+                        color="currentColor"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                       ></path>
                     </svg>
+                    <!-- Buttons with click handlers -->
+                    <div
+                      id="search-preference-button"
+                      class="candidate-job-detail-view-buttons1"
+                      >
+                      <button
+                        id="search-button"
+                        type="button"
+                        class="candidate-job-detail-view-search-button1 button"
+                        (click)="onSearch()"
+                        >
+                        <span
+                          id="search-text"
+                          class="candidate-job-detail-view-search-text1"
+                          >
+                          Search
+                        </span>
+                      </button>
+                      <button
+                        id="preference-button"
+                        type="button"
+                        class="candidate-job-detail-view-preference-button1 button"
+                        (click)="openFiltersPopup('preferences')"
+                        >
+                        <span
+                          id="preference-text"
+                          class="candidate-job-detail-view-preference-text1"
+                          >
+                          Preference
+                        </span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <nav
-                  id="links-container"
-                  class="candidate-job-detail-view-links2"
-                >
+                  <!-- Mobile view -->
                   <div
-                    id="job-container"
-                    class="candidate-job-detail-view-job-title-container2"
-                  >
-                    <svg
-                      id="search-icon"
-                      viewBox="0 0 32 32"
-                      class="candidate-job-detail-view-search-icon3"
+                    data-thq="thq-burger-menu"
+                    class="candidate-job-detail-view-burger-menu"
                     >
+                    <span
+                      id="jobs-title-search-bar"
+                      class="candidate-job-detail-view-job-title-text2"
+                      >
+                      Job title, skills...
+                    </span>
+                    <svg
+                      id="job-search-icon-navbar"
+                      viewBox="0 0 32 32"
+                      class="candidate-job-detail-view-search-icon2"
+                      >
                       <path
                         d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
                         fill="currentColor"
                       ></path>
                     </svg>
-                    <span
-                      id="search-job-title-input-navbar"
-                      class="candidate-job-detail-view-search-text2"
-                    >
-                      Job tittle, Keyword...
-                    </span>
                   </div>
                   <div
-                    id="experience-navbar-container"
-                    class="candidate-job-detail-view-experience-container2"
-                  >
-                    <svg
-                      id="briefcase-icon-navbar"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      class="candidate-job-detail-view-briefcase-icon2"
+                    data-thq="thq-mobile-menu"
+                    class="candidate-job-detail-view-mobile-menu"
                     >
-                      <path
-                        d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    <span
-                      id="search-experience-input-navbar"
-                      class="candidate-job-detail-view-experience-text"
-                    >
-                      Experience
-                    </span>
+                    <div class="candidate-job-detail-view-nav">
+                      <div class="candidate-job-detail-view-top">
+                        <div
+                          data-thq="thq-close-menu"
+                          class="candidate-job-detail-view-close-menu"
+                          >
+                          <svg
+                            viewBox="0 0 1024 1024"
+                            class="candidate-job-detail-view-close-icon"
+                            >
+                            <path
+                              d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <nav
+                        id="links-container"
+                        class="candidate-job-detail-view-links2"
+                        >
+                        <div
+                          id="job-container"
+                          class="candidate-job-detail-view-job-title-container2"
+                          >
+                          <svg
+                            id="search-icon"
+                            viewBox="0 0 32 32"
+                            class="candidate-job-detail-view-search-icon3"
+                            >
+                            <path
+                              d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                          <span
+                            id="search-job-title-input-navbar"
+                            class="candidate-job-detail-view-search-text2"
+                            >
+                            Job tittle, Keyword...
+                          </span>
+                        </div>
+                        <div
+                          id="experience-navbar-container"
+                          class="candidate-job-detail-view-experience-container2"
+                          >
+                          <svg
+                            id="briefcase-icon-navbar"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            class="candidate-job-detail-view-briefcase-icon2"
+                            >
+                            <path
+                              d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                          <span
+                            id="search-experience-input-navbar"
+                            class="candidate-job-detail-view-experience-text"
+                            >
+                            Experience
+                          </span>
+                        </div>
+                        <div
+                          id="location-container-navbar"
+                          class="candidate-job-detail-view-location-container2"
+                          >
+                          <svg
+                            id="location-icon-navbar"
+                            width="1024"
+                            height="1024"
+                            viewBox="0 0 1024 1024"
+                            class="candidate-job-detail-view-location-icon2"
+                            >
+                            <path
+                              d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
+                              fill="currentColor"
+                            ></path>
+                            <path
+                              d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                          <span
+                            id="search-location-input-navbar"
+                            class="candidate-job-detail-view-your-location-text"
+                            >
+                            Your Location
+                          </span>
+                        </div>
+                      </nav>
+                      <div
+                        id="buttons-conatiner"
+                        class="candidate-job-detail-view-buttons2"
+                        >
+                        <svg
+                          id="job-filter-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          class="candidate-job-detail-view-filter-icon2"
+                          >
+                          <path
+                            d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
+                            fill="none"
+                            color="currentColor"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </svg>
+                        <button
+                          id="job-search-button"
+                          type="button"
+                          class="candidate-job-detail-view-search-button2 button"
+                          >
+                          <span
+                            id="job-search-text"
+                            class="candidate-job-detail-view-search-text3"
+                            >
+                            Search
+                          </span>
+                        </button>
+                        <button
+                          id="preference-button-navbar"
+                          type="button"
+                          class="candidate-job-detail-view-preference-button2 button"
+                          >
+                          <span
+                            id="preference-text-navbar"
+                            class="candidate-job-detail-view-preferece-text"
+                            >
+                            Preference
+                          </span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    id="location-container-navbar"
-                    class="candidate-job-detail-view-location-container2"
-                  >
-                    <svg
-                      id="location-icon-navbar"
-                      width="1024"
-                      height="1024"
-                      viewBox="0 0 1024 1024"
-                      class="candidate-job-detail-view-location-icon2"
-                    >
-                      <path
-                        d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"
-                        fill="currentColor"
-                      ></path>
-                      <path
-                        d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    <span
-                      id="search-location-input-navbar"
-                      class="candidate-job-detail-view-your-location-text"
-                    >
-                      Your Location
-                    </span>
-                  </div>
-                </nav>
-                <div
-                  id="buttons-conatiner"
-                  class="candidate-job-detail-view-buttons2"
-                >
-                  <svg
-                    id="job-filter-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    class="candidate-job-detail-view-filter-icon2"
-                  >
-                    <path
-                      d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
-                      fill="none"
-                      color="currentColor"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                  </svg>
-                  <button
-                    id="job-search-button"
-                    type="button"
-                    class="candidate-job-detail-view-search-button2 button"
-                  >
-                    <span
-                      id="job-search-text"
-                      class="candidate-job-detail-view-search-text3"
-                    >
-                      Search
-                    </span>
-                  </button>
-                  <button
-                    id="preference-button-navbar"
-                    type="button"
-                    class="candidate-job-detail-view-preference-button2 button"
-                  >
-                    <span
-                      id="preference-text-navbar"
-                      class="candidate-job-detail-view-preferece-text"
-                    >
-                      Preference
-                    </span>
-                  </button>
-                </div>
+                </header>
+              </header>
+            </div>
+            <!-- Tab counts are now driven by getters -->
+            <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
+              <div
+                id="job-recommended-container"
+                class="candidate-job-detail-view-job-recommended-container"
+                (click)="selectRecommendedTab()"
+                [class.active-tab]="activeTab === 'recommended'">
+                <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
+                  Jobs recommended
+                  @if (recommendedJobCount !== null) {
+                    ({{ recommendedJobCount }})
+                  }
+                </span>
+              </div>
+              <!--
+              <div
+                id="preference-container"
+                class="candidate-job-detail-view-preference-container">
+                <span id="preference-text" class="candidate-job-detail-view-preference-text2">
+                  Preference (4)
+                </span>
+              </div>
+              -->
+              <div
+                id="saved-container"
+                class="candidate-job-detail-view-saved-container"
+                (click)="selectSavedTab()"
+                [class.active-tab]="activeTab === 'saved'">
+                <span id="saved-text" class="candidate-job-detail-view-saved-text">
+                  Saved
+                  @if (savedJobCount !== null) {
+                    ({{ savedJobCount }})
+                  }
+                </span>
+              </div>
+              <div
+                id="applied-container"
+                class="candidate-job-detail-view-applied-container"
+                (click)="selectAppliedTab()"
+                [class.active-tab]="activeTab === 'applied'">
+                <span id="applied-text" class="candidate-job-detail-view-applied-text">
+                  Applied
+                  @if (appliedJobCount !== null) {
+                    ({{ appliedJobCount }})
+                  }
+                </span>
               </div>
             </div>
-          </header>
-        </header>
-      </div>
-       <!-- Tab counts are now driven by getters -->
-      <div id="job-recommended-preference-container" class="candidate-job-detail-view-job-recommended-preference-container">
-        <div
-          id="job-recommended-container"
-          class="candidate-job-detail-view-job-recommended-container"
-          (click)="selectRecommendedTab()"
-          [class.active-tab]="activeTab === 'recommended'">
-          <span id="job-recommended-text" class="candidate-job-detail-view-job-recommended-text">
-            Jobs recommended
-            <ng-container *ngIf="recommendedJobCount !== null">
-              ({{ recommendedJobCount }})
-            </ng-container>
-          </span>
-        </div>
-        <!--
-        <div
-          id="preference-container"
-          class="candidate-job-detail-view-preference-container">
-          <span id="preference-text" class="candidate-job-detail-view-preference-text2">
-            Preference (4)
-          </span>
-        </div>
-        -->
-        <div
-          id="saved-container"
-          class="candidate-job-detail-view-saved-container"
-          (click)="selectSavedTab()"
-          [class.active-tab]="activeTab === 'saved'">
-          <span id="saved-text" class="candidate-job-detail-view-saved-text">
-            Saved
-            <ng-container *ngIf="savedJobCount !== null">
-              ({{ savedJobCount }})
-            </ng-container>
-          </span>
-        </div>
-        <div
-          id="applied-container"
-          class="candidate-job-detail-view-applied-container"
-          (click)="selectAppliedTab()"
-          [class.active-tab]="activeTab === 'applied'">
-          <span id="applied-text" class="candidate-job-detail-view-applied-text">
-            Applied
-            <ng-container *ngIf="appliedJobCount !== null">
-              ({{ appliedJobCount }})
-            </ng-container>
-          </span>
-        </div>
-      </div>
-      <div class="candidate-job-detail-view-container4">
-        <job-cards
-          [selectedJobId]="selectedJobId"
-          [isLoading]="isLoading"
-          [errorMessage]="errorMessage"
-          [jobsToDisplay]="jobsToDisplay"
-          [noMatchesFound]="noMatchesFound"
-          (jobSelected)="onJobSelected($event)"
-          rootClassName="job-cardsroot-class-name"
-        ></job-cards>
-        <div class="candidate-job-detail-view-container5">
-          <candidate-job-details
-            *ngIf="jobsToDisplay.length > 0"
-            [job]="selectedJob"
-            [activeTab]="activeTab"
-            [allAssessments]="allAssessments"
-            (applicationRevoked)="onApplicationRevoked($event)"
-            (jobAppliedSuccess)="onJobApplied($event)"
-            (jobSaved)="onJobSaved($event)"
-            (jobUnsaved)="onJobUnsaved($event)"
-            (jobDisliked)="onJobDisliked($event)"
-            (jobUndisliked)="onJobUndisliked($event)"
-            rootClassName="candidate-job-detailsroot-class-name"
-          ></candidate-job-details>
-          <div *ngIf="!isLoading && !errorMessage && jobsToDisplay.length === 0" class="no-jobs-message-container">
-              <span>There are no jobs to display in this category.</span>
+            <div class="candidate-job-detail-view-container4">
+              <job-cards
+                [selectedJobId]="selectedJobId"
+                [isLoading]="isLoading"
+                [errorMessage]="errorMessage"
+                [jobsToDisplay]="jobsToDisplay"
+                [noMatchesFound]="noMatchesFound"
+                (jobSelected)="onJobSelected($event)"
+                rootClassName="job-cardsroot-class-name"
+              ></job-cards>
+              <div class="candidate-job-detail-view-container5">
+                @if (jobsToDisplay.length > 0) {
+                  <candidate-job-details
+                    [job]="selectedJob"
+                    [activeTab]="activeTab"
+                    [allAssessments]="allAssessments"
+                    (applicationRevoked)="onApplicationRevoked($event)"
+                    (jobAppliedSuccess)="onJobApplied($event)"
+                    (jobSaved)="onJobSaved($event)"
+                    (jobUnsaved)="onJobUnsaved($event)"
+                    (jobDisliked)="onJobDisliked($event)"
+                    (jobUndisliked)="onJobUndisliked($event)"
+                    rootClassName="candidate-job-detailsroot-class-name"
+                  ></candidate-job-details>
+                }
+                @if (!isLoading && !errorMessage && jobsToDisplay.length === 0) {
+                  <div class="no-jobs-message-container">
+                    <span>There are no jobs to display in this category.</span>
+                  </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>

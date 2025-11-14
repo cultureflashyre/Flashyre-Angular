@@ -1,19 +1,27 @@
 
 <div class="page-container">
-    <div *ngIf="isLoading" class="loading">Loading...</div>
-    <div class="left-section">
-        <div *ngIf="!isLoading && problems.length > 0" class="problem-selector">
-            <label for="problem-select">Select Problem:</label>
-            <select id="problem-select" class="problem-selector" (change)="selectProblem($event.target.value)">
-                <option value="" disabled selected *ngIf="!problemId">Select a problem</option>
-                <option *ngFor="let prob of problems" [value]="prob.id" [selected]="prob.id === problemId">{{ prob.title }}</option>
-            </select>
-        </div>
-        <app-problem-description [problem]="problem"></app-problem-description>
-    </div>
-    <div class="right-section">
-        <div class="timer-display">Time Remaining: {{ remainingTime }}</div>
-        <app-code-editor [problemId]="problemId" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
-        <app-test-results [results]="results"></app-test-results>
-    </div>
+  @if (isLoading) {
+    <div class="loading">Loading...</div>
+  }
+  <div class="left-section">
+    @if (!isLoading && problems.length > 0) {
+      <div class="problem-selector">
+        <label for="problem-select">Select Problem:</label>
+        <select id="problem-select" class="problem-selector" (change)="selectProblem($event.target.value)">
+          @if (!problemId) {
+            <option value="" disabled selected>Select a problem</option>
+          }
+          @for (prob of problems; track prob) {
+            <option [value]="prob.id" [selected]="prob.id === problemId">{{ prob.title }}</option>
+          }
+        </select>
+      </div>
+    }
+    <app-problem-description [problem]="problem"></app-problem-description>
+  </div>
+  <div class="right-section">
+    <div class="timer-display">Time Remaining: {{ remainingTime }}</div>
+    <app-code-editor [problemId]="problemId" (runCode)="onRunCode($event)" (submitCode)="onSubmitCode($event)"></app-code-editor>
+    <app-test-results [results]="results"></app-test-results>
+  </div>
 </div>

@@ -1,39 +1,44 @@
 <!-- Add this entire block -->
-<app-alert-message
-  *ngIf="showAlert"
-  [message]="alertMessage"
-  [buttons]="alertButtons"
-  (buttonClicked)="onAlertButtonClicked($event)"
-  (close)="showAlert = false">
-</app-alert-message>
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+}
 
-<div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
-    <span *ngIf="popupType === 'success'" class="tick">✔</span>
+@if (showPopup) {
+  <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    @if (popupType === 'success') {
+      <span class="tick">✔</span>
+    }
     {{ popupMessage }}
     <span class="closebtn" (click)="closePopup()"> × </span>
-</div>
+  </div>
+}
 
 
 <div
   id="admin-page1-component"
   class="admin-page1-component-container"
   [ngClass]="rootClassName"
->
+  >
   <div
     id="date-selector-main-container"
     class="admin-page1-component-date-selector-main-container"
-  >
+    >
     <div
       id="left-arrow-container"
       class="admin-page1-component-left-arrow-container"
-    >
+      >
       <svg
         id="left-arrow-icon"
         width="24"
         height="24"
         viewBox="0 0 24 24"
         class="admin-page1-component-left-arrow-icon"
-      >
+        >
         <path
           d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z"
           fill="currentColor"
@@ -43,34 +48,37 @@
     <div
       id="date-selector-container"
       class="admin-page1-component-date-selector-container"
-    >
-      <!-- Loop through the dynamically generated filters -->
-      <div
-        *ngFor="let filter of dateFilters"
-        class="admin-page1-component-date-selector1st-container"
-        [ngClass]="{'active-date-filter': activeFilter === filter.value}"
-        (click)="applyFilter(filter.value)"
       >
-        <!-- The text is now bound to the filter's label -->
-        <span class="admin-page1-component-day-text">{{ filter.label }}</span>
-      </div>
+      <!-- Loop through the dynamically generated filters -->
+      @for (filter of dateFilters; track filter) {
+        <div
+          class="admin-page1-component-date-selector1st-container"
+          [ngClass]="{'active-date-filter': activeFilter === filter.value}"
+          (click)="applyFilter(filter.value)"
+          >
+          <!-- The text is now bound to the filter's label -->
+          <span class="admin-page1-component-day-text">{{ filter.label }}</span>
+        </div>
+      }
 
       <!-- NEW: Show a message if no CVs have been uploaded yet -->
-      <div *ngIf="!isLoading && dateFilters.length === 0" class="no-batches-message">
-        No CV batches have been uploaded.
-      </div>
+      @if (!isLoading && dateFilters.length === 0) {
+        <div class="no-batches-message">
+          No CV batches have been uploaded.
+        </div>
+      }
     </div>
     <div
       id="right-arrow-container"
       class="admin-page1-component-right-arrow-container"
-    >
+      >
       <svg
         id="right-arrow-icon"
         width="24"
         height="24"
         viewBox="0 0 24 24"
         class="admin-page1-component-right-arrow-icon"
-      >
+        >
         <path
           d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z"
           fill="currentColor"
@@ -81,15 +89,15 @@
   <div
     id="candidate-profiles-main-container"
     class="admin-page1-component-candidate-profiles-main-container"
-  >
+    >
     <div
       id="select-process-remove-main-container"
       class="admin-page1-component-select-process-remove-main-container"
-    >
+      >
       <div
         id="select-all-main-container"
         class="admin-page1-component-select-all-main-container"
-      >
+        >
         <!-- MODIFIED: Two-way binding for select all checkbox -->
         <input
           type="checkbox"
@@ -97,180 +105,188 @@
           class="admin-page1-component-select-checkbox"
           [(ngModel)]="isAllSelected"
           (ngModelChange)="toggleSelectAll()"
-        />
-        <span
-          id="select-all-text"
-          class="admin-page1-component-select-all-text"
-        >
-          Select All
-        </span>
-      </div>
-      <div
-        id="start-process-remove-container"
-        class="admin-page1-component-start-process-remove-container"
-      >
-        <!-- MODIFIED: Added click handlers for bulk actions -->
-        <button
-          id="start-process-button"
-          type="button"
-          class="admin-page1-component-start-process-button button"
-          (click)="onStartProcessAttempt()"
-        >
-          <span
-            id="start-process-text"
-            class="admin-page1-component-start-process-text"
-          >
-            Send Invite
-          </span>
-        </button>
-        <button
-          id="remove-button"
-          type="button"
-          class="admin-page1-component-remove-button button"
-          (click)="onRemoveSelectedAttempt()"
-        >
-          <span id="remove-text" class="admin-page1-component-remove-text">
-            Remove
-          </span>
-        </button>
-      </div>
-    </div>
-
-     <!-- MODIFIED: Added a dedicated header row for column titles -->
-    <div class="table-header-row">
-      <span class="header-name">Candidate Name</span>
-      <span class="header-cv">View CV</span>
-      <span class="header-invite">Last Invite Sent</span>
-      <span class="header-status">Registered</span>
-      <span class="header-remove">Remove</span>
-    </div>
-    
-    <!-- NEW: Loading and Empty State Handling -->
-    <div *ngIf="isLoading" class="loading-container">
-      Loading candidates...
-    </div>
-    <div *ngIf="!isLoading && candidates.length === 0" class="loading-container">
-      No candidates found for this filter.
-    </div>
-
-    <div
-      *ngIf="!isLoading && candidates.length > 0"
-      id="candidates-name-view-cv-main-container"
-      class="admin-page1-component-candidates-name-view-cv-main-container"
-    >
-      <!-- MODIFIED: This entire block is now dynamic with *ngFor -->
-      <div
-        *ngFor="let candidate of candidates; let i = index"
-        id="candidates-main-container"
-        class="admin-page1-component-candidates-main-container"
-      >
-        <div
-          id="candidate-name-check-box-container"
-          class="admin-page1-component-candidate-name-check-box-container"
-        >
-          <input
-            type="checkbox"
-            [id]="'candidate-checkbox-' + i"
-            class="admin-page1-component-candidate-checkbox"
-            [(ngModel)]="candidate.selected"
-            (ngModelChange)="updateSelectAllState()"
           />
           <span
-            id="candidate-name-text"
-            class="admin-page1-component-candidate-name-text"
-          >
-            {{ (candidate.full_name && candidate.full_name !== 'Processing...') ? candidate.full_name : 'Unable to parse file' }}
-          </span>
-        </div>
-        <a
-          [href]="candidate.cv_file_path"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="admin-page1-component-cv-main-container"
-          title="View {{ candidate.full_name }}'s CV"
-        >
-          <svg
-            id="eye-icon"
-            width="1024"
-            height="1024"
-            viewBox="0 0 1024 1024"
-            class="admin-page1-component-eye-icon"
-          >
-            <path
-              d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112"
-              fill="currentColor"
-            ></path>
-          </svg>
-          <span
-            id="view-cv-text"
-            class="admin-page1-component-view-cv-text"
-          >
-            View CV
-          </span>
-        </a>
-        <!-- NEW: "Last Invite Sent" Column -->
-        <div class="last-invite-sent-container">
-          <span>
-            {{ candidate.email_sent_date ? (candidate.email_sent_date | date:'dd-MMM-yy') : '-' }}
+            id="select-all-text"
+            class="admin-page1-component-select-all-text"
+            >
+            Select All
           </span>
         </div>
         <div
-          id="warning-green-tick-remove-icon-container"
-          class="admin-page1-component-warning-green-tick-remove-icon-container"
-        >
-          <div
-            id="warning-green-tick-container"
-            class="admin-page1-component-warning-green-tick-container"
+          id="start-process-remove-container"
+          class="admin-page1-component-start-process-remove-container"
           >
-            <svg
-              *ngIf="candidate.has_account !== 'Yes'"
-              id="warning-icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              class="admin-page1-component-warning-icon"
-              title="This candidate is not yet registered."
+          <!-- MODIFIED: Added click handlers for bulk actions -->
+          <button
+            id="start-process-button"
+            type="button"
+            class="admin-page1-component-start-process-button button"
+            (click)="onStartProcessAttempt()"
             >
-              <g
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
+            <span
+              id="start-process-text"
+              class="admin-page1-component-start-process-text"
               >
-                <path
-                  d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
-                ></path>
-                <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
-              </g>
-            </svg>
-            <svg
-              *ngIf="candidate.has_account === 'Yes'"
-              id="green-tick-icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              class="admin-page1-component-green-tick-icon"
-              title="This candidate is already registered."
+              Send Invite
+            </span>
+          </button>
+          <button
+            id="remove-button"
+            type="button"
+            class="admin-page1-component-remove-button button"
+            (click)="onRemoveSelectedAttempt()"
             >
-              <path
-                d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </div>
-          <svg
-            id="remove-icon"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            class="admin-page1-component-remove-icon"
-            (click)="onRemoveCandidateAttempt(candidate.candidate_id, i)"
-            title="Remove this candidate"
-          >
-            <path d="M19 13H5v-2h14z" fill="currentColor"></path>
-          </svg>
+            <span id="remove-text" class="admin-page1-component-remove-text">
+              Remove
+            </span>
+          </button>
         </div>
       </div>
+
+      <!-- MODIFIED: Added a dedicated header row for column titles -->
+      <div class="table-header-row">
+        <span class="header-name">Candidate Name</span>
+        <span class="header-cv">View CV</span>
+        <span class="header-invite">Last Invite Sent</span>
+        <span class="header-status">Registered</span>
+        <span class="header-remove">Remove</span>
+      </div>
+
+      <!-- NEW: Loading and Empty State Handling -->
+      @if (isLoading) {
+        <div class="loading-container">
+          Loading candidates...
+        </div>
+      }
+      @if (!isLoading && candidates.length === 0) {
+        <div class="loading-container">
+          No candidates found for this filter.
+        </div>
+      }
+
+      @if (!isLoading && candidates.length > 0) {
+        <div
+          id="candidates-name-view-cv-main-container"
+          class="admin-page1-component-candidates-name-view-cv-main-container"
+          >
+          <!-- MODIFIED: This entire block is now dynamic with *ngFor -->
+          @for (candidate of candidates; track candidate; let i = $index) {
+            <div
+              id="candidates-main-container"
+              class="admin-page1-component-candidates-main-container"
+              >
+              <div
+                id="candidate-name-check-box-container"
+                class="admin-page1-component-candidate-name-check-box-container"
+                >
+                <input
+                  type="checkbox"
+                  [id]="'candidate-checkbox-' + i"
+                  class="admin-page1-component-candidate-checkbox"
+                  [(ngModel)]="candidate.selected"
+                  (ngModelChange)="updateSelectAllState()"
+                  />
+                  <span
+                    id="candidate-name-text"
+                    class="admin-page1-component-candidate-name-text"
+                    >
+                    {{ (candidate.full_name && candidate.full_name !== 'Processing...') ? candidate.full_name : 'Unable to parse file' }}
+                  </span>
+                </div>
+                <a
+                  [href]="candidate.cv_file_path"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="admin-page1-component-cv-main-container"
+                  title="View {{ candidate.full_name }}'s CV"
+                  >
+                  <svg
+                    id="eye-icon"
+                    width="1024"
+                    height="1024"
+                    viewBox="0 0 1024 1024"
+                    class="admin-page1-component-eye-icon"
+                    >
+                    <path
+                      d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  <span
+                    id="view-cv-text"
+                    class="admin-page1-component-view-cv-text"
+                    >
+                    View CV
+                  </span>
+                </a>
+                <!-- NEW: "Last Invite Sent" Column -->
+                <div class="last-invite-sent-container">
+                  <span>
+                    {{ candidate.email_sent_date ? (candidate.email_sent_date | date:'dd-MMM-yy') : '-' }}
+                  </span>
+                </div>
+                <div
+                  id="warning-green-tick-remove-icon-container"
+                  class="admin-page1-component-warning-green-tick-remove-icon-container"
+                  >
+                  <div
+                    id="warning-green-tick-container"
+                    class="admin-page1-component-warning-green-tick-container"
+                    >
+                    @if (candidate.has_account !== 'Yes') {
+                      <svg
+                        id="warning-icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        class="admin-page1-component-warning-icon"
+                        title="This candidate is not yet registered."
+                        >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          >
+                          <path
+                            d="M20.043 21H3.957c-1.538 0-2.5-1.664-1.734-2.997l8.043-13.988c.77-1.337 2.699-1.337 3.468 0l8.043 13.988C22.543 19.336 21.58 21 20.043 21ZM12 9v4"
+                          ></path>
+                          <path d="m12 17.01l.01-.011" stroke-linejoin="round"></path>
+                        </g>
+                      </svg>
+                    }
+                    @if (candidate.has_account === 'Yes') {
+                      <svg
+                        id="green-tick-icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        class="admin-page1-component-green-tick-icon"
+                        title="This candidate is already registered."
+                        >
+                        <path
+                          d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    }
+                  </div>
+                  <svg
+                    id="remove-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="admin-page1-component-remove-icon"
+                    (click)="onRemoveCandidateAttempt(candidate.candidate_id, i)"
+                    title="Remove this candidate"
+                    >
+                    <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+                  </svg>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
-  </div>
-</div>

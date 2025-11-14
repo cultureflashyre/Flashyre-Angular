@@ -1,9 +1,9 @@
 <!-- src/app/components/admin-jd-extended-component/admin-jd-extended-component.html -->
 
-<!-- 
-  --- FIX: Added the <form> tag with the [formGroup]="jdForm" directive. ---
-  This is the critical link that connects this entire HTML template to the 'jdForm' FormGroup
-  object in the component's TypeScript file. Without this, formControlName has no effect on displaying data.
+<!--
+--- FIX: Added the <form> tag with the [formGroup]="jdForm" directive. ---
+This is the critical link that connects this entire HTML template to the 'jdForm' FormGroup
+object in the component's TypeScript file. Without this, formControlName has no effect on displaying data.
 -->
 <form [formGroup]="jdForm" class="admin-jd-extended-component-container1" [ngClass]="rootClassName">
   <div id="role-container" class="admin-jd-extended-component-role-container">
@@ -26,17 +26,23 @@
       <div class="location-widget-wrapper">
         <div class="input-wrapper">
           <input type="text" id="location" class="location-input" placeholder="Enter your location" autocomplete="off" formControlName="location" />
-          <div class="loading" *ngIf="isLocationLoading"></div>
+          @if (isLocationLoading) {
+            <div class="loading"></div>
+          }
           <svg class="location-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
         </div>
-        <div class="suggestions" *ngIf="locationSuggestions.length > 0">
-          <div class="suggestion-item" *ngFor="let suggestion of locationSuggestions" (click)="selectLocation(suggestion)">
-            {{ suggestion }}
+        @if (locationSuggestions.length > 0) {
+          <div class="suggestions">
+            @for (suggestion of locationSuggestions; track suggestion) {
+              <div class="suggestion-item" (click)="selectLocation(suggestion)">
+                {{ suggestion }}
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   </div>
@@ -87,7 +93,7 @@
   <div
     id="skills-container"
     class="admin-jd-extended-component-skills-container"
-  >
+    >
     <div class="admin-jd-extended-component-skill-text-container">
       <span class="admin-jd-extended-component-skill-text">Skills</span>
       <span class="admin-jd-extended-component-skill-star-text">*</span>
@@ -95,18 +101,24 @@
     <div id="skills-input-container" class="admin-jd-extended-component-skills-input-container">
       <div class="skills-widget-wrapper">
         <div class="tag-container" (click)="skillInput.focus()">
-          <div *ngFor="let tag of selectedSkills" class="tag">
-            <span>{{ tag }}</span>
-            <!-- Added type="button" to prevent form submission -->
-            <button type="button" (click)="removeSkill(tag)">&times;</button>
-          </div>
+          @for (tag of selectedSkills; track tag) {
+            <div class="tag">
+              <span>{{ tag }}</span>
+              <!-- Added type="button" to prevent form submission -->
+              <button type="button" (click)="removeSkill(tag)">&times;</button>
+            </div>
+          }
           <input #skillInput type="text" class="tag-input" formControlName="skillInput" placeholder="Type to add Skills..." (keydown)="onSkillInputKeyDown($event)" />
         </div>
-        <div class="suggestions" *ngIf="skillSuggestions.length > 0">
-          <div *ngFor="let suggestion of skillSuggestions; let i = index" class="suggestion-item" [class.active-suggestion]="i === activeSkillSuggestionIndex" (click)="addSkill(suggestion)">
-            {{ suggestion }}
+        @if (skillSuggestions.length > 0) {
+          <div class="suggestions">
+            @for (suggestion of skillSuggestions; track suggestion; let i = $index) {
+              <div class="suggestion-item" [class.active-suggestion]="i === activeSkillSuggestionIndex" (click)="addSkill(suggestion)">
+                {{ suggestion }}
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   </div>

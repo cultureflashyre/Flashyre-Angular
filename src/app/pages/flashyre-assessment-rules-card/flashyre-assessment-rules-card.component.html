@@ -8,122 +8,137 @@
         alt="Flashy"
         src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
         class="assessment-card__logo"
-      />
-      <h1 class="assessment-card__title">
-        {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }}
-      </h1>
-    </header>
+        />
+        <h1 class="assessment-card__title">
+          {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }}
+        </h1>
+      </header>
 
-    <!-- Main Content Grid -->
-    <div class="assessment-card__grid">
-      <!-- Left Column: Rules (No changes here) -->
-      <div class="assessment-card__rules">
-        <h2>Rules for the Assessment</h2>
-        <section class="rules-section">
-          <h3>Test Details</h3>
-          <ul>
-            <li *ngFor="let section of sections">
-              <strong>{{ section.section_title }}:</strong> {{ section.question_count || 'N/A' }} Questions
-            </li>
-            <li>Consists of <strong>{{ assessmentData?.total_questions }} multiple-choice questions</strong>.</li>
-            <li>Total time limit is <strong>{{ assessmentData?.total_duration || 'Unknown' }} minutes</strong>.</li>
-          </ul>
-        </section>
-        <section class="rules-section">
-          <h3>Test Taking</h3>
-          <ul>
-            <li>You must answer all questions within the time limit.</li>
-            <li>You can navigate between questions and change your answers before submitting.</li>
-            <li>The test will automatically submit when the time limit is reached.</li>
-          </ul>
-        </section>
-        <section class="rules-section">
-          <h3>Scoring</h3>
-          <ul>
-            <li>Each correct answer is awarded 1 point.</li>
-            <li>Your final score will be displayed at the end of the test.</li>
-          </ul>
-        </section>
-        <section class="rules-section">
-          <h3>Important Notes</h3>
-          <ul>
-            <li>The test will auto-submit after {{ assessmentData?.total_duration || 'Unknown' }} minutes.</li>
-            <li>Review your answers carefully before the time runs out.</li>
-            <li>No late submissions will be accepted.</li>
-          </ul>
-        </section>
-      </div>
-
-      <!-- Right Column: Notes & Actions -->
-      <aside class="assessment-card__actions">
-        <div class="notes-container">
-          <h3>Please Note:</h3>
-          <p class="note-item--warning" *ngIf="showProctoredRule">
-            Switching tabs or applications will lead to the automatic submission of this assessment.
-          </p>
-          <p class="note-item--warning" *ngIf="showVideoRecordingRule">
-            This assessment session is being video recorded for monitoring purposes.
-          </p>
+      <!-- Main Content Grid -->
+      <div class="assessment-card__grid">
+        <!-- Left Column: Rules (No changes here) -->
+        <div class="assessment-card__rules">
+          <h2>Rules for the Assessment</h2>
+          <section class="rules-section">
+            <h3>Test Details</h3>
+            <ul>
+              @for (section of sections; track section) {
+                <li>
+                  <strong>{{ section.section_title }}:</strong> {{ section.question_count || 'N/A' }} Questions
+                </li>
+              }
+              <li>Consists of <strong>{{ assessmentData?.total_questions }} multiple-choice questions</strong>.</li>
+              <li>Total time limit is <strong>{{ assessmentData?.total_duration || 'Unknown' }} minutes</strong>.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Test Taking</h3>
+            <ul>
+              <li>You must answer all questions within the time limit.</li>
+              <li>You can navigate between questions and change your answers before submitting.</li>
+              <li>The test will automatically submit when the time limit is reached.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Scoring</h3>
+            <ul>
+              <li>Each correct answer is awarded 1 point.</li>
+              <li>Your final score will be displayed at the end of the test.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Important Notes</h3>
+            <ul>
+              <li>The test will auto-submit after {{ assessmentData?.total_duration || 'Unknown' }} minutes.</li>
+              <li>Review your answers carefully before the time runs out.</li>
+              <li>No late submissions will be accepted.</li>
+            </ul>
+          </section>
         </div>
 
-        <div class="confirmation-container">
-          <p class="good-luck-text">Good luck!</p>
-          <label for="assessment-rule-checkbox" class="custom-checkbox" (click)="onLabelClick()">
-          <input type="checkbox"
-            id="assessment-rule-checkbox"
-            [checked]="rulesUnderstood"
-            (change)="onCheckboxChange($event)"
-            (click)="onInputClick($event)" /> 
-            <span class="checkmark"></span>
-            I have read and understood the assessment rules.
-          </label>
-          
-          <!-- MODIFIED: Button Group with new logic -->
-          <div class="button-group">
-            <!-- This button only appears if a system check is necessary -->
-            <button
-              *ngIf="showVideoRecordingRule"
-              type="button"
-              class="button button--secondary"
-              (click)="checkSystemRequirements()"
-              [disabled]="!rulesUnderstood || isCheckingRequirements"
-            >
-              <span *ngIf="!isCheckingRequirements">Check System</span>
-              <span *ngIf="isCheckingRequirements" class="button-spinner"></span>
-            </button>
-            
-            <button
-              type="button"
-              class="button button--primary"
-              [class.full-width]="!showVideoRecordingRule"
-              (click)="startAssessment()"
-              [disabled]="!systemRequirementsMet || !rulesUnderstood"
-            >
-              Start Assessment
-            </button>
+        <!-- Right Column: Notes & Actions -->
+        <aside class="assessment-card__actions">
+          <div class="notes-container">
+            <h3>Please Note:</h3>
+            @if (showProctoredRule) {
+              <p class="note-item--warning">
+                Switching tabs or applications will lead to the automatic submission of this assessment.
+              </p>
+            }
+            @if (showVideoRecordingRule) {
+              <p class="note-item--warning">
+                This assessment session is being video recorded for monitoring purposes.
+              </p>
+            }
           </div>
 
+          <div class="confirmation-container">
+            <p class="good-luck-text">Good luck!</p>
+            <label for="assessment-rule-checkbox" class="custom-checkbox" (click)="onLabelClick()">
+              <input type="checkbox"
+                id="assessment-rule-checkbox"
+                [checked]="rulesUnderstood"
+                (change)="onCheckboxChange($event)"
+                (click)="onInputClick($event)" />
+                <span class="checkmark"></span>
+                I have read and understood the assessment rules.
+              </label>
 
-          <p *ngIf="systemRequirementsMet && showVideoRecordingRule" class="status-message--success">
-            ✓ System requirements met. You are ready to start.
-          </p>
+              <!-- MODIFIED: Button Group with new logic -->
+              <div class="button-group">
+                <!-- This button only appears if a system check is necessary -->
+                @if (showVideoRecordingRule) {
+                  <button
+                    type="button"
+                    class="button button--secondary"
+                    (click)="checkSystemRequirements()"
+                    [disabled]="!rulesUnderstood || isCheckingRequirements"
+                    >
+                    @if (!isCheckingRequirements) {
+                      <span>Check System</span>
+                    }
+                    @if (isCheckingRequirements) {
+                      <span class="button-spinner"></span>
+                    }
+                  </button>
+                }
 
+                <button
+                  type="button"
+                  class="button button--primary"
+                  [class.full-width]="!showVideoRecordingRule"
+                  (click)="startAssessment()"
+                  [disabled]="!systemRequirementsMet || !rulesUnderstood"
+                  >
+                  Start Assessment
+                </button>
+              </div>
+
+
+              @if (systemRequirementsMet && showVideoRecordingRule) {
+                <p class="status-message--success">
+                  ✓ System requirements met. You are ready to start.
+                </p>
+              }
+
+            </div>
+          </aside>
         </div>
-      </aside>
-    </div>
-  </main>
+      </main>
 
-  <!-- NEW: System Requirement Failed Overlay -->
-  <div class="system-req-popup-overlay" *ngIf="showSystemCheckOverlay">
-    <div class="system-req-popup-content">
-      <h3>System Requirement Check Failed</h3>
-      <p class="popup-note">
-        To proceed, please enable camera and microphone permissions in your browser. Look for an icon in your address bar to manage site settings.
-      </p>
-      <div class="popup-actions">
-        <button class="popup-button cancel" (click)="closeOverlay()">Go Back</button>
-        <button class="popup-button generate" (click)="retrySystemCheck()">Retry</button>
-      </div>
+      <!-- NEW: System Requirement Failed Overlay -->
+      @if (showSystemCheckOverlay) {
+        <div class="system-req-popup-overlay">
+          <div class="system-req-popup-content">
+            <h3>System Requirement Check Failed</h3>
+            <p class="popup-note">
+              To proceed, please enable camera and microphone permissions in your browser. Look for an icon in your address bar to manage site settings.
+            </p>
+            <div class="popup-actions">
+              <button class="popup-button cancel" (click)="closeOverlay()">Go Back</button>
+              <button class="popup-button generate" (click)="retrySystemCheck()">Retry</button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
-  </div>
-</div>

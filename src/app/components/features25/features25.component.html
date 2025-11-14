@@ -3,7 +3,9 @@
     <div class="features25-tabs-menu">
       <div (click)="activeTab = 0" class="features25-tab-horizontal1">
         <div class="features25-divider-container1">
-          <div *ngIf="activeTab === 0" class="features25-container3"></div>
+          @if (activeTab === 0) {
+            <div class="features25-container3"></div>
+          }
         </div>
         <div class="features25-content1">
           <h2 class="thq-heading-2">
@@ -37,7 +39,9 @@
       </div>
       <div (click)="activeTab = 1" class="features25-tab-horizontal2">
         <div class="features25-divider-container2">
-          <div *ngIf="activeTab === 1" class="features25-container4"></div>
+          @if (activeTab === 1) {
+            <div class="features25-container4"></div>
+          }
         </div>
         <div class="features25-content2">
           <h2 class="thq-heading-2">
@@ -71,7 +75,9 @@
       </div>
       <div (click)="activeTab = 2" class="features25-tab-horizontal3">
         <div class="features25-divider-container3">
-          <div *ngIf="activeTab === 2" class="features25-container5"></div>
+          @if (activeTab === 2) {
+            <div class="features25-container5"></div>
+          }
         </div>
         <div class="features25-content3">
           <h2 class="thq-heading-2">
@@ -107,24 +113,27 @@
       </div>
     </div>
     <div class="features25-image-container">
-      <img
-        [attr.alt]="feature1ImgAlt"
-        [attr.src]="feature1ImgSrc"
-        *ngIf="activeTab === 0"
-        class="features25-image1 thq-img-ratio-16-9"
-      />
-      <img
-        [attr.alt]="feature2ImgAlt"
-        [attr.src]="feature2ImgSrc"
-        *ngIf="activeTab === 1"
-        class="features25-image2 thq-img-ratio-16-9"
-      />
-      <img
-        [attr.alt]="feature3ImgAlt"
-        [attr.src]="feature3ImgSrc"
-        *ngIf="activeTab === 2"
-        class="features25-image3 thq-img-ratio-16-9"
-      />
+      @if (activeTab === 0) {
+        <img
+          [attr.alt]="feature1ImgAlt"
+          [attr.src]="feature1ImgSrc"
+          class="features25-image1 thq-img-ratio-16-9"
+          />
+      }
+      @if (activeTab === 1) {
+        <img
+          [attr.alt]="feature2ImgAlt"
+          [attr.src]="feature2ImgSrc"
+          class="features25-image2 thq-img-ratio-16-9"
+          />
+      }
+      @if (activeTab === 2) {
+        <img
+          [attr.alt]="feature3ImgAlt"
+          [attr.src]="feature3ImgSrc"
+          class="features25-image3 thq-img-ratio-16-9"
+          />
+      }
     </div>
   </div>
 </div>

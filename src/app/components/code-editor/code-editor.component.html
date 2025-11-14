@@ -1,16 +1,20 @@
 <div class="editor-container">
-    <div class="form-group">
-        <label for="language">Code Editor</label>
-        <select id="language" class="language-selector" [(ngModel)]="selectedLanguage" (ngModelChange)="onLanguageChange()">
-            <option *ngFor="let lang of languages" [ngValue]="lang">{{ lang.name }}</option>
-        </select>
-    </div>
-    <div *ngIf="selectedLanguage.name === 'Java'" class="java-note">
+  <div class="form-group">
+    <label for="language">Code Editor</label>
+    <select id="language" class="language-selector" [(ngModel)]="selectedLanguage" (ngModelChange)="onLanguageChange()">
+      @for (lang of languages; track lang) {
+        <option [ngValue]="lang">{{ lang.name }}</option>
+      }
+    </select>
+  </div>
+  @if (selectedLanguage.name === 'Java') {
+    <div class="java-note">
       Note - Please use the class name as " Main " when writing Java code.
     </div>
-    <div class="ace-editor" #editor></div>
-    <div class="button-group">
-        <button class="btn btn-primary" (click)="run()">Run Code</button>
-        <button class="btn btn-secondary" (click)="submit()">Submit</button>
-    </div>
+  }
+  <div class="ace-editor" #editor></div>
+  <div class="button-group">
+    <button class="btn btn-primary" (click)="run()">Run Code</button>
+    <button class="btn btn-secondary" (click)="submit()">Submit</button>
+  </div>
 </div>

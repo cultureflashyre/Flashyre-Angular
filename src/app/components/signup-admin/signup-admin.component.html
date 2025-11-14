@@ -14,160 +14,220 @@
             placeholder="Enter First Name"
             formControlName="first_name"
             class="signup-admin1-first-name-input input"
-          />
-          <div *ngIf="signupForm.get('first_name').invalid && signupForm.get('first_name').touched" class="error-text">
-            <span *ngIf="signupForm.get('first_name').errors?.required">First name is required.</span>
-            <span *ngIf="signupForm.get('first_name').errors?.pattern">Only letters and spaces are allowed.</span>
-            <span *ngIf="signupForm.get('first_name').errors?.minlength">First name must be at least 3 characters long.</span>
-            <span *ngIf="signupForm.get('first_name').errors?.maxlength">First name cannot exceed 10 characters.</span>
-          </div>
-        </div>
-
-        <!-- Last Name -->
-        <div id="last-name-container" class="signup-admin1-last-name-container1">
-          <span class="signup-admin1-last-name-text1">Last Name</span>
-          <input
-            type="text"
-            id="signup-last-name-input"
-            placeholder="Enter Last Name"
-            formControlName="last_name"
-            class="signup-admin1-last-name-input1 input"
-          />
-          <div *ngIf="signupForm.get('last_name').invalid && signupForm.get('last_name').touched" class="error-text">
-            <span *ngIf="signupForm.get('last_name').errors?.required">Last name is required.</span>
-            <span *ngIf="signupForm.get('last_name').errors?.pattern">Only letters and spaces are allowed.</span>
-            <span *ngIf="signupForm.get('last_name').errors?.minlength">Last name must be at least 3 characters long.</span>
-            <span *ngIf="signupForm.get('last_name').errors?.maxlength">Last name cannot exceed 10 characters.</span>
-          </div>
-        </div>
-
-        <!-- Phone Number -->
-        <div id="phone-container" class="signup-admin1-last-name-container2">
-          <span class="signup-admin1-last-name-text2">Phone Number</span>
-          <input
-            type="text"
-            id="signup-phone-number-input"
-            placeholder="Enter Phone Number"
-            formControlName="phone_number"
-            class="signup-admin1-last-name-input2 input"
-            maxlength="10"
-            (input)="sanitizePhoneNumber($event)"
-          />
-          <div *ngIf="signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched" class="error-text">
-            <span *ngIf="signupForm.get('phone_number').errors?.required">Phone number is required.</span>
-            <span *ngIf="signupForm.get('phone_number').errors?.pattern">Phone number must be exactly 10 digits.</span>
-          </div>
-          <div *ngIf="signupForm.get('phone_number').errors?.phoneExists" class="error-text">
-            Phone number already exists.
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div id="email-container" class="signup-admin1-email-container">
-          <span class="signup-admin1-email-text">Email Id</span>
-          <input
-            type="email"
-            id="signup-email-input"
-            placeholder="Enter Email Id"
-            formControlName="email"
-            class="signup-admin1-email-input input"
-          />
-          <div *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched" class="error-text">
-            <span *ngIf="signupForm.get('email').errors?.required">Email is required.</span>
-            <span *ngIf="signupForm.get('email').errors?.email">Please enter a valid email.</span>
-          </div>
-          <div *ngIf="signupForm.get('email').errors?.emailExists" class="error-text">
-            Email already exists.
-          </div>
-        </div>
-
-        <!-- Password -->
-        <div id="password-container" class="signup-admin1-password-container1">
-          <div class="signup-admin1-password1">
-            <span class="signup-admin1-password-text1">Password</span>
-            <span
-              class="signup-admin1-show-text1 button"
-              (click)="togglePasswordVisibility()"
-            >
-              {{ passwordType === 'password' ? 'Show' : 'Hide' }}
-            </span>
-            <input
-              [type]="passwordType"
-              id="signup-password-input"
-              placeholder="Enter Password"
-              formControlName="password"
-              class="signup-admin1-password-input1 input"
-               maxlength="15"
             />
-            
+            @if (signupForm.get('first_name').invalid && signupForm.get('first_name').touched) {
+              <div class="error-text">
+                @if (signupForm.get('first_name').errors?.required) {
+                  <span>First name is required.</span>
+                }
+                @if (signupForm.get('first_name').errors?.pattern) {
+                  <span>Only letters and spaces are allowed.</span>
+                }
+                @if (signupForm.get('first_name').errors?.minlength) {
+                  <span>First name must be at least 3 characters long.</span>
+                }
+                @if (signupForm.get('first_name').errors?.maxlength) {
+                  <span>First name cannot exceed 10 characters.</span>
+                }
+              </div>
+            }
           </div>
-          <div *ngIf="signupForm.get('password').invalid && signupForm.get('password').dirty" class="error-text">
-              <span *ngIf="signupForm.get('password').errors?.required">Password is required.</span>
-              <span *ngIf="signupForm.get('password').errors?.minlength">Password must be at least 8 characters.</span>
-              <span *ngIf="signupForm.get('password').errors?.maxlength">Password cannot exceed 15 characters.</span>
-              <span *ngIf="signupForm.get('password').errors?.uppercase">Password must include at least one uppercase letter.</span>
-              <span *ngIf="signupForm.get('password').errors?.lowercase">Password must include at least one lowercase letter.</span>
-              <span *ngIf="signupForm.get('password').errors?.number">Password must include at least one number.</span>
-              <span *ngIf="signupForm.get('password').errors?.specialChar">Password must include at least one special character.</span>
-              <span *ngIf="signupForm.get('password').errors?.alphabet">Password must include at least one alphabet.</span>
-            </div>
-        </div>
 
-        <!-- Confirm Password -->
-        <div id="password-container" class="signup-admin1-password-container2">
-          <div class="signup-admin1-password2">
-            <span class="signup-admin1-password-text2">Confirm Password</span>
-            <span
-              class="signup-admin1-show-text2 button"
-              (click)="toggleConfirmPasswordVisibility()"
-            >
-              {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
-            </span>
+          <!-- Last Name -->
+          <div id="last-name-container" class="signup-admin1-last-name-container1">
+            <span class="signup-admin1-last-name-text1">Last Name</span>
             <input
-              [type]="confirmPasswordType"
-              id="signup-confirm-password-input"
-              placeholder="Confirm Password"
-              formControlName="confirm_password"
-              class="signup-admin1-password-input2 input"
-               maxlength="15"
-            />
-            
-          </div>
-          <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched" class="error-text">
-              Passwords do not match.
+              type="text"
+              id="signup-last-name-input"
+              placeholder="Enter Last Name"
+              formControlName="last_name"
+              class="signup-admin1-last-name-input1 input"
+              />
+              @if (signupForm.get('last_name').invalid && signupForm.get('last_name').touched) {
+                <div class="error-text">
+                  @if (signupForm.get('last_name').errors?.required) {
+                    <span>Last name is required.</span>
+                  }
+                  @if (signupForm.get('last_name').errors?.pattern) {
+                    <span>Only letters and spaces are allowed.</span>
+                  }
+                  @if (signupForm.get('last_name').errors?.minlength) {
+                    <span>Last name must be at least 3 characters long.</span>
+                  }
+                  @if (signupForm.get('last_name').errors?.maxlength) {
+                    <span>Last name cannot exceed 10 characters.</span>
+                  }
+                </div>
+              }
             </div>
-        </div>
 
-        <!-- Signup Button and Error Message -->
-        <div class="signup-admin1-signup-and-signin-container">
-          <button
-            id="signup-button"
-            type="submit"
-            [disabled]="signupForm.invalid"
-            class="signup-admin1-signup-button button"
-          >
-            Sign Up
-          </button>
-          <div *ngIf="errorMessage" class="signup-admin1-error-signup-container">
-            <span class="signup-admin1-error-message-signup">{{ errorMessage }}</span>
-          </div>
+            <!-- Phone Number -->
+            <div id="phone-container" class="signup-admin1-last-name-container2">
+              <span class="signup-admin1-last-name-text2">Phone Number</span>
+              <input
+                type="text"
+                id="signup-phone-number-input"
+                placeholder="Enter Phone Number"
+                formControlName="phone_number"
+                class="signup-admin1-last-name-input2 input"
+                maxlength="10"
+                (input)="sanitizePhoneNumber($event)"
+                />
+                @if (signupForm.get('phone_number').invalid && signupForm.get('phone_number').touched) {
+                  <div class="error-text">
+                    @if (signupForm.get('phone_number').errors?.required) {
+                      <span>Phone number is required.</span>
+                    }
+                    @if (signupForm.get('phone_number').errors?.pattern) {
+                      <span>Phone number must be exactly 10 digits.</span>
+                    }
+                  </div>
+                }
+                @if (signupForm.get('phone_number').errors?.phoneExists) {
+                  <div class="error-text">
+                    Phone number already exists.
+                  </div>
+                }
+              </div>
 
-          <!-- Add this after the error message div -->
-          <div *ngIf="successMessage" class="signup-admin1-success-signup-container">
-          <span class="signup-admin1-success-message-signup">{{ successMessage }}</span>
-          </div>
+              <!-- Email -->
+              <div id="email-container" class="signup-admin1-email-container">
+                <span class="signup-admin1-email-text">Email Id</span>
+                <input
+                  type="email"
+                  id="signup-email-input"
+                  placeholder="Enter Email Id"
+                  formControlName="email"
+                  class="signup-admin1-email-input input"
+                  />
+                  @if (signupForm.get('email').invalid && signupForm.get('email').touched) {
+                    <div class="error-text">
+                      @if (signupForm.get('email').errors?.required) {
+                        <span>Email is required.</span>
+                      }
+                      @if (signupForm.get('email').errors?.email) {
+                        <span>Please enter a valid email.</span>
+                      }
+                    </div>
+                  }
+                  @if (signupForm.get('email').errors?.emailExists) {
+                    <div class="error-text">
+                      Email already exists.
+                    </div>
+                  }
+                </div>
 
-          <!-- Sign In Link -->
-          <div class="signup-admin1-signin-container">
-            <span class="signup-admin1-already-have-an-account-text">
-              Already have an account?
-            </span>
-            <span class="signup-admin1-signin-text button" routerLink="/login-admin">
-              Sign In
-            </span>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+                <!-- Password -->
+                <div id="password-container" class="signup-admin1-password-container1">
+                  <div class="signup-admin1-password1">
+                    <span class="signup-admin1-password-text1">Password</span>
+                    <span
+                      class="signup-admin1-show-text1 button"
+                      (click)="togglePasswordVisibility()"
+                      >
+                      {{ passwordType === 'password' ? 'Show' : 'Hide' }}
+                    </span>
+                    <input
+                      [type]="passwordType"
+                      id="signup-password-input"
+                      placeholder="Enter Password"
+                      formControlName="password"
+                      class="signup-admin1-password-input1 input"
+                      maxlength="15"
+                      />
+
+                    </div>
+                    @if (signupForm.get('password').invalid && signupForm.get('password').dirty) {
+                      <div class="error-text">
+                        @if (signupForm.get('password').errors?.required) {
+                          <span>Password is required.</span>
+                        }
+                        @if (signupForm.get('password').errors?.minlength) {
+                          <span>Password must be at least 8 characters.</span>
+                        }
+                        @if (signupForm.get('password').errors?.maxlength) {
+                          <span>Password cannot exceed 15 characters.</span>
+                        }
+                        @if (signupForm.get('password').errors?.uppercase) {
+                          <span>Password must include at least one uppercase letter.</span>
+                        }
+                        @if (signupForm.get('password').errors?.lowercase) {
+                          <span>Password must include at least one lowercase letter.</span>
+                        }
+                        @if (signupForm.get('password').errors?.number) {
+                          <span>Password must include at least one number.</span>
+                        }
+                        @if (signupForm.get('password').errors?.specialChar) {
+                          <span>Password must include at least one special character.</span>
+                        }
+                        @if (signupForm.get('password').errors?.alphabet) {
+                          <span>Password must include at least one alphabet.</span>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Confirm Password -->
+                  <div id="password-container" class="signup-admin1-password-container2">
+                    <div class="signup-admin1-password2">
+                      <span class="signup-admin1-password-text2">Confirm Password</span>
+                      <span
+                        class="signup-admin1-show-text2 button"
+                        (click)="toggleConfirmPasswordVisibility()"
+                        >
+                        {{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}
+                      </span>
+                      <input
+                        [type]="confirmPasswordType"
+                        id="signup-confirm-password-input"
+                        placeholder="Confirm Password"
+                        formControlName="confirm_password"
+                        class="signup-admin1-password-input2 input"
+                        maxlength="15"
+                        />
+
+                      </div>
+                      @if (signupForm.hasError('mismatch') && signupForm.get('confirm_password').touched) {
+                        <div class="error-text">
+                          Passwords do not match.
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Signup Button and Error Message -->
+                    <div class="signup-admin1-signup-and-signin-container">
+                      <button
+                        id="signup-button"
+                        type="submit"
+                        [disabled]="signupForm.invalid"
+                        class="signup-admin1-signup-button button"
+                        >
+                        Sign Up
+                      </button>
+                      @if (errorMessage) {
+                        <div class="signup-admin1-error-signup-container">
+                          <span class="signup-admin1-error-message-signup">{{ errorMessage }}</span>
+                        </div>
+                      }
+
+                      <!-- Add this after the error message div -->
+                      @if (successMessage) {
+                        <div class="signup-admin1-success-signup-container">
+                          <span class="signup-admin1-success-message-signup">{{ successMessage }}</span>
+                        </div>
+                      }
+
+                      <!-- Sign In Link -->
+                      <div class="signup-admin1-signin-container">
+                        <span class="signup-admin1-already-have-an-account-text">
+                          Already have an account?
+                        </span>
+                        <span class="signup-admin1-signin-text button" routerLink="/login-admin">
+                          Sign In
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>

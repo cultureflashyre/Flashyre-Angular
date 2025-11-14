@@ -3,10 +3,10 @@
   <div
     id="create-job-post-2.2-page-main-container"
     class="create-job-post22-page-create-job-post22-page-main-container"
-  >
+    >
     <navbar-for-recruiter-view
       rootClassName="navbar-for-recruiter-viewroot-class-name10"
-    >
+      >
       <ng-template #text>
         <div class="create-job-post22-page-fragment10">
           <span class="create-job-post22-page-text10">2</span>
@@ -105,21 +105,21 @@
     <div
       id="create-job-post-details-main-container"
       class="create-job-post22-page-create-job-post-details-main-container"
-    >
+      >
       <div
         id="create-job-post-details-container"
         class="create-job-post22-page-create-job-post-details-container"
-      >
+        >
         <div
           id="create-job-post-container"
           class="create-job-post22-page-create-job-post-container"
-        >
+          >
           <svg
             width="32"
             height="32"
             viewBox="0 0 32 32"
             class="create-job-post22-page-icon1"
-          >
+            >
             <path
               d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
               fill="currentColor"
@@ -128,34 +128,38 @@
           <span
             id="create-job-post-text"
             class="create-job-post22-page-create-job-post-text"
-          >
+            >
             Create Job Post
           </span>
         </div>
-       <!-- This is the new, simplified code for this section -->
-<div
-    id="progress-bar-assessment-questions-main-container"
-    class="create-job-post22-page-progress-bar-assessment-questions-main-container"
->
-    <progress-bar2-code
-      rootClassName="progress-bar2-coderoot-class-name1"
-    ></progress-bar2-code>
-    
-    <!-- ========================================================= -->
-    <!-- === THIS IS THE REPLACEMENT ============================= -->
-    <!-- ========================================================= -->
+        <!-- This is the new, simplified code for this section -->
+        <div
+          id="progress-bar-assessment-questions-main-container"
+          class="create-job-post22-page-progress-bar-assessment-questions-main-container"
+          >
+          <progress-bar2-code
+            rootClassName="progress-bar2-coderoot-class-name1"
+          ></progress-bar2-code>
 
-    <!-- Loading state indicator, shown while the component logic is fetching data -->
-    <div *ngIf="isLoading" class="loading-indicator-style">
-        <p>Loading assessment configuration...</p>
-        <!-- You can add a material spinner or other loading indicator here -->
-    </div>
+          <!-- ========================================================= -->
+          <!-- === THIS IS THE REPLACEMENT ============================= -->
+          <!-- ========================================================= -->
 
-    <!-- The functional component is loaded here when not loading and the job ID is available -->
-    <div *ngIf="!isLoading && jobUniqueId">
-        <create-job-post22 [jobUniqueId]="jobUniqueId"></create-job-post22>
-    </div>
-</div>
+          <!-- Loading state indicator, shown while the component logic is fetching data -->
+          @if (isLoading) {
+            <div class="loading-indicator-style">
+              <p>Loading assessment configuration...</p>
+              <!-- You can add a material spinner or other loading indicator here -->
+            </div>
+          }
+
+          <!-- The functional component is loaded here when not loading and the job ID is available -->
+          @if (!isLoading && jobUniqueId) {
+            <div>
+              <create-job-post22 [jobUniqueId]="jobUniqueId"></create-job-post22>
+            </div>
+          }
+        </div>
       </div>
     </div>
   </div>

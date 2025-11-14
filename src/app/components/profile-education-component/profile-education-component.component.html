@@ -12,186 +12,216 @@
     </span>
 
     <!-- Error message display -->
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
 
     <!-- Loading spinner -->
-    <div *ngIf="isLoading" class="loading-spinner">
-      Loading education data...
-    </div>
+    @if (isLoading) {
+      <div class="loading-spinner">
+        Loading education data...
+      </div>
+    }
 
     <!-- Scrollable container for dynamic education forms -->
     <div class="profile-education-container">
-      <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>
-        <form [formGroup]="form">
-          <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">
-            <div id="duration-{{i}}" class="profile-education-component-duration-container2">
-              <span id="duration-text-{{i}}" class="profile-education-component-duration-text">
-                <!-- Label changed from "Duration" to "Graduation Date" -->
-                Graduation Date
-              </span>
-              <div class="profile-education-dates-container">
-                <!-- The "Start Date" input has been completely removed. -->
-                <div class="date-input-wrapper">
-                  <div class="profile-education-component-form2 input">
+      @for (form of educationForms; track form; let i = $index) {
+        <div class="education-form-instance" #educationFormInstance>
+          <form [formGroup]="form">
+            <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">
+              <div id="duration-{{i}}" class="profile-education-component-duration-container2">
+                <span id="duration-text-{{i}}" class="profile-education-component-duration-text">
+                  <!-- Label changed from "Duration" to "Graduation Date" -->
+                  Graduation Date
+                </span>
+                <div class="profile-education-dates-container">
+                  <!-- The "Start Date" input has been completely removed. -->
+                  <div class="date-input-wrapper">
+                    <div class="profile-education-component-form2 input">
+                      <input
+                        type="date"
+                        formControlName="endDate"
+                        class="profile-education-component-select"
+                        [max]="todayDate"
+                        (change)="onGraduationDateChange(i)"
+                        />
+                      </div>
+                      @if (form.get('endDate')?.invalid && form.get('endDate')?.touched) {
+                        <div class="error-message">
+                          Graduation date is mandatory.
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="university-institute-education-container-{{i}}" class="profile-education-component-university-institute-education-container">
+                <div id="university-input-container-{{i}}" class="profile-education-component-university-institute-container">
+                  <span id="university-institute-text-{{i}}" class="profile-education-component-university-institute-text">
+                    <ng-container>
+                      <ng-template #defaultText111>
+                        <div class="profile-education-component-fragment14">
+                          <span class="profile-education-component-text16">University/Institute</span>
+                        </div>
+                      </ng-template>
+                      <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
+                    </ng-container>
+                  </span>
+                  <div class="profile-education-component-form3 input autocomplete-container">
                     <input
-                      type="date"
-                      formControlName="endDate"
+                      type="text"
+                      placeholder="Type a university or institute..."
+                      formControlName="university"
                       class="profile-education-component-select"
-                      [max]="todayDate"
-                      (change)="onGraduationDateChange(i)"
-                    />
+                      (input)="onUniversityInput($event, i)"
+                      (click)="$event.stopPropagation()"
+                      />
+                      <!-- Suggestions List -->
+                      @if (showUniversitySuggestions && activeUniversityInputIndex === i) {
+                        <div class="suggestions-list">
+                          @if (isLoadingUniversities) {
+                            <div class="suggestion-item">Loading...</div>
+                          }
+                          @for (suggestion of universitySuggestions; track suggestion) {
+                            <div class="suggestion-item" (click)="selectUniversitySuggestion(suggestion, i)">
+                              {{ suggestion.description }}
+                            </div>
+                          }
+                          @if (!isLoadingUniversities && universitySuggestions.length === 0) {
+                            <div class="suggestion-item">
+                              No matches found.
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                    @if (form.get('university')?.invalid && form.get('university')?.touched) {
+                      <div class="error-message">
+                        University is mandatory.
+                      </div>
+                    }
                   </div>
-                  <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="error-message">
-                    Graduation date is mandatory.
+                  <div id="education-input-container-{{i}}" class="profile-education-component-education-container">
+                    <span id="education-text-{{i}}" class="profile-education-component-education-text2">
+                      <ng-container>
+                        <ng-template #defaultText112>
+                          <div class="profile-education-component-fragment15">
+                            <span class="profile-education-component-text19">Education</span>
+                          </div>
+                        </ng-template>
+                        <ng-container *ngTemplateOutlet="text112 ? text112 : defaultText112"></ng-container>
+                      </ng-container>
+                    </span>
+                    <div class="profile-education-component-form4 input">
+                      <select formControlName="educationLevel" class="profile-education-component-select">
+                        <option value="" disabled selected>Select</option>
+                        @for (level of educationLevels; track level) {
+                          <option [value]="level.id">{{ level.name }}</option>
+                        }
+                      </select>
+                    </div>
+                    @if (form.get('educationLevel')?.invalid && form.get('educationLevel')?.touched) {
+                      <div class="error-message">
+                        Education level is mandatory.
+                      </div>
+                    }
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div id="university-institute-education-container-{{i}}" class="profile-education-component-university-institute-education-container">
-            <div id="university-input-container-{{i}}" class="profile-education-component-university-institute-container">
-              <span id="university-institute-text-{{i}}" class="profile-education-component-university-institute-text">
-                <ng-container>
-                  <ng-template #defaultText111>
-                    <div class="profile-education-component-fragment14">
-                      <span class="profile-education-component-text16">University/Institute</span>
+                <div class="profile-education-component-container3">
+                  <div id="education-course-container-{{i}}" class="profile-education-component-course-container">
+                    <span id="education-course-{{i}}" class="profile-education-component-course-text">
+                      <ng-container>
+                        <ng-template #defaultText1111>
+                          <div class="profile-education-component-fragment20">
+                            <span class="profile-education-component-text24">Course</span>
+                          </div>
+                        </ng-template>
+                        <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>
+                      </ng-container>
+                    </span>
+                    <div class="profile-education-component-form5 input">
+                      <select formControlName="course" class="profile-education-component-select">
+                        <option value="" disabled selected>Select</option>
+                        @for (course of courses; track course) {
+                          <option [value]="course.id">{{ course.name }}</option>
+                        }
+                      </select>
                     </div>
-                  </ng-template>
-                  <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>
-                </ng-container>
-              </span>
-
-              <div class="profile-education-component-form3 input autocomplete-container">
-                <input
-                  type="text"
-                  placeholder="Type a university or institute..."
-                  formControlName="university"
-                  class="profile-education-component-select"
-                  (input)="onUniversityInput($event, i)"
-                  (click)="$event.stopPropagation()"
-                />
-                <!-- Suggestions List -->
-                <div *ngIf="showUniversitySuggestions && activeUniversityInputIndex === i" class="suggestions-list">
-                  <div *ngIf="isLoadingUniversities" class="suggestion-item">Loading...</div>
-                  <div *ngFor="let suggestion of universitySuggestions" class="suggestion-item" (click)="selectUniversitySuggestion(suggestion, i)">
-                    {{ suggestion.description }}
+                    @if (form.get('course')?.invalid && form.get('course')?.touched) {
+                      <div class="error-message">
+                        Course is mandatory.
+                      </div>
+                    }
                   </div>
-                  <div *ngIf="!isLoadingUniversities && universitySuggestions.length === 0" class="suggestion-item">
-                    No matches found.
+                  <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">
+                    <span id="education-specialization-dropdown-{{i}}" class="profile-education-component-specialisation-text">
+                      <ng-container>
+                        <ng-template #defaultText1112>
+                          <div class="profile-education-component-fragment13">
+                            <span class="profile-education-component-text13">Specialization</span>
+                          </div>
+                        </ng-template>
+                        <ng-container *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"></ng-container>
+                      </ng-container>
+                    </span>
+                    <div class="profile-education-component-form6 input">
+                      <select formControlName="specialization" class="profile-education-component-select">
+                        <option value="" disabled selected>Select</option>
+                        @for (spec of specializations; track spec) {
+                          <option [value]="spec.id">{{ spec.name }}</option>
+                        }
+                      </select>
+                    </div>
+                    @if (form.get('specialization')?.invalid && form.get('specialization')?.touched) {
+                      <div class="error-message">
+                        Specialization is mandatory.
+                      </div>
+                    }
                   </div>
                 </div>
-              </div>
-
-
-            <div *ngIf="form.get('university')?.invalid && form.get('university')?.touched" class="error-message">
-    University is mandatory.
-  </div>
+                <!-- Conditionally display Remove button only when there are multiple forms -->
+                @if (educationForms.length > 1) {
+                  <button class="remove-button" (click)="promptRemoveForm(i)">- Remove Education</button>
+                }
+              </form>
+              <!-- Add a horizontal line between positions, except after the last one -->
+              @if (i < educationForms.length - 1) {
+                <hr class="position-divider" />
+              }
             </div>
-            <div id="education-input-container-{{i}}" class="profile-education-component-education-container">
-              <span id="education-text-{{i}}" class="profile-education-component-education-text2">
-                <ng-container>
-                  <ng-template #defaultText112>
-                    <div class="profile-education-component-fragment15">
-                      <span class="profile-education-component-text19">Education</span>
-                    </div>
-                  </ng-template>
-                  <ng-container *ngTemplateOutlet="text112 ? text112 : defaultText112"></ng-container>
-                </ng-container>
-              </span>
-              <div class="profile-education-component-form4 input">
-                <select formControlName="educationLevel" class="profile-education-component-select">
-                  <option value="" disabled selected>Select</option>
-                  <option *ngFor="let level of educationLevels" [value]="level.id">{{ level.name }}</option>
-                </select> 
-              </div>
-                              <div *ngIf="form.get('educationLevel')?.invalid && form.get('educationLevel')?.touched" class="error-message">
-    Education level is mandatory.
-  </div>
-            </div>
-          </div>
+          }
+        </div>
 
-          <div class="profile-education-component-container3">
-            <div id="education-course-container-{{i}}" class="profile-education-component-course-container">
-              <span id="education-course-{{i}}" class="profile-education-component-course-text">
-                <ng-container>
-                  <ng-template #defaultText1111>
-                    <div class="profile-education-component-fragment20">
-                      <span class="profile-education-component-text24">Course</span>
-                    </div>
-                  </ng-template>
-                  <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>
-                </ng-container>
-              </span>
-              <div class="profile-education-component-form5 input">
-                <select formControlName="course" class="profile-education-component-select">
-                  <option value="" disabled selected>Select</option>
-                  <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
-                </select>
+        <!-- Add Education Button outside the scrollable container -->
+        <span id="add-education-button" class="profile-education-component-add-education-text button" (click)="addNewForm()">
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="profile-education-component-fragment22">
+                <span class="profile-education-component-text28">+ Add Education</span>
               </div>
-                            <div *ngIf="form.get('course')?.invalid && form.get('course')?.touched" class="error-message">
-    Course is mandatory.
-  </div>
-            </div>
-            <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">
-              <span id="education-specialization-dropdown-{{i}}" class="profile-education-component-specialisation-text">
-                <ng-container>
-                  <ng-template #defaultText1112>
-                    <div class="profile-education-component-fragment13">
-                      <span class="profile-education-component-text13">Specialization</span>
-                    </div>
-                  </ng-template>
-                  <ng-container *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"></ng-container>
-                </ng-container>
-              </span>
-              <div class="profile-education-component-form6 input">
-                <select formControlName="specialization" class="profile-education-component-select">
-                  <option value="" disabled selected>Select</option>
-                  <option *ngFor="let spec of specializations" [value]="spec.id">{{ spec.name }}</option>
-                </select>
-              </div>
-               <div *ngIf="form.get('specialization')?.invalid && form.get('specialization')?.touched" class="error-message">
-    Specialization is mandatory.
-  </div>
-            </div>
-          </div>
-
-          <!-- Conditionally display Remove button only when there are multiple forms -->
-          <button *ngIf="educationForms.length > 1" class="remove-button" (click)="promptRemoveForm(i)">- Remove Education</button>
-        </form>
-        <!-- Add a horizontal line between positions, except after the last one -->
-        <hr *ngIf="i < educationForms.length - 1" class="position-divider" />
+            </ng-template>
+            <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
+          </ng-container>
+        </span>
       </div>
+      @if (showRemoveConfirmation) {
+        <app-alert-message
+          [message]="'Are you sure you want to remove this education?'"
+          [buttons]="['Cancel', 'Remove']"
+          (buttonClicked)="handleRemoveConfirmation($event)"
+          (close)="closeRemoveConfirmationModal()"
+        ></app-alert-message>
+      }
+
+      @if (showDateProximityAlert) {
+        <app-alert-message
+          [message]="dateProximityMessage"
+          [buttons]="['OK']"
+          (buttonClicked)="handleDateProximityConfirmation()"
+          (close)="handleDateProximityConfirmation()"
+        ></app-alert-message>
+      }
+
     </div>
-
-    <!-- Add Education Button outside the scrollable container -->
-    <span id="add-education-button" class="profile-education-component-add-education-text button" (click)="addNewForm()">
-      <ng-container>
-        <ng-template #defaultText1>
-          <div class="profile-education-component-fragment22">
-            <span class="profile-education-component-text28">+ Add Education</span>
-          </div>
-        </ng-template>
-        <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
-      </ng-container>
-    </span>
-  </div>
- <app-alert-message
-    *ngIf="showRemoveConfirmation"
-    [message]="'Are you sure you want to remove this education?'"
-    [buttons]="['Cancel', 'Remove']"
-    (buttonClicked)="handleRemoveConfirmation($event)"
-    (close)="closeRemoveConfirmationModal()"
-  ></app-alert-message>
-
-  <app-alert-message
-  *ngIf="showDateProximityAlert"
-  [message]="dateProximityMessage"
-  [buttons]="['OK']"
-  (buttonClicked)="handleDateProximityConfirmation()"
-  (close)="handleDateProximityConfirmation()"
-></app-alert-message>
-
-</div>

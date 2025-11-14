@@ -5,12 +5,12 @@
   color="#fff"
   type="ball-scale-multiple"
   [fullScreen]="true"
->
+  >
   <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
 </ngx-spinner>
 <navbar-for-admin-view
   rootClassName="navbar-for-candidate-viewroot-class-name"
->
+  >
   <ng-template>
     <div class="candidate-home-fragment10">
       <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
@@ -108,20 +108,25 @@
 
 <div class="admin-create-job-step2-container1">
   <div class="admin-create-job-step2-container2">
-    
-    <app-alert-message
-  *ngIf="showAlert"
-  [message]="alertMessage"
-  [buttons]="alertButtons"
-  (buttonClicked)="onAlertButtonClicked($event)"
-  (close)="showAlert = false">
-</app-alert-message>
 
-    <div class="alert" *ngIf="showPopup" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
-      <span *ngIf="popupType === 'success'" class="tick">✔</span>
-      {{ popupMessage }}
-      <span class="closebtn" (click)="closePopup()"> × </span>
-    </div>
+    @if (showAlert) {
+      <app-alert-message
+        [message]="alertMessage"
+        [buttons]="alertButtons"
+        (buttonClicked)="onAlertButtonClicked($event)"
+        (close)="showAlert = false">
+      </app-alert-message>
+    }
+
+    @if (showPopup) {
+      <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+        @if (popupType === 'success') {
+          <span class="tick">✔</span>
+        }
+        {{ popupMessage }}
+        <span class="closebtn" (click)="closePopup()"> × </span>
+      </div>
+    }
 
     <div class="admin-create-job-step2-container3">
       <div class="admin-create-job-step2-container4">
@@ -138,7 +143,7 @@
             class="admin-create-job-step2-icon1"
             (click)="onPrevious()"
             style="cursor: pointer;"
-          >
+            >
             <path
               d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
               fill="currentColor"
@@ -160,28 +165,34 @@
               [disabled]="isGenerating"
               [class.disabled]="isGenerating || hasGenerated"
               [title]="isGenerating ? 'Generating...' : hasGenerated ? 'Questions Generated' : 'Generate questions using AI'"
-            >
+              >
               <span id="generate-questions-text" class="admin-create-job-step2-generate-text">
-                <span *ngIf="!isGenerating && !hasGenerated">
-                  <span class="admin-create-job-step2-generate-label">Generate with AI</span>
-                  <span class="admin-create-job-step2-sparkle"> ✨</span>
-                </span>
-                <span *ngIf="isGenerating">Generating...</span>
-                <span *ngIf="!isGenerating && hasGenerated">
-                  <span class="admin-create-job-step2-generate-label">Regenerate</span>
-                  <span class="admin-create-job-step2-sparkle"> ✨</span>
-                </span>
+                @if (!isGenerating && !hasGenerated) {
+                  <span>
+                    <span class="admin-create-job-step2-generate-label">Generate with AI</span>
+                    <span class="admin-create-job-step2-sparkle"> ✨</span>
+                  </span>
+                }
+                @if (isGenerating) {
+                  <span>Generating...</span>
+                }
+                @if (!isGenerating && hasGenerated) {
+                  <span>
+                    <span class="admin-create-job-step2-generate-label">Regenerate</span>
+                    <span class="admin-create-job-step2-sparkle"> ✨</span>
+                  </span>
+                }
               </span>
             </button>
 
-             <button
+            <button
               id="upload-questions-button"
               class="admin-create-job-step2-upload-button"
               (click)="handleUploadClick()"
               [disabled]="isGenerating"
               [class.disabled]="isGenerating"
               title="Upload your own questions"
-            >
+              >
               <svg
                 width="24"
                 height="24"
@@ -189,7 +200,7 @@
                 class="admin-create-job-step2-upload-icon"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-              >
+                >
                 <!-- SVG paths remain unchanged -->
               </svg>
               <span id="upload-text" class="admin-create-job-step2-upload-text">
@@ -198,35 +209,37 @@
             </button>
 
             <!-- Uploaded file name display (No changes needed here) -->
-            <div *ngIf="uploadedFileName" class="uploaded-file-name">
-              Uploaded file: {{ uploadedFileName }}
-            </div>
+            @if (uploadedFileName) {
+              <div class="uploaded-file-name">
+                Uploaded file: {{ uploadedFileName }}
+              </div>
+            }
 
-                    <!-- Popup Floating Message Card -->
-                <div class="upload-popup-backdrop" *ngIf="showUploadPopup">
-                  <div class="upload-popup-card">
-                    <h3>Upload Questions Template</h3>
-                    <div class="step">
-                      <strong>Step 1:</strong> Download the Excel template and fill it in the given format.<br />
-                      <small>
-                        Note: multiple choice questions, options, the actual correct answer, difficulty level (optional), marks (optional).
-                      </small><br />
-                      <button class="download-template-button" (click)="downloadTemplate()">
-                        Download Template&nbsp;
-                        <span class="download-icon">⬇️</span>
-                      </button>
-                    </div>
-
-                    <div class="step" style="margin-top: 20px;">
-                      <strong>Step 2:</strong> Upload the filled Excel template to extract questions and then give it some time.<br />
-                      <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
-                    </div>
-
-                    <div class="popup-actions" style="margin-top: 20px;">
-                      <button (click)="closeUploadPopup()">Close</button>
-                    </div>
+            <!-- Popup Floating Message Card -->
+            @if (showUploadPopup) {
+              <div class="upload-popup-backdrop">
+                <div class="upload-popup-card">
+                  <h3>Upload Questions Template</h3>
+                  <div class="step">
+                    <strong>Step 1:</strong> Download the Excel template and fill it in the given format.<br />
+                    <small>
+                      Note: multiple choice questions, options, the actual correct answer, difficulty level (optional), marks (optional).
+                    </small><br />
+                    <button class="download-template-button" (click)="downloadTemplate()">
+                      Download Template&nbsp;
+                      <span class="download-icon">⬇️</span>
+                    </button>
+                  </div>
+                  <div class="step" style="margin-top: 20px;">
+                    <strong>Step 2:</strong> Upload the filled Excel template to extract questions and then give it some time.<br />
+                    <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+                  </div>
+                  <div class="popup-actions" style="margin-top: 20px;">
+                    <button (click)="closeUploadPopup()">Close</button>
                   </div>
                 </div>
+              </div>
+            }
 
 
           </div>
