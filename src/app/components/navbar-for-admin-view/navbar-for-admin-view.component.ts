@@ -3,6 +3,8 @@ import { AuthService } from '../../services/candidate.service'; // Import AuthSe
 import { AdminAuthService } from 'src/app/services/admin-auth.service';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
+
 @Component({
     selector: 'navbar-for-admin-view',
     templateUrl: 'navbar-for-admin-view.component.html',
@@ -11,6 +13,7 @@ import { RouterLink } from '@angular/router';
     imports: [
         NgClass,
         RouterLink,
+        DangerousHtmlComponent,
         NgTemplateOutlet,
     ],
 })

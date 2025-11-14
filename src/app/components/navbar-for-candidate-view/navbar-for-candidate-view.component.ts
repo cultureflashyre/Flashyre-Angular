@@ -2,6 +2,7 @@ import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { AuthService } from '../../services/candidate.service';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router'; // Import AuthService
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 
 @Component({
     selector: 'navbar-for-candidate-view',
@@ -10,6 +11,7 @@ import { RouterLink } from '@angular/router'; // Import AuthService
     standalone: true,
     imports: [
         NgClass,
+        DangerousHtmlComponent,
         RouterLink,
         NgTemplateOutlet,
     ],

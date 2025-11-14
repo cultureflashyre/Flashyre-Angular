@@ -10,13 +10,13 @@ import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SkillService, ApiSkill } from '../../services/skill.service';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
 import { MCQItem as IMcqItem } from '../create-job/types';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { McqAssessmentService } from 'src/app/services/mcq-assessment.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { NgxSpinner } from 'ngx-spinner';
 import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
@@ -100,8 +100,8 @@ export function timeNotZeroValidator(control: AbstractControl): ValidationErrors
   selector: 'create-job-step3',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    NgxSpinner, NavbarForAdminView, AlertMessageComponent,
-    ProgressBar2Code, CreateJobPostFooter2,
+    NavbarForAdminView, AlertMessageComponent,
+    ProgressBar2Code, CreateJobPostFooter2, ReactiveFormsModule, NgxSpinnerModule,
   ],
   templateUrl: 'create-job-step3.component.html',
   styleUrls: ['create-job-step3.component.css'],

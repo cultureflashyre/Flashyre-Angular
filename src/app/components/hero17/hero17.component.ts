@@ -1,12 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { NgTemplateOutlet } from '@angular/common';
-
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 @Component({
     selector: 'app-hero17',
     templateUrl: 'hero17.component.html',
     styleUrls: ['hero17.component.css'],
     standalone: true,
-    imports: [NgTemplateOutlet],
+    imports: [NgTemplateOutlet, DangerousHtmlComponent,],
 })
 export class Hero17 {
   @Input()

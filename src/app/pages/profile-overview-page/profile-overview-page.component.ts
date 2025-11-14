@@ -24,7 +24,7 @@ import { ProgressBarStep3 } from 'src/app/components/progress-bar-step-3/progres
 import { ProgressBarStep4 } from 'src/app/components/progress-bar-step-4/progress-bar-step-4.component';
 import { ProgressBarStep5 } from 'src/app/components/progress-bar-step-5/progress-bar-step-5.component';
 import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
-import { profile } from 'console';
+import { BufferName1 } from 'src/app/components/buffer-name-1/buffer-name-1.component';
 
 @Component({
   selector: 'profile-overview-page',
@@ -35,6 +35,7 @@ import { profile } from 'console';
     ProgressBarStep2, ProgressBarStep5, ProfileCreationNavigation2,
     ProfileBasicinformationComponent, ProfileEmploymentComponent,
     ProfileEducationComponent, ProfileCertificationsComponent,
+    BufferName1,
   ],
   templateUrl: './profile-overview-page.component.html',
   styleUrls: ['./profile-overview-page.component.css'],

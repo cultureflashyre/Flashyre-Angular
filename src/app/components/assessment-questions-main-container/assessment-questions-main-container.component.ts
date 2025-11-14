@@ -1,12 +1,13 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { NgTemplateOutlet } from '@angular/common';
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 
 @Component({
     selector: 'assessment-questions-main-container',
     templateUrl: 'assessment-questions-main-container.component.html',
     styleUrls: ['assessment-questions-main-container.component.css'],
     standalone: true,
-    imports: [NgTemplateOutlet],
+    imports: [NgTemplateOutlet, DangerousHtmlComponent,],
 })
 export class AssessmentQuestionsMainContainer {
   @ContentChild('aiGeneratedText')

@@ -22,13 +22,14 @@ import { AlertMessageComponent } from 'src/app/components/alert-message/alert-me
 import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progress-bar-2-code.component';
 import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'create-job-step2',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    NgxSpinner, NavbarForAdminView, AlertMessageComponent,
-    ProgressBar2Code, CreateJobPostFooter2,
+    NavbarForAdminView, AlertMessageComponent,
+    ProgressBar2Code, CreateJobPostFooter2, NgxSpinnerModule,
   ],
   templateUrl: 'create-job-step2.component.html',
   styleUrls: ['create-job-step2.component.css'],

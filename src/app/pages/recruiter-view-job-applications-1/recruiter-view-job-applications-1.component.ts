@@ -9,7 +9,7 @@ import { formatDate } from '@angular/common';
 
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { NavbarForRecruiterView } from 'src/app/components/navbar-for-recruiter-view/navbar-for-recruiter-view.component';
@@ -26,6 +26,7 @@ import autoTable from 'jspdf-autotable';
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
     AlertMessageComponent, NavbarForRecruiterView, RecruiterFlowLargeCard,
+    ReactiveFormsModule,
   ],
   templateUrl: './recruiter-view-job-applications-1.component.html',
   styleUrls: ['./recruiter-view-job-applications-1.component.css'],

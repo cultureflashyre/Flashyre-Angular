@@ -37,7 +37,7 @@ export class LogInPage implements OnInit {
 
   loginForm: FormGroup;
   showPassword: boolean = false;
-  errorMessage: string = '';
+  @Input() errorMessage: string = '';
 
     // Properties for the alert message
   showLoginSuccessAlert = false;

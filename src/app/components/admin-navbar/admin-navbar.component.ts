@@ -1,7 +1,7 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { RecruiterProfile } from '../recruiter-profile/recruiter-profile.component';
-
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 @Component({
     selector: 'admin-navbar',
     templateUrl: 'admin-navbar.component.html',
@@ -11,6 +11,7 @@ import { RecruiterProfile } from '../recruiter-profile/recruiter-profile.compone
         NgClass,
         NgTemplateOutlet,
         RecruiterProfile,
+        DangerousHtmlComponent,
     ],
 })
 export class AdminNavbar {

@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { authGuard } from './guards/auth.guard';
 import { AppComponent } from './app.component'
-import { BufferPageModule } from './buffer-page/buffer-page.module';
+import { BufferPage } from './buffer-page/buffer-page.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BufferInterceptor } from './interceptors/buffer.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -19,13 +19,6 @@ export const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./pages/index/index.component').then((m) => m.Index),
-  },
-  {
-    path: 'profile-education-page',
-    loadChildren: () =>
-      import(
-        './pages/profile-education-page/profile-education-page.component'
-      ).then((m) => m.ProfileEducationPage),
   },
   {
     path: 'profile-education-page-duplicate',
@@ -173,13 +166,7 @@ export const routes: Routes = [
         './pages/profile-certification-page/profile-certification-page.component'
       ).then((m) => m.ProfileCertificationPage),
   },
-  {
-    path: 'corporate/recruiter-view-4th-page',
-    loadChildren: () =>
-      import(
-        './pages/recruiter-view-4th-page/recruiter-view-4th-page.component'
-      ).then((m) => m.RecruiterView4thPage),
-  },
+
   {
     path: 'signup-college',
     loadChildren: () =>

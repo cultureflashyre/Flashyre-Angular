@@ -9,11 +9,14 @@ import { FormsModule } from '@angular/forms'
 
 import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
 import { ProgressBarStep5 } from 'src/app/components/progress-bar-step-5/progress-bar-step-5.component';
+import { BufferName } from 'src/app/components/buffer-name/buffer-name.component';
+
  @Component({
    selector: 'profile-last-page1',
    standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
     NavbarForCandidateView1, ProgressBarStep5,
+    BufferName,
   ],
    templateUrl: 'profile-last-page1.component.html',
    styleUrls: ['profile-last-page1.component.css'],

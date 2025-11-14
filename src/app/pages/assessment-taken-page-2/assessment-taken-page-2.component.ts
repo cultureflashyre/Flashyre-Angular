@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 
 import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component'
+import { DangerousHtmlComponent } from 'src/app/components/dangerous-html/dangerous-html.component'
 @Component({
   selector: 'assessment-taken-page2',
   standalone: true,
   imports: [ CommonModule, RouterModule, FormsModule,
-    NavbarForCandidateView,
+    NavbarForCandidateView, DangerousHtmlComponent,
   ],
   templateUrl: './assessment-taken-page-2.component.html',
   styleUrls: ['./assessment-taken-page-2.component.css'],

@@ -4,8 +4,14 @@ import { Subscription } from 'rxjs';
 import { BufferService } from '../services/buffer.service';
 import { Observable } from 'rxjs';
 
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'buffer-page',
+  standalone: true,
+  imports: [
+    CommonModule // This makes the 'async' pipe and '@if' available
+  ],
   templateUrl: 'buffer-page.component.html',
   styleUrls: ['buffer-page.component.css'],
 })

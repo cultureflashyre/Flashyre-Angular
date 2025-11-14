@@ -19,6 +19,8 @@ import { ProblemDescriptionComponent } from 'src/app/components/problem-descript
 import { CodeEditorComponent } from '../../components/code-editor/code-editor.component';
 import { CodingTestResultsComponent } from 'src/app/components/coding-test-results/coding-test-results.component';
 
+import { TimerFormatPipe } from 'src/app/pipe/timer-format.pipe';
+
 interface SelectedAnswer {
   answer: string;
   section_id: number;
@@ -45,6 +47,7 @@ interface CodingSubmission {
   imports: [ RouterModule, FormsModule, CommonModule,
     AlertMessageComponent, AssessmentWarningPopup, 
     ProblemDescriptionComponent, CodeEditorComponent, CodingTestResultsComponent,
+    TimerFormatPipe,
   ],
   templateUrl: './flashyre-assessment11.component.html',
   styleUrls: ['./flashyre-assessment11.component.css'],

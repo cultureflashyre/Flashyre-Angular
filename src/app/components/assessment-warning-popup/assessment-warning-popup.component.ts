@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { SharedPipesModule } from '../../shared/shared-pipes.module';
+import { TimerFormatPipe } from 'src/app/pipe/timer-format.pipe';
 // import { interval, Subscription } from 'rxjs';
 
 interface CodingSubmission {
@@ -13,7 +13,7 @@ interface CodingSubmission {
     templateUrl: 'assessment-warning-popup.component.html',
     styleUrls: ['assessment-warning-popup.component.css'],
     standalone: true,
-    imports: [NgTemplateOutlet, SharedPipesModule],
+    imports: [NgTemplateOutlet, TimerFormatPipe],
 })
 export class AssessmentWarningPopup implements AfterViewInit, OnChanges {
   @ViewChild('numbersContainer', { read: ElementRef }) numbersContainer: ElementRef<HTMLDivElement>;
