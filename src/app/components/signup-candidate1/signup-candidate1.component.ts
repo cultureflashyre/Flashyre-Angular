@@ -9,6 +9,10 @@ import { environment } from '../../../environments/environment';
 import { UserProfileService } from '../../services/user-profile.service';
 import { ThumbnailService } from '../../services/thumbnail.service'; // Import thumbnail service
 import { Console } from 'console';
+import { AuthService } from '../../services/candidate.service'; // Renamed to avoid conflict
+import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { SocialAuthService, GoogleLoginProvider, SocialUser } from '@abacritt/angularx-social-login';
+
 
 @Component({
   selector: 'signup-candidate1',
@@ -42,13 +46,22 @@ export class SignupCandidate1 implements OnInit {
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
+     // --- NEW STATE VARIABLES FOR GOOGLE SIGNUP ---
+  showPhonePopup: boolean = false;
+  isSubmittingPhone: boolean = false;
+  popupErrorMessage: string = '';
+  googleUserData: { email: string, first_name: string, last_name: string } | null = null;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
     private userProfileService: UserProfileService,
-    private thumbnailService: ThumbnailService // Inject ThumbnailService here
+    private thumbnailService: ThumbnailService, // Inject ThumbnailService here
+    private candidateAuthService: AuthService, // Aliased to avoid conflict
+    private corporateAuthService: CorporateAuthService,
+    private socialAuthService: SocialAuthService
   ) {}
 
   ngOnInit() {
@@ -72,10 +85,50 @@ export class SignupCandidate1 implements OnInit {
           Validators.maxLength(15)
         ]],
         confirm_password: ['', [Validators.required]],
-        user_type: ['candidate', Validators.required]  // default candidate or empty
-      },
+      // --- NEW FORM CONTROLS ---
+        user_type_radio: ['candidate', Validators.required], // For the radio buttons
+        popup_phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]       
+    },
       { validator: this.passwordMatchValidator }
     );
+
+            // --- ADDED: Google Sign-Up Subscription Logic ---
+    // This is the new, correct way to handle Google Sign-Up.
+    // It listens for a successful authentication from the <asl-google-signin-button>
+    // in your HTML and then executes the multi-step signup logic.
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      this.errorMessage = ''; // Clear previous errors
+      const idToken = socialUser.idToken;
+      const selectedUserType = this.signupForm.get('user_type_radio').value;
+
+      const authObservable = selectedUserType === 'corporate'
+        ? this.corporateAuthService.googleAuthCheck(idToken)
+        : this.candidateAuthService.googleAuthCheck(idToken);
+
+      this.spinner.show();
+      authObservable.subscribe({
+        next: (response) => {
+          this.spinner.hide();
+          if (response.status === 'LOGIN_SUCCESS') {
+            // User already exists, handle as a successful login.
+            this.handleSuccessfulAuth(response);
+          } else if (response.status === 'INCOMPLETE_SIGNUP') {
+            // New user, show the popup to collect their phone number.
+            this.googleUserData = {
+              email: response.email,
+              first_name: response.first_name,
+              last_name: response.last_name
+            };
+            this.showPhonePopup = true;
+          }
+        },
+        error: (err) => {
+          this.spinner.hide();
+          this.errorMessage = err.error?.error || 'An error occurred. Please try again.';
+        }
+      });
+    });
+
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -126,6 +179,64 @@ export class SignupCandidate1 implements OnInit {
     this.confirmPasswordType = this.confirmPasswordType === 'password' ? 'text' : 'password';
   }
 
+  onPhoneSubmit(): void {
+    if (this.signupForm.get('popup_phone_number').invalid) {
+      return;
+    }
+
+    this.isSubmittingPhone = true;
+    this.popupErrorMessage = '';
+    const selectedUserType = this.signupForm.get('user_type_radio').value;
+
+    const finalUserData = {
+      ...this.googleUserData,
+      phone_number: this.signupForm.get('popup_phone_number').value
+    };
+
+    const signupObservable = selectedUserType === 'corporate'
+      ? this.corporateAuthService.completeGoogleSignup(finalUserData)
+      : this.candidateAuthService.completeGoogleSignup(finalUserData);
+
+    signupObservable.subscribe({
+      next: (response) => {
+        this.isSubmittingPhone = false;
+        this.showPhonePopup = false;
+        this.handleSuccessfulAuth(response);
+      },
+      error: (err) => {
+        this.isSubmittingPhone = false;
+        this.popupErrorMessage = err.error?.error || 'Signup failed. Please check the phone number and try again.';
+      }
+    });
+  }
+  // --- REFACTORED SUCCESS HANDLER ---
+  private handleSuccessfulAuth(response: any): void {
+    console.log('Authentication successful', response);
+    this.errorMessage = '';
+    this.successMessage = response.message || 'Successfully Signed up';
+
+    localStorage.setItem('jwtToken', response.access);
+    localStorage.setItem('refreshToken', response.refresh);
+    localStorage.setItem('user_id', response.user_id);
+    localStorage.setItem('userType', response.role);
+
+    this.userProfileService.fetchUserProfile().subscribe({
+      next: () => {
+        this.router.navigate(['/profile-overview-page'], { state: { source: response.role } });
+      },
+      error: (profileError) => {
+        console.error('Error fetching profile', profileError);
+        this.router.navigate(['/profile-overview-page'], { state: { source: response.role } });
+      }
+    });
+  }
+
+  cancelGoogleSignup(): void {
+    this.showPhonePopup = false;
+    this.googleUserData = null;
+    this.signupForm.get('popup_phone_number').reset();
+  }
+
   sanitizePhoneNumber(event: Event): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/\D/g, '').slice(0, 10);
@@ -133,12 +244,22 @@ export class SignupCandidate1 implements OnInit {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
+    const isManualFormValid = 
+        this.signupForm.get('first_name').valid &&
+        this.signupForm.get('last_name').valid &&
+        this.signupForm.get('phone_number').valid &&
+        this.signupForm.get('email').valid &&
+        this.signupForm.get('password').valid &&
+        this.signupForm.get('confirm_password').valid &&
+        !this.signupForm.hasError('mismatch');
+
+    if (isManualFormValid) {
       this.spinner.show(); // Show spinner only when request starts
 
       const firstName = this.signupForm.get('first_name').value;
       const lastName = this.signupForm.get('last_name').value;
       const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+      const userType = this.signupForm.get('user_type_radio').value === 'corporate' ? 'recruiter' : 'candidate';
 
       const formData = {
         first_name: this.signupForm.get('first_name').value,
@@ -146,7 +267,7 @@ export class SignupCandidate1 implements OnInit {
         phone_number: this.signupForm.get('phone_number').value,
         email: this.signupForm.get('email').value,
         password: this.signupForm.get('password').value,
-        user_type: 'candidate',
+        user_type: userType, // The only change inside this object
         initials: initials  // Include initials here
       };
 
@@ -197,6 +318,13 @@ export class SignupCandidate1 implements OnInit {
           console.log('Error message set to:', this.errorMessage);
         }
       );
+          }else {
+        // --- ADDED: Mark fields as touched if form is invalid ---
+        // This ensures validation messages appear if the user clicks "Sign Up" on an empty form.
+        Object.values(this.signupForm.controls).forEach(control => {
+            control.markAsTouched();
+        });
+        console.log("Manual signup form is invalid.");
     }
   }
 

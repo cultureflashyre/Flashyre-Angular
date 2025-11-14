@@ -1,8 +1,61 @@
+<!-- Phone Number Popup Overlay -->
+<div class="popup-overlay" *ngIf="showPhonePopup">
+  <div class="popup-content">
+    <h3>Complete Your Signup</h3>
+    <p class="popup-note">
+      Welcome, {{ googleUserData?.first_name }}! To finish creating your account, please provide your 10-digit phone number.
+    </p>
+
+    <div class="popup-input-group">
+      <label for="phone-number-input">Phone Number</label>
+      <input 
+        id="phone-number-input" 
+        type="tel"
+        class="popup-input" 
+        placeholder="Enter 10-digit phone number"
+        formControlName="popup_phone_number"
+        maxlength="10"
+        (input)="sanitizePhoneNumber($event)"
+      />
+      <div *ngIf="signupForm.get('popup_phone_number').invalid && signupForm.get('popup_phone_number').touched" class="error-text">
+        <span *ngIf="signupForm.get('popup_phone_number').errors?.required">Phone number is required.</span>
+        <span *ngIf="signupForm.get('popup_phone_number').errors?.pattern">Phone number must be exactly 10 digits.</span>
+      </div>
+    </div>
+
+    <div class="popup-actions">
+      <button class="popup-button cancel" (click)="cancelGoogleSignup()">Cancel</button>
+      <button class="popup-button generate" (click)="onPhoneSubmit()" [disabled]="signupForm.get('popup_phone_number').invalid || isSubmittingPhone">
+        <span *ngIf="!isSubmittingPhone">Create Account</span>
+        <span *ngIf="isSubmittingPhone" class="button-spinner-container">
+          <span class="tab-spinner"></span> Creating...
+        </span>
+      </button>
+    </div>
+    <div *ngIf="popupErrorMessage" class="error-text" style="text-align: center; margin-top: 10px;">{{ popupErrorMessage }}</div>
+  </div>
+</div>
+<!-- End of Popup -->
+
 <div id="signup-page" class="signup-candidate1-container" [ngClass]="rootClassName">
   <div id="signup-container" class="signup-candidate1-signup-container">
     <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">
       <span>Welcome to Flashyre</span>
     </h2>
+
+        <!-- ADD USER TYPE SELECTION -->
+    <div class="user-type-selection">
+      <label>
+        <input type="radio" value="candidate" formControlName="user_type_radio" />
+        I am a Candidate
+      </label>
+      <label>
+        <input type="radio" value="corporate" formControlName="user_type_radio" />
+        I am Corporate/Recruiter
+      </label>
+    </div>
+    <!-- END USER TYPE SELECTION -->
+
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div id="details" class="signup-candidate1-details-container">
         <!-- First Name -->
@@ -148,6 +201,23 @@
           >
             Sign Up
           </button>
+
+            <div class="google-signin-container">
+              <div class="separator">OR</div>
+              <asl-google-signin-button
+                  class="google-button-wrapper"
+                  type='standard'
+                  size='large'
+                  theme='outline'
+                  shape='rectangular'
+                  text='signup_with'
+                  width='320px'
+              ></asl-google-signin-button>
+          </div>
+          <!-- ADD GOOGLE SIGNUP SECTION -->
+
+                  <!-- END GOOGLE SIGNUP SECTION -->
+
           <div *ngIf="errorMessage" class="signup-candidate1-error-signup-container">
             <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>
           </div>
