@@ -1,103 +1,118 @@
-/* Full screen overlay */
+/* === Inspired Alert Message Styles === */
+
+/* Full screen overlay with blur effect */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* translucent grey */
-  z-index: 9999; /* very high z-index */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Alert container box */
-.alert-message {
-  gap: var(--dl-layout-space-threeunits);
   width: 100%;
-  height: auto;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
   display: flex;
-  padding: var(--dl-layout-space-unit);
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Ensure it's on top */
+  backdrop-filter: blur(4px); /* Inspired blur effect */
+}
+
+/* Alert container box - styled like the popup */
+.alert-message {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px; /* Slightly adjusted for typical alert content */
+  display: flex;
   flex-direction: column;
-  align-self: center;
-  background-color: white;
-  /*padding: 1.5rem 2rem;*/
-  border-radius: 8px;
-  max-width: 400px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  position: relative;
-  z-index: 10000; /* above background overlay */
+  gap: 20px; /* Spacing between message and buttons */
+  animation: fadeIn 0.3s ease-out;
+  position: relative; /* Needed for the close icon positioning */
 }
 
+/* Keyframe animation for a smooth entrance */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Container for the main message text */
 .alter-message-close-icon-container {
-    justify-content: space-between;
+  /* This container now only holds the text, close icon is positioned independently */
+  padding-right: 20px; /* Add padding to prevent text from overlapping with the close icon */
 }
 
-/* Close icon */
+/* Styling for the alert message text itself */
+.alter-message-close-icon-container p {
+  font-size: 15px;
+  color: #667085; /* Soft, secondary text color */
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* A more subtle close icon */
 .close-icon {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 24px;
+  top: 16px;
+  right: 16px;
+  font-size: 20px;
+  color: #98a2b3; /* Lighter color */
   cursor: pointer;
-  color: #888;
+  transition: color 0.3s;
 }
 
+.close-icon:hover {
+  color: #344054;
+}
+
+/* Flex container for bottom action buttons */
 .alter-message-buttons-container1 {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 12px;
+  margin-top: 8px;
 }
 
-.button-cancel {
-  background-color: transparent;
-  border: 1px solid #888;
-  color: #555;
-}
-
-.button-save-draft, .button-yes {
-  background-color: rgb(255, 255, 255); /* blue */
-  color: #05356c;
-  border: none;
-}
-
-.button-delete {
-  background-color: #dc3545; /* red */
-  color: white;
-  border: none;
-}
-
-
+/* Base button style, inspired by .popup-button */
 .alter-message-component-button {
-
-  color: var(--dl-color-theme-neutral-dark);
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-color: var(--dl-color-theme-neutral-dark);
-  border-width: 1px;
-  border-radius: 4px;
-  background-color: var(--dl-color-theme-neutral-light);
-
-  color: #05356c;
-  width: auto;
-  height: 75%;
-  font-style: normal;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 500;
-  font-size: 12px;
-  transition: 0.3s;
-  border-color: #05356c;
-  border-width: 1px;
-  background-color: rgb(255, 255, 255);
-}
- 
-.alter-message-component-button:hover {
+  border: 1px solid transparent;
   cursor: pointer;
-  transform: scale(0.90);
-  transition: all 0.7s;
+  transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
- 
-.alter-message-component-button:active {
-  transform: scale(1.05);
-  transition: all 0.7s;
+
+/* Secondary action button (e.g., "Cancel") */
+.button-cancel {
+  background-color: #ffffff;
+  color: #344054;
+  border-color: #d0d5dd;
+}
+
+.button-cancel:hover {
+  background-color: #f9fafb;
+}
+
+/* Primary action buttons (e.g., "Save Draft", "Yes") */
+.button-save-draft, 
+.button-yes {
+  background-color: #41327b; /* Primary brand color from inspiration */
+  color: #ffffff;
+}
+
+.button-save-draft:hover, 
+.button-yes:hover {
+  background-color: #352866; /* Darker shade on hover */
+}
+
+/* Destructive action button (e.g., "Delete") */
+.button-delete {
+  background-color: #d92d20; /* A modern, clear red for destructive actions */
+  color: #ffffff;
+}
+
+.button-delete:hover {
+  background-color: #b42318;
 }
