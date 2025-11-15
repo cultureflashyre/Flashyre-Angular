@@ -8,12 +8,16 @@ import { AlertMessageComponent } from '../alert-message/alert-message.component'
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+
 @Component({
     selector: 'log-in-page',
     templateUrl: './log-in-page.component.html',
     styleUrls: ['./log-in-page.component.css'],
     standalone: true,
     imports: [
+      FormsModule, ReactiveFormsModule, CommonModule,
       AlertMessageComponent, NgClass, 
       NgTemplateOutlet, FormsModule, 
       ReactiveFormsModule, RouterLink,
@@ -73,10 +77,11 @@ export class LogInPage implements OnInit {
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       console.log('Google user authenticated:', socialUser);
       const idToken = socialUser.idToken;
+      const selectedUserType = this.userType;
 
       const authObservable = this.userType === 'corporate'
-        ? this.corporateAuthService.googleAuthCheck(idToken)
-        : this.authService.googleAuthCheck(idToken);
+        ? this.corporateAuthService.googleAuthCheck(idToken, selectedUserType)
+        : this.authService.googleAuthCheck(idToken, selectedUserType);
 
       authObservable.subscribe({
         next: (response) => {

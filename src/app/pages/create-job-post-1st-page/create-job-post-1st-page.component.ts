@@ -155,7 +155,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
 
     if (!this.corporateAuthService.isLoggedIn()) {
       this.showErrorPopup('Please log in to create or edit a job post.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -211,7 +211,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -385,7 +385,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     this.isSubmitting = true;
@@ -869,7 +869,7 @@ export class CreateJobPost1stPageComponent implements OnInit, AfterViewInit, OnD
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']); return;
+      this.router.navigate(['/login']); return;
     }
 
     this.jobForm.markAllAsTouched();

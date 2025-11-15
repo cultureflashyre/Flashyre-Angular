@@ -2,6 +2,173 @@
   display: contents; 
 }
 
+/* === Inspired Popup Theme === */
+
+/* 1. Full-Screen Overlay with Blur Effect */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Ensure it's on top */
+  backdrop-filter: blur(4px); /* Inspired blur effect */
+}
+
+/* 2. Main Popup Container Box */
+.popup-content {
+  background-color: #ffffff;
+  padding: 28px 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Consistent spacing between elements */
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid #e0e0e0;
+}
+
+/* Keyframe animation for a smooth entrance */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 3. Popup Typography */
+.popup-content h3 {
+  font-size: 20px;
+  color: #101828; /* Dark, primary headline color */
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.popup-note {
+  font-size: 15px;
+  color: #667085; /* Soft, secondary text color */
+  line-height: 1.6;
+  text-align: center;
+  margin: 0;
+}
+
+/* === Specific Styles for Role Selection Popup === */
+
+.role-selection-popup {
+  gap: 24px; /* Slightly more spacing for this popup */
+}
+
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.role-button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid #d0d5dd;
+  background-color: #ffffff;
+  color: #344054;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+  text-align: center;
+}
+
+.role-button:hover {
+  background-color: #f9fafb;
+  border-color: #41327b;
+}
+
+/* === Specific Styles for Phone Number Popup === */
+
+.popup-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popup-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+.popup-input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.popup-input:focus {
+  outline: none;
+  border-color: #41327b;
+  box-shadow: 0 0 0 4px #f2f1f5;
+}
+
+/* === Shared Styles for Popup Action Buttons === */
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.popup-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+/* Cancel Button Style */
+.popup-button.cancel {
+  background-color: #ffffff;
+  color: #344054;
+  border-color: #d0d5dd;
+}
+
+.popup-button.cancel:hover {
+  background-color: #f9fafb;
+}
+
+/* Primary/Generate Button Style */
+.popup-button.generate {
+  background-color: #41327b; /* Primary brand color */
+  color: #ffffff;
+}
+
+.popup-button.generate:hover {
+  background-color: #352866; /* Darker shade on hover */
+}
+
+/* Disabled state for the generate button */
+.popup-button.generate:disabled {
+  background-color: #d0d5dd;
+  cursor: not-allowed;
+}
+
+/* Spinner inside button */
+.button-spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
 asl-google-signin-button {
   display: flex; /* Use flexbox to manage the button that renders inside */
@@ -66,83 +233,47 @@ asl-google-signin-button {
 
 /* src/app/components/signup-candidate1/signup-candidate1.component.css */
 
-/* --- STYLES FOR POPUP --- */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+
+
+/* === Signup Context Header Styles === */
+
+/* 1. The main container for the text and button */
+.signup-context-header {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  justify-content: space-between; /* Pushes items to opposite ends */
+  align-items: center;            /* Vertically aligns text and button */
+  padding: 12px 16px;             /* Provides comfortable internal spacing */
+  margin-bottom: 24px;            /* Adds space between the header and the form fields */
+  background-color: #f9fafb;      /* A very light, neutral background */
+  border: 1px solid #f2f4f7;      /* A subtle border to define the container */
+  border-radius: 8px;             /* Rounded corners to match the overall theme */
+  width: 100%;                    /* Ensures it takes the full width of its container */
 }
 
-.popup-content {
-  background: white;
-  padding: 24px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.popup-content h3 {
-  margin-top: 0;
-  font-size: 20px;
-  text-align: center;
-}
-
-.popup-note {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.popup-input-group {
-  margin-bottom: 16px;
-}
-
-.popup-input-group label {
-  display: block;
-  margin-bottom: 8px;
+/* 2. The "Signing up as..." text itself */
+.context-text {
+  font-size: 15px;
   font-weight: 500;
+  color: #344054; /* A soft, professional dark grey for readability */
 }
 
-.popup-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ACACAD;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 24px;
-}
-
-.popup-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* 3. The "Change" button, styled to be subtle */
+.change-button {
+  background-color: transparent;  /* Removes the default button background */
+  border: none;                   /* Removes the default button border */
+  color: #41327b;                 /* Uses your primary brand color for the text */
+  font-size: 14px;
   font-weight: 600;
+  cursor: pointer;                /* Standard pointer to indicate it's clickable */
+  padding: 4px 8px;               /* Adds a small, comfortable clickable area */
+  border-radius: 6px;             /* Subtle rounding */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Smooth hover effect */
 }
 
-.popup-button.cancel {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.popup-button.generate {
-  background-color: #05356C;
-  color: white;
+/* 4. A gentle hover effect for the "Change" button */
+.change-button:hover {
+  background-color: #f2f1f5;      /* A very light background color appears on hover */
+  color: #352866;                 /* Slightly darkens the text color on hover for feedback */
 }
 
 /* --- STYLES FOR USER TYPE & GOOGLE BUTTON --- */

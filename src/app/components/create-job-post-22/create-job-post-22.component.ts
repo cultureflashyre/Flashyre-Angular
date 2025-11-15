@@ -665,7 +665,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     const token = this.authService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       this.isLoading = false;
       return;
     }
@@ -743,7 +743,7 @@ export class CreateJobPost22 implements OnInit, OnDestroy, AfterViewInit { // Im
     const token = this.authService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       this.isLoading = false;
       return;
     }

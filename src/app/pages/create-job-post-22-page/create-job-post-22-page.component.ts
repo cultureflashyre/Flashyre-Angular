@@ -43,7 +43,7 @@ export class CreateJobPost22Page implements OnInit {
     // 1. Check for an active login session first.
     if (!this.authService.isLoggedIn()) {
       this.snackBar.open('Your session has expired. Please log in.', 'Close', { duration: 5000 });
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 

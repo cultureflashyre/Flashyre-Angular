@@ -22,7 +22,7 @@ export class AssessmentTakenService {
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getJWTToken();
     if (!token) {
-      this.router.navigate(['/login-candidate']);
+      this.router.navigate(['/login']);
       throw new Error('No authentication token found.');
     }
     return new HttpHeaders({
@@ -34,7 +34,7 @@ export class AssessmentTakenService {
     const token = this.authService.getJWTToken();
     if (!token) {
       console.error('No token found. User must log in.');
-      this.router.navigate(['/login-candidate']); // Redirect to login
+      this.router.navigate(['/login']); // Redirect to login
       return of(null); // Return an empty observable to prevent errors
     }
 

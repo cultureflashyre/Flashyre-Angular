@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { tap, catchError } from 'rxjs/operators';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,9 @@ export class AuthService {
 
   constructor(
     private http: HttpClient, 
-    private router: Router) {}
+    private router: Router,
+    private socialAuthService: SocialAuthService,
+) {}
 
   /**
    * Creates and returns HttpHeaders with the JWT token for authenticated requests.
@@ -51,16 +54,26 @@ export class AuthService {
   /**
    * Logs the user out by clearing authentication data from localStorage and redirecting.
    */
-  logout(): void {
+async logout(): Promise<void> {
+  try {
+    // 1. Sign out from the social provider (Google). This will resolve even
+    //    if the user was not logged in with a social provider.
+    await this.socialAuthService.signOut();
+    console.log('User signed out from social provider.');
+  } catch (error) {
+    console.error('Error signing out from social provider:', error);
+  } finally {
+    // 2. Clear all your application's session data from localStorage.
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userProfile');
     localStorage.removeItem('user_id');
     localStorage.removeItem('userType');
 
-    
-    this.router.navigate(['/login-candidate']);
+    // 3. Redirect the user to the login page.
+    this.router.navigate(['/login']);
   }
+}
 
   clearTokens(): void {
     localStorage.removeItem('jwtToken');
@@ -289,9 +302,9 @@ export class AuthService {
   }
 
     // --- NEW METHOD 1: Initial Google Auth Check ---
-  googleAuthCheck(idToken: string): Observable<any> {
+  googleAuthCheck(idToken: string, selectedUserType: string): Observable<any> {
     // The user type is implicitly 'candidate' when using this service.
-    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken });
+    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken, selectedUserType });
   }
 
   // --- NEW METHOD 2: Complete Google Signup ---

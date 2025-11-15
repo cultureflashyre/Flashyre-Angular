@@ -40,6 +40,6 @@ export class AdminAuthService {
     localStorage.removeItem('userType');
 
     
-    this.router.navigate(['/login-admin']);
+    this.router.navigate(['/login']);
   }
 }

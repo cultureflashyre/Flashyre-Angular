@@ -12,9 +12,10 @@ import { Console } from 'console';
 import { AuthService } from '../../services/candidate.service'; // Renamed to avoid conflict
 import { CorporateAuthService } from '../../services/corporate-auth.service';
 import { SocialAuthService, GoogleLoginProvider, SocialUser } from '@abacritt/angularx-social-login';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 @Component({
     selector: 'signup-candidate1',
@@ -25,8 +26,8 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
         FormsModule,
         ReactiveFormsModule,
         NgClass,
-        RouterLink,
-        GoogleSigninButtonModule,
+        RouterLink, AlertMessageComponent,
+        GoogleSigninButtonModule, CommonModule,
     ],
 })
 export class SignupCandidate1 implements OnInit {
@@ -62,6 +63,14 @@ export class SignupCandidate1 implements OnInit {
   popupErrorMessage: string = '';
   googleUserData: { email: string, first_name: string, last_name: string } | null = null;
 
+  userType: 'candidate' | 'recruiter' | 'admin' | null = null;
+  showRoleSelection = true; // Show overlay by default
+
+  showRoleMismatchAlert = false;
+  roleMismatchMessage = '';
+  roleMismatchButtons: string[] = [];
+  private mismatchLoginData: any = null; // To store login data from the backend
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -96,7 +105,7 @@ export class SignupCandidate1 implements OnInit {
         ]],
         confirm_password: ['', [Validators.required]],
       // --- NEW FORM CONTROLS ---
-        user_type_radio: ['candidate', Validators.required], // For the radio buttons
+        //user_type_radio: ['candidate', Validators.required], // For the radio buttons
         popup_phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]       
     },
       { validator: this.passwordMatchValidator }
@@ -108,12 +117,18 @@ export class SignupCandidate1 implements OnInit {
     // in your HTML and then executes the multi-step signup logic.
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       this.errorMessage = ''; // Clear previous errors
-      const idToken = socialUser.idToken;
-      const selectedUserType = this.signupForm.get('user_type_radio').value;
+      if (!this.userType) {
+        this.errorMessage = 'Please select a user type before signing up with Google.';
+        this.changeUserType(); // Re-open the role selector
+        return;
+      }
 
-      const authObservable = selectedUserType === 'corporate'
-        ? this.corporateAuthService.googleAuthCheck(idToken)
-        : this.candidateAuthService.googleAuthCheck(idToken);
+      const idToken = socialUser.idToken;
+      const selectedUserType = this.userType;
+
+      const authObservable = selectedUserType === 'recruiter'
+        ? this.corporateAuthService.googleAuthCheck(idToken, selectedUserType)
+        : this.candidateAuthService.googleAuthCheck(idToken, selectedUserType);
 
       this.spinner.show();
       authObservable.subscribe({
@@ -131,6 +146,17 @@ export class SignupCandidate1 implements OnInit {
             };
             this.showPhonePopup = true;
           }
+          // --- NEW LOGIC to handle Role Mismatch ---
+          else if (response.status === 'ROLE_MISMATCH') {
+            // Store the login data in case the user wants to continue
+            this.mismatchLoginData = response;
+
+            // Prepare and show the alert
+            const role = response.existing_role.charAt(0).toUpperCase() + response.existing_role.slice(1);
+            this.roleMismatchMessage = `You have already signed up as ${role} using this email: ${response.email}`;
+            this.roleMismatchButtons = [`Continue as ${role}`, 'Back to Signup'];
+            this.showRoleMismatchAlert = true;
+          }          
         },
         error: (err) => {
           this.spinner.hide();
@@ -139,6 +165,37 @@ export class SignupCandidate1 implements OnInit {
       });
     });
 
+  }
+
+    // --- NEW METHOD to handle alert button clicks ---
+  handleMismatchAlertAction(button: string): void {
+    this.showRoleMismatchAlert = false; // Hide the alert
+
+    if (button.startsWith('Continue as')) {
+      // If user wants to continue, log them in using the stored data
+      this.handleSuccessfulAuth(this.mismatchLoginData);
+    }
+    // If "Back to Signup" is clicked, we just hide the alert and do nothing else.
+    this.mismatchLoginData = null; // Clear the stored data
+  }
+
+  // --- NEW METHOD to handle closing the alert via 'x' icon ---
+  closeMismatchAlert(): void {
+    this.showRoleMismatchAlert = false;
+    this.mismatchLoginData = null;
+  }
+
+  selectUserType(type: 'candidate' | 'recruiter' | 'admin'): void {
+    this.userType = type;
+    this.showRoleSelection = false;
+  }
+
+  changeUserType(): void {
+    this.showRoleSelection = true;
+  }
+
+  cancelRoleSelection(): void {
+    this.router.navigate(['/login']);
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -196,14 +253,14 @@ export class SignupCandidate1 implements OnInit {
 
     this.isSubmittingPhone = true;
     this.popupErrorMessage = '';
-    const selectedUserType = this.signupForm.get('user_type_radio').value;
+    const selectedUserType = this.userType;
 
     const finalUserData = {
       ...this.googleUserData,
       phone_number: this.signupForm.get('popup_phone_number').value
     };
 
-    const signupObservable = selectedUserType === 'corporate'
+    const signupObservable = selectedUserType === 'recruiter'
       ? this.corporateAuthService.completeGoogleSignup(finalUserData)
       : this.candidateAuthService.completeGoogleSignup(finalUserData);
 
@@ -247,10 +304,15 @@ export class SignupCandidate1 implements OnInit {
     this.signupForm.get('popup_phone_number').reset();
   }
 
-  sanitizePhoneNumber(event: Event): void {
+  sanitizePhoneNumber(event: Event, controlName: string): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/\D/g, '').slice(0, 10);
-    this.signupForm.get('phone_number').setValue(sanitizedValue, { emitEvent: false });
+
+    // Get the correct form control by name and update its value
+    const control = this.signupForm.get(controlName);
+    if (control) {
+      control.setValue(sanitizedValue, { emitEvent: false });
+    }
   }
 
   onSubmit() {
@@ -269,7 +331,7 @@ export class SignupCandidate1 implements OnInit {
       const firstName = this.signupForm.get('first_name').value;
       const lastName = this.signupForm.get('last_name').value;
       const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
-      const userType = this.signupForm.get('user_type_radio').value === 'corporate' ? 'recruiter' : 'candidate';
+      const userType = this.userType;
 
       const formData = {
         first_name: this.signupForm.get('first_name').value,

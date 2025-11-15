@@ -191,7 +191,7 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
         this.loading = false;
         localStorage.removeItem('resetEmail');
         setTimeout(() => {
-          window.location.href = '/login-candidate';
+          window.location.href = '/login';
         }, 2000);
       },
       error: (err) => {

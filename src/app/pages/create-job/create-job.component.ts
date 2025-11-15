@@ -183,7 +183,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
     if (!this.corporateAuthService.isLoggedIn()) {
       this.showErrorPopup('Please log in to create or edit a job post.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -236,7 +236,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     this.isSubmitting = true;
@@ -421,7 +421,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     this.isSubmitting = true;
@@ -909,7 +909,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     // Validation is handled in onSubmitAttempt, so we proceed directly
@@ -1093,7 +1093,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication required. Please log in.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     

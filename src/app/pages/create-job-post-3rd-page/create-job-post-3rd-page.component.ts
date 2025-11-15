@@ -419,7 +419,7 @@ export class CreateJobPost3rdPageComponent implements OnInit {
     const token = this.authService.getJWTToken();
     if (!token) {
       this.snackBar.open('Authentication error. Please log in again.', 'Close', { duration: 4000 });
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     this.isSubmitting = true;

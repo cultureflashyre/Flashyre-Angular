@@ -87,7 +87,7 @@ function handle401Error(
       catchError(err => {
         isRefreshing = false;
         authService.logout(); // A single logout method is cleaner
-        const loginRoute = authService instanceof CorporateAuthService ? '/login-corporate' : '/login-candidate';
+        const loginRoute = '/login';
         router.navigate([loginRoute]);
         return throwError(() => err);
       })

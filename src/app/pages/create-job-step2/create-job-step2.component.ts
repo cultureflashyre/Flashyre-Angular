@@ -81,7 +81,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
 
     if (!this.corporateAuthService.isLoggedIn()) {
       this.showErrorPopup('Your session has expired. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -291,7 +291,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     const token = this.corporateAuthService.getJWTToken();
     if (!token) {
       this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
     this.isGenerating = true;

@@ -130,7 +130,7 @@ export class ProfileBasicinformationComponent implements OnInit {
       (error) => {
         console.error('Error fetching user details', error);
         if (error.status === 401) {
-          this.router.navigate(['/login-candidate']);
+          this.router.navigate(['/login']);
         } else {
           alert('Failed to load user details. Please try again.');
         }

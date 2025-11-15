@@ -13,7 +13,7 @@ import { LoginPageNavbar } from 'src/app/components/login-page-navbar/login-page
 import { LogInPage } from 'src/app/components/log-in-page/log-in-page.component';
 
 @Component({
-  selector: 'login-candidate',
+  selector: 'login',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
     LoginPageNavbar, LogInPage,
@@ -34,11 +34,11 @@ export class LoginCandidate implements OnInit {
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
   ) {
-    this.title.setTitle('Login-Candidate - Flashyre');
+    this.title.setTitle('Login - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Login-Candidate - Flashyre',
+        content: 'Login - Flashyre',
       },
       {
         property: 'og:image',
@@ -49,7 +49,7 @@ export class LoginCandidate implements OnInit {
 
   ngOnInit() {
     // Capture returnUrl query param or default to candidate login page
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login-candidate';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
   }
 
   onLoginSubmit(response: any) {

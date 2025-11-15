@@ -76,7 +76,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     if (!this.corporateAuthService.isLoggedIn()) {
       // Replaced MatSnackBar with custom popup
       this.showErrorPopup('Your session has expired. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -151,7 +151,7 @@ export class CreateJobPost21Page implements OnInit, OnDestroy {
     if (!token) {
       // Replaced MatSnackBar with custom popup
       this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login-corporate']);
+      this.router.navigate(['/login']);
       return;
     }
 

@@ -228,11 +228,11 @@ export class SignupCorporate1 implements OnInit {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login-corporate']);
+    this.router.navigate(['/login']);
   }
 
   closePopup() {
     this.showSuccessPopup = false;
-    this.router.navigate(['/login-corporate']);
+    this.router.navigate(['/login']);
   }
 }

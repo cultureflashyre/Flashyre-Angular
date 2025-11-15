@@ -9,7 +9,7 @@ import { SignupPageNavbar } from 'src/app/components/signup-page-navbar/signup-p
 import { SignupCandidate1 } from 'src/app/components/signup-candidate1/signup-candidate1.component'
 
 @Component({
-  selector: 'signup-candidate',
+  selector: 'signup',
   standalone: true,
     imports: [ RouterModule, FormsModule, CommonModule,
       SignupCandidate1, SignupPageNavbar,
@@ -19,11 +19,11 @@ import { SignupCandidate1 } from 'src/app/components/signup-candidate1/signup-ca
 })
 export class SignupCandidate {
   constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Signup-Candidate - Flashyre')
+    this.title.setTitle('Signup - Flashyre')
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Signup-Candidate - Flashyre',
+        content: 'Signup - Flashyre',
       },
       {
         property: 'og:image',

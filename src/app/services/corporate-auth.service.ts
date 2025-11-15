@@ -110,7 +110,7 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
     localStorage.removeItem('userType');
     // Optionally clear other stored corporate user data
 
-    this.router.navigate(['/login-corporate']);
+    this.router.navigate(['/login']);
   }
 
   clearTokens(): void {
@@ -122,9 +122,9 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
   
   // --- NEW METHOD 1: Initial Google Auth Check ---
-  googleAuthCheck(idToken: string): Observable<any> {
+  googleAuthCheck(idToken: string, selectedUserType: string): Observable<any> {
     // The user type is implicitly 'recruiter' (corporate) when using this service.
-    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken });
+    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken, selectedUserType });
   }
 
   // --- NEW METHOD 2: Complete Google Signup ---
