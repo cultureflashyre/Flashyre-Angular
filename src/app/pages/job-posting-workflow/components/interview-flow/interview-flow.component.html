@@ -1,0 +1,84 @@
+@if (isLoading) {
+  <div class="loading-container">
+    <p>Loading Interview Stages...</p>
+    <!-- You can add a spinner component here -->
+  </div>
+} @else {
+  @if (showAlert) {
+    <app-alert-message
+      [message]="alertMessage"
+      [buttons]="alertButtons"
+      (buttonClicked)="handleAlertAction($event)"
+      (close)="showAlert = false">
+    </app-alert-message>
+  }
+  <div class="interview-process-container">
+    <span class="interview-process-title">Interview Process</span>
+    
+    <form [formGroup]="interviewForm">
+      <div formArrayName="stages" class="stages-list-container">
+        @for (stageControl of stages.controls; track stageControl; let i = $index) {
+          <div [formGroupName]="i" class="stage-row-container">
+            <!-- Stage Name (Dropdown/Input) -->
+            <div class="form-field-wrapper stage-field">
+              <label [for]="'stage-name-' + i">Stage Name <span class="required-asterisk">*</span></label>
+              <select formControlName="stage_name" [id]="'stage-name-' + i">
+                <option value="Screening">Screening</option>
+                <option value="Technical interview - 1">Technical interview - 1</option>
+                <option value="Technical interview - 2">Technical interview - 2</option>
+                <option value="HR interview">HR interview</option>
+                <option value="Customize">Customize</option>
+              </select>
+              @if (stageControl.get('stage_name')?.value === 'Customize') {
+                <input type="text" formControlName="custom_stage_name" placeholder="Enter Custom Stage Name" [id]="'custom-stage-name-' + i" class="custom-stage-input">
+              }
+              @if (stageControl.get('custom_stage_name')?.touched && stageControl.get('custom_stage_name')?.errors?.required) {
+                <div class="field-error-message">Custom name is required.</div>
+              }
+            </div>
+
+            <!-- Date -->
+            <div class="form-field-wrapper date-field">
+              <label [for]="'date-input-' + i">Date <span class="required-asterisk">*</span></label>
+              <input type="date" formControlName="stage_date" [min]="minDateString" [id]="'date-input-' + i">
+              @if (stageControl.get('stage_date')?.touched && stageControl.get('stage_date')?.errors?.required) {
+                <div class="field-error-message">Date is required.</div>
+              }
+            </div>
+
+            <!-- Mode -->
+            <div class="form-field-wrapper mode-field">
+              <label [for]="'mode-select-' + i">Mode <span class="required-asterisk">*</span></label>
+              <select formControlName="mode" [id]="'mode-select-' + i">
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+            </div>
+
+            <!-- Assigned To -->
+            <div class="form-field-wrapper assigned-to-field">
+              <label [for]="'assigned-to-' + i">Assigned To <span class="required-asterisk">*</span></label>
+              <input type="email" formControlName="assigned_to" placeholder="interviewer@company.com" [id]="'assigned-to-' + i">
+              @if (stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors) {
+                <div class="field-error-message">A valid email is required.</div>
+              }
+            </div>
+            
+            <!-- Remove Button -->
+            <div class="remove-icon-wrapper">
+              <button type="button" (click)="removeStage(i)" class="remove-button" title="Remove Stage">
+                &#10005; <!-- Multiplcation Sign for 'X' -->
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </form>
+    
+    <div class="add-stage-container">
+      <button type="button" (click)="addStage()" class="add-stage-button">
+        + Add Another Stage
+      </button>
+    </div>
+  </div>
+}

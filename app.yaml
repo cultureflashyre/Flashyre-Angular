@@ -1,0 +1,19 @@
+runtime: python313
+api_version: 1
+entrypoint: serve
+
+handlers:
+  # Serve static files from the 'browser' directory
+  - url: /(.*\.(gif|png|jpg|ico|js|css|woff2|woff|ttf|svg|eot))$
+    static_files: dist/teleport-project-template-angular/browser/\1
+    upload: dist/teleport-project-template-angular/browser/.*\.(gif|png|jpg|ico|js|css|woff2|woff|ttf|svg|eot)$
+
+  # Serve files from the 'assets' folder
+  - url: /assets/(.*)
+    static_files: dist/teleport-project-template-angular/browser/assets/\1
+    upload: dist/teleport-project-template-angular/browser/assets/.*
+
+  # Catch-all handler to serve index.html for all other requests (enables Angular routing)
+  - url: /.*
+    static_files: dist/teleport-project-template-angular/browser/index.html
+    upload: dist/teleport-project-template-angular/browser/index.html

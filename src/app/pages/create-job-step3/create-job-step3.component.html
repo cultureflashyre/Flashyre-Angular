@@ -156,9 +156,24 @@
   }
   <!-- The form tag wraps the entire component to manage settings with ReactiveFormsModule -->
   <form [formGroup]="assessmentForm" class="admin-create-job-step3-container10" [ngClass]="rootClassName">
-    <progress-bar2-code
-      rootClassName="progress-bar2-coderoot-class-name1"
-    ></progress-bar2-code>
+     <div class="main-content-card-step3">
+          <div class="progress-bar-container">
+            <div class="create-job-progress-bar">
+              <div class="step completed">
+                <div class="step-circle">✓</div>
+                <span>Create Job Post</span>
+              </div>
+              <div class="step active">
+                <div class="step-circle">2</div>
+                <span>Assessment for Job</span>
+              </div>
+              <div class="step">
+                <div class="step-circle">3</div>
+                <span>Interview process</span>
+              </div>
+            </div>
+          </div>
+     </div>     
     <div id="create-job-post-2.2-main-container" class="admin-create-job-step3-create-job-post22-main-container">
       <!-- Assessment Name and All Settings Section -->
       <div id="assessment-additional-settings-main-container" class="admin-create-job-step3-assessment-additional-settings-main-container">

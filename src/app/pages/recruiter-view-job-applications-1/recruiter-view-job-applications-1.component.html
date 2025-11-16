@@ -490,7 +490,7 @@
       (click)="toggleJdDropdown($event)"
       [disabled]="!job?.job_description_url"
     >
-      View JD
+      View / Download
       <!-- Simple dropdown arrow -->
       <span style="margin-left: 8px;">▼</span>
     </button>
@@ -576,7 +576,7 @@
                   id="job-matching-score-text"
                   class="recruiter-view-job-applications1-job-matching-score-text"
                 >
-                  Job matching Score
+                  Job matching<br>Score
                   <span *ngIf="sortColumn === 'score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
                 </span>
               </div>
@@ -590,7 +590,7 @@
         id="assessment-score-text"
         class="recruiter-view-job-applications1-assessment-score-text"
       >
-        Assessment Score
+        Assessment<br>Score
         <span *ngIf="sortColumn === 'assessment_score'">{{ sortDirection === 'asc' ? ' ▲' : ' ▼' }}</span>
       </span>
     </div>
@@ -661,7 +661,8 @@
                   </div>
                   <span
                     id="candidate-name-text"
-                    class="recruiter-view-job-applications1-candidate-name-text"
+                    class="recruiter-view-job-applications1-candidate-name-text candidate-name"
+                    [title]="candidate.user.full_name"
                   >
                     {{ candidate.user.full_name }}
                   </span>
@@ -672,7 +673,8 @@
                 >
                   <span
                     id="candidate-designation-company-name-text"
-                    class="recruiter-view-job-applications1-candidate-designation-company-text"
+                    class="recruiter-view-job-applications1-candidate-designation-company-text candidate-designation"
+                    [title]="candidate.designation"
                   >
                     {{ candidate.designation }}
                   </span>

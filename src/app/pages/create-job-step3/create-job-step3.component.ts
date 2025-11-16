@@ -23,6 +23,7 @@ import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/nav
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progress-bar-2-code.component';
 import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
+import { Title, Meta } from '@angular/platform-browser';
 
 // Interface to hold the structured parts of a parsed question
 interface ParsedDetails {
@@ -166,7 +167,9 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
     private mcqService: McqAssessmentService,
     private skillService: SkillService,
     private spinner: NgxSpinnerService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private title: Title,
+    private meta: Meta
   ) {}
 
   @HostListener('window:resize')
@@ -180,6 +183,15 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.title.setTitle('Assessment Setup - Flashyre');
+    this.meta.addTags([
+      { property: 'og:title', content: 'Assessment Setup - Flashyre' },
+      {
+        property: 'og:image',
+        content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
+      }
+    ]);
+
     this.initializeForm();
     this.jobUniqueId = this.workflowService.getCurrentJobId();
     this.currentAssessmentId = this.workflowService.getCurrentAssessmentId();

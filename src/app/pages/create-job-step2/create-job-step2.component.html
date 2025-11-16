@@ -106,20 +106,34 @@
 </navbar-for-admin-view>
 
 
-<div class="admin-create-job-step2-container1">
-  <div class="admin-create-job-step2-container2">
+<!-- START: Corrected Navbar Implementation -->
+<navbar-for-admin-view rootClassName="navbar-for-candidate-viewroot-class-name">
+  <!-- You can include all the necessary ng-template slots just like in your first component -->
+  <!-- This example includes the key one for the user's name -->
+  <ng-template #text4>
+    <div class="candidate-home-fragment17">
+      <span class="candidate-home-text107">
+        {{ userProfile.first_name }} {{ userProfile.last_name }}
+      </span>
+    </div>
+  </ng-template>
+  <!-- Add other ng-template slots as needed for Logout, Settings, etc. -->
+</navbar-for-admin-view>
 
+<div class="page-container">
+  <div class="content-wrapper">
     @if (showAlert) {
       <app-alert-message
         [message]="alertMessage"
         [buttons]="alertButtons"
         (buttonClicked)="onAlertButtonClicked($event)"
-        (close)="showAlert = false">
-      </app-alert-message>
-    }
-
-    @if (showPopup) {
-      <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+        (close)="showAlert = false"
+      ></app-alert-message>
+    } @if (showPopup) {
+      <div
+        class="alert"
+        [ngClass]="{ success: popupType === 'success', error: popupType === 'error' }"
+      >
         @if (popupType === 'success') {
           <span class="tick">✔</span>
         }
@@ -128,133 +142,133 @@
       </div>
     }
 
-    <div class="admin-create-job-step2-container3">
-      <div class="admin-create-job-step2-container4">
-
-        <progress-bar2-code
-          rootClassName="progress-bar2-coderoot-class-name"
-        ></progress-bar2-code>
-
-        <div class="admin-create-job-step2-container5">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            class="admin-create-job-step2-icon1"
-            (click)="onPrevious()"
-            style="cursor: pointer;"
-            >
-            <path
-              d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
-              fill="currentColor"
-            ></path>
-          </svg>
-          <span class="admin-create-job-step2-text31">Assessment for Job</span>
-        </div>
-
-        <div class="admin-create-job-step2-questions-section">
-          <span class="admin-create-job-step2-questions-title">
-            How do you want to Add your Questions to Assessment?
-          </span>
-          <div class="admin-create-job-step2-buttons-container">
-
-            <button
-              id="generate-questions-button"
-              class="admin-create-job-step2-generate-button"
-              (click)="onGenerateAi()"
-              [disabled]="isGenerating"
-              [class.disabled]="isGenerating || hasGenerated"
-              [title]="isGenerating ? 'Generating...' : hasGenerated ? 'Questions Generated' : 'Generate questions using AI'"
-              >
-              <span id="generate-questions-text" class="admin-create-job-step2-generate-text">
-                @if (!isGenerating && !hasGenerated) {
-                  <span>
-                    <span class="admin-create-job-step2-generate-label">Generate with AI</span>
-                    <span class="admin-create-job-step2-sparkle"> ✨</span>
-                  </span>
-                }
-                @if (isGenerating) {
-                  <span>Generating...</span>
-                }
-                @if (!isGenerating && hasGenerated) {
-                  <span>
-                    <span class="admin-create-job-step2-generate-label">Regenerate</span>
-                    <span class="admin-create-job-step2-sparkle"> ✨</span>
-                  </span>
-                }
-              </span>
-            </button>
-
-            <button
-              id="upload-questions-button"
-              class="admin-create-job-step2-upload-button"
-              (click)="handleUploadClick()"
-              [disabled]="isGenerating"
-              [class.disabled]="isGenerating"
-              title="Upload your own questions"
-              >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                class="admin-create-job-step2-upload-icon"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                >
-                <!-- SVG paths remain unchanged -->
-              </svg>
-              <span id="upload-text" class="admin-create-job-step2-upload-text">
-                <span>Upload</span>
-              </span>
-            </button>
-
-            <!-- Uploaded file name display (No changes needed here) -->
-            @if (uploadedFileName) {
-              <div class="uploaded-file-name">
-                Uploaded file: {{ uploadedFileName }}
-              </div>
-            }
-
-            <!-- Popup Floating Message Card -->
-            @if (showUploadPopup) {
-              <div class="upload-popup-backdrop">
-                <div class="upload-popup-card">
-                  <h3>Upload Questions Template</h3>
-                  <div class="step">
-                    <strong>Step 1:</strong> Download the Excel template and fill it in the given format.<br />
-                    <small>
-                      Note: multiple choice questions, options, the actual correct answer, difficulty level (optional), marks (optional).
-                    </small><br />
-                    <button class="download-template-button" (click)="downloadTemplate()">
-                      Download Template&nbsp;
-                      <span class="download-icon">⬇️</span>
-                    </button>
-                  </div>
-                  <div class="step" style="margin-top: 20px;">
-                    <strong>Step 2:</strong> Upload the filled Excel template to extract questions and then give it some time.<br />
-                    <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
-                  </div>
-                  <div class="popup-actions" style="margin-top: 20px;">
-                    <button (click)="closeUploadPopup()">Close</button>
-                  </div>
-                </div>
-              </div>
-            }
-
-
+    <div class="main-content-card">
+      <!-- START: Updated Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="create-job-progress-bar">
+          <div class="step completed">
+            <div class="step-circle">✓</div>
+            <span>Create Job Post</span>
+          </div>
+          <div class="step active">
+            <div class="step-circle">2</div>
+            <span>Assessment for Job</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">3</div>
+            <span>Interview process</span>
           </div>
         </div>
       </div>
+      <!-- END: Updated Progress Bar -->
 
-      <create-job-post-footer2
-        rootClassName="create-job-post-footer2root-class-name1"
-        [isNextDisabled]="!hasGenerated || isGenerating"
-        (cancelClick)="onCancel()"
-        (previousClick)="onPrevious()"
-        (skipClick)="onSkip()"
-        (nextClick)="onNext()"
-        (saveDraftClick)="onSaveDraft()">
-      </create-job-post-footer2>
+      <div class="page-header">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          class="back-icon"
+          (click)="onPrevious()"
+        >
+          <path
+            d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+            fill="currentColor"
+          ></path>
+        </svg>
+        <span class="page-title">Assessment for Job</span>
+      </div>
+
+      <div class="questions-section">
+        <span class="questions-title">
+          How do you want to add questions to the assessment?
+        </span>
+        <div class="buttons-container">
+          <button
+            id="generate-questions-button"
+            class="generate-button"
+            (click)="onGenerateAi()"
+            [disabled]="isGenerating"
+            [title]="isGenerating ? 'Generating...' : 'Generate questions using AI'"
+          >
+            <span id="generate-questions-text" class="generate-text">
+              @if (isGenerating) {
+                <span>Generating...</span>
+              } @else {
+                <span>
+                  <span class="generate-label">{{ hasGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
+                  <span class="sparkle"> ✨</span>
+                </span>
+              }
+            </span>
+          </button>
+
+          <button
+            id="upload-questions-button"
+            class="upload-button"
+            (click)="handleUploadClick()"
+            [disabled]="isGenerating"
+            title="Upload your own questions"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="upload-icon"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M..."></path>
+              <!-- Your SVG path -->
+            </svg>
+            <span id="upload-text" class="upload-text">Upload from Device</span>
+          </button>
+        </div>
+        @if (uploadedFileName) {
+          <div class="uploaded-file-name">
+            <strong>Uploaded file:</strong> {{ uploadedFileName }}
+          </div>
+        }
+      </div>
     </div>
+
+    <!-- The footer remains outside the main card for consistent placement -->
+    <create-job-post-footer2
+      rootClassName="create-job-post-footer2root-class-name1"
+      [isNextDisabled]="!hasGenerated || isGenerating"
+      (cancelClick)="onCancel()"
+      (previousClick)="onPrevious()"
+      (skipClick)="onSkip()"
+      (nextClick)="onNext()"
+      (saveDraftClick)="onSaveDraft()"
+    ></create-job-post-footer2>
+
+    <!-- Upload Popup -->
+    @if (showUploadPopup) {
+      <div class="upload-popup-backdrop">
+        <div class="upload-popup-card">
+          <h3>Upload Questions Template</h3>
+          <div class="step-info">
+            <strong>Step 1:</strong> Download and fill out the Excel template in the specified format.<br />
+            <button class="download-template-button" (click)="downloadTemplate()">
+              Download Template <span class="download-icon">⬇️</span>
+            </button>
+          </div>
+          <div class="step-info">
+            <strong>Step 2:</strong> Upload the completed Excel file to extract the questions.<br />
+            <input
+              type="file"
+              class="file-input"
+              accept=".xlsx,.xls"
+              (change)="onFileSelected($event)"
+            />
+          </div>
+          <div class="popup-actions">
+            <button class="close-popup-button" (click)="closeUploadPopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 </div>
+
+

@@ -1,0 +1,62 @@
+.workflow-container {
+  width: 100%;
+  max-width: 1124px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #f9fafb;
+}
+
+.workflow-content {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.workflow-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.nav-buttons-right {
+  display: flex;
+  gap: 16px;
+}
+
+.button-primary, .button-secondary {
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-primary {
+  background-color: #05356C;
+  color: white;
+}
+
+.button-primary:hover:not(:disabled) {
+  background-color: #0a4992;
+}
+
+.button-secondary {
+  background-color: #ffffff;
+  color: #05356C;
+  border-color: #05356C;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background-color: #f5f8fa;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

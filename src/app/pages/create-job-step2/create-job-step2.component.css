@@ -90,6 +90,183 @@
   color: #333;
 }
 
+/* --- Import or paste the modern progress bar CSS from Step 1 --- */
+.create-job-progress-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* Centered within its container */
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 0;
+}
+
+.step-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #e0e0e0;
+  color: #6c757d; /* Muted color for number */
+  font-size: 1rem;
+  font-weight: bold;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.step span {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Active Step Styling */
+.step.active .step-circle {
+  border-color: #0d6efd;
+  background-color: #ffffff;
+  color: #0d6efd;
+}
+
+.step.active span {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+/* Completed Step Styling */
+.step.completed .step-circle {
+  background-color: #198754;
+  border-color: #198754;
+  color: #ffffff;
+}
+
+.step.completed span {
+  color: #343a40; /* Darker text for completed step name */
+  font-weight: 500;
+}
+
+.step.completed::after {
+  background-color: #198754;
+}
+
+
+/* --- New and Refined Styles for Page Layout --- */
+:host {
+  display: contents;
+}
+
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px; /* Space for the fixed navbar */
+  background-color: #f8f9fa; /* A light background color */
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 1124px; /* Consistent max-width */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.main-content-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 20px;
+}
+
+.back-icon {
+  cursor: pointer;
+  color: #495057;
+  transition: color 0.2s ease;
+}
+
+.back-icon:hover {
+  color: #0d6efd;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.questions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.questions-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #343a40;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* --- Refined Button Styles (example) --- */
+.generate-button,
+.upload-button {
+  padding: 20px 24px;
+  height: auto;
+  min-height: 100px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  /* Add other shared styles */
+}
+/* Keep your existing popup and alert styles as they are well-defined */
+
 /* Styles for the questions section wrapper (equivalent to original interactive area) */
 .admin-create-job-step2-questions-section {
   gap: 16px;  /* Space between title and buttons container */

@@ -26,7 +26,7 @@ export const routes: Routes = [
       
   },
   {
-    path: 'recruiter-view-job-applications-1',
+    path: 'recruiter-view-job-applications-1/:jobId',
     loadComponent: () =>
       import(
         './pages/recruiter-view-job-applications-1/recruiter-view-job-applications-1.component'
@@ -202,7 +202,13 @@ export const routes: Routes = [
            canActivate: [authGuard],
     data: { roles: ['admin'] },
   },
-  
+    {
+  path: 'job-posting-workflow',
+  loadComponent: () => import('./pages/job-posting-workflow/job-posting-workflow.component').then(
+        (m) => m.JobPostingWorkflowComponent),
+                  canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] },
+},
   {
   path: 'create-job',
   loadComponent: () => import('./pages/create-job/create-job.component').then(
@@ -210,6 +216,15 @@ export const routes: Routes = [
                   canActivate: [authGuard],
     data: { roles: ['admin', 'recruiter'] },
 },
+  {
+    // This route handles the "edit" case, e.g., /create-job/12345
+    path: 'create-job/:id',
+    loadComponent: () => import('./pages/create-job/create-job.component').then(
+      (m) => m.AdminCreateJobStep1Component
+    ),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] },
+  },
 {
   path: 'create-job-step2',
   loadComponent: () => import('./pages/create-job-step2/create-job-step2.component').then(m => m.AdminCreateJobStep2),

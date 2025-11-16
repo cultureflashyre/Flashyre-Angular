@@ -1,0 +1,223 @@
+<!-- Spinner specifically for file uploads within this component -->
+<ngx-spinner name="file-spinner" bdColor="rgba(255, 255, 255, 0.7)" [fullScreen]="false" type="ball-clip-rotate" size="medium">
+  <p style="color: #333; font-size: 16px;">Processing File...</p>
+</ngx-spinner>
+
+<!-- Local alerts and popups for this component's actions -->
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (close)="showAlert = false">
+  </app-alert-message>
+}
+@if (showPopup) {
+  <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    {{ popupMessage }} <span class="closebtn" (click)="closePopup()">×</span>
+  </div>
+}
+
+<!-- The main form container -->
+<div class="job-details-form-container">
+  <form [formGroup]="jobForm">
+    <!-- Section 1: File Upload -->
+    <div class="form-section">
+      <h2 class="section-title">Start with a Job Description</h2>
+      <span class="section-subtitle">Upload an existing job description to autofill the details.</span>
+      
+      <div class="upload-file-container">
+        <input type="file" #fileInput class="file-input-hidden" (change)="onFileSelected($event)" accept=".pdf,.docx,.doc,.txt">
+        <div class="file-display-area">
+          @if (displayedFileName) {
+            <span class="file-name">{{ displayedFileName }}</span>
+          } @else {
+            <span class="placeholder-text">Select or drag file (PDF, DOCX, TXT)</span>
+          }
+        </div>
+        <button type="button" class="upload-button" (click)="triggerFileInput()" [disabled]="isUploadingFile" [class.success]="isFileUploadSuccess">
+          {{ isUploadingFile ? 'Uploading...' : (isFileUploadSuccess ? '✓ Uploaded' : 'Upload File') }}
+        </button>
+      </div>
+      <span class="note">Maximum file size: 5 MB.</span>
+    </div>
+
+    <div class="separator-text">
+        <span>OR FILL MANUALLY</span>
+    </div>
+
+    <!-- Section 2: Main Job Details -->
+    <div class="form-section">
+        <h2 class="section-title">Job Details</h2>
+        
+        <!-- Row 1: Role & Location -->
+        <div class="form-row">
+            <div class="form-field">
+                <label for="role-input">Role <span class="required-asterisk">*</span></label>
+                <input id="role-input" type="text" placeholder="e.g., Senior Software Engineer" formControlName="role">
+                @if (jobForm.get('role')?.touched && jobForm.get('role')?.errors) {
+                    <div class="field-error-message">Role is required.</div>
+                }
+            </div>
+            <div class="form-field">
+                <label>Location(s) <span class="required-asterisk">*</span></label>
+                <div class="location-tag-container" (click)="locationInput.focus()">
+                    @for (loc of jobForm.get('location')?.value; track loc; let i = $index) {
+                      <div class="location-tag">
+                        <span>{{ loc }}</span>
+                        <button type="button" class="remove-tag-btn" (click)="removeLocation(i)">×</button>
+                      </div>
+                    }
+                    <input #locationInput type="text" class="location-live-input" placeholder="Type a location..." (input)="onLocationInput($event)" (keydown)="onLocationInputKeydown($event)">
+                </div>
+                @if (showLocationSuggestions) {
+                    <div class="location-suggestions-list">
+                      @if (isLoadingLocations) { <div class="suggestion-item">Loading...</div> }
+                      @for (suggestion of locationSuggestions; track suggestion) {
+                        <div class="suggestion-item" (click)="selectLocationSuggestion(suggestion)">
+                          {{ suggestion.description }}
+                        </div>
+                      }
+                      @if (!isLoadingLocations && locationSuggestions.length === 0) {
+                        <div class="suggestion-item">No matches found.</div>
+                      }
+                    </div>
+                }
+                @if (jobForm.get('location')?.touched && jobForm.get('location')?.errors) {
+                    <div class="field-error-message">At least one location is required.</div>
+                }
+            </div>
+        </div>
+
+        <!-- Row 2: Job Type & Workplace Type -->
+        <div class="form-row">
+            <div class="form-field">
+                <label>Job Type <span class="required-asterisk">*</span></label>
+                <div class="radio-group-container">
+                    <div class="radio-option"><input type="radio" id="jt-permanent" value="Permanent" formControlName="job_type"><label for="jt-permanent">Permanent</label></div>
+                    <div class="radio-option"><input type="radio" id="jt-contract" value="Contract" formControlName="job_type"><label for="jt-contract">Contract</label></div>
+                    <div class="radio-option"><input type="radio" id="jt-part-time" value="Part-time" formControlName="job_type"><label for="jt-part-time">Part-time</label></div>
+                    <div class="radio-option"><input type="radio" id="jt-internship" value="Internship" formControlName="job_type"><label for="jt-internship">Internship</label></div>
+                </div>
+                 @if (jobForm.get('job_type')?.touched && jobForm.get('job_type')?.errors) { <div class="field-error-message">Job type is required.</div> }
+            </div>
+            <div class="form-field">
+                <label>Workplace Type <span class="required-asterisk">*</span></label>
+                <div class="radio-group-container">
+                    <div class="radio-option"><input type="radio" id="wt-onsite" value="Onsite" formControlName="workplace_type"><label for="wt-onsite">Onsite</label></div>
+                    <div class="radio-option"><input type="radio" id="wt-hybrid" value="Hybrid" formControlName="workplace_type"><label for="wt-hybrid">Hybrid</label></div>
+                    <div class="radio-option"><input type="radio" id="wt-remote" value="Remote" formControlName="workplace_type"><label for="wt-remote">Remote</label></div>
+                </div>
+                @if (jobForm.get('workplace_type')?.touched && jobForm.get('workplace_type')?.errors) { <div class="field-error-message">Workplace type is required.</div> }
+            </div>
+        </div>
+
+        <!-- Row 3: Experience Sliders -->
+        <div class="form-row">
+            <div class="form-field">
+                <label>Total Experience (Years) <span class="required-asterisk">*</span></label>
+                <div class="range-slider-container">
+                    <div class="range-indicator" id="total_rangeIndicator">
+                        <div class="line"></div>
+                        <div class="filled-segment" id="total_filledSegment"></div>
+                        <div class="marker" id="total_markerLeft"></div>
+                        <div class="marker" id="total_markerRight"></div>
+                        <div class="label" id="total_labelLeft"></div>
+                        <div class="label" id="total_labelRight"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-field">
+                <label>Relevant Experience (Years) <span class="required-asterisk">*</span></label>
+                <div class="range-slider-container">
+                    <div class="range-indicator" id="relevant_rangeIndicator">
+                        <div class="line"></div>
+                        <div class="filled-segment" id="relevant_filledSegment"></div>
+                        <div class="marker" id="relevant_markerLeft"></div>
+                        <div class="marker" id="relevant_markerRight"></div>
+                        <div class="label" id="relevant_labelLeft"></div>
+                        <div class="label" id="relevant_labelRight"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4: Budget -->
+        <div class="form-row">
+            <div class="form-field">
+                <label>Budget Type <span class="required-asterisk">*</span></label>
+                <div class="radio-group-container">
+                    <div class="radio-option"><input type="radio" id="bt-annually" value="Annually" formControlName="budget_type"><label for="bt-annually">Annually</label></div>
+                    <div class="radio-option"><input type="radio" id="bt-monthly" value="Monthly" formControlName="budget_type"><label for="bt-monthly">Monthly</label></div>
+                    <div class="radio-option"><input type="radio" id="bt-weekly" value="Weekly" formControlName="budget_type"><label for="bt-weekly">Weekly</label></div>
+                </div>
+                @if (jobForm.get('budget_type')?.touched && jobForm.get('budget_type')?.errors) { <div class="field-error-message">Budget type is required.</div> }
+            </div>
+            <div class="form-field">
+                <label>Min Budget (INR) <span class="required-asterisk">*</span></label>
+                <input type="text" placeholder="e.g., 1200000" formControlName="min_budget">
+                @if (jobForm.get('min_budget')?.touched && jobForm.get('min_budget')?.errors) { <div class="field-error-message">A valid minimum budget is required.</div> }
+            </div>
+            <div class="form-field">
+                <label>Max Budget (INR) <span class="required-asterisk">*</span></label>
+                <input type="text" placeholder="e.g., 1500000" formControlName="max_budget">
+                 @if (jobForm.get('max_budget')?.touched && jobForm.get('max_budget')?.errors) { <div class="field-error-message">A valid maximum budget is required.</div> }
+                 @if (jobForm.errors?.['invalidBudgetRange'] && (jobForm.get('min_budget')?.touched || jobForm.get('max_budget')?.touched)) {
+                    <div class="field-error-message">Max budget cannot be less than min budget.</div>
+                 }
+            </div>
+        </div>
+        
+        <!-- Row 5: Notice Period -->
+        <div class="form-row">
+            <div class="form-field" style="max-width: 50%;">
+                <label for="notice-period">Notice Period <span class="required-asterisk">*</span></label>
+                <select id="notice-period" formControlName="notice_period">
+                    <option value="" disabled>Select Notice Period</option>
+                    <option value="Immediate">Immediate</option>
+                    <option value="Less than 15 Days">Less than 15 Days</option>
+                    <option value="30 Days">30 Days</option>
+                    <option value="60 Days">60 Days</option>
+                    <option value="90 Days">90 Days</option>
+                </select>
+                @if (jobForm.get('notice_period')?.touched && jobForm.get('notice_period')?.errors) { <div class="field-error-message">Notice period is required.</div> }
+            </div>
+        </div>
+
+        <!-- Row 6: Skills -->
+        <div class="form-field">
+            <label>Skills <span class="required-asterisk">*</span></label>
+            <div class="tag-container" id="tagContainer">
+                <input type="text" class="tag-input" id="tagInput" placeholder="Type to add skills...">
+            </div>
+            <div class="suggestions" id="skillsSuggestions"></div>
+            @if (jobForm.get('skills')?.touched && jobForm.get('skills')?.errors) {
+                <div class="field-error-message">At least one skill is required.</div>
+            }
+        </div>
+
+        <!-- Row 7: Job Description -->
+        <div class="form-field">
+            <label>Job Description <span class="required-asterisk">*</span></label>
+            <div class="editor-container">
+                <div class="toolbar">
+                    <button type="button" class="format-btn" title="Bold" (click)="formatText('bold')"><b>B</b></button>
+                    <button type="button" class="format-btn" title="Italic" (click)="formatText('italic')"><i>I</i></button>
+                    <button type="button" class="format-btn" title="Underline" (click)="formatText('underline')"><u>U</u></button>
+                    <button type="button" class="format-btn" title="Unordered List" (click)="formatText('insertUnorderedList')">●</button>
+                </div>
+                <div
+                    id="editor"
+                    class="editable-area"
+                    contenteditable="true"
+                    data-placeholder="Enter job responsibilities, qualifications, and other details..."
+                    (input)="updateJobDescriptionFromEditor($event)"
+                    (blur)="checkEmpty('editor')"
+                ></div>
+            </div>
+            @if (jobForm.get('job_description')?.touched && jobForm.get('job_description')?.errors) {
+                <div class="field-error-message">Job description is required.</div>
+            }
+        </div>
+    </div>
+  </form>
+</div>

@@ -74,9 +74,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.title.setTitle('Admin Step 2: Assessment Setup - Flashyre');
+    this.title.setTitle('Assessment Setup - Flashyre');
     this.meta.addTags([
-      { property: 'og:title', content: 'Admin Step 2: Assessment Setup - Flashyre' },
+      { property: 'og:title', content: 'Assessment Setup - Flashyre' },
     ]);
 
     if (!this.corporateAuthService.isLoggedIn()) {

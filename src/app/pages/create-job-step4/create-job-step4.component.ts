@@ -15,7 +15,7 @@ import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/nav
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progress-bar-2-code.component';
 import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
-
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'create-job-step4',
@@ -56,10 +56,21 @@ export class AdminCreateJobStep4Component implements OnInit {
     private router: Router,
     private workflowService: AdminJobCreationWorkflowService,
     private authService: CorporateAuthService,
-    private interviewService: InterviewService
+    private interviewService: InterviewService,
+    private title: Title,
+    private meta: Meta
   ) {}
 
   ngOnInit(): void {
+    this.title.setTitle('Interview FLow - Flashyre');
+    this.meta.addTags([
+      { property: 'og:title', content: 'Interview Flow - Flashyre' },
+      {
+        property: 'og:image',
+        content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
+      }
+    ]);
+
     if (typeof window !== 'undefined' && window.localStorage) {
       this.loadUserProfile();
       this.userType = localStorage.getItem('userType');

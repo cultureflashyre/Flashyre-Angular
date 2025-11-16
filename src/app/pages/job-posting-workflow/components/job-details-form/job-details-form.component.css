@@ -1,0 +1,412 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ========================================================================== */
+/* == 1. General Layout & Typography                                      == */
+/* ========================================================================== */
+
+.job-details-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Consistent gap between elements in a section */
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #18191c;
+  margin: 0;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: #6c757d;
+  margin-top: -12px;
+}
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0; /* Prevents flex items from overflowing */
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field select {
+  height: 44px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 16px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.required-asterisk {
+  color: #d92d20;
+  margin-left: 2px;
+}
+
+.field-error-message {
+  color: #d92d20;
+  font-size: 12px;
+}
+
+.separator-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #98a2b3;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 16px 0;
+}
+
+.separator-text::before,
+.separator-text::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e4e7ec;
+}
+
+.separator-text span {
+  padding: 0 16px;
+}
+
+.note {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* ========================================================================== */
+/* == 2. File Upload Component                                            == */
+/* ========================================================================== */
+
+.upload-file-container {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.file-display-area {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #6c757d;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-display-area .file-name {
+  color: #18191c;
+  font-weight: 500;
+}
+
+.upload-button {
+  flex-shrink: 0;
+  padding: 10px 24px;
+  background-color: #05356C;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.upload-button.success {
+  background-color: #3AC14A;
+}
+
+.upload-button:hover:not(:disabled) {
+  background-color: #0a4992;
+}
+
+.upload-button:disabled {
+  background-color: #acacad;
+  cursor: not-allowed;
+}
+
+/* ========================================================================== */
+/* == 3. Radio Button Groups (Job Type, Workplace, Budget)                == */
+/* ========================================================================== */
+
+.radio-group-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #05356C;
+  cursor: pointer;
+}
+
+.radio-option label {
+  font-size: 16px;
+  color: #344054;
+  cursor: pointer;
+}
+
+/* ========================================================================== */
+/* == 4. Location & Skills Tag Inputs                                     == */
+/* ========================================================================== */
+
+.location-tag-container,
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+.location-tag,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e1f5fe;
+  color: #0288d1;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.location-tag span,
+.tag span {
+  margin-right: 6px;
+}
+
+.remove-tag-btn {
+  background: none;
+  border: none;
+  color: #0288d1;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0;
+  line-height: 1;
+}
+
+.location-live-input,
+.tag-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 4px;
+  font-size: 16px;
+  min-width: 150px;
+  background-color: transparent;
+}
+
+/* Autocomplete Suggestions */
+.location-suggestions-list,
+.suggestions {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  width: 100%; /* Make it match the input width */
+  box-sizing: border-box;
+}
+
+.suggestion-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover, .suggestion-item.active-suggestion { background-color: #f5f5f5; }
+
+/* ========================================================================== */
+/* == 5. Experience Range Sliders                                         == */
+/* ========================================================================== */
+
+.range-slider-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.range-indicator {
+  position: relative;
+  width: 100%;
+  height: 40px;
+}
+
+.range-indicator .line {
+  position: absolute;
+  top: 19px; /* Vertically center */
+  left: 6px; /* Half of marker width */
+  width: calc(100% - 12px); /* Full width minus marker width */
+  height: 4px;
+  background-color: #e4e5e8;
+  border-radius: 2px;
+}
+
+.range-indicator .filled-segment {
+  position: absolute;
+  top: 19px;
+  height: 4px;
+  background-color: #05356c;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.range-indicator .marker {
+  position: absolute;
+  top: 15px; /* (Container height - marker height) / 2 */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #05356c;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.range-indicator .label {
+  position: absolute;
+  top: -5px;
+  color: #6b7280;
+  font-size: 12px;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+/* ========================================================================== */
+/* == 6. Rich Text Editor                                                 == */
+/* ========================================================================== */
+
+.editor-container {
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  padding: 8px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e4e7ec;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar .format-btn {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+}
+.toolbar .format-btn:hover { background-color: #e9e9e9; }
+.toolbar .format-btn.active { background-color: #ddd; }
+
+.editable-area {
+  min-height: 200px;
+  padding: 16px;
+  color: #18191c;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-y: auto;
+  word-break: break-word;
+}
+.editable-area:focus { outline: none; }
+.editable-area[data-empty='true']::before {
+  content: attr(data-placeholder);
+  color: #999;
+  pointer-events: none;
+}
+
+/* ========================================================================== */
+/* == 7. Alerts & Popups                                                  == */
+/* ========================================================================== */
+
+.alert {
+  padding: 16px;
+  color: white;
+  margin-bottom: 15px;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1050;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+.alert.success { background-color: #28a745; }
+.alert.error { background-color: #dc3545; }
+.closebtn { margin-left: auto; padding-left: 16px; color: white; font-weight: bold; font-size: 20px; cursor: pointer; }
+
+/* ========================================================================== */
+/* == 8. Responsive Adjustments                                           == */
+/* ========================================================================== */
+
+@media (max-width: 767px) {
+  .form-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .radio-group-container {
+    gap: 12px 24px; /* More vertical, less horizontal gap */
+  }
+}

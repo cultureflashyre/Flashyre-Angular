@@ -154,9 +154,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
   }
 
   ngOnInit(): void {
-    this.title.setTitle('Admin Create Job Post - Flashyre');
+    this.title.setTitle('Create Job Post - Flashyre');
     this.meta.addTags([
-      { property: 'og:title', content: 'Admin Create Job Post - Flashyre' },
+      { property: 'og:title', content: 'Create Job Post - Flashyre' },
       {
         property: 'og:image',
         content: 'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original'
@@ -761,24 +761,63 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     const tagInput = this.document.getElementById('tagInput') as HTMLInputElement;
     const tagContainer = this.document.getElementById('tagContainer') as HTMLDivElement;
     const skillsSuggestionsDiv = this.document.getElementById('skillsSuggestions') as HTMLDivElement;
-    if (!tagInput || !tagContainer || !skillsSuggestionsDiv) {
-      if (this.isViewInitialized) console.warn('Skill input elements not found!'); return;
-      tagInput.addEventListener('input', (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    const caretPosition = input.selectionStart;
-    const originalValue = input.value;
-    const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, ''); // Only allows letters and spaces
 
-    if (originalValue !== sanitizedValue) {
-        const diff = originalValue.length - sanitizedValue.length;
-        input.value = sanitizedValue;
-        if (caretPosition) {
-            input.setSelectionRange(caretPosition - diff, caretPosition - diff);
-        }
+    if (!tagInput || !tagContainer || !skillsSuggestionsDiv) {
+      if (this.isViewInitialized) console.warn('Skill input elements not found!');
+      return;
     }
-});
-    }
+
     let activeSuggestionIndex = -1;
+
+    // Helper function to add a single skill tag after validation
+    const addSkillTag = (skillName: string) => {
+      // Final validation: only letters and spaces, and must not be empty.
+      const sanitizedSkill = skillName.replace(/[^a-zA-Z ]/g, '').trim();
+      if (!sanitizedSkill) {
+        return;
+      }
+
+      let currentSkills: string[] = this.jobForm.get('skills')?.value || [];
+      // Case-insensitive duplicate check
+      if (currentSkills.some(s => s.toLowerCase() === sanitizedSkill.toLowerCase())) {
+        this.showErrorPopup(`Skill "${sanitizedSkill}" is already added.`);
+        return;
+      }
+
+      currentSkills = [...currentSkills, sanitizedSkill];
+      this.jobForm.patchValue({ skills: currentSkills });
+      this.jobForm.get('skills')?.markAsDirty();
+      this.jobForm.get('skills')?.updateValueAndValidity();
+
+      // Create and append the visual tag element
+      const tag = this.renderer.createElement('div');
+      this.renderer.addClass(tag, 'tag');
+      const tagText = this.renderer.createElement('span');
+      tagText.textContent = sanitizedSkill;
+      this.renderer.appendChild(tag, tagText);
+      const removeBtn = this.renderer.createElement('button');
+      removeBtn.textContent = '×';
+      this.renderer.setAttribute(removeBtn, 'type', 'button');
+      this.renderer.listen(removeBtn, 'click', () => {
+        this.renderer.removeChild(tagContainer, tag);
+        let skillsAfterRemove: string[] = this.jobForm.get('skills')?.value || [];
+        skillsAfterRemove = skillsAfterRemove.filter(s => s.toLowerCase() !== sanitizedSkill.toLowerCase());
+        this.jobForm.patchValue({ skills: skillsAfterRemove });
+        this.jobForm.get('skills')?.markAsDirty();
+        this.jobForm.get('skills')?.updateValueAndValidity();
+      });
+      this.renderer.appendChild(tag, removeBtn);
+      this.renderer.insertBefore(tagContainer, tag, tagInput);
+    };
+    
+    // Helper function to process a string that may contain multiple skills separated by commas
+    const processSkillInput = (inputText: string) => {
+      inputText.split(',')
+        .map(skill => skill.trim())
+        .filter(skill => skill) // Filter out any empty strings that result from splitting
+        .forEach(addSkillTag);
+    };
+
     const showAvailableSuggestions = (suggestedSkills: string[]) => {
       skillsSuggestionsDiv.innerHTML = '';
       if (this.isLoadingSkills && suggestedSkills.length === 0 && tagInput.value.trim()) {
@@ -803,28 +842,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       });
       skillsSuggestionsDiv.style.display = 'block'; activeSuggestionIndex = -1;
     };
-    const addSkillTag = (skillName: string) => {
-      if (!skillName.trim()) return; let currentSkills: string[] = this.jobForm.get('skills')?.value || [];
-      if (currentSkills.includes(skillName)) {
-        this.showErrorPopup(`Skill "${skillName}" is already added.`); return;
-      }
-      currentSkills = [...currentSkills, skillName]; this.jobForm.patchValue({ skills: currentSkills });
-      this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
-      const tag = this.renderer.createElement('div'); this.renderer.addClass(tag, 'tag');
-      const tagText = this.renderer.createElement('span'); tagText.textContent = skillName;
-      this.renderer.appendChild(tag, tagText);
-      const removeBtn = this.renderer.createElement('button'); removeBtn.textContent = '×';
-      this.renderer.setAttribute(removeBtn, 'type', 'button');
-      this.renderer.listen(removeBtn, 'click', () => {
-        this.renderer.removeChild(tagContainer, tag);
-        let skillsAfterRemove: string[] = this.jobForm.get('skills')?.value || [];
-        skillsAfterRemove = skillsAfterRemove.filter(s => s !== skillName);
-        this.jobForm.patchValue({ skills: skillsAfterRemove });
-        this.jobForm.get('skills')?.markAsDirty(); this.jobForm.get('skills')?.updateValueAndValidity();
-      });
-      this.renderer.appendChild(tag, removeBtn);
-      this.renderer.insertBefore(tagContainer, tag, tagInput);
-    };
+
     const navigateAvailableSuggestions = (direction: 'up' | 'down') => {
       const items = skillsSuggestionsDiv.querySelectorAll('.suggestion-item:not(.suggestion-loading):not(.no-results)') as NodeListOf<HTMLDivElement>;
       if (items.length === 0) return;
@@ -836,48 +854,65 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         items[activeSuggestionIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }
     };
-    const skillInputSub = fromEvent(tagInput, 'input').pipe(
-  // This new map operator sanitizes the input in real-time
-  map(event => {
-    const input = event.target as HTMLInputElement;
-    const originalValue = input.value;
-    // This regex removes anything that is NOT a letter or a space
-    const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, '');
 
-    if (originalValue !== sanitizedValue) {
-      const caretPosition = input.selectionStart;
-      const diff = originalValue.length - sanitizedValue.length;
-      input.value = sanitizedValue;
-      if (caretPosition) {
-        input.setSelectionRange(caretPosition - diff, caretPosition - diff);
-      }
-    }
-    return sanitizedValue; // Pass the clean value to the next step
-  }),
-  debounceTime(this.SKILL_DEBOUNCE_DELAY), 
-  distinctUntilChanged(),
-  tap(term => { this.isLoadingSkills = !!term.trim(); if (!term.trim()) showAvailableSuggestions([]); }),
-  switchMap(term => {
-    if (!term.trim()) return of([]);
-    return this.skillService.searchSkills(term).pipe(
-      map((apiSkills: ApiSkill[]) => apiSkills.map(s => s.name)),
-      catchError(() => { this.isLoadingSkills = false; this.showErrorPopup('Error fetching skills.'); return of([]); })
-    );
-  })
-).subscribe(skillNames => {
-  this.isLoadingSkills = false;
-  const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
-  const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
-  showAvailableSuggestions(filteredForDisplay.slice(0, 10));
-});
+    // RxJS stream to handle real-time input, validation, and suggestions
+    const skillInputSub = fromEvent(tagInput, 'input').pipe(
+      map(event => (event.target as HTMLInputElement).value), // Get the current input value
+      // This 'tap' operator handles the comma logic imperatively
+      tap(value => {
+        if (value.includes(',')) {
+          const textToProcess = value.substring(0, value.lastIndexOf(','));
+          processSkillInput(textToProcess);
+          // Set the input value to whatever was typed after the last comma
+          tagInput.value = value.substring(value.lastIndexOf(',') + 1);
+        }
+      }),
+      // This 'map' operator handles real-time sanitization for the suggestion service
+      map(() => {
+        const originalValue = tagInput.value;
+        // Sanitize: remove anything that is not a letter or space
+        const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, '');
+        if (originalValue !== sanitizedValue) {
+          const caretPosition = tagInput.selectionStart;
+          const diff = originalValue.length - sanitizedValue.length;
+          tagInput.value = sanitizedValue;
+          if (caretPosition) {
+            tagInput.setSelectionRange(caretPosition - diff, caretPosition - diff);
+          }
+        }
+        return sanitizedValue; // Pass the clean value to the suggestion stream
+      }),
+      debounceTime(this.SKILL_DEBOUNCE_DELAY),
+      distinctUntilChanged(),
+      tap(term => { this.isLoadingSkills = !!term.trim(); if (!term.trim()) showAvailableSuggestions([]); }),
+      switchMap(term => {
+        if (!term.trim()) return of([]);
+        return this.skillService.searchSkills(term).pipe(
+          map((apiSkills: ApiSkill[]) => apiSkills.map(s => s.name)),
+          catchError(() => { this.isLoadingSkills = false; this.showErrorPopup('Error fetching skills.'); return of([]); })
+        );
+      })
+    ).subscribe(skillNames => {
+      this.isLoadingSkills = false;
+      const currentSelectedSkills: string[] = this.jobForm.get('skills')?.value || [];
+      const filteredForDisplay = skillNames.filter(name => !currentSelectedSkills.includes(name));
+      showAvailableSuggestions(filteredForDisplay.slice(0, 10));
+    });
+
     this.subscriptions.add(skillInputSub);
+
     tagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         const activeItem = skillsSuggestionsDiv.querySelector('.suggestion-item.active-suggestion') as HTMLDivElement;
-        if (activeItem && activeItem.textContent) addSkillTag(activeItem.textContent);
-        else if (tagInput.value.trim()) addSkillTag(tagInput.value.trim());
-        tagInput.value = ''; skillsSuggestionsDiv.style.display = 'none'; activeSuggestionIndex = -1;
+        if (activeItem && activeItem.textContent) {
+            addSkillTag(activeItem.textContent);
+        } else if (tagInput.value.trim()) {
+            processSkillInput(tagInput.value.trim()); // Process input which might have commas
+        }
+        tagInput.value = ''; 
+        skillsSuggestionsDiv.style.display = 'none'; 
+        activeSuggestionIndex = -1;
       } else if (e.key === 'ArrowDown') { e.preventDefault(); navigateAvailableSuggestions('down'); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); navigateAvailableSuggestions('up'); }
       else if (e.key === 'Backspace' && !tagInput.value) {
@@ -890,6 +925,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         }
       } else if (e.key === 'Escape') { skillsSuggestionsDiv.style.display = 'none'; activeSuggestionIndex = -1; }
     });
+
     this.document.addEventListener('click', (e) => {
       const target = e.target as Node;
       const skillsContainer = this.document.getElementById('skills-input-container');
@@ -901,6 +937,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.showLocationSuggestions = false;
       }
     });
+
     tagInput.addEventListener('click', (e) => { e.stopPropagation(); });
     this.document.getElementById('tagContainer')?.addEventListener('click', () => tagInput.focus());
   }

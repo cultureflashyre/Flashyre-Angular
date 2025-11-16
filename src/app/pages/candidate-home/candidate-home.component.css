@@ -2,6 +2,15 @@
   display: contents; 
 }
 
+.company-name {
+  display: inline-block;
+  max-width: 200px; /* Adjust this value to fit your layout */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle; /* Ensures proper alignment with surrounding text */
+}
+
 .profile-info-line {
   display: block; /* or inline-block */
   white-space: nowrap;

@@ -1,0 +1,240 @@
+<!-- Alerts and Popups for this component -->
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+}
+@if (showPopup) {
+  <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    @if (popupType === 'success') { <span class="tick">✔</span> }
+    {{ popupMessage }}
+    <span class="closebtn" (click)="closePopup()"> × </span>
+  </div>
+}
+
+<!-- Add Skill Popup (Modal) -->
+@if (showAddSkillPopup) {
+  <div class="popup-overlay">
+    <div class="popup-content">
+      <h3>Add New Skills</h3>
+      <p class="popup-note">
+        Enter one or more skills separated by a comma. 15 AI-generated questions will be created for each new skill.
+      </p>
+      <div class="popup-input-group">
+        <label for="new-skill-input">Skill Names</label>
+        <textarea
+          id="new-skill-input"
+          class="popup-textarea"
+          placeholder="e.g., JavaScript, React, Node.js"
+          rows="3"
+          [(ngModel)]="newSkillName"
+          [ngModelOptions]="{standalone: true}"
+        ></textarea>
+      </div>
+      <div class="popup-actions">
+        <button class="popup-button cancel" (click)="closeAddSkillPopup()">Cancel</button>
+        <button class="popup-button generate" (click)="onAddNewSkillSubmit()" [disabled]="!newSkillName.trim() || isAddingNewSkill">
+          @if (!isAddingNewSkill) { <span>Generate Questions</span> }
+          @if (isAddingNewSkill) {
+            <span class="button-spinner-container">
+              <span class="tab-spinner"></span> Generating...
+            </span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+
+<!-- =================================================== -->
+<!-- == PART 1: INITIAL CHOICE (FROM create-job-step2) == -->
+<!-- =================================================== -->
+@if (!hasInitialChoiceBeenMade && !isLoading) {
+  <div class="initial-choice-container">
+    <span class="questions-title">How do you want to add questions to the assessment?</span>
+    <div class="buttons-container">
+      <button
+        class="generate-button"
+        (click)="onGenerateAi()"
+        [disabled]="isGenerating">
+        @if (isGenerating) {
+          <span>Generating...</span>
+        } @else {
+          <span class="generate-text">Generate with AI ✨</span>
+        }
+      </button>
+
+      <button
+        class="upload-button-initial"
+        (click)="openUploadPopup()"
+        [disabled]="isGenerating">
+        <span class="upload-text-initial">Upload from Excel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Excel Upload Popup (hidden by default) -->
+  @if (showUploadPopup) {
+    <div class="upload-popup-backdrop">
+      <div class="upload-popup-card">
+        <h3>Upload Questions Template</h3>
+        <div class="step">
+          <strong>Step 1:</strong> Download and fill out the Excel template.
+          <button class="download-template-button" (click)="downloadTemplate()">
+            Download Template ⬇️
+          </button>
+        </div>
+        <div class="step">
+          <strong>Step 2:</strong> Upload the completed template.
+          <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+        </div>
+        <div class="popup-actions">
+          <button (click)="closeUploadPopup()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+<!-- ======================================================== -->
+<!-- == PART 2: ASSESSMENT EDITOR (FROM create-job-step3)  == -->
+<!-- ======================================================== -->
+@if (hasInitialChoiceBeenMade && !isLoading) {
+  <form [formGroup]="assessmentForm" class="assessment-editor-layout">
+    <!-- Left Panel: Assessment Settings -->
+    <div class="assessment-settings-panel">
+      <div class="form-group">
+        <label for="assessmentName">Assessment Name *</label>
+        <input type="text" id="assessmentName" placeholder="Enter Name" formControlName="assessmentName" maxlength="50">
+        @if (assessmentForm.get('assessmentName')?.touched && assessmentForm.get('assessmentName')?.errors) {
+          <div class="field-error-message">A valid name is required.</div>
+        }
+      </div>
+
+      <div class="settings-title">Additional Settings</div>
+      <div class="checkbox-options-container">
+        <div class="checkbox-option">
+          <input type="checkbox" id="shuffleQuestions" formControlName="shuffleQuestions">
+          <label for="shuffleQuestions">Shuffle questions for candidate</label>
+        </div>
+        <div class="checkbox-option">
+          <input type="checkbox" id="isProctored" formControlName="isProctored">
+          <label for="isProctored">Proctored Assessment</label>
+        </div>
+        <div class="checkbox-option">
+          <input type="checkbox" id="allowPhoneAccess" formControlName="allowPhoneAccess">
+          <label for="allowPhoneAccess">Allow Phone Access</label>
+        </div>
+        <div class="checkbox-option">
+          <input type="checkbox" id="allowVideoRecording" formControlName="allowVideoRecording">
+          <label for="allowVideoRecording">Allow Video Recording</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="timeLimit">Set time limit *</label>
+        <input type="text" id="timeLimit" placeholder="HH:MM" formControlName="timeLimit">
+        @if (assessmentForm.get('timeLimit')?.touched && assessmentForm.get('timeLimit')?.errors) {
+          <div class="field-error-message">A valid, non-zero time is required (HH:MM).</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="attemptsAllowed">Number of attempts *</label>
+        <input type="number" id="attemptsAllowed" placeholder="1" min="1" max="10" formControlName="attemptsAllowed">
+        @if (assessmentForm.get('attemptsAllowed')?.touched && assessmentForm.get('attemptsAllowed')?.errors) {
+          <div class="field-error-message">Attempts must be between 1 and 10.</div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Panel: Questions Selection -->
+    <div class="questions-panel">
+      <div class="questions-header">
+        <div class="questions-header-title">
+          <h3>Questions</h3>
+          <span>(Selected {{ totalSelectedCount }} / {{ totalQuestionCount }})</span>
+        </div>
+        @if (activeTab === 'ai-generated') {
+          <button type="button" class="add-question-ai-button" (click)="addMoreAiQuestions()" [disabled]="isSubmitting">
+            ✨ {{ isSubmitting ? 'Generating...' : 'Add More with AI' }}
+          </button>
+        }
+      </div>
+
+      <div class="tabs-container">
+        <div class="tab" [class.active-tab]="activeTab === 'ai-generated'" (click)="activeTab = 'ai-generated'">AI Generated ({{ totalAIQuestionCount }})</div>
+        <div class="tab" [class.active-tab]="activeTab === 'uploaded'" (click)="activeTab = 'uploaded'">Uploaded ({{ uploadedQuestionCount }})</div>
+        <div class="tab" [class.active-tab]="activeTab === 'coding-problem'" (click)="activeTab = 'coding-problem'">Coding Problem ({{ codingProblems.length }})</div>
+      </div>
+
+      <!-- Skill Carousel & Question List Area -->
+      <div class="skill-carousel-container">
+        <button type="button" class="arrow-container" (click)="navigateCarousel('prev')" [disabled]="currentScrollIndex === 0">
+          <span class="nav-arrow-icon">&lt;</span>
+        </button>
+
+        @if (activeTab === 'ai-generated') {
+          <button type="button" class="add-skill-button" title="Add New Skills" (click)="openAddSkillPopup()">+ Add</button>
+        }
+
+        <div class="skill-viewport" #skillViewport>
+          <div class="skill-scroll-track" #skillTrack>
+            <!-- AI Skills -->
+            @if (activeTab === 'ai-generated') {
+              @for (section of skillSections; track section; let i = $index) {
+                <div class="skill-tab" [class.active-section]="i === activeSectionIndex" (click)="selectSection(i)">
+                  {{ section.skillName }}
+                  @if (section.generationStatus === 'loading' || section.generationStatus === 'pending') { <span class="tab-spinner"></span> }
+                  @if (section.generationStatus === 'completed') { <span class="skill-tab-count">({{ section.selectedCount }}/{{ section.totalCount }})</span> }
+                </div>
+              }
+            }
+            <!-- Uploaded Skills -->
+            @if (activeTab === 'uploaded') {
+              @for (section of uploadedSkillSections; track section; let i = $index) {
+                <div class="skill-tab" [class.active-section]="i === activeUploadedSectionIndex" (click)="selectUploadedSection(i)">
+                  {{ section.skillName }} <span class="skill-tab-count">({{ section.selectedCount }}/{{ section.totalCount }})</span>
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <button type="button" class="arrow-container" (click)="navigateCarousel('next')" [disabled]="currentScrollIndex >= maxScrollIndex">
+          <span class="nav-arrow-icon">&gt;</span>
+        </button>
+      </div>
+
+      <!-- Dynamic Question Content -->
+      <div class="questions-list-area">
+        <!-- AI Questions View -->
+        @if (activeTab === 'ai-generated' && skillSections[activeSectionIndex]; as activeSection) {
+          <!-- Question List Here... -->
+        }
+
+        <!-- Uploaded Questions View -->
+        @if (activeTab === 'uploaded' && uploadedSkillSections[activeUploadedSectionIndex]; as activeUploadedSection) {
+           <!-- Question List Here... -->
+        }
+
+        <!-- Coding Problems View -->
+        @if (activeTab === 'coding-problem') {
+           <!-- Coding Problems List Here... -->
+        }
+      </div>
+    </div>
+  </form>
+}
+
+<!-- Loading State -->
+@if (isLoading) {
+  <div class="status-container">
+    <span class="large-spinner tab-spinner"></span>
+    <p class="status-text">Loading Assessment Data...</p>
+  </div>
+}
