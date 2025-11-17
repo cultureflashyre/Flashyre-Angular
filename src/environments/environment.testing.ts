@@ -15,7 +15,8 @@ export const environment = {
   chcs_logo_thumbnail: 'https://storage.googleapis.com/flashyre-testing-b1/default_images/chcs_logo_thumbnail.jfif',
 
   mcq_upload_template: 'https://storage.googleapis.com/cflashyre-dev-b2/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
-  googleMapsApiKey: 'AIzaSyDtLg-JxsWgG1fWNA2pWXrzjnEs5f3lGrQ'
+  googleMapsApiKey: 'AIzaSyDtLg-JxsWgG1fWNA2pWXrzjnEs5f3lGrQ',
+  googleClientId: '76855691155-qj1bb6i1fcidraejoicasbpe1hi6g283.apps.googleusercontent.com'
 };
 
 /*
