@@ -42,7 +42,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     }
 
     console.log(`Redirecting to login page for role: login-${roleToRedirect} with returnUrl: ${state.url}`);
-    router.navigate([`/login-${roleToRedirect}`], { queryParams: { returnUrl: state.url } });
+    router.navigate([`/login`], { queryParams: { returnUrl: state.url } });
     return false; // Block access
   }
 

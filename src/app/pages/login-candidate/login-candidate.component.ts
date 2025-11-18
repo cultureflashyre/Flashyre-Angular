@@ -55,7 +55,13 @@ export class LoginCandidate implements OnInit {
   onLoginSubmit(response: any) {
     this.spinner.show();
 
-    if (response.message === 'Login successful' && response.access) {
+      const isSuccessfulLogin = (
+      response.message === 'Login successful' ||
+      response.status === 'LOGIN_SUCCESS' ||
+      response.status === 'ROLE_MISMATCH'
+    ) && response.access;
+
+    if (isSuccessfulLogin) {
       console.log("Login response: ", response);
       localStorage.setItem('jwtToken', response.access); // Ensure token is stored
       // Store user_id in local storage

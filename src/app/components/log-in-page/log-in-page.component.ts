@@ -77,15 +77,13 @@ export class LogInPage implements OnInit {
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       console.log('Google user authenticated:', socialUser);
       const idToken = socialUser.idToken;
-      const selectedUserType = this.userType;
+      const selectedUserType = '';
 
-      const authObservable = this.userType === 'corporate'
-        ? this.corporateAuthService.googleAuthCheck(idToken, selectedUserType)
-        : this.authService.googleAuthCheck(idToken, selectedUserType);
+      const authObservable = this.authService.googleAuthCheck(idToken, selectedUserType);
 
       authObservable.subscribe({
         next: (response) => {
-          if (response.status === 'LOGIN_SUCCESS') {
+          if (response.status === 'LOGIN_SUCCESS' || response.status === 'ROLE_MISMATCH') {
             this.errorMessage = '';
             // The backend returns a full login response, so we emit it
             // to the parent component (login-candidate.component).
