@@ -57,6 +57,9 @@ export class SignupCandidate1 implements OnInit {
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
 
+  // A NEW, SEPARATE FORM for the Google popup
+  phonePopupForm: FormGroup;
+
      // --- NEW STATE VARIABLES FOR GOOGLE SIGNUP ---
   showPhonePopup: boolean = false;
   isSubmittingPhone: boolean = false;
@@ -105,11 +108,42 @@ export class SignupCandidate1 implements OnInit {
         ]],
         confirm_password: ['', [Validators.required]],
       // --- NEW FORM CONTROLS ---
-        //user_type_radio: ['candidate', Validators.required], // For the radio buttons
-        popup_phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]       
+        //user_type_radio: ['candidate', Validators.required], // For the radio buttons       
     },
       { validator: this.passwordMatchValidator }
     );
+
+    // Initialize the new, independent form for the popup
+    this.phonePopupForm = this.fb.group({
+      popup_phone_number: ['',
+        [Validators.required, Validators.pattern(/^\d{10}$/)],
+        [this.phoneExistsValidator()] // Also validate if the phone exists here
+      ]
+    });
+
+    // --- DIAGNOSTIC LOG ---
+    // Log the form's status and value changes in real-time.
+    // This is the MOST IMPORTANT log for diagnosing a disabled button.
+    this.signupForm.valueChanges.subscribe(() => {
+        console.log('--- Form State Changed ---');
+        console.log(`Form Valid: ${this.signupForm.valid}`);
+        console.log(`Form Status: ${this.signupForm.status}`); // Will show VALID, INVALID, or PENDING
+
+        // Log errors for each control individually to pinpoint the issue
+        Object.keys(this.signupForm.controls).forEach(key => {
+            const control = this.signupForm.get(key);
+            if (control && control.invalid) {
+                console.log(`Control '${key}' is INVALID. Errors:`, control.errors);
+            }
+        });
+
+        // Check for form-level validator errors (like password mismatch)
+        if (this.signupForm.errors) {
+            console.log('Form-level errors:', this.signupForm.errors);
+        }
+        console.log('--------------------------');
+    });
+
 
             // --- ADDED: Google Sign-Up Subscription Logic ---
     // This is the new, correct way to handle Google Sign-Up.
@@ -188,6 +222,8 @@ export class SignupCandidate1 implements OnInit {
   selectUserType(type: 'candidate' | 'recruiter' | 'admin'): void {
     this.userType = type;
     this.showRoleSelection = false;
+
+    console.log(`User role selected: ${this.userType}. The signup form should now be visible.`);
   }
 
   changeUserType(): void {
@@ -247,7 +283,8 @@ export class SignupCandidate1 implements OnInit {
   }
 
   onPhoneSubmit(): void {
-    if (this.signupForm.get('popup_phone_number').invalid) {
+    // Check the validity of the NEW form
+    if (this.phonePopupForm.invalid) {
       return;
     }
 
@@ -257,7 +294,8 @@ export class SignupCandidate1 implements OnInit {
 
     const finalUserData = {
       ...this.googleUserData,
-      phone_number: this.signupForm.get('popup_phone_number').value
+      phone_number: this.phonePopupForm.get('popup_phone_number').value,
+      initials: this.thumbnailService.getUserInitials(`${this.googleUserData.first_name} ${this.googleUserData.last_name}`)
     };
 
     const signupObservable = selectedUserType === 'recruiter'
@@ -301,7 +339,7 @@ export class SignupCandidate1 implements OnInit {
   cancelGoogleSignup(): void {
     this.showPhonePopup = false;
     this.googleUserData = null;
-    this.signupForm.get('popup_phone_number').reset();
+    this.phonePopupForm.reset();
   }
 
   sanitizePhoneNumber(event: Event, controlName: string): void {
@@ -309,13 +347,27 @@ export class SignupCandidate1 implements OnInit {
     const sanitizedValue = input.value.replace(/\D/g, '').slice(0, 10);
 
     // Get the correct form control by name and update its value
-    const control = this.signupForm.get(controlName);
+    // *** UPDATED LOGIC TO HANDLE TWO FORMS ***
+    let control: AbstractControl | null;
+    if (controlName === 'popup_phone_number') {
+        control = this.phonePopupForm.get(controlName);
+    } else {
+        control = this.signupForm.get(controlName);
+    }
+
     if (control) {
       control.setValue(sanitizedValue, { emitEvent: false });
     }
   }
 
   onSubmit() {
+
+        // --- DIAGNOSTIC LOG ---
+    console.log("onSubmit() triggered. Checking form validity...");
+    console.log("Is signupForm valid?", this.signupForm.valid);
+    console.log("Full form value:", this.signupForm.value);
+    console.log("Full form errors:", this.signupForm.errors);
+
     const isManualFormValid = 
         this.signupForm.get('first_name').valid &&
         this.signupForm.get('last_name').valid &&
@@ -327,6 +379,8 @@ export class SignupCandidate1 implements OnInit {
 
     if (isManualFormValid) {
       this.spinner.show(); // Show spinner only when request starts
+
+      console.log("Form is valid. Proceeding with API call.");
 
       const firstName = this.signupForm.get('first_name').value;
       const lastName = this.signupForm.get('last_name').value;

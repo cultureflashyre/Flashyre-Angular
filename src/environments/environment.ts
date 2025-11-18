@@ -16,7 +16,7 @@ export const environment = {
 
   mcq_upload_template: 'https://storage.googleapis.com/cflashyre-dev-b2/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
   googleMapsApiKey: 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w',
-  googleClientId: '163465767284-567fbcql8qvsfcr3hp44m7h95k67o720.apps.googleusercontent.com',
+  googleClientId: '76855691155-qj1bb6i1fcidraejoicasbpe1hi6g283.apps.googleusercontent.com'
 };
 
 /*
