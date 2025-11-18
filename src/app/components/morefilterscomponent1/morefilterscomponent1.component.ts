@@ -1,7 +1,8 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { CommonModule, NgClass, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 @Component({
     selector: 'app-morefilterscomponent1',
@@ -12,9 +13,22 @@ import { FormsModule } from '@angular/forms';
         NgClass,
         NgTemplateOutlet,
         FormsModule,
+        CommonModule,
+        AlertMessageComponent,
     ],
 })
 export class Morefilterscomponent1 implements OnChanges {
+
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private actionToConfirm: string = '';
+
+  experienceError: string = '';
+  companyNameError: string = '';
+  locationError: string = '';
+  roleError: string = '';
+  salaryError: string = '';
   // ContentChild for labels and button texts
   @ContentChild('text') text: TemplateRef<any>; // Header text
   @ContentChild('text11') text11: TemplateRef<any>; // Date Posted label
@@ -110,9 +124,25 @@ export class Morefilterscomponent1 implements OnChanges {
     this.filterWorkMode = '';
     this.filterRole = '';
     this.filterJobType = '';
+    this.experienceError = '';
+    this.companyNameError = '';
+    this.locationError = '';
+    this.roleError = '';
+    this.salaryError = '';
   }
 
   applyFilters(): void {
+    this.validateExperience();
+    this.validateCompanyName();
+    this.validateLocation();
+    this.validateRole();
+    this.validateSalary();
+
+    // Check if any errors exist
+    if (this.experienceError || this.companyNameError || this.locationError || this.roleError || this.salaryError) {
+      return; // Stop execution if there's an error
+    }
+
     const filters = {
       datePosted: this.filterDatePosted,
       experienceLevel: this.filterExperienceLevel,
@@ -129,6 +159,17 @@ export class Morefilterscomponent1 implements OnChanges {
   }
 
   savePreference(): void {
+    this.validateExperience();
+    this.validateCompanyName();
+    this.validateLocation();
+    this.validateRole();
+    this.validateSalary();
+
+    // Check if any errors exist
+    if (this.experienceError || this.companyNameError || this.locationError || this.roleError || this.salaryError) {
+      return; // Stop execution if there's an error
+    }
+
     const filters = {
       date_posted: this.filterDatePosted,
       experience_level: this.filterExperienceLevel,
@@ -142,49 +183,126 @@ export class Morefilterscomponent1 implements OnChanges {
       job_type: this.filterJobType
     };
 
-    // Check if at least one field is filled
-    if (Object.values(filters).every(value => value === '')) {
-      alert('Please fill in at least one field to save a preference.');
+    // 1. Check if at least one field is filled
+    if (Object.values(filters).every(value => value === '' || value === null)) {
+      this.openAlert('Please fill in at least one field to save a preference.', ['OK'], 'info');
       return;
     }
+    
+    // 2. Determine which service to use
+    const preferenceService = this.callerType === 'recruiter' 
+      ? this.recruiterPreferenceService 
+      : this.preferenceService;
+
+    // 3. Check if the user has reached the preference limit
+    preferenceService.getPreferences().subscribe(preferences => {
+      if (preferences.length >= 3) {
+        this.openAlert('You can only save up to 3 preferences.', ['OK'], 'info');
+      } else {
+        // 4. If checks pass, ask for final confirmation
+        this.openAlert('Are you sure you want to save these filters as a new preference?', ['Cancel', 'Save'], 'save');
+      }
+    });
+  }
+
+  private confirmSavePreference(): void {
+    const filters = {
+      date_posted: this.filterDatePosted,
+      experience_level: this.filterExperienceLevel,
+      department: this.filterDepartment,
+      salary: this.filterSalary,
+      location: this.filterLocation,
+      company_name: this.filterCompanyName,
+      industries: this.filterIndustries,
+      work_mode: this.filterWorkMode,
+      role: this.filterRole,
+      job_type: this.filterJobType
+    };
+
+    const successCallback = (response: any) => {
+      console.log('Preference saved successfully!', response);
+      this.savePreferenceEvent.emit(filters);
+      this.openAlert('Preference saved!', ['OK'], 'success');
+    };
+
+    const errorCallback = (error: any) => {
+      console.error('Error saving preference:', error);
+      this.openAlert('Failed to save preference.', ['OK'], 'error');
+    };
 
     if (this.callerType === 'recruiter') {
-      this.recruiterPreferenceService.getPreferences().subscribe(preferences => {
-        if (preferences.length >= 3) {
-          alert('You can only save up to 3 preferences.');
-        } else {
-          this.recruiterPreferenceService.savePreference(filters, this.recJobType).subscribe(
-            response => {
-              console.log('Preference saved successfully!', response);
-              this.savePreferenceEvent.emit(filters);
-              alert('Preference saved!');
-            },
-            error => {
-              console.error('Error saving preference:', error);
-              alert('Failed to save preference.');
-            }
-          );
-        }
+      this.recruiterPreferenceService.savePreference(filters, this.recJobType).subscribe({
+        next: successCallback,
+        error: errorCallback
       });
     } else {
-      this.preferenceService.getPreferences().subscribe(preferences => {
-        if (preferences.length >= 3) {
-          alert('You can only save up to 3 preferences.');
-        } else {
-          this.preferenceService.savePreference(filters).subscribe(
-            response => {
-              console.log('Preference saved successfully!', response);
-              this.savePreferenceEvent.emit(filters);
-              alert('Preference saved!');
-            },
-            error => {
-              console.error('Error saving preference:', error);
-              alert('Failed to save preference.');
-            }
-          );
-        }
+      this.preferenceService.savePreference(filters).subscribe({
+        next: successCallback,
+        error: errorCallback
       });
     }
-    
   }
+
+  private openAlert(message: string, buttons: string[], action: string) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.actionToConfirm = action;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(buttonClicked: string) {
+    this.showAlert = false;
+    const action = buttonClicked.toLowerCase();
+
+    if (this.actionToConfirm === 'save' && action === 'save') {
+        this.confirmSavePreference();
+    }
+    // For other actions ('ok', 'cancel'), we just need to close the dialog, which is already done.
+  }
+
+  validateExperience(): void {
+    const numericRegex = /^[0-9]*$/;
+    if (!numericRegex.test(this.filterExperienceLevel)) {
+      this.experienceError = 'Experience Level must be a number.';
+    } else {
+      this.experienceError = '';
+    }
+  }
+
+  validateCompanyName(): void {
+    const charsRegex = /^[a-zA-Z\s]*$/;
+    if (!charsRegex.test(this.filterCompanyName)) {
+      this.companyNameError = 'Company Name must only contain characters.';
+    } else {
+      this.companyNameError = '';
+    }
+  }
+
+  validateLocation(): void {
+    const charsRegex = /^[^\d]*$/;
+    if (!charsRegex.test(this.filterLocation)) {
+      this.locationError = 'Location must only contain characters.';
+    } else {
+      this.locationError = '';
+    }
+  }
+
+  validateRole(): void {
+    const charsRegex = /^[a-zA-Z\s]*$/;
+    if (!charsRegex.test(this.filterRole)) {
+      this.roleError = 'Role must only contain characters.';
+    } else {
+      this.roleError = '';
+    }
+  }
+
+  validateSalary(): void {
+    const numericRegex = /^[0-9]*$/;
+    if (!numericRegex.test(this.filterSalary)) {
+      this.salaryError = 'Salary must be a number.';
+    } else {
+      this.salaryError = '';
+    }
+  }
+
 }

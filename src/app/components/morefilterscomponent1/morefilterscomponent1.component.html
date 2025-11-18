@@ -1,3 +1,11 @@
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
 <div
   id="More_Filters_Container"
   class="morefilterscomponent1-morefilterscontainer"
@@ -126,10 +134,12 @@
       class="morefilterscomponent1-text16" 
       [(ngModel)]="filterExperienceLevel" 
       name="filterExperienceLevel"
+      (input)="validateExperience()"
     >
   </form>
 </div>
         </div>
+        <div *ngIf="experienceError" class="error-message">{{ experienceError }}</div>
       </div>
     </div>
     <div
@@ -177,7 +187,7 @@
                 <ng-container>
                   <ng-template #defaultText318>
                     <div class="morefilterscomponent1-fragment26">
-                      <input class="morefilterscomponent1-text40" type="text" [(ngModel)]="filterCompanyName" name="filterCompanyName" placeholder="Enter company name">
+                      <input class="morefilterscomponent1-text40" type="text" [(ngModel)]="filterCompanyName" name="filterCompanyName" placeholder="Enter company name" (input)="validateCompanyName()">
                     </div>
                   </ng-template>
                   <ng-container
@@ -199,6 +209,7 @@
             </form>
           </div>
         </div>
+        <div *ngIf="companyNameError" class="error-message">{{ companyNameError }}</div>
       </div>
       <div
         id="job-type-container"
@@ -307,7 +318,7 @@
                 <ng-container>
                   <ng-template #defaultText317>
                     <div class="morefilterscomponent1-fragment31">
-                      <input class="morefilterscomponent1-text47" type="text" [(ngModel)]="filterLocation" name="filterLocation" placeholder="Enter location">
+                      <input class="morefilterscomponent1-text47" type="text" [(ngModel)]="filterLocation" name="filterLocation" placeholder="Enter location" (input)="validateLocation()">
                     </div>
                   </ng-template>
                   <ng-container
@@ -329,6 +340,7 @@
             </form>
           </div>
         </div>
+        <div *ngIf="locationError" class="error-message">{{ locationError }}</div>
       </div>
       <div id="role-container" class="morefilterscomponent1-role-container">
         <div
@@ -358,10 +370,12 @@
       class="morefilterscomponent1-text18" 
       [(ngModel)]="filterRole" 
       name="filterRole"
+      (input)="validateRole()"
     >
   </form>
 </div>
         </div>
+        <div *ngIf="roleError" class="error-message">{{ roleError }}</div>
       </div>
     </div>
     <div
@@ -396,10 +410,12 @@
       class="morefilterscomponent1-text14" 
       [(ngModel)]="filterSalary" 
       name="filterSalary"
+      (input)="validateSalary()"
     >
   </form>
 </div>
         </div>
+        <div *ngIf="salaryError" class="error-message">{{ salaryError }}</div>
       </div>
       <div
         id="work-mode-container"

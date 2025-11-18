@@ -51,6 +51,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-date-posted-main-container {
@@ -124,6 +125,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-experoence-level-main-container {
@@ -206,6 +208,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-company-main-container {
@@ -280,6 +283,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-job-container {
@@ -362,6 +366,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-location-main-container {
@@ -436,6 +441,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-role-main-container {
@@ -518,6 +524,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-salary-main-container {
@@ -591,6 +598,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  align-self: flex-start;
 }
  
 .morefilterscomponent1-work-mode-main-container {
@@ -1207,6 +1215,12 @@
 .morefilterscomponent1-text51 {
   display: inline-block;
   font-size: 12px;
+}
+
+.error-message {
+  color: red;
+  font-size: 10px;
+  margin-top: 2px;
 }
  
 
