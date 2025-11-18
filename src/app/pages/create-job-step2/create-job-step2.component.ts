@@ -327,8 +327,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
         next: (response) => {
           this.hasGenerated = true;
           this.selectedExcelFile = null;
-          this.uploadedFileName = null;
-          this.initialUploadedFileName = null; // Clear initial state as AI questions now take precedence
           this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
         },
         error: (err) => {
