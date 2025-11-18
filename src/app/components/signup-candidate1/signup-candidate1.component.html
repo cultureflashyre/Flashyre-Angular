@@ -42,17 +42,17 @@
           maxlength="10"
           (input)="sanitizePhoneNumber($event, 'popup_phone_number')" 
           />
-          @if (signupForm.get('popup_phone_number').invalid && signupForm.get('popup_phone_number').touched) {
+          @if (phonePopupForm.get('popup_phone_number').invalid && phonePopupForm.get('popup_phone_number').touched) {
             <div class="error-text">
-              @if (signupForm.get('popup_phone_number').errors?.required) {
+              @if (phonePopupForm.get('popup_phone_number').errors?.required) {
                 <span>Phone number is required.</span>
               }
-              @if (signupForm.get('popup_phone_number').errors?.pattern) {
+              @if (phonePopupForm.get('popup_phone_number').errors?.pattern) {
                 <span>Phone number must be exactly 10 digits.</span>
               }
             </div>
           }
-              @if (signupForm.get('popup_phone_number').errors?.phoneExists) {
+              @if (phonePopupForm.get('popup_phone_number').errors?.phoneExists) {
                     <div class="error-text">
                       Phone number already exists.
                     </div>
@@ -60,7 +60,7 @@
       </div>
       <div class="popup-actions">
         <button class="popup-button cancel" (click)="cancelGoogleSignup()">Cancel</button>
-        <button class="popup-button generate" (click)="onPhoneSubmit()" [disabled]="signupForm.get('popup_phone_number').invalid || isSubmittingPhone">
+        <button class="popup-button generate" (click)="onPhoneSubmit()" [disabled]="phonePopupForm.get('popup_phone_number').invalid || isSubmittingPhone">
           @if (!isSubmittingPhone) {
             <span>Create Account</span>
           }
