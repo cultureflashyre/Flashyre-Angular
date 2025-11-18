@@ -1177,6 +1177,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
         this.showSuccessPopup('Draft saved successfully!');
+
+        this.workflowService.clearWorkflow();
         
         // Navigate to the job list page after a short delay.
         setTimeout(() => {
