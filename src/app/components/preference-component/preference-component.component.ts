@@ -2,15 +2,22 @@ import { Component, Input, ContentChild, TemplateRef, OnInit, Output, EventEmitt
 import { CandidatePreferenceService } from '../../services/candidate-preference.service';
 import { MoreFiltersAndPreferenceComponent } from '../more-filters-and-preference-component/more-filters-and-preference-component.component';
 import { RecruiterPreferenceService } from 'src/app/services/recruiter-preference.service';
-import { NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet, CommonModule } from '@angular/common';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 @Component({
     selector: 'preference-component',
     templateUrl: 'preference-component.component.html',
     styleUrls: ['preference-component.component.css'],
     standalone: true,
-    imports: [NgTemplateOutlet],
+    imports: [NgTemplateOutlet, CommonModule, AlertMessageComponent],
 })
 export class PreferenceComponent implements OnInit {
+
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private preferenceToDeleteId: number | null = null;
+  private actionToConfirm: string = '';
 
 
   @Output() applyPreference = new EventEmitter<any>();
@@ -95,26 +102,60 @@ export class PreferenceComponent implements OnInit {
     preference.expanded = !preference.expanded;
   }
 
-  deletePreference(id: number) {
-    if (confirm('Are you sure you want to delete this preference?')) {
-      this.candidatePreferenceService.deletePreference(id).subscribe(
-        () => {
-          this.loadPreferences(); // Refresh the list of preferences
-        },
-        error => console.error('Error deleting preference:', error)
-      );
+  private openAlert(message: string, buttons: string[], action: string) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.actionToConfirm = action;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(buttonClicked: string) {
+    this.showAlert = false;
+    const action = buttonClicked.toLowerCase();
+
+    if (action === 'cancel') {
+      this.preferenceToDeleteId = null;
+      return;
     }
+
+    if (this.actionToConfirm === 'delete' && action === 'delete') {
+      this.confirmDelete();
+    } else if (this.actionToConfirm === 'add' && action === 'continue') {
+      this.parent.setTab('filters');
+    }
+  }
+  
+  private confirmDelete() {
+    if (this.preferenceToDeleteId === null) return;
+
+    const service = this.callerType === 'recruiter'
+      ? this.recruiterPreferenceService
+      : this.candidatePreferenceService;
+    
+    const refreshMethod = this.callerType === 'recruiter'
+      ? () => this.loadRecruiterPreferences()
+      : () => this.loadPreferences();
+
+    service.deletePreference(this.preferenceToDeleteId).subscribe({
+      next: () => {
+        refreshMethod();
+        this.preferenceToDeleteId = null;
+      },
+      error: (error) => {
+        console.error('Error deleting preference:', error);
+        this.preferenceToDeleteId = null;
+      }
+    });
+  }
+
+  deletePreference(id: number) {
+    this.preferenceToDeleteId = id;
+    this.openAlert('Are you sure you want to delete this preference?', ['Cancel', 'Delete'], 'delete');
   }
 
   deleteRecruiterPreference(id: number) {
-    if (confirm('Are you sure you want to delete this preference?')) {
-      this.recruiterPreferenceService.deletePreference(id).subscribe(
-        () => {
-          this.loadPreferences(); // Refresh the list of preferences
-        },
-        error => console.error('Error deleting preference:', error)
-      );
-    }
+    this.preferenceToDeleteId = id;
+    this.openAlert('Are you sure you want to delete this preference?', ['Cancel', 'Delete'], 'delete');
   }
 
   addNewPreference() {

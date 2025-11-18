@@ -433,58 +433,59 @@ export class AdminCreateJobStep3 implements OnInit, OnDestroy, AfterViewInit {
    * It now adds all skill tabs to the UI at once before starting the sequential generation.
    */
   onAddNewSkillSubmit(): void {
-    if (this.isAddingNewSkill) return;
-
-    const skillNames = this.newSkillName
-      .split(',')
-      .map(skill => skill.trim())
-      .filter(skill => skill.length > 0);
-
-    if (skillNames.length === 0) {
-      this.showErrorPopup('Please enter at least one valid skill name.');
+  if (this.isAddingNewSkill) return;
+  const skillNames = this.newSkillName
+    .split(',')
+    .map(skill => skill.trim())
+    .filter(skill => skill.length > 0);
+  if (skillNames.length === 0) {
+    this.showErrorPopup('Please enter at least one valid skill name.');
+    return;
+  }
+  const existingSkillNames = new Set(this.skillSections.map(s => s.skillName.toLowerCase()));
+  const newValidSkills: string[] = [];
+  for (const skill of skillNames) {
+    if (existingSkillNames.has(skill.toLowerCase())) {
+      this.showErrorPopup(`The skill "${skill}" already exists.`);
       return;
     }
-
-    const existingSkillNames = new Set(this.skillSections.map(s => s.skillName.toLowerCase()));
-    const newValidSkills = [];
-    for (const skill of skillNames) {
-      if (existingSkillNames.has(skill.toLowerCase())) {
-        this.showErrorPopup(`The skill "${skill}" already exists.`);
-        return;
-      }
-      newValidSkills.push(skill);
-    }
-
-    const firstNewSkillIndex = this.skillSections.length;
-
-    for (const skillName of newValidSkills) {
-      const newSection: SkillSection = {
-        skillName,
-        questions: [],
-        totalCount: 0,
-        selectedCount: 0,
-        isAllSelected: false,
-        generationStatus: 'loading', // Set status to 'loading' immediately
-      };
-      this.skillSections.push(newSection);
-    }
-
-    this.closeAddSkillPopup();
-    setTimeout(() => {
-      this.calculateCarouselState();
-      if (this.skillTrack?.nativeElement) {
-          const firstNewTabElement = this.skillTrack.nativeElement.children[firstNewSkillIndex] as HTMLElement;
-          if (firstNewTabElement) {
-              const newScrollPosition = firstNewTabElement.offsetLeft;
-              this.renderer.setStyle(this.skillTrack.nativeElement, 'transform', `translateX(-${newScrollPosition}px)`);
-          }
-      }
-      this.activeSectionIndex = firstNewSkillIndex;
-      this.cdr.detectChanges();
-    }, 100);
-
-    this.processNewSkillsSequentially(newValidSkills);
+    newValidSkills.push(skill);
   }
+
+  // === THIS IS THE ONLY PART YOU CHANGE ===
+  const oldLength = this.skillSections.length;
+
+  const newSections: SkillSection[] = newValidSkills.map(skillName => ({
+    skillName,
+    questions: [],
+    totalCount: 0,
+    selectedCount: 0,
+    isAllSelected: false,
+    generationStatus: 'loading',
+  }));
+
+  // Immutable update + force view render immediately
+  this.skillSections = [...this.skillSections, ...newSections];
+  this.cdr.detectChanges();
+
+  // Set active to first new skill so questions area shows "Generating..." immediately
+  this.activeSectionIndex = oldLength;
+
+  this.closeAddSkillPopup();
+
+  // Reliable scroll to new skills after layout
+  setTimeout(() => {
+    this.calculateCarouselState();
+
+    // Scroll to the very end so all new skills are visible
+    this.currentScrollIndex = this.maxScrollIndex;
+    this.updateScrollPosition();
+    this.cdr.detectChanges();
+  }, 150);
+  // =======================================
+
+  this.processNewSkillsSequentially(newValidSkills);
+}
 
   private async processNewSkillsSequentially(skillsToProcess: string[]): Promise<void> {
     this.isAddingNewSkill = true;
