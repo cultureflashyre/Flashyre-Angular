@@ -107,6 +107,27 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     this.loadUserProfile();
   }
 
+
+  /**
+   * Parses a filename to remove the UUID prefix added by the backend.
+   * e.g., "8cc50d1f-...._original_name.xlsx" becomes "original_name.xlsx"
+   * @param fullFileName The filename returned from the backend.
+   * @returns The cleaned, original filename.
+   */
+  private parseFileName(fullFileName: string): string {
+    if (!fullFileName) {
+      return '';
+    }
+    // This regex matches a 36-character UUID followed by an underscore at the start of the string.
+    const uuidPrefixRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_/i;
+    if (uuidPrefixRegex.test(fullFileName)) {
+      // If the pattern matches, return the substring that comes after the 37-character prefix.
+      return fullFileName.substring(37);
+    }
+    // If the pattern doesn't match, return the original filename as a fallback.
+    return fullFileName;
+  }
+
   private checkInitialMcqStatus(): void {
     const token = this.corporateAuthService.getJWTToken();
     if (!this.jobUniqueId || !token) {
@@ -122,8 +143,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
           this.hasGenerated = response.status !== 'not_started';
 
           if (response.filename) {
-            this.uploadedFileName = response.filename;
-            this.initialUploadedFileName = response.filename;
+            const cleanFileName = this.parseFileName(response.filename);
+            this.uploadedFileName = cleanFileName;
+            this.initialUploadedFileName = cleanFileName;
           }
         },
         error: (err) => {
@@ -305,8 +327,6 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
         next: (response) => {
           this.hasGenerated = true;
           this.selectedExcelFile = null;
-          this.uploadedFileName = null;
-          this.initialUploadedFileName = null; // Clear initial state as AI questions now take precedence
           this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
         },
         error: (err) => {
