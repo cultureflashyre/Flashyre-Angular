@@ -81,6 +81,24 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
+    const key = `otpExpiry_${this.email}`;
+  const expiryTime = localStorage.getItem(key);
+
+  if (expiryTime) {
+    // If an expiry time exists, calculate remaining seconds
+    const remainingSeconds = Math.round((+expiryTime - Date.now()) / 1000);
+
+    if (remainingSeconds > 0) {
+      this.countdown = remainingSeconds;
+    } else {
+      this.countdown = 0; // OTP has already expired
+    }
+  } else {
+    // If no expiry time, this is a new OTP. Set a 60-second timer.
+    this.countdown = 60;
+    const newExpiryTime = Date.now() + this.countdown * 1000;
+    localStorage.setItem(key, String(newExpiryTime));
+  }
     this.countdownInterval = setInterval(() => {
       if (this.countdown > 0) {
         this.countdown--;
@@ -107,6 +125,7 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
         console.log('Resend OTP response:', response);
         this.message = response.message || 'New OTP sent successfully.';
         this.loading = false;
+        localStorage.removeItem(`otpExpiry_${this.email}`);
         this.startCountdown();
       },
       error: (err) => {
@@ -190,6 +209,7 @@ export class LoginResetPasswordComponent implements OnInit, OnDestroy {
         this.message = response.message || 'Password reset successfully. You can now log in.';
         this.loading = false;
         localStorage.removeItem('resetEmail');
+        localStorage.removeItem(`otpExpiry_${this.email}`);
         setTimeout(() => {
           window.location.href = '/login';
         }, 2000);
