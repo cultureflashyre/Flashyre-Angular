@@ -23,6 +23,9 @@ import { AlertMessageComponent } from '../alert-message/alert-message.component'
     ],
 })
 export class ProfileEmploymentComponent implements OnInit, OnDestroy {
+
+  public hasPendingDeletions: boolean = false;
+
   saveAndNext() {
     throw new Error('Method not implemented.');
   }
@@ -333,7 +336,8 @@ private loadPositionsFromUserProfile(): void {
   // This method handles the button click from the alert component
   handleRemoveConfirmation(button: string): void {
     if (button.toLowerCase() === 'remove') {
-      if (this.positionToRemoveIndex !== null && this.positions.length > 1) {
+      if (this.positionToRemoveIndex !== null) {
+        this.hasPendingDeletions = true;
         this.positions.splice(this.positionToRemoveIndex, 1);
       }
     }
@@ -400,6 +404,12 @@ private loadPositionsFromUserProfile(): void {
   }
 
   public isFormEmpty(): boolean {
+
+    // If there are no position blocks at all, it's empty.
+    if (this.positions.length === 0) {
+      return true;
+    }
+
     // The form is considered empty if there's only one position block
     // and all its fields are still empty strings.
     if (this.positions.length === 1) {
@@ -564,16 +574,7 @@ private loadPositionsFromUserProfile(): void {
 // --- MODIFIED: `saveEmployment` method now includes the overlap check ---
 saveEmployment(): Promise<boolean> {
   return new Promise((resolve) => {
-    const positionsToSave = this.positions.filter(p => 
-      p.jobTitle || p.companyName || p.startDate || p.jobDetails
-    );
-
-    if (positionsToSave.length === 0) {
-      console.log('No employment data to save. Skipping.');
-      resolve(true);
-      return;
-    }
-
+    
     if (!this.validatePositions()) {
       console.log('Validation failed for required fields.');
       resolve(false);
@@ -591,12 +592,26 @@ saveEmployment(): Promise<boolean> {
         resolve(false);
         return;
       }
+
+      // Prepare the payload. Filter out any truly blank new entries.
+      // Your backend sync endpoint relies on getting the full, current state.
+      const payload = this.positions.filter(p => 
+        p.id || p.jobTitle || p.companyName || p.startDate || p.jobDetails
+      );
+
+      // THE KEY LOGIC: Skip the API call only if the form is empty AND no deletions are pending.
+      if (payload.length === 0 && !this.hasPendingDeletions) {
+        console.log('No employment data to save or delete. Skipping.');
+        resolve(true);
+        return;
+      }
+
     // --- End of overlap check ---
 
-    this.employmentService.saveEmployment(positionsToSave).subscribe({
+    this.employmentService.saveEmployment(payload).subscribe({
       next: (response) => {
-        console.log('Employment saved successfully:', response);
-        this.resetForm();
+        console.log('Employment data synchronized successfully:', response);
+        this.hasPendingDeletions = false; // IMPORTANT: Reset the flag on success.
         resolve(true);
       },
       error: (error) => {

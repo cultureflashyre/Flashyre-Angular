@@ -207,12 +207,15 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   // --- Navigation ---
     onSaveAndNext() {
     let formIsEmpty = false;
+    let hasDeletions = false; // Variable to hold the deletion state
     
     // Check the state of the form for the current step
     switch (this.currentStep) {
       case 2: // Employment
         if (this.employmentComponent) {
           formIsEmpty = this.employmentComponent.isFormEmpty();
+
+          hasDeletions = this.employmentComponent.hasPendingDeletions;
           // --- MODIFICATION START ---
           // Before showing the save confirmation, check if there's a short employment duration.
           // If so, show the date warning instead of the regular save/skip prompt.
@@ -225,6 +228,8 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       case 3: // Education
         if (this.educationComponent) {
           formIsEmpty = this.educationComponent.isFormEmpty();
+          // Check the new public property from the child component
+          hasDeletions = this.educationComponent.hasPendingDeletions;
         }
         break;
       case 5: // Certifications
@@ -240,7 +245,7 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
     // If the form is empty, show the "skip" confirmation pop-up.
     // Otherwise, show the regular "save" confirmation pop-up.
-    if (formIsEmpty) {
+    if (formIsEmpty && !hasDeletions) {
       this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
     } else {
       this.openAlert('Do you want to save your changes and proceed?', ['Cancel', 'Save & Next']);

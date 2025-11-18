@@ -229,7 +229,6 @@
                   }
                 </div>
                 <!-- Remove Position Button (visible only if more than one position) -->
-                @if (positions.length > 1) {
                   <button
                     type="button"
                     (click)="promptRemovePosition(i)"
@@ -237,7 +236,7 @@
                     >
                     - Remove Position
                   </button>
-                }
+
                 <!-- Add a horizontal line between positions, except after the last one -->
                 @if (i < positions.length - 1) {
                   <hr class="position-divider" />

@@ -182,9 +182,7 @@
                   </div>
                 </div>
                 <!-- Conditionally display Remove button only when there are multiple forms -->
-                @if (educationForms.length > 1) {
                   <button class="remove-button" (click)="promptRemoveForm(i)">- Remove Education</button>
-                }
               </form>
               <!-- Add a horizontal line between positions, except after the last one -->
               @if (i < educationForms.length - 1) {

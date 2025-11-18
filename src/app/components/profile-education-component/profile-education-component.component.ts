@@ -30,6 +30,9 @@ interface ReferenceData {
     imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, AlertMessageComponent]
 })
 export class ProfileEducationComponent implements OnInit, OnDestroy {
+
+  public hasPendingDeletions: boolean = false;
+
   @ContentChild('text') text: TemplateRef<any>;
   @ContentChild('text1') text1: TemplateRef<any>;
   @ContentChild('text2') text2: TemplateRef<any>;
@@ -309,6 +312,11 @@ export class ProfileEducationComponent implements OnInit, OnDestroy {
   }
 
   public isFormEmpty(): boolean {
+
+    if (this.educationForms.length === 0) {
+      return true;
+    } 
+
     // The form is empty if there is only one education form group
     // and all of its fields are empty.
     if (this.educationForms.length === 1) {
@@ -372,14 +380,20 @@ public validateForms(): boolean {
     this.showRemoveConfirmation = true;
   }
 
-  handleRemoveConfirmation(button: string): void {
-    if (button.toLowerCase() === 'remove') {
-      if (this.formToRemoveIndex !== null) {
-        this.educationForms.splice(this.formToRemoveIndex, 1);
-      }
+handleRemoveConfirmation(button: string): void {
+  if (button.toLowerCase() === 'remove') {
+    if (this.formToRemoveIndex !== null) {
+      const formToRemove = this.educationForms[this.formToRemoveIndex];
+      // If the form being removed was saved (had an ID), we now have a pending deletion.
+     // if (formToRemove && formToRemove.get('id')?.value) {
+       // this.hasPendingDeletions = true;
+      //}
+      this.hasPendingDeletions = true;
+      this.educationForms.splice(this.formToRemoveIndex, 1);
     }
-    this.closeRemoveConfirmationModal();
   }
+  this.closeRemoveConfirmationModal();
+}
 
   closeRemoveConfirmationModal(): void {
     this.showRemoveConfirmation = false;
@@ -408,9 +422,9 @@ saveEducation(): Promise<boolean> {
     });
 
     // Step 3: If there are no forms with data, treat it as a successful skip.
-    if (formsToSave.length === 0) {
+    if (formsToSave.length === 0 && !this.hasPendingDeletions) {
       console.log('No education data to save. Skipping.');
-      resolve(true); // Allow navigation to the next page.
+      resolve(true);
       return;
     }
 
@@ -436,6 +450,7 @@ saveEducation(): Promise<boolean> {
       next: (response) => {
         console.log('All educations saved successfully:', response);
         this.errorMessage = null;
+        this.hasPendingDeletions = false;
         resolve(true);
       },
       error: (error) => {

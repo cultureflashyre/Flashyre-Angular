@@ -285,7 +285,7 @@
                         }
                       </div>
                       <!-- Remove Certification Button (visible only if more than one certification) -->
-                      @if (certifications.length > 1) {
+
                         <button
                           type="button"
                           (click)="promptRemoveCertification(i)"
@@ -293,7 +293,7 @@
                           >
                           - Remove Certification
                         </button>
-                      }
+
                       <!-- Horizontal line after each certification block except the last one -->
                       @if (i < certifications.length - 1) {
                         <hr class="certification-divider" />

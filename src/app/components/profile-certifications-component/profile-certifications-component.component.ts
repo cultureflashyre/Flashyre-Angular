@@ -34,6 +34,8 @@ export class ProfileCertificationsComponent implements OnInit {
   showRemoveConfirmation = false;
   certificationToRemoveIndex: number | null = null;
 
+  public hasPendingDeletions: boolean = false;
+
   constructor(private fb: FormBuilder, private certificationService: CertificationService) {
     this.certificationForm = this.fb.group({
       certifications: this.fb.array([]), // Initialize as empty array
@@ -105,7 +107,9 @@ export class ProfileCertificationsComponent implements OnInit {
 
   handleRemoveConfirmation(button: string): void {
     if (button.toLowerCase() === 'remove') {
-      if (this.certificationToRemoveIndex !== null && this.certifications.length > 1) {
+      if (this.certificationToRemoveIndex !== null) {
+        this.hasPendingDeletions = true;
+
         this.certifications.removeAt(this.certificationToRemoveIndex);
       }
     }
@@ -123,6 +127,11 @@ export class ProfileCertificationsComponent implements OnInit {
   }
 
  public isFormEmpty(): boolean {
+  // If there are no certification forms at all, it's considered empty.
+    if (this.certifications.length === 0) {
+      return true;
+    }
+
   // A form is considered empty only if there is one certification group
   // and all of its relevant fields are empty.
   if (this.certifications.length === 1) {
@@ -176,7 +185,7 @@ saveCertifications(): Promise<boolean> {
     // Step 1: Validate all forms. The updated validateForms() now correctly
     // ignores completely blank forms and only validates partially filled ones.
     if (!this.validateForms()) {
-      alert('Please fill out all required fields for any certification you have started.');
+      //alert('Please fill out all required fields for any certification you have started.');
       resolve(false);
       return; // Stop if validation fails.
     }
@@ -192,7 +201,7 @@ saveCertifications(): Promise<boolean> {
     });
 
     // Step 3: If, after filtering, there are no forms left to save, treat it as a successful skip.
-    if (formsToSave.length === 0) {
+    if (formsToSave.length === 0 && !this.hasPendingDeletions) {
       console.log('No certification data to save. Skipping.');
       resolve(true); // Allow navigation.
       return;
@@ -210,11 +219,12 @@ saveCertifications(): Promise<boolean> {
     this.certificationService.saveCertifications(payload).subscribe({
       next: () => {
         console.log('Certifications saved successfully');
+        this.hasPendingDeletions = false; // IMPORTANT: Reset the flag on success.
         resolve(true);
       },
       error: (error) => {
         console.error('Error saving certifications:', error);
-        alert('Error saving certifications: ' + (error.message || 'Unknown error'));
+        //alert('Error saving certifications: ' + (error.message || 'Unknown error'));
         resolve(false);
       }
     });
