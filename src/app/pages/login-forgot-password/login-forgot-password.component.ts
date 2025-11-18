@@ -43,6 +43,7 @@ onSubmit() {
       console.log('Forgot password response:', response);
       this.message = response.message || 'OTP sent to your email';
       this.loading = false;
+      localStorage.removeItem(`otpExpiry_${this.email}`);
       this.router.navigate(['/login-reset-password'], {
         state: { email: this.email },
         queryParams: { email: this.email }
