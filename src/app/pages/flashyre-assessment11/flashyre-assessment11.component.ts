@@ -265,6 +265,28 @@ fetchAssessmentData(assessmentId: number): void {
         this.processCustomizations(response.sections);
 
         this.sections.forEach(section => {
+          if (section.type === 'coding') {
+            const problemId = section.coding_id_id;
+            const key = `flashyre-code-${this.userId}-${this.assessmentData.assessment_id}-${problemId}`;
+            const savedData = localStorage.getItem(key);
+
+            if (savedData) {
+              try {
+                const parsedData = JSON.parse(savedData);
+                // Pre-populate the solutions state with the saved code and language
+                this.codingSolutions[problemId] = {
+                  code: parsedData.code,
+                  language: parsedData.language
+                };
+                console.log(`[Persistence] Loaded saved code for problem ${problemId}.`);
+              } catch (e) {
+                console.error(`[Persistence] Failed to parse saved data for problem ${problemId}.`, e);
+              }
+            }
+          }
+        });
+
+        this.sections.forEach(section => {
           const sectionKey = section.section_id || section.coding_id_id;
           if (sectionKey) {
             // Initialize the timer for this section.
@@ -487,6 +509,14 @@ fetchAssessmentData(assessmentId: number): void {
       await this.cleanupResources();
       const submissionData = this.prepareSubmissionData();
       await lastValueFrom(this.trialAssessmentService.submitAssessment(submissionData));
+      this.sections.forEach(section => {
+      if (section.type === 'coding') {
+        const problemId = section.coding_id_id;
+        const key = `flashyre-code-${this.userId}-${this.assessmentData.assessment_id}-${problemId}`;
+        localStorage.removeItem(key);
+        console.log(`[Persistence] Cleaned up saved code for problem ${problemId}.`);
+      }
+    });
       if (isViolation) {
         this.router.navigate(['/assessment-violation-message'], {
           state: { message: "Test submitted automatically due to screen/app switching" }
@@ -618,13 +648,28 @@ fetchAssessmentData(assessmentId: number): void {
   }
 
   onCodeChange(event: { code: string; language: any }) {
-    if (this.currentSection && this.isCodingSection) {
-      this.codingSolutions[this.currentSection.coding_id_id] = {
+  if (this.currentSection && this.isCodingSection) {
+    const problemId = this.currentSection.coding_id_id;
+    // Update the in-memory state
+    this.codingSolutions[problemId] = {
+      code: event.code,
+      language: event.language,
+    };
+    
+    // ### MODIFICATION START: Save code to localStorage ###
+    try {
+      const key = `flashyre-code-${this.userId}-${this.assessmentData.assessment_id}-${problemId}`;
+      const dataToSave = JSON.stringify({
         code: event.code,
-        language: event.language,
-      };
+        language: event.language
+      });
+      localStorage.setItem(key, dataToSave);
+    } catch (e) {
+      console.error("[Persistence] Failed to save code to localStorage.", e);
     }
+    // ### MODIFICATION END ###
   }
+}
 
   onRunCode(event: { source_code: string, language_id: number }) {
     const problemId = this.currentSection.coding_id_id;
