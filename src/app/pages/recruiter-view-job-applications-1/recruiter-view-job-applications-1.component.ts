@@ -683,29 +683,42 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
 
   // Called when the popup's Save button is clicked
   onSaveNewStage(): void {
-    // This log confirms the function is called. We can keep it for now.
-    console.log('onSaveNewStage() was called!'); 
-
-    // This check is important. If the form is somehow invalid, we stop here.
     if (this.newStageForm.invalid) {
       this.newStageForm.markAllAsTouched();
-      alert('Please fill all required fields correctly.');
+      // Using custom alert for consistency
+      this.openAlert('Please fill all required fields correctly.', ['OK']);
       return;
     }
     
-    // Prepare the data payload for the backend.
     const formValue = this.newStageForm.value;
+    // Determine the name of the new stage, whether from the dropdown or custom input
+    const newStageName = (formValue.stage_name === 'Customize' 
+      ? formValue.custom_stage_name 
+      : formValue.stage_name
+    ).trim();
+
+    // --- DUPLICATE CHECK LOGIC START ---
+    const isDuplicate = this.interviewStages.some(
+      stage => stage.stage_name.trim().toLowerCase() === newStageName.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      this.openAlert('A stage with this name already exists. Please choose a different name.', ['OK']);
+      return; // Stop the process if a duplicate is found
+    }
+    // --- DUPLICATE CHECK LOGIC END ---
+
+    // If the check passes, proceed with preparing the data and showing the confirmation
     this.pendingStageData = {
-      id: 0, // ID is not needed for creation
-      stage_name: formValue.stage_name === 'Customize' ? formValue.custom_stage_name : formValue.stage_name,
+      id: 0,
+      stage_name: newStageName, // Use the trimmed name
       stage_date: formatDate(formValue.stage_date, 'yyyy-MM-dd', 'en-US'),
       mode: formValue.mode,
       assigned_to: formValue.assigned_to,
-      order: 0, // The backend will calculate the correct order
+      order: 0,
       user_id: null
     };
 
-    // Set the pending action and open the confirmation popup.
     this.pendingAction = 'addStageConfirm';
     this.openAlert('Are you sure you want to add this stage?', ['No', 'Yes']);
   }
@@ -715,37 +728,39 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     
     const token = this.authService.getJWTToken();
     if (!token) {
-      alert('Authentication error.');
+      this.openAlert('Authentication error.', ['OK']);
       return;
     }
 
     this.isSubmitting = true;
     this.interviewService.addInterviewStage(this.jobId, this.pendingStageData, token).subscribe({
       next: () => {
-        this.showSuccessPopup('Stage added successfully!');
-        this.closeAddStagePopup();
+        this.closeAddStagePopup(); // Close the form popup
+        this.openAlert('Interview stage successfully added', ['OK']); // Show custom success alert
         this.fetchInterviewStages(); // Refresh the stage list
+        this.initializeNewStageForm(); // <-- ADD THIS LINE to reset the form
         this.isSubmitting = false;
       },
       error: (err) => {
+        const errorMessage = err.error?.errors ? `Failed to add stage: ${JSON.stringify(err.error.errors)}` : 'Failed to add stage: An unknown server error occurred.';
+        this.openAlert(errorMessage, ['OK']);
         console.error('Failed to add stage:', err);
-        this.showErrorPopup(`Failed to add stage: ${err.error?.errors || 'Server error'}`);
         this.isSubmitting = false;
       }
     });
   }
   
-  private showSuccessPopup(message: string) {
-    // This is a placeholder for your actual implementation. 
-    // If you don't have this method, add it.
-    console.log(`SUCCESS: ${message}`); 
-    // Your actual implementation would set properties to show a temporary banner.
-  }
+  // private showSuccessPopup(message: string) {
+  //   // This is a placeholder for your actual implementation. 
+  //   // If you don't have this method, add it.
+  //   console.log(`SUCCESS: ${message}`); 
+  //   // Your actual implementation would set properties to show a temporary banner.
+  // }
   
-  private showErrorPopup(message: string) {
-    // This is a placeholder for your actual implementation.
-    console.error(`ERROR: ${message}`);
-  }
+  // private showErrorPopup(message: string) {
+  //   // This is a placeholder for your actual implementation.
+  //   console.error(`ERROR: ${message}`);
+  // }
 
   // Alert handling logic
   private openAlert(message: string, buttons: string[]) {

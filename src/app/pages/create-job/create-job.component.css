@@ -578,7 +578,6 @@ gmp-place-autocomplete::part(input):focus {
     left: calc(-40% + 15px); /* Adjust position to align the line between circles */
     width: calc(80% - 30px); /* Width adjusted to match circle diameter */
     height: 2px;
-    background-color: #ccc;
     z-index: 0;
   }
 
