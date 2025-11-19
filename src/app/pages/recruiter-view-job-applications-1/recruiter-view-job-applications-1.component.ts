@@ -409,19 +409,20 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     const selectedCandidates = this.allCandidates.filter(c => c.isSelected);
 
     if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate.');
+      this.openAlert('Please select at least one candidate.', ['Ok']);
       return;
     }
+    
     // Add a check to ensure nextStage is not null before proceeding
     if (!this.nextStage) {
-      alert('This is the final stage, or the next stage is not defined. No invite can be sent.');
+      this.openAlert('This is the final stage, or the next stage is not defined. No invite can be sent.', ['Ok']);
       return;
     }
 
     const applicationIds = selectedCandidates.map(c => c.application_id).filter(id => id != null);
 
     if (applicationIds.length === 0) {
-        alert('Could not send invite. No valid candidate IDs were selected.');
+        this.openAlert('Could not send invite. No valid candidate IDs were selected.', ['Ok']);
         return;
     }
 
@@ -435,22 +436,19 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
       })
       .subscribe(
         () => {
-          // --- FIX #1 ---
-          // Use the 'stageName' variable we defined above.
-          alert(`${stageName} invites sent successfully.`);
+          this.openAlert(`${stageName} invites sent successfully.`, ['Ok']);
           this.fetchJobDetails();
           this.fetchInterviewStages();
         },
         (error) => {
-          // --- FIX #2 & #3 ---
-          // Use the 'stageName' variable here as well.
           console.error(`Error sending ${stageName} invites:`, error);
           const errorDetail = error.error?.error || "Please try again.";
-          alert(`Failed to send ${stageName} invites: ${JSON.stringify(errorDetail)}`);
+          this.openAlert(`Failed to send ${stageName} invites: ${JSON.stringify(errorDetail)}`, ['Ok']);
         }
       );
   }
 
+  
   toggleAll(checked: boolean) {
     this.masterChecked = checked;
     this.candidates.forEach(candidate => candidate.isSelected = checked);

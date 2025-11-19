@@ -470,20 +470,31 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       },
       error: (error) => {
         console.error('File upload error:', error);
+        // --- MODIFICATION START: Custom error handling for invalid JD ---
         const errorMessage = error?.message || 'An unknown error occurred during file processing.';
-        if (errorMessage.includes('Text extraction failed')) {
-            this.openAlert('Please provide the file in standard format and try again later', ['OK']);
+        
+        // Check for the specific error message from the backend.
+        if (errorMessage.includes('Invalid Job Description')) {
+            // Use the main alert component as requested.
+            this.openAlert('Please upload a valid JD', ['OK']);
+            // The action to clear the input is now handled in onAlertButtonClicked.
         } else {
-            this.openAlert(`File upload failed: ${errorMessage}`, ['OK']);
+            // Fallback to the original popup for other errors.
+            this.showErrorPopup(`File upload failed: ${errorMessage}`);
         }
+        // --- MODIFICATION END ---
+        
         this.isSubmitting = false;
         this.spinner.hide('main-spinner');
         this.isFileUploadCompletedSuccessfully = false;
+        
+        // This was already here and is good practice.
         this.clearFileInput();
       }
     });
     this.subscriptions.add(uploadSub);
   }
+
 
   private updateExperienceUI(): void {
     this.setExperienceRange('total', this.jobForm.value.total_experience_min, this.jobForm.value.total_experience_max);
@@ -1205,6 +1216,10 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
   onAlertButtonClicked(action: string) {
     this.showAlert = false;
+     // If the alert was for an invalid JD, clear the file input after the user clicks "OK".
+    if (this.alertMessage === 'Please upload a valid JD') {
+      this.clearFileInput();
+    }
     if (action.toLowerCase() === 'cancel' || action.toLowerCase() === 'no') {
       this.actionContext = null;
       return;
