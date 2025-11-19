@@ -744,6 +744,13 @@
   display: inline-block;
   font-style: normal;
   font-weight: 700;
+
+    /* --- Added styles for truncation --- */
+  max-width: 250px;         /* Set the limit */
+  white-space: nowrap;      /* Prevent text from wrapping */
+  overflow: hidden;         /* Hide the overflowing text */
+  text-overflow: ellipsis;  /* Add the "..." */
+  vertical-align: middle;   /* Ensures proper alignment if there are icons nearby */
 }
  
 .recruiter-view-job-applications1-fragment29 {

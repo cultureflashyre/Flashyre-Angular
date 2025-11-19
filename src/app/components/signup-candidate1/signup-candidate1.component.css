@@ -2,6 +2,11 @@
   display: contents; 
 }
 
+.signup-candidate1-password-input1::-ms-reveal,
+.signup-candidate1-password-input2::-ms-reveal {
+  display: none;
+}
+
 /* === Inspired Popup Theme === */
 
 /* 1. Full-Screen Overlay with Blur Effect */

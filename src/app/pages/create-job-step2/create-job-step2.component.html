@@ -195,7 +195,7 @@
                 <span>Generating...</span>
               } @else {
                 <span>
-                  <span class="generate-label">{{ hasGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
+                  <span class="generate-label">{{ aiQuestionsGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
                   <span class="sparkle"> ✨</span>
                 </span>
               }
@@ -234,7 +234,7 @@
     <!-- The footer remains outside the main card for consistent placement -->
     <create-job-post-footer2
       rootClassName="create-job-post-footer2root-class-name1"
-      [isNextDisabled]="!hasGenerated || isGenerating"
+      [isNextDisabled]="!questionsAreReady || isGenerating"
       (cancelClick)="onCancel()"
       (previousClick)="onPrevious()"
       (skipClick)="onSkip()"

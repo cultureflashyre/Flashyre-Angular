@@ -69,7 +69,9 @@
                   <ng-container *ngTemplateOutlet="text1"></ng-container>
                 } @else {
                   <div class="job-cards-fragment2">
-                    <span class="job-cards-text2">{{ job.company_name || 'Unknown Company' }}</span>
+                    <span class="job-cards-text2"
+                    [title]="job.company_name || 'Unknown Company'">
+                    {{ job.company_name || 'Unknown Company' }}</span>
                   </div>
                 }
               </span>

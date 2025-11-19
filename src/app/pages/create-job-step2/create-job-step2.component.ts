@@ -42,6 +42,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   isLoading: boolean = true;
   isEditMode: boolean = false;
 
+  questionsAreReady: boolean = false;
+  aiQuestionsGenerated: boolean = false;
+
   private subscriptions = new Subscription();
   
   showPopup: boolean = false;
@@ -140,16 +143,20 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
-          this.hasGenerated = response.status !== 'not_started';
+          const questionsExist = response.status !== 'not_started';
+          this.questionsAreReady = questionsExist;
 
           if (response.filename) {
             const cleanFileName = this.parseFileName(response.filename);
             this.uploadedFileName = cleanFileName;
             this.initialUploadedFileName = cleanFileName;
+            this.aiQuestionsGenerated = false; // Questions came from a file
+          } else if (questionsExist) {
+            this.aiQuestionsGenerated = true; // Questions exist but no file, so they must be AI-generated
           }
         },
         error: (err) => {
-          this.hasGenerated = false;
+          //this.hasGenerated = false;
           console.error('Failed to check MCQ status:', err);
           this.showErrorPopup('Could not verify existing assessment questions.');
         }
@@ -203,7 +210,10 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       }
       this.selectedExcelFile = file;
       this.uploadedFileName = file.name; // Update UI to show the newly selected file name
-      this.hasGenerated = true; 
+      // MODIFICATION: Enable 'Next' button, but set AI generation state to false.
+      this.questionsAreReady = true; 
+      //this.aiQuestionsGenerated = false; // This ensures the AI button label remains "Generate with AI"
+
       this.closeUploadPopup();
     }
   }
@@ -217,7 +227,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onNext(): void {
-    if (!this.hasGenerated) {
+    if (!this.questionsAreReady) {
       this.showErrorPopup('Please generate or upload questions before proceeding.');
       return;
     }
@@ -325,8 +335,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       }))
       .subscribe({
         next: (response) => {
-          this.hasGenerated = true;
-          this.selectedExcelFile = null;
+          // MODIFICATION: Set both states to true after successful AI generation.
+          this.questionsAreReady = true;
+          this.aiQuestionsGenerated = true;
+
+          // MODIFICATION: Clear any previously uploaded file to avoid confusion.
+          //this.selectedExcelFile = null;
+          //this.uploadedFileName = null;
+          //this.initialUploadedFileName = null;
+
           this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
         },
         error: (err) => {

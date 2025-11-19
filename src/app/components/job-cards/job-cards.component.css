@@ -133,6 +133,14 @@
   color: #18191C;
   font-style: normal;
   font-weight: 500;
+
+    /* --- Added styles for truncation --- */
+  max-width: 150px;         /* Set the desired limit */
+  white-space: nowrap;      /* Prevent the text from wrapping to a new line */
+  overflow: hidden;         /* Hide the content that overflows the max-width */
+  text-overflow: ellipsis;  /* Display "..." for the hidden text */
+  display: inline-block;    /* Required for text-overflow to work on a span */
+  vertical-align: middle;   /* Ensures proper vertical alignment with adjacent elements */
 }
  
 .job-cards-job-location-text {
