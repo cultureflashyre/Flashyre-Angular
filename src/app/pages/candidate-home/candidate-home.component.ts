@@ -481,18 +481,21 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
 
     forkJoin({
         applied: this.authService.getAppliedJobs(),
-        disliked: this.authService.getDislikedJobs(userId) 
+        disliked: this.authService.getDislikedJobs(userId) // New API call
     }).pipe(
         takeUntil(this.destroy$)
     ).subscribe({
         next: ({ applied, disliked }) => {
-            const appliedJobIds = applied.applied_job_ids || [];
-            const dislikedJobIds = disliked.disliked_jobs.map((job: any) => job.job_id?.toString()) || []; // Use optional chaining here too
+            const appliedJobIds = new Set(applied.applied_job_ids || []);
+            // The API now returns a simple array of IDs.
+            const dislikedJobIds = new Set(disliked.disliked_jobs || []);
 
+            // Filter the master list of jobs ONCE on page load.
             this.jobs = jobs.filter(job =>
-                job.job_id !== undefined && job.job_id !== null && // Ensure job_id exists
-                !appliedJobIds.includes(job.job_id) &&
-                !dislikedJobIds.includes(job.job_id.toString())
+                job.job_id !== undefined &&
+                job.job_id !== null &&
+                !appliedJobIds.has(job.job_id) &&
+                !dislikedJobIds.has(job.job_id) // Filter out disliked jobs
             );
 
             this.filteredJobs = [...this.jobs];
@@ -503,7 +506,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (error) => {
             console.error('Error fetching applied/disliked jobs, showing all jobs as a fallback:', error);
-            this.jobs = jobs.filter(job => job.job_id !== undefined && job.job_id !== null); // Add this filter
+            this.jobs = jobs.filter(job => job.job_id !== undefined && job.job_id !== null);
             this.filteredJobs = [...this.jobs];
             this.currentPage = 0;
             this.displayedJobs = [];
@@ -511,6 +514,7 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
             this.isLoading = false;
         }
     });
+    // --- MODIFICATION END ---
   }
 
   private loadNextPage(): void {
