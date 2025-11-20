@@ -120,6 +120,33 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     
   }
 
+/**
+   * Formats the assessment score to ensure decimal places are displayed correctly.
+   * @param score The raw assessment score from the candidate data.
+   * @returns The formatted score as a string (e.g., "85.5%") or "N/A".
+   */
+  formatAssessmentScore(score: any): string {
+    // 1. Check if the score is null, undefined, or an empty string.
+    if (score == null || score === '') {
+      return 'N/A';
+    }
+
+    // 2. Convert the score to a number. This handles cases where it might be a string like "85.50".
+    const numericScore = Number(score);
+
+    // 3. Check if the result is a valid number. If not, return 'N/A'.
+    if (isNaN(numericScore)) {
+      return 'N/A';
+    }
+
+    // 4. Format the number to a fixed number of decimal places (e.g., 2),
+    //    and then use parseFloat to remove any trailing zeros (e.g., 85.00 -> 85, 85.50 -> 85.5).
+    const formattedScore = parseFloat(numericScore.toFixed(2));
+
+    // 5. Return the final formatted string with a percentage sign.
+    return `${formattedScore}%`;
+  }
+
   ngOnInit() {
     this.jobId = this.route.snapshot.paramMap.get('jobId');
     

@@ -186,6 +186,7 @@
           <button
             id="generate-questions-button"
             class="generate-button"
+            [ngClass]="{ 'regenerate': aiQuestionsGenerated }"
             (click)="onGenerateAi()"
             [disabled]="isGenerating"
             [title]="isGenerating ? 'Generating...' : 'Generate questions using AI'"
@@ -214,15 +215,20 @@
               height="24"
               viewBox="0 0 24 24"
               class="upload-icon"
-              fill="none"
+              fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M..."></path>
+              <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
               <!-- Your SVG path -->
             </svg>
             <span id="upload-text" class="upload-text">Upload from Device</span>
           </button>
         </div>
+        @if (showAiSuccessMessage) {
+    <div class="ai-success-message">
+      AI questions have been generated
+    </div>
+  }
         @if (uploadedFileName) {
           <div class="uploaded-file-name">
             <strong>Uploaded file:</strong> {{ uploadedFileName }}
@@ -270,5 +276,3 @@
     }
   </div>
 </div>
-
-

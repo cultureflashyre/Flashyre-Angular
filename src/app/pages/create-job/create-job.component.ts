@@ -1101,11 +1101,51 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
   formatText(command: string, value: string | null = null): void {
     const editor = this.document.getElementById('editor');
-    if (editor && this.document.queryCommandSupported(command)) {
-      this.document.execCommand(command, false, value);
-      editor.focus();
+    if (!editor || !this.document.queryCommandSupported(command)) {
+        return;
     }
-  }
+
+    // Special handling for the highlight command to make it a toggle
+    if (command === 'hiliteColor') {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+            // If no text is selected, do nothing for highlight
+            this.document.execCommand(command, false, value);
+            editor.focus();
+            return;
+        }
+
+        const anchorNode = selection.anchorNode;
+        if (anchorNode) {
+            // Get the parent element of the selected text
+            const parentElement = anchorNode.nodeType === Node.TEXT_NODE ? anchorNode.parentElement : anchorNode as HTMLElement;
+            
+            if (parentElement) {
+                // Get the final, computed background color
+                const computedStyle = window.getComputedStyle(parentElement);
+                const currentColor = computedStyle.backgroundColor;
+
+                // The standard RGB value for yellow is rgb(255, 255, 0)
+                if (currentColor === 'rgb(255, 255, 0)') {
+                    // If it's already yellow, remove the highlight by setting a transparent background
+                    this.document.execCommand(command, false, 'transparent');
+                } else {
+                    // Otherwise, apply the yellow highlight
+                    this.document.execCommand(command, false, value);
+                }
+            }
+        }
+    } else {
+        // For all other commands, execute them normally.
+        this.document.execCommand(command, false, value);
+    }
+
+    editor.focus();
+
+    // Manually trigger updates to ensure Angular's form model is in sync.
+    this.updateJobDescriptionFromEditor({ target: editor } as unknown as Event);
+    this.checkEmpty('editor');
+}
 
   onLogoutClick() {
     this.corporateAuthService.logout();

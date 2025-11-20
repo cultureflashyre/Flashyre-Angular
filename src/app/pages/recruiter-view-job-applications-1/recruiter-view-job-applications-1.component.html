@@ -695,7 +695,7 @@
           class="recruiter-view-job-applications1-matching-score-percentage-text"
         >
           <!-- Display the real score from the database, defaulting to 0 if null/undefined, and add a '%' sign. -->
-          {{ (candidate.matching_score || 0) + '%' }}
+          {{ (candidate.matching_score || 0) | number:'1.0-2' }}%
         </span>
       </div>
       <div
@@ -706,7 +706,7 @@
           id="assessment-score-percentage-text"
           class="recruiter-view-job-applications1-matching-score-percentage-text"
         >
-          {{ candidate.assessment_score != null ? candidate.assessment_score + '%' : 'N/A' }}
+          {{ candidate.assessment_score != null ? (candidate.assessment_score | number:'1.0-2') + '%' : 'N/A' }}
         </span>
       </div>
                 <div

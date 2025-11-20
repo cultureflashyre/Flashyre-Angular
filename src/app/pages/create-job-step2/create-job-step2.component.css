@@ -567,6 +567,152 @@
   font-weight: 600;  /* Bold */
 }
 
+/* Button styling with gradient borders and text */
+.generate-button {
+  position: relative;
+  padding: 12px 24px;
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-clip: padding-box;
+}
+
+/* Initial state - purple/pink/blue gradient */
+.generate-button:not(.regenerate):not(:disabled) {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(90deg, #E489A9, #6D68E7, #76A7DA) border-box;
+}
+
+.generate-button:not(.regenerate):not(:disabled) .generate-text {
+  background: linear-gradient(90deg, #E489A9, #6D68E7, #76A7DA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Regenerate state - pink/green gradient */
+.generate-button.regenerate:not(:disabled) {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(90deg, #E489A9, #3AC14A, #1F882B) border-box;
+}
+
+.generate-button.regenerate:not(:disabled) .generate-text {
+  background: linear-gradient(90deg, #E489A9, #3AC14A, #1F882B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Disabled/Generating state - greyed out */
+.generate-button:disabled {
+  background: #f5f5f5;
+  border: 2px solid #d0d0d0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.generate-button:disabled .generate-text {
+  color: #999;
+  background: none;
+  -webkit-text-fill-color: #999;
+}
+
+.generate-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sparkle {
+  font-size: 20px;
+}
+
+/* Upload button styling */
+.upload-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.upload-button:hover:not(:disabled) {
+  border-color: #6D68E7;
+  background: #f8f9ff;
+}
+
+.upload-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Success message styling */
+.ai-success-message {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #e8f5e9;
+  border-left: 4px solid #3AC14A;
+  border-radius: 4px;
+  color: #1F882B;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-success-message::before {
+  content: '✓';
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Buttons container */
+.buttons-container {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Additional styles for the page */
+.questions-section {
+  padding: 24px;
+}
+
+.questions-title {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.uploaded-file-name {
+  margin-top: 12px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666;
+}
+
 /* Media queries for responsiveness */
 @media(max-width: 1200px) {
   .admin-create-job-step2-container2 {

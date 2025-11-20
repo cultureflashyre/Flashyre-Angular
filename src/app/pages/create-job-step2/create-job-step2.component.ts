@@ -64,6 +64,9 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   // This helps differentiate between a saved state and a new user selection.
   private initialUploadedFileName: string | null = null;
 
+  showAiSuccessMessage: boolean = false;
+
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -105,6 +108,10 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       this.router.navigate(['/create-job']);
       return;
     }
+    const storedAiStatus = localStorage.getItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
+  if (storedAiStatus === 'true') {
+    this.aiQuestionsGenerated = true;
+  }
 
     this.checkInitialMcqStatus();
     this.loadUserProfile();
@@ -281,76 +288,95 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   }
 
   onAlertButtonClicked(action: string) {
-    this.showAlert = false;
-    switch (action.toLowerCase()) {
-      case 'skip':
-        this.onSkipConfirmed();
-        break;
-      case 'yes, cancel':
-        this.onCancelConfirmed();
-        break;
-      case 'save & exit':
-        this.onSaveDraftConfirmed();
-        break;
-      // MODIFICATION: Handle the 'Continue' action from the re-upload confirmation.
-      case 'continue':
-        this.openUploadPopup(); // Opens the upload card after user confirms.
-        break;
-    }
+  this.showAlert = false;
+  switch (action.toLowerCase()) {
+    case 'ok':
+      // Just close the alert, user can proceed
+      break;
+    case 'skip':
+      this.onSkipConfirmed();
+      break;
+    case 'yes, cancel':
+      this.onCancelConfirmed();
+      break;
+    case 'save & exit':
+      this.onSaveDraftConfirmed();
+      break;
+    case 'continue':
+      this.openUploadPopup();
+      break;
   }
+}
   
   private onSkipConfirmed(): void {
     this.router.navigate(['/create-job-step3']);
   }
 
   private onCancelConfirmed(): void {
-    this.workflowService.clearWorkflow();
-    const message = this.isEditMode ? 'Job post editing cancelled.' : 'Job post creation cancelled.';
-    this.showSuccessPopup(message);
-    setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
+  // ADD THIS LINE
+  if (this.jobUniqueId) {
+    localStorage.removeItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
   }
+  // END OF ADDED LINE
+  this.workflowService.clearWorkflow();
+  const message = this.isEditMode ? 'Job post editing cancelled.' : 'Job post creation cancelled.';
+  this.showSuccessPopup(message);
+  setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
+}
+
   
   private onSaveDraftConfirmed(): void {
-    this.workflowService.clearWorkflow();
-    this.showSuccessPopup('Your draft has been saved.');
-    setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
+  // ADD THIS LINE
+  if (this.jobUniqueId) {
+    localStorage.removeItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
   }
+  // END OF ADDED LINE
+  this.workflowService.clearWorkflow();
+  this.showSuccessPopup('Your draft has been saved.');
+  setTimeout(() => this.router.navigate(['/job-post-list']), 2000);
+}
   
   // --- Unchanged methods from here ---
 
   onGenerateAi(): void {
-    if (!this.jobUniqueId || this.isGenerating) return;
-    const token = this.corporateAuthService.getJWTToken();
-    if (!token) {
-      this.showErrorPopup('Authentication error. Please log in again.');
-      this.router.navigate(['/login']);
-      return;
-    }
-    this.isGenerating = true;
-    this.spinner.show('ai-spinner');
-    this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
-      .pipe(finalize(() => {
-        this.isGenerating = false;
-        this.spinner.hide('ai-spinner');
-      }))
-      .subscribe({
-        next: (response) => {
-          // MODIFICATION: Set both states to true after successful AI generation.
-          this.questionsAreReady = true;
-          this.aiQuestionsGenerated = true;
-
-          // MODIFICATION: Clear any previously uploaded file to avoid confusion.
-          //this.selectedExcelFile = null;
-          //this.uploadedFileName = null;
-          //this.initialUploadedFileName = null;
-
-          this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
-        },
-        error: (err) => {
-          this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
-        }
-      });
+  if (!this.jobUniqueId || this.isGenerating) return;
+  const token = this.corporateAuthService.getJWTToken();
+  if (!token) {
+    this.showErrorPopup('Authentication error. Please log in again.');
+    this.router.navigate(['/login']);
+    return;
   }
+  
+  this.isGenerating = true;
+  this.showAiSuccessMessage = false; // Hide message during generation
+  this.spinner.show('ai-spinner');
+  
+  this.jobDescriptionService.generateMcqsForJob(this.jobUniqueId, token)
+    .pipe(finalize(() => {
+      this.isGenerating = false;
+      this.spinner.hide('ai-spinner');
+    }))
+    .subscribe({
+      next: (response) => {
+        // Set states after successful AI generation
+        this.questionsAreReady = true;
+        this.aiQuestionsGenerated = true;
+        this.showAiSuccessMessage = true; // Show success message below button
+
+        localStorage.setItem(`aiQuestionsGenerated_${this.jobUniqueId}`, 'true');
+
+
+        // Show alert popup
+        this.openAlert('AI Questions have been generated', ['OK']);
+        
+        // Optional: Also show the toast popup
+        this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
+      },
+      error: (err) => {
+        this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
+      }
+    });
+}
 
   showSuccessPopup(message: string) {
     this.popupMessage = message;
