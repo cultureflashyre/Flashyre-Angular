@@ -25,7 +25,7 @@ export interface JobDetails {
     secondary: Skill[];
   };
   job_description: string;
-  status: 'draft' | 'final';
+  status: 'draft' | 'final' | 'pause' | 'deleted';
   created_at?: string; // ISO date string, optional as it's read-only
   updated_at?: string; // ISO date string, optional as it's read-only
 }

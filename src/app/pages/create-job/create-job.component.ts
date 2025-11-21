@@ -1209,7 +1209,18 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       };
     }
 
-    draftPayload['status'] = 'draft';
+    // draftPayload['status'] = 'draft';
+
+    // Check the original status of the job post when it was loaded for editing.
+const originalStatus = (this.jobData as JobDetails)?.status;
+
+// If the user started editing a job that was already paused, keep the status as 'pause'.
+// Otherwise, for new jobs or jobs from other tabs, set the status to 'draft'.
+if (this.isEditMode && (originalStatus as string) === 'pause') {
+    draftPayload['status'] = 'pause';
+} else {
+  draftPayload['status'] = 'draft';
+}
 
     const userProfileString = localStorage.getItem('userProfile');
     let companyName = 'Flashyre'; 
