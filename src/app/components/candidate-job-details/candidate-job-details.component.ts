@@ -154,6 +154,12 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       case 'remove dislike':
         this.onDislikeConfirmed();
         break;
+      
+      // Add this new case to handle the revoke button click
+      case 'revoke':
+        this.confirmRevocation();
+        break;
+
       case 'cancel':
       case 'close':
         // Do nothing
@@ -504,10 +510,16 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
       });
   }
 
-  revokeApplication(): void {
-    if (!this.job.job_id || !window.confirm('Do you want to Revoke this application?')) {
+ revokeApplication(): void {
+    if (!this.job?.job_id) {
       return;
     }
+    // This now opens your custom alert instead of window.confirm
+    this.openAlert('Are you sure you want to revoke this application?', ['Cancel', 'Revoke']);
+  }
+
+  private confirmRevocation(): void {
+    if (!this.job?.job_id) return;
 
     this.isProcessing = true;
     this.authService.revokeApplication(this.job.job_id)
@@ -517,15 +529,18 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
           this.isProcessing = false;
           this.jobService.clearCache();
           this.applicationRevoked.emit(this.job.job_id);
-          alert('Application revoked successfully!');
-          this.resetJob(); 
+          // Replaced browser alert() with your custom component
+          this.openAlert('Application revoked successfully!', ['Close']);
+          this.resetJob();
         },
         error: (err) => {
           this.isProcessing = false;
-          alert(err.error?.error || 'Failed to revoke application');
+          // Replaced browser alert() with your custom component
+          this.openAlert(err.error?.error || 'Failed to revoke application', ['Close']);
         }
       });
   }
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

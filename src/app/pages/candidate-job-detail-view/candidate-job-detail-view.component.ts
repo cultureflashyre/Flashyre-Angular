@@ -16,6 +16,7 @@ import { AlertMessageComponent } from 'src/app/components/alert-message/alert-me
 import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
 import { JobCardsComponent } from 'src/app/components/job-cards/job-cards.component';
 import { CandidateJobDetailsComponent } from 'src/app/components/candidate-job-details/candidate-job-details.component';
+import { AuthService } from 'src/app/services/candidate.service';
 
 
 @Component({
@@ -109,6 +110,7 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private jobService: JobsService,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -310,42 +312,42 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
       recommended: this.jobService.fetchJobs(),
       saved: this.jobService.fetchSavedJobs(userId),
       applied: this.jobService.fetchAppliedJobDetails(),
-      assessments: this.jobService.fetchAssessments() // Fetch all assessments
+      assessments: this.jobService.fetchAssessments(),
+      disliked: this.authService.getDislikedJobs(userId) // New API call from JobService
     }).subscribe({
       next: (results) => {
-        // --- [ADD THIS LINE] ---
-        this.allAssessments = results.assessments; // Store the fetched assessments
+        this.allAssessments = results.assessments;
 
-        // --- NEW FUNCTIONALITY 1: PERSISTENT FILTERING ---
-        const savedAndAppliedIds = new Set([
-          ...results.saved.map(j => j.job_id),
-          ...results.applied.map(j => j.job_id)
-        ]);
+        // Create Sets for efficient filtering.
+        const dislikedJobIds = new Set(results.disliked.disliked_jobs || []);
+        const savedJobIds = new Set(results.saved.map(j => j.job_id));
+        const appliedJobIds = new Set(results.applied.map(j => j.job_id));
 
-        const filteredRecommended = results.recommended.filter(job => !savedAndAppliedIds.has(job.job_id));
+        // 1. Filter Recommended Jobs: Must not be disliked, saved, or applied.
+        const filteredRecommended = results.recommended.filter(job =>
+          !dislikedJobIds.has(job.job_id) &&
+          !savedJobIds.has(job.job_id) &&
+          !appliedJobIds.has(job.job_id)
+        );
 
-        // --- NEW FUNCTIONALITY 2: DATE SORTING ---
-        // Sort recommended jobs by posted date (descending)
+        // 2. Filter Saved Jobs: Must not be disliked.
+        const filteredSaved = results.saved.filter(job => !dislikedJobIds.has(job.job_id));
+
+        // 3. Filter Applied Jobs: Must not be disliked.
+        const filteredApplied = results.applied.filter(job => !dislikedJobIds.has(job.job_id));
+
+        // Sort the filtered lists
         filteredRecommended.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        
-        // Sort saved jobs by saved date (descending) - assuming 'saved_at' property exists
-        results.saved.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
-        
-        // Sort applied jobs by applied date (descending) - assuming 'applied_at' property exists
-        results.applied.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+        filteredSaved.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
+        filteredApplied.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
 
-        // Populate both master and filtered lists with the processed data
+        // Populate master lists with the correctly filtered and sorted data.
         this.masterRecommendedJobs = this.filteredRecommendedJobs = filteredRecommended;
-        this.masterSavedJobs = this.filteredSavedJobs = results.saved;
-        this.masterAppliedJobs = this.filteredAppliedJobs = results.applied;
+        this.masterSavedJobs = this.filteredSavedJobs = filteredSaved;
+        this.masterAppliedJobs = this.filteredAppliedJobs = filteredApplied;
         
-        console.log('All jobs fetched, filtered, and sorted successfully:', {
-          recommended: this.masterRecommendedJobs.length,
-          saved: this.masterSavedJobs.length,
-          applied: this.masterAppliedJobs.length
-        });
+        console.log('All jobs fetched, filtered by dislike status, and sorted successfully.');
 
-        // Run the filter pipeline to apply any search filters and update the view
         this.runFilterPipeline();
         this.isLoading = false;
       },
@@ -353,12 +355,14 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
         console.error('Failed to fetch all jobs:', err);
         this.errorMessage = 'Failed to load job data. Please try again later.';
         this.isLoading = false;
+        // Reset all lists on error
         this.masterRecommendedJobs = this.filteredRecommendedJobs = [];
         this.masterSavedJobs = this.filteredSavedJobs = [];
         this.masterAppliedJobs = this.filteredAppliedJobs = [];
         this.updateJobsToDisplay();
       }
     });
+    // --- MODIFICATION END ---
   }
 
   private setInitialJobSelection(): void {

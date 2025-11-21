@@ -80,7 +80,7 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
       if (interaction.jobId === this.jobId) {
         if (interaction.type === 'dislike') {
           this.isDisliked = interaction.state;
-          this.shouldRender = !this.isDisliked;
+          // this.shouldRender = !this.isDisliked;
         } else if (interaction.type === 'save') {
           this.isSaved = interaction.state;
         }
@@ -95,16 +95,16 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
       const cachedDislikedJobs = await this.getDislikedJobsFromCache(userId);
       if (cachedDislikedJobs) {
         this.isDisliked = cachedDislikedJobs.includes(this.jobId);
-        this.shouldRender = !this.isDisliked;
+        // this.shouldRender = !this.isDisliked;
         this.cdr.detectChanges();
       }
 
       // Fetch latest interaction statuses from API
       this.authService.getDislikedJobs(userId).subscribe({
         next: (response: any) => {
-          const dislikedJobs = response.disliked_jobs.map((job: any) => job.job_id?.toString() || '');
+          const dislikedJobs = response.disliked_jobs.map((id: number) => id.toString());
           this.isDisliked = dislikedJobs.includes(this.jobId);
-          this.shouldRender = !this.isDisliked;
+          // this.shouldRender = !this.isDisliked;
           this.cacheDislikedJobs(userId, dislikedJobs); // Update cache
           this.cdr.detectChanges();
         },
