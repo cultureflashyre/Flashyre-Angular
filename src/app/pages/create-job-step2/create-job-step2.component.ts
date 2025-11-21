@@ -109,9 +109,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
       return;
     }
     const storedAiStatus = localStorage.getItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
-  if (storedAiStatus === 'true') {
-    this.aiQuestionsGenerated = true;
-  }
+    if (storedAiStatus === 'true') {
+        this.aiQuestionsGenerated = true;
+        this.showAiSuccessMessage = true; // Also show the message
+    }
+
+    const storedFileName = localStorage.getItem(`uploadedFileName_${this.jobUniqueId}`);
+    if (storedFileName) {
+        this.uploadedFileName = storedFileName;
+    }
 
     this.checkInitialMcqStatus();
     this.loadUserProfile();
@@ -153,17 +159,19 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
           const questionsExist = response.status !== 'not_started';
           this.questionsAreReady = questionsExist;
 
-          if (response.filename) {
+          // EDIT: THIS IS THE CRITICAL LOGIC CHANGE
+          // Get the user's most recent action from the browser session.
+          const sessionAiStatus = localStorage.getItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
+
+          // ONLY restore the filename from the server IF the user has NOT generated AI
+          // in their current session. This gives session actions priority over saved state.
+          if (response.filename && sessionAiStatus !== 'true') {
             const cleanFileName = this.parseFileName(response.filename);
             this.uploadedFileName = cleanFileName;
             this.initialUploadedFileName = cleanFileName;
-            this.aiQuestionsGenerated = false; // Questions came from a file
-          } else if (questionsExist) {
-            this.aiQuestionsGenerated = true; // Questions exist but no file, so they must be AI-generated
           }
         },
         error: (err) => {
-          //this.hasGenerated = false;
           console.error('Failed to check MCQ status:', err);
           this.showErrorPopup('Could not verify existing assessment questions.');
         }
@@ -254,6 +262,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
             if (response.uploaded_mcqs) {
               this.workflowService.setUploadedMcqs(response.uploaded_mcqs);
             }
+            localStorage.setItem(`uploadedFileName_${this.jobUniqueId}`, this.selectedExcelFile!.name);
             this.showSuccessPopup('File uploaded and questions processed!');
             this.router.navigate(['/create-job-step3']);
           },
@@ -316,6 +325,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   // ADD THIS LINE
   if (this.jobUniqueId) {
     localStorage.removeItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
+    localStorage.removeItem(`uploadedFileName_${this.jobUniqueId}`);
   }
   // END OF ADDED LINE
   this.workflowService.clearWorkflow();
@@ -329,6 +339,7 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   // ADD THIS LINE
   if (this.jobUniqueId) {
     localStorage.removeItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
+    localStorage.removeItem(`uploadedFileName_${this.jobUniqueId}`);
   }
   // END OF ADDED LINE
   this.workflowService.clearWorkflow();
@@ -358,25 +369,24 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     }))
     .subscribe({
       next: (response) => {
-        // Set states after successful AI generation
-        this.questionsAreReady = true;
-        this.aiQuestionsGenerated = true;
-        this.showAiSuccessMessage = true; // Show success message below button
+          this.questionsAreReady = true;
+          this.aiQuestionsGenerated = true;    // Set button state to 'Regenerate'
+          this.showAiSuccessMessage = true; // Show the success message
 
-        localStorage.setItem(`aiQuestionsGenerated_${this.jobUniqueId}`, 'true');
+          // Persist the AI generation state in localStorage
+          this.uploadedFileName = null;
+          localStorage.setItem(`aiQuestionsGenerated_${this.jobUniqueId}`, 'true');
 
+          // Clear any selected file that hasn't been uploaded yet
+          this.selectedExcelFile = null;
 
-        // Show alert popup
-        this.openAlert('AI Questions have been generated', ['OK']);
-        
-        // Optional: Also show the toast popup
-        this.showSuccessPopup(response.message || 'Assessment questions generated successfully!');
-      },
-      error: (err) => {
-        this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
-      }
-    });
-}
+          this.openAlert('AI Questions have been generated successfully!', ['OK']);
+        },
+        error: (err) => {
+          this.showErrorPopup(`Error: ${err.message || 'Could not generate questions.'}`);
+        }
+      });
+  }
 
   showSuccessPopup(message: string) {
     this.popupMessage = message;

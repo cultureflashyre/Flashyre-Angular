@@ -189,18 +189,18 @@
             [ngClass]="{ 'regenerate': aiQuestionsGenerated }"
             (click)="onGenerateAi()"
             [disabled]="isGenerating"
-            [title]="isGenerating ? 'Generating...' : 'Generate questions using AI'"
+            [title]="isGenerating ? 'Generating...' : (aiQuestionsGenerated ? 'Regenerate questions using AI' : 'Generate questions using AI')"
           >
             <span id="generate-questions-text" class="generate-text">
-              @if (isGenerating) {
-                <span>Generating...</span>
-              } @else {
-                <span>
-                  <span class="generate-label">{{ aiQuestionsGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
-                  <span class="sparkle"> ✨</span>
-                </span>
-              }
-            </span>
+    @if (isGenerating) {
+      <span>Generating...</span>
+    } @else {
+      <span>
+        <span class="generate-label">{{ aiQuestionsGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
+        <span class="sparkle"> ✨</span>
+      </span>
+    }
+  </span>
           </button>
 
           <button
@@ -225,15 +225,15 @@
           </button>
         </div>
         @if (showAiSuccessMessage) {
-    <div class="ai-success-message">
-      AI questions have been generated
-    </div>
-  }
-        @if (uploadedFileName) {
-          <div class="uploaded-file-name">
-            <strong>Uploaded file:</strong> {{ uploadedFileName }}
-          </div>
-        }
+  <div class="ai-success-message">
+    AI questions have been generated.
+  </div>
+}
+@if (uploadedFileName) {
+  <div class="uploaded-file-name">
+    <strong>Uploaded file:</strong> {{ uploadedFileName }}
+  </div>
+}
       </div>
     </div>
 
