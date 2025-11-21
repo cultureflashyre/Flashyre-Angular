@@ -72,6 +72,8 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   showSuccessPopup = false;
   successPopupMessage = '';
   private successPopupTimeout: any;
+
+  private assessmentEndTime: number;
   // ### MODIFICATION END ###
 
   showWarningPopup = false;
@@ -248,6 +250,8 @@ fetchAssessmentData(assessmentId: number): void {
       } else if (response.status === 'SUCCESS') {
         console.log("DEBUG: [Component] Condition MET: response.status is 'SUCCESS'.");
         this.assessmentData = response;
+
+        const savedState = this.loadState();
         
         // ... (rest of your success logic)
         try {
@@ -296,9 +300,41 @@ fetchAssessmentData(assessmentId: number): void {
 
         this.totalSections = this.sections.length;
         this.timer = response.total_assessment_duration * 60;
-        this.trialAssessmentService.updateTimer(this.timer);
-        this.startTimer();
-        this.selectSection(this.sections[0]);
+    if (savedState && savedState.assessmentEndTime) {
+      this.assessmentEndTime = savedState.assessmentEndTime;
+      const remainingTime = Math.max(0, Math.floor((this.assessmentEndTime - Date.now()) / 1000));
+      this.trialAssessmentService.updateTimer(remainingTime);
+    } else {
+      this.assessmentEndTime = Date.now() + (this.timer * 1000);
+      this.trialAssessmentService.updateTimer(this.timer);
+    }
+
+    if (savedState) {
+      // Restore the state as before
+      this.userResponses = savedState.userResponses || {};
+      this.selectedAnswers = savedState.selectedAnswers || {};
+      this.expiredSections = new Set(savedState.expiredSections || []);
+      this.currentSectionIndex = savedState.currentSectionIndex || 0;
+      this.currentQuestionIndex = savedState.currentQuestionIndex || 0;
+
+      // Restore the remaining time for each section
+      this.sectionTimers = savedState.sectionTimers || {};
+    } else {
+      // If no saved state, initialize section timers with their full duration
+      this.sections.forEach(section => {
+        const sectionKey = section.section_id || section.coding_id_id;
+        if (sectionKey) {
+          this.sectionTimers[sectionKey] = section.duration * 60;
+        }
+      });
+    }
+
+    this.startTimer();
+    
+    this.selectSection(this.sections[this.currentSectionIndex]);
+    if (this.sections[this.currentSectionIndex]?.type === 'mcq') {
+      this.navigateToQuestion(this.currentQuestionIndex);
+    }
 
       } else {
         // This is the catch-all that is likely being triggered
@@ -356,30 +392,54 @@ fetchAssessmentData(assessmentId: number): void {
   }
 
   decrementTimer(): void {
-    this.timerInterval = setInterval(() => {
-      if (this.timer > 0) this.trialAssessmentService.updateTimer(this.timer - 1);
-      else clearInterval(this.timerInterval);
-    }, 1000);
-  }
+  this.timerInterval = setInterval(() => {
+    const remainingTime = Math.max(0, Math.floor((this.assessmentEndTime - Date.now()) / 1000));
+    this.trialAssessmentService.updateTimer(remainingTime);
+
+    // Periodically save state to keep timers in sync
+    if (this.timer > 0 && this.timer % 15 === 0) {
+        this.saveState();
+    }
+
+    if (remainingTime <= 0) {
+      clearInterval(this.timerInterval);
+    }
+  }, 1000);
+}
+
 
   startSectionTimer(): void {
-    if (this.sectionTimerInterval) clearInterval(this.sectionTimerInterval);
-    this.sectionTimerInterval = setInterval(() => {
-      if (this.sectionTimer > 0) {
-        this.sectionTimer--;
-        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+  // Clear any existing timer to ensure only one is running
+  if (this.sectionTimerInterval) clearInterval(this.sectionTimerInterval);
+
+  this.sectionTimerInterval = setInterval(() => {
+    if (this.sectionTimer > 0) {
+      // Decrement the timer by one second
+      this.sectionTimer--;
+
+      // Update the stored value for this section
+      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+      if(sectionKey) {
         this.sectionTimers[sectionKey] = this.sectionTimer;
-        console.log(`DEBUG: [Component] Section Timer for section ${sectionKey}: ${this.sectionTimer} seconds remaining.`);
-      } else {
-        clearInterval(this.sectionTimerInterval);
-        this.sectionTimerInterval = null;
-        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-        this.expiredSections.add(sectionKey);
-        if (this.currentSectionIndex < this.totalSections - 1) this.nextSection();
-        else this.terminateTest();
       }
-    }, 1000);
-  }
+      
+    } else {
+      // Time for this section has run out
+      clearInterval(this.sectionTimerInterval);
+      this.sectionTimerInterval = null;
+      
+      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+      this.expiredSections.add(sectionKey);
+      this.saveState(); // Save the state now that the section has expired
+
+      if (this.currentSectionIndex < this.totalSections - 1) {
+        this.nextSection();
+      } else {
+        this.terminateTest();
+      }
+    }
+  }, 1000);
+}
 
   isSectionAccessible(section: any): boolean {
     const sectionKey = section.section_id || section.coding_id_id;
@@ -387,47 +447,50 @@ fetchAssessmentData(assessmentId: number): void {
   }
 
   selectSection(section: any): void {
-    const sectionKey = section.section_id || section.coding_id_id;
-    if (this.expiredSections.has(sectionKey)) {
-      alert('This section time has expired. You cannot return to it.');
-      return;
-    }
-    
-    if (this.currentSection) {
-      const currentSectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-      this.sectionTimers[currentSectionKey] = this.sectionTimer;
-    }
-
-    this.currentSection = section;
-    this.currentSectionIndex = this.sections.indexOf(section);
-    this.isCodingSection = section.type === 'coding';
-    this.showTestResults = false; 
-
-    if (!this.isCodingSection) {
-      this.currentQuestions = section.questions;
-      this.currentQuestionIndex = 0;
-      this.updateCurrentQuestion();
-      this.totalQuestionsInSection = this.currentQuestions.length;
-    } else {
-        // MODIFICATION: When selecting a coding section, load its specific, saved results.
-        // If no results are saved for this problem, default to an empty array.
-        this.results = this.codingResults[this.currentSection.coding_id_id] || [];
-        // Decide if the results pane should be visible (e.g., if there are any results to show)
-        if (this.results.length > 0) {
-            this.showTestResults = true;
-        }
-    }
-
-    if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
-      this.sectionTimer = this.sectionTimers[sectionKey];
-    } else {
-      this.sectionTimer = section.duration * 60;
-      this.sectionTimers[sectionKey] = this.sectionTimer;
-    }
-
-    clearInterval(this.sectionTimerInterval);
-    this.startSectionTimer();
+  const sectionKeyToTest = section.section_id || section.coding_id_id;
+  if (this.expiredSections.has(sectionKeyToTest)) {
+    alert('This section time has expired. You cannot return to it.');
+    return;
   }
+  
+  if (this.sectionTimerInterval) {
+    clearInterval(this.sectionTimerInterval);
+  }
+
+  this.currentSection = section;
+  this.currentSectionIndex = this.sections.indexOf(section);
+  this.isCodingSection = section.type === 'coding';
+  this.showTestResults = false; 
+
+  if (!this.isCodingSection) {
+    this.currentQuestions = section.questions;
+    // On section change, default to the first question unless state is restored elsewhere
+    this.currentQuestionIndex = (this.currentSectionIndex === this.sections.indexOf(section)) ? this.currentQuestionIndex : 0;
+    this.updateCurrentQuestion();
+    this.totalQuestionsInSection = this.currentQuestions.length;
+  } else {
+      this.results = this.codingResults[this.currentSection.coding_id_id] || [];
+      if (this.results.length > 0) {
+          this.showTestResults = true;
+      }
+  }
+
+  // ### MODIFICATION START: Section timer persistence logic ###
+  const sectionKey = section.section_id || section.coding_id_id;
+
+  // Set the active timer to the remaining seconds for the new section
+  if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
+    this.sectionTimer = this.sectionTimers[sectionKey];
+  } else {
+    // This handles both expired sections (0) and unvisited sections
+    this.sectionTimer = this.sectionTimers[sectionKey] || 0;
+  }
+  
+  // Start the countdown for the newly selected section
+  this.startSectionTimer();
+  this.saveState(); // Save state on every section change
+  // ### MODIFICATION END ###
+}
 
   updateCurrentQuestion(): void {
     if (this.currentQuestions && this.currentQuestions.length > 0) {
@@ -487,16 +550,19 @@ fetchAssessmentData(assessmentId: number): void {
     if (index >= 0 && index < this.currentQuestions.length) {
       this.currentQuestionIndex = index;
       this.updateCurrentQuestion();
+      this.saveState();
     }
   }
 
   onOptionSelected(questionId: number, sectionId: number, answer: string): void {
     this.selectedAnswers[questionId] = { answer, section_id: sectionId };
+    this.saveState();
   }
 
   clearResponse(questionId: number): void {
     delete this.userResponses[questionId];
     delete this.selectedAnswers[questionId];
+    this.saveState();
   }
 
   private isTerminating = false;
@@ -506,6 +572,10 @@ fetchAssessmentData(assessmentId: number): void {
     this.isTerminating = true;
 
     try {
+      const key = this.getAssessmentStateKey();
+      if (key) {
+      localStorage.removeItem(key);
+      }
       await this.cleanupResources();
       const submissionData = this.prepareSubmissionData();
       await lastValueFrom(this.trialAssessmentService.submitAssessment(submissionData));
@@ -587,6 +657,7 @@ fetchAssessmentData(assessmentId: number): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.updateCurrentQuestion();
+      this.saveState();
     }
   }
 
@@ -594,6 +665,7 @@ fetchAssessmentData(assessmentId: number): void {
     if (this.currentQuestionIndex < this.currentQuestions.length - 1) {
       this.currentQuestionIndex++;
       this.updateCurrentQuestion();
+      this.saveState();
     }
   }
 
@@ -769,4 +841,42 @@ fetchAssessmentData(assessmentId: number): void {
       }
     });
   }
+
+  private getAssessmentStateKey(): string | null {
+  if (this.userId && this.assessmentData?.assessment_id) {
+    return `flashyre-assessment-state-${this.userId}-${this.assessmentData.assessment_id}`;
+  }
+  return null;
+}
+
+private saveState(): void {
+  const key = this.getAssessmentStateKey();
+  if (!key) return;
+
+  // We are saving all crucial information needed to restore the session
+  const stateToSave = {
+    currentSectionIndex: this.currentSectionIndex,
+    currentQuestionIndex: this.currentQuestionIndex,
+    userResponses: this.userResponses,
+    selectedAnswers: this.selectedAnswers,
+    assessmentEndTime: this.assessmentEndTime,
+    sectionTimers: this.sectionTimers,
+    expiredSections: Array.from(this.expiredSections), // Convert Set to Array for JSON
+  };
+
+  localStorage.setItem(key, JSON.stringify(stateToSave));
+  console.log('[Persistence] Assessment state saved.');
+}
+
+private loadState(): any | null {
+  const key = this.getAssessmentStateKey();
+  if (!key) return null;
+
+  const savedState = localStorage.getItem(key);
+  if (savedState) {
+    console.log('[Persistence] Found and loaded a saved assessment state.');
+    return JSON.parse(savedState);
+  }
+  return null;
+}
 }
