@@ -125,6 +125,9 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Clear any existing job creation workflow state to avoid conflicts.
+    this.adminWorkflowService.clearWorkflow();
+
     if (typeof window !== 'undefined' && window.localStorage) {
       this.loadUserProfile();
 
@@ -144,6 +147,7 @@ export class RecruiterView3rdPage1 implements OnInit, AfterViewInit {
       this.isLoading = false;
     }
     this.recruiterPreferenceService.setActiveTab(this.activeTab);
+    
   }
 
   ngAfterViewInit(): void {

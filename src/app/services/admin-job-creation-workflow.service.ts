@@ -47,6 +47,11 @@ export class AdminJobCreationWorkflowService {
   }
 
   startWorkflow(jobUniqueId: string): void {
+    
+    // 1. Force clear everything first to ensure no stale data exists
+    this.clearWorkflow();
+
+    // 2. Set new data
     sessionStorage.setItem(this.JOB_ID_KEY, jobUniqueId);
     this.currentJobId.next(jobUniqueId);
     // Ensure edit mode is false for a new job workflow.
@@ -60,6 +65,9 @@ export class AdminJobCreationWorkflowService {
    * @param jobUniqueId The unique ID of the job being edited.
    */
   startEditWorkflow(jobUniqueId: string): void {
+    // 1. Force clear everything first to ensure no stale data exists
+    this.clearWorkflow();
+     // 2. Set new data
     sessionStorage.setItem(this.JOB_ID_KEY, jobUniqueId);
     this.currentJobId.next(jobUniqueId);
 
