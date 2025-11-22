@@ -1,5 +1,5 @@
 // src/app/pages/admin-candidate-scores-page/admin-candidate-scores-page.component.ts
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminJobCreationWorkflowService } from '../../services/admin-job-creation-workflow.service';
@@ -16,6 +16,8 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NavbarForAdminView } from 'src/app/components/navbar-for-admin-view/navbar-for-admin-view.component';
+import { environment } from '../../../environments/environment'; // Ensure environment is imported
+
 
 @Component({
   selector: 'admin-candidate-scores-page',
@@ -150,45 +152,62 @@ onSelectAllChange(isSelected: boolean): void {
     XLSX.writeFile(workbook, `candidate_scores_${this.jobUniqueId}.xlsx`);
   }
 
-  // Download individual candidate resume (placeholder - implement API call if needed)
+  // Download individual candidate resume
   downloadCandidateResume(candidate: any): void {
-  if (!candidate || !candidate.cv_file_path) {
-    console.error('Resume file path is not available for candidate:', candidate.name);
-    this.error = `Resume for ${candidate.name} is not available.`;
-    return;
-  }
-
-  // Use HttpClient to fetch the file as a blob
-  this.http.get(candidate.cv_file_path, { responseType: 'blob' }).subscribe({
-    next: (blob) => {
-      // Create a URL for the blob data
-      const url = window.URL.createObjectURL(blob);
-      
-      // Create a temporary anchor element
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Extract the original filename from the URL
-      const filename = candidate.cv_file_path.split('/').pop();
-      link.download = filename || `resume_${candidate.name.replace(/\s+/g, '_')}.pdf`;
-      
-      // Programmatically click the link to trigger the download
-      document.body.appendChild(link);
-      link.click();
-      
-      // Clean up by removing the link and revoking the object URL
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      console.log('Download initiated for:', candidate.name);
-    },
-    error: (err) => {
-      console.error('Failed to download resume:', err);
-      this.error = `Could not download resume for ${candidate.name}. Please try again.`;
+    if (!candidate || !candidate.candidate_id) {
+      console.error('Candidate ID missing');
+      this.error = `Cannot download resume: Invalid candidate data.`;
+      return;
     }
-  });
-}
 
+    // Construct the URL to your new Django Proxy Endpoint
+    // Adjust the path segment ('api/admin/job-post/') to match your main urls.py prefix for the admin_job_post app
+    const downloadUrl = `${environment.apiUrl}api/admin/job-post/download-cv/${candidate.candidate_id}/`;
+    
+    // Get the token
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.loading = true; // Optional: show loading indicator
+
+    this.http.get(downloadUrl, { 
+      headers: headers, 
+      responseType: 'blob' // Important: Tell Angular to expect a binary file
+    }).subscribe({
+      next: (blob: Blob) => {
+        // Create a temporary URL for the blob
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create a hidden anchor tag
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Set the filename
+        // We try to use the candidate name for a clean file name
+        const cleanName = candidate.name ? candidate.name.replace(/\s+/g, '_') : 'Candidate';
+        // Default extension to pdf, though the browser often detects it from the blob type
+        link.download = `Resume_${cleanName}.pdf`;
+        
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          this.loading = false;
+        }, 100);
+        
+        console.log('Resume downloaded successfully via proxy for:', candidate.name);
+      },
+      error: (err) => {
+        console.error('Failed to download resume:', err);
+        this.error = `Could not download resume for ${candidate.name}. Server error.`;
+        this.loading = false;
+      }
+    });
+  }
 
   // Navigate back to job setup (step 4)
   onBackToJobSetup(): void {
