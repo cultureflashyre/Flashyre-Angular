@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, TemplateRef, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, Inject } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, Inject,HostListener } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { TrialAssessmentService } from '../../services/trial-assessment.service';
 import { Subscription } from 'rxjs';
@@ -120,6 +120,9 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
   private timerInterval: any;
   private violationSubscription: Subscription;
   private isCleanedUp = false;
+  // Flag to track legitimate submissions ###
+  private isLegitimateExit = false;
+
 
   elem: any;
 
@@ -143,7 +146,22 @@ export class FlashyreAssessment11 implements OnInit, OnDestroy, AfterViewInit {
       },
     ]);
   }
-
+// ### MODIFICATION START: Detect Page Reload / Close ###
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: Event) {
+    // If the user is NOT terminating via our button, it's a reload/close violation.
+    // We assume the test is active if we have an assessmentId.
+    const assessmentId = this.assessmentData?.assessment_id;
+    
+    if (assessmentId && !this.isLegitimateExit && !this.showSuccessPopup) {
+      // Mark this specific assessment as having a reload violation
+      localStorage.setItem(`reload_violation_${assessmentId}`, 'true');
+      
+      // Optional: You can force a save state here one last time to ensure latest answers are captured
+      this.saveState();
+    }
+  }
+  // ### MODIFICATION END ###
 
   /**
    * Displays a user-friendly message for 3 seconds and then redirects to the home page.
@@ -251,6 +269,36 @@ fetchAssessmentData(assessmentId: number): void {
         console.log("DEBUG: [Component] Condition MET: response.status is 'SUCCESS'.");
         this.assessmentData = response;
 
+        // ### MODIFICATION START: Check for Reload Violation ###
+          // We do this AFTER setting assessmentData but BEFORE setting up the rest of the test
+          // so we can restore state and submit immediately.
+          const violationKey = `reload_violation_${assessmentId}`;
+          if (localStorage.getItem(violationKey)) {
+            console.warn('DEBUG: [Component] Reload violation detected on startup.');
+            
+            // 1. Load saved state to ensure we have the answers to submit
+            const savedState = this.loadState();
+            if (savedState) {
+              this.userResponses = savedState.userResponses || {};
+              this.selectedAnswers = savedState.selectedAnswers || {};
+              this.codingSolutions = this.restoreCodingSolutions(savedState, response.sections) || {};
+            }
+
+            // 2. Clear the flag so they don't get stuck in a loop if they enter again later (though attempts usually block this)
+            localStorage.removeItem(violationKey);
+
+            // 3. Terminate immediately as a violation
+            this.isLoading = false; // Ensure UI is technically "ready" for the redirect logic
+            this.userId = localStorage.getItem('user_id'); // Ensure User ID is set
+            this.startTime = new Date(); // Set a temp start time if missing to avoid submission errors
+            
+            this.terminateTest(true); // True = isViolation
+            return; // Stop further initialization
+          }
+          // ### MODIFICATION END ###
+
+        
+
         const savedState = this.loadState();
         
         // ... (rest of your success logic)
@@ -351,6 +399,25 @@ fetchAssessmentData(assessmentId: number): void {
     }
   });
 }
+
+// Helper method to restore coding solutions (add this if you don't have it, or rely on existing logic)
+  private restoreCodingSolutions(savedState: any, sections: any[]): any {
+    // Logic to re-hydrate coding solutions from local storage manually if needed for the violation submission
+    const solutions: any = {};
+    sections.forEach((section: any) => {
+        if (section.coding_problem) {
+            const problemId = section.coding_problem.id;
+            const key = `flashyre-code-${this.userId}-${this.assessmentData.assessment_id}-${problemId}`;
+            const savedCode = localStorage.getItem(key);
+            if (savedCode) {
+                try {
+                    solutions[problemId] = JSON.parse(savedCode);
+                } catch (e) {}
+            }
+        }
+    });
+    return solutions;
+  }
 
   
   openFullscreen() {
@@ -568,6 +635,7 @@ fetchAssessmentData(assessmentId: number): void {
   private isTerminating = false;
 
   async terminateTest(isViolation = false): Promise<void> {
+    this.isLegitimateExit = true;
     if (this.isTerminating) return;
     this.isTerminating = true;
 
@@ -589,7 +657,7 @@ fetchAssessmentData(assessmentId: number): void {
     });
       if (isViolation) {
         this.router.navigate(['/assessment-violation-message'], {
-          state: { message: "Test submitted automatically due to screen/app switching" }
+          state: { message: "Test submitted automatically due to page reload or window switch." }
         });
       } else {
         this.router.navigate(['/assessment-taken-page']);
