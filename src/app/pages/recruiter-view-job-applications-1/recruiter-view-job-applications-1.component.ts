@@ -592,26 +592,25 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
   //   this.router.navigate(['/create-job-step4', this.jobId]);
   // }
 
-  removeStage(stageToRemove: InterviewStage, event: MouseEvent) {
-    event.stopPropagation(); // Prevent the tab from being selected
-    
-    if (confirm(`Are you sure you want to remove the "${stageToRemove.stage_name}" stage?`)) {
-      const token = this.authService.getJWTToken();
-      if (!token) {
-        alert('Authentication error.');
-        return;
-      }
-      this.interviewService.deleteInterviewStage(stageToRemove.id, token).subscribe({
-        next: () => {
-          alert('Stage removed successfully.');
-          this.fetchInterviewStages(); // Refresh the list of stages
-        },
-        error: (err) => {
-          console.error('Error removing stage:', err);
-          alert('Failed to remove stage. Please try again.');
-        }
-      });
+  removeStageConfirmed(): void {
+    if (!this.pendingStageData) return;
+
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.openAlert('Authentication error.', ['OK']);
+      return;
     }
+    
+    this.interviewService.deleteInterviewStage(this.pendingStageData.id, token).subscribe({
+      next: () => {
+        this.openAlert('Stage removed successfully.', ['OK']);
+        this.fetchInterviewStages(); // Refresh the list of stages
+      },
+      error: (err) => {
+        console.error('Error removing stage:', err);
+        this.openAlert('Failed to remove stage. Please try again.', ['OK']);
+      }
+    });
   }
   
   calculateNextStage() {
@@ -700,6 +699,15 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.initializeNewStageForm(); // Reset the form every time it's opened
     this.showAddStagePopup = true;
   }
+
+  removeStage(stageToRemove: InterviewStage, event: MouseEvent) {
+    event.stopPropagation(); // Prevent the tab from being selected
+    
+    // Store the stage and action, then open the custom alert
+    this.pendingStageData = stageToRemove;
+    this.pendingAction = 'removeStageConfirm';
+    this.openAlert(`Are you sure you want to remove the "${stageToRemove.stage_name}" stage?`, ['No', 'Yes']);
+  }
   
   closeAddStagePopup(): void {
     if (this.isSubmitting) return;
@@ -760,11 +768,12 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.isSubmitting = true;
     this.interviewService.addInterviewStage(this.jobId, this.pendingStageData, token).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.closeAddStagePopup(); // Close the form popup
         this.openAlert('Interview stage successfully added', ['OK']); // Show custom success alert
         this.fetchInterviewStages(); // Refresh the stage list
         this.initializeNewStageForm(); // <-- ADD THIS LINE to reset the form
-        this.isSubmitting = false;
+        
       },
       error: (err) => {
         const errorMessage = err.error?.errors ? `Failed to add stage: ${JSON.stringify(err.error.errors)}` : 'Failed to add stage: An unknown server error occurred.';
@@ -800,6 +809,10 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
 
     if (confirmed && this.pendingAction === 'addStageConfirm') {
         this.onSaveNewStageConfirmed();
+    } 
+    // Add this new "else if" block
+    else if (confirmed && this.pendingAction === 'removeStageConfirm') {
+        this.removeStageConfirmed();
     }
 
     // Reset pending state

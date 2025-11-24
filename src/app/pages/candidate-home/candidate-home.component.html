@@ -283,6 +283,7 @@
                         class="candidate-home-experience-text1"
                         placeholder="Experience"
                         [(ngModel)]="searchExperience"
+                        (keydown)="onExperienceInput($event)"
                       />
                     </div>
                   </div>

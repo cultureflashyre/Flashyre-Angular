@@ -253,6 +253,32 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.runFilterPipeline();
   }
 
+  // This new function acts as a gatekeeper for keyboard input
+  onExperienceInput(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const key = event.key;
+
+    // Allowed keys: numbers, one decimal point, and control keys
+    const isNumber = /[0-9]/.test(key);
+    const isControlKey = [
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'
+    ].includes(key);
+    
+    // Check for decimal point specifically
+    const isDecimal = key === '.';
+    const hasDecimalAlready = input.value.includes('.');
+
+    // Allow the key press only if it's a number, a control key,
+    // or a decimal point when one doesn't already exist.
+    if (isNumber || isControlKey || (isDecimal && !hasDecimalAlready)) {
+      // Let the key press go through
+      return;
+    } else {
+      // Block the key press
+      event.preventDefault();
+    }
+  }
+
   private parseFirstNumber(input: string): number | null {
     if (!input || typeof input !== 'string') {
       return null;

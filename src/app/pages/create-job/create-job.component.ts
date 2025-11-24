@@ -145,7 +145,37 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     });
   }
 
-  
+  private _normalizeNoticePeriod(noticePeriodStr: string | null | undefined): string {
+    if (!noticePeriodStr) {
+      // If the AI provides no value, return an empty string.
+      // This will correctly show the "Select Notice Period" placeholder.
+      return '';
+    }
+
+    const lowerCasePeriod = noticePeriodStr.toLowerCase().trim();
+
+    // This checks for common variations the AI might return.
+    if (lowerCasePeriod.includes('immediate')) {
+      return 'Immediate';
+    }
+    if (lowerCasePeriod.includes('less than 15') || lowerCasePeriod.includes('15 day')) {
+      return 'Less than 15 Days';
+    }
+    if (lowerCasePeriod.includes('30 day') || lowerCasePeriod.includes('1 month')) {
+      return '30 Days';
+    }
+    if (lowerCasePeriod.includes('60 day') || lowerCasePeriod.includes('2 month')) {
+      return '60 Days';
+    }
+    if (lowerCasePeriod.includes('90 day') || lowerCasePeriod.includes('3 month')) {
+      return '90 Days';
+    }
+
+    // If the AI gives a value we don't recognize (e.g., "120 Days"),
+    // return an empty string so the user has to select a valid option.
+    console.warn(`Unrecognized notice period "${noticePeriodStr}". Please select a value manually.`);
+    return '';
+  }
 
    public sanitizeAlphaNumericInput(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -530,7 +560,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       budget_type = details.budget_type || 'Annually';
       min_budget = details.min_budget || null;
       max_budget = details.max_budget || null;
-      notice_period = details.notice_period || '30 days';
+      notice_period = this._normalizeNoticePeriod(details.notice_period);
       skills = [...(details.skills?.primary || []).map(s => s.skill), ...(details.skills?.secondary || []).map(s => s.skill)];
       job_description = details.job_description || '';
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
