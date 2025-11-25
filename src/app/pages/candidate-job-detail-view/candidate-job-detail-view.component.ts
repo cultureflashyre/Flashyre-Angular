@@ -1,7 +1,8 @@
 // candidate-job-detail-view.component.ts
 
-import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, Inject } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';   
 import { JobsService } from '../../services/job.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
@@ -111,6 +112,7 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
     private jobService: JobsService,
     private router: Router,
     private authService: AuthService,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
@@ -317,6 +319,18 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
     }).subscribe({
       next: (results) => {
         this.allAssessments = results.assessments;
+
+        const cleanList = (list: any[]) => {
+          list.forEach(job => {
+            if (job.description) {
+              job.description = this.sanitizeJobDescription(job.description);
+            }
+          });
+        };
+
+        cleanList(results.recommended);
+        cleanList(results.saved);
+        cleanList(results.applied);
 
         // Create Sets for efficient filtering.
         const dislikedJobIds = new Set(results.disliked.disliked_jobs || []);
@@ -550,5 +564,56 @@ export class CandidateJobDetailView implements OnInit, OnDestroy {
   onJobSelected(job: any): void {
     this.selectedJobId = job?.job_id ?? null;
     this.selectedJob = job;
+  }
+
+  private sanitizeJobDescription(content: string): string {
+    if (!content) return '';
+
+    // STEP 1: Pre-clean known "junk" characters (Private Use Area unicode)
+    // Replaces the "No Glyph" boxes with a standard bullet point.
+    let cleaned = content.replace(/[\uE000-\uF8FF]/g, '• ');
+
+    // Remove invisible control characters
+    cleaned = cleaned.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // STEP 2: Check for Plain Text
+    if (!/<[a-z][\s\S]*>/i.test(cleaned)) {
+      return cleaned.replace(/\n/g, '<br>');
+    }
+
+    // STEP 3: Clean HTML
+    const tempDiv = this.document.createElement('div');
+    tempDiv.innerHTML = cleaned;
+
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+
+    const cleanNode = (element: HTMLElement) => {
+      const children = Array.from(element.childNodes);
+      children.forEach((node) => {
+        if (node.nodeType === 1) { 
+          cleanNode(node as HTMLElement);
+        }
+      });
+
+      if (element !== tempDiv) {
+        const tagName = element.tagName;
+        if (!allowedTags.includes(tagName)) {
+          // Unwrap forbidden tags
+          const parent = element.parentNode;
+          while (element.firstChild) {
+            parent?.insertBefore(element.firstChild, element);
+          }
+          parent?.removeChild(element);
+        } else {
+          // Remove attributes (like style="font-family: Symbol") which causes issues
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+          }
+        }
+      }
+    };
+
+    cleanNode(tempDiv);
+    return tempDiv.innerHTML;
   }
 }

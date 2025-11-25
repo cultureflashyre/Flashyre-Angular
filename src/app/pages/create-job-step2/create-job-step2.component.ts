@@ -159,7 +159,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
           const questionsExist = response.status !== 'not_started';
           this.questionsAreReady = questionsExist;
 
-          // EDIT: THIS IS THE CRITICAL LOGIC CHANGE
+          // --- START CHANGE: Check for existing AI Sections ---
+          // If the backend returns skills (sections), it means AI generation happened.
+          // We set the flags to show "Regenerate" and the success message.
+          if (response.skills && Object.keys(response.skills).length > 0) {
+            this.aiQuestionsGenerated = true;
+            this.showAiSuccessMessage = true;
+          }
+          // --- END CHANGE ---
+
           // Get the user's most recent action from the browser session.
           const sessionAiStatus = localStorage.getItem(`aiQuestionsGenerated_${this.jobUniqueId}`);
 
