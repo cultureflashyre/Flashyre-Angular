@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, HostListener, ChangeDetectorRef, AfterViewInit } from '@angular/core';import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, HostListener, ChangeDetectorRef, AfterViewInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -103,7 +105,8 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     private authService: CorporateAuthService,   
     private renderer: Renderer2,                 
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.title.setTitle('Recruiter-View-Job-Applications-1 - Flashyre');
     this.meta.addTags([
@@ -351,7 +354,9 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
       this.http.get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`).subscribe(
           (data: any) => {
             this.job = data;
-            this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(this.job?.description || '');
+            const rawDesc = this.job?.description || '';
+            const sanitizedDesc = this.sanitizeJobDescription(rawDesc);
+            this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(sanitizedDesc);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
             
             // This now dynamically updates counts
@@ -806,5 +811,58 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.pendingAction = '';
     this.pendingStageData = null;
   }
+
+  private sanitizeJobDescription(content: string): string {
+    if (!content) return '';
+
+    // STEP 1: Pre-clean known "junk" characters (Private Use Area unicode)
+    // Replaces the "No Glyph" boxes with a standard bullet point.
+    let cleaned = content.replace(/[\uE000-\uF8FF]/g, '• ');
+
+    // Remove invisible control characters
+    cleaned = cleaned.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // STEP 2: Check for Plain Text
+    if (!/<[a-z][\s\S]*>/i.test(cleaned)) {
+      return cleaned.replace(/\n/g, '<br>');
+    }
+
+    // STEP 3: Clean HTML
+    const tempDiv = this.document.createElement('div');
+    tempDiv.innerHTML = cleaned;
+
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+
+    const cleanNode = (element: HTMLElement) => {
+      const children = Array.from(element.childNodes);
+      children.forEach((node) => {
+        if (node.nodeType === 1) { 
+          cleanNode(node as HTMLElement);
+        }
+      });
+
+      if (element !== tempDiv) {
+        const tagName = element.tagName;
+        if (!allowedTags.includes(tagName)) {
+          // Unwrap forbidden tags
+          const parent = element.parentNode;
+          while (element.firstChild) {
+            parent?.insertBefore(element.firstChild, element);
+          }
+          parent?.removeChild(element);
+        } else {
+          // Remove attributes (like style="font-family: Symbol") which causes issues
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+          }
+        }
+      }
+    };
+
+    cleanNode(tempDiv);
+    return tempDiv.innerHTML;
+  }
+
+
 
 }

@@ -532,9 +532,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       max_budget = details.max_budget || null;
       notice_period = details.notice_period || '30 days';
       skills = [...(details.skills?.primary || []).map(s => s.skill), ...(details.skills?.secondary || []).map(s => s.skill)];
-      job_description = details.job_description || '';
+      job_description = this.sanitizeJobDescription(details.job_description || '');
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
-      job_description_url_val = aiJobData.file_url || '';
+      job_description = this.sanitizeJobDescription(details.job_description || '');
     } else {
       const details = jobData as JobDetails;
       role = details.role;
@@ -556,7 +556,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       skills = [...primarySkills, ...secondarySkills];
       job_description = details.job_description;
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
-      job_description_url_val = details.job_description_url || '';
+      job_description = this.sanitizeJobDescription(details.job_description || '');
     }
 
     this.jobForm.patchValue({
@@ -1379,5 +1379,57 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
         ? 'Do you want to save the changes to this job post and proceed?'
         : 'Do you want to save this job post and proceed?';
       this.openAlert(message, ['Cancel', 'Save & Next']);
+  }
+
+  private sanitizeJobDescription(content: string): string {
+    if (!content) return '';
+
+    // 1. If the content seems to be plain text (no HTML tags found),
+    // convert newlines to <br> tags so it displays correctly in HTML.
+    if (!/<[a-z][\s\S]*>/i.test(content)) {
+      return content.replace(/\n/g, '<br>');
+    }
+
+    // 2. If HTML tags exist, we parse and clean them.
+    const tempDiv = this.document.createElement('div');
+    tempDiv.innerHTML = content;
+
+    // Define tags that are allowed (Basic formatting + Structure)
+    // We map 'STRONG' to 'B' and 'EM' to 'I' visually, but keeping them is fine.
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+
+    const cleanNode = (element: HTMLElement) => {
+      // Process children first (Depth-First Traversal)
+      const children = Array.from(element.childNodes);
+      children.forEach((node) => {
+        if (node.nodeType === 1) { // Node.ELEMENT_NODE
+          cleanNode(node as HTMLElement);
+        }
+      });
+
+      // Process the current element (skip the root tempDiv)
+      if (element !== tempDiv) {
+        const tagName = element.tagName;
+
+        if (!allowedTags.includes(tagName)) {
+          // If tag is NOT allowed (e.g., <style>, <script>, <font>), 
+          // Unwrap it: Remove the tag but keep the text content/children.
+          const parent = element.parentNode;
+          while (element.firstChild) {
+            parent?.insertBefore(element.firstChild, element);
+          }
+          parent?.removeChild(element);
+        } else {
+          // If tag IS allowed, strip all attributes (style="...", class="...")
+          // This removes external formatting conflicts but keeps bold/italic/lists.
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+          }
+        }
+      }
+    };
+
+    cleanNode(tempDiv);
+    return tempDiv.innerHTML;
   }
 }
