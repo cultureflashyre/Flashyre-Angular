@@ -1019,6 +1019,11 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       } catch (e) {
         console.error('Failed to parse userProfile from localStorage', e);
       }
+      let currentStatus = this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft';
+    
+    if (currentStatus === 'processing') {
+        currentStatus = 'draft';
+    }
     }
     const jobDetails: JobDetails = {
       ...formValues,
@@ -1219,7 +1224,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
     for (const key in rawValues) {
       const value = rawValues[key];
-      if (value !== null && value !== undefined && value !== '') {
+      if (value !== null && value !== undefined) {
         if (Array.isArray(value) && value.length === 0) {
           continue;
         }
