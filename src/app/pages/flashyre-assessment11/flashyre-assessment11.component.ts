@@ -528,6 +528,7 @@ fetchAssessmentData(assessmentId: number): void {
   this.currentSectionIndex = this.sections.indexOf(section);
   this.isCodingSection = section.type === 'coding';
   this.showTestResults = false; 
+  if (this.numbersContainer) { this.numbersContainer.nativeElement.scrollLeft = 0; }
 
   if (!this.isCodingSection) {
     this.currentQuestions = section.questions;
@@ -541,6 +542,12 @@ fetchAssessmentData(assessmentId: number): void {
           this.showTestResults = true;
       }
   }
+
+  setTimeout(() => {
+  if (this.numbersContainer && this.numbersContainer.nativeElement) {
+    this.numbersContainer.nativeElement.scrollLeft = 0;
+  }
+}, 0);
 
   // ### MODIFICATION START: Section timer persistence logic ###
   const sectionKey = section.section_id || section.coding_id_id;
@@ -743,6 +750,7 @@ fetchAssessmentData(assessmentId: number): void {
       while (prevIndex >= 0) {
         const prevSection = this.sections[prevIndex];
         if (this.isSectionAccessible(prevSection)) {
+          this.currentQuestionIndex = 0;
           this.selectSection(prevSection);
           return;
         }
@@ -757,6 +765,7 @@ fetchAssessmentData(assessmentId: number): void {
       while (nextIndex < this.totalSections) {
         const nextSection = this.sections[nextIndex];
         if (this.isSectionAccessible(nextSection)) {
+          this.currentQuestionIndex = 0;
           this.selectSection(nextSection);
           return;
         }

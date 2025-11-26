@@ -23,6 +23,7 @@ import { ProgressBar2Code } from 'src/app/components/progress-bar-2-code/progres
 import { CreateJobPostFooter2 } from 'src/app/components/create-job-post-footer-2/create-job-post-footer-2.component';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'create-job-step2',
@@ -65,6 +66,15 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
   private initialUploadedFileName: string | null = null;
 
   showAiSuccessMessage: boolean = false;
+
+  readonly REQUIRED_HEADERS = [
+    'question', 
+    'q_option1', 
+    'q_option2', 
+    'q_option3', 
+    'q_option4', 
+    'q_correct_answer'
+  ];
 
 
   constructor(
@@ -219,25 +229,105 @@ export class AdminCreateJobStep2 implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
 
+  // REPLACE your existing onFileSelected function with this one
+  // REPLACE your onFileSelected function with this version
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      // 1. Validate Extension
       if (!file.name.match(/\.(xlsx|xls)$/)) {
         this.showErrorPopup('Invalid file type. Please upload an Excel file (.xlsx, .xls).');
+        input.value = ''; 
         return;
       }
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        this.showErrorPopup('File size exceeds 5MB limit.');
-        return;
-      }
-      this.selectedExcelFile = file;
-      this.uploadedFileName = file.name; // Update UI to show the newly selected file name
-      // MODIFICATION: Enable 'Next' button, but set AI generation state to false.
-      this.questionsAreReady = true; 
-      //this.aiQuestionsGenerated = false; // This ensures the AI button label remains "Generate with AI"
 
-      this.closeUploadPopup();
+      // 2. Validate Size
+      if (file.size > 5 * 1024 * 1024) { 
+        this.showErrorPopup('File size exceeds 5MB limit.');
+        input.value = ''; 
+        return;
+      }
+
+      const reader = new FileReader();
+      
+      reader.onload = (e: any) => {
+        try {
+            const binaryString = e.target.result;
+            const workbook = XLSX.read(binaryString, { type: 'binary' });
+            
+            // Flag to track if we found ANY data in the whole file
+            let hasAnyData = false;
+
+            // Loop through ALL sheets
+            for (const sheetName of workbook.SheetNames) {
+                const worksheet = workbook.Sheets[sheetName];
+                
+                // Read sheet data
+                const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+                // If this specific sheet is empty, skip to the next one
+                if (!jsonData || jsonData.length === 0) {
+                    continue; 
+                }
+
+                // If we are here, we found data!
+                hasAnyData = true;
+
+                // --- A. VALIDATE HEADERS ---
+                const fileHeaders = Object.keys(jsonData[0]);
+                const lowerCaseFileHeaders = fileHeaders.map(h => h.toLowerCase().trim());
+                
+                const missingHeaders = this.REQUIRED_HEADERS.filter(req => !lowerCaseFileHeaders.includes(req.toLowerCase()));
+
+                if (missingHeaders.length > 0) {
+                    console.log(`Sheet '${sheetName}' Missing Headers:`, missingHeaders);
+                    this.showErrorPopup(`Error in section '${sheetName}': uploaded wrong file format`);
+                    input.value = ''; 
+                    return; // Fail immediately
+                }
+
+                // --- B. VALIDATE DATA ROWS ---
+                for (let i = 0; i < jsonData.length; i++) {
+                    const row = jsonData[i];
+                    const rowNum = i + 2; 
+
+                    const isQuestionMissing = !row['question'] || String(row['question']).trim() === '';
+                    const isOption1Missing = !row['q_option1'] || String(row['q_option1']).trim() === '';
+                    const isOption2Missing = !row['q_option2'] || String(row['q_option2']).trim() === '';
+                    const isAnswerMissing  = !row['q_correct_answer'] || String(row['q_correct_answer']).trim() === '';
+
+                    if (isQuestionMissing || isOption1Missing || isOption2Missing || isAnswerMissing) {
+                        this.showErrorPopup(`Error in section '${sheetName}', Row ${rowNum}: Data missing (Question, Options, or Answer).`);
+                        input.value = '';
+                        return; // Fail immediately
+                    }
+                }
+            }
+
+            // --- C. CHECK FOR BLANK FILE ---
+            // If the loop finished but we never set hasAnyData to true, the file is blank.
+            if (!hasAnyData) {
+                this.showErrorPopup('The uploaded Excel file is empty. Please add questions.');
+                input.value = '';
+                return;
+            }
+
+            // --- SUCCESS ---
+            this.selectedExcelFile = file;
+            this.uploadedFileName = file.name;
+            this.questionsAreReady = true; 
+            this.closeUploadPopup();
+
+        } catch (err: any) {
+            console.error(err);
+            this.showErrorPopup('Could not process file. Please ensure it is not corrupted.');
+            input.value = ''; 
+        }
+      };
+
+      reader.readAsBinaryString(file);
     }
   }
 

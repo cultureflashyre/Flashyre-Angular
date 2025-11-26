@@ -1,6 +1,6 @@
 // components/profile-basicinformation-component/profile-basicinformation-component.component.ts
 
-import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ export class ProfileBasicinformationComponent implements OnInit {
   @ContentChild('button') button: TemplateRef<any>;
   @ContentChild('text51') text51: TemplateRef<any>;
   @ContentChild('text52') text52: TemplateRef<any>;
-
+  @Output() alertRequested = new EventEmitter<{ message: string; buttons: string[] }>();
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
 
@@ -200,9 +200,13 @@ onProfilePictureSelected(event: any) {
     // --- END: New and More Reliable FileReader Logic ---
 
   } else {
-    alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
-    this.profilePictureInput.nativeElement.value = '';
-  }
+  // alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
+  this.alertRequested.emit({
+    message: 'Invalid file. Only JPG, JPEG, & PNG are allowed. Maximum size is 5MB.',
+    buttons: ['OK']
+  });
+  this.profilePictureInput.nativeElement.value = '';
+}
 }
 
   onResumeSelected(event: any) {
@@ -215,9 +219,13 @@ onProfilePictureSelected(event: any) {
       this.resumeFileName = ''; 
       // --- MODIFICATION END ---
     } else {
-      alert('Invalid file. Only PDF and Word documents (.pdf, .doc, .docx) allowed. Max size: 1MB.');
-      this.resumeInput.nativeElement.value = '';
-    }
+  // alert('Invalid file. Only PDF and Word documents (.pdf, .doc, .docx) allowed. Max size: 1MB.');
+  this.alertRequested.emit({
+    message: 'Invalid file. Only PDF & Word documents are allowed. Maximum size is 1MB.',
+    buttons: ['OK']
+  });
+  this.resumeInput.nativeElement.value = '';
+}
   }
 
   validateProfilePicture(file: File): boolean {
