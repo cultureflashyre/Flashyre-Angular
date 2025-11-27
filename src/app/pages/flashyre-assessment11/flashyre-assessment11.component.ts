@@ -476,37 +476,37 @@ fetchAssessmentData(assessmentId: number): void {
 
 
   startSectionTimer(): void {
-  // Clear any existing timer to ensure only one is running
-  if (this.sectionTimerInterval) clearInterval(this.sectionTimerInterval);
+    // Clear any existing timer to ensure only one is running
+    if (this.sectionTimerInterval) clearInterval(this.sectionTimerInterval);
 
-  this.sectionTimerInterval = setInterval(() => {
-    if (this.sectionTimer > 0) {
-      // Decrement the timer by one second
-      this.sectionTimer--;
+    this.sectionTimerInterval = setInterval(() => {
+      if (this.sectionTimer > 0) {
+        // Decrement the timer by one second
+        this.sectionTimer--;
 
-      // Update the stored value for this section
-      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-      if(sectionKey) {
-        this.sectionTimers[sectionKey] = this.sectionTimer;
-      }
-      
-    } else {
-      // Time for this section has run out
-      clearInterval(this.sectionTimerInterval);
-      this.sectionTimerInterval = null;
-      
-      const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
-      this.expiredSections.add(sectionKey);
-      this.saveState(); // Save the state now that the section has expired
-
-      if (this.currentSectionIndex < this.totalSections - 1) {
-        this.nextSection();
+        // Update the stored value for this section
+        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+        if(sectionKey) {
+          this.sectionTimers[sectionKey] = this.sectionTimer;
+        }
+        
       } else {
-        this.terminateTest();
+        // Time for this section has run out
+        clearInterval(this.sectionTimerInterval);
+        this.sectionTimerInterval = null;
+        
+        const sectionKey = this.currentSection.section_id || this.currentSection.coding_id_id;
+        this.expiredSections.add(sectionKey);
+        this.saveState(); // Save the state now that the section has expired
+
+        if (this.currentSectionIndex < this.totalSections - 1) {
+          this.nextSection();
+        } else {
+          this.terminateTest();
+        }
       }
-    }
-  }, 1000);
-}
+    }, 1000);
+  }
 
   isSectionAccessible(section: any): boolean {
     const sectionKey = section.section_id || section.coding_id_id;
@@ -514,57 +514,67 @@ fetchAssessmentData(assessmentId: number): void {
   }
 
   selectSection(section: any): void {
-  const sectionKeyToTest = section.section_id || section.coding_id_id;
-  if (this.expiredSections.has(sectionKeyToTest)) {
-    alert('This section time has expired. You cannot return to it.');
-    return;
-  }
-  
-  if (this.sectionTimerInterval) {
-    clearInterval(this.sectionTimerInterval);
-  }
+    const sectionKeyToTest = section.section_id || section.coding_id_id;
+    if (this.expiredSections.has(sectionKeyToTest)) {
+      alert('This section time has expired. You cannot return to it.');
+      return;
+    }
+    
+    if (this.sectionTimerInterval) {
+      clearInterval(this.sectionTimerInterval);
+    }
 
-  this.currentSection = section;
-  this.currentSectionIndex = this.sections.indexOf(section);
-  this.isCodingSection = section.type === 'coding';
-  this.showTestResults = false; 
-  if (this.numbersContainer) { this.numbersContainer.nativeElement.scrollLeft = 0; }
+    // Calculate the new index based on the clicked section
+    const newSectionIndex = this.sections.indexOf(section);
+    // If the user is switching to a different section, reset the question index to 0.
+    // If it's the same section (e.g., during page reload/restore), keep the existing index.
+    if (this.currentSectionIndex !== newSectionIndex) {
+      this.currentQuestionIndex = 0;
+    }
+    // Now update the current section index
+    this.currentSectionIndex = newSectionIndex;
 
-  if (!this.isCodingSection) {
-    this.currentQuestions = section.questions;
-    // On section change, default to the first question unless state is restored elsewhere
-    this.currentQuestionIndex = (this.currentSectionIndex === this.sections.indexOf(section)) ? this.currentQuestionIndex : 0;
-    this.updateCurrentQuestion();
-    this.totalQuestionsInSection = this.currentQuestions.length;
-  } else {
-      this.results = this.codingResults[this.currentSection.coding_id_id] || [];
-      if (this.results.length > 0) {
-          this.showTestResults = true;
-      }
+    this.currentSection = section;
+    //this.currentSectionIndex = this.sections.indexOf(section);
+    this.isCodingSection = section.type === 'coding';
+    this.showTestResults = false; 
+    if (this.numbersContainer) { this.numbersContainer.nativeElement.scrollLeft = 0; }
+
+    if (!this.isCodingSection) {
+      this.currentQuestions = section.questions;
+      // On section change, default to the first question unless state is restored elsewhere
+      //this.currentQuestionIndex = (this.currentSectionIndex === this.sections.indexOf(section)) ? this.currentQuestionIndex : 0;
+      this.updateCurrentQuestion();
+      this.totalQuestionsInSection = this.currentQuestions.length;
+    } else {
+        this.results = this.codingResults[this.currentSection.coding_id_id] || [];
+        if (this.results.length > 0) {
+            this.showTestResults = true;
+        }
+    }
+
+    setTimeout(() => {
+    if (this.numbersContainer && this.numbersContainer.nativeElement) {
+      this.numbersContainer.nativeElement.scrollLeft = 0;
+    }
+  }, 0);
+
+    // ### MODIFICATION START: Section timer persistence logic ###
+    const sectionKey = section.section_id || section.coding_id_id;
+
+    // Set the active timer to the remaining seconds for the new section
+    if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
+      this.sectionTimer = this.sectionTimers[sectionKey];
+    } else {
+      // This handles both expired sections (0) and unvisited sections
+      this.sectionTimer = this.sectionTimers[sectionKey] || 0;
+    }
+    
+    // Start the countdown for the newly selected section
+    this.startSectionTimer();
+    this.saveState(); // Save state on every section change
+    // ### MODIFICATION END ###
   }
-
-  setTimeout(() => {
-  if (this.numbersContainer && this.numbersContainer.nativeElement) {
-    this.numbersContainer.nativeElement.scrollLeft = 0;
-  }
-}, 0);
-
-  // ### MODIFICATION START: Section timer persistence logic ###
-  const sectionKey = section.section_id || section.coding_id_id;
-
-  // Set the active timer to the remaining seconds for the new section
-  if (this.sectionTimers[sectionKey] !== undefined && this.sectionTimers[sectionKey] > 0) {
-    this.sectionTimer = this.sectionTimers[sectionKey];
-  } else {
-    // This handles both expired sections (0) and unvisited sections
-    this.sectionTimer = this.sectionTimers[sectionKey] || 0;
-  }
-  
-  // Start the countdown for the newly selected section
-  this.startSectionTimer();
-  this.saveState(); // Save state on every section change
-  // ### MODIFICATION END ###
-}
 
   updateCurrentQuestion(): void {
     if (this.currentQuestions && this.currentQuestions.length > 0) {
