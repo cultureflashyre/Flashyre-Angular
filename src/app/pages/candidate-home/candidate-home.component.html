@@ -136,6 +136,8 @@
       </div>
     </ng-template>
   </navbar-for-candidate-view>
+  <!-- NEW: Resume Rejection Warning Bar -->
+
   <div id="details-container" class="candidate-home-details-container">
     <div id="main-container" class="candidate-home-main-container">
       <div id="profile-container" class="candidate-home-profile-container">
@@ -154,6 +156,7 @@
                       : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
             </span>
           </ng-template>
+          
         </candidate-profile-short>
 
         <!--
@@ -185,6 +188,7 @@
         -->
 
       </div>
+      
       <div id="jobs-container" class="candidate-home-jobs-container1">
         <div
           id="search-navbar-main-container"
@@ -500,6 +504,15 @@
             </header>
           </header>
         </div>
+        <div *ngIf="isResumeRejected" class="resume-rejected-banner">
+  <div class="banner-content">
+    <span class="warning-icon">⚠️</span>
+    <span class="warning-text">
+      <strong>Action Required:</strong> Your profile is incomplete. {{ rejectionReason }}
+    </span>
+    <a [routerLink]="['/profile-overview-page']" class="fix-now-btn">Upload Correct Resume</a>
+  </div>
+</div>
         <div id="Jobs-for-you" class="candidate-home-jobs-for-you-container">
           <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
             Jobs for you

@@ -2,6 +2,55 @@
   display: contents; 
 }
 
+/* candidate-home.component.css */
+
+.resume-rejected-banner {
+  background-color: #fee2e2; /* Light Red background */
+  border-bottom: 1px solid #ef4444; /* Red border */
+  color: #b91c1c; /* Dark Red text */
+  padding: 12px 20px;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  animation: slideDown 0.3s ease-out;
+}
+
+.banner-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.warning-icon {
+  font-size: 1.2rem;
+}
+
+.warning-text {
+  font-size: 14px;
+}
+
+.fix-now-btn {
+  background-color: #dc2626; /* Red Button */
+  color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.fix-now-btn:hover {
+  background-color: #b91c1c;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .company-name {
   display: inline-block;
   max-width: 200px; /* Adjust this value to fit your layout */

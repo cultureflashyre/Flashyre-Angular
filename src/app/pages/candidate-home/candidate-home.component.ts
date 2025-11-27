@@ -100,6 +100,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   assessmentAlertButtons: string[] = [];
   private jobToProcess: any = null; // To store job context for the alert
 
+  // New Properties for Resume Validation
+  isResumeRejected: boolean = false;
+  rejectionReason: string = '';
+
   // RxJS & Observer
   private observer: IntersectionObserver | null = null;
   private destroy$ = new Subject<void>();
@@ -137,7 +141,25 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.loadUserProfile();
     // this.initializeJobs();
     // this.loadAllAssessments();
+    this.checkResumeStatus(); // Check on Init
     this.loadInitialData();
+  }
+
+  checkResumeStatus(): void {
+    this.authService.getLatestResumeStatus().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response) => {
+        if (response.status === 'REJECTED') {
+          this.isResumeRejected = true;
+          this.rejectionReason = response.reason || 'Uploaded file does not appear to be a valid resume.';
+        } else {
+          this.isResumeRejected = false;
+          this.rejectionReason = '';
+        }
+      },
+      error: (err) => console.error("Could not check resume status", err)
+    });
   }
 
   ngAfterViewInit(): void {

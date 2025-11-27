@@ -320,5 +320,19 @@ async logout(): Promise<void> {
     };
     return this.http.post(`${this.apiUrl}api/auth/google/complete/`, payload);
   }
+
+  /**
+   * Checks the status of the latest uploaded resume.
+   * Returns { status: 'SUCCESS' | 'REJECTED' | 'FAILED' | 'PENDING', reason: string }
+   */
+  getLatestResumeStatus(): Observable<any> {
+    return this.http.get(`${this.apiUrl}api/resume/status/`, { headers: this.getAuthHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error fetching resume status:', error);
+        return throwError(() => new Error('Failed to fetch resume status'));
+      })
+    );
+  }
+
   
 }
