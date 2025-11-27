@@ -49,9 +49,9 @@ export class AdminCreateJobStep4Component implements OnInit {
   recruiterId: string | null = null;
   userType: string | null = null;
 
-  showDropdown = false;
+  // showDropdown = false;
 
-  constructor(
+  constructor(  
     private fb: FormBuilder,
     private router: Router,
     private workflowService: AdminJobCreationWorkflowService,
@@ -258,7 +258,7 @@ export class AdminCreateJobStep4Component implements OnInit {
    * MODIFIED: Checks form validity to decide which confirmation message to show.
    */
   onSaveJobAndAssessment(): void {
-    this.toggleDropdown(); // Close the dropdown menu
+    // this.toggleDropdown(); 
 
     if (this.interviewForm.invalid) {
       // If the form is invalid or empty, show the specific confirmation prompt.
@@ -437,22 +437,22 @@ export class AdminCreateJobStep4Component implements OnInit {
     this.showPopup = false;
   }
 
-  toggleDropdown(): void {
-    if (!this.isSubmitting) {
-      this.showDropdown = !this.showDropdown;
-    }
-  }
+  // toggleDropdown(): void {
+  //   if (!this.isSubmitting) {
+  //     this.showDropdown = !this.showDropdown;
+  //   }
+  // }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.admin-create-job-step4-dropdown-container')) {
-      this.showDropdown = false;
-    }
-  }
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: Event): void {
+  //   const target = event.target as HTMLElement;
+  //   if (!target.closest('.admin-create-job-step4-dropdown-container')) {
+  //     this.showDropdown = false;
+  //   }
+  // }
 
-  onViewScore(): void {
-    this.showDropdown = false;
-    this.router.navigate(['/admin-candidate-scores']);
-  }
+  // onViewScore(): void {
+  //   this.showDropdown = false;
+  //   this.router.navigate(['/admin-candidate-scores']);
+  // }
 }

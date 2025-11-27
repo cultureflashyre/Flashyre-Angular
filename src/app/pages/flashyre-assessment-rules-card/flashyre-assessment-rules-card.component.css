@@ -46,6 +46,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
+  justify-content: space-between;
 }
 
 .assessment-card__logo {
@@ -53,11 +54,33 @@
   width: auto;
 }
 
+.assessment-title {
+  width: auto;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: rgb(203, 230, 239);
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 4px;
+}
+
+.assessment-name {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--primary-color);
+  margin: 0;
+}
+
 .assessment-card__title {
   font-size: 20px;
   font-weight: 600;
   color: var(--primary-color);
   margin: 0;
+  align-self: center;
 }
 
 /* --- Card Content Layout --- */

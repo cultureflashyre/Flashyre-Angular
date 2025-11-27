@@ -241,7 +241,7 @@
             </div> -->
             <!-- Time Limit Input -->
             <div id="time-limit-container" class="admin-create-job-step3-time-limit-container2">
-              <span id="time-limit-text" class="admin-create-job-step3-time-limit-text2">Set time limit *</span>
+              <span id="time-limit-text" class="admin-create-job-step3-time-limit-text2">Set time limit * (HH:MM)</span>
               <input type="text" id="time-input" placeholder="HH:MM" class="admin-create-job-step3-time-input2 input" formControlName="timeLimit" />
               <!-- Validation message for required field -->
               @if (assessmentForm.get('timeLimit')?.touched && assessmentForm.get('timeLimit')?.errors?.required) {
