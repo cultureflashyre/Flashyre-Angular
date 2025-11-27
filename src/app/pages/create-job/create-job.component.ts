@@ -571,7 +571,8 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       skills = [...(details.skills?.primary || []).map(s => s.skill), ...(details.skills?.secondary || []).map(s => s.skill)];
       job_description = this.sanitizeJobDescription(details.job_description || '');
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
-      job_description = this.sanitizeJobDescription(details.job_description || '');
+      //job_description = this.sanitizeJobDescription(details.job_description || '');
+      job_description_url_val = aiJobData.file_url || this.jobForm.get('job_description_url')?.value || '';
     } else {
       const details = jobData as JobDetails;
       role = details.role;
@@ -594,6 +595,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       job_description = details.job_description;
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
       job_description = this.sanitizeJobDescription(details.job_description || '');
+      job_description_url_val = details.job_description_url || '';
     }
 
     this.jobForm.patchValue({
