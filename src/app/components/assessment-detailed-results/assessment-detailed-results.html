@@ -313,3 +313,12 @@
       }
     </div>
   </div>
+  <!-- Add this at the very end of the file -->
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (close)="closeAlert()"
+    (buttonClicked)="onAlertButtonClick($event)">
+  </app-alert-message>
+}
