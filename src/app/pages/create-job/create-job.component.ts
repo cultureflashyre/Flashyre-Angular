@@ -695,9 +695,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     markerLeft.style.left = `${minPos}px`;
     markerRight.style.left = `${maxPos}px`;
     labelLeft.style.left = `${minPos + markerWidth / 2}px`;
-    labelLeft.textContent = `${clampedMin}yrs`;
+    labelLeft.textContent = `${clampedMin}`;
     labelRight.style.left = `${maxPos + markerWidth / 2}px`;
-    labelRight.textContent = `${clampedMax}yrs`;
+    labelRight.textContent = `${clampedMax}`;
     filledSegment.style.left = `${minPos + markerWidth / 2}px`;
     filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
   }
@@ -1414,15 +1414,15 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
   private sanitizeJobDescription(content: string): string {
     if (!content) return '';
 
-    // 1. If the content seems to be plain text (no HTML tags found),
-    // convert newlines to <br> tags so it displays correctly in HTML.
-    if (!/<[a-z][\s\S]*>/i.test(content)) {
-      return content.replace(/\n/g, '<br>');
-    }
+    // FIX: Always convert newlines (\n) to <br> tags before processing HTML.
+    // This ensures line breaks from the uploaded file are visually rendered in the editor,
+    // even if the content contains other HTML tags.
+    // We also handle escaped newlines (\\n) just in case the backend sends them that way.
+    let formattedContent = content.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
 
-    // 2. If HTML tags exist, we parse and clean them.
+    // Create a temp div to parse the HTML structure
     const tempDiv = this.document.createElement('div');
-    tempDiv.innerHTML = content;
+    tempDiv.innerHTML = formattedContent;
 
     // Define tags that are allowed (Basic formatting + Structure)
     // We map 'STRONG' to 'B' and 'EM' to 'I' visually, but keeping them is fine.

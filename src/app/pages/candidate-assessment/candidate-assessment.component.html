@@ -228,7 +228,7 @@
                     class="candidate-assessment-assessment1-description"
                     [ngClass]="{'expanded': assessment.isExpanded, 'scrollable': assessment.isScrollable}"
                   >
-                    <span class="candidate-assessment-text6">
+                    <span class="candidate-assessment-text6" [innerHTML]="assessment.safe_description">
                       {{ assessment.assessment_description }}
                     </span>
                   </span>
