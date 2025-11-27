@@ -227,6 +227,14 @@
     (back)="closeDetailView()">
   </assessment-detailed-results>
 }
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (close)="closeAlert()"
+    (buttonClicked)="onAlertButtonClick($event)">
+  </app-alert-message>
+}
 
 <!-- Styles for pagination and loading indicators -->
 <style>

@@ -145,6 +145,14 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     });
   }
 
+  readonly VALID_NOTICE_PERIODS = [
+    'Immediate',
+    'Less than 15 Days',
+    '30 Days',
+    '60 Days',
+    '90 Days'
+  ];
+
   private _normalizeNoticePeriod(noticePeriodStr: string | null | undefined): string {
     if (!noticePeriodStr) {
       // If the AI provides no value, return an empty string.
@@ -153,27 +161,26 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     }
 
     const lowerCasePeriod = noticePeriodStr.toLowerCase().trim();
-
+       let mappedValue = '';
     // This checks for common variations the AI might return.
-    if (lowerCasePeriod.includes('immediate')) {
-      return 'Immediate';
+     if (lowerCasePeriod.includes('immediate') || lowerCasePeriod.includes('start')) {
+      mappedValue = 'Immediate';
+    } else if (lowerCasePeriod.includes('less than 15') || lowerCasePeriod.includes('15 day')) {
+      mappedValue = 'Less than 15 Days';
+    } else if (lowerCasePeriod.includes('30 day') || lowerCasePeriod.includes('1 month')) {
+      mappedValue = '30 Days';
+    } else if (lowerCasePeriod.includes('60 day') || lowerCasePeriod.includes('2 month')) {
+      mappedValue = '60 Days';
+    } else if (lowerCasePeriod.includes('90 day') || lowerCasePeriod.includes('3 month')) {
+      mappedValue = '90 Days';
     }
-    if (lowerCasePeriod.includes('less than 15') || lowerCasePeriod.includes('15 day')) {
-      return 'Less than 15 Days';
-    }
-    if (lowerCasePeriod.includes('30 day') || lowerCasePeriod.includes('1 month')) {
-      return '30 Days';
-    }
-    if (lowerCasePeriod.includes('60 day') || lowerCasePeriod.includes('2 month')) {
-      return '60 Days';
-    }
-    if (lowerCasePeriod.includes('90 day') || lowerCasePeriod.includes('3 month')) {
-      return '90 Days';
+    if (this.VALID_NOTICE_PERIODS.includes(mappedValue)) {
+      return mappedValue;
     }
 
     // If the AI gives a value we don't recognize (e.g., "120 Days"),
     // return an empty string so the user has to select a valid option.
-    console.warn(`Unrecognized notice period "${noticePeriodStr}". Please select a value manually.`);
+    console.warn(`Unrecognized notice period "${noticePeriodStr}". Resetting to empty.`);
     return '';
   }
 
@@ -1019,6 +1026,11 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       } catch (e) {
         console.error('Failed to parse userProfile from localStorage', e);
       }
+      let currentStatus = this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft';
+    
+    if (currentStatus === 'processing') {
+        currentStatus = 'draft';
+    }
     }
     const jobDetails: JobDetails = {
       ...formValues,
@@ -1219,7 +1231,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
     for (const key in rawValues) {
       const value = rawValues[key];
-      if (value !== null && value !== undefined && value !== '') {
+      if (value !== null && value !== undefined) {
         if (Array.isArray(value) && value.length === 0) {
           continue;
         }

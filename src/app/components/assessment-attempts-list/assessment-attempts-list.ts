@@ -4,13 +4,14 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 import { JobsService } from '../../services/job.service';
 import { AssessmentDetailedResults } from '../assessment-detailed-results/assessment-detailed-results';
 import { DatePipe } from '@angular/common';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 @Component({
     selector: 'assessment-attempts-list',
     templateUrl: 'assessment-attempts-list.html',
     styleUrls: ['assessment-attempts-list.css'],
     standalone: true,
-    imports: [AssessmentDetailedResults, DatePipe]
+    imports: [AssessmentDetailedResults, DatePipe, AlertMessageComponent ]
 })
 export class AssessmentAttemptsListComponent implements OnInit {
   @Input() assessmentId!: string;
@@ -32,6 +33,9 @@ export class AssessmentAttemptsListComponent implements OnInit {
   errorMessage: string = '';
 
   isLoading: boolean = true;
+  showAlert: boolean = false;
+alertMessage: string = '';
+alertButtons: string[] = ['OK'];
 
   constructor(
     private assessmentTakenService: AssessmentTakenService,
@@ -133,6 +137,14 @@ export class AssessmentAttemptsListComponent implements OnInit {
   this.back.emit();
 }
 
+closeAlert() {
+  this.showAlert = false;
+}
+
+onAlertButtonClick(btn: string) {
+  this.showAlert = false;
+}
+
   onReattempt() {
     if (!this.assessmentId) {
         console.error('Cannot re-attempt: Assessment ID is missing.');
@@ -158,9 +170,11 @@ export class AssessmentAttemptsListComponent implements OnInit {
           // On successful navigation, the component is destroyed, so no need to reset the flag.
         } else {
           console.error(`Assessment with ID ${targetAssessmentId} not found.`);
-          alert('Could not start the assessment. Details not found.');
-          this.isReattempting = false; // <-- Reset on failure
-        }
+           this.alertMessage = 'This assessment is currently unavailable. It may have been paused or expired. Please try after sometime.';
+  this.showAlert = true;
+  
+  this.isReattempting = false; 
+}
       },
       error: (error) => {
         console.error('Failed to fetch the list of assessments for re-attempt:', error);

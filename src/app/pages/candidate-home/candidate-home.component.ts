@@ -639,7 +639,10 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     if (!selectedAssessment) {
       console.error("Assessment details not found for id:", assessmentId, "Please ensure the assessment list is loaded.");
       // Optionally, show an alert to the user.
-      alert("Could not start the assessment. Please try again later.");
+      this.assessmentAlertMessage = "Could not start the assessment. Please try again later.";
+      this.assessmentAlertButtons = ['Dismiss'];
+      this.showAssessmentAlert = true;
+      
       return;
     }
 
@@ -702,8 +705,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (error) => {
           this.processingApplications[jobId] = false;
-          alert(error.error?.error || 'Failed to apply for this job');
-        }
+this.assessmentAlertMessage = error.error?.error || 'Failed to apply for this job';
+          this.assessmentAlertButtons = ['Dismiss'];
+          this.showAssessmentAlert = true;        }
       });
   }
 
@@ -751,7 +755,9 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
           },
           error: (error) => {
             this.processingApplications[jobId] = false;
-            alert(error.error?.error || 'Failed to apply for this job');
+            this.assessmentAlertMessage = error.error?.error || 'Failed to apply for this job';
+            this.assessmentAlertButtons = ['Dismiss'];
+            this.showAssessmentAlert = true;
           }
         });
     }
