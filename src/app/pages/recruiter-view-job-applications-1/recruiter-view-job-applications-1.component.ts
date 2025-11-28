@@ -211,7 +211,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
    * Private helper method to construct and save the PDF document.
    * @param data The detailed assessment data from the API.
    */
-   private _generateAssessmentPdf(data: any): void {
+   private _generateAssessmentPdf_OLD(data: any): void {
     const doc = new jsPDF();
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
@@ -348,6 +348,180 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     doc.save(fileName);
   }
 
+
+private _generateAssessmentPdf(data: any): void {
+    const doc = new jsPDF();
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    const margin = 14;
+    let yPos = 20;
+
+    // --- PDF Header ---
+    doc.setFontSize(18);
+    doc.text(`Assessment Questions for: ${this.job?.title || 'Job'}`, margin, yPos);
+    yPos += 10;
+    doc.setFontSize(12);
+    doc.text(`Assessment Name: ${data.name}`, margin, yPos);
+    yPos += 15;
+
+    // --- MCQs Section ---
+    if (data.selected_mcqs && data.selected_mcqs.length > 0) {
+      // 1. Group MCQs by skill name
+      const mcqsBySkill = data.selected_mcqs.reduce((acc: any, q: any) => {
+        const skill = q.mcq_item_details?.skill_name || 'General Questions';
+        if (!acc[skill]) {
+          acc[skill] = [];
+        }
+        acc[skill].push(q);
+        return acc;
+      }, {});
+
+      // 2. Iterate through each skill group and create a table
+      for (const skill in mcqsBySkill) {
+        // Check for page break before adding a new section header
+        if (yPos > pageHeight - 40) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Skill Section: ${skill}`, margin, yPos);
+        yPos += 4;
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += 8;
+        doc.setFont('helvetica', 'normal');
+
+        const mcqBody = mcqsBySkill[skill].map((q: any, index: number) => {
+          const details = q.mcq_item_details;
+          const rawText = details.question_text || '';
+
+          // Initialize variables
+          let question = null;
+          let optionsBlock = null;
+          let correctAnswer = null;
+
+          // --- 1. Try Frontend Regex Parsing (Improved for Multiline) ---
+          // [\s\S] matches any character including newlines
+          const questionMatch = rawText.match(/^(?:Q\d+[\.:]\s*)?([\s\S]*?)(?=\s*a\))/i);
+          const optionsMatch = rawText.match(/\s*a\)([\s\S]*?)\s*b\)([\s\S]*?)\s*c\)([\s\S]*?)\s*d\)([\s\S]*?)(?=\s*(?:Correct Answer:|Correct:|$))/i);
+          const answerMatch = rawText.match(/(?:Correct Answer:|Correct:)\s*([a-d])/i);
+
+          if (questionMatch && optionsMatch) {
+             question = questionMatch[1].trim();
+             optionsBlock = `a) ${optionsMatch[1].trim()}\nb) ${optionsMatch[2].trim()}\nc) ${optionsMatch[3].trim()}\nd) ${optionsMatch[4].trim()}`;
+          }
+          if (answerMatch) {
+            correctAnswer = answerMatch[1].toUpperCase();
+          }
+
+          // --- 2. Fallback: Check Backend Parsed Metadata ---
+          // Only use this if the Frontend Regex failed AND the Backend actually found options
+          if ((!question || !optionsBlock) && details.parsed_metadata && details.parsed_metadata.options && details.parsed_metadata.options.length > 0) {
+             question = details.parsed_metadata.clean_question;
+             const opts = details.parsed_metadata.options;
+             // Ensure we actually have 4 options before formatting
+             if (opts[0] || opts[1]) {
+                optionsBlock = `a) ${opts[0] || ''}\nb) ${opts[1] || ''}\nc) ${opts[2] || ''}\nd) ${opts[3] || ''}`;
+                correctAnswer = (details.parsed_metadata.answer_label || '').toUpperCase();
+             }
+          }
+
+          // --- 3. Fallback: Check for Explicit Option Fields ---
+          if ((!question || !optionsBlock) && details.option_a) {
+            question = details.question_text;
+            optionsBlock = `a) ${details.option_a}\nb) ${details.option_b}\nc) ${details.option_c}\nd) ${details.option_d}`;
+            correctAnswer = (details.correct_answer || 'N/A').toUpperCase();
+          }
+
+          // --- 4. Final Fallback: Display Raw Text "As Is" ---
+          // If all parsing failed, display the raw text so it is readable, without adding empty "a) b) c)" lines.
+          if (!question || !optionsBlock) {
+             question = rawText;
+             optionsBlock = ''; // Leave empty to avoid clutter
+             // Try to preserve the answer if we found it via regex, otherwise N/A
+             correctAnswer = correctAnswer || 'Refer to Question Text';
+          }
+
+          // Format Final String
+          // Filter out empty lines to make the "Raw Text" fallback look cleaner
+          const parts = [question, optionsBlock, `Correct Answer: ${correctAnswer || 'N/A'}`].filter(p => p && p.trim() !== '');
+          const fullQuestionBlock = parts.join('\n\n');
+
+          return [index + 1, fullQuestionBlock];
+        });
+
+        autoTable(doc, {
+          head: [['#', 'Question Details']],
+          body: mcqBody,
+          startY: yPos,
+          theme: 'grid',
+          headStyles: { fillColor: [5, 53, 108] },
+          styles: { cellPadding: 3, fontSize: 9, valign: 'top' },
+          columnStyles: {
+            0: { cellWidth: 10, halign: 'center' },
+          }
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 15;
+      }
+    }
+
+    // --- Coding Problems Section ---
+    if (data.selected_coding_problems && data.selected_coding_problems.length > 0) {
+      if (yPos > pageHeight - 60) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Coding Problems', margin, yPos);
+      yPos += 4;
+      doc.line(margin, yPos, pageWidth - margin, yPos);
+      yPos += 10;
+
+      data.selected_coding_problems.forEach((p: any, index: number) => {
+        const details = p.coding_problem_details;
+        if (!details) return;
+
+        // Estimate height to check for page break
+        const descriptionLines = doc.splitTextToSize(details.description || '', 170).length;
+        const estimatedHeight = 20 + (descriptionLines * 5);
+        if (yPos + estimatedHeight > pageHeight - 20) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${index + 1}. ${details.title}`, margin, yPos);
+        yPos += 8;
+
+        const addWrappedText = (label: string, text: string | null) => {
+          if (!text || text.trim() === 'N/A' || text.trim() === '') return;
+          doc.setFont('helvetica', 'bold');
+          doc.text(label, margin, yPos);
+          yPos += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          const lines = doc.splitTextToSize(text, pageWidth - (margin * 2));
+          doc.text(lines, margin, yPos);
+          yPos += (lines.length * 4) + 6;
+        };
+
+        addWrappedText('Description:', details.description);
+        addWrappedText('Input Format:', details.input_format);
+        addWrappedText('Output Format:', details.output_format);
+        addWrappedText('Constraints:', details.constraints);
+        addWrappedText('Example:', details.example);
+        yPos += 5;
+      });
+    }
+
+    // --- Save the PDF ---
+    const fileName = `Assessment_Questions_${this.job?.title.replace(/\s/g, '_') || 'Job'}.pdf`;
+    doc.save(fileName);
+  }
 
   fetchJobDetails() {
     if (this.jobId) {
