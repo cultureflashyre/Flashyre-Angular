@@ -489,7 +489,7 @@
       type="button"
       class="recruiter-view-job-applications1-view-jd-button button"
       (click)="toggleJdDropdown($event)"
-      [disabled]="!job?.job_description_url"
+      
     >
       View / Download
       <!-- Simple dropdown arrow -->
@@ -499,7 +499,9 @@
     <!-- The dropdown menu itself, shown conditionally -->
     <div class="jd-dropdown-menu" *ngIf="showJdDropdown">
       <button 
-        (click)="openJD(job.job_description_url)">
+        (click)="openJD(job.job_description_url)"
+        [disabled]="!job?.job_description_url"
+        [title]="job?.job_description_url ? 'View Job Description' : 'No Job Description File available'">
         View JD
       </button>
       <button 
