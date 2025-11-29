@@ -253,19 +253,19 @@ export const routes: Routes = [
     ),
 },
 {
-    path: 'recruiter-super-admin-analytical-module',
-    loadComponent: () =>
-      import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component').then(
-        (m) => m.recruiter-super-admin-analytical-module
-      ),
-  },
-  {
-  path: 'recruiter-workflow',
+  path: 'recruiter-super-admin-analytical-module', // or whatever URL you want
   loadComponent: () =>
-    import('./pages/recruiter-workflow/recruiter-workflow.component').then(
-      (m) => m.recruiter-workflow
-    ),
+    import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component')
+      .then(m => m.RecruiterSuperAdminAnalyticalModuleComponent),
 },
+
+  {
+    path: 'recruiter-workflow',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow/recruiter-workflow.component')
+        .then(m => m.RecruiterWorkflowComponent),
+  },
+
   {
     path: '**',
     loadComponent: () =>

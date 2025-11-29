@@ -1,14 +1,23 @@
-import { Component } from '@angular/core'
-import { Title, Meta } from '@angular/platform-browser'
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
+
+// Adjust this path if your folder structure is different
+import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 
 @Component({
-  selector: 'recruiter-super-admin-analytical-module',
-  templateUrl: 'recruiter-super-admin-analytical-module.component.html',
-  styleUrls: ['recruiter-super-admin-analytical-module.component.css'],
+  selector: 'app-recruiter-super-admin-analytical-module', // you can keep the old selector string if you prefer
+  standalone: true,
+  imports: [
+    CommonModule,
+    RecruiterWorkflowNavbarComponent,
+  ],
+  templateUrl: './recruiter-super-admin-analytical-module.component.html',
+  styleUrls: ['./recruiter-super-admin-analytical-module.component.css'],
 })
-export class RecruiterSuperAdminAnalyticalModule {
+export class RecruiterSuperAdminAnalyticalModuleComponent {
   constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Recruiter-Super-Admin-Analytical-module - Flashyre')
+    this.title.setTitle('Recruiter-Super-Admin-Analytical-module - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
@@ -19,6 +28,6 @@ export class RecruiterSuperAdminAnalyticalModule {
         content:
           'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
       },
-    ])
+    ]);
   }
 }
