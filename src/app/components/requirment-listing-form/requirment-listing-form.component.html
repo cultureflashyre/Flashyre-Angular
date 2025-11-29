@@ -1,0 +1,855 @@
+<div
+  class="requirment-listing-form-requirment-listing-form"
+  [ngClass]="rootClassName"
+>
+  <div class="requirment-listing-form-container10">
+    <span class="requirment-listing-form-text10">
+      <ng-container>
+        <ng-template #defaultText>
+          <div class="requirment-listing-form-fragment33">
+            <span class="requirment-listing-form-text48">Input form</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text ? text : defaultText"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <div class="requirment-listing-form-container11">
+      <h1 class="requirment-listing-form-text11">
+        <ng-container>
+          <ng-template #defaultHeading>
+            <div class="requirment-listing-form-fragment37">
+              <span class="requirment-listing-form-text52">Naukri</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="heading ? heading : defaultHeading"
+          ></ng-container>
+        </ng-container>
+      </h1>
+      <h1 class="requirment-listing-form-text12">
+        <ng-container>
+          <ng-template #defaultHeading1>
+            <div class="requirment-listing-form-fragment30">
+              <span class="requirment-listing-form-text45">External</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="heading1 ? heading1 : defaultHeading1"
+          ></ng-container>
+        </ng-container>
+      </h1>
+    </div>
+  </div>
+  <div class="requirment-listing-form-container12">
+    <div
+      id="upload-file-container"
+      class="requirment-listing-form-upload-file-container"
+    >
+      <input
+        type="text"
+        id="upload-file-input"
+        [attr.placeholder]="uploadFileInputPlaceholder"
+        class="requirment-listing-form-upload-file-input input"
+      />
+      <div
+        id="upload-file-button-container"
+        class="requirment-listing-form-upload-file-button-container"
+      >
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          class="requirment-listing-form-icon1"
+        >
+          <path
+            d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+        <span class="requirment-listing-form-text13">
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="requirment-listing-form-fragment15">
+                <span class="requirment-listing-form-text27">Upload File</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+    <span id="note-for-file" class="requirment-listing-form-note-for-file">
+      <ng-container>
+        <ng-template #defaultNoteForFile>
+          <div class="requirment-listing-form-fragment39">
+            <span class="requirment-listing-form-text54">
+              Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="noteForFile ? noteForFile : defaultNoteForFile"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div class="requirment-listing-form-container13">
+    <div
+      id="enter-manually-text-container"
+      class="requirment-listing-form-enter-manually-text-container"
+    >
+      <span
+        id="enter-manually-text"
+        class="requirment-listing-form-enter-manually-text"
+      >
+        <ng-container>
+          <ng-template #defaultEnterManuallyText>
+            <div class="requirment-listing-form-fragment18">
+              <span class="requirment-listing-form-text30">Enter Manually</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="enterManuallyText ? enterManuallyText : defaultEnterManuallyText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+    <div
+      id="job-title-company-name-container"
+      class="requirment-listing-form-job-title-company-name-container1"
+    >
+      <div
+        id="candidate-job-title"
+        class="requirment-listing-form-job-title-container1"
+      >
+        <span
+          id="employment-job-title-text"
+          class="requirment-listing-form-job-title-text1"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText>
+              <div class="requirment-listing-form-fragment34">
+                <span class="requirment-listing-form-text49">Client</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText ? jobTitleText : defaultJobTitleText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder1"
+          class="requirment-listing-form-job-title-input1 input"
+        />
+      </div>
+      <div
+        id="candidate-company-name-container"
+        class="requirment-listing-form-company-name-container1"
+      >
+        <span
+          id="employment-company-name"
+          class="requirment-listing-form-company-name-text1"
+        >
+          <ng-container>
+            <ng-template #defaultCompanyNameText>
+              <div class="requirment-listing-form-fragment27">
+                <span class="requirment-listing-form-text42">Sub Client</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="companyNameText ? companyNameText : defaultCompanyNameText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-company-name-input"
+          [attr.placeholder]="companyNameInputPlaceholder"
+          class="requirment-listing-form-company-name-input1 input"
+        />
+      </div>
+    </div>
+    <div
+      id="issued-renewal-date-container"
+      class="requirment-listing-form-issued-renewal-date-container1"
+    >
+      <div
+        id="certification-issued-date-container"
+        class="requirment-listing-form-issued-date-container1"
+      >
+        <div id="container" class="requirment-listing-form-container14">
+          <span
+            id="certificate-issued-date"
+            class="requirment-listing-form-issuing-date-text1"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText>
+                <div class="requirment-listing-form-fragment12">
+                  <span
+                    id="certificate-issued-date"
+                    class="requirment-listing-form-issuing-date-text4"
+                  >
+                    <span>Total Experience</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText ? issuingDateText : defaultIssuingDateText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="requirment-listing-form-select-container1"
+          >
+            <div class="requirment-listing-form-container15">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder2"
+                class="requirment-listing-form-company-name-input2 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="requirment-listing-form-fragment29">
+                    <span class="requirment-listing-form-text44">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="requirment-listing-form-container16">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder3"
+                class="requirment-listing-form-company-name-input3 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText3>
+                  <div class="requirment-listing-form-fragment24">
+                    <span class="requirment-listing-form-text38">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certification-renewal-date-input"
+        class="requirment-listing-form-renewal-date-container"
+      >
+        <div
+          id="certification-renewal-date-container"
+          class="requirment-listing-form-container17"
+        >
+          <span
+            id="certificate-renewal-date-text"
+            class="requirment-listing-form-renewal-date-text1"
+          >
+            <ng-container>
+              <ng-template #defaultRenewalDateText>
+                <div class="requirment-listing-form-fragment19">
+                  <span
+                    id="certificate-renewal-date-text"
+                    class="requirment-listing-form-renewal-date-text2"
+                  >
+                    <span>Relavant Experience</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="renewalDateText ? renewalDateText : defaultRenewalDateText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="requirment-listing-form-select-container2"
+          >
+            <div class="requirment-listing-form-container18">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder4"
+                class="requirment-listing-form-company-name-input4 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText4>
+                  <div class="requirment-listing-form-fragment16">
+                    <span class="requirment-listing-form-text28">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="requirment-listing-form-container19">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder5"
+                class="requirment-listing-form-company-name-input5 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText5>
+                  <div class="requirment-listing-form-fragment20">
+                    <span class="requirment-listing-form-text33">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text5 ? text5 : defaultText5"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="issued-renewal-date-container"
+      class="requirment-listing-form-issued-renewal-date-container2"
+    >
+      <div
+        id="certification-issued-date-container"
+        class="requirment-listing-form-issued-date-container2"
+      >
+        <div id="container" class="requirment-listing-form-container20">
+          <span
+            id="certificate-issued-date"
+            class="requirment-listing-form-issuing-date-text2"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText1>
+                <div class="requirment-listing-form-fragment25">
+                  <span
+                    id="certificate-issued-date"
+                    class="requirment-listing-form-issuing-date-text5"
+                  >
+                    <span>Salary</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText1 ? issuingDateText1 : defaultIssuingDateText1"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="requirment-listing-form-select-container3"
+          >
+            <div class="requirment-listing-form-container21">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder6"
+                class="requirment-listing-form-company-name-input6 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText6>
+                  <div class="requirment-listing-form-fragment38">
+                    <span class="requirment-listing-form-text53">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text6 ? text6 : defaultText6"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="requirment-listing-form-container22">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder7"
+                class="requirment-listing-form-company-name-input7 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText7>
+                  <div class="requirment-listing-form-fragment40">
+                    <span class="requirment-listing-form-text55">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certificate-name-container"
+        class="requirment-listing-form-certificate-name-container"
+      >
+        <div
+          id="certificate-container"
+          class="requirment-listing-form-certifiacate-name-container"
+        >
+          <span
+            id="certificate-name"
+            class="requirment-listing-form-certificate-name-text1"
+          >
+            <ng-container>
+              <ng-template #defaultCertificateNameText>
+                <div class="requirment-listing-form-fragment23">
+                  <span
+                    id="certificate-name"
+                    class="requirment-listing-form-certificate-name-text2"
+                  >
+                    <span class="requirment-listing-form-text36">
+                      Current CTC
+                    </span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="certificateNameText ? certificateNameText : defaultCertificateNameText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="requirment-listing-form-container23"
+          >
+            <form
+              id="certificate-name-input"
+              data-form-id="ab0159c8-7995-4c45-a289-9fa7e8cf14f1"
+              class="requirment-listing-form-form1 input"
+            >
+              <span
+                id="select-text"
+                class="requirment-listing-form-select-text1"
+              >
+                <ng-container>
+                  <ng-template #defaultSelectText1>
+                    <div class="requirment-listing-form-fragment35">
+                      <span class="requirment-listing-form-text50">Select</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="selectText1 ? selectText1 : defaultSelectText1"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                id="certificate-name-dropdown-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="requirment-listing-form-drop-down-icon1"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="job-title-company-name-container"
+      class="requirment-listing-form-job-title-company-name-container2"
+    >
+      <div
+        id="candidate-job-title"
+        class="requirment-listing-form-job-title-container2"
+      >
+        <span
+          id="employment-job-title-text"
+          class="requirment-listing-form-job-title-text2"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText1>
+              <div class="requirment-listing-form-fragment21">
+                <span class="requirment-listing-form-text34">
+                  Interview Location
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText1 ? jobTitleText1 : defaultJobTitleText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder2"
+          class="requirment-listing-form-job-title-input2 input"
+        />
+      </div>
+      <div
+        id="candidate-company-name-container"
+        class="requirment-listing-form-company-name-container2"
+      >
+        <span
+          id="employment-company-name"
+          class="requirment-listing-form-company-name-text2"
+        >
+          <ng-container>
+            <ng-template #defaultCompanyNameText1>
+              <div class="requirment-listing-form-fragment14">
+                <span class="requirment-listing-form-text26">
+                  Interview Date
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="companyNameText1 ? companyNameText1 : defaultCompanyNameText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="date"
+          id="employment-company-name-input"
+          [attr.placeholder]="companyNameInputPlaceholder1"
+          class="requirment-listing-form-company-name-input8 input"
+        />
+      </div>
+    </div>
+    <div class="requirment-listing-form-container24">
+      <div
+        id="certification-issued-date-container"
+        class="requirment-listing-form-issued-date-container3"
+      >
+        <div id="container" class="requirment-listing-form-container25">
+          <span
+            id="certificate-issued-date"
+            class="requirment-listing-form-issuing-date-text3"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText2>
+                <div class="requirment-listing-form-fragment32">
+                  <span class="requirment-listing-form-text47">
+                    Notice Period
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText2 ? issuingDateText2 : defaultIssuingDateText2"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="requirment-listing-form-select-container4"
+          >
+            <form
+              id="certification-issued-date-dropdown"
+              data-form-id="c2587c4f-202f-4c4e-8298-97caa0743fba"
+              class="requirment-listing-form-form2 input"
+            >
+              <span
+                id="select-text"
+                class="requirment-listing-form-select-text2"
+              >
+                <ng-container>
+                  <ng-template #defaultSelectText2>
+                    <div class="requirment-listing-form-fragment36">
+                      <span class="requirment-listing-form-text51">Select</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="selectText2 ? selectText2 : defaultSelectText2"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                id="issued-date-dropdown-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="requirment-listing-form-drop-down-icon2"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certification-credentials-container"
+        class="requirment-listing-form-credentials-container"
+      >
+        <span
+          id="certification-credentials-text"
+          class="requirment-listing-form-credentials-text1"
+        >
+          <ng-container>
+            <ng-template #defaultCredentialsText>
+              <div class="requirment-listing-form-fragment11">
+                <span
+                  id="certification-credentials-text"
+                  class="requirment-listing-form-credentials-text2"
+                >
+                  <span>Gender</span>
+                  <br />
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="credentialsText ? credentialsText : defaultCredentialsText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          id="select-container"
+          class="requirment-listing-form-select-container5"
+        >
+          <form
+            id="certification-credentials-dropdown"
+            data-form-id="e9fb3569-9205-4a8b-a1a5-61cb3126af8c"
+            class="requirment-listing-form-form3 input"
+          >
+            <span id="select-text" class="requirment-listing-form-select-text3">
+              <ng-container>
+                <ng-template #defaultSelectText>
+                  <div class="requirment-listing-form-fragment17">
+                    <span class="requirment-listing-form-text29">Select</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="selectText ? selectText : defaultSelectText"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <svg
+              id="credentials-dropdown-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 32 32"
+              class="requirment-listing-form-drop-down-icon3"
+            >
+              <path
+                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="skills-container" class="requirment-listing-form-skills-container">
+      <div
+        id="skill-text-container"
+        class="requirment-listing-form-skill-text-container"
+      >
+        <span id="skill-text" class="requirment-listing-form-skill-text">
+          <ng-container>
+            <ng-template #defaultSkillText>
+              <div class="requirment-listing-form-fragment22">
+                <span class="requirment-listing-form-text35">
+                  Job Description
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillText ? skillText : defaultSkillText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="skill-star-text"
+          class="requirment-listing-form-skill-star-text"
+        >
+          <ng-container>
+            <ng-template #defaultSkillStarText>
+              <div class="requirment-listing-form-fragment26">
+                <span class="requirment-listing-form-text41">*</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillStarText ? skillStarText : defaultSkillStarText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <input
+        type="text"
+        id="employment-job-title-input"
+        [attr.placeholder]="jobTitleInputPlaceholder"
+        class="requirment-listing-form-job-title-input3 input"
+      />
+    </div>
+    <div
+      id="interview-process-container"
+      class="requirment-listing-form-interview-process-container"
+    >
+      <span
+        id="interview-process-text"
+        class="requirment-listing-form-interview-process-text"
+      >
+        <ng-container>
+          <ng-template #defaultInterviewProcessText>
+            <div class="requirment-listing-form-fragment10">
+              <span class="requirment-listing-form-text20">
+                Additional Details
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="interviewProcessText ? interviewProcessText : defaultInterviewProcessText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="different-stages-container"
+        class="requirment-listing-form-different-stages-container"
+      >
+        <div
+          id="different-stage-container"
+          class="requirment-listing-form-different-stage-container"
+        >
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder"
+            class="requirment-listing-form-date-input1 input"
+          />
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder1"
+            class="requirment-listing-form-date-input2 input"
+          />
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder2"
+            class="requirment-listing-form-date-input3 input"
+          />
+          <svg
+            id="remove-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            class="requirment-listing-form-remove-icon"
+          >
+            <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </div>
+      <div
+        id="add-section-container"
+        class="requirment-listing-form-add-section-container"
+      >
+        <span
+          id="add-section-text"
+          class="requirment-listing-form-add-section-text button"
+        >
+          <ng-container>
+            <ng-template #defaultAddSectionText>
+              <div class="requirment-listing-form-fragment28">
+                <span class="requirment-listing-form-text43">
+                  + Add Location
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="addSectionText ? addSectionText : defaultAddSectionText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="remove-section-text"
+          class="requirment-listing-form-remove-section-text button"
+        >
+          <ng-container>
+            <ng-template #defaultRemoveSectionText>
+              <div class="requirment-listing-form-fragment31">
+                <span class="requirment-listing-form-text46">
+                  - Remove Section
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="removeSectionText ? removeSectionText : defaultRemoveSectionText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    id="submit-cancel-buttons-container"
+    class="requirment-listing-form-submit-cancel-buttons-container"
+  >
+    <button
+      id="cancel-button"
+      name="cancel-button"
+      type="button"
+      class="requirment-listing-form-cancel-button button"
+    >
+      <span id="cancel-text" class="requirment-listing-form-cancel-text">
+        <ng-container>
+          <ng-template #defaultCancelText>
+            <div class="requirment-listing-form-fragment41">
+              <span class="requirment-listing-form-text56">Cancel</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="cancelText ? cancelText : defaultCancelText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <button
+      id="submit-button"
+      name="submit-button"
+      type="button"
+      class="requirment-listing-form-submit-button button"
+    >
+      <span id="submit-text" class="requirment-listing-form-submit-text">
+        <ng-container>
+          <ng-template #defaultSubmitText>
+            <div class="requirment-listing-form-fragment13">
+              <span class="requirment-listing-form-text25">Submit</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="submitText ? submitText : defaultSubmitText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+  </div>
+</div>

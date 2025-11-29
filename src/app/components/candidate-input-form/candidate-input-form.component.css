@@ -1,0 +1,1619 @@
+:host { 
+  display: contents; 
+}
+ 
+.candidate-input-form-candidate-input-form {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-self: center;
+  align-items: flex-start;
+  padding-top: var(--dl-layout-space-unit);
+  flex-direction: column;
+  padding-bottom: var(--dl-layout-space-unit);
+}
+ 
+.candidate-input-form-container10 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.candidate-input-form-text10 {
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-input-form-container11 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-text11 {
+  fill: #05356C;
+  color: #05356C;
+  font-size: 24px;
+}
+ 
+.candidate-input-form-text12 {
+  fill: #05356C;
+  color: #05356C;
+  font-size: 24px;
+}
+ 
+.candidate-input-form-container12 {
+  gap: 12px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-upload-file-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border-color: #ACACAD;
+  border-width: 1px;
+  border-radius: 5px;
+  justify-content: center;
+}
+ 
+.candidate-input-form-upload-file-input {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border-color: #ACACAD;
+  border-width: 1px;
+  justify-content: flex-start;
+  background-color: transparent;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+ 
+.candidate-input-form-upload-file-button-container {
+  gap: 12px;
+  flex: 0 0 auto;
+  width: 147px;
+  height: 48px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: 16px;
+  padding-left: 12px;
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: 12px;
+  padding-bottom: 16px;
+  justify-content: center;
+  background-color: #05356C;
+  border-top-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 4px;
+}
+ 
+.candidate-input-form-upload-file-button-container:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.candidate-input-form-upload-file-button-container:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.candidate-input-form-icon1 {
+  color: #FFFFFF;
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-input-form-text13 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 87px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.candidate-input-form-note-for-file {
+  color: #18191c;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-container13 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 550px;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: flex-start;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.candidate-input-form-enter-manually-text-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-enter-manually-text {
+  gap: 24px;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.candidate-input-form-job-title-company-name-container1 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+ 
+.candidate-input-form-job-title-container1 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-job-title-text1 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input1 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container14 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: space-between;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-company-name-text1 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-company-name-container1 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-company-name-input1 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-job-title-company-name-container2 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+ 
+.candidate-input-form-job-title-container2 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-job-title-text2 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input2 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container15 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: auto;
+  display: flex;
+  align-items: space-between;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-company-name-text2 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-company-name-container2 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-company-name-input2 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-issued-renewal-date-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-input-form-issued-date-container1 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-container16 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-issuing-date-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-select-container1 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container17 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input3 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container18 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input4 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-renewal-date-container {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-container19 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-self: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-renewal-date-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-select-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container20 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input5 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container21 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input6 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-issued-renewal-date-container2 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.candidate-input-form-issued-date-container2 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-container22 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-issuing-date-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-select-container3 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container23 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input7 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container24 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-company-name-input8 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-certificate-name-container {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-certifiacate-name-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-certificate-name-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-container25 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-form1 {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.candidate-input-form-select-text1 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.candidate-input-form-drop-down-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.candidate-input-form-job-title-company-name-container3 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.candidate-input-form-job-title-container3 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-job-title-text3 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input3 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-job-title-container4 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-job-title-text4 {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input4 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-container26 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+}
+ 
+.candidate-input-form-issued-date-container3 {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-container27 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-issuing-date-text3 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-select-container4 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-form2 {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.candidate-input-form-select-text2 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.candidate-input-form-drop-down-icon2 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.candidate-input-form-credentials-container {
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-credentials-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+}
+ 
+.candidate-input-form-select-container5 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-form3 {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.candidate-input-form-select-text3 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-layout-space-halfunit);
+  margin-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.candidate-input-form-drop-down-icon3 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.candidate-input-form-skills-container1 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-skill-text-container1 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-skill-text1 {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-skill-star-text1 {
+  fill: #F10400;
+  color: #F10400;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input5 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-skills-container2 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-skill-text-container2 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-skill-text2 {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.candidate-input-form-skill-star-text2 {
+  fill: #F10400;
+  color: #F10400;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-input-form-job-title-input6 {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-submit-cancel-buttons-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--dl-layout-radius-radius4);
+  justify-content: flex-end;
+}
+ 
+.candidate-input-form-cancel-button {
+  width: 86px;
+  height: 40px;
+  transition: 0.3s;
+  border-color: #05356C;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-input-form-cancel-button:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-input-form-cancel-button:active {
+  color: #FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.candidate-input-form-cancel-text {
+  color: #05356c;
+}
+ 
+.candidate-input-form-submit-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 86px;
+  height: 40px;
+  transition: 0.3s;
+  border-width: 0px;
+  background-color: #05356C;
+}
+ 
+.candidate-input-form-submit-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.candidate-input-form-submit-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.candidate-input-form-candidate-input-form-overlay {
+  flex: 0 0 auto;
+  width: 200px;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 100px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-input-form-fragment10 {
+  display: contents;
+}
+ 
+.candidate-input-form-text20 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment11 {
+  display: contents;
+}
+ 
+.candidate-input-form-text21 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment12 {
+  display: contents;
+}
+ 
+.candidate-input-form-issuing-date-text4 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment13 {
+  display: contents;
+}
+ 
+.candidate-input-form-text24 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment14 {
+  display: contents;
+}
+ 
+.candidate-input-form-text25 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment15 {
+  display: contents;
+}
+ 
+.candidate-input-form-text26 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment16 {
+  display: contents;
+}
+ 
+.candidate-input-form-text27 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment17 {
+  display: contents;
+}
+ 
+.candidate-input-form-text28 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment18 {
+  display: contents;
+}
+ 
+.candidate-input-form-text29 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment19 {
+  display: contents;
+}
+ 
+.candidate-input-form-text30 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment20 {
+  display: contents;
+}
+ 
+.candidate-input-form-text31 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment21 {
+  display: contents;
+}
+ 
+.candidate-input-form-text32 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment22 {
+  display: contents;
+}
+ 
+.candidate-input-form-text33 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment23 {
+  display: contents;
+}
+ 
+.candidate-input-form-text34 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment24 {
+  display: contents;
+}
+ 
+.candidate-input-form-issuing-date-text5 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment25 {
+  display: contents;
+}
+ 
+.candidate-input-form-text37 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment26 {
+  display: contents;
+}
+ 
+.candidate-input-form-text38 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment27 {
+  display: contents;
+}
+ 
+.candidate-input-form-certificate-name-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment28 {
+  display: contents;
+}
+ 
+.candidate-input-form-text41 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment29 {
+  display: contents;
+}
+ 
+.candidate-input-form-text42 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment30 {
+  display: contents;
+}
+ 
+.candidate-input-form-text43 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment31 {
+  display: contents;
+}
+ 
+.candidate-input-form-text44 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment32 {
+  display: contents;
+}
+ 
+.candidate-input-form-text45 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment33 {
+  display: contents;
+}
+ 
+.candidate-input-form-text46 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment34 {
+  display: contents;
+}
+ 
+.candidate-input-form-renewal-date-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment35 {
+  display: contents;
+}
+ 
+.candidate-input-form-text49 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment36 {
+  display: contents;
+}
+ 
+.candidate-input-form-text50 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment37 {
+  display: contents;
+}
+ 
+.candidate-input-form-text51 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment38 {
+  display: contents;
+}
+ 
+.candidate-input-form-text52 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment39 {
+  display: contents;
+}
+ 
+.candidate-input-form-text53 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment40 {
+  display: contents;
+}
+ 
+.candidate-input-form-text54 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment41 {
+  display: contents;
+}
+ 
+.candidate-input-form-text55 {
+  display: inline-block;
+}
+ 
+.candidate-input-form-fragment42 {
+  display: contents;
+}
+ 
+.candidate-input-form-credentials-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+
+ 
+@media(max-width: 1200px) {
+  .candidate-input-form-job-title-company-name-container1 {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .candidate-input-form-job-title-container1 {
+    width: 49%;
+  }
+  .candidate-input-form-job-title-input1 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-container1 {
+    width: 49%;
+  }
+  .candidate-input-form-company-name-input1 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-company-name-container2 {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .candidate-input-form-job-title-container2 {
+    width: 49%;
+  }
+  .candidate-input-form-job-title-input2 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-container2 {
+    width: 49%;
+  }
+  .candidate-input-form-company-name-input2 {
+    width: 100%;
+  }
+  .candidate-input-form-issued-renewal-date-container1 {
+    gap: 24px;
+    width: 100%;
+    height: 76px;
+  }
+  .candidate-input-form-company-name-input3 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input4 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input5 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input6 {
+    width: 100%;
+  }
+  .candidate-input-form-issued-renewal-date-container2 {
+    gap: 24px;
+    width: 100%;
+    height: 76px;
+  }
+  .candidate-input-form-company-name-input7 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input8 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-company-name-container3 {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .candidate-input-form-job-title-container3 {
+    width: 49%;
+  }
+  .candidate-input-form-job-title-input3 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-container4 {
+    width: 49%;
+  }
+  .candidate-input-form-job-title-input4 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input5 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input6 {
+    width: 100%;
+  }
+  .candidate-input-form-text39 {
+    color: #18191c;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .candidate-input-form-upload-file-container {
+    height: 44px;
+    border-width: 0px;
+  }
+  .candidate-input-form-upload-file-input {
+    height: 100%;
+  }
+  .candidate-input-form-upload-file-button-container {
+    height: 100%;
+  }
+  .candidate-input-form-note-for-file {
+    font-size: 14px;
+  }
+  .candidate-input-form-enter-manually-text {
+    font-size: 18px;
+  }
+  .candidate-input-form-skill-text1 {
+    font-size: 14px;
+  }
+  .candidate-input-form-skill-text2 {
+    font-size: 14px;
+  }
+  .candidate-input-form-submit-cancel-buttons-container {
+    height: auto;
+  }
+  .candidate-input-form-cancel-button {
+    height: 36px;
+    font-size: 14px;
+  }
+  .candidate-input-form-submit-button {
+    height: 36px;
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .candidate-input-form-cancel-button {
+    padding: 0px;
+  }
+  .candidate-input-form-submit-button {
+    padding: 0px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .candidate-input-form-enter-manually-text-container {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-company-name-container1 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .candidate-input-form-job-title-container1 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input1 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-container1 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input1 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-company-name-container2 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .candidate-input-form-job-title-container2 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-text2 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input2 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-text2 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-container2 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input2 {
+    width: 100%;
+  }
+  .candidate-input-form-issued-renewal-date-container1 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+  }
+  .candidate-input-form-issued-date-container1 {
+    width: 100%;
+  }
+  .candidate-input-form-container16 {
+    width: 100%;
+  }
+  .candidate-input-form-issuing-date-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-select-container1 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input3 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input4 {
+    width: 100%;
+  }
+  .candidate-input-form-renewal-date-container {
+    width: 100%;
+  }
+  .candidate-input-form-container19 {
+    width: 100%;
+  }
+  .candidate-input-form-renewal-date-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-select-container2 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input5 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input6 {
+    width: 100%;
+  }
+  .candidate-input-form-issued-renewal-date-container2 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+  }
+  .candidate-input-form-issued-date-container2 {
+    width: 100%;
+  }
+  .candidate-input-form-container22 {
+    width: 100%;
+  }
+  .candidate-input-form-issuing-date-text2 {
+    width: 100%;
+  }
+  .candidate-input-form-select-container3 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input7 {
+    width: 100%;
+  }
+  .candidate-input-form-company-name-input8 {
+    width: 100%;
+  }
+  .candidate-input-form-certificate-name-container {
+    width: 100%;
+  }
+  .candidate-input-form-certifiacate-name-container {
+    width: 100%;
+  }
+  .candidate-input-form-certificate-name-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-container25 {
+    width: 100%;
+  }
+  .candidate-input-form-form1 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-company-name-container3 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .candidate-input-form-job-title-container3 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-text3 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input3 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-container4 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-text4 {
+    width: 100%;
+  }
+  .candidate-input-form-job-title-input4 {
+    width: 100%;
+  }
+  .candidate-input-form-issued-date-container3 {
+    width: 100%;
+  }
+  .candidate-input-form-container27 {
+    width: 100%;
+  }
+  .candidate-input-form-issuing-date-text3 {
+    width: 100%;
+  }
+  .candidate-input-form-select-container4 {
+    width: 100%;
+  }
+  .candidate-input-form-form2 {
+    width: 100%;
+  }
+  .candidate-input-form-credentials-container {
+    width: 100%;
+  }
+  .candidate-input-form-credentials-text1 {
+    width: 100%;
+  }
+  .candidate-input-form-form3 {
+    width: 100%;
+  }
+  .candidate-input-form-skills-container1 {
+    width: 100%;
+    height: auto;
+  }
+  .candidate-input-form-skill-text1 {
+    width: auto;
+  }
+  .candidate-input-form-job-title-input5 {
+    width: 100%;
+  }
+  .candidate-input-form-skills-container2 {
+    width: 100%;
+    height: auto;
+  }
+  .candidate-input-form-skill-text2 {
+    width: auto;
+  }
+  .candidate-input-form-job-title-input6 {
+    width: 100%;
+  }
+  .candidate-input-form-submit-cancel-buttons-container {
+    width: 100%;
+  }
+  .candidate-input-form-cancel-button {
+    width: 70px;
+    padding: 0px;
+  }
+  .candidate-input-form-cancel-text {
+    font-size: 14px;
+  }
+  .candidate-input-form-submit-button {
+    width: 70px;
+  }
+  .candidate-input-form-submit-text {
+    font-size: 14px;
+  }
+  .candidate-input-form-issuing-date-text4 {
+    width: 100%;
+  }
+  .candidate-input-form-issuing-date-text5 {
+    width: 100%;
+  }
+  .candidate-input-form-certificate-name-text2 {
+    width: 100%;
+  }
+  .candidate-input-form-renewal-date-text2 {
+    width: 100%;
+  }
+  .candidate-input-form-credentials-text2 {
+    width: 100%;
+  }
+}

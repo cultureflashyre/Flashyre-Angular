@@ -252,6 +252,20 @@ export const routes: Routes = [
       (m) => m.CodingAssessment
     ),
 },
+{
+    path: 'recruiter-super-admin-analytical-module',
+    loadComponent: () =>
+      import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component').then(
+        (m) => m.recruiter-super-admin-analytical-module
+      ),
+  },
+  {
+  path: 'recruiter-workflow',
+  loadComponent: () =>
+    import('./pages/recruiter-workflow/recruiter-workflow.component').then(
+      (m) => m.recruiter-workflow
+    ),
+},
   {
     path: '**',
     loadComponent: () =>

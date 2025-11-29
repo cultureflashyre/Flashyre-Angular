@@ -1,0 +1,1369 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-workflow-requirment-listing-recruiter-workflow-requirment-listing {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-self: center;
+  align-items: flex-start;
+  padding-top: var(--dl-layout-space-unit);
+  flex-direction: column;
+  padding-bottom: var(--dl-layout-space-unit);
+}
+ 
+.recruiter-workflow-requirment-listing-select-filter-sort-download-zip-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+  padding-left: var(--dl-layout-space-halfunit);
+  padding-right: var(--dl-layout-space-halfunit);
+  justify-content: space-between;
+}
+ 
+.recruiter-workflow-requirment-listing-container10 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-select-all-main-container1 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-select-checkbox1 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.recruiter-workflow-requirment-listing-select-all-text {
+  font-size: 16px;
+}
+ 
+.recruiter-workflow-requirment-listing-container11 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-select-all-main-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-icon10 {
+  fill: #ACACAD;
+  color: #ACACAD;
+}
+ 
+.recruiter-workflow-requirment-listing-container12 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-icon12 {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.recruiter-workflow-requirment-listing-filter-sort-download-zip-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button1 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: auto;
+  height: 100%;
+  font-size: 20px;
+  transition: 0.3s;
+  border-color: #F10400;
+  border-width: 1px;
+  background-color: #F10400;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-start-process-text1 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  font-size: 16px;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button2 {
+  fill: #05356c;
+  color: #05356c;
+  width: auto;
+  height: 100%;
+  font-size: 20px;
+  transition: 0.3s;
+  border-color: #05356c;
+  border-width: 1px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-filtered-button2:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-start-process-text2 {
+  fill: #05356c;
+  color: #05356c;
+  font-size: 16px;
+}
+ 
+.recruiter-workflow-requirment-listing-sort-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle1 {
+  fill: #05356c;
+  color: #05356c;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  padding: var(--dl-layout-space-halfunit);
+  transition: 0.3s;
+  align-items: center;
+  border-color: #05356c;
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.recruiter-workflow-requirment-listing-text11 {
+  color: #05356c;
+  font-size: 16px;
+  font-style: normal;
+  text-align: center;
+  font-weight: 400;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon14 {
+  width: 18px;
+  height: 18px;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  list-style-position: inside;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-workflow-requirment-listing-text12 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown2 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-workflow-requirment-listing-text13 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown3 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.recruiter-workflow-requirment-listing-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.recruiter-workflow-requirment-listing-text14 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.recruiter-workflow-requirment-listing-container13 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 75vh;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+ 
+.recruiter-workflow-requirment-listing-container14 {
+  gap: 0px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.recruiter-workflow-requirment-listing-container15 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: flex-start;
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+ 
+.recruiter-workflow-requirment-listing-container16 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 94%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-halfunit);
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.recruiter-workflow-requirment-listing-container17 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.recruiter-workflow-requirment-listing-select-checkbox2 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.recruiter-workflow-requirment-listing-container18 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 95%;
+  height: auto;
+  display: flex;
+  padding: 4px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.recruiter-workflow-requirment-listing-text15 {
+  display: flex;
+  font-size: 22px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.recruiter-workflow-requirment-listing-container19 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-container20 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-icon16 {
+  fill: #747474;
+  color: #747474;
+  width: 16px;
+  height: 16px;
+}
+ 
+.recruiter-workflow-requirment-listing-text16 {
+  font-size: 14px;
+  align-self: flex-end;
+}
+ 
+.recruiter-workflow-requirment-listing-container21 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-icon20 {
+  fill: #747474;
+  color: #747474;
+  width: 18px;
+  height: 18px;
+}
+ 
+.recruiter-workflow-requirment-listing-text17 {
+  font-size: 14px;
+  align-self: flex-end;
+}
+ 
+.recruiter-workflow-requirment-listing-container22 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-icon22 {
+  fill: #747474;
+  color: #747474;
+  width: 16px;
+  height: 16px;
+}
+ 
+.recruiter-workflow-requirment-listing-text18 {
+  font-size: 14px;
+  align-self: flex-end;
+}
+ 
+.recruiter-workflow-requirment-listing-container23 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.recruiter-workflow-requirment-listing-container24 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text19 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 20%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text20 {
+  width: 80%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-container25 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text21 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 20%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text22 {
+  width: 80%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-container26 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text23 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 20%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-container27 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 80%;
+  height: auto;
+  display: flex;
+  max-width: 70%;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.recruiter-workflow-requirment-listing-text24 {
+  width: auto;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text25 {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  font-size: 14px;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-text25:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-requirment-listing-text25:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-requirment-listing-container28 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text26 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 20%;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-container29 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 80%;
+  height: auto;
+  display: flex;
+  max-width: 70%;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.recruiter-workflow-requirment-listing-text27 {
+  width: auto;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text28 {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  font-size: 14px;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-text28:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-requirment-listing-text28:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-requirment-listing-container30 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  align-items: flex-start;
+  border-color: #C0C0C0;
+  border-width: 1px;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.recruiter-workflow-requirment-listing-container31 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border-color: #C0C0C0;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-halfunit);
+  padding-right: var(--dl-layout-space-halfunit);
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+ 
+.recruiter-workflow-requirment-listing-container32 {
+  flex: 0 0 auto;
+  width: 25%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text29 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.recruiter-workflow-requirment-listing-container33 {
+  flex: 0 0 auto;
+  width: 25%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text30 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.recruiter-workflow-requirment-listing-container34 {
+  flex: 0 0 auto;
+  width: 25%;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.recruiter-workflow-requirment-listing-text31 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.recruiter-workflow-requirment-listing-container35 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: flex-start;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.recruiter-workflow-requirment-listing-container36 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  padding-left: var(--dl-layout-space-halfunit);
+  padding-right: var(--dl-layout-space-halfunit);
+}
+ 
+.recruiter-workflow-requirment-listing-container37 {
+  flex: 0 0 auto;
+  width: 25%;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.recruiter-workflow-requirment-listing-container38 {
+  flex: 0 0 auto;
+  width: 25%;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.recruiter-workflow-requirment-listing-container39 {
+  flex: 0 0 auto;
+  width: 25%;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.recruiter-workflow-requirment-listing-container40 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 4%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
+  flex-direction: column;
+  padding-bottom: 4px;
+}
+ 
+.recruiter-workflow-requirment-listing-icon26 {
+  fill: #ACACAD;
+  color: #ACACAD;
+  width: 24px;
+  height: 24px;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon26:hover {
+  color: #05356C;
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon26:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-requirment-listing-icon29 {
+  fill: #ACACAD;
+  color: #ACACAD;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon29:hover {
+  color: #05356C;
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon29:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-requirment-listing-icon31 {
+  fill: #F10400;
+  color: #F10400;
+  width: 24px;
+  height: 24px;
+  transition: 0.3s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon31:hover {
+  color: #F65E5C;
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-requirment-listing-icon31:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-requirment-listing-container41 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding-left: var(--dl-layout-space-halfunit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-halfunit);
+  justify-content: flex-end;
+  background-color: #F4F4F4;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+ 
+.recruiter-workflow-requirment-listing-container42 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text35 {
+  fill: #747474;
+  color: #747474;
+  width: auto;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text36 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: auto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-workflow-requirment-listing-container43 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.recruiter-workflow-requirment-listing-text37 {
+  fill: #747474;
+  color: #747474;
+  width: auto;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-text38 {
+  fill: #747474;
+  color: #747474;
+  width: auto;
+  font-size: 14px;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment10 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text39 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment11 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text40 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment12 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text41 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment13 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text42 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment14 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text43 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment15 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text44 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment16 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text45 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment17 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text46 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment18 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text47 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment19 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text48 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment20 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text49 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment21 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text50 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment22 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text51 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment23 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text52 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment24 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text53 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment25 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text54 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment26 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text55 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment27 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text56 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment28 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text57 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment29 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text58 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment30 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text59 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment31 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text60 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment32 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text61 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment33 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text62 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment34 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text63 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment35 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text64 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment36 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text65 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment37 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text66 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment38 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text67 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment39 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text68 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment40 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text69 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listing-fragment41 {
+  display: contents;
+}
+ 
+.recruiter-workflow-requirment-listing-text70 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirment-listingroot-class-name {
+  display: none;
+}
+ 
+@media(max-width: 1200px) {
+  .recruiter-workflow-requirment-listing-select-filter-sort-download-zip-main-container {
+    height: auto;
+  }
+  .recruiter-workflow-requirment-listing-container30 {
+    gap: 8px;
+    width: 100%;
+    padding: 0px;
+    max-height: auto;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-radius: 8px;
+  }
+  .recruiter-workflow-requirment-listing-container31 {
+    width: 100%;
+    height: 28px;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-container32 {
+    width: 25%;
+    height: 100%;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text29 {
+    width: auto;
+    font-size: 16px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .recruiter-workflow-requirment-listing-container33 {
+    width: 25%;
+    height: 100%;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text30 {
+    width: auto;
+    font-size: 16px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .recruiter-workflow-requirment-listing-container34 {
+    width: 25%;
+    height: 100%;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text31 {
+    width: auto;
+    font-size: 16px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .recruiter-workflow-requirment-listing-container35 {
+    gap: 8px;
+    width: 100%;
+    max-height: 200px;
+    align-items: flex-start;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-container36 {
+    width: 100%;
+    height: 24px;
+    align-items: center;
+    border-width: 0px;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .recruiter-workflow-requirment-listing-container37 {
+    width: 25%;
+    height: 24px;
+    align-items: center;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text32 {
+    width: 100%;
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-container38 {
+    width: 25%;
+    height: 24px;
+    align-items: center;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text33 {
+    width: 100%;
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-container39 {
+    width: 25%;
+    height: 24px;
+    align-items: center;
+    border-width: 0px;
+  }
+  .recruiter-workflow-requirment-listing-text34 {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .recruiter-workflow-requirment-listing-select-filter-sort-download-zip-main-container {
+    height: 15%;
+    align-items: center;
+  }
+  .recruiter-workflow-requirment-listing-select-checkbox1 {
+    width: 16px;
+    height: 16px;
+  }
+  .recruiter-workflow-requirment-listing-select-all-text {
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-filtered-button1 {
+    padding: var(--dl-layout-space-halfunit);
+  }
+  .recruiter-workflow-requirment-listing-start-process-text1 {
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-filtered-button2 {
+    padding: var(--dl-layout-space-halfunit);
+  }
+  .recruiter-workflow-requirment-listing-start-process-text2 {
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-text11 {
+    font-size: 14px;
+  }
+  .recruiter-workflow-requirment-listing-container15 {
+    gap: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .recruiter-workflow-requirment-listing-select-checkbox2 {
+    width: 16px;
+    height: 16px;
+  }
+  .recruiter-workflow-requirment-listing-container20 {
+    width: auto;
+    height: 22px;
+  }
+  .recruiter-workflow-requirment-listing-container21 {
+    width: auto;
+    height: 22px;
+  }
+  .recruiter-workflow-requirment-listing-container22 {
+    width: auto;
+    height: 22px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-workflow-requirment-listing-select-filter-sort-download-zip-main-container {
+    height: 15%;
+    padding-left: var(--dl-layout-space-halfunit);
+    padding-right: var(--dl-layout-space-halfunit);
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-requirment-listing-select-checkbox1 {
+    width: 14px;
+    height: 14px;
+  }
+  .recruiter-workflow-requirment-listing-select-all-text {
+    font-size: 12px;
+  }
+  .recruiter-workflow-requirment-listing-select-all-main-container2 {
+    gap: 8px;
+    width: 181px;
+  }
+  .recruiter-workflow-requirment-listing-filter-sort-download-zip-container {
+    gap: 4px;
+  }
+  .recruiter-workflow-requirment-listing-filtered-button1 {
+    padding: 2px;
+  }
+  .recruiter-workflow-requirment-listing-start-process-text1 {
+    font-size: 16px;
+  }
+  .recruiter-workflow-requirment-listing-filtered-button2 {
+    padding: 2px;
+  }
+  .recruiter-workflow-requirment-listing-start-process-text2 {
+    font-size: 16px;
+  }
+  .recruiter-workflow-requirment-listing-dropdown-toggle1 {
+    padding: 2px;
+  }
+  .recruiter-workflow-requirment-listing-text11 {
+    font-size: 16px;
+  }
+  .recruiter-workflow-requirment-listing-container15 {
+    gap: 8px;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .recruiter-workflow-requirment-listing-select-checkbox2 {
+    width: 14px;
+    height: 14px;
+  }
+}

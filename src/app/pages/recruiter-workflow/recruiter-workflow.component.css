@@ -1,0 +1,1961 @@
+:host { 
+  display: contents; 
+}
+ 
+.recruiter-workflow-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.recruiter-workflow-container2 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  box-shadow: 5px 5px 20px 10px #d4d4d4;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.recruiter-workflow-fragment100 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text100 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.recruiter-workflow-fragment101 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text101 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment102 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text102 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment103 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text103 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment104 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text104 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment105 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text105 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment106 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text106 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment107 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text107 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment108 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text108 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment109 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text109 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment110 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text110 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment111 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text111 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.recruiter-workflow-fragment112 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text112 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment113 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text113 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment114 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text114 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment115 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text115 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment116 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text119 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+}
+ 
+.recruiter-workflow-candidates-listing-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: 90vh;
+  display: none;
+  padding: var(--dl-layout-space-unit);
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-workflow-cvjd-upload-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button1 {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button1:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button1:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-add-questions-with-ai-text1 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: auto;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button2 {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button2:hover {
+  cursor: poin;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button2:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-add-questions-with-ai-text2 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: auto;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-workflow-fragment117 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text120 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment118 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text121 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment119 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text122 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment120 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text123 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment121 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text124 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment122 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text125 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment123 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text126 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment124 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text127 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment125 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text128 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment126 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text129 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment127 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text130 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment128 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text131 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment129 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text132 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment130 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text133 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment131 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text134 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment132 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text135 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment133 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text136 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment134 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text137 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment135 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text138 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment136 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text139 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment137 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text140 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment138 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text141 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment139 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text142 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment140 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text143 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment141 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text144 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment142 {
+  display: contents;
+}
+ 
+.recruiter-workflow-credentials-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment143 {
+  display: contents;
+}
+ 
+.recruiter-workflow-issuing-date-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment144 {
+  display: contents;
+}
+ 
+.recruiter-workflow-renewal-date-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment145 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text151 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment146 {
+  display: contents;
+}
+ 
+.recruiter-workflow-issuing-date-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment147 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text154 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment148 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text155 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment149 {
+  display: contents;
+}
+ 
+.recruiter-workflow-certificate-name-text1 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment150 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text158 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment151 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text159 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment152 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text160 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment153 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text161 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment154 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text162 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment155 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text163 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment156 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text164 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment157 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text165 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment158 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text166 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment159 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text167 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment160 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text168 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment161 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text169 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment162 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text170 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment163 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text171 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment164 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text172 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment165 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text173 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment166 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text174 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment167 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text175 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment168 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text176 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment169 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text177 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment170 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text178 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment171 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text179 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment172 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text180 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment173 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text181 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment174 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text182 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment175 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text183 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment176 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text184 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment177 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text185 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment178 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text186 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment179 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text187 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment180 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text188 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment181 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text189 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment182 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text190 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment183 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text191 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment184 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text192 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-requirements-listing-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: 90vh;
+  display: none;
+  padding: var(--dl-layout-space-unit);
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-workflow-cvjd-upload-container2 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button3 {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button3:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button3:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-add-questions-with-ai-text3 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: auto;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-workflow-fragment185 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text193 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment186 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text194 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment187 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text195 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment188 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text196 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment189 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text197 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment190 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text198 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment191 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text199 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment192 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text200 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment193 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text201 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment194 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text202 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment195 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text203 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment196 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text204 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment197 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text205 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment198 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text206 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment199 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text207 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment200 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text208 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment201 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text209 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment202 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text210 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment203 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text211 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment204 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text212 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment205 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text213 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment206 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text214 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment207 {
+  display: contents;
+}
+ 
+.recruiter-workflow-credentials-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment208 {
+  display: contents;
+}
+ 
+.recruiter-workflow-issuing-date-text3 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment209 {
+  display: contents;
+}
+ 
+.recruiter-workflow-renewal-date-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment210 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text221 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment211 {
+  display: contents;
+}
+ 
+.recruiter-workflow-issuing-date-text4 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment212 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text224 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment213 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text225 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment214 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text226 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment215 {
+  display: contents;
+}
+ 
+.recruiter-workflow-certificate-name-text2 {
+  fill: #18191C;
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment216 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text229 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment217 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text230 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment218 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text231 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment219 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text232 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment220 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text233 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment221 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text234 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment222 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text235 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment223 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text236 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment224 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text237 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment225 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text238 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment226 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text239 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment227 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text240 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment228 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text241 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment229 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text242 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment230 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text243 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment231 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text244 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment232 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text245 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment233 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text246 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment234 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text247 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment235 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text248 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment236 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text249 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment237 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text250 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment238 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text251 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment239 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text252 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment240 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text253 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment241 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text254 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment242 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text255 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment243 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text256 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment244 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text257 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment245 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text258 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment246 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text259 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment247 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text260 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment248 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text261 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-clients-listing-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: 90vh;
+  display: none;
+  padding: var(--dl-layout-space-unit);
+  position: relative;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.recruiter-workflow-cvjd-upload-container3 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button4 {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  padding: 0px;
+  background: linear-gradient(90deg, #E489A9,  #696CE9, #7064E5, #78B7D7);
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button4:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+ 
+.recruiter-workflow-add-questions-with-ai-button4:active {
+  transform: scale(0.9);
+}
+ 
+.recruiter-workflow-add-questions-with-ai-text4 {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: auto;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.recruiter-workflow-fragment249 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text262 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment250 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text263 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment251 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text264 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment252 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text265 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment253 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text266 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment254 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text267 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment255 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text268 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment256 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text269 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment257 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text270 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment258 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text271 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment259 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text272 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment260 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text273 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment261 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text274 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment262 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text275 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment263 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text276 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment264 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text277 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment265 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text278 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment266 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text279 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment267 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text280 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment268 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text281 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment269 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text282 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment270 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text283 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment271 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text284 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment272 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text285 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment273 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text286 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment274 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text287 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment275 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text288 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment276 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text289 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment277 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text290 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment278 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text291 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment279 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text292 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment280 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text293 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment281 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text294 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment282 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text295 {
+  display: inline-block;
+}
+ 
+.recruiter-workflow-fragment283 {
+  display: contents;
+}
+ 
+.recruiter-workflow-text296 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .recruiter-workflow-candidates-listing-container {
+    width: 85%;
+    display: none;
+  }
+  .recruiter-workflow-text156 {
+    color: #18191c;
+  }
+  .recruiter-workflow-requirements-listing-container {
+    width: 85%;
+    display: flex;
+  }
+  .recruiter-workflow-text227 {
+    color: #18191c;
+  }
+  .recruiter-workflow-clients-listing-container {
+    width: 85%;
+    display: flex;
+  }
+  .recruiter-workflow-add-questions-with-ai-text4 {
+    fill: #FFFFFF;
+    color: #ffffff;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .recruiter-workflow-text100 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .recruiter-workflow-text101 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .recruiter-workflow-cvjd-upload-container1 {
+    width: 50%;
+    height: 90px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button1 {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text1 {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-add-questions-with-ai-button2 {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text2 {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-cvjd-upload-container2 {
+    width: 50%;
+    height: 90px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button3 {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text3 {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-cvjd-upload-container3 {
+    width: 50%;
+    height: 90px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button4 {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text4 {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .recruiter-workflow-text104 {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .recruiter-workflow-text105 {
+    font-size: 12px;
+  }
+  .recruiter-workflow-text106 {
+    font-size: 12px;
+  }
+  .recruiter-workflow-text107 {
+    font-size: 12px;
+  }
+  .recruiter-workflow-text108 {
+    font-size: 10px;
+  }
+  .recruiter-workflow-text109 {
+    font-size: 10px;
+  }
+  .recruiter-workflow-text110 {
+    font-size: 10px;
+  }
+  .recruiter-workflow-text112 {
+    font-size: 16px;
+  }
+  .recruiter-workflow-text115 {
+    color: rgb(24, 25, 28);
+  }
+  .recruiter-workflow-cvjd-upload-container1 {
+    height: 60px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button1 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text1 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-add-questions-with-ai-button2 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text2 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-cvjd-upload-container2 {
+    height: 60px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button3 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text3 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .recruiter-workflow-cvjd-upload-container3 {
+    height: 60px;
+  }
+  .recruiter-workflow-add-questions-with-ai-button4 {
+    width: auto;
+    height: 32px;
+    padding: var(--dl-layout-space-halfunit);
+    justify-content: center;
+  }
+  .recruiter-workflow-add-questions-with-ai-text4 {
+    font-size: 10px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .recruiter-workflow-cvjd-upload-container1 {
+    width: 100%;
+    align-self: flex-start;
+  }
+  .recruiter-workflow-credentials-text1 {
+    width: 100%;
+  }
+  .recruiter-workflow-issuing-date-text1 {
+    width: 100%;
+  }
+  .recruiter-workflow-renewal-date-text1 {
+    width: 100%;
+  }
+  .recruiter-workflow-issuing-date-text2 {
+    width: 100%;
+  }
+  .recruiter-workflow-certificate-name-text1 {
+    width: 100%;
+  }
+  .recruiter-workflow-cvjd-upload-container2 {
+    width: 100%;
+    align-self: flex-start;
+  }
+  .recruiter-workflow-credentials-text2 {
+    width: 100%;
+  }
+  .recruiter-workflow-issuing-date-text3 {
+    width: 100%;
+  }
+  .recruiter-workflow-renewal-date-text2 {
+    width: 100%;
+  }
+  .recruiter-workflow-issuing-date-text4 {
+    width: 100%;
+  }
+  .recruiter-workflow-certificate-name-text2 {
+    width: 100%;
+  }
+  .recruiter-workflow-cvjd-upload-container3 {
+    width: 100%;
+    align-self: flex-start;
+  }
+}

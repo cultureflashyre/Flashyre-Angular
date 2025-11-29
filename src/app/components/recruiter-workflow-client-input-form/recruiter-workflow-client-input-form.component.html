@@ -1,0 +1,291 @@
+<div
+  class="recruiter-workflow-client-input-form-recruiter-workflow-client-input-form"
+  [ngClass]="rootClassName"
+>
+  <div class="recruiter-workflow-client-input-form-container1">
+    <span class="recruiter-workflow-client-input-form-text10">
+      <ng-container>
+        <ng-template #defaultText>
+          <div class="recruiter-workflow-client-input-form-fragment16">
+            <span class="recruiter-workflow-client-input-form-text17">
+              Client Input form
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text ? text : defaultText"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div class="recruiter-workflow-client-input-form-container2">
+    <div
+      id="job-title-company-name-container"
+      class="recruiter-workflow-client-input-form-job-title-company-name-container"
+    >
+      <div
+        id="candidate-job-title"
+        class="recruiter-workflow-client-input-form-job-title-container"
+      >
+        <span
+          id="employment-job-title-text"
+          class="recruiter-workflow-client-input-form-job-title-text"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText>
+              <div class="recruiter-workflow-client-input-form-fragment11">
+                <span class="recruiter-workflow-client-input-form-text12">
+                  Client Name
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText ? jobTitleText : defaultJobTitleText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder1"
+          class="recruiter-workflow-client-input-form-job-title-input1 input"
+        />
+      </div>
+      <div
+        id="candidate-company-name-container"
+        class="recruiter-workflow-client-input-form-company-name-container"
+      >
+        <span
+          id="employment-company-name"
+          class="recruiter-workflow-client-input-form-company-name-text"
+        >
+          <ng-container>
+            <ng-template #defaultCompanyNameText>
+              <div class="recruiter-workflow-client-input-form-fragment14">
+                <span class="recruiter-workflow-client-input-form-text15">
+                  Sub Client Name
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="companyNameText ? companyNameText : defaultCompanyNameText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-company-name-input"
+          [attr.placeholder]="companyNameInputPlaceholder"
+          class="recruiter-workflow-client-input-form-company-name-input input"
+        />
+      </div>
+    </div>
+    <div
+      id="skills-container"
+      class="recruiter-workflow-client-input-form-skills-container"
+    >
+      <div
+        id="skill-text-container"
+        class="recruiter-workflow-client-input-form-skill-text-container"
+      >
+        <span
+          id="skill-text"
+          class="recruiter-workflow-client-input-form-skill-text"
+        >
+          <ng-container>
+            <ng-template #defaultSkillText>
+              <div class="recruiter-workflow-client-input-form-fragment15">
+                <span class="recruiter-workflow-client-input-form-text16">
+                  Client Description
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillText ? skillText : defaultSkillText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="skill-star-text"
+          class="recruiter-workflow-client-input-form-skill-star-text"
+        >
+          <ng-container>
+            <ng-template #defaultSkillStarText>
+              <div class="recruiter-workflow-client-input-form-fragment10">
+                <span class="recruiter-workflow-client-input-form-text11">
+                  *
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillStarText ? skillStarText : defaultSkillStarText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <input
+        type="text"
+        id="employment-job-title-input"
+        [attr.placeholder]="jobTitleInputPlaceholder"
+        class="recruiter-workflow-client-input-form-job-title-input2 input"
+      />
+    </div>
+    <div
+      id="interview-process-container"
+      class="recruiter-workflow-client-input-form-interview-process-container"
+    >
+      <span
+        id="interview-process-text"
+        class="recruiter-workflow-client-input-form-interview-process-text"
+      >
+        <ng-container>
+          <ng-template #defaultInterviewProcessText>
+            <div class="recruiter-workflow-client-input-form-fragment18">
+              <span class="recruiter-workflow-client-input-form-text19">
+                Contact Information
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="interviewProcessText ? interviewProcessText : defaultInterviewProcessText"
+          ></ng-container>
+        </ng-container>
+      </span>
+      <div
+        id="different-stages-container"
+        class="recruiter-workflow-client-input-form-different-stages-container"
+      >
+        <div
+          id="different-stage-container"
+          class="recruiter-workflow-client-input-form-different-stage-container"
+        >
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder"
+            class="recruiter-workflow-client-input-form-date-input1 input"
+          />
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder1"
+            class="recruiter-workflow-client-input-form-date-input2 input"
+          />
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder2"
+            class="recruiter-workflow-client-input-form-date-input3 input"
+          />
+          <input
+            type="text"
+            id="date-input"
+            [attr.placeholder]="dateInputPlaceholder3"
+            class="recruiter-workflow-client-input-form-date-input4 input"
+          />
+          <svg
+            id="remove-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            class="recruiter-workflow-client-input-form-remove-icon"
+          >
+            <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </div>
+      <div
+        id="add-section-container"
+        class="recruiter-workflow-client-input-form-add-section-container"
+      >
+        <span
+          id="add-section-text"
+          class="recruiter-workflow-client-input-form-add-section-text button"
+        >
+          <ng-container>
+            <ng-template #defaultAddSectionText>
+              <div class="recruiter-workflow-client-input-form-fragment17">
+                <span class="recruiter-workflow-client-input-form-text18">
+                  + Add Location
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="addSectionText ? addSectionText : defaultAddSectionText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="remove-section-text"
+          class="recruiter-workflow-client-input-form-remove-section-text button"
+        >
+          <ng-container>
+            <ng-template #defaultRemoveSectionText>
+              <div class="recruiter-workflow-client-input-form-fragment13">
+                <span class="recruiter-workflow-client-input-form-text14">
+                  - Remove Section
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="removeSectionText ? removeSectionText : defaultRemoveSectionText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    id="submit-cancel-buttons-container"
+    class="recruiter-workflow-client-input-form-submit-cancel-buttons-container"
+  >
+    <button
+      id="cancel-button"
+      name="cancel-button"
+      type="button"
+      class="recruiter-workflow-client-input-form-cancel-button button"
+    >
+      <span
+        id="cancel-text"
+        class="recruiter-workflow-client-input-form-cancel-text"
+      >
+        <ng-container>
+          <ng-template #defaultCancelText>
+            <div class="recruiter-workflow-client-input-form-fragment12">
+              <span class="recruiter-workflow-client-input-form-text13">
+                Cancel
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="cancelText ? cancelText : defaultCancelText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <button
+      id="submit-button"
+      name="submit-button"
+      type="button"
+      class="recruiter-workflow-client-input-form-submit-button button"
+    >
+      <span
+        id="submit-text"
+        class="recruiter-workflow-client-input-form-submit-text"
+      >
+        <ng-container>
+          <ng-template #defaultSubmitText>
+            <div class="recruiter-workflow-client-input-form-fragment19">
+              <span class="recruiter-workflow-client-input-form-text20">
+                Submit
+              </span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="submitText ? submitText : defaultSubmitText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,848 @@
+<div
+  class="candidate-input-form-candidate-input-form"
+  [ngClass]="rootClassName"
+>
+  <div class="candidate-input-form-container10">
+    <span class="candidate-input-form-text10">
+      <ng-container>
+        <ng-template #defaultText>
+          <div class="candidate-input-form-fragment25">
+            <span class="candidate-input-form-text37">Input form</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text ? text : defaultText"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <div class="candidate-input-form-container11">
+      <h1 class="candidate-input-form-text11">
+        <ng-container>
+          <ng-template #defaultHeading>
+            <div class="candidate-input-form-fragment19">
+              <span class="candidate-input-form-text30">Naukri</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="heading ? heading : defaultHeading"
+          ></ng-container>
+        </ng-container>
+      </h1>
+      <h1 class="candidate-input-form-text12">
+        <ng-container>
+          <ng-template #defaultHeading1>
+            <div class="candidate-input-form-fragment26">
+              <span class="candidate-input-form-text38">External</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="heading1 ? heading1 : defaultHeading1"
+          ></ng-container>
+        </ng-container>
+      </h1>
+    </div>
+  </div>
+  <div class="candidate-input-form-container12">
+    <div
+      id="upload-file-container"
+      class="candidate-input-form-upload-file-container"
+    >
+      <input
+        type="text"
+        id="upload-file-input"
+        [attr.placeholder]="uploadFileInputPlaceholder"
+        class="candidate-input-form-upload-file-input input"
+      />
+      <div
+        id="upload-file-button-container"
+        class="candidate-input-form-upload-file-button-container"
+      >
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          class="candidate-input-form-icon1"
+        >
+          <path
+            d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+        <span class="candidate-input-form-text13">
+          <ng-container>
+            <ng-template #defaultText1>
+              <div class="candidate-input-form-fragment29">
+                <span class="candidate-input-form-text42">Upload File</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+    <span id="note-for-file" class="candidate-input-form-note-for-file">
+      <ng-container>
+        <ng-template #defaultNoteForFile>
+          <div class="candidate-input-form-fragment14">
+            <span class="candidate-input-form-text25">
+              Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="noteForFile ? noteForFile : defaultNoteForFile"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div class="candidate-input-form-container13">
+    <div
+      id="enter-manually-text-container"
+      class="candidate-input-form-enter-manually-text-container"
+    >
+      <span
+        id="enter-manually-text"
+        class="candidate-input-form-enter-manually-text"
+      >
+        <ng-container>
+          <ng-template #defaultEnterManuallyText>
+            <div class="candidate-input-form-fragment32">
+              <span class="candidate-input-form-text45">Enter Manually</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="enterManuallyText ? enterManuallyText : defaultEnterManuallyText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </div>
+    <div
+      id="job-title-company-name-container"
+      class="candidate-input-form-job-title-company-name-container1"
+    >
+      <div
+        id="candidate-job-title"
+        class="candidate-input-form-job-title-container1"
+      >
+        <span
+          id="employment-job-title-text"
+          class="candidate-input-form-job-title-text1"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText>
+              <div class="candidate-input-form-fragment22">
+                <span class="candidate-input-form-text33">
+                  Candidate First Name
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText ? jobTitleText : defaultJobTitleText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder2"
+          class="candidate-input-form-job-title-input1 input"
+        />
+      </div>
+      <div class="candidate-input-form-container14">
+        <span
+          id="employment-company-name"
+          class="candidate-input-form-company-name-text1"
+        >
+          <ng-container>
+            <ng-template #defaultCompanyNameText>
+              <div class="candidate-input-form-fragment37">
+                <span class="candidate-input-form-text51">
+                  Candidate Last Name
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="companyNameText ? companyNameText : defaultCompanyNameText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          id="candidate-company-name-container"
+          class="candidate-input-form-company-name-container1"
+        >
+          <input
+            type="text"
+            id="employment-company-name-input"
+            [attr.placeholder]="companyNameInputPlaceholder"
+            class="candidate-input-form-company-name-input1 input"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      id="job-title-company-name-container"
+      class="candidate-input-form-job-title-company-name-container2"
+    >
+      <div
+        id="candidate-job-title"
+        class="candidate-input-form-job-title-container2"
+      >
+        <span
+          id="employment-job-title-text"
+          class="candidate-input-form-job-title-text2"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText1>
+              <div class="candidate-input-form-fragment38">
+                <span class="candidate-input-form-text52">Phone Number</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText1 ? jobTitleText1 : defaultJobTitleText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="number"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder3"
+          class="candidate-input-form-job-title-input2 input"
+        />
+      </div>
+      <div class="candidate-input-form-container15">
+        <span
+          id="employment-company-name"
+          class="candidate-input-form-company-name-text2"
+        >
+          <ng-container>
+            <ng-template #defaultCompanyNameText1>
+              <div class="candidate-input-form-fragment28">
+                <span class="candidate-input-form-text41">Email Id</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="companyNameText1 ? companyNameText1 : defaultCompanyNameText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          id="candidate-company-name-container"
+          class="candidate-input-form-company-name-container2"
+        >
+          <input
+            type="email"
+            id="employment-company-name-input"
+            [attr.placeholder]="companyNameInputPlaceholder1"
+            class="candidate-input-form-company-name-input2 input"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      id="issued-renewal-date-container"
+      class="candidate-input-form-issued-renewal-date-container1"
+    >
+      <div
+        id="certification-issued-date-container"
+        class="candidate-input-form-issued-date-container1"
+      >
+        <div id="container" class="candidate-input-form-container16">
+          <span
+            id="certificate-issued-date"
+            class="candidate-input-form-issuing-date-text1"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText>
+                <div class="candidate-input-form-fragment12">
+                  <span
+                    id="certificate-issued-date"
+                    class="candidate-input-form-issuing-date-text4"
+                  >
+                    <span>Total Experience</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText ? issuingDateText : defaultIssuingDateText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="candidate-input-form-select-container1"
+          >
+            <div class="candidate-input-form-container17">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder2"
+                class="candidate-input-form-company-name-input3 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="candidate-input-form-fragment17">
+                    <span class="candidate-input-form-text28">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="candidate-input-form-container18">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder3"
+                class="candidate-input-form-company-name-input4 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText3>
+                  <div class="candidate-input-form-fragment35">
+                    <span class="candidate-input-form-text49">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certification-renewal-date-input"
+        class="candidate-input-form-renewal-date-container"
+      >
+        <div
+          id="certification-renewal-date-container"
+          class="candidate-input-form-container19"
+        >
+          <span
+            id="certificate-renewal-date-text"
+            class="candidate-input-form-renewal-date-text1"
+          >
+            <ng-container>
+              <ng-template #defaultRenewalDateText>
+                <div class="candidate-input-form-fragment34">
+                  <span
+                    id="certificate-renewal-date-text"
+                    class="candidate-input-form-renewal-date-text2"
+                  >
+                    <span>Relavant Experience</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="renewalDateText ? renewalDateText : defaultRenewalDateText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="candidate-input-form-select-container2"
+          >
+            <div class="candidate-input-form-container20">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder4"
+                class="candidate-input-form-company-name-input5 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText4>
+                  <div class="candidate-input-form-fragment33">
+                    <span class="candidate-input-form-text46">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="candidate-input-form-container21">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder5"
+                class="candidate-input-form-company-name-input6 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText5>
+                  <div class="candidate-input-form-fragment16">
+                    <span class="candidate-input-form-text27">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text5 ? text5 : defaultText5"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="issued-renewal-date-container"
+      class="candidate-input-form-issued-renewal-date-container2"
+    >
+      <div
+        id="certification-issued-date-container"
+        class="candidate-input-form-issued-date-container2"
+      >
+        <div id="container" class="candidate-input-form-container22">
+          <span
+            id="certificate-issued-date"
+            class="candidate-input-form-issuing-date-text2"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText1>
+                <div class="candidate-input-form-fragment24">
+                  <span
+                    id="certificate-issued-date"
+                    class="candidate-input-form-issuing-date-text5"
+                  >
+                    <span>Expected CTC</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText1 ? issuingDateText1 : defaultIssuingDateText1"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="candidate-input-form-select-container3"
+          >
+            <div class="candidate-input-form-container23">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder6"
+                class="candidate-input-form-company-name-input7 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText6>
+                  <div class="candidate-input-form-fragment10">
+                    <span class="candidate-input-form-text20">To</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text6 ? text6 : defaultText6"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <div class="candidate-input-form-container24">
+              <input
+                type="number"
+                id="employment-company-name-input"
+                [attr.placeholder]="companyNameInputPlaceholder7"
+                class="candidate-input-form-company-name-input8 input"
+              />
+            </div>
+            <span>
+              <ng-container>
+                <ng-template #defaultText7>
+                  <div class="candidate-input-form-fragment23">
+                    <span class="candidate-input-form-text34">Years</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certificate-name-container"
+        class="candidate-input-form-certificate-name-container"
+      >
+        <div
+          id="certificate-container"
+          class="candidate-input-form-certifiacate-name-container"
+        >
+          <span
+            id="certificate-name"
+            class="candidate-input-form-certificate-name-text1"
+          >
+            <ng-container>
+              <ng-template #defaultCertificateNameText>
+                <div class="candidate-input-form-fragment27">
+                  <span
+                    id="certificate-name"
+                    class="candidate-input-form-certificate-name-text2"
+                  >
+                    <span class="candidate-input-form-text39">Current CTC</span>
+                    <br />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="certificateNameText ? certificateNameText : defaultCertificateNameText"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div id="select-container" class="candidate-input-form-container25">
+            <form
+              id="certificate-name-input"
+              data-form-id="e011634f-5704-4dea-9f25-af78791bd1d2"
+              class="candidate-input-form-form1 input"
+            >
+              <span id="select-text" class="candidate-input-form-select-text1">
+                <ng-container>
+                  <ng-template #defaultSelectText1>
+                    <div class="candidate-input-form-fragment11">
+                      <span class="candidate-input-form-text21">Select</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="selectText1 ? selectText1 : defaultSelectText1"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                id="certificate-name-dropdown-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="candidate-input-form-drop-down-icon1"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="job-title-company-name-container"
+      class="candidate-input-form-job-title-company-name-container3"
+    >
+      <div
+        id="candidate-job-title"
+        class="candidate-input-form-job-title-container3"
+      >
+        <span
+          id="employment-job-title-text"
+          class="candidate-input-form-job-title-text3"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText2>
+              <div class="candidate-input-form-fragment39">
+                <span class="candidate-input-form-text53">
+                  Prefered Location
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText2 ? jobTitleText2 : defaultJobTitleText2"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder4"
+          class="candidate-input-form-job-title-input3 input"
+        />
+      </div>
+      <div
+        id="candidate-job-title"
+        class="candidate-input-form-job-title-container4"
+      >
+        <span
+          id="employment-job-title-text"
+          class="candidate-input-form-job-title-text4"
+        >
+          <ng-container>
+            <ng-template #defaultJobTitleText3>
+              <div class="candidate-input-form-fragment21">
+                <span class="candidate-input-form-text32">
+                  Current Location
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="jobTitleText3 ? jobTitleText3 : defaultJobTitleText3"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <input
+          type="text"
+          id="employment-job-title-input"
+          [attr.placeholder]="jobTitleInputPlaceholder5"
+          class="candidate-input-form-job-title-input4 input"
+        />
+      </div>
+    </div>
+    <div class="candidate-input-form-container26">
+      <div
+        id="certification-issued-date-container"
+        class="candidate-input-form-issued-date-container3"
+      >
+        <div id="container" class="candidate-input-form-container27">
+          <span
+            id="certificate-issued-date"
+            class="candidate-input-form-issuing-date-text3"
+          >
+            <ng-container>
+              <ng-template #defaultIssuingDateText2>
+                <div class="candidate-input-form-fragment40">
+                  <span class="candidate-input-form-text54">Notice Period</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="issuingDateText2 ? issuingDateText2 : defaultIssuingDateText2"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div
+            id="select-container"
+            class="candidate-input-form-select-container4"
+          >
+            <form
+              id="certification-issued-date-dropdown"
+              data-form-id="bd1e9c86-f2cb-4ba4-b34c-a17ac85e7ffa"
+              class="candidate-input-form-form2 input"
+            >
+              <span id="select-text" class="candidate-input-form-select-text2">
+                <ng-container>
+                  <ng-template #defaultSelectText2>
+                    <div class="candidate-input-form-fragment18">
+                      <span class="candidate-input-form-text29">Select</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="selectText2 ? selectText2 : defaultSelectText2"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <svg
+                id="issued-date-dropdown-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 32 32"
+                class="candidate-input-form-drop-down-icon2"
+              >
+                <path
+                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+        id="certification-credentials-container"
+        class="candidate-input-form-credentials-container"
+      >
+        <span
+          id="certification-credentials-text"
+          class="candidate-input-form-credentials-text1"
+        >
+          <ng-container>
+            <ng-template #defaultCredentialsText>
+              <div class="candidate-input-form-fragment42">
+                <span
+                  id="certification-credentials-text"
+                  class="candidate-input-form-credentials-text2"
+                >
+                  <span>Gender</span>
+                  <br />
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="credentialsText ? credentialsText : defaultCredentialsText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div
+          id="select-container"
+          class="candidate-input-form-select-container5"
+        >
+          <form
+            id="certification-credentials-dropdown"
+            data-form-id="e735ca67-f6ba-4845-a6ee-73055d23c802"
+            class="candidate-input-form-form3 input"
+          >
+            <span id="select-text" class="candidate-input-form-select-text3">
+              <ng-container>
+                <ng-template #defaultSelectText>
+                  <div class="candidate-input-form-fragment15">
+                    <span class="candidate-input-form-text26">Select</span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="selectText ? selectText : defaultSelectText"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <svg
+              id="credentials-dropdown-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 32 32"
+              class="candidate-input-form-drop-down-icon3"
+            >
+              <path
+                d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="skills-container" class="candidate-input-form-skills-container1">
+      <div
+        id="skill-text-container"
+        class="candidate-input-form-skill-text-container1"
+      >
+        <span id="skill-text" class="candidate-input-form-skill-text1">
+          <ng-container>
+            <ng-template #defaultSkillText>
+              <div class="candidate-input-form-fragment31">
+                <span class="candidate-input-form-text44">Work Experience</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillText ? skillText : defaultSkillText"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="skill-star-text"
+          class="candidate-input-form-skill-star-text1"
+        >
+          <ng-container>
+            <ng-template #defaultSkillStarText>
+              <div class="candidate-input-form-fragment13">
+                <span class="candidate-input-form-text24">*</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillStarText ? skillStarText : defaultSkillStarText"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <input
+        type="text"
+        id="employment-job-title-input"
+        [attr.placeholder]="jobTitleInputPlaceholder"
+        class="candidate-input-form-job-title-input5 input"
+      />
+    </div>
+    <div id="skills-container" class="candidate-input-form-skills-container2">
+      <div
+        id="skill-text-container"
+        class="candidate-input-form-skill-text-container2"
+      >
+        <span id="skill-text" class="candidate-input-form-skill-text2">
+          <ng-container>
+            <ng-template #defaultSkillText1>
+              <div class="candidate-input-form-fragment36">
+                <span class="candidate-input-form-text50">Skills</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillText1 ? skillText1 : defaultSkillText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span
+          id="skill-star-text"
+          class="candidate-input-form-skill-star-text2"
+        >
+          <ng-container>
+            <ng-template #defaultSkillStarText1>
+              <div class="candidate-input-form-fragment20">
+                <span class="candidate-input-form-text31">*</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="skillStarText1 ? skillStarText1 : defaultSkillStarText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </div>
+      <input
+        type="text"
+        id="employment-job-title-input"
+        [attr.placeholder]="jobTitleInputPlaceholder1"
+        class="candidate-input-form-job-title-input6 input"
+      />
+    </div>
+  </div>
+  <div
+    id="submit-cancel-buttons-container"
+    class="candidate-input-form-submit-cancel-buttons-container"
+  >
+    <button
+      id="cancel-button"
+      name="cancel-button"
+      type="button"
+      class="candidate-input-form-cancel-button button"
+    >
+      <span id="cancel-text" class="candidate-input-form-cancel-text">
+        <ng-container>
+          <ng-template #defaultCancelText>
+            <div class="candidate-input-form-fragment30">
+              <span class="candidate-input-form-text43">Cancel</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="cancelText ? cancelText : defaultCancelText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+    <button
+      id="submit-button"
+      name="submit-button"
+      type="button"
+      class="candidate-input-form-submit-button button"
+    >
+      <span id="submit-text" class="candidate-input-form-submit-text">
+        <ng-container>
+          <ng-template #defaultSubmitText>
+            <div class="candidate-input-form-fragment41">
+              <span class="candidate-input-form-text55">Submit</span>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngTemplateOutlet="submitText ? submitText : defaultSubmitText"
+          ></ng-container>
+        </ng-container>
+      </span>
+    </button>
+  </div>
+  <div class="candidate-input-form-candidate-input-form-overlay"></div>
+</div>
