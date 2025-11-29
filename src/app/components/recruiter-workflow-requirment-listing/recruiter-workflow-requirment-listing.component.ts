@@ -49,6 +49,4 @@ export class RecruiterWorkflowRequirmentListingComponent {
   @ContentChild('text11') text11: TemplateRef<any> | null = null;
   @ContentChild('text15') text15: TemplateRef<any> | null = null;
   @ContentChild('text20') text20: TemplateRef<any> | null = null;
-
-  constructor() {}
 }

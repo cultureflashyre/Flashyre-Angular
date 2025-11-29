@@ -7,20 +7,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// These two are used inside the navbar template.
-// Make sure you also convert them to standalone components.
-import { RecruiterProfileComponent } from '../recruiter-profile/recruiter-profile.component';
-import { RecruiterJobPosted1Component } from '../recruiter-job-posted1/recruiter-job-posted1.component';
-
 @Component({
   selector: 'recruiter-workflow-navbar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    RecruiterProfileComponent,
-    RecruiterJobPosted1Component,
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './recruiter-workflow-navbar.component.html',
   styleUrls: ['./recruiter-workflow-navbar.component.css'],
 })
@@ -65,6 +55,4 @@ export class RecruiterWorkflowNavbarComponent {
 
   @ContentChild('text3') text3: TemplateRef<any> | null = null;
   @ContentChild('text9') text9: TemplateRef<any> | null = null;
-
-  constructor() {}
 }

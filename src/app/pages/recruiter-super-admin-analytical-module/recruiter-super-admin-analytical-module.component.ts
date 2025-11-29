@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 
-// Adjust this path if your folder structure is different
+// Update the import path below if the component exists elsewhere, or create the file if missing.
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 
 @Component({
-  selector: 'app-recruiter-super-admin-analytical-module', // you can keep the old selector string if you prefer
+  selector: 'app-recruiter-super-admin-analytical-module',
   standalone: true,
   imports: [
     CommonModule,

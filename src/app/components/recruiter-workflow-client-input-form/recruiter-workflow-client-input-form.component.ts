@@ -41,6 +41,4 @@ export class RecruiterWorkflowClientInputFormComponent {
   @ContentChild('addSectionText') addSectionText: TemplateRef<any> | null = null;
   @ContentChild('interviewProcessText') interviewProcessText: TemplateRef<any> | null = null;
   @ContentChild('submitText') submitText: TemplateRef<any> | null = null;
-
-  constructor() {}
 }

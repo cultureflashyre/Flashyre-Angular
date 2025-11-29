@@ -2,28 +2,27 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 
-// Import the child components that this page template uses.
-// Adjust the paths below according to your actual folder structure.
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { CandidateInputFormComponent } from '../../components/candidate-input-form/candidate-input-form.component';
+import { RecruiterWorkflowCandidateListsComponent } from '../../components/recruiter-workflow-candidate-lists/recruiter-workflow-candidate-lists.component';
+import { RequirmentListingFormComponent } from '../../components/requirment-listing-form/requirment-listing-form.component';
+import { RecruiterWorkflowRequirmentListingComponent } from '../../components/recruiter-workflow-requirment-listing/recruiter-workflow-requirment-listing.component';
 import { RecruiterWorkflowClientInputFormComponent } from '../../components/recruiter-workflow-client-input-form/recruiter-workflow-client-input-form.component';
 import { RecruiterWorkflowClientListComponent } from '../../components/recruiter-workflow-client-list/recruiter-workflow-client-list.component';
-import { RecruiterWorkflowCandidateListsComponent } from '../../components/recruiter-workflow-candidate-lists/recruiter-workflow-candidate-lists.component';
-import { RecruiterWorkflowRequirmentListingComponent } from '../../components/recruiter-workflow-requirment-listing/recruiter-workflow-requirment-listing.component';
-import { RequirmentListingFormComponent } from '../../components/requirment-listing-form/requirment-listing-form.component';
+
 
 @Component({
-  selector: 'app-recruiter-workflow', // you can keep 'recruiter-workflow' if you prefer
+  selector: 'app-recruiter-workflow',
   standalone: true,
   imports: [
     CommonModule,
     RecruiterWorkflowNavbarComponent,
     CandidateInputFormComponent,
+    RecruiterWorkflowCandidateListsComponent,
+    RequirmentListingFormComponent,
+    RecruiterWorkflowRequirmentListingComponent,
     RecruiterWorkflowClientInputFormComponent,
     RecruiterWorkflowClientListComponent,
-    RecruiterWorkflowCandidateListsComponent,
-    RecruiterWorkflowRequirmentListingComponent,
-    RequirmentListingFormComponent,
   ],
   templateUrl: './recruiter-workflow.component.html',
   styleUrls: ['./recruiter-workflow.component.css'],

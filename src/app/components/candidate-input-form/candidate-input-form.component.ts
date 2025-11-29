@@ -82,6 +82,4 @@ export class CandidateInputFormComponent {
   @ContentChild('issuingDateText2') issuingDateText2: TemplateRef<any> | null = null;
   @ContentChild('submitText') submitText: TemplateRef<any> | null = null;
   @ContentChild('credentialsText') credentialsText: TemplateRef<any> | null = null;
-
-  constructor() {}
 }

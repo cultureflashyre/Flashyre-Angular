@@ -86,6 +86,4 @@ export class RequirmentListingFormComponent {
   @ContentChild('cancelText') cancelText: TemplateRef<any> | null = null;
 
   @Input() companyNameInputPlaceholder2: string = 'Min Experience';
-
-  constructor() {}
 }

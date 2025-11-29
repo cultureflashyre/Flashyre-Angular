@@ -42,6 +42,4 @@ export class RecruiterWorkflowClientListComponent {
   @ContentChild('heading2') heading2: TemplateRef<any> | null = null;
   @ContentChild('text7') text7: TemplateRef<any> | null = null;
   @ContentChild('startProcessText1') startProcessText1: TemplateRef<any> | null = null;
-
-  constructor() {}
 }
