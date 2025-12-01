@@ -1,0 +1,100 @@
+<!-- The form tag is bound to the FormGroup and the submit event -->
+<form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="recruiter-workflow-input-form-recruiter-workflow-input-form">
+
+  <div class="recruiter-workflow-input-form-container10">
+    <span class="recruiter-workflow-input-form-text10">Candidate Input Form</span>
+  </div>
+
+  <div class="recruiter-workflow-input-form-container13">
+    <div class="recruiter-workflow-input-form-enter-manually-text-container">
+      <span class="recruiter-workflow-input-form-enter-manually-text">Enter Manually</span>
+    </div>
+
+    <!-- First Name & Last Name -->
+    <div class="recruiter-workflow-input-form-job-title-company-name-container1">
+      <div class="recruiter-workflow-input-form-job-title-container1">
+        <span class="recruiter-workflow-input-form-job-title-text1">Candidate First Name *</span>
+        <input type="text" formControlName="first_name" class="recruiter-workflow-input-form-job-title-input1 input" />
+        <div *ngIf="f['first_name'].invalid && f['first_name'].touched" class="error-message">
+          <small *ngIf="f['first_name'].errors?.['required']">First name is required.</small>
+          <small *ngIf="f['first_name'].errors?.['pattern']">First name must contain letters only.</small>
+        </div>
+      </div>
+      <div class="recruiter-workflow-input-form-company-name-container1">
+        <span class="recruiter-workflow-input-form-company-name-text1">Candidate Last Name *</span>
+        <input type="text" formControlName="last_name" class="recruiter-workflow-input-form-company-name-input1 input" />
+        <div *ngIf="f['last_name'].invalid && f['last_name'].touched" class="error-message">
+          <small *ngIf="f['last_name'].errors?.['required']">Last name is required.</small>
+          <small *ngIf="f['last_name'].errors?.['pattern']">Last name must contain letters only.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Number & Email -->
+    <div class="recruiter-workflow-input-form-job-title-company-name-container2">
+      <div class="recruiter-workflow-input-form-job-title-container2">
+        <span class="recruiter-workflow-input-form-job-title-text2">Phone Number *</span>
+        <input type="text" formControlName="phone_number" class="recruiter-workflow-input-form-job-title-input2 input" />
+        <div *ngIf="f['phone_number'].invalid && f['phone_number'].touched" class="error-message">
+          <small *ngIf="f['phone_number'].errors?.['required']">Phone number is required.</small>
+          <small *ngIf="f['phone_number'].errors?.['pattern']">Please enter a valid 10-digit phone number.</small>
+        </div>
+      </div>
+      <div class="recruiter-workflow-input-form-company-name-container2">
+        <span class="recruiter-workflow-input-form-company-name-text2">Email Id *</span>
+        <input type="email" formControlName="email" class="recruiter-workflow-input-form-company-name-input2 input" />
+        <div *ngIf="f['email'].invalid && f['email'].touched" class="error-message">
+          <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
+          <small *ngIf="f['email'].errors?.['email']">Please enter a valid email address.</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gender and Notice Period -->
+    <div class="recruiter-workflow-input-form-container26">
+        <div class="recruiter-workflow-input-form-credentials-container">
+            <span class="recruiter-workflow-input-form-credentials-text1">Gender *</span>
+            <select formControlName="gender" class="input">
+                <option value="" disabled>Select Gender</option>
+                <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
+            </select>
+        </div>
+        <div class="recruiter-workflow-input-form-issued-date-container3">
+            <span class="recruiter-workflow-input-form-issuing-date-text3">Notice Period *</span>
+            <select formControlName="notice_period" class="input">
+                <option value="" disabled>Select Notice Period</option>
+                <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Current CTC -->
+     <div class="recruiter-workflow-input-form-certificate-name-container">
+        <span class="recruiter-workflow-input-form-certificate-name-text1">Current CTC *</span>
+        <select formControlName="current_ctc" class="input">
+             <option value="" disabled>Select CTC</option>
+            <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
+        </select>
+    </div>
+
+    <!-- Skills, Work Experience, etc. -->
+    <div class="recruiter-workflow-input-form-skills-container1">
+        <span class="recruiter-workflow-input-form-skill-text1">Work Experience</span>
+        <input type="text" formControlName="work_experience" class="recruiter-workflow-input-form-job-title-input5 input" placeholder="e.g., Senior Developer at Google" />
+    </div>
+
+    <div class="recruiter-workflow-input-form-skills-container2">
+        <span class="recruiter-workflow-input-form-skill-text2">Skills *</span>
+        <input type="text" formControlName="skills" class="recruiter-workflow-input-form-job-title-input6 input" placeholder="e.g., Angular, Django, Python" />
+        <div *ngIf="f['skills'].invalid && f['skills'].touched" class="error-message">
+            <small *ngIf="f['skills'].errors?.['required']">Skills are required.</small>
+        </div>
+    </div>
+  </div>
+
+  <!-- Submit & Cancel Buttons -->
+  <div class="recruiter-workflow-input-form-submit-cancel-buttons-container">
+    <button type="button" class="recruiter-workflow-input-form-cancel-button button">Cancel</button>
+    <button type="submit" class="recruiter-workflow-input-form-submit-button button">Submit</button>
+  </div>
+</form>

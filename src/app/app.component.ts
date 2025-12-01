@@ -2,7 +2,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router'; // Import RouterModule
 import { NgxSpinnerModule } from 'ngx-spinner';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
