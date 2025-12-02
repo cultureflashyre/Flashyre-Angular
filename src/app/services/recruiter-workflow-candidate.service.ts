@@ -54,4 +54,24 @@ export class RecruiterWorkflowCandidateService {
     // Construct the full URL inside the method
     return this.http.post<Candidate>(`${this.apiUrl}${this.endpoint}`, candidate);
   }
+  // --- NEW METHOD: UPDATE ---
+  /**
+   * Updates an existing candidate by sending a PUT request.
+   * @param id - The ID of the candidate to update.
+   * @param candidate - The updated candidate data.
+   * @returns An Observable of the updated Candidate.
+   */
+  updateCandidate(id: number, candidate: Candidate): Observable<Candidate> {
+    return this.http.put<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`, candidate);
+  }
+
+  // --- NEW METHOD: DELETE ---
+  /**
+   * Deletes a candidate by their ID.
+   * @param id - The ID of the candidate to delete.
+   * @returns An Observable with an empty response.
+   */
+  deleteCandidate(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}${this.endpoint}${id}/`);
+  }
 }

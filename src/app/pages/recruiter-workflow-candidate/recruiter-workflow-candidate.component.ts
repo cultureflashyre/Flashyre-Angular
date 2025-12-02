@@ -49,6 +49,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   formVisible = false; 
   candidates: Candidate[] = [];
 
+  // NEW: To track which candidate is being edited.
+  editingCandidateId: number | null = null; 
+
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
@@ -109,6 +112,38 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
   get f() { return this.candidateForm.controls; }
 
+
+  // NEW METHOD: Called when the edit icon is clicked
+  startEdit(candidate: Candidate): void {
+    if (candidate.id) {
+      this.editingCandidateId = candidate.id;
+      // Use patchValue to fill the form with the candidate's data
+      this.candidateForm.patchValue(candidate);
+      this.showForm(); // Show the pre-filled form
+    }
+  }
+  
+  // NEW METHOD: Called when the delete icon is clicked
+  deleteCandidate(id: number | undefined): void {
+    if (!id) return; // Guard against undefined id
+
+    // Use a confirmation dialog as a safeguard
+    const confirmation = window.confirm('Are you sure you want to delete this candidate?');
+    if (confirmation) {
+      this.candidateService.deleteCandidate(id).subscribe({
+        next: () => {
+          // On success, remove the candidate from the local array
+          this.candidates = this.candidates.filter(c => c.id !== id);
+        },
+        error: (err) => {
+          // You can show a toast or alert here for the user
+          console.error('Failed to delete candidate', err);
+          alert('Error: Could not delete the candidate.');
+        }
+      });
+    }
+  }
+
   // NEW METHOD: Call this to display the form.
   showForm(): void {
     this.formVisible = true;
@@ -138,6 +173,26 @@ export class RecruiterWorkflowCandidate implements OnInit {
       expected_ctc_max: formValue.expected_ctc_max ?? 0,
     };
 
+    
+    if (this.editingCandidateId) {
+      // --- UPDATE LOGIC ---
+      this.candidateService.updateCandidate(this.editingCandidateId, payload).subscribe({
+        next: (updatedCandidate) => {
+          // Remove the old version from the array
+          this.candidates = this.candidates.filter(c => c.id !== this.editingCandidateId);
+          // Add the updated version to the top of the array
+          this.candidates.unshift(updatedCandidate);
+          
+          this.submissionSuccess = true;
+          this.formVisible = false;
+          this.isSubmitting = false;
+          this.candidateForm.reset();
+          this.editingCandidateId = null; // Exit edit mode
+        },
+        error: (err) => { /* ... error handling ... */ }
+      });
+    } else {
+
     this.candidateService.createCandidate(payload).subscribe({
       next: (newCandidate) => {
         this.submissionSuccess = true;
@@ -163,6 +218,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       }
     });
   }
+}
 
   onCancel(): void {
     this.candidateForm.reset();
@@ -170,5 +226,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.submissionSuccess = false;
     // MODIFICATION: Hide the form and go back to the list.
     this.formVisible = false; 
+    this.editingCandidateId = null; // Exit edit mode on cancel
+
   }
 }
