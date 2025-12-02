@@ -1,6 +1,48 @@
 :host { 
   display: contents; 
 }
+
+/* Add these styles to your existing CSS file */
+
+.input.is-invalid {
+  border-color: #dc3545; /* Red border for invalid fields */
+}
+
+.validation-error {
+  color: #dc3545;
+  font-size: 0.8em;
+  margin-top: 4px;
+}
+
+.success-message {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  width: 100%;
+  text-align: center;
+}
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Style to disable submit button */
+.recruiter-workflow-candidate-submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
  
 .recruiter-workflow-candidate-container10 {
   width: 100%;
@@ -1217,7 +1259,7 @@
   flex: 0 0 auto;
   width: 100%;
   height: auto;
-  display: flex;
+  
   position: relative;
   align-self: center;
   align-items: flex-start;
