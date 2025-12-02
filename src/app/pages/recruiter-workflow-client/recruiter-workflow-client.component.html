@@ -101,7 +101,7 @@
       >
         <button
           type="button" 
-          (click)="addClient()"
+          (click)="openAddClientForm()"
           class="recruiter-workflow-client-add-questions-with-ai-button button"
         >
           <span class="recruiter-workflow-client-add-questions-with-ai-text">
@@ -111,7 +111,7 @@
       </div>
 
       <!-- MAIN FORM START -->
-      <form [formGroup]="mainForm">
+      <form [formGroup]="mainForm" *ngIf="showForm">
         <div class="recruiter-workflow-client-recruiter-workflow-client-input-form">
           <div class="recruiter-workflow-client-container12">
             <span class="recruiter-workflow-client-text30">Client Input form</span>
@@ -359,7 +359,7 @@
           >
             <button
               type="button" 
-              (click)="onCancel()"
+              (click)="closeForm()"
               class="recruiter-workflow-client-cancel-button button"
             >
               <span class="recruiter-workflow-client-cancel-text">Cancel</span>
@@ -374,9 +374,13 @@
           </div>
         </div>
       </form>
+      <div *ngIf="isLoading" class="loader-container">
+  <div class="round-loader"></div>
+  <p>Saving Data...</p>
+</div>
       <!-- MAIN FORM END -->
 
-      <div class="recruiter-workflow-client-recruiter-workflow-client-list">
+      <div class="recruiter-workflow-client-recruiter-workflow-client-list" *ngIf="showList">
         <div
           id="select-filter-sort-download-zip-main-container"
           class="recruiter-workflow-client-select-filter-sort-download-zip-main-container"
@@ -390,6 +394,7 @@
                 type="checkbox"
                 id="select-checkbox"
                 class="recruiter-workflow-client-select-checkbox1"
+                (change)="toggleSelectAll($event)"
               />
               <span class="recruiter-workflow-client-select-all-text">
                 Select All
@@ -440,10 +445,11 @@
               <button
                 id="filtered-button"
                 type="button"
+                (click)="deleteSelectedClients()"
                 class="recruiter-workflow-client-filtered-button1 button"
               >
                 <span class="recruiter-workflow-client-start-process-text1">
-                  Delete 
+                  Delete
                 </span>
               </button>
               <button
@@ -531,7 +537,7 @@
             <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container19">
               <div class="recruiter-workflow-client-container20">
                 <div class="recruiter-workflow-client-container21">
-                  <input type="checkbox" class="recruiter-workflow-client-select-checkbox2"/>
+                  <input type="checkbox" class="recruiter-workflow-client-select-checkbox2" [(ngModel)]="clientData.selected"/>
                 </div>
                 
                 <div class="recruiter-workflow-client-container22">
@@ -587,6 +593,7 @@
                   width="24"
                   height="24"
                   viewBox="0 0 1024 1024"
+                  (click)="editClientClick(clientData)"
                   class="recruiter-workflow-client-icon17"
                 >
                   <path
@@ -602,6 +609,7 @@
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
+                  (click)="downloadClientData(clientData)"
                   class="recruiter-workflow-client-icon20"
                 >
                   <path
@@ -612,6 +620,7 @@
                   width="20"
                   height="20"
                   viewBox="0 0 20 20"
+                  (click)="deleteSingleClient(clientData)"
                   class="recruiter-workflow-client-icon22"
                 >
                   <path
@@ -629,13 +638,13 @@
               <span class="recruiter-workflow-client-text49">
                 Recruiter : 
               </span>
-              <span class="recruiter-workflow-client-text50">Prashanth</span>
+              <span class="recruiter-workflow-client-text50">{{ recruiterFirstName }}</span>
             </div>
             <div class="recruiter-workflow-client-container41">
               <span class="recruiter-workflow-client-text51">
                 Created at : 
               </span>
-              <span class="recruiter-workflow-client-text52">Yesterday</span>
+              <span class="recruiter-workflow-client-text52">{{ existingClients[0]?.created_at | date:'mediumDate' }}</span>
             </div>
           </div>
         </div>

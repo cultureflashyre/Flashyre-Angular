@@ -20,4 +20,15 @@ export class AdbClientService {
   createClients(data: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, data);
   }
+
+  updateClient(id: any, data: any): Observable<any> {
+  // Remove the slash before ${id} if apiUrl already has one
+    return this.http.put(`${this.apiUrl}${id}/`, data); 
+  }
+
+// Do the same for deleteClient just in case!
+  deleteClient(id: any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
+
 }
