@@ -1,0 +1,692 @@
+<header
+  id="recruiter-view-navbar-main-container"
+  class="recruiter-workflow-navbar-container10"
+  [ngClass]="rootClassName"
+>
+  <div
+    id="navbar-recruiter-view-container"
+    class="recruiter-workflow-navbar-container11"
+  >
+    <header
+      data-thq="thq-navbar"
+      class="recruiter-workflow-navbar-navbar-interactive"
+    >
+      <img
+        id="flashyre-logo"
+        [attr.alt]="imageAlt1"
+        [attr.src]="imageSrc1"
+        class="recruiter-workflow-navbar-flashyre-image"
+      />
+      <div
+        data-thq="thq-navbar-nav"
+        class="recruiter-workflow-navbar-desktop-menu"
+      >
+        <nav
+          id="desktop-links-container"
+          class="recruiter-workflow-navbar-links"
+        >
+          <a
+            [attr.href]="link1Url"
+            id="recruiter-dashboard-link"
+            class="recruiter-workflow-navbar-dashboard-link thq-body-small button"
+          >
+            <ng-container>
+              <ng-template #defaultLink1>
+                <div class="recruiter-workflow-navbar-fragment29">
+                  <span class="recruiter-workflow-navbar-text40">Home</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link1 ? link1 : defaultLink1"
+              ></ng-container>
+            </ng-container>
+          </a>
+          <a
+            [attr.href]="link4Url"
+            id="recruiter-jobs-posted-link"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="recruiter-workflow-navbar-jobs-for-you-link thq-body-small button"
+          >
+            <ng-container>
+              <ng-template #defaultLink4>
+                <div class="recruiter-workflow-navbar-fragment34">
+                  <span class="recruiter-workflow-navbar-text45">
+                    Requirments
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="link4 ? link4 : defaultLink4"
+              ></ng-container>
+            </ng-container>
+          </a>
+        </nav>
+      </div>
+      <div
+        data-thq="thq-dropdown"
+        class="recruiter-workflow-navbar-thq-dropdown list-item"
+      >
+        <div
+          data-thq="thq-dropdown-toggle"
+          class="recruiter-workflow-navbar-dropdown-toggle1"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            class="recruiter-workflow-navbar-icon10"
+          >
+            <path
+              d="M18.685 19.097A9.72 9.72 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.72 9.72 0 0 0 3.065 7.097A9.72 9.72 0 0 0 12 21.75a9.72 9.72 0 0 0 6.685-2.653m-12.54-1.285A7.49 7.49 0 0 1 12 15a7.49 7.49 0 0 1 5.855 2.812A8.22 8.22 0 0 1 12 20.25a8.22 8.22 0 0 1-5.855-2.438M15.75 9a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 0 1 7.5 0"
+              fill="currentColor"
+              clip-rule="evenodd"
+              fill-rule="evenodd"
+            ></path>
+          </svg>
+          <div
+            data-thq="thq-dropdown-arrow"
+            class="recruiter-workflow-navbar-dropdown-arrow"
+          >
+            <svg
+              id="Dropdown"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              class="recruiter-workflow-navbar-drop-down-icon"
+            >
+              <path
+                d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <ul
+          data-thq="thq-dropdown-list"
+          class="recruiter-workflow-navbar-dropdown-list"
+        >
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-workflow-navbar-profile1 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-workflow-navbar-dropdown-toggle2"
+            >
+              <span
+                id="Recruiter-profile-Button"
+                class="recruiter-workflow-navbar-profile2"
+              >
+                <ng-container>
+                  <ng-template #defaultText1>
+                    <div class="recruiter-workflow-navbar-fragment32">
+                      <span class="recruiter-workflow-navbar-text43">
+                        Profile
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text1 ? text1 : defaultText1"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-workflow-navbar-preference1 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-workflow-navbar-dropdown-toggle3"
+            >
+              <span
+                id="Recruiter-preference-button"
+                class="recruiter-workflow-navbar-preference2"
+              >
+                <ng-container>
+                  <ng-template #defaultText2>
+                    <div class="recruiter-workflow-navbar-fragment30">
+                      <span class="recruiter-workflow-navbar-text41">
+                        Preference
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-workflow-navbar-settings1 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-workflow-navbar-dropdown-toggle4"
+            >
+              <span
+                id="Recruiter-settings-Button"
+                class="recruiter-workflow-navbar-settings2"
+              >
+                <ng-container>
+                  <ng-template #defaultText3>
+                    <div class="recruiter-workflow-navbar-fragment35">
+                      <span class="recruiter-workflow-navbar-text46">
+                        Settings
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+          <li
+            data-thq="thq-dropdown"
+            class="recruiter-workflow-navbar-logout1 list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-workflow-navbar-dropdown-toggle5"
+            >
+              <span
+                id="recruiter-logout-Button"
+                class="recruiter-workflow-navbar-logout2"
+              >
+                <ng-container>
+                  <ng-template #defaultText31>
+                    <div class="recruiter-workflow-navbar-fragment27">
+                      <span class="recruiter-workflow-navbar-text38">
+                        Logout
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text31 ? text31 : defaultText31"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div
+        data-thq="thq-burger-menu"
+        class="recruiter-workflow-navbar-burger-menu"
+      >
+        <svg
+          id="hamburger-icon"
+          viewBox="0 0 1024 1024"
+          class="recruiter-workflow-navbar-burger-icon"
+        >
+          <path
+            d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"
+          ></path>
+        </svg>
+        <div
+          id="number-of-notifications"
+          class="recruiter-workflow-navbar-number-of-notification"
+        >
+          <span class="recruiter-workflow-navbar-text10">
+            <ng-container>
+              <ng-template #defaultText1411>
+                <div class="recruiter-workflow-navbar-fragment25">
+                  <span class="recruiter-workflow-navbar-text36">2</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text1411 ? text1411 : defaultText1411"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+      <div
+        data-thq="thq-mobile-menu"
+        class="recruiter-workflow-navbar-mobile-menu"
+      >
+        <div class="recruiter-workflow-navbar-popup-container">
+          <div class="recruiter-workflow-navbar-close-icon">
+            <div
+              data-thq="thq-close-menu"
+              class="recruiter-workflow-navbar-close-menu"
+            >
+              <svg
+                viewBox="0 0 1024 1024"
+                class="recruiter-workflow-navbar-icon14"
+              >
+                <path
+                  d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div class="recruiter-workflow-navbar-container12">
+            <div class="recruiter-workflow-navbar-container13">
+              <img
+                id="Candidate-Profile-Picture"
+                [attr.alt]="imageAlt4"
+                [attr.src]="imageSrc4"
+                class="recruiter-workflow-navbar-user-image"
+              />
+              <div class="recruiter-workflow-navbar-container14">
+                
+
+                  <ng-template #text>
+                    <div class="recruiter-workflow-navbar-fragment10">
+                      <span class="recruiter-workflow-navbar-text11">
+                        Leslie Alexander
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-template #text1>
+                    <div class="recruiter-workflow-navbar-fragment11">
+                      <span class="recruiter-workflow-navbar-text12">
+                        Google
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-template #text3>
+                    <div class="recruiter-workflow-navbar-fragment12">
+                      <span class="recruiter-workflow-navbar-text13">
+                        <span>Software Development</span>
+                        <br />
+                        <span>Mountain View, CA</span>
+                      </span>
+                    </div>
+                  </ng-template>
+                
+                  <ng-template #text>
+                    <div class="recruiter-workflow-navbar-fragment13">
+                      <span class="recruiter-workflow-navbar-text17">
+                        Job Posted
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-template #text3>
+                    <div class="recruiter-workflow-navbar-fragment14">
+                      <span class="recruiter-workflow-navbar-text18">
+                        2 Jobs Posted
+                      </span>
+                    </div>
+                  </ng-template>
+               
+              </div>
+              <div
+                id="recruiter-details"
+                class="recruiter-workflow-navbar-details-container"
+              >
+                <span
+                  id="recruiter-name"
+                  class="recruiter-workflow-navbar-recruiter-name"
+                >
+                  <ng-container>
+                    <ng-template #defaultText15>
+                      <div class="recruiter-workflow-navbar-fragment26">
+                        <span class="recruiter-workflow-navbar-text37">
+                          Leslie Alexander
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text15 ? text15 : defaultText15"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <div
+                  id="recruiter-company-logo-and-name"
+                  class="recruiter-workflow-navbar-container15"
+                >
+                  <img
+                    id="recruiter-company-image"
+                    [attr.alt]="imageAlt11"
+                    [attr.src]="imageSrc11"
+                    class="recruiter-workflow-navbar-company-image"
+                  />
+                  <span
+                    id="recruiter-company-name"
+                    class="recruiter-workflow-navbar-company-name"
+                  >
+                    <ng-container>
+                      <ng-template #defaultText16>
+                        <div class="recruiter-workflow-navbar-fragment28">
+                          <span class="recruiter-workflow-navbar-text39">
+                            Google
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text16 ? text16 : defaultText16"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+                <span
+                  id="recruiter-role"
+                  class="recruiter-workflow-navbar-job-role-of-recruiter"
+                >
+                  <ng-container>
+                    <ng-template #defaultText32>
+                      <div class="recruiter-workflow-navbar-fragment20">
+                        <span class="recruiter-workflow-navbar-text28">
+                          <span>Software Development</span>
+                          <br />
+                          <span>Mountain View, CA</span>
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text32 ? text32 : defaultText32"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+            <div
+              id="mobile-popup-container"
+              class="recruiter-workflow-navbar-container16"
+            >
+              <div
+                id="dashboard-container"
+                class="recruiter-workflow-navbar-dashboard-container"
+              >
+                <svg
+                  id="dashboard-icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  class="recruiter-workflow-navbar-dashboard-icon"
+                >
+                  <path
+                    d="M21 16V4H3v12zm0-14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v2h2v2H8v-2h2v-2H3a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2zM5 6h9v5H5zm10 0h4v2h-4zm4 3v5h-4V9zM5 12h4v2H5zm5 0h4v2h-4z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+                <span id="dashboard-button">
+                  <ng-container>
+                    <ng-template #defaultText7>
+                      <div class="recruiter-workflow-navbar-fragment31">
+                        <span class="recruiter-workflow-navbar-text42">
+                          Dashboard
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="jobs-posted-container"
+                class="recruiter-workflow-navbar-jobs-for-container"
+              >
+                <svg
+                  id="briefcase-icon"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  class="recruiter-workflow-navbar-briefcase-icon"
+                >
+                  <path
+                    d="M2 6h5V3h1V2h6v1h1v3h5v1h1v12h-1v1H2v-1H1V7h1zm7 0h4V4H9zm10 2H3v10h16z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+                <span id="jobs-posted-button">
+                  <ng-container>
+                    <ng-template #defaultText10>
+                      <div class="recruiter-workflow-navbar-fragment23">
+                        <span class="recruiter-workflow-navbar-text34">
+                          Jobs Posted
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text10 ? text10 : defaultText10"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="recruiter-notification-container"
+                class="recruiter-workflow-navbar-notification-container"
+              >
+                <div
+                  id="notification-icon"
+                  class="recruiter-workflow-navbar-container17"
+                >
+                  <svg
+                    id="recruiter-notification-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="recruiter-workflow-navbar-icon18"
+                  >
+                    <g
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M12.721 5.003L11.255 5c-3.344-.008-6.247 2.709-6.27 6v3.79c0 .79-.1 1.561-.531 2.218l-.287.438C3.73 18.11 4.2 19 4.985 19h14.03c.785 0 1.254-.89.818-1.554l-.287-.438c-.43-.657-.531-1.429-.531-2.219v-3.788c-.04-3.292-2.95-5.99-6.294-5.998M15 19a3 3 0 1 1-6 0"
+                      ></path>
+                      <path d="M12 2a2 2 0 0 1 2 2v1h-4V4a2 2 0 0 1 2-2"></path>
+                    </g>
+                  </svg>
+                  <div
+                    id="numbers-container"
+                    class="recruiter-workflow-navbar-container18"
+                  >
+                    <span
+                      id="Number of notifications"
+                      class="recruiter-workflow-navbar-text19"
+                    >
+                      <ng-container>
+                        <ng-template #defaultText14>
+                          <div class="recruiter-workflow-navbar-fragment21">
+                            <span class="recruiter-workflow-navbar-text32">
+                              2
+                            </span>
+                          </div>
+                        </ng-template>
+                        <ng-container
+                          *ngTemplateOutlet="text14 ? text14 : defaultText14"
+                        ></ng-container>
+                      </ng-container>
+                    </span>
+                  </div>
+                </div>
+                <span id="notification-button">
+                  <ng-container>
+                    <ng-template #defaultText9>
+                      <div class="recruiter-workflow-navbar-fragment36">
+                        <span class="recruiter-workflow-navbar-text47">
+                          Notifications
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text9 ? text9 : defaultText9"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+              </div>
+              <div
+                id="profile-popup-container"
+                class="recruiter-workflow-navbar-container19"
+              >
+                <div
+                  id="preference-container"
+                  class="recruiter-workflow-navbar-preference-container"
+                >
+                  <svg
+                    id="preference-icon"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    class="recruiter-workflow-navbar-preference-icon"
+                  >
+                    <g fill="currentColor">
+                      <path
+                        d="M23 22.922c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 1 1-2 0z"
+                      ></path>
+                      <path
+                        d="M20 16a4 4 0 0 1 3-3.874V7a1 1 0 1 1 2 0v5.126A4.002 4.002 0 0 1 24 20a4 4 0 0 1-4-4m4 2a2 2 0 1 0 0-4a2 2 0 0 0 0 4m-8 14a4 4 0 1 1-4.992-3.876A1 1 0 0 1 11 28V7a1 1 0 1 1 2 0v21q0 .063-.008.124A4 4 0 0 1 16 32m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
+                        clip-rule="evenodd"
+                        fill-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M36 42a1 1 0 0 1-1-1v-7.078c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 0 1-1 1"
+                      ></path>
+                      <path
+                        d="M36 6a1 1 0 0 0-1 1v16.126A4.002 4.002 0 0 0 36 31a4 4 0 0 0 1-7.874V7a1 1 0 0 0-1-1m0 19a2 2 0 1 0 0 4a2 2 0 0 0 0-4"
+                        clip-rule="evenodd"
+                        fill-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M11 41a1 1 0 1 0 2 0v-2.078c0-.526-.474-.922-1-.922s-1 .396-1 .922z"
+                      ></path>
+                    </g>
+                  </svg>
+                  <span id="recruiter-preference-button">
+                    <ng-container>
+                      <ng-template #defaultText11>
+                        <div class="recruiter-workflow-navbar-fragment33">
+                          <span class="recruiter-workflow-navbar-text44">
+                            Preference
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text11 ? text11 : defaultText11"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+                <div
+                  id="settings-container"
+                  class="recruiter-workflow-navbar-settings-container"
+                >
+                  <svg
+                    id="settings-icon"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    class="recruiter-workflow-navbar-settings-icon"
+                  >
+                    <path
+                      d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z"
+                      fill="currentColor"
+                    ></path>
+                    <path
+                      d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  <span id="recruiter-settings-button">
+                    <ng-container>
+                      <ng-template #defaultText12>
+                        <div class="recruiter-workflow-navbar-fragment24">
+                          <span class="recruiter-workflow-navbar-text35">
+                            Settings
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+                <div
+                  id="logout-container"
+                  class="recruiter-workflow-navbar-logout-container button"
+                >
+                  <svg
+                    id="logout-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="recruiter-workflow-navbar-logout-icon"
+                  >
+                    <g fill="none">
+                      <path
+                        d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+                      ></path>
+                      <path
+                        d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"
+                        fill="currentColor"
+                      ></path>
+                    </g>
+                  </svg>
+                  <span id="recruiter-logout-button">
+                    <ng-container>
+                      <ng-template #defaultText13>
+                        <div class="recruiter-workflow-navbar-fragment22">
+                          <span class="recruiter-workflow-navbar-text33">
+                            Logout
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text13 ? text13 : defaultText13"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="recruiter-workflow-navbar-container20">
+              
+                <ng-template #text>
+                  <div class="recruiter-workflow-navbar-fragment15">
+                    <span class="recruiter-workflow-navbar-text20">
+                      Leslie Alexander
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-template #text1>
+                  <div class="recruiter-workflow-navbar-fragment16">
+                    <span class="recruiter-workflow-navbar-text21">Google</span>
+                  </div>
+                </ng-template>
+                <ng-template #text3>
+                  <div class="recruiter-workflow-navbar-fragment17">
+                    <span class="recruiter-workflow-navbar-text22">
+                      <span>Software Development</span>
+                      <br />
+                      <span>Mountain View, CA</span>
+                    </span>
+                  </div>
+                </ng-template>
+              
+                <ng-template #text>
+                  <div class="recruiter-workflow-navbar-fragment18">
+                    <span class="recruiter-workflow-navbar-text26">
+                      Job Posted
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-template #text3>
+                  <div class="recruiter-workflow-navbar-fragment19">
+                    <span class="recruiter-workflow-navbar-text27">
+                      2 Jobs Posted
+                    </span>
+                  </div>
+                </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+</header>

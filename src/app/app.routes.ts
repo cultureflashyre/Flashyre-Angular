@@ -3,6 +3,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
+
 export const routes: Routes = [
     {
     path: '',
@@ -252,6 +253,24 @@ export const routes: Routes = [
       (m) => m.CodingAssessment
     ),
 },
+{
+    path: 'recruiter-workflow-candidate',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-candidate/recruiter-workflow-candidate.component')
+      .then((m) => m.RecruiterWorkflowCandidate),
+  },
+  {
+    path: 'recruiter-workflow-requirement',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-requirement/recruiter-workflow-requirement.component')
+      .then((m) => m.RecruiterWorkflowRequirement),
+  },
+  {
+    path: 'recruiter-workflow-client',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-client/recruiter-workflow-client.component')
+      .then((m) => m.RecruiterWorkflowClient),
+  },
   {
     path: '**',
     loadComponent: () =>
