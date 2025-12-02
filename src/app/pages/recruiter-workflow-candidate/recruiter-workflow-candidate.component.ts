@@ -18,7 +18,6 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
         maxControl.setErrors({ minGreaterThanMax: true });
         return { minGreaterThanMax: true };
       } else {
-        // If the error was previously set, clear it
         if (maxControl.hasError('minGreaterThanMax')) {
           maxControl.setErrors(null);
         }
@@ -28,6 +27,7 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
   };
 }
 
+
 @Component({
   standalone: true,
   selector: 'recruiter-workflow-candidate',
@@ -36,7 +36,7 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
   imports: [
     CommonModule,
     RouterModule,
-    ReactiveFormsModule, // Import ReactiveFormsModule for form handling
+    ReactiveFormsModule,
     RecruiterWorkflowNavbarComponent
   ]
 })
@@ -45,11 +45,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
   isSubmitting = false;
   submissionSuccess = false;
   submissionError = '';
-  formVisible = true;
+  // MODIFICATION: Default to false to show the list first.
+  formVisible = false; 
   candidates: Candidate[] = [];
-  
 
-  // Hardcoded dropdown options, matching the Django model
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
@@ -68,21 +67,19 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.loadCandidates();
   }
 
-  // Fetch initial list of candidates
   loadCandidates(): void {
     this.candidateService.getCandidates().subscribe({
       next: (data) => {
         this.candidates = data;
       },
       error: () => {
-        // Handle error loading candidates, e.g., show a message
         console.error("Failed to load candidates.");
       }
     });
   }
 
-  // Form initialization with all validators
   private initializeForm(): void {
+    // ... (form initialization logic remains the same)
     this.candidateForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
       last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
@@ -110,23 +107,26 @@ export class RecruiterWorkflowCandidate implements OnInit {
     });
   }
 
-  // Convenience getters for easy access in the template
   get f() { return this.candidateForm.controls; }
 
+  // NEW METHOD: Call this to display the form.
+  showForm(): void {
+    this.formVisible = true;
+    this.submissionSuccess = false; // Reset success message when showing form
+  }
+
   onSubmit(): void {
+    // ... (onSubmit logic remains the same)
     this.submissionError = '';
     this.submissionSuccess = false;
-
-    // Mark all fields as touched to trigger validation messages
     this.candidateForm.markAllAsTouched();
 
     if (this.candidateForm.invalid) {
-      return; // Stop if the form is invalid
+      return;
     }
 
     this.isSubmitting = true;
 
-    // Create a safe payload to send to the backend
     const formValue = this.candidateForm.value;
     const payload: Candidate = {
       ...formValue,
@@ -138,29 +138,24 @@ export class RecruiterWorkflowCandidate implements OnInit {
       expected_ctc_max: formValue.expected_ctc_max ?? 0,
     };
 
-    // Use the sanitized 'payload' instead of the raw form value
     this.candidateService.createCandidate(payload).subscribe({
       next: (newCandidate) => {
         this.submissionSuccess = true;
-        this.formVisible = false;
+        this.formVisible = false; // Hide form and show list
         this.isSubmitting = false;
         this.candidateForm.reset();
         this.candidates.unshift(newCandidate);
       },
-       error: (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
+        // ... (error handling remains the same)
         if (err.status === 400) {
           const errors = err.error;
-          // Log the entire error object from Django to the browser's console.
           console.error('Backend validation failed:', errors); 
-          
-          // Generate a user-friendly error message.
           let errorMessages = Object.keys(errors).map(field => {
-            const fieldName = field.replace(/_/g, ' '); // e.g., 'first_name' -> 'first name'
+            const fieldName = field.replace(/_/g, ' ');
             return `${fieldName}: ${errors[field][0]}`;
           });
-          
           this.submissionError = `Submission failed. Please correct the following errors: ${errorMessages.join('; ')}`;
-
         } else {
           this.submissionError = 'An unexpected server error occurred. Please try again later.';
         }
@@ -168,13 +163,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
       }
     });
   }
-    /**
-   * Clears all form fields and resets validation state when the cancel button is clicked.
-   */
+
   onCancel(): void {
     this.candidateForm.reset();
-    this.submissionError = ''; // Also clear any error messages
+    this.submissionError = '';
     this.submissionSuccess = false;
+    // MODIFICATION: Hide the form and go back to the list.
+    this.formVisible = false; 
   }
-
 }
