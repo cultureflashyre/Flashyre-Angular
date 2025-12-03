@@ -258,18 +258,35 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/recruiter-workflow-candidate/recruiter-workflow-candidate.component')
       .then((m) => m.RecruiterWorkflowCandidate),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
   },
   {
     path: 'recruiter-workflow-requirement',
     loadComponent: () =>
       import('./pages/recruiter-workflow-requirement/recruiter-workflow-requirement.component')
       .then((m) => m.RecruiterWorkflowRequirement),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
   },
   {
     path: 'recruiter-workflow-client',
     loadComponent: () =>
       import('./pages/recruiter-workflow-client/recruiter-workflow-client.component')
       .then((m) => m.RecruiterWorkflowClient),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
+  },
+    {
+    path: 'recruiter-super-admin-analytical-module',
+    loadComponent: () =>
+      import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component')
+      .then((m) => m.RecruiterSuperAdminAnalyticalModuleComponent),
+      canActivate: [authGuard],
+      data: { 
+        roles: ['admin'], 
+        requiresSuperAdmin: true // Custom flag for the guard
+      }
   },
   {
     path: '**',

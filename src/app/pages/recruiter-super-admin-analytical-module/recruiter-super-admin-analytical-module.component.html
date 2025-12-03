@@ -1,0 +1,856 @@
+<div class="recruiter-super-admin-analytical-module-container10">
+  <div class="recruiter-super-admin-analytical-module-container11">
+    <recruiter-workflow-navbar
+      rootClassName="recruiter-workflow-navbarroot-class-name1"
+    >
+      <ng-template #link1>
+        <div class="recruiter-super-admin-analytical-module-fragment10">
+          <span class="recruiter-super-admin-analytical-module-text10">
+            Home
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="recruiter-super-admin-analytical-module-fragment11">
+          <span class="recruiter-super-admin-analytical-module-text11">
+            Requirments
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="recruiter-super-admin-analytical-module-fragment12">
+          <span class="recruiter-super-admin-analytical-module-text12">
+            Profile
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="recruiter-super-admin-analytical-module-fragment13">
+          <span class="recruiter-super-admin-analytical-module-text13">
+            Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="recruiter-super-admin-analytical-module-fragment14">
+          <span class="recruiter-super-admin-analytical-module-text14">
+            Settings
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="recruiter-super-admin-analytical-module-fragment15">
+          <span class="recruiter-super-admin-analytical-module-text15">
+            Dashboard
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="recruiter-super-admin-analytical-module-fragment16">
+          <span class="recruiter-super-admin-analytical-module-text16">
+            Notifications
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="recruiter-super-admin-analytical-module-fragment17">
+          <span class="recruiter-super-admin-analytical-module-text17">
+            Jobs Posted
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="recruiter-super-admin-analytical-module-fragment18">
+          <span class="recruiter-super-admin-analytical-module-text18">
+            Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="recruiter-super-admin-analytical-module-fragment19">
+          <span class="recruiter-super-admin-analytical-module-text19">
+            Settings
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="recruiter-super-admin-analytical-module-fragment20">
+          <span class="recruiter-super-admin-analytical-module-text20">
+            Logout
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="recruiter-super-admin-analytical-module-fragment21">
+          <span class="recruiter-super-admin-analytical-module-text21">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text15>
+        <div class="recruiter-super-admin-analytical-module-fragment22">
+          <span class="recruiter-super-admin-analytical-module-text22">
+            Leslie Alexander
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="recruiter-super-admin-analytical-module-fragment23">
+          <span class="recruiter-super-admin-analytical-module-text23">
+            Google
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="recruiter-super-admin-analytical-module-fragment24">
+          <span class="recruiter-super-admin-analytical-module-text24">
+            Logout
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text32>
+        <div class="recruiter-super-admin-analytical-module-fragment25">
+          <span class="recruiter-super-admin-analytical-module-text25">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="recruiter-super-admin-analytical-module-fragment26">
+          <span class="recruiter-super-admin-analytical-module-text29">2</span>
+        </div>
+      </ng-template>
+    </recruiter-workflow-navbar>
+
+    <!-- NEW: TAB NAVIGATION -->
+    <div class="tab-navigation-container">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'reports'" 
+        (click)="setActiveTab('reports')">
+        Reports & Analytics
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'users'" 
+        (click)="setActiveTab('users')">
+        User Management
+      </button>
+    </div>
+
+
+    <div *ngIf="activeTab === 'reports'" class="recruiter-super-admin-analytical-module-container12">
+      <div class="recruiter-super-admin-analytical-module-container13">
+        <h5 class="recruiter-super-admin-analytical-module-text30">
+          Filters &amp; Exports
+        </h5>
+        <div class="dropdown">
+          <div class="recruiter-super-admin-analytical-module-container15">
+            <div class="recruiter-super-admin-analytical-module-container16">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                class="recruiter-super-admin-analytical-module-icon10"
+              >
+                <g fill="none">
+                  <path
+                    d="m2 9l13.267-2.843a3.5 3.5 0 0 1 1.466 0L30 9v15.8a5.2 5.2 0 0 1-5.2 5.2H7.2A5.2 5.2 0 0 1 2 24.8z"
+                    fill="#B4ACBC"
+                  ></path>
+                  <path
+                    d="M3 10.884V24.5A4.5 4.5 0 0 0 7.5 29h16l5.5-5.674V10.884L16.464 8.5z"
+                    fill="#F3EEF8"
+                  ></path>
+                  <path
+                    d="M8.2 13a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2zm6.5 0a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2zm6.3.2c0-.11.09-.2.2-.2h2.6c.11 0 .2.09.2.2v2.6a.2.2 0 0 1-.2.2h-2.6a.2.2 0 0 1-.2-.2zM8.2 18a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2zm6.3.2c0-.11.09-.2.2-.2h2.6c.11 0 .2.09.2.2v2.6a.2.2 0 0 1-.2.2h-2.6a.2.2 0 0 1-.2-.2zM8.2 23a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2zm6.3.2c0-.11.09-.2.2-.2h2.6c.11 0 .2.09.2.2v2.6a.2.2 0 0 1-.2.2h-2.6a.2.2 0 0 1-.2-.2zm6.7-.2a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2zm8.81 3.24V23l-4.51 2.5l-2.49 4.5h3.24c2.08 0 3.76-1.69 3.76-3.76"
+                    fill="#998EA4"
+                  ></path>
+                  <path
+                    d="M23.01 26.76V30l7-7h-3.24c-2.07 0-3.76 1.69-3.76 3.76"
+                    fill="#E1D8EC"
+                  ></path>
+                  <path
+                    d="M30 8.785V11H2V8.785C2 6.691 3.69 4.99 5.759 5H26.24C28.311 5 30 6.691 30 8.785M21.2 18a.2.2 0 0 0-.2.2v2.6c0 .11.09.2.2.2h2.6a.2.2 0 0 0 .2-.2v-2.6a.2.2 0 0 0-.2-.2z"
+                    fill="#0084CE"
+                  ></path>
+                  <path
+                    d="M8 6.696C8 7.418 8.558 8 9.25 8s1.25-.582 1.25-1.304V3.304C10.5 2.582 9.942 2 9.25 2S8 2.582 8 3.304zm13.5 0c0 .722.558 1.304 1.25 1.304S24 7.418 24 6.696V3.304C24 2.582 23.442 2 22.75 2s-1.25.582-1.25 1.304z"
+                    fill="#CDC4D6"
+                  ></path>
+                </g>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text31">
+                Date Range
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container17">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="recruiter-super-admin-analytical-module-icon18"
+              >
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4m0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4"
+                  fill="currentColor"
+                ></path>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text32">
+                Recruiter
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container18">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 100 100"
+                class="recruiter-super-admin-analytical-module-icon20"
+              >
+                <path
+                  d="M40.972 72.92s-38.986.031-38.944.041c.017.865 0 4.022 0 4.022l38.943 23.052l38.944-23.052s-.035-3.198-.008-3.987c-.092-.194-38.935-.076-38.935-.076"
+                  fill="#34495E"
+                ></path>
+                <path
+                  d="M40.972 25.95s-38.986.031-38.944.041c.017.865 0 46.996 0 46.996l38.944 23.051l38.944-23.051s-.004-46.171.022-46.96c-.089-.196-38.966-.077-38.966-.077"
+                  fill="#ECF0F1"
+                ></path>
+                <path
+                  d="M2.028 72.961c.017.865 0 4.022 0 4.022l38.943 23.052V72.92c.001 0-38.986.032-38.943.041"
+                  fill="#2C3E50"
+                ></path>
+                <path
+                  d="M2.028 25.991c.017.865 0 46.996 0 46.996l38.944 23.051V25.95s-38.987.031-38.944.041"
+                  fill="#BDC3C7"
+                ></path>
+                <path
+                  d="M40.972 23.986s-40.983.031-40.941.041c.018.865 0 4.022 0 4.022L40.971 52.1l40.94-24.051s-.033-3.198-.008-3.987c-.09-.195-40.931-.076-40.931-.076"
+                  fill="#BDC3C7"
+                ></path>
+                <path
+                  d="m46.994 54.967l7.004-3.998v12.992l-7.004 3.996zm10.007-5.997l7.005-3.998v12.993l-7.005 3.996zM.034 28.05L40.86 52.034h.111V24.051H.034v.217c.008.758.003 2.276 0 3.141zm66.974 14.924l7.007-3.997v12.991l-7.007 3.997zM46.994 71.967l7.004-3.998v12.992l-7.004 3.998zm20.014-11.994l7.007-3.997v12.992l-7.007 3.997z"
+                  fill="#95A5A6"
+                ></path>
+                <path
+                  d="m57.008 72.973l7.005-3.997v17.421l-7.005 4.146z"
+                  fill="#2C3E50"
+                ></path>
+                <path
+                  d="m57.008 65.973l7.005-3.997v3.992l-7.005 3.997z"
+                  fill="#C0392C"
+                ></path>
+                <path
+                  d="M40.972 0L0 24.051l40.972 24.051l41.034-24.051z"
+                  fill="#ECF0F1"
+                ></path>
+                <path
+                  d="M40.972 4.029L5.991 24.051l34.981 20.022l34.981-20.022z"
+                  fill="#D48A6D"
+                ></path>
+                <path
+                  d="M34.981 54.998L27.992 51v12.992l6.989 3.996zm-9.985-5.997l-6.989-3.998v12.994l6.989 3.996zm-9.985-5.996l-6.989-3.998v12.991l6.989 3.998zm19.97 28.982l-6.989-3.996v12.99l6.989 3.998zm-9.985-5.996l-6.989-3.996v12.99l6.989 3.998zm-9.985-5.996l-6.989-3.998v12.992l6.989 3.998z"
+                  fill="#7F8C8D"
+                ></path>
+                <path
+                  d="m74.015 44.598l-7.007 4.372v1.999l7.007-4.372zm0 17l-7.007 4.372v1.999l7.007-4.373zM64.006 50.594l-7.005 4.373v1.998l7.005-4.373zM53.998 56.59l-7.004 4.373v1.998l7.004-4.371zm0 17l-7.004 4.373v1.998l7.004-4.371z"
+                  fill="#BDC3C7"
+                ></path>
+                <path
+                  d="M27.992 56.622v2l6.989 4.371v-1.998zm0 16.99v1.998l6.989 4.373v-2zm-9.985-5.996v1.998l6.989 4.373v-2zm0-16.991v1.998l6.989 4.374v-1.999zM8.019 61.618v1.998l6.992 4.375v-2zm0-16.991v1.999L15.011 51v-1.999z"
+                  fill="#95A5A6"
+                ></path>
+                <path
+                  d="m40.972 6.029l33.234 19.022l1.747-1L40.972 4.029L5.991 24.051l1.747 1z"
+                  fill="#AA6F57"
+                ></path>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text33">
+                Client
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container19">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 128 128"
+                class="recruiter-super-admin-analytical-module-icon35"
+              >
+                <defs>
+                  <path
+                    d="M117.38 124H10.57c-3.8 0-4.61-4.61-4.61-4.61c-4.42-31.69 0-78.55 0-78.55c0-3.87 3.14-7.01 7.01-7.01h101.99c3.87 0 7.01 3.14 7.01 7.01c0 0 4.52 54.1 0 78.55c.02 0-1.38 4.61-4.59 4.61"
+                    id="notoBriefcase0"
+                    fill="#7A442C"
+                  ></path>
+                </defs>
+                <path
+                  d="M46.34 27.25h3.79v8.04h-3.79zm35.33 0h3.79v8.04h-3.79z"
+                  fill="#7A442C"
+                ></path>
+                <use href="#notoBriefcase0"></use>
+                <use href="#notoBriefcase0"></use>
+                <path
+                  d="M121.02 46.99c-.51-3.68.39-8.16-2.73-10.85a6.8 6.8 0 0 0-4.54-1.73H14.21c-6.98.18-7.07 7.06-7.32 12.58h.32c.07 21.6 3.2 34.4 56.89 34.4c56.77 0 56.9-11.37 56.9-34.4z"
+                  fill="#7A442C"
+                ></path>
+                <path
+                  d="M12.98 33.83c-8.25.58-5.47 8.38-5.75 12.09c0 0 1.71-4.76 5.49-4.76h103.09c3.81 0 5.12 4.76 5.12 4.76c-.26-3.69 2.63-11.25-5.96-12.09z"
+                  fill="#A65F3E"
+                ></path>
+                <path
+                  d="M121.92 39.89a5 5 0 0 0-.09-.53c-.01-.07-.04-.14-.05-.21c-.04-.17-.09-.34-.14-.5l-.06-.18c-.06-.17-.13-.34-.2-.51a.5.5 0 0 0-.07-.13c-.08-.18-.17-.35-.27-.52l-.06-.09a6 6 0 0 0-.35-.52c-.01-.02-.03-.04-.04-.05c-.14-.18-.28-.35-.43-.52l-.02-.02c-.16-.17-.33-.34-.51-.5c.44 2.27.72 4.34.72 5.64v5.48h2.06v-.24l-.03-.44l-.06-.78l-.03-.4c-.02-.24-.03-.48-.05-.7l-.03-.43c-.01-.2-.03-.4-.04-.58c-.01-.09-.01-.16-.02-.24c-.01-.19-.03-.39-.04-.56c-.01-.16-.02-.29-.03-.43c-.01-.07-.01-.15-.02-.22c-.02-.29-.04-.49-.05-.63s-.02-.24-.02-.24c0-.25-.01-.5-.04-.75zM5.91 41.42c-.01.11-.02.23-.03.37a2 2 0 0 0-.02.28c-.01.13-.02.27-.04.42c0 .04-.01.08-.01.12v4.12h2.06v-5.48c0-1.34.31-3.54.78-5.91c-.61.48-1.13 1.05-1.55 1.7c-.02.03-.03.05-.05.08c-.11.18-.22.36-.32.55c-.03.06-.06.12-.08.17c-.08.16-.15.33-.21.5c-.03.07-.06.15-.08.22c-.06.16-.1.33-.15.49c-.02.08-.05.16-.06.25c-.04.17-.07.35-.09.53c-.01.08-.03.16-.04.23c-.03.26-.05.51-.05.78c0 0-.01.15-.04.43c-.01.04-.01.1-.02.15"
+                  fill="#A06841"
+                ></path>
+                <path
+                  d="M121.21 52.31c-.01 10.55-1.53 15.76-7.78 20.81c-7.15 5.78-22.49 8.36-49.72 8.36c-25.64 0-41.13-2.89-48.75-9.1C8.47 67.1 7.09 61.74 7 52.31H5.82c.2 21.4 4.28 34.04 58.29 34.04c57.17 0 58.28-11.25 58.3-34.04z"
+                  fill="#3E2723"
+                ></path>
+                <path
+                  d="M122.3 46.48c-.25-3.54-.42-5.64-.42-5.64c0-2.09-.92-3.95-2.36-5.24c.44 2.27.72 4.34.72 5.64v5.32c0 11.45 0 19.73-6.52 25c-7.15 5.78-22.49 8.36-49.72 8.36c-25.64 0-41.13-2.89-48.75-9.1c-6.94-5.65-7.49-14.27-7.49-24.95v-4.62c0-1.34.31-3.54.78-5.91a6.99 6.99 0 0 0-2.68 5.51s-.06.62-.15 1.76v3.26c0 22.65 2.57 36.11 58.3 36.11c58.36 0 58.3-11.73 58.29-35.5"
+                  fill="#A06841"
+                ></path>
+                <path
+                  d="M4.77 107.9c.25 2.69.85 8.96 1.2 11.49c0 0 .8 4.61 4.61 4.61h106.81c3.21 0 4.61-4.61 4.61-4.61c.44-2.37 1.05-8.22 1.37-11.35c0 0-1.75 2.52-10.43 4.48c-8.67 1.95-25.89.53-43.87.51c-23.92-.03-49.04.74-55.76-.96c-5.69-1.43-8.54-4.17-8.54-4.17"
+                  fill="#603C24"
+                ></path>
+                <path
+                  d="M66.24 25.88c4.07.03 7.93.73 11 1.75c1.08.36 5.54 3.15 7.12 2.82c.84-.2 2.66-.9 2.23-3.2c-.48-2.58-4.23-2.85-7.11-3.91c-4.07-1.49-8.76-2.03-13.24-2.03c-4.31 0-8.78.5-12.73 1.84c-2.94 1-8.53 2.43-7.95 5.13c.55 2.59 3.53 2.35 4.26 1.99c2.12-1.04 3.81-1.92 6.18-2.78c3.05-1.11 6.78-1.63 10.24-1.61"
+                  fill="#7A442C"
+                ></path>
+                <path
+                  d="M66.12 22.38c9.12 0 12.97 2.76 15.07 4.23c5.12 3.58 5.47 1.54 5.4.64c-.27-3.53-3.87-6.16-6.82-7.59c-4.16-2.02-8.97-2.74-13.56-2.74c-4.41 0-8.98.67-13.03 2.5c-3.01 1.35-8.33 4.74-7.73 8.43c.48 2.9 4.29.08 5.03-.41c2.18-1.4 6.16-5.06 15.64-5.06"
+                  fill="#A65F3E"
+                ></path>
+                <path
+                  d="M46.65 27.25c-.8-1.48.97-3.36 1.74-4c1.54-1.27 3.28-2.36 5.13-3.11c.95-.38 3.72-.96 3.86.53c.14 1.51-3.67 3.01-4.63 3.48c-3.42 1.67-5.34 4.52-6.1 3.1"
+                  fill="#E6A467"
+                  opacity=".68"
+                ></path>
+                <path
+                  d="M70.06 95.07H57.94c-.78 0-1.42-.63-1.42-1.42v-7.78c0-.78.63-1.42 1.42-1.42h12.11c.78 0 1.42.63 1.42 1.42v7.78c0 .79-.63 1.42-1.41 1.42"
+                  fill="#3E2723"
+                ></path>
+                <path
+                  d="M70.96 82.01H57.04c-.59 0-1.07-.48-1.07-1.07v-4.21c0-.59.48-1.07 1.07-1.07h13.93c.59 0 1.07.48 1.07 1.07v4.21c-.01.59-.49 1.07-1.08 1.07m-.89 11.04H57.93c-.56 0-1.02-.46-1.02-1.02v-6.77c0-.56.46-1.02 1.02-1.02h12.15c.56 0 1.02.46 1.02 1.02v6.77c-.01.56-.46 1.02-1.03 1.02"
+                  fill="#E6A467"
+                ></path>
+                <path
+                  d="M58.77 78.83c0 2.3-.35 2.55-1.11 2.55s-.88-.74-.88-2.57s.13-2.46.94-2.46s1.05.18 1.05 2.48m1.28 9.63c0 2.2.04 3.5-1.02 3.5c-1.07 0-1.17-1.24-1.17-3.56c0-1.67 0-3.04 1.11-3.04c1.1-.01 1.08.89 1.08 3.1"
+                  fill="#FFF59D"
+                ></path>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text34">
+                Job Type
+              </span>
+            </div>
+          </div>
+          <div
+            data-thq="thq-dropdown"
+            class="recruiter-super-admin-analytical-module-thq-dropdown list-item"
+          >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="recruiter-super-admin-analytical-module-dropdown-toggle1"
+            >
+              <span class="recruiter-super-admin-analytical-module-text35">
+                Download
+              </span>
+              <div
+                data-thq="thq-dropdown-arrow"
+                class="recruiter-super-admin-analytical-module-dropdown-arrow"
+              >
+                <svg
+                  viewBox="0 0 1024 1024"
+                  class="recruiter-super-admin-analytical-module-icon53"
+                >
+                  <path d="M426 726v-428l214 214z"></path>
+                </svg>
+              </div>
+            </div>
+            <ul
+              data-thq="thq-dropdown-list"
+              class="recruiter-super-admin-analytical-module-dropdown-list"
+            >
+              <li
+                data-thq="thq-dropdown"
+                class="recruiter-super-admin-analytical-module-dropdown1 list-item"
+              >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="recruiter-super-admin-analytical-module-dropdown-toggle2"
+                >
+                  <span class="recruiter-super-admin-analytical-module-text36">
+                    CSV
+                  </span>
+                </div>
+              </li>
+              <li
+                data-thq="thq-dropdown"
+                class="recruiter-super-admin-analytical-module-dropdown2 list-item"
+              >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="recruiter-super-admin-analytical-module-dropdown-toggle3"
+                >
+                  <span class="recruiter-super-admin-analytical-module-text37">
+                    PDF
+                  </span>
+                </div>
+              </li>
+              <li
+                data-thq="thq-dropdown"
+                class="recruiter-super-admin-analytical-module-dropdown3 list-item"
+              >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="recruiter-super-admin-analytical-module-dropdown-toggle4"
+                >
+                  <span class="recruiter-super-admin-analytical-module-text38">
+                    EXCEL
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="recruiter-super-admin-analytical-module-container20">
+        <h2 class="recruiter-super-admin-analytical-module-text39">
+          Key Preformance Indicators
+        </h2>
+        <div class="recruiter-super-admin-analytical-module-container21">
+          <div class="recruiter-super-admin-analytical-module-container22">
+            <div class="recruiter-super-admin-analytical-module-container23">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                class="recruiter-super-admin-analytical-module-icon55"
+              >
+                <g fill="none">
+                  <path
+                    d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20c0 1.48-.804 2.773-2 3.465L26.554 29a4 4 0 0 0-3.014.23L22 30h-3l-3-1.5l-3 1.5h-3l-1.54-.77A4 4 0 0 0 5.446 29L4 29.465A4 4 0 0 1 2 26z"
+                    fill="#E1D8EC"
+                  ></path>
+                  <path
+                    d="M10 11v10H2v1h8v8h1v-8h10v8h1v-8h8v-1h-8V11h8v-1h-8V2h-1v8H11V2h-1v8H2v1zm1 0h10v10H11z"
+                    fill="#B4ACBC"
+                  ></path>
+                  <path
+                    d="M6 30h4V10.214C10 9.542 9.453 9 8.774 9H5.226C4.547 9 4 9.542 4 10.213v19.252c.588.34 1.271.535 2 .535"
+                    fill="#00D26A"
+                  ></path>
+                  <path
+                    d="M17.774 17h-3.548c-.679 0-1.226.542-1.226 1.214V30h6V18.214c0-.672-.547-1.214-1.226-1.214"
+                    fill="#F70A8D"
+                  ></path>
+                  <path
+                    d="M22 30h4c.729 0 1.412-.195 2-.535V7.209C28 6.539 27.453 6 26.774 6h-3.548C22.547 6 22 6.54 22 7.209z"
+                    fill="#00A6ED"
+                  ></path>
+                </g>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text40">
+                Recruiter Productivity
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container24">
+              <div class="recruiter-super-admin-analytical-module-container25">
+                <span class="recruiter-super-admin-analytical-module-text41">
+                  Total Candidates Submission : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text42">
+                  Averge  Time-to-Fill : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text43">
+                  Active Recruiters : 
+                </span>
+              </div>
+              <div class="recruiter-super-admin-analytical-module-container26">
+                <span class="recruiter-super-admin-analytical-module-text44">
+                  1,243
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text45">
+                  18 days
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text46">
+                  12
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="recruiter-super-admin-analytical-module-container27">
+            <div class="recruiter-super-admin-analytical-module-container28">
+              <svg width="32" height="32" viewBox="0 0 48 48">
+                <g
+                  fill="none"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M39 6H9C7.34315 6 6 7.34315 6 9V39C6 40.6569 7.34315 42 9 42H39C40.6569 42 42 40.6569 42 39V9C42 7.34315 40.6569 6 39 6Z"
+                    fill="#2F88FF"
+                    stroke="#000"
+                  ></path>
+                  <path d="M15 21L33 21" stroke="#fff"></path>
+                  <path d="M15 27L33 27" stroke="#fff"></path>
+                  <path d="M33 21L26 14" stroke="#fff"></path>
+                  <path d="M22 34L15 27" stroke="#fff"></path>
+                </g>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text47">
+                Pipeline Health (Real-Time)
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container29">
+              <div class="recruiter-super-admin-analytical-module-container30">
+                <span class="recruiter-super-admin-analytical-module-text48">
+                  Sourced : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text49">
+                  In Screening : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text50">
+                  In Interview : 
+                </span>
+              </div>
+              <div class="recruiter-super-admin-analytical-module-container31">
+                <span class="recruiter-super-admin-analytical-module-text51">
+                  450
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text52">
+                  280
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text53">
+                  120
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="recruiter-super-admin-analytical-module-container32">
+            <div class="recruiter-super-admin-analytical-module-container33">
+              <svg width="32" height="32" viewBox="0 0 48 48">
+                <g fill="none">
+                  <path
+                    d="M23.8887 39.8887C32.7287 39.8887 39.8887 32.7287 39.8887 23.8887C39.8887 15.0487 32.7287 7.88867 23.8887 7.88867C15.0487 7.88867 7.88867 15.0487 7.88867 23.8887C7.88867 32.7287 15.0487 39.8887 23.8887 39.8887Z"
+                    fill="#2F88FF"
+                    stroke="#000"
+                    stroke-width="4"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                  ></path>
+                  <path
+                    d="M23.8887 31.8887C28.3087 31.8887 31.8887 28.3087 31.8887 23.8887C31.8887 19.4687 28.3087 15.8887 23.8887 15.8887C19.4687 15.8887 15.8887 19.4687 15.8887 23.8887C15.8887 28.3087 19.4687 31.8887 23.8887 31.8887Z"
+                    fill="#43CCF8"
+                    stroke="#fff"
+                    stroke-width="4"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                  ></path>
+                  <path
+                    d="M23.8887 25.8887C24.9887 25.8887 25.8887 24.9887 25.8887 23.8887C25.8887 22.7887 24.9887 21.8887 23.8887 21.8887C22.7887 21.8887 21.8887 22.7887 21.8887 23.8887C21.8887 24.9887 22.7887 25.8887 23.8887 25.8887Z"
+                    fill="#000"
+                  ></path>
+                  <path
+                    d="M23.8887 7.88867V3.88867"
+                    stroke="#000"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                  ></path>
+                  <path
+                    d="M37.8887 43.8887L33.8887 36.8887"
+                    stroke="#000"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                  ></path>
+                  <path
+                    d="M13.8887 36.8887L9.88867 43.8887"
+                    stroke="#000"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                  ></path>
+                </g>
+              </svg>
+              <span class="recruiter-super-admin-analytical-module-text54">
+                Sourcing Efficiency
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container34">
+              <div class="recruiter-super-admin-analytical-module-container35">
+                <span class="recruiter-super-admin-analytical-module-text55">
+                  Top Source - Linkdin : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text56">
+                  Quality Hires (This Month) : 
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text57">
+                  Active Data Source : 
+                </span>
+              </div>
+              <div class="recruiter-super-admin-analytical-module-container36">
+                <span class="recruiter-super-admin-analytical-module-text58">
+                  45%
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text59">
+                  35
+                </span>
+                <span class="recruiter-super-admin-analytical-module-text60">
+                  6
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="recruiter-super-admin-analytical-module-container37">
+        <h2 class="recruiter-super-admin-analytical-module-text61">
+          Detailed Performance Reports
+        </h2>
+        <div class="recruiter-super-admin-analytical-module-container38">
+          <div class="recruiter-super-admin-analytical-module-container39">
+            <span class="recruiter-super-admin-analytical-module-text62">
+              Recruiter Name
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text63">
+              Client
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text64">
+              Job Type
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text65">
+              Submissions
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text66">
+              Time-to-Fill
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text67">
+              Data Source
+            </span>
+            <span class="recruiter-super-admin-analytical-module-text68">
+              Status
+            </span>
+          </div>
+          <div class="recruiter-super-admin-analytical-module-container40">
+            <div class="recruiter-super-admin-analytical-module-container41">
+              <span class="recruiter-super-admin-analytical-module-text69">
+                John Smith
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text70">
+                Tech Corp
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text71">
+                Full-Time
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text72">
+                24
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text73">
+                15 days
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text74">
+                Linkdin
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text75">
+                Active
+              </span>
+            </div>
+            <div class="recruiter-super-admin-analytical-module-container42">
+              <span class="recruiter-super-admin-analytical-module-text76">
+                John Smith
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text77">
+                Tech Corp
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text78">
+                Full-Time
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text79">
+                24
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text80">
+                15 days
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text81">
+                Linkdin
+              </span>
+              <span class="recruiter-super-admin-analytical-module-text82">
+                Closed
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: USER MANAGEMENT -->
+    <div *ngIf="activeTab === 'users'" class="user-management-container">
+      
+      <!-- 1. Toolbar -->
+      <div class="user-management-toolbar">
+        <h2 class="toolbar-title">User Management</h2>
+        <button class="create-user-btn" (click)="openCreateUserPopup()">
+          <span style="font-size: 20px; line-height: 1;">+</span> Create User
+        </button>
+      </div>
+
+      <!-- User List Grid -->
+      <div class="user-list-view">
+        <div *ngIf="isLoadingUsers">Loading users...</div>
+        
+        <div class="user-cards-grid" *ngIf="!isLoadingUsers">
+          @for (user of userList; track user.user_id) {
+            <div class="user-card">
+              <div class="card-header">
+                <div style="display:flex; align-items:center;">
+                  <div class="user-initials">{{ user.initials || 'U' }}</div>
+                  <div class="header-info">
+                    <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                    <span class="user-role-badge" [class.super]="user.is_superuser">
+                      {{ user.is_superuser ? 'Super Admin' : user.user_type }}
+                    </span>
+                  </div>
+                </div>
+                <button class="action-btn copy-all-btn" title="Copy All Info" (click)="copyUserData(user)">
+                  <!-- Copy Icon -->
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+              </div>
+
+              <div class="card-body">
+                <div class="info-row">
+                  <span class="info-label">User ID:</span>
+                  <span>{{ user.user_id }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Email:</span>
+                  <span style="display:flex; align-items:center;">
+                    {{ user.email }}
+                    <span class="copy-icon" (click)="copyToClipboard(user.email)" title="Copy Email">📋</span>
+                  </span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Phone:</span>
+                  <span>{{ user.phone_number }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Status:</span>
+                  <span [style.color]="user.is_active ? 'green' : 'red'">{{ user.is_active ? 'Active' : 'Inactive' }}</span>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <!-- Reset Password -->
+                <button class="action-btn reset-btn" title="Reset Password" (click)="confirmResetPassword(user)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </button>
+                <!-- Edit -->
+                <button class="action-btn edit-btn" title="Edit User" (click)="openEditUserPopup(user)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <!-- Delete -->
+                <button class="action-btn delete-btn" title="Delete User" (click)="confirmDeleteUser(user)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      
+
+      <!-- 3. Floating Popup (Modal) for Creation -->
+      <div class="modal-overlay" *ngIf="showCreateUserPopup">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="modal-title">{{ isEditMode ? 'Edit User' : 'Create New Admin' }}</span>
+            <button class="close-modal-btn" (click)="closeCreateUserPopup()">&times;</button>
+          </div>
+
+          @if (successMessage) { <div class="success-banner">{{ successMessage }}</div> }
+          @if (errorMessage) { <div class="error-banner">{{ errorMessage }}</div> }
+
+          <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="admin-creation-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-input" formControlName="first_name" placeholder="First Name" [class.error]="isFieldInvalid('first_name')">
+                @if (isFieldInvalid('first_name')) { <div class="error-message">Required (Letters only)</div> }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" formControlName="last_name" placeholder="Last Name" [class.error]="isFieldInvalid('last_name')">
+                @if (isFieldInvalid('last_name')) { <div class="error-message">Required</div> }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" formControlName="phone_number" placeholder="10-digit number" maxlength="10" (input)="sanitizePhoneNumber($event)" [class.error]="isFieldInvalid('phone_number')">
+              @if (isFieldInvalid('phone_number')) { <div class="error-message">Valid 10-digit number required</div> }
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" formControlName="email" placeholder="email@company.com" [class.error]="isFieldInvalid('email')">
+              @if (isFieldInvalid('email')) { <div class="error-message">Valid email required</div> }
+            </div>
+
+            <div class="form-group checkbox-group">
+              <input type="checkbox" id="isSuperAdmin" class="checkbox-input" formControlName="is_superuser">
+              <label for="isSuperAdmin" class="form-label" style="cursor: pointer; margin:0;">Grant Super-Admin Privileges</label>
+            </div>
+
+            <!-- Passwords hidden in Edit Mode -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">
+                  Password
+                  <span *ngIf="isEditMode" style="font-weight:normal; font-size:11px; color:#666;">(Leave blank to keep current)</span>
+                </label>
+                <div class="password-wrapper">
+                  <input [type]="passwordType" class="form-input" formControlName="password" placeholder="Password">
+                  <span class="password-toggle" (click)="togglePasswordVisibility()">{{ passwordType === 'password' ? 'Show' : 'Hide' }}</span>
+                </div>
+                @if (isFieldInvalid('password')) { <div class="error-message">Min 8 chars, 1 Upper, 1 Number, 1 Special.</div> }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="password-wrapper">
+                  <input [type]="confirmPasswordType" class="form-input" formControlName="confirm_password" placeholder="Confirm">
+                  <span class="password-toggle" (click)="toggleConfirmPasswordVisibility()">{{ confirmPasswordType === 'password' ? 'Show' : 'Hide' }}</span>
+                </div>
+                @if (createUserForm.hasError('mismatch') && createUserForm.get('confirm_password')?.touched) { <div class="error-message">Passwords do not match</div> }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="cancel-btn" (click)="closeCreateUserPopup()">Cancel</button>
+              <button type="submit" class="submit-btn" [disabled]="createUserForm.invalid || isSubmitting">
+                {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User') }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ALERT MESSAGE COMPONENT -->
+    @if (showAlert) {
+      <app-alert-message
+        [message]="alertMessage"
+        [buttons]="alertButtons"
+        (buttonClicked)="onAlertAction($event)"
+        (close)="onAlertClose()"
+      ></app-alert-message>
+    }
+
+    </div>
+    
+  </div>
+</div>
