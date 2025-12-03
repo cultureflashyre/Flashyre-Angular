@@ -94,204 +94,293 @@
       </ng-template>
     </recruiter-workflow-navbar>
     <div class="recruiter-workflow-client-clients-listing-container">
+      <!-- Add Client Button with functionality -->
       <div
         id="cv-jd-upload-container"
         class="recruiter-workflow-client-cvjd-upload-container"
       >
         <button
-          id="add-questions-with-ai-button"
-          type="button"
+          type="button" 
+          (click)="openAddClientForm()"
           class="recruiter-workflow-client-add-questions-with-ai-button button"
         >
-          <span
-            id="add-questions-with-ai-text"
-            class="recruiter-workflow-client-add-questions-with-ai-text"
-          >
+          <span class="recruiter-workflow-client-add-questions-with-ai-text">
             + Add Client
           </span>
         </button>
       </div>
-      <div
-        class="recruiter-workflow-client-recruiter-workflow-client-input-form"
+
+      <!-- MAIN FORM START -->
+      <form [formGroup]="mainForm" *ngIf="showForm">
+        <div class="recruiter-workflow-client-recruiter-workflow-client-input-form">
+          <div class="recruiter-workflow-client-container12">
+            <span class="recruiter-workflow-client-text30">Client Input form</span>
+          </div>
+
+          <!-- CLIENTS LOOP -->
+          <ng-container formArrayName="clients">
+            <div *ngFor="let client of clientsArray.controls; let i = index" [formGroupName]="i" 
+                 style="border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; padding-bottom: 20px;">
+              
+              <!-- Header for Client Block if multiple -->
+              <div *ngIf="clientsArray.length > 1" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                 <strong>Client #{{i + 1}}</strong>
+                 <button type="button" (click)="removeClient(i)" style="color: red; border: none; background: none; cursor: pointer;">Remove Client</button>
+              </div>
+
+              <div class="recruiter-workflow-client-container13">
+                
+                <!-- ROW 1: Company Name (NEW) & Client Name -->
+                <div class="recruiter-workflow-client-job-title-company-name-container">
+                  
+                  <!-- 1. Company Name (New Field) -->
+                  <div
+                    id="candidate-job-title"
+                    class="recruiter-workflow-client-job-title-container"
+                  >
+                   <div
+                      id="skill-text-container-1"
+                      class="recruiter-workflow-client-skill-text-container-1"
+                    >
+                    <span class="recruiter-workflow-client-job-title-text">Company Name</span>
+                    <span class="recruiter-workflow-client-skill-star-text">*</span>
+                   </div>
+                    <input 
+                      type="text" 
+                      formControlName="company_name" 
+                      placeholder="Enter Company Name" 
+                      class="recruiter-workflow-client-job-title-input1 input"/>
+                    <!-- Validation Error -->
+                    <div *ngIf="client.get('company_name')?.invalid && client.get('company_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
+                      <span *ngIf="client.get('company_name')?.errors?.['required']">Company Name is required.</span>
+                      <span *ngIf="client.get('company_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+                    </div>
+                  </div>
+
+                  <!-- 2. Client Name -->
+                  <div
+                    id="candidate-company-name-container"
+                    class="recruiter-workflow-client-company-name-container"
+                  >
+                  <div
+                      id="skill-text-container-2"
+                      class="recruiter-workflow-client-skill-text-container-2"
+                    >
+                    <span class="recruiter-workflow-client-company-name-text">Client Name</span>
+                    <span class="recruiter-workflow-client-skill-star-text">*</span>
+                  </div>
+                    <input 
+                      type="text" 
+                      formControlName="client_name" 
+                      placeholder="Enter Client Name" 
+                      class="recruiter-workflow-client-company-name-input input"/>
+                    <!-- Validation Error -->
+                    <div *ngIf="client.get('client_name')?.invalid && client.get('client_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
+                        <span *ngIf="client.get('client_name')?.errors?.['required']">Client Name is required.</span>
+                        <span *ngIf="client.get('client_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROW 2: Sub-Client & Description -->
+                <div class="recruiter-workflow-client-job-title-company-name-container">
+                  
+                  <!-- 3. Sub Client Name -->
+                  <div class="recruiter-workflow-client-job-title-container">
+                      <span class="recruiter-workflow-client-job-title-text">Sub Client Name</span>
+                      <input 
+                        type="text" 
+                        formControlName="sub_client_name" 
+                        placeholder="Enter Sub-Client Name" 
+                        class="recruiter-workflow-client-job-title-input1 input"/>
+                      <div *ngIf="client.get('sub_client_name')?.invalid && client.get('sub_client_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
+                          <span *ngIf="client.get('sub_client_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+                      </div>
+                  </div>
+
+                  <!-- 4. Client Description -->
+                  <div
+                    id="skills-container"
+                    class="recruiter-workflow-client-skills-container"
+                  >
+                    <div
+                      id="skill-text-container"
+                      class="recruiter-workflow-client-skill-text-container"
+                    >
+                      <span class="recruiter-workflow-client-skill-text">Client Description</span>
+                      <span class="recruiter-workflow-client-skill-star-text">*</span>
+                    </div>
+                    <input
+                      type="text"
+                      formControlName="client_description"
+                      placeholder="Description" 
+                      class="recruiter-workflow-client-job-title-input2 input"
+                    />
+                     <div *ngIf="client.get('client_description')?.invalid && client.get('client_description')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
+                          <span *ngIf="client.get('client_description')?.errors?.['required']">Description is required.</span>
+                     </div>
+                  </div>
+                </div>
+
+                <!-- CONTACT INFORMATION (Nested FormArray) -->
+                <div
+  id="interview-process-container"
+  class="recruiter-workflow-client-interview-process-container"
+>
+  <span
+    id="interview-process-text"
+    class="recruiter-workflow-client-interview-process-text"
+  >
+    Contact Information
+  </span>
+  
+  <div
+    id="different-stages-container"
+    class="recruiter-workflow-client-different-stages-container" 
+    formArrayName="contacts"
+  >
+    <!-- Loop through Contacts/Locations -->
+    <div 
+      *ngFor="let contact of getContactsArray(i).controls; let j = index" 
+      [formGroupName]="j"
+      id="different-stage-container"
+      class="recruiter-workflow-client-different-stage-container"
+    >
+      <!-- Location -->
+      <div>
+        <input 
+          type="text" 
+          formControlName="location" 
+          placeholder="Location" 
+          class="recruiter-workflow-client-date-input1 input"
+        />
+        <span 
+          *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" 
+          style="color: red; font-size: 10px;"
+        >
+          Required
+        </span>
+      </div>
+
+      <!-- Spoc -->
+      <div>
+        <input 
+          type="text" 
+          formControlName="spoc_name" 
+          placeholder="Spoc" 
+          class="recruiter-workflow-client-date-input2 input"
+        />
+        <span 
+          *ngIf="contact.get('spoc_name')?.hasError('pattern') && contact.get('spoc_name')?.touched" 
+          style="color: red; font-size: 10px;"
+        >
+          Alpha only
+        </span>
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <input 
+          type="text" 
+          formControlName="phone_number" 
+          placeholder="Phone Number" 
+          class="recruiter-workflow-client-date-input3 input"
+        />
+        <span 
+          *ngIf="contact.get('phone_number')?.hasError('pattern') && contact.get('phone_number')?.touched" 
+          style="color: red; font-size: 10px;"
+        >
+          Digits only
+        </span>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <input 
+          type="text" 
+          formControlName="email" 
+          placeholder="Email" 
+          class="recruiter-workflow-client-date-input4 input"
+        />
+        <span 
+          *ngIf="contact.get('email')?.hasError('email') && contact.get('email')?.touched" 
+          style="color: red; font-size: 10px;"
+        >
+          Invalid Email
+        </span>
+      </div>
+
+      <!-- Remove Icon -->
+      <svg 
+        (click)="removeLocation(i, j)" 
+        *ngIf="getContactsArray(i).length > 1"
+        id="remove-icon" 
+        width="24" 
+        height="24" 
+        viewBox="0 0 24 24" 
+        class="recruiter-workflow-client-remove-icon"
+        style="cursor: pointer;"
       >
-        <div class="recruiter-workflow-client-container12">
-          <span class="recruiter-workflow-client-text30">
-            Client Input form
-          </span>
-        </div>
-        <div class="recruiter-workflow-client-container13">
-          <div
-            id="job-title-company-name-container"
-            class="recruiter-workflow-client-job-title-company-name-container"
-          >
-            <div
-              id="candidate-job-title"
-              class="recruiter-workflow-client-job-title-container"
-            >
-              <span
-                id="employment-job-title-text"
-                class="recruiter-workflow-client-job-title-text"
-              >
-                Client Name
-              </span>
-              <input
-                type="text"
-                id="employment-job-title-input"
-                placeholder="Enter Job Title"
-                class="recruiter-workflow-client-job-title-input1 input"
-              />
-            </div>
-            <div
-              id="candidate-company-name-container"
-              class="recruiter-workflow-client-company-name-container"
-            >
-              <span
-                id="employment-company-name"
-                class="recruiter-workflow-client-company-name-text"
-              >
-                Sub Client Name
-              </span>
-              <input
-                type="text"
-                id="employment-company-name-input"
-                placeholder="Enter Company Name"
-                class="recruiter-workflow-client-company-name-input input"
-              />
-            </div>
-          </div>
-          <div
-            id="skills-container"
-            class="recruiter-workflow-client-skills-container"
-          >
-            <div
-              id="skill-text-container"
-              class="recruiter-workflow-client-skill-text-container"
-            >
-              <span
-                id="skill-text"
-                class="recruiter-workflow-client-skill-text"
-              >
-                Client Description
-              </span>
-              <span
-                id="skill-star-text"
-                class="recruiter-workflow-client-skill-star-text"
-              >
-                *
-              </span>
-            </div>
-            <input
-              type="text"
-              id="employment-job-title-input"
-              placeholder="Client Description"
-              class="recruiter-workflow-client-job-title-input2 input"
-            />
-          </div>
-          <div
-            id="interview-process-container"
-            class="recruiter-workflow-client-interview-process-container"
-          >
-            <span
-              id="interview-process-text"
-              class="recruiter-workflow-client-interview-process-text"
-            >
-              Contact Information
-            </span>
-            <div
-              id="different-stages-container"
-              class="recruiter-workflow-client-different-stages-container"
-            >
-              <div
-                id="different-stage-container"
-                class="recruiter-workflow-client-different-stage-container"
-              >
-                <input
-                  type="text"
-                  id="date-input"
-                  placeholder="Location"
-                  class="recruiter-workflow-client-date-input1 input"
-                />
-                <input
-                  type="text"
-                  id="date-input"
-                  placeholder="Spoc"
-                  class="recruiter-workflow-client-date-input2 input"
-                />
-                <input
-                  type="text"
-                  id="date-input"
-                  placeholder="Phone Number"
-                  class="recruiter-workflow-client-date-input3 input"
-                />
-                <input
-                  type="text"
-                  id="date-input"
-                  placeholder="Email"
-                  class="recruiter-workflow-client-date-input4 input"
-                />
-                <svg
-                  id="remove-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="recruiter-workflow-client-remove-icon"
-                >
-                  <path d="M19 13H5v-2h14z" fill="currentColor"></path>
-                </svg>
+        <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div
+    id="add-section-container"
+    class="recruiter-workflow-client-add-section-container"
+  >
+    <span 
+      (click)="addLocation(i)" 
+      id="add-section-text"
+      class="recruiter-workflow-client-add-section-text button"
+      style="cursor: pointer;"
+    >
+      + Add Location
+    </span>
+    <span
+      id="remove-section-text"
+      class="recruiter-workflow-client-remove-section-text button"
+    >
+      - Remove Section
+    </span>
+  </div>
+</div>
+
+
               </div>
             </div>
-            <div
-              id="add-section-container"
-              class="recruiter-workflow-client-add-section-container"
+          </ng-container>
+          <!-- END CLIENTS LOOP -->
+
+          <div
+           id="submit-cancel-buttons-container"
+           class="recruiter-workflow-client-submit-cancel-buttons-container"
+          >
+            <button
+              type="button" 
+              (click)="closeForm()"
+              class="recruiter-workflow-client-cancel-button button"
             >
-              <span
-                id="add-section-text"
-                class="recruiter-workflow-client-add-section-text button"
-              >
-                + Add Location
-              </span>
-              <span
-                id="remove-section-text"
-                class="recruiter-workflow-client-remove-section-text button"
-              >
-                - Remove Section
-              </span>
-            </div>
+              <span class="recruiter-workflow-client-cancel-text">Cancel</span>
+            </button>
+            <button
+              type="button" 
+              (click)="onSubmit()"
+              class="recruiter-workflow-client-submit-button button"
+            >
+              <span class="recruiter-workflow-client-submit-text">Submit</span>
+            </button>
           </div>
         </div>
-        <div
-          id="submit-cancel-buttons-container"
-          class="recruiter-workflow-client-submit-cancel-buttons-container"
-        >
-          <button
-            id="cancel-button"
-            name="cancel-button"
-            type="button"
-            class="recruiter-workflow-client-cancel-button button"
-          >
-            <span
-              id="cancel-text"
-              class="recruiter-workflow-client-cancel-text"
-            >
-              Cancel
-            </span>
-          </button>
-          <button
-            id="submit-button"
-            name="submit-button"
-            type="button"
-            class="recruiter-workflow-client-submit-button button"
-          >
-            <span
-              id="submit-text"
-              class="recruiter-workflow-client-submit-text"
-            >
-              Submit
-            </span>
-          </button>
-        </div>
-      </div>
-      <div class="recruiter-workflow-client-recruiter-workflow-client-list">
+      </form>
+      <div *ngIf="isLoading" class="loader-container">
+  <div class="round-loader"></div>
+  <p>Saving Data...</p>
+</div>
+      <!-- MAIN FORM END -->
+
+      <div class="recruiter-workflow-client-recruiter-workflow-client-list" *ngIf="showList">
         <div
           id="select-filter-sort-download-zip-main-container"
           class="recruiter-workflow-client-select-filter-sort-download-zip-main-container"
@@ -305,11 +394,9 @@
                 type="checkbox"
                 id="select-checkbox"
                 class="recruiter-workflow-client-select-checkbox1"
+                (change)="toggleSelectAll($event)"
               />
-              <span
-                id="select-all-text"
-                class="recruiter-workflow-client-select-all-text"
-              >
+              <span class="recruiter-workflow-client-select-all-text">
                 Select All
               </span>
             </div>
@@ -358,13 +445,11 @@
               <button
                 id="filtered-button"
                 type="button"
+                (click)="deleteSelectedClients()"
                 class="recruiter-workflow-client-filtered-button1 button"
               >
-                <span
-                  id="start-process-text"
-                  class="recruiter-workflow-client-start-process-text1"
-                >
-                  Delete 
+                <span class="recruiter-workflow-client-start-process-text1">
+                  Delete
                 </span>
               </button>
               <button
@@ -372,10 +457,7 @@
                 type="button"
                 class="recruiter-workflow-client-filtered-button2 button"
               >
-                <span
-                  id="start-process-text"
-                  class="recruiter-workflow-client-start-process-text2"
-                >
+                <span class="recruiter-workflow-client-start-process-text2">
                   Filtered By
                 </span>
               </button>
@@ -450,88 +532,68 @@
         </div>
         <div class="recruiter-workflow-client-container17">
           <div class="recruiter-workflow-client-container18">
-            <div class="recruiter-workflow-client-container19">
+            
+            <!-- LIST ITEM LOOP -->
+            <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container19">
               <div class="recruiter-workflow-client-container20">
                 <div class="recruiter-workflow-client-container21">
-                  <input
-                    type="checkbox"
-                    id="select-checkbox"
-                    class="recruiter-workflow-client-select-checkbox2"
-                  />
+                  <input type="checkbox" class="recruiter-workflow-client-select-checkbox2" [(ngModel)]="clientData.selected"/>
                 </div>
+                
                 <div class="recruiter-workflow-client-container22">
+                  <!-- Company Name -->
                   <span class="recruiter-workflow-client-text36">
-                    ASM Technologies Lt. Pvt.
+                    {{ clientData.company_name }}
                   </span>
+                  
                   <div class="recruiter-workflow-client-container23">
                     <div class="recruiter-workflow-client-container24">
-                      <span class="recruiter-workflow-client-text37">
-                        Client
-                      </span>
-                      <span class="recruiter-workflow-client-text38">
-                        Asian Paint
-                      </span>
+                      <span class="recruiter-workflow-client-text37">Client</span>
+                      <span class="recruiter-workflow-client-text38">{{ clientData.client_name }}</span>
                     </div>
                     <div class="recruiter-workflow-client-container25">
-                      <span class="recruiter-workflow-client-text39">
-                        Sub Client
-                      </span>
-                      <span class="recruiter-workflow-client-text40">
-                        Asian Paint
-                      </span>
+                      <span class="recruiter-workflow-client-text39">Sub Client</span>
+                      <span class="recruiter-workflow-client-text40">{{ clientData.sub_client_name || '-' }}</span>
                     </div>
                   </div>
+
+                  <!-- Table Header for Contacts -->
                   <div class="recruiter-workflow-client-container26">
                     <div class="recruiter-workflow-client-container27">
-                      <div class="recruiter-workflow-client-container28">
-                        <h1 class="recruiter-workflow-client-text41">
-                          Location
-                        </h1>
-                      </div>
-                      <div class="recruiter-workflow-client-container29">
-                        <h1 class="recruiter-workflow-client-text42">Spoc</h1>
-                      </div>
-                      <div class="recruiter-workflow-client-container30">
-                        <h1 class="recruiter-workflow-client-text43">
-                          Phone Number
-                        </h1>
-                      </div>
-                      <div class="recruiter-workflow-client-container31">
-                        <h1 class="recruiter-workflow-client-text44">Email</h1>
-                      </div>
+                      <div class="recruiter-workflow-client-container28"><h1 class="recruiter-workflow-client-text41">Location</h1></div>
+                      <div class="recruiter-workflow-client-container29"><h1 class="recruiter-workflow-client-text42">Spoc</h1></div>
+                      <div class="recruiter-workflow-client-container30"><h1 class="recruiter-workflow-client-text43">Phone Number</h1></div>
+                      <div class="recruiter-workflow-client-container31"><h1 class="recruiter-workflow-client-text44">Email</h1></div>
                     </div>
+                    
+                    <!-- Contacts Loop -->
                     <div class="recruiter-workflow-client-container32">
-                      <div class="recruiter-workflow-client-container33">
+                      <div *ngFor="let contact of clientData.contacts" class="recruiter-workflow-client-container33" style="margin-bottom: 5px;">
                         <div class="recruiter-workflow-client-container34">
-                          <span class="recruiter-workflow-client-text45">
-                            Hebbal, Banglore
-                          </span>
+                          <span class="recruiter-workflow-client-text45">{{ contact.location }}</span>
                         </div>
                         <div class="recruiter-workflow-client-container35">
-                          <span class="recruiter-workflow-client-text46">
-                            Prashanth
-                          </span>
+                          <span class="recruiter-workflow-client-text46">{{ contact.spoc_name }}</span>
                         </div>
                         <div class="recruiter-workflow-client-container36">
-                          <span class="recruiter-workflow-client-text47">
-                            9874569874
-                          </span>
+                          <span class="recruiter-workflow-client-text47">{{ contact.phone_number }}</span>
                         </div>
                         <div class="recruiter-workflow-client-container37">
-                          <span class="recruiter-workflow-client-text48">
-                            culturehighway&#64;gmail.com
-                          </span>
+                          <span class="recruiter-workflow-client-text48">{{ contact.email }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Action Icons (Static) -->
               <div class="recruiter-workflow-client-container38">
                 <svg
                   width="24"
                   height="24"
                   viewBox="0 0 1024 1024"
+                  (click)="editClientClick(clientData)"
                   class="recruiter-workflow-client-icon17"
                 >
                   <path
@@ -547,6 +609,7 @@
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
+                  (click)="downloadClientData(clientData)"
                   class="recruiter-workflow-client-icon20"
                 >
                   <path
@@ -557,6 +620,7 @@
                   width="20"
                   height="20"
                   viewBox="0 0 20 20"
+                  (click)="deleteSingleClient(clientData)"
                   class="recruiter-workflow-client-icon22"
                 >
                   <path
@@ -566,19 +630,21 @@
                 </svg>
               </div>
             </div>
-            <div class="recruiter-workflow-client-container39">
-              <div class="recruiter-workflow-client-container40">
-                <span class="recruiter-workflow-client-text49">
-                  Recruiter : 
-                </span>
-                <span class="recruiter-workflow-client-text50">Prashanth</span>
-              </div>
-              <div class="recruiter-workflow-client-container41">
-                <span class="recruiter-workflow-client-text51">
-                  Created at : 
-                </span>
-                <span class="recruiter-workflow-client-text52">Yesterday</span>
-              </div>
+            <!-- END LIST ITEM LOOP -->
+
+          </div>
+          <div class="recruiter-workflow-client-container39">
+            <div class="recruiter-workflow-client-container40">
+              <span class="recruiter-workflow-client-text49">
+                Recruiter : 
+              </span>
+              <span class="recruiter-workflow-client-text50">{{ recruiterFirstName }}</span>
+            </div>
+            <div class="recruiter-workflow-client-container41">
+              <span class="recruiter-workflow-client-text51">
+                Created at : 
+              </span>
+              <span class="recruiter-workflow-client-text52">{{ existingClients[0]?.created_at | date:'mediumDate' }}</span>
             </div>
           </div>
         </div>
