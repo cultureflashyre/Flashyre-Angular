@@ -1,3 +1,4 @@
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -25,24 +26,41 @@ import { AdbClientService } from '../../services/adb-client.service'; // Adjust 
     RouterModule, 
     ReactiveFormsModule, // Important for Forms
     FormsModule,
-    RecruiterWorkflowNavbarComponent
+    RecruiterWorkflowNavbarComponent,
+    AlertMessageComponent
   ]
 })
 export class RecruiterWorkflowClient implements OnInit {
   mainForm: FormGroup;
   existingClients: any[] = []; // Stores data fetched from DB
 
-  // CONTROLS VISIBILITY
-showList: boolean = true;      // Shows the list by default
-showForm: boolean = false;     // Hides the form by default
-isLoading: boolean = false;    // Hides the loader by default
+  masterClients: any[] = []; // The original full list from DB
+  isFilterPanelVisible: boolean = false;
+  filterForm: FormGroup;
+  currentSort: string = 'none';
 
-// EDIT MODE variables
-isEditMode: boolean = false;   // Are we editing?
-currentEditId: any = null;     // Which client are we editing?
+  showToast: boolean = false;
+  toastMessage: string = '';
 
-// USER INFO variable
-recruiterFirstName: string = 'Loading...';
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  
+  // Stores the action waiting for confirmation
+  // type: 'SUBMIT_CREATE', 'SUBMIT_UPDATE', 'DELETE_BULK', 'DELETE_SINGLE', 'EDIT_MODE', 'DOWNLOAD'
+  pendingAction: { type: string, data?: any } = { type: '' };
+
+    // CONTROLS VISIBILITY
+  showList: boolean = true;      // Shows the list by default
+  showForm: boolean = false;     // Hides the form by default
+  isLoading: boolean = false;    // Hides the loader by default
+
+  // EDIT MODE variables
+  isEditMode: boolean = false;   // Are we editing?
+  currentEditId: any = null;     // Which client are we editing?
+
+  // USER INFO variable
+  recruiterFirstName: string = 'Loading...';
 
   constructor(
     private title: Title, 
@@ -55,6 +73,13 @@ recruiterFirstName: string = 'Loading...';
     // Initialize the main form containing an array of clients
     this.mainForm = this.fb.group({
       clients: this.fb.array([])
+    });
+
+    this.filterForm = this.fb.group({
+      company_name: [''],
+      client_name: [''],
+      location: [''],
+      date_created: ['']
     });
   }
 
@@ -134,9 +159,16 @@ closeForm(): void {
   // Creates the structure for a Single Contact/Location
   createContactGroup(): FormGroup {
     return this.fb.group({
-      location: ['', Validators.required],
+      // Req 3: Must contain at least one alphabet (cannot be just numbers or special chars)
+      location: ['', [Validators.required, Validators.pattern('.*[a-zA-Z].*')]],
+      
+      // Req 4: Only characters and spaces
       spoc_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
-      phone_number: ['', [Validators.required, Validators.pattern('^[0-9+]+$')]],
+      
+      // Req 5: Only digits (Phone numbers)
+      phone_number: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      
+      // Req 6: Valid Email format
       email: ['', [Validators.required, Validators.email]]
     });
   }
@@ -161,59 +193,90 @@ closeForm(): void {
 
   // --- API Interaction ---
 
-  fetchClients(): void {
+  fetchClients(onComplete?: () => void): void {
     this.clientService.getClients().subscribe({
       next: (data) => {
-        this.existingClients = data;
+        // 1. Store Original Data
+        this.masterClients = data.map(client => ({ ...client, selected: false }));
+        
+        // 2. Apply current filters/sort to populate existingClients (the view list)
+        this.applyFiltersAndSort();
+        
+        if (onComplete) onComplete();
       },
       error: (err) => {
         console.error('Error fetching clients:', err);
+        if (onComplete) onComplete();
       }
     });
   }
 
   onSubmit(): void {
-  if (this.mainForm.invalid) {
-    this.mainForm.markAllAsTouched();
-    return;
+    // Validation Check
+    if (this.mainForm.invalid) {
+      this.mainForm.markAllAsTouched();
+      this.openAlert('Please fix the validation errors in the form before submitting.', ['OK']);
+      return;
+    }
+
+    // Trigger Alert instead of window.confirm
+    if (this.isEditMode) {
+      this.pendingAction = { type: 'SUBMIT_UPDATE' };
+      this.openAlert('Are you sure you want to update this client details?', ['Cancel', 'Update']);
+    } else {
+      this.pendingAction = { type: 'SUBMIT_CREATE' };
+      this.openAlert('Are you sure you want to add this client?', ['Cancel', 'Add']);
+    }
   }
 
-  // 1. Show Loader, Hide Form
-  this.isLoading = true;
-  this.showForm = false; 
+  // Logic moved here to be called AFTER confirmation
+  proceedWithSubmit(): void {
+    this.isLoading = true;
+    this.showForm = false; 
 
-  const payload = this.mainForm.value.clients;
+    const payload = this.mainForm.value.clients;
 
-  if (this.isEditMode) {
-    // --- UPDATE LOGIC ---
-    // In edit mode, we usually update one client. 
-    // We use the ID we saved earlier.
-    const clientData = payload[0]; 
-    this.clientService.updateClient(this.currentEditId, clientData).subscribe({
-      next: () => {
-        this.finishSubmit();
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false; // Stop loader on error
-        this.showForm = true;   // Show form again so they can fix it
-      }
-    });
+    const handleSuccess = () => {
+      this.fetchClients(() => {
+         this.isLoading = false; 
+         this.showList = true;
+         this.mainForm.reset();
+         this.clientsArray.clear();
+         this.addClient();
 
-  } else {
-    // --- CREATE LOGIC ---
-    this.clientService.createClients(payload).subscribe({
-      next: () => {
-        this.finishSubmit();
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false;
-        this.showForm = true;
-      }
-    });
+         // --- START OF NEW CODE ---
+         // Trigger the success message based on the mode
+         if (this.isEditMode) {
+           this.showSuccessToast('Client data updated successfully');
+         } else {
+           this.showSuccessToast('Client added successfully');
+         }
+         // --- END OF NEW CODE ---
+      });
+    };
+
+    const handleError = (err: any) => {
+      console.error(err);
+      this.isLoading = false;
+      this.showForm = true;
+      this.openAlert('Failed to save data. Please check your inputs.', ['OK']);
+    };
+
+    if (this.isEditMode) {
+      // Use pendingAction type or existing logic to determine mode
+      const clientData = payload[0]; 
+      this.clientService.updateClient(this.currentEditId, clientData).subscribe({
+        next: handleSuccess,
+        error: handleError
+      });
+    } else {
+      this.clientService.createClients(payload).subscribe({
+        next: handleSuccess,
+        error: handleError
+      });
+    }
   }
-}
+
 
 // Helper to clean up after save
 finishSubmit(): void {
@@ -234,19 +297,19 @@ finishSubmit(): void {
 
 // --- DELETE LOGIC ---
 deleteSelectedClients(): void {
-  // 1. Get the list of selected clients
-  const selected = this.existingClients.filter(c => c.selected);
+    const selected = this.existingClients.filter(c => c.selected);
 
-  if (selected.length === 0) {
-    alert('Select At least one client');
-    return;
+    if (selected.length === 0) {
+      this.openAlert('Select at least one client', ['OK']);
+      return;
+    }
+
+    this.pendingAction = { type: 'DELETE_BULK' };
+    this.openAlert('Are you sure to delete all those clients?', ['Cancel', 'Delete']);
   }
 
-  if (confirm('Are you sure to delete all those clients?')) {
-    // 2. Loop through and delete each one
-    // Note: In a professional app, we would send one "Bulk Delete" request.
-    // For now, we will do it one by one.
-    
+  proceedWithBulkDelete(): void {
+    const selected = this.existingClients.filter(c => c.selected);
     let deletedCount = 0;
     
     selected.forEach((client) => {
@@ -255,10 +318,8 @@ deleteSelectedClients(): void {
       this.clientService.deleteClient(id).subscribe({
         next: () => {
           deletedCount++;
-          // If we have deleted all of them, refresh the list
           if (deletedCount === selected.length) {
              this.fetchClients();
-             // Uncheck the "Select All" box
              const selectAllBox = document.getElementById('select-checkbox') as HTMLInputElement;
              if(selectAllBox) selectAllBox.checked = false;
           }
@@ -267,37 +328,40 @@ deleteSelectedClients(): void {
       });
     });
   }
-}
 
 deleteSingleClient(client: any): void {
-  if (confirm('Are you sure to delete this client?')) {
-    // We assume your client object has a property called 'id' or 'client_id'
-    // Check your console logs if 'id' is undefined.
+    this.pendingAction = { type: 'DELETE_SINGLE', data: client };
+    this.openAlert('Are you sure to delete this client?', ['Cancel', 'Delete']);
+  }
+
+  proceedWithSingleDelete(client: any): void {
     const idToDelete = client.id || client.client_id; 
 
     this.clientService.deleteClient(idToDelete).subscribe({
       next: () => {
-        alert('Client deleted successfully');
-        this.fetchClients(); // Refresh the list!
+        // Optional: Show success alert or just refresh
+        // this.openAlert('Client deleted successfully', ['OK']); 
+        this.fetchClients(); 
       },
       error: (err) => {
         console.error('Delete failed', err);
-        alert('Failed to delete client');
+        this.openAlert('Failed to delete client', ['OK']);
       }
     });
   }
-}
 
 // --- EDIT LOGIC ---
 editClientClick(client: any): void {
-  if (confirm('Are you sure to edit this client data')) {
-    this.isEditMode = true;
-    this.currentEditId = client.id; // Save ID for later
+    this.pendingAction = { type: 'EDIT_MODE', data: client };
+    this.openAlert('Are you sure to edit this client data?', ['Cancel', 'Edit']);
+  }
 
-    // Prepare the form
+  proceedWithEdit(client: any): void {
+    this.isEditMode = true;
+    this.currentEditId = client.id; 
+
     this.clientsArray.clear();
     
-    // Create a form group and fill it with data
     const group = this.createClientGroup();
     group.patchValue({
       company_name: client.company_name,
@@ -306,8 +370,6 @@ editClientClick(client: any): void {
       client_description: client.client_description
     });
 
-    // Handle Contacts (Locations)
-    // Clear default contact and add existing ones
     const contactsFormArray = group.get('contacts') as FormArray;
     contactsFormArray.clear();
     
@@ -319,27 +381,194 @@ editClientClick(client: any): void {
 
     this.clientsArray.push(group);
 
-    // Switch Views
     this.showList = false;
     this.showForm = true;
   }
-}
 
 // --- DOWNLOAD PDF LOGIC ---
 downloadClientData(client: any): void {
-  if (confirm('Are you sure to download this client data')) {
-    alert('Downloading PDF for ' + client.client_name + '...');
-    
-    // NOTE: To do real PDF, you need a library like 'jspdf'. 
-    // Since we are keeping it simple:
-    console.log("PDF Data:", JSON.stringify(client));
-    // If you install jspdf later, you put the code here.
+    this.pendingAction = { type: 'DOWNLOAD', data: client };
+    this.openAlert('Are you sure to download this client data?', ['Cancel', 'Download']);
   }
-}
 
   onCancel(): void {
     this.mainForm.reset();
     this.clientsArray.clear();
     this.addClient();
   }
+
+  getHumanDate(dateString: string): string {
+    if (!dateString) return '';
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    
+    // Normalize times to midnight for accurate day comparison
+    const dateMidnight = new Date(date.setHours(0, 0, 0, 0));
+    const nowMidnight = new Date(now.setHours(0, 0, 0, 0));
+    
+    const diffTime = nowMidnight.getTime() - dateMidnight.getTime();
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    if (diffDays === 0) {
+      return 'Today'; // Or 'Now' if you prefer
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else {
+      // Return standard date format (e.g., Dec 3, 2025)
+      // You can adjust 'en-US' to your locale
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric'
+      });
+    }
+  }
+
+  // 2. Helper to determine if we show 'Created at' or 'Edited at'
+  // Returns an object with { label: string, date: string }
+  getDateStatus(client: any): { label: string, date: string } {
+    const created = new Date(client.created_at).getTime();
+    const updated = new Date(client.updated_at).getTime();
+
+    // If updated time is significantly larger than created time (e.g., > 1 second difference)
+    // we consider it Edited.
+    if (updated - created > 1000) {
+      return { 
+        label: 'Updated at :', 
+        date: client.updated_at 
+      };
+    } else {
+      return { 
+        label: 'Created at :', 
+        date: client.created_at 
+      };
+    }
+  }
+
+  openAlert(message: string, buttons: string[]): void {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  // 2. Handle Button Clicks from the Custom Alert
+  onAlertButtonClicked(action: string): void {
+    this.showAlert = false; // Close popup
+    
+    // Normalize action string (handle case sensitivity)
+    const act = action.toLowerCase();
+
+    // If user clicked Cancel, No, or OK (for simple info), just clear pending action and return
+    if (act === 'cancel' || act === 'no') {
+      this.pendingAction = { type: '' };
+      return;
+    }
+
+    // Proceed based on the Pending Action Type
+    if (act === 'add' || act === 'update' || act === 'delete' || act === 'edit' || act === 'yes' || act === 'download') {
+      
+      switch (this.pendingAction.type) {
+        case 'SUBMIT_CREATE':
+        case 'SUBMIT_UPDATE':
+          this.proceedWithSubmit(); // We will separate the API logic into this function
+          break;
+          
+        case 'DELETE_BULK':
+          this.proceedWithBulkDelete();
+          break;
+          
+        case 'DELETE_SINGLE':
+          this.proceedWithSingleDelete(this.pendingAction.data);
+          break;
+          
+        case 'EDIT_MODE':
+          this.proceedWithEdit(this.pendingAction.data);
+          break;
+          
+        case 'DOWNLOAD':
+          // Just a console log for now as per previous code
+          console.log("PDF Data:", JSON.stringify(this.pendingAction.data));
+          // You could call this.showSuccessPopup here if you had one
+          break;
+      }
+    }
+    
+    // Reset pending action
+    this.pendingAction = { type: '' };
+  }
+
+  showSuccessToast(message: string): void {
+    this.toastMessage = message;
+    this.showToast = true;
+
+    // Hide after 2 seconds
+    setTimeout(() => {
+      this.showToast = false;
+    }, 2000);
+  }
+
+   toggleFilterPanel(): void {
+    this.isFilterPanelVisible = !this.isFilterPanelVisible;
+  }
+
+  // The Core Logic Engine
+  applyFiltersAndSort(): void {
+    let clients = [...this.masterClients]; // Start with full list
+    const filters = this.filterForm.value;
+
+    // 1. Filter by Company Name
+    if (filters.company_name) {
+      const term = filters.company_name.toLowerCase();
+      clients = clients.filter(c => c.company_name.toLowerCase().includes(term));
+    }
+
+    // 2. Filter by Client Name
+    if (filters.client_name) {
+      const term = filters.client_name.toLowerCase();
+      clients = clients.filter(c => c.client_name.toLowerCase().includes(term));
+    }
+
+    // 3. Filter by Location (Nested Check)
+    if (filters.location) {
+      const term = filters.location.toLowerCase();
+      clients = clients.filter(c => 
+        c.contacts.some((contact: any) => contact.location.toLowerCase().includes(term))
+      );
+    }
+
+    // 4. Filter by Date (Exact match on YYYY-MM-DD)
+    if (filters.date_created) {
+      clients = clients.filter(c => c.created_at.startsWith(filters.date_created));
+    }
+
+    // 5. Apply Sorting
+    if (this.currentSort === 'a-z') {
+      clients.sort((a, b) => a.company_name.localeCompare(b.company_name));
+    } else if (this.currentSort === 'z-a') {
+      clients.sort((a, b) => b.company_name.localeCompare(a.company_name));
+    } else if (this.currentSort === 'newest') {
+      clients.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (this.currentSort === 'oldest') {
+      clients.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    }
+
+    // Update the View List
+    this.existingClients = clients;
+  }
+
+  applyFiltersFromPanel(): void {
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset({ company_name: '', client_name: '', location: '', date_created: '' });
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  sortClients(event: Event): void {
+    this.currentSort = (event.target as HTMLSelectElement).value;
+    this.applyFiltersAndSort();
+  }
+
 }

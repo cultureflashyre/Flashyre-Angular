@@ -93,11 +93,27 @@
         </div>
       </ng-template>
     </recruiter-workflow-navbar>
+    <app-alert-message
+      *ngIf="showAlert"
+      [message]="alertMessage"
+      [buttons]="alertButtons"
+      (buttonClicked)="onAlertButtonClicked($event)"
+      (close)="showAlert = false">
+    </app-alert-message>
+    <div *ngIf="showToast" class="success-toast-message">
+      <!-- Optional Checkmark Icon -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      {{ toastMessage }}
+    </div>
     <div class="recruiter-workflow-client-clients-listing-container">
       <!-- Add Client Button with functionality -->
       <div
         id="cv-jd-upload-container"
         class="recruiter-workflow-client-cvjd-upload-container"
+        *ngIf="showList"
       >
         <button
           type="button" 
@@ -113,14 +129,31 @@
       <!-- MAIN FORM START -->
       <form [formGroup]="mainForm" *ngIf="showForm">
         <div class="recruiter-workflow-client-recruiter-workflow-client-input-form">
-          <div class="recruiter-workflow-client-container12">
+          <div class="recruiter-workflow-client-container12" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <span class="recruiter-workflow-client-text30">Client Input form</span>
+            <svg
+    (click)="closeForm()"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    style="cursor: pointer; color: #666;"
+    class="close-icon"
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
           </div>
 
           <!-- CLIENTS LOOP -->
           <ng-container formArrayName="clients">
             <div *ngFor="let client of clientsArray.controls; let i = index" [formGroupName]="i" 
-                 style="border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; padding-bottom: 20px;">
+                 style="border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; padding-bottom: 20px; width: 100%;">
               
               <!-- Header for Client Block if multiple -->
               <div *ngIf="clientsArray.length > 1" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
@@ -254,12 +287,11 @@
           placeholder="Location" 
           class="recruiter-workflow-client-date-input1 input"
         />
-        <span 
-          *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" 
-          style="color: red; font-size: 10px;"
-        >
-          Required
-        </span>
+        <!-- Error Handling -->
+        <div *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" style="color: red; font-size: 12px;">
+           <span *ngIf="contact.get('location')?.errors?.['required']">Required</span>
+           <span *ngIf="contact.get('location')?.errors?.['pattern']">Must contain alphabets.</span>
+        </div>
       </div>
 
       <!-- Spoc -->
@@ -270,12 +302,11 @@
           placeholder="Spoc" 
           class="recruiter-workflow-client-date-input2 input"
         />
-        <span 
-          *ngIf="contact.get('spoc_name')?.hasError('pattern') && contact.get('spoc_name')?.touched" 
-          style="color: red; font-size: 10px;"
-        >
-          Alpha only
-        </span>
+        <!-- Error Handling -->
+        <div *ngIf="contact.get('spoc_name')?.invalid && contact.get('spoc_name')?.touched" style="color: red; font-size: 12px;">
+           <span *ngIf="contact.get('spoc_name')?.errors?.['required']">Required</span>
+           <span *ngIf="contact.get('spoc_name')?.errors?.['pattern']">Alphabets and spaces only.</span>
+        </div>
       </div>
 
       <!-- Phone -->
@@ -286,12 +317,11 @@
           placeholder="Phone Number" 
           class="recruiter-workflow-client-date-input3 input"
         />
-        <span 
-          *ngIf="contact.get('phone_number')?.hasError('pattern') && contact.get('phone_number')?.touched" 
-          style="color: red; font-size: 10px;"
-        >
-          Digits only
-        </span>
+        <!-- Error Handling -->
+        <div *ngIf="contact.get('phone_number')?.invalid && contact.get('phone_number')?.touched" style="color: red; font-size: 12px;">
+           <span *ngIf="contact.get('phone_number')?.errors?.['required']">Required</span>
+           <span *ngIf="contact.get('phone_number')?.errors?.['pattern']">Digits only.</span>
+        </div>
       </div>
 
       <!-- Email -->
@@ -302,12 +332,11 @@
           placeholder="Email" 
           class="recruiter-workflow-client-date-input4 input"
         />
-        <span 
-          *ngIf="contact.get('email')?.hasError('email') && contact.get('email')?.touched" 
-          style="color: red; font-size: 10px;"
-        >
-          Invalid Email
-        </span>
+        <!-- Error Handling -->
+        <div *ngIf="contact.get('email')?.invalid && contact.get('email')?.touched" style="color: red; font-size: 12px;">
+           <span *ngIf="contact.get('email')?.errors?.['required']">Required</span>
+           <span *ngIf="contact.get('email')?.errors?.['email']">Invalid Email format.</span>
+        </div>
       </div>
 
       <!-- Remove Icon -->
@@ -381,6 +410,23 @@
       <!-- MAIN FORM END -->
 
       <div class="recruiter-workflow-client-recruiter-workflow-client-list" *ngIf="showList">
+        <div 
+    *ngIf="existingClients.length === 0" 
+    style="display: flex; flex-direction: column; align-self: center; align-items: center; justify-content: center; height: 300px; color: #595959; text-align: center;"
+  >
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #ccc;">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    <span style="font-size: 20px; font-weight: 600;">No Clients Available</span>
+    <span style="font-size: 14px; margin-top: 8px;">Click "+ Add Client" above to create your first client.</span>
+  </div>
+
+  <!-- 2. WRAPPER START for Existing Content -->
+  <ng-container *ngIf="existingClients.length > 0">
+
         <div
           id="select-filter-sort-download-zip-main-container"
           class="recruiter-workflow-client-select-filter-sort-download-zip-main-container"
@@ -438,9 +484,11 @@
             id="filter-sort-download-zip-container"
             class="recruiter-workflow-client-filter-sort-download-zip-container"
           >
+            <!-- 1. FILTER BUTTON CONTAINER (Add position: relative) -->
             <div
               id="filtered-container"
               class="recruiter-workflow-client-filtered-container"
+              style="position: relative;" 
             >
               <button
                 id="filtered-button"
@@ -452,89 +500,74 @@
                   Delete
                 </span>
               </button>
+              
+              <!-- Toggle Panel Button -->
               <button
                 id="filtered-button"
                 type="button"
+                (click)="toggleFilterPanel()"
                 class="recruiter-workflow-client-filtered-button2 button"
               >
                 <span class="recruiter-workflow-client-start-process-text2">
                   Filtered By
                 </span>
               </button>
-            </div>
-            <div
-              data-thq="thq-dropdown"
-              class="recruiter-workflow-client-sort-dropdown list-item"
-            >
-              <div
-                data-thq="thq-dropdown-toggle"
-                class="recruiter-workflow-client-dropdown-toggle1"
-              >
-                <span class="recruiter-workflow-client-text32">Sort</span>
-                <div
-                  data-thq="thq-dropdown-arrow"
-                  class="recruiter-workflow-client-dropdown-arrow"
-                >
-                  <svg
-                    viewBox="0 0 1024 1024"
-                    class="recruiter-workflow-client-icon15"
-                  >
-                    <path d="M426 726v-428l214 214z"></path>
-                  </svg>
+
+              <!-- 2. NEW FILTER PANEL (Popup) -->
+              <div *ngIf="isFilterPanelVisible" class="filter-panel">
+                <form [formGroup]="filterForm" class="filter-form-grid">
+                  
+                  <div class="filter-group">
+                    <label>Company Name</label>
+                    <input type="text" formControlName="company_name" placeholder="Search Company" class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label>Client Name</label>
+                    <input type="text" formControlName="client_name" placeholder="Search Client" class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label>Location</label>
+                    <input type="text" formControlName="location" placeholder="Search Location" class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label>Created Date</label>
+                    <input type="date" formControlName="date_created" class="input">
+                  </div>
+
+                </form>
+                <div class="filter-panel-actions">
+                  <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
+                  <button type="button" (click)="applyFiltersFromPanel()" class="button apply-button">Apply</button>
                 </div>
               </div>
-              <ul
-                data-thq="thq-dropdown-list"
-                class="recruiter-workflow-client-dropdown-list"
-              >
-                <li
-                  data-thq="thq-dropdown"
-                  class="recruiter-workflow-client-dropdown1 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="recruiter-workflow-client-dropdown-toggle2"
-                  >
-                    <span class="recruiter-workflow-client-text33">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="recruiter-workflow-client-dropdown2 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="recruiter-workflow-client-dropdown-toggle3"
-                  >
-                    <span class="recruiter-workflow-client-text34">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-                <li
-                  data-thq="thq-dropdown"
-                  class="recruiter-workflow-client-dropdown3 list-item"
-                >
-                  <div
-                    data-thq="thq-dropdown-toggle"
-                    class="recruiter-workflow-client-dropdown-toggle4"
-                  >
-                    <span class="recruiter-workflow-client-text35">
-                      Sub-menu Item
-                    </span>
-                  </div>
-                </li>
-              </ul>
+
             </div>
+
+            <!-- 3. UPDATED SORT DROPDOWN (Native Select) -->
+            <div class="recruiter-workflow-client-sort-dropdown list-item" style="border-width: 1px; border-radius: 4px; border-color: #05356c; width: auto;">
+              <select 
+                class="recruiter-workflow-client-dropdown-toggle1" 
+                (change)="sortClients($event)" 
+                style="border: none; background: transparent; cursor: pointer; font-size: 16px; outline: none;"
+              >
+                <option value="none" selected>Sort</option>
+                <option value="a-z">Company (A-Z)</option>
+                <option value="z-a">Company (Z-A)</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
           </div>
         </div>
         <div class="recruiter-workflow-client-container17">
-          <div class="recruiter-workflow-client-container18">
+          <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container18">
             
             <!-- LIST ITEM LOOP -->
-            <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container19">
+            <div class="recruiter-workflow-client-container19">
               <div class="recruiter-workflow-client-container20">
                 <div class="recruiter-workflow-client-container21">
                   <input type="checkbox" class="recruiter-workflow-client-select-checkbox2" [(ngModel)]="clientData.selected"/>
@@ -630,24 +663,39 @@
                 </svg>
               </div>
             </div>
+            <div class="recruiter-workflow-client-container39">
+  
+  <!-- 1. RECRUITER NAME (First + Last) -->
+  <div class="recruiter-workflow-client-container40">
+    <span class="recruiter-workflow-client-text49">
+      Recruiter : 
+    </span>
+    <!-- Now using the field from backend -->
+    <span class="recruiter-workflow-client-text50">
+      {{ clientData.recruiter_name }}
+    </span>
+  </div>
+
+  <!-- 2. DATE (Created/Edited + Now/Yesterday) -->
+  <div class="recruiter-workflow-client-container41">
+    <!-- Use the helper function to get Label -->
+    <span class="recruiter-workflow-client-text51">
+      {{ getDateStatus(clientData).label }} 
+    </span>
+    
+    <!-- Use the helper function to get Humanized Date -->
+    <span class="recruiter-workflow-client-text52">
+      {{ getHumanDate(getDateStatus(clientData).date) }}
+    </span>
+  </div>
+
+</div>
             <!-- END LIST ITEM LOOP -->
 
           </div>
-          <div class="recruiter-workflow-client-container39">
-            <div class="recruiter-workflow-client-container40">
-              <span class="recruiter-workflow-client-text49">
-                Recruiter : 
-              </span>
-              <span class="recruiter-workflow-client-text50">{{ recruiterFirstName }}</span>
-            </div>
-            <div class="recruiter-workflow-client-container41">
-              <span class="recruiter-workflow-client-text51">
-                Created at : 
-              </span>
-              <span class="recruiter-workflow-client-text52">{{ existingClients[0]?.created_at | date:'mediumDate' }}</span>
-            </div>
-          </div>
+          
         </div>
+        </ng-container>
       </div>
     </div>
   </div>
