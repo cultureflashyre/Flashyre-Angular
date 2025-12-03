@@ -60,6 +60,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
   isDeleting = false;
   currentSort = 'none';
 
+  // --- NEW: FILTER PANEL MANAGEMENT ---
+  isFilterPanelVisible = false;
+  filterForm!: FormGroup;
+
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
@@ -73,10 +77,22 @@ export class RecruiterWorkflowCandidate implements OnInit {
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
+    this.initializeFilterForm(); // Initialize the new filter form
+
   }
 
   ngOnInit(): void {
     this.loadCandidates();
+  }
+
+  private initializeFilterForm(): void {
+    this.filterForm = this.fb.group({
+      name: [''],
+      location: [''],
+      skills: [''],
+      current_ctc: [''],
+      email: ['']
+    });
   }
 
   loadCandidates(): void {
@@ -88,6 +104,77 @@ export class RecruiterWorkflowCandidate implements OnInit {
       error: (err) => { console.error("Failed to load candidates.", err); }
     });
   }
+
+  // --- CORE LOGIC: APPLY FILTERS AND SORTING ---
+  applyFiltersAndSort(): void {
+    let candidates = [...this.masterCandidates];
+    const filterValues = this.filterForm.value;
+
+    // 1. Apply Name Filter
+    if (filterValues.name) {
+      const nameFilter = filterValues.name.toLowerCase();
+      candidates = candidates.filter(c => 
+        (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
+      );
+    }
+
+    // 2. Apply Location Filter
+    if (filterValues.location) {
+      const locationFilter = filterValues.location.toLowerCase();
+      candidates = candidates.filter(c => 
+        c.current_location.toLowerCase().includes(locationFilter)
+      );
+    }
+
+    // 3. Apply Skills Filter (OR search)
+    if (filterValues.skills) {
+      const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
+      if (skillFilters.length > 0) {
+        candidates = candidates.filter(c => {
+          const candidateSkills = c.skills.toLowerCase().split(',').map(s => s.trim());
+          return skillFilters.some((skillFilter: string) => candidateSkills.includes(skillFilter));
+        });
+      }
+    }
+
+    // 4. Apply CTC Filter
+    if (filterValues.current_ctc) {
+      candidates = candidates.filter(c => c.current_ctc === filterValues.current_ctc);
+    }
+
+    // 5. Apply Email Filter
+    if (filterValues.email) {
+      const emailFilter = filterValues.email.toLowerCase();
+      candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
+    }
+
+    // 6. Apply Sorting
+    if (this.currentSort === 'a-z') {
+      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
+    } else if (this.currentSort === 'z-a') {
+      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
+    }
+
+    this.displayCandidates = candidates;
+    this.updateSelectAllState();
+  }
+
+    // --- NEW FILTER PANEL METHODS ---
+  toggleFilterPanel(): void {
+    this.isFilterPanelVisible = !this.isFilterPanelVisible;
+  }
+
+  applyFiltersFromPanel(): void {
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false; // Hide panel after applying
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '' });
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
 
   // --- CORE LOGIC: APPLY SORTING ---
   applySort(): void {

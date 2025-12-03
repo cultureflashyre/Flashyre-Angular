@@ -2,6 +2,74 @@
   display: contents; 
 }
 
+/* --- NEW STYLES FOR FILTER PANEL --- */
+.filter-panel {
+  position: absolute;
+  top: 110%; /* Position it just below the header buttons */
+  right: 0;
+  width: 600px; /* Give it a substantial width */
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  padding: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two-column layout */
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.filter-group .input {
+  height: 38px;
+  font-size: 14px;
+}
+
+.filter-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.filter-panel-actions .button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-panel-actions .apply-button {
+  background-color: #05356C;
+  color: white;
+}
+
+.filter-panel-actions .clear-button {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #dcdcdc;
+}
+
 /* Add these styles to your existing CSS file */
 
 .input.is-invalid {

@@ -336,11 +336,51 @@
                 {{ isDeleting ? 'Deleting...' : 'Delete' }}
               </span>
             </button>
-            <div id="filtered-container" class="recruiter-workflow-candidate-filtered-container">
-              <button id="filtered-button" type="button" class="recruiter-workflow-candidate-filtered-button2 button">
+            <div id="filtered-container" class="recruiter-workflow-candidate-filtered-container" style="position: relative;">
+              <button (click)="toggleFilterPanel()" id="filtered-button" type="button" class="recruiter-workflow-candidate-filtered-button2 button">
                 <span id="start-process-text" class="recruiter-workflow-candidate-start-process-text2">Filtered By</span>
               </button>
+
+              <!-- THE FILTER PANEL ITSELF -->
+              <div *ngIf="isFilterPanelVisible" class="filter-panel">
+                <form [formGroup]="filterForm" class="filter-form-grid">
+                  
+                  <div class="filter-group">
+                    <label for="filter-name">Name</label>
+                    <input id="filter-name" type="text" formControlName="name" placeholder="Filter by name..." class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="filter-location">Location</label>
+                    <input id="filter-location" type="text" formControlName="location" placeholder="Filter by location..." class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="filter-skills">Skills (comma-separated)</label>
+                    <input id="filter-skills" type="text" formControlName="skills" placeholder="e.g., java, python" class="input">
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="filter-ctc">Current CTC</label>
+                    <select id="filter-ctc" formControlName="current_ctc" class="input">
+                      <option value="">All CTCs</option>
+                      <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="filter-email">Email</label>
+                    <input id="filter-email" type="text" formControlName="email" placeholder="Filter by email..." class="input">
+                  </div>
+
+                </form>
+                <div class="filter-panel-actions">
+                  <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
+                  <button type="button" (click)="applyFiltersFromPanel()" class="button apply-button">Apply</button>
+                </div>
+              </div>
             </div>
+
             <div class="recruiter-workflow-candidate-sort-dropdown list-item">
               <select class="recruiter-workflow-candidate-dropdown-toggle1" (change)="sortCandidates($event)">
                 <option value="none" selected>Sort</option>
