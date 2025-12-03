@@ -24,6 +24,7 @@ export interface Candidate {
   preferred_location: string;
   current_location: string;
   created_at?: string;
+  selected?: boolean;
 }
 
 @Injectable({
