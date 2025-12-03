@@ -22,4 +22,7 @@ export class AdbRequirementService {
   updateRequirement(id: number, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}${id}/`, data);
   }
+  deleteRequirement(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
 }
