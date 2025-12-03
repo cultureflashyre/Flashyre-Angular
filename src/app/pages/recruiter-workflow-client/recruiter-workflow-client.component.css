@@ -453,7 +453,7 @@
   width: 100%;
   height: 40px;
   display: flex;
-  font-size: 20px;
+  font-size: 16px;
   align-items: center;
   padding-top: 0px;
   border-color: rgba(120, 120, 120, 0.4);
@@ -470,7 +470,7 @@
   width: 100%;
   height: 40px;
   display: flex;
-  font-size: 20px;
+  font-size: 16px;
   align-items: center;
   padding-top: 0px;
   border-color: rgba(120, 120, 120, 0.4);
@@ -487,7 +487,7 @@
   width: 100%;
   height: 40px;
   display: flex;
-  font-size: 20px;
+  font-size: 16px;
   align-items: center;
   padding-top: 0px;
   border-color: rgba(120, 120, 120, 0.4);
@@ -504,7 +504,7 @@
   width: 100%;
   height: 40px;
   display: flex;
-  font-size: 20px;
+  font-size: 16px;
   align-items: center;
   padding-top: 0px;
   border-color: rgba(120, 120, 120, 0.4);
@@ -1011,6 +1011,7 @@
 }
  
 .recruiter-workflow-client-container17 {
+  gap: 16px;
   flex: 0 0 auto;
   width: 100%;
   height: 75vh;
@@ -1408,6 +1409,76 @@
   font-size: 14px;
 }
 
+.filter-panel {
+  position: absolute;
+  top: 110%; /* Position below the button */
+  right: 0; /* Align to right of container */
+  width: 500px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  padding: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filter-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 15px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-group .input {
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 15px;
+  margin-top: 5px;
+}
+
+.filter-panel-actions .button {
+  padding: 8px 20px;
+  border-radius: 5px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-panel-actions .apply-button {
+  background-color: #05356C; /* Match your theme color */
+  color: white;
+}
+
+.filter-panel-actions .clear-button {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #dcdcdc;
+}
+
 .loader-container {
   display: flex;
   flex-direction: column;
@@ -1433,6 +1504,32 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.success-toast-message {
+  position: fixed;
+  top: 80px; /* Adjust based on your navbar height */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #d1e7dd; /* Light Green Background */
+  color: #0f5132;            /* Dark Green Text */
+  border: 1px solid #badbcc;
+  padding: 15px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 9999; /* Ensure it is on top of everything */
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInOut 0.3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
  
 @media(max-width: 1200px) {
   .recruiter-workflow-client-clients-listing-container {
