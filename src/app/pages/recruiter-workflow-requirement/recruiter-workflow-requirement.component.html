@@ -126,6 +126,25 @@
             <h1 class="recruiter-workflow-requirement-text31">Naukri</h1>
             <h1 class="recruiter-workflow-requirement-text32">External</h1>
           </div>
+          <div 
+    class="close-icon-container" 
+    (click)="onCancel()"
+    style="cursor: pointer; padding: 5px;"
+    title="Close Form"
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 1024 1024"
+      style="fill: #555; transition: transform 0.2s;"
+      onmouseover="this.style.fill='#000'; this.style.transform='scale(1.1)'"
+      onmouseout="this.style.fill='#555'; this.style.transform='scale(1)'"
+    >
+      <path
+        d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+      ></path>
+    </svg>
+  </div>
         </div>
         <div class="recruiter-workflow-requirement-container14">
           <div
@@ -679,8 +698,14 @@
     </span>
   </div>
   
-  <input
-    type="text"
+  <!-- 
+    CHANGED TO TEXTAREA 
+    1. Changed tag from <input> to <textarea>
+    2. Added style "white-space: pre-wrap" to force text to next line
+    3. Added "height: 100px" to give space for the wrapped text
+    4. Kept all your original classes and IDs
+  -->
+  <textarea
     id="job-description-input"
     placeholder="Enter Job Description"
     class="recruiter-workflow-requirement-job-title-input3 input"
@@ -688,7 +713,8 @@
     [(ngModel)]="jobDescription"
     (input)="validateJobDescription()"
     (blur)="validateJobDescription()"
-  />
+    style="height: 100px; padding-top: 10px; white-space: pre-wrap; word-wrap: break-word; resize: none;"
+  ></textarea>
   
   <!-- Error Message -->
   <div *ngIf="isJobDescriptionInvalid" style="margin-top: 5px;">
@@ -880,104 +906,89 @@
       </div>
     </div>
     <div
-      id="filter-sort-download-zip-container"
-      class="recruiter-workflow-requirement-filter-sort-download-zip-container"
+  id="filter-sort-download-zip-container"
+  class="recruiter-workflow-requirement-filter-sort-download-zip-container"
+>
+  
+  <!-- EXISTING DELETE BUTTON (Do not change) -->
+  <button
+    id="filtered-button"
+    type="button"
+    class="recruiter-workflow-requirement-filtered-button1 button"
+    (click)="deleteSelectedRequirements()"
+  >
+    <span id="start-process-text" class="recruiter-workflow-requirement-start-process-text1">
+      Delete
+    </span>
+  </button>
+
+  <!-- FILTER SECTION (Updated to match reference) -->
+  <div id="filtered-container" class="recruiter-workflow-requirement-filtered-container" style="position: relative;">
+    
+    <!-- Filter Button -->
+    <button
+      (click)="toggleFilterPanel()"
+      id="filtered-button"
+      type="button"
+      class="recruiter-workflow-requirement-filtered-button2 button"
     >
-      <div
-        id="filtered-container"
-        class="recruiter-workflow-requirement-filtered-container"
-      >
-        <button
-          id="filtered-button"
-          type="button"
-          class="recruiter-workflow-requirement-filtered-button1 button"
-        >
-          <span
-            id="start-process-text"
-            class="recruiter-workflow-requirement-start-process-text1"
-          >
-            Delete
-          </span>
-        </button>
-        <button
-          id="filtered-button"
-          type="button"
-          class="recruiter-workflow-requirement-filtered-button2 button"
-        >
-          <span
-            id="start-process-text"
-            class="recruiter-workflow-requirement-start-process-text2"
-          >
-            Filtered By
-          </span>
-        </button>
-      </div>
-      <div
-        data-thq="thq-dropdown"
-        class="recruiter-workflow-requirement-sort-dropdown list-item"
-      >
-        <div
-          data-thq="thq-dropdown-toggle"
-          class="recruiter-workflow-requirement-dropdown-toggle1"
-        >
-          <span class="recruiter-workflow-requirement-text51">Sort</span>
-          <div
-            data-thq="thq-dropdown-arrow"
-            class="recruiter-workflow-requirement-dropdown-arrow"
-          >
-            <svg
-              viewBox="0 0 1024 1024"
-              class="recruiter-workflow-requirement-icon20"
-            >
-              <path d="M426 726v-428l214 214z"></path>
-            </svg>
-          </div>
+      <span id="start-process-text" class="recruiter-workflow-requirement-start-process-text2">
+        Filtered By
+      </span>
+    </button>
+
+    <!-- FILTER PANEL OVERLAY -->
+    <div *ngIf="isFilterPanelVisible" class="filter-panel">
+      <form [formGroup]="filterForm" class="filter-form-grid">
+        
+        <!-- Filter: Client Name -->
+        <div class="filter-group">
+          <label for="filter-client">Client Name</label>
+          <input id="filter-client" type="text" formControlName="client_name" placeholder="Filter by client..." class="input">
         </div>
-        <ul
-          data-thq="thq-dropdown-list"
-          class="recruiter-workflow-requirement-dropdown-list"
-        >
-          <li
-            data-thq="thq-dropdown"
-            class="recruiter-workflow-requirement-dropdown1 list-item"
-          >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="recruiter-workflow-requirement-dropdown-toggle2"
-            >
-              <span class="recruiter-workflow-requirement-text52">
-                Sub-menu Item
-              </span>
-            </div>
-          </li>
-          <li
-            data-thq="thq-dropdown"
-            class="recruiter-workflow-requirement-dropdown2 list-item"
-          >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="recruiter-workflow-requirement-dropdown-toggle3"
-            >
-              <span class="recruiter-workflow-requirement-text53">
-                Sub-menu Item
-              </span>
-            </div>
-          </li>
-          <li
-            data-thq="thq-dropdown"
-            class="recruiter-workflow-requirement-dropdown3 list-item"
-          >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="recruiter-workflow-requirement-dropdown-toggle4"
-            >
-              <span class="recruiter-workflow-requirement-text54">
-                Sub-menu Item
-              </span>
-            </div>
-          </li>
-        </ul>
+
+        <!-- Filter: Location -->
+        <div class="filter-group">
+          <label for="filter-location">Location</label>
+          <input id="filter-location" type="text" formControlName="location" placeholder="Filter by location..." class="input">
+        </div>
+
+        <!-- Filter: Description/Skills -->
+        <div class="filter-group">
+          <label for="filter-desc">Description / Skills</label>
+          <input id="filter-desc" type="text" formControlName="description" placeholder="e.g. Python, Java" class="input">
+        </div>
+
+        <!-- Filter: CTC -->
+        <div class="filter-group">
+          <label for="filter-ctc">Current CTC</label>
+          <select id="filter-ctc" formControlName="ctc" class="input">
+            <option value="">All CTCs</option>
+            <option *ngFor="let ctc of ctcOptions" [value]="ctc">{{ ctc }}</option>
+          </select>
+        </div>
+
+      </form>
+
+      <!-- Panel Actions -->
+      <div class="filter-panel-actions">
+        <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
+        <button type="button" (click)="applyFiltersFromPanel()" class="button apply-button">Apply</button>
       </div>
+    </div>
+  </div>
+      <div class="recruiter-workflow-requirement-sort-dropdown list-item">
+    <select 
+      class="recruiter-workflow-requirement-dropdown-toggle1" 
+      (change)="sortRequirementsChange($event)"
+      style="cursor: pointer; padding-right: 20px;"
+    >
+      <option value="none" selected>Sort</option>
+      <option value="a-z">Alphabetical (A-Z)</option>
+      <option value="z-a">Alphabetical (Z-A)</option>
+    </select>
+  </div>
+
     </div>
   </div>
 
@@ -1095,10 +1106,15 @@
                 </span>
                 <div class="recruiter-workflow-requirement-container45">
                   <span class="recruiter-workflow-requirement-text64">
-                    {{ item.job_description | slice:0:100 }}...
+                     {{ item.isExpanded ? item.job_description : (item.job_description | slice:0:100) }}
+      <!-- Add ellipsis if text is long and collapsed -->
+      {{ !item.isExpanded && item.job_description.length > 100 ? '...' : '' }}
                   </span>
-                  <span class="recruiter-workflow-requirement-text65">
-                    ... more
+                  <span class="recruiter-workflow-requirement-text65"
+                  *ngIf="item.job_description.length > 100"
+      (click)="toggleDescription(item)"
+      style="cursor: pointer;  margin-left: 5px;">
+                    {{ item.isExpanded ? '... less' : '... more' }}
                   </span>
                 </div>
               </div>
@@ -1162,51 +1178,53 @@
             </div>
           </div>
         </div>
-       <div 
-      class="recruiter-workflow-requirement-container58"
-      style="
-        display: flex; 
-        flex-direction: column; 
-        gap: 15px; 
-        padding: 10px; 
-        min-width: 40px; 
-        z-index: 100;
-        margin-left: 10px;
-        flex-shrink: 0;
-      "
-    >
-      <!-- EDIT ICON -->
-      <svg
-        width="24" height="24" viewBox="0 0 1024 1024"
-        (click)="onEdit(item)"
-        style="cursor: pointer;"
-        title="Edit"
-      >
-        <path d="M761.1 288.3L687.8 215L325.1 577.6l-15.6 89l88.9-15.7z" fill="#000000" fill-opacity=".3"></path>
-        <path d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32m-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9m67.4-174.4L687.8 215l73.3 73.3l-362.7 362.6l-88.9 15.7z" fill="#000000"></path>
-      </svg>
+      <!-- RIGHT SIDE: ICONS (Container 58) -->
+<div class="recruiter-workflow-requirement-container58">
+  
+  <!-- EDIT ICON -->
+  <svg
+    viewBox="0 0 1024 1024"
+    class="recruiter-workflow-requirement-icon32"
+    (click)="onEdit(item)"
+  >
+    <path
+      d="M761.1 288.3L687.8 215L325.1 577.6l-15.6 89l88.9-15.7z"
+      fill="currentColor"
+      fill-opacity=".15"
+    ></path>
+    <path
+      d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32m-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9m67.4-174.4L687.8 215l73.3 73.3l-362.7 362.6l-88.9 15.7z"
+      fill="currentColor"
+    ></path>
+  </svg>
 
-      <!-- DOWNLOAD PDF ICON -->
-      <svg
-        width="24" height="24" viewBox="0 0 24 24"
-        (click)="downloadCardAsPdf(i)"
-        style="cursor: pointer;"
-        title="Download PDF"
-      >
-        <path d="M14 2H4v20h16V8zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3zm-3-7V3.5L18.5 9z" fill="#000000"></path>
-      </svg>
+  <!-- DOWNLOAD PDF ICON -->
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    class="recruiter-workflow-requirement-icon35"
+    (click)="downloadCardAsPdf(i)"
+  >
+    <path
+      d="M14 2H4v20h16V8zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3zm-3-7V3.5L18.5 9z"
+      fill="currentColor"
+    ></path>
+  </svg>
 
-      <!-- DELETE ICON -->
-      <svg
-        width="24" height="24" viewBox="0 0 20 20"
-        (click)="deleteCardFromUi(i)"
-        style="cursor: pointer;"
-        title="Delete"
-      >
-        <path d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" fill="#000000"></path>
-      </svg>
+  <!-- DELETE ICON -->
+  <svg
+    viewBox="0 0 20 20"
+    class="recruiter-workflow-requirement-icon37"
+    (click)="deleteCardFromUi(i)"
+  >
+    <path
+      d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+      fill="currentColor"
+    ></path>
+  </svg>
 
-    </div>
+</div>
       </div>
       <div class="recruiter-workflow-requirement-container59">
         <div class="recruiter-workflow-requirement-container60">
@@ -1240,4 +1258,12 @@
 </div>
     </div>
   </div>
+  <app-alert-message
+    *ngIf="showAlert"
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClick($event)"
+    (close)="closeAlert()"
+  >
+  </app-alert-message>
 </div>

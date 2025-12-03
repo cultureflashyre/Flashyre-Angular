@@ -7,6 +7,9 @@ import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { forkJoin } from 'rxjs';
+import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // Add these
 
 
 
@@ -21,7 +24,9 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
     CommonModule, 
     RouterModule, 
     RecruiterWorkflowNavbarComponent,
-    FormsModule
+    FormsModule,
+    AlertMessageComponent,
+    ReactiveFormsModule
   ]
 })
 export class RecruiterWorkflowRequirement {
@@ -36,8 +41,19 @@ export class RecruiterWorkflowRequirement {
   isEditMode: boolean = false;
   currentRequirementId: number | null = null;
   isAllSelected: boolean = false;
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  alertButtons: string[] = [];
+  pendingAction: string = ''; 
+  pendingDeleteIndex: number | null = null;
+  filterForm!: FormGroup;
+  isFilterPanelVisible: boolean = false;
+  currentSort: string = 'none';
 
-  constructor(private title: Title, private meta: Meta, private adbService: AdbRequirementService ) {
+  // Master list to keep original data safe while filtering
+  masterRequirements: any[] = []; 
+
+  constructor(private title: Title, private meta: Meta, private adbService: AdbRequirementService,  private fb: FormBuilder ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
     const today = new Date();
@@ -46,6 +62,17 @@ export class RecruiterWorkflowRequirement {
     const day = String(today.getDate()).padStart(2, '0');
     
     this.minDate = `${year}-${month}-${day}`;
+    this.initializeFilterForm();
+  }
+
+  // 1. Initialize the Filter Form
+  private initializeFilterForm(): void {
+    this.filterForm = this.fb.group({
+      client_name: [''],
+      location: [''],
+      description: [''], // Will search in job_description
+      ctc: ['']
+    });
   }
 
   ngOnInit() {
@@ -78,6 +105,7 @@ export class RecruiterWorkflowRequirement {
   isGenderDropdownOpen: boolean = false;
    jobDescription: string = '';
   isJobDescriptionInvalid: boolean = false;
+  isSortDropdownOpen: boolean = false;
 
    experience = {
     totalMin: null as number | null,
@@ -313,21 +341,44 @@ toggleNoticePeriodDropdown() {
     }
   }
 
+  // BULK DELETE FUNCTION
+ deleteSelectedRequirements() {
+    const selectedItems = this.requirementsList.filter(item => item.selected);
+
+    if (selectedItems.length === 0) {
+      this.triggerAlert('Please select at least one requirement to delete.', ['OK']);
+      return;
+    }
+
+    const msg = `Are you sure you want to delete ${selectedItems.length} selected requirement(s)?`;
+    this.triggerAlert(msg, ['Yes', 'Cancel'], 'deleteBulk');
+  }
+
   // 3. DELETE FROM UI FUNCTIONALITY
   // Removes from the array list only, does not call API
   deleteCardFromUi(index: number) {
-    // Confirmation is optional, but good UX
-    if(confirm('Are you sure you want to remove this card from the view?')) {
-      this.requirementsList.splice(index, 1);
-    }
+    this.pendingDeleteIndex = index; 
+    this.triggerAlert(
+      'Are you sure you want to delete this requirement permanently?', 
+      ['Yes', 'Cancel'], 
+      'deleteSingle'
+    );
   }
 
 
  onSubmit() {
     // ... (Keep your existing validation logic here) ...
     this.validateJobDescription();
-    if (!this.clientName || !this.interviewLocation || this.isJobDescriptionInvalid) {
-      alert('Please fill in all mandatory fields.');
+    if (!this.clientName) {
+      this.triggerAlert('Client Name is required', ['OK']);
+      return;
+    }
+    if (!this.interviewLocation) {
+      this.triggerAlert('Interview Location is required', ['OK']);
+      return;
+    }
+    if (this.isJobDescriptionInvalid) {
+      this.triggerAlert('Please fill in the Job Description.', ['OK']);
       return;
     }
 
@@ -364,56 +415,59 @@ toggleNoticePeriodDropdown() {
       // UPDATE EXISTING
       this.adbService.updateRequirement(this.currentRequirementId, payload).subscribe({
         next: (response) => {
-          alert('Requirement updated successfully!');
+          this.triggerAlert('Requirement updated successfully!', ['OK']);
           this.onCancel(); // Reset form and mode
           this.showListing = true;
           this.fetchRequirements(); // Refresh list
         },
-        error: (error) => {
-          console.error('Update Failed:', error);
-          alert('Failed to update. Check inputs.');
-        }
+        error: () => this.triggerAlert('Failed to update. Check inputs.', ['OK'])
       });
     } else {
       // CREATE NEW (Existing logic)
       this.adbService.createRequirement(payload).subscribe({
         next: (response) => {
-          alert('Requirement created successfully!');
+          this.triggerAlert('Requirement created successfully!', ['OK']);
           this.onCancel();
           this.showListing = true;
           this.fetchRequirements();
         },
-        error: (error) => {
-          console.error('Create Failed:', error);
-          alert('Failed to create. Check inputs.');
-        }
+       error: () => this.triggerAlert('Failed to create. Check inputs.', ['OK'])
       });
     }
   }
 
   // 4. UPDATE onCancel Function
   onCancel() {
-    // Reset Edit Mode flags
+    // 1. Reset Edit Mode flags
     this.isEditMode = false;
     this.currentRequirementId = null;
 
-    // ... (Keep existing reset logic for all fields) ...
+    // 2. Clear all input fields
     this.clientName = '';
     this.subClientName = '';
     this.interviewLocation = '';
     this.interviewDate = '';
     this.jobDescription = '';
+    
+    // 3. Reset Objects
     this.experience = { totalMin: null, totalMax: null, relevantMin: null, relevantMax: null };
     this.salary = { min: null, max: null };
+    
+    // 4. Reset Dropdowns
     this.selectedCtc = '';
     this.selectedNoticePeriod = '';
     this.selectedGender = '';
+    
+    // 5. Reset Array to initial state
     this.additionalDetails = [{ location: '', spoc: '', vacancies: '' }];
+    
+    // 6. Reset Errors
     this.isJobDescriptionInvalid = false;
     this.salaryErrors.rangeError = false;
     this.errors = { minExperience: false, maxExperience: false };
     
-    this.showListing = false; // Or true, depending on your desired UX for cancel
+    // 7. CRITICAL: Switch view back to the List
+    this.showListing = true; 
   }
 
   showAddForm() {
@@ -430,19 +484,87 @@ toggleNoticePeriodDropdown() {
 
 
   // --- FETCH LISTING LOGIC ---
-  fetchRequirements() {
+ fetchRequirements() {
     this.adbService.getRequirements().subscribe({
       next: (data: any[]) => {
-        // We map the data to ensure every item has a 'selected' property set to false
-        this.requirementsList = data.map(item => ({
+        // Map data and set BOTH lists
+        const processedData = data.map(item => ({
           ...item,
-          selected: false 
+          selected: false,
+          isExpanded: false
         }));
+        
+        this.masterRequirements = processedData; // Save original copy
+        this.requirementsList = processedData;   // Display copy
+        
+        this.applyFiltersAndSort(); // Re-apply any active filters
       },
       error: (err) => console.error(err)
     });
   }
 
+  // 3. Filter Panel Toggles
+  toggleFilterPanel(): void {
+    this.isFilterPanelVisible = !this.isFilterPanelVisible;
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset({ client_name: '', location: '', description: '', ctc: '' });
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  applyFiltersFromPanel(): void {
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  // 4. CORE LOGIC: Filtering and Sorting
+  applyFiltersAndSort(): void {
+    let data = [...this.masterRequirements]; // Start with full list
+    const filters = this.filterForm.value;
+
+    // Filter by Client Name
+    if (filters.client_name) {
+      const term = filters.client_name.toLowerCase();
+      data = data.filter(item => item.client_name.toLowerCase().includes(term));
+    }
+
+    // Filter by Location
+    if (filters.location) {
+      const term = filters.location.toLowerCase();
+      data = data.filter(item => item.interview_location.toLowerCase().includes(term));
+    }
+
+    // Filter by Job Description/Skills
+    if (filters.description) {
+      const term = filters.description.toLowerCase();
+      data = data.filter(item => item.job_description.toLowerCase().includes(term));
+    }
+
+    // Filter by CTC
+    if (filters.ctc) {
+      data = data.filter(item => item.current_ctc_range === filters.ctc);
+    }
+
+    // Apply Sorting
+    if (this.currentSort === 'a-z') {
+      data.sort((a, b) => (a.client_name || '').localeCompare(b.client_name || ''));
+    } else if (this.currentSort === 'z-a') {
+      data.sort((a, b) => (b.client_name || '').localeCompare(a.client_name || ''));
+    }
+
+    this.requirementsList = data; // Update UI
+  }
+
+  // 5. Sort Change Event
+  sortRequirementsChange(event: Event): void {
+    this.currentSort = (event.target as HTMLSelectElement).value;
+    this.applyFiltersAndSort();
+  }
+toggleDescription(item: any) {
+    item.isExpanded = !item.isExpanded;
+  }
   // 3. ADD THIS FUNCTION (For the "Select All" checkbox)
   toggleSelectAll() {
     // Loop through all items and set their selected state to match the master checkbox
@@ -462,5 +584,85 @@ toggleNoticePeriodDropdown() {
       this.isAllSelected = false;
     }
   }
+triggerAlert(message: string, buttons: string[], action: string = '') {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.pendingAction = action;
+    this.showAlert = true;
+  }
 
+  onAlertButtonClick(button: string) {
+    const btn = button.toLowerCase();
+
+    // HANDLE "YES" ACTIONS
+    if (btn === 'yes') {
+      if (this.pendingAction === 'deleteSingle' && this.pendingDeleteIndex !== null) {
+        this.executeSingleDelete(this.pendingDeleteIndex);
+      } 
+      else if (this.pendingAction === 'deleteBulk') {
+        this.executeBulkDelete();
+      }
+    }
+    // CLOSE ALERT
+    this.closeAlert();
+  }
+
+  closeAlert() {
+    this.showAlert = false;
+    this.pendingAction = '';
+    this.pendingDeleteIndex = null;
+  }
+
+  // Logic for Single Delete (Called by Alert)
+  executeSingleDelete(index: number) {
+    const itemToDelete = this.requirementsList[index];
+    this.adbService.deleteRequirement(itemToDelete.id).subscribe({
+      next: () => {
+        this.requirementsList.splice(index, 1);
+        this.triggerAlert('Requirement deleted successfully.', ['OK']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.triggerAlert('Failed to delete requirement.', ['OK']);
+      }
+    });
+  }
+
+  // Logic for Bulk Delete (Called by Alert)
+  executeBulkDelete() {
+    const selectedItems = this.requirementsList.filter(item => item.selected);
+    const deleteRequests = selectedItems.map(item => this.adbService.deleteRequirement(item.id));
+
+    forkJoin(deleteRequests).subscribe({
+      next: () => {
+        this.requirementsList = this.requirementsList.filter(item => !item.selected);
+        this.isAllSelected = false;
+        this.triggerAlert('Selected requirements deleted successfully.', ['OK']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.triggerAlert('An error occurred while deleting.', ['OK']);
+        this.fetchRequirements();
+      }
+    });
+  }
+   toggleSortDropdown() {
+    this.isSortDropdownOpen = !this.isSortDropdownOpen;
+  }
+  sortRequirements(order: string) {
+    if (order === 'asc') {
+      // Sort A to Z (Ascending) based on Client Name
+      this.requirementsList.sort((a, b) => 
+        (a.client_name || '').localeCompare(b.client_name || '')
+      );
+    } else if (order === 'desc') {
+      // Sort Z to A (Descending) based on Client Name
+      this.requirementsList.sort((a, b) => 
+        (b.client_name || '').localeCompare(a.client_name || '')
+      );
+    }
+    
+    // Close the dropdown after selection
+    this.isSortDropdownOpen = false;
+  }
 }
