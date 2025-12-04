@@ -78,9 +78,9 @@ export class RecruiterWorkflowClient implements OnInit {
     });
 
     this.filterForm = this.fb.group({
-      company_name: [''],
-      client_name: [''],
-      location: [''],
+      company_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]], 
+      client_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]],
+      location: ['', [Validators.pattern('.*[a-zA-Z].*')]], 
       date_created: ['']
     });
   }
@@ -168,7 +168,7 @@ closeForm(): void {
       spoc_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       
       // Req 5: Only digits (Phone numbers)
-      phone_number: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      phone_number: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       
       // Req 6: Valid Email format
       email: ['', [Validators.required, Validators.email]]
@@ -467,7 +467,7 @@ downloadClientData(client: any): void {
     }
 
     // Proceed based on the Pending Action Type
-    if (act === 'add' || act === 'update' || act === 'delete' || act === 'edit' || act === 'yes' || act === 'download') {
+    if (act === 'add' || act === 'update' || act === 'delete' || act === 'edit' || act === 'yes' || act === 'download' || act === 'ok') {
       
       switch (this.pendingAction.type) {
         case 'SUBMIT_CREATE':
@@ -573,6 +573,11 @@ downloadClientData(client: any): void {
   }
 
   applyFiltersFromPanel(): void {
+    if (this.filterForm.invalid) {
+      // Optional: Add a touched mark to show errors immediately if not already shown
+      this.filterForm.markAllAsTouched();
+      return; 
+    }
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
   }

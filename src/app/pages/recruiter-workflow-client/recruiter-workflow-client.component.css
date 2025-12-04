@@ -1635,6 +1635,24 @@ recruiter-workflow-navbar,
   100% { transform: rotate(360deg); }
 }
 
+app-alert-message {
+  position: fixed;           /* Locks it to the screen */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;             /* Centers the popup content */
+  align-items: center;
+  justify-content: center;
+  z-index: 3002;             /* Higher than the form (2001) and Overlay (2000) */
+  pointer-events: none;      /* Allows clicks to pass through transparent parts */
+}
+
+/* Ensure the actual internal box of the alert catches clicks */
+::ng-deep app-alert-message > * {
+  pointer-events: auto;
+}
+
  
 @media(max-width: 1200px) {
   .recruiter-workflow-client-clients-listing-container {

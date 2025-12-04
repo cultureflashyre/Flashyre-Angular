@@ -331,7 +331,7 @@
         <!-- Error Handling -->
         <div *ngIf="contact.get('phone_number')?.invalid && contact.get('phone_number')?.touched" style="color: red; font-size: 12px;">
            <span *ngIf="contact.get('phone_number')?.errors?.['required']">Required</span>
-           <span *ngIf="contact.get('phone_number')?.errors?.['pattern']">Digits only.</span>
+           <span *ngIf="contact.get('phone_number')?.errors?.['pattern']">Must be exactly 10 digits.</span>
         </div>
       </div>
 
@@ -422,7 +422,7 @@
 
       <div class="recruiter-workflow-client-recruiter-workflow-client-list" *ngIf="showList">
         <div 
-    *ngIf="existingClients.length === 0" 
+    *ngIf="masterClients.length === 0" 
     style="display: flex; flex-direction: column; align-self: center; align-items: center; justify-content: center; height: 300px; color: #595959; text-align: center;"
   >
     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #ccc;">
@@ -436,7 +436,7 @@
   </div>
 
   <!-- 2. WRAPPER START for Existing Content -->
-  <ng-container *ngIf="existingClients.length > 0">
+  <ng-container *ngIf="masterClients.length > 0">
 
         <div
           id="select-filter-sort-download-zip-main-container"
@@ -552,16 +552,25 @@
                   <div class="filter-group">
                     <label>Company Name</label>
                     <input type="text" formControlName="company_name" placeholder="Search Company" class="input">
+                    <div *ngIf="filterForm.get('company_name')?.invalid && (filterForm.get('company_name')?.touched || filterForm.get('company_name')?.dirty)" style="color: red; font-size: 11px;">
+                      Alphabets and spaces only.
+                    </div>
                   </div>
 
                   <div class="filter-group">
                     <label>Client Name</label>
                     <input type="text" formControlName="client_name" placeholder="Search Client" class="input">
+                    <div *ngIf="filterForm.get('client_name')?.invalid && (filterForm.get('client_name')?.touched || filterForm.get('client_name')?.dirty)" style="color: red; font-size: 11px;">
+                      Alphabets and spaces only.
+                    </div>
                   </div>
 
                   <div class="filter-group">
                     <label>Location</label>
                     <input type="text" formControlName="location" placeholder="Search Location" class="input">
+                    <div *ngIf="filterForm.get('location')?.invalid && (filterForm.get('location')?.touched || filterForm.get('location')?.dirty)" style="color: red; font-size: 11px;">
+                      Must contain at least one alphabet.
+                    </div>
                   </div>
 
                   <div class="filter-group">
@@ -595,7 +604,10 @@
 
           </div>
         </div>
-        <div class="recruiter-workflow-client-container17">
+        <div *ngIf="existingClients.length === 0" style="text-align: center; align-self: center; padding: 40px; color: #666; font-size: 18px; font-weight: 500;">
+          No Match Found so clear the filters to view all the clients
+        </div>
+        <div class="recruiter-workflow-client-container17" *ngIf="existingClients.length > 0">
           <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container18">
             
             <!-- LIST ITEM LOOP -->
