@@ -408,7 +408,7 @@
   position: relative;
   align-self: center;
   align-items: flex-start;
-  padding-top: var(--dl-layout-space-unit);
+  padding: var(--dl-layout-space-unit);
   flex-direction: column;
   padding-bottom: var(--dl-layout-space-unit);
 }
