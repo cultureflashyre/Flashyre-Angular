@@ -289,6 +289,13 @@ export const routes: Routes = [
       }
   },
   {
+    path: 'recruiter-workflow-ats/:id', // :id is the Job Requirement ID
+    loadComponent: () => import('./pages/recruiter-workflow-ats/recruiter-workflow-ats.component')
+      .then(m => m.RecruiterWorkflowAtsComponent),
+    canActivate: [authGuard],
+    data: { roles: ['admin'] }
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./pages/not-found/not-found.component').then(

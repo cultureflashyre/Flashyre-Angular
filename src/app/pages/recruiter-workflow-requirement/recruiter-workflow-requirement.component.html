@@ -536,7 +536,45 @@
   />
 </div>
           </div>
-          <div class="recruiter-workflow-requirement-container26">
+          <div class="recruiter-workflow-requirement-container26" style="margin-top: 15px;">
+
+            <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
+  
+          <div class="multi-select-container" (click)="filterUsers()">
+            
+            <!-- Selected Chips -->
+            <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
+              {{ user.first_name }} {{ user.last_name }}
+              <span class="remove-chip-icon" (click)="removeUser(i); $event.stopPropagation()">×</span>
+            </div>
+
+            <!-- Input for searching -->
+            <input 
+              type="text" 
+              class="multi-select-input" 
+              placeholder="Search Admins/Recruiters..." 
+              [(ngModel)]="userSearchText" 
+              (input)="filterUsers()"
+              (focus)="filterUsers()"
+              (blur)="closeUserDropdown()" 
+              [ngModelOptions]="{standalone: true}"
+            />
+
+            <!-- Dropdown List -->
+            <ul class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
+              <li class="users-dropdown-item" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
+                <span>{{ user.first_name }} {{ user.last_name }}</span>
+                <span class="dropdown-user-role">{{ user.user_type }}</span>
+              </li>
+            </ul>
+            
+            <!-- No results message -->
+            <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:#999;">
+              No matching users found.
+            </div>
+
+          </div>
+
             <div
   id="certification-issued-date-container"
   class="recruiter-workflow-requirement-issued-date-container3"
@@ -1243,6 +1281,27 @@
             {{ item.created_at | date:'mediumDate' }}
           </span>
         </div>
+
+        <div class="assigned-users-display" *ngIf="item.assigned_users_details && item.assigned_users_details.length > 0">
+          <!-- Show first 3 users -->
+          <div 
+            class="user-avatar-small" 
+            *ngFor="let user of item.assigned_users_details | slice:0:3" 
+            title="{{ user.first_name }} {{ user.last_name }}"
+          >
+            {{ user.initials || (user.first_name | slice:0:1) }}
+          </div>
+
+          <!-- Show count if more than 3 -->
+          <div class="user-avatar-small more-users-badge" *ngIf="item.assigned_users_details.length > 3">
+            +{{ item.assigned_users_details.length - 3 }}
+          </div>
+        </div>
+  
+        <div class="assigned-users-display" *ngIf="!item.assigned_users_details || item.assigned_users_details.length === 0">
+          <span style="font-size: 12px; color: #999;">Unassigned</span>
+        </div>
+
       </div>
     </div>
   </div>

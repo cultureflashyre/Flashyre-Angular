@@ -2188,7 +2188,7 @@
   color: #F65E5C;
   cursor: pointer;
   transform: scale(1.05);
-  ttransition: all 0.8s;
+  transition: all 0.8s;
 }
  
 .recruiter-workflow-candidate-icon44:active {

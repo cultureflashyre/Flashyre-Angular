@@ -1,0 +1,60 @@
+<div class="ats-container">
+  
+  <!-- Header -->
+  <div class="ats-header">
+    <div>
+      <h1 class="ats-title">{{ jobTitle }}</h1>
+      <span style="color: #666; font-size: 14px;">{{ clientName }}</span>
+    </div>
+    
+    <button class="button" style="background-color: #05356C; color: white; padding: 8px 16px; border-radius: 4px;" 
+            (click)="showAddCandidate = !showAddCandidate">
+      + Add Candidate
+    </button>
+  </div>
+
+  <!-- Add Candidate Dropdown (Simple Search) -->
+  <div *ngIf="showAddCandidate" class="add-candidate-overlay">
+    <h4>Add to Pipeline</h4>
+    <input type="text" placeholder="Search Candidate Name..." 
+           (input)="filterCandidates($event)" 
+           class="input" style="width: 100%; margin-bottom: 10px;">
+    
+    <div style="max-height: 200px; overflow-y: auto;">
+      <div *ngFor="let cand of filteredCandidates" 
+           (click)="addCandidateToPipeline(cand)"
+           style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; hover:bg-gray-100;">
+        {{ cand.first_name }} {{ cand.last_name }}
+      </div>
+    </div>
+  </div>
+
+  <!-- KANBAN BOARD -->
+  <div class="pipeline-board" cdkDropListGroup>
+    
+    <!-- Loop through stages -->
+    <div class="stage-column" *ngFor="let stage of stages">
+      <div class="stage-header">
+        <span>{{ stage }}</span>
+        <span class="stage-count">{{ pipelineData[stage]?.length || 0 }}</span>
+      </div>
+
+      <!-- Drop List for this column -->
+      <div class="card-list"
+           cdkDropList
+           [cdkDropListData]="pipelineData[stage]"
+           (cdkDropListDropped)="drop($event, stage)">
+
+        <!-- Draggable Cards -->
+        <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
+          <span class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</span>
+          <span class="card-detail">Exp: {{ app.candidate_details.total_experience_min }}y</span>
+          <span class="card-detail">CTC: {{ app.candidate_details.current_ctc }}</span>
+          <span class="card-detail" *ngIf="app.updated_at">Updated: {{ app.updated_at | date:'shortDate' }}</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

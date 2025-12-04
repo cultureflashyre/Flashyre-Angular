@@ -29,8 +29,8 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
     ReactiveFormsModule
   ]
 })
-export class RecruiterWorkflowRequirement {
-   clientName: string = '';
+export class RecruiterWorkflowRequirement implements OnInit {
+  clientName: string = '';
   subClientName: string = '';
   interviewLocation: string = '';
   interviewDate: string = '';
@@ -53,7 +53,19 @@ export class RecruiterWorkflowRequirement {
   // Master list to keep original data safe while filtering
   masterRequirements: any[] = []; 
 
-  constructor(private title: Title, private meta: Meta, private adbService: AdbRequirementService,  private fb: FormBuilder ) {
+  // --- MULTI-SELECT USER ASSIGNMENT PROPERTIES ---
+  availableUsers: any[] = [];     // Full list from API
+  filteredUsers: any[] = [];      // List shown in dropdown
+  selectedAssignees: any[] = [];  // Users selected in the form
+  userSearchText: string = '';    // Input text
+  isUserDropdownOpen: boolean = false;
+
+  constructor(
+    private title: Title, 
+    private meta: Meta, 
+    private adbService: AdbRequirementService,  
+    private fb: FormBuilder 
+  ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
     const today = new Date();
@@ -77,6 +89,55 @@ export class RecruiterWorkflowRequirement {
 
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
+    this.fetchAvailableUsers();
+  }
+
+  // 1. Fetch Users from Backend
+  fetchAvailableUsers() {
+    this.adbService.getAllUsers().subscribe({
+      next: (users: any[]) => {
+        this.availableUsers = users;
+        this.filteredUsers = users; // Initialize filtered list
+      },
+      error: (err) => console.error('Failed to load users', err)
+    });
+  }
+
+  // 2. Filter Users based on input
+  filterUsers() {
+    if (!this.userSearchText) {
+      this.filteredUsers = this.availableUsers.filter(u => !this.isSelected(u));
+    } else {
+      const term = this.userSearchText.toLowerCase();
+      this.filteredUsers = this.availableUsers.filter(u => 
+        (u.first_name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)) &&
+        !this.isSelected(u)
+      );
+    }
+    this.isUserDropdownOpen = true;
+  }
+
+  // 3. Helper: Check if user is already selected
+  isSelected(user: any): boolean {
+    return this.selectedAssignees.some(selected => selected.user_id === user.user_id);
+  }
+
+  // 4. Select a User
+  selectUser(user: any) {
+    this.selectedAssignees.push(user);
+    this.userSearchText = ''; // Clear input
+    this.isUserDropdownOpen = false;
+  }
+
+  // 5. Remove a User
+  removeUser(index: number) {
+    this.selectedAssignees.splice(index, 1);
+  }
+
+  // 6. Close dropdown if clicked outside (Optional, simplistic version)
+  closeUserDropdown() {
+    // A small timeout allows the click event on the list item to fire first
+    setTimeout(() => { this.isUserDropdownOpen = false; }, 200);
   }
 
   ctcOptions: string[] = [
@@ -316,6 +377,13 @@ toggleNoticePeriodDropdown() {
     } else {
       this.additionalDetails = [{ location: '', spoc: '', vacancies: '' }];
     }
+
+    // POPULATE ASSIGNED USERS
+    if (item.assigned_users_details) {
+      this.selectedAssignees = [...item.assigned_users_details];
+    } else {
+      this.selectedAssignees = [];
+    }
   }
 
   downloadCardAsPdf(index: number) {
@@ -367,6 +435,10 @@ toggleNoticePeriodDropdown() {
 
 
  onSubmit() {
+
+  // Extract User IDs for the backend
+    const assignedUserIds = this.selectedAssignees.map(u => u.user_id);
+
     // ... (Keep your existing validation logic here) ...
     this.validateJobDescription();
     if (!this.clientName) {
@@ -407,7 +479,14 @@ toggleNoticePeriodDropdown() {
       interview_location: this.interviewLocation,
       interview_date: this.interviewDate ? this.interviewDate : null,
       job_description: this.jobDescription,
-      location_details: validLocationDetails
+      location_details: this.additionalDetails.filter(d => d.location && d.spoc).map(d => ({
+        location: d.location,
+        spoc_name: d.spoc,
+        vacancies: parseInt(d.vacancies) || 1
+      })),
+      // NEW FIELD
+      assigned_users: assignedUserIds 
+      
     };
 
     // --- NEW LOGIC: Check if Editing or Creating ---
@@ -438,7 +517,12 @@ toggleNoticePeriodDropdown() {
 
   // 4. UPDATE onCancel Function
   onCancel() {
+
+    this.selectedAssignees = [];
+    this.userSearchText = '';
+
     // 1. Reset Edit Mode flags
+    this.showListing = true; 
     this.isEditMode = false;
     this.currentRequirementId = null;
 

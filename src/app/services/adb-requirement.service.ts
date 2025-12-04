@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class AdbRequirementService {
   private apiUrl = environment.apiUrl + 'api/job-requirements/'; 
+  private usersUrl = environment.apiUrl + 'api/super-admin/list/'; 
 
   constructor(private http: HttpClient) { }
 
@@ -24,5 +25,9 @@ export class AdbRequirementService {
   }
   deleteRequirement(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${id}/`);
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(this.usersUrl);
   }
 }
