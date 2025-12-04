@@ -341,8 +341,23 @@
                 <span id="start-process-text" class="recruiter-workflow-candidate-start-process-text2">Filtered By</span>
               </button>
 
-              <!-- THE FILTER PANEL ITSELF -->
-              <div *ngIf="isFilterPanelVisible" class="filter-panel">
+              <!-- NEW: THE BACKDROP ELEMENT -->
+              <!-- This div covers the screen and closes the panel when clicked. -->
+              <div *ngIf="isFilterPanelVisible" class="filter-backdrop" (click)="toggleFilterPanel()"></div>
+
+
+               <!-- THE FILTER PANEL ITSELF -->
+              <!-- We add a click handler here to stop clicks inside the panel from closing it. -->
+              <div *ngIf="isFilterPanelVisible" class="filter-panel" (click)="$event.stopPropagation()">
+                 <!-- ============================================= -->
+                <!-- === NEW: CLOSE ICON BUTTON ADDED HERE === -->
+                <!-- ============================================= -->
+                <button type="button" class="close-panel-button" (click)="toggleFilterPanel()">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
                 <form [formGroup]="filterForm" class="filter-form-grid">
                   
                   <div class="filter-group">

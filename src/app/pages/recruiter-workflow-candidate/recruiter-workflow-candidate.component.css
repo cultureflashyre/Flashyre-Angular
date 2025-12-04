@@ -2,6 +2,43 @@
   display: contents; 
 }
 
+/* --- NEW STYLES FOR CLOSE BUTTON --- */
+.close-panel-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #6c757d; /* A neutral gray color */
+  border-radius: 50%; /* Makes the hover effect circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.close-panel-button:hover {
+  background-color: #f1f1f1; /* Light gray background on hover */
+  color: #333; /* Darker color on hover */
+}
+
+.filter-backdrop {
+  position: fixed; /* Use fixed positioning to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.2); /* A subtle dark, semi-transparent overlay */
+
+  /* The magic for the blur effect */
+  -webkit-backdrop-filter: blur(3px); /* For Safari */
+  backdrop-filter: blur(3px);
+
+  z-index: 90; /* Must be below the panel but above all other page content */
+}
+
 /* --- NEW STYLES FOR FILTER PANEL --- */
 .filter-panel {
   position: absolute;
