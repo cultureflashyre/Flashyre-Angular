@@ -248,9 +248,20 @@
                       <h1 class="recruiter-workflow-candidate-text72">{{ candidate.source }}</h1>
                     </div>
                     <div class="recruiter-workflow-candidate-container52">
-                      <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-candidate-icon33">
-                        <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.342a2 2 0 0 0-.602-1.43l-4.44-4.342A2 2 0 0 0 13.56 2H6a2 2 0 0 0-2 2m5 9h6m-6 4h3" stroke-linecap="round"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path></g>
-                      </svg>
+                      <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            [ngClass]="{
+              'recruiter-workflow-candidate-icon33': candidate.resume, 
+              'icon-disabled': !candidate.resume
+            }"
+          >
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+              <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.342a2 2 0 0 0-.602-1.43l-4.44-4.342A2 2 0 0 0 13.56 2H6a2 2 0 0 0-2 2m5 9h6m-6 4h3" stroke-linecap="round"></path>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            </g>
+          </svg>
                     </div>
                     <div class="recruiter-workflow-candidate-container53">
                       <div class="recruiter-workflow-candidate-container54">
