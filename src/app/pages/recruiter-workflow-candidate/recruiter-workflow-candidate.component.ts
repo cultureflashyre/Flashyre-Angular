@@ -121,8 +121,14 @@ export class RecruiterWorkflowCandidate implements OnInit {
       expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
       expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
       current_ctc: ['', Validators.required],
-      preferred_location: ['', Validators.required],
-      current_location: ['', Validators.required],
+      preferred_location: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z\s]*$/) // Allows letters and spaces
+      ]],
+      current_location: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z\s]*$/) // Allows letters and spaces
+      ]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
       work_experience: ['', Validators.required],

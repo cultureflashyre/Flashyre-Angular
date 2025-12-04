@@ -230,7 +230,7 @@
                     </div>
                     <div class="recruiter-workflow-candidate-container41">
                       <div class="recruiter-workflow-candidate-container42">
-                        <span class="recruiter-workflow-candidate-text59">Current</span>
+                        <span class="recruiter-workflow-candidate-text59">Role</span>
                         <span class="recruiter-workflow-candidate-text60">{{ candidate.work_experience }}</span>
                       </div>
                       <div class="recruiter-workflow-candidate-container44">
@@ -507,6 +507,7 @@
                 <!-- ADD THIS DIV FOR VALIDATION -->
                 <div *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched" class="validation-error">
                     <small *ngIf="f['preferred_location'].errors?.['required']">Preferred location is required.</small>
+                    <small *ngIf="f['preferred_location'].errors?.['pattern']">Location can only contain letters and spaces.</small>
                 </div>
             </div>
 
@@ -516,6 +517,7 @@
                 <!-- ADD THIS DIV FOR VALIDATION -->
                 <div *ngIf="f['current_location'].invalid && f['current_location'].touched" class="validation-error">
                     <small *ngIf="f['current_location'].errors?.['required']">Current location is required.</small>
+                    <small *ngIf="f['current_location'].errors?.['pattern']">Location can only contain letters and spaces.</small>
                 </div>
             </div>
           </div>
