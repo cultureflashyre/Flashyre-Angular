@@ -64,6 +64,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
   alertMessage = '';
   alertButtons: string[] = [];
   private pendingAction: (() => void) | null = null;
+  private isSuccessAlert = false; // To track if the current alert is a success message
+
 
 
   // --- File Management ---
@@ -82,6 +84,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   // --- FILTER PANEL MANAGEMENT ---
   isFilterPanelVisible = false;
   filterForm!: FormGroup;
+
+   // NEW: An array to hold the skills for the pill input
+  skills: string[] = [];
 
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
@@ -274,14 +279,21 @@ export class RecruiterWorkflowCandidate implements OnInit {
         this.pendingAction();
       }
     } else {
-      // Any other button ('Cancel', 'Close', etc.) will just close the alert
+      // Any other button ('Cancel', 'Close', etc.) will close the alert.
       this.closeAlert();
+      
+      // If the alert we just closed was a success message, also close the main form.
+      if (this.isSuccessAlert) {
+        this.onCancel();
+      }
     }
   }
 
    closeAlert(): void {
     this.isAlertVisible = false;
     this.pendingAction = null;
+    this.isSuccessAlert = false; // Reset the flag
+
   }
 
 
@@ -300,12 +312,45 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.submissionError = '';
   }
 
+  // --- NEW METHODS FOR SKILLS MANAGEMENT ---
+
+  addSkill(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim();
+
+    if (value) {
+      // Prevent adding duplicate skills
+      if (!this.skills.includes(value)) {
+        this.skills.push(value);
+      }
+      // Clear the input field
+      input.value = '';
+      // Update the main form control with the new comma-separated string
+      this.updateSkillsFormControl();
+    }
+    // Prevent the default Enter key behavior (which might submit the form)
+    event.preventDefault();
+  }
+
+  removeSkill(index: number): void {
+    this.skills.splice(index, 1);
+    // Update the main form control after removing a skill
+    this.updateSkillsFormControl();
+  }
+
+  private updateSkillsFormControl(): void {
+    // Synchronize the local skills array with the reactive form control
+    this.candidateForm.controls['skills'].setValue(this.skills.join(', '));
+  }
+
   startEdit(candidate: Candidate): void {
     if (candidate.id) {
       this.editingCandidateId = candidate.id;
       this.selectedFile = null;
       this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
       this.candidateForm.patchValue(candidate);
+      // Populate the skills array from the candidate's skills string
+      this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
       this.showForm('External'); // Default to 'External' when editing
     }
   }
@@ -374,32 +419,29 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   onSubmit(): void {
-    this.submissionError = '';
-    this.submissionSuccess = false;
     this.candidateForm.markAllAsTouched();
 
+    // 1. Handle frontend validation errors first
     if (this.candidateForm.invalid) {
+      this.showAlert('Please fill out all required fields marked with an asterisk (*).', ['Close']);
       return;
     }
 
     this.isSubmitting = true;
     const formData = new FormData();
-
     Object.keys(this.candidateForm.controls).forEach(key => {
       const value = this.candidateForm.get(key)?.value;
-      if (value !== null && value !== undefined) {
-        formData.append(key, value);
-      }
+      if (value !== null && value !== undefined) { formData.append(key, value); }
     });
 
     const userId = localStorage.getItem('user_id');
-    if (userId) {
-      formData.append('user_id', userId);
-    }
+    if (userId) { formData.append('user_id', userId); }
 
-    if (this.selectedFile) {
-      formData.append('resume', this.selectedFile, this.selectedFile.name);
-    }
+     // --- THIS IS THE NEW LINE TO ADD ---
+    // Append the source ('Naukri' or 'External')
+    formData.append('source', this.formSource);
+
+    if (this.selectedFile) { formData.append('resume', this.selectedFile, this.selectedFile.name); }
 
     const handleSuccess = (candidate: Candidate) => {
       if (this.editingCandidateId) {
@@ -409,33 +451,32 @@ export class RecruiterWorkflowCandidate implements OnInit {
         this.masterCandidates.unshift({ ...candidate, selected: false });
       }
       this.applyFiltersAndSort();
-      this.submissionSuccess = true;
-      this.onCancel(); // Use onCancel to reset everything
+      
+      // 2. Show success message in the alert
+      this.isSuccessAlert = true; // Mark this as a success alert
+      this.showAlert(this.editingCandidateId ? 'Candidate updated successfully!' : 'Candidate created successfully!', ['Close']);
+      this.onCancel();
     };
 
     const handleError = (err: HttpErrorResponse) => {
+      let errorMessage = 'An unexpected server error occurred. Please try again later.';
       if (err.status === 400) {
         const errors = err.error;
         const errorMessages = Object.keys(errors).map(field => `${field.replace(/_/g, ' ')}: ${errors[field][0]}`);
-        this.submissionError = `Submission failed: ${errorMessages.join('; ')}`;
-      } else {
-        this.submissionError = 'An unexpected server error occurred. Please try again later.';
+        errorMessage = `Submission failed: ${errorMessages.join('; ')}`;
       }
+      // 3. Show backend errors in the alert
+      this.showAlert(errorMessage, ['Close']);
       this.isSubmitting = false;
     };
 
     if (this.editingCandidateId) {
-      this.candidateService.updateCandidate(this.editingCandidateId, formData).subscribe({
-        next: handleSuccess,
-        error: handleError
-      });
+      this.candidateService.updateCandidate(this.editingCandidateId, formData).subscribe({ next: handleSuccess, error: handleError });
     } else {
-      this.candidateService.createCandidate(formData).subscribe({
-        next: handleSuccess,
-        error: handleError
-      });
+      this.candidateService.createCandidate(formData).subscribe({ next: handleSuccess, error: handleError });
     }
   }
+
 
   onCancel(): void {
     this.formVisible = false; 
@@ -446,5 +487,6 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.selectedFile = null;
     this.selectedFileName = '';
     this.isSubmitting = false;
+    this.skills = []; // Clear the skills array on cancel
   }
 }

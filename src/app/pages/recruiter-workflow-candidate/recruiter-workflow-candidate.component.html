@@ -116,10 +116,7 @@
         </button>
       </div>
 
-      <!-- Success Message -->
-      <div *ngIf="submissionSuccess" class="success-message">
-        Candidate successfully added!
-      </div>
+      
       
       <!-- CANDIDATE LIST (NOW ALWAYS VISIBLE) -->
       <div class="recruiter-workflow-candidate-recruiter-workflow-candidate-lists">
@@ -248,7 +245,7 @@
                   </div>
                   <div class="recruiter-workflow-candidate-container50">
                     <div class="recruiter-workflow-candidate-container51">
-                      <h1 class="recruiter-workflow-candidate-text72">Naukri</h1>
+                      <h1 class="recruiter-workflow-candidate-text72">{{ candidate.source }}</h1>
                     </div>
                     <div class="recruiter-workflow-candidate-container52">
                       <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-candidate-icon33">
@@ -327,9 +324,7 @@
     <div class="recruiter-workflow-candidate-candidate-input-form">
       <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()">
         <!-- General API Error Message (now inside the modal) -->
-        <div *ngIf="submissionError" class="error-message">
-          {{ submissionError }}
-        </div>
+       
 
         <!-- Form Header -->
         <div class="recruiter-workflow-candidate-container12">
@@ -396,21 +391,29 @@
                     <span class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span>
                     <input type="text" formControlName="last_name" placeholder="Enter Last Name" class="recruiter-workflow-candidate-company-name-input1 input" [ngClass]="{ 'is-invalid': f['last_name'].invalid && f['last_name'].touched }"/>
                     <div *ngIf="f['last_name'].invalid && f['last_name'].touched" class="validation-error">
-                        <small *ngIf="f['last_name'].errors?.['required']">Last name is required.</small>
-                    </div>
+                    <small *ngIf="f['last_name'].errors?.['required']">Last name is required.</small>
+                    <small *ngIf="f['last_name'].errors?.['pattern']">Last name must contain letters only.</small>
+                </div>
                 </div>
             </div>
 
             <!-- Phone and Email -->
             <div class="recruiter-workflow-candidate-job-title-company-name-container2">
-                <div class="recruiter-workflow-candidate-job-title-container2">
-                    <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
-                    <input type="text" formControlName="phone_number" placeholder="Enter 10-digit Phone Number" class="recruiter-workflow-candidate-job-title-input2 input" [ngClass]="{ 'is-invalid': f['phone_number'].invalid && f['phone_number'].touched }"/>
-                    <div *ngIf="f['phone_number'].invalid && f['phone_number'].touched" class="validation-error">
-                        <small *ngIf="f['phone_number'].errors?.['required']">Phone number is required.</small>
-                        <small *ngIf="f['phone_number'].errors?.['pattern']">Must be exactly 10 digits.</small>
-                    </div>
+            <div class="recruiter-workflow-candidate-job-title-container2">
+                <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
+                <input 
+                  type="text" 
+                  formControlName="phone_number" 
+                  placeholder="Enter 10-digit Phone Number" 
+                  class="recruiter-workflow-candidate-job-title-input2 input" 
+                  [ngClass]="{ 'is-invalid': f['phone_number'].invalid && f['phone_number'].touched }"
+                  maxlength="10" 
+                />
+                <div *ngIf="f['phone_number'].invalid && f['phone_number'].touched" class="validation-error">
+                    <small *ngIf="f['phone_number'].errors?.['required']">Phone number is required.</small>
+                    <small *ngIf="f['phone_number'].errors?.['pattern']">Must be exactly 10 digits.</small>
                 </div>
+            </div>
                 <div class="recruiter-workflow-candidate-company-name-container2">
                     <span class="recruiter-workflow-candidate-company-name-text2">Email Id</span>
                     <input type="email" formControlName="email" placeholder="Enter Email" class="recruiter-workflow-candidate-company-name-input2 input" [ngClass]="{ 'is-invalid': f['email'].invalid && f['email'].touched }"/>
@@ -431,9 +434,12 @@
                         <input type="number" formControlName="total_experience_max" placeholder="Max Experience" class="recruiter-workflow-candidate-company-name-input4 input"/>
                         <span>Years</span>
                     </div>
-                    <div *ngIf="f['total_experience_max'].touched && candidateForm.hasError('minGreaterThanMax')" class="validation-error">
-                        <small>Max experience cannot be less than min.</small>
-                    </div>
+                    <div *ngIf="(f['total_experience_min'].invalid && f['total_experience_min'].touched) || (f['total_experience_max'].invalid && f['total_experience_max'].touched)" class="validation-error">
+                    <small *ngIf="f['total_experience_min'].errors?.['required'] || f['total_experience_max'].errors?.['required']">Min and Max experience are required.</small>
+                </div>
+                <div *ngIf="candidateForm.hasError('minGreaterThanMax') && f['total_experience_max'].touched" class="validation-error">
+                    <small>Max experience cannot be less than min.</small>
+                </div>
                 </div>
                 <div class="recruiter-workflow-candidate-renewal-date-container">
                     <span class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span>
@@ -443,9 +449,12 @@
                         <input type="number" formControlName="relevant_experience_max" placeholder="Max Experience" class="recruiter-workflow-candidate-company-name-input6 input"/>
                         <span>Years</span>
                     </div>
-                    <div *ngIf="f['relevant_experience_max'].touched && candidateForm.hasError('minGreaterThanMax')" class="validation-error">
-                        <small>Max experience cannot be less than min.</small>
-                    </div>
+                    <div *ngIf="(f['relevant_experience_min'].invalid && f['relevant_experience_min'].touched) || (f['relevant_experience_max'].invalid && f['relevant_experience_max'].touched)" class="validation-error">
+                    <small *ngIf="f['relevant_experience_min'].errors?.['required'] || f['relevant_experience_max'].errors?.['required']">Min and Max experience are required.</small>
+                </div>
+                <div *ngIf="candidateForm.hasError('minGreaterThanMax') && f['relevant_experience_max'].touched" class="validation-error">
+                    <small>Max experience cannot be less than min.</small>
+                </div>
                 </div>
             </div>
             
@@ -459,6 +468,13 @@
                         <input type="number" formControlName="expected_ctc_max" placeholder="Max Salary" class="recruiter-workflow-candidate-company-name-input8 input"/>
                         <span>Years</span>
                     </div>
+                    <div *ngIf="(f['expected_ctc_min'].invalid && f['expected_ctc_min'].touched) || (f['expected_ctc_max'].invalid && f['expected_ctc_max'].touched)" class="validation-error">
+                    <small *ngIf="f['expected_ctc_min'].errors?.['required'] || f['expected_ctc_max'].errors?.['required']">Min and Max CTC are required.</small>
+                </div>
+                <div *ngIf="candidateForm.hasError('minGreaterThanMax') && f['expected_ctc_max'].touched" class="validation-error">
+                    <small>Max CTC cannot be less than min.</small>
+                </div>
+    
                 </div>
                 <div class="recruiter-workflow-candidate-certificate-name-container">
                     <span class="recruiter-workflow-candidate-certificate-name-text">Current CTC *</span>
@@ -474,51 +490,93 @@
 
             <!-- Preferred and Current Location -->
             <div class="recruiter-workflow-candidate-job-title-company-name-container3">
-                <div class="recruiter-workflow-candidate-job-title-container3">
-                    <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
-                    <input type="text" formControlName="preferred_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input3 input"/>
-                </div>
-                <div class="recruiter-workflow-candidate-job-title-container4">
-                    <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
-                    <input type="text" formControlName="current_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input4 input"/>
+            <div class="recruiter-workflow-candidate-job-title-container3">
+                <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
+                <input type="text" formControlName="preferred_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input3 input" [ngClass]="{ 'is-invalid': f['preferred_location'].invalid && f['preferred_location'].touched }"/>
+                <!-- ADD THIS DIV FOR VALIDATION -->
+                <div *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched" class="validation-error">
+                    <small *ngIf="f['preferred_location'].errors?.['required']">Preferred location is required.</small>
                 </div>
             </div>
 
+                <div class="recruiter-workflow-candidate-job-title-container4">
+                <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
+                <input type="text" formControlName="current_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input4 input" [ngClass]="{ 'is-invalid': f['current_location'].invalid && f['current_location'].touched }"/>
+                <!-- ADD THIS DIV FOR VALIDATION -->
+                <div *ngIf="f['current_location'].invalid && f['current_location'].touched" class="validation-error">
+                    <small *ngIf="f['current_location'].errors?.['required']">Current location is required.</small>
+                </div>
+            </div>
+          </div>
             <!-- Notice Period and Gender -->
             <div class="recruiter-workflow-candidate-container28">
-                <div class="recruiter-workflow-candidate-issued-date-container3">
-                    <span class="recruiter-workflow-candidate-issuing-date-text3">Notice Period *</span>
-                    <select formControlName="notice_period" class="input" [ngClass]="{ 'is-invalid': f['notice_period'].invalid && f['notice_period'].touched }">
-                        <option value="" disabled>Select</option>
-                        <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
-                    </select>
-                </div>
-                <div class="recruiter-workflow-candidate-credentials-container">
-                    <span class="recruiter-workflow-candidate-credentials-text">Gender *</span>
-                    <select formControlName="gender" class="input" [ngClass]="{ 'is-invalid': f['gender'].invalid && f['gender'].touched }">
-                        <option value="" disabled>Select Gender</option>
-                        <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
-                    </select>
+            <div class="recruiter-workflow-candidate-issued-date-container3">
+                <span class="recruiter-workflow-candidate-issuing-date-text3">Notice Period *</span>
+                <select formControlName="notice_period" class="input" [ngClass]="{ 'is-invalid': f['notice_period'].invalid && f['notice_period'].touched }">
+                    <option value="" disabled>Select</option>
+                    <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
+                </select>
+                <!-- ADD THIS DIV FOR VALIDATION -->
+                <div *ngIf="f['notice_period'].invalid && f['notice_period'].touched" class="validation-error">
+                    <small *ngIf="f['notice_period'].errors?.['required']">Notice period is required.</small>
                 </div>
             </div>
-
+            <div class="recruiter-workflow-candidate-credentials-container">
+                <span class="recruiter-workflow-candidate-credentials-text">Gender *</span>
+                <select formControlName="gender" class="input" [ngClass]="{ 'is-invalid': f['gender'].invalid && f['gender'].touched }">
+                    <option value="" disabled>Select Gender</option>
+                    <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
+                </select>
+                <!-- ADD THIS DIV FOR VALIDATION -->
+                <div *ngIf="f['gender'].invalid && f['gender'].touched" class="validation-error">
+                    <small *ngIf="f['gender'].errors?.['required']">Gender is required.</small>
+                </div>
+            </div>
+          </div>
             <!-- Work Experience and Skills -->
             <div class="recruiter-workflow-candidate-skills-container1">
-                <div class="recruiter-workflow-candidate-skill-text-container1">
-                    <span class="recruiter-workflow-candidate-skill-text1">Work Experience</span>
-                    <span class="recruiter-workflow-candidate-skill-star-text1">*</span>
-                </div>
-                <input type="text" formControlName="work_experience" placeholder="Enter Work Experience" class="recruiter-workflow-candidate-job-title-input5 input"/>
-            </div>
+              <div class="recruiter-workflow-candidate-skill-text-container1">
+                  <span class="recruiter-workflow-candidate-skill-text1">Work Experience</span>
+                  <span class="recruiter-workflow-candidate-skill-star-text1">*</span>
+              </div>
+              <input type="text" formControlName="work_experience" placeholder="Enter Work Experience" class="recruiter-workflow-candidate-job-title-input5 input" [ngClass]="{ 'is-invalid': f['work_experience'].invalid && f['work_experience'].touched }"/>
+              <!-- ADD THIS DIV FOR VALIDATION -->
+              <div *ngIf="f['work_experience'].invalid && f['work_experience'].touched" class="validation-error">
+                  <small *ngIf="f['work_experience'].errors?.['required']">Work experience is required.</small>
+              </div>
+          </div>            <input type="hidden" formControlName="skills">
+
 
             <div class="recruiter-workflow-candidate-skills-container2">
                 <div class="recruiter-workflow-candidate-skill-text-container2">
                     <span class="recruiter-workflow-candidate-skill-text2">Skills</span>
                     <span class="recruiter-workflow-candidate-skill-star-text2">*</span>
                 </div>
-                <input type="text" formControlName="skills" placeholder="Enter Skills" class="recruiter-workflow-candidate-job-title-input6 input"/>
+<div class="skills-input-container">
+      <!-- Loop through the skills array to display pills -->
+      <span *ngFor="let skill of skills; let i = index" class="skill-pill">
+        {{ skill }}
+        <button type="button" class="remove-skill-button" (click)="removeSkill(i)">&times;</button>
+      </span>            
+      <input type="hidden" formControlName="skills">
+
+      <!-- The actual input field for typing new skills -->
+      <input 
+        type="text" 
+        class="skills-entry-input"
+        placeholder="Type a skill and press Enter"
+        (keydown.enter)="addSkill($event)"
+      >
+    </div>
+    
+    <!-- Hidden input to hold the validation state for the form -->
+    <input type="hidden" formControlName="skills">
+    <div *ngIf="f['skills'].invalid && f['skills'].touched && skills.length === 0" class="validation-error">
+                <small>At least one skill is required.</small>
             </div>
+  </div>    
         </div>
+        
         
         <!-- Submit/Cancel Buttons -->
         <div class="recruiter-workflow-candidate-submit-cancel-buttons-container">

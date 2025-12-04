@@ -2,6 +2,55 @@
   display: contents; 
 }
 
+/* --- NEW STYLES FOR SKILLS PILL INPUT --- */
+.skills-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #A7A7A7;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  min-height: 48px; /* Match other input heights */
+  min-width: 1050px;
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e7ff; /* A light blue/purple background */
+  color: #4338ca; /* A darker text color for contrast */
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.remove-skill-button {
+  background: none;
+  border: none;
+  color: #4338ca;
+  margin-left: 8px;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.remove-skill-button:hover {
+  color: #dc3545; /* Red on hover */
+}
+
+.skills-entry-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 4px;
+  background-color: transparent;
+  min-width: 150px; /* Ensure there's always some space to type */
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -109,9 +158,11 @@
 
 .form-modal-container .close-panel-button {
   position: absolute;
-  top: 10;
-  right: 10;
+  top: 0;
+  right: 0;
 }
+
+
 
 /* --- NEW STYLES FOR FORM MODAL OVERLAY --- */
 .form-modal-backdrop {
@@ -172,6 +223,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease, color 0.2s ease;
+  display: hidden;
 }
 
 .close-panel-button:hover {

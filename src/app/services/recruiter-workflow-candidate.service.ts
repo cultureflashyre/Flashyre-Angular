@@ -27,6 +27,8 @@ export interface Candidate {
   selected?: boolean;
   resume?: string;
   recruiter_name?: string; // <-- ADD THIS PROPERTY
+  source?: 'Naukri' | 'External'; // <-- ADD THIS PROPERTY
+
 
 }
 
