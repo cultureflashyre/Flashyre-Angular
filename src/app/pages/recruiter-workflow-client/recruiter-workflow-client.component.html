@@ -93,6 +93,7 @@
         </div>
       </ng-template>
     </recruiter-workflow-navbar>
+    <div *ngIf="showForm || isFilterPanelVisible" class="form-background-blur-overlay"></div>
     <app-alert-message
       *ngIf="showAlert"
       [message]="alertMessage"
@@ -100,12 +101,22 @@
       (buttonClicked)="onAlertButtonClicked($event)"
       (close)="showAlert = false">
     </app-alert-message>
-    <div *ngIf="showToast" class="success-toast-message">
-      <!-- Optional Checkmark Icon -->
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div *ngIf="showToast" 
+         [ngClass]="isErrorToast ? 'error-toast-message' : 'success-toast-message'">
+      
+      <!-- Icon for Success (Checkmark) -->
+      <svg *ngIf="!isErrorToast" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
+
+      <!-- Icon for Error (X Circle) -->
+      <svg *ngIf="isErrorToast" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+
       {{ toastMessage }}
     </div>
     <div class="recruiter-workflow-client-clients-listing-container">
@@ -127,7 +138,7 @@
       </div>
 
       <!-- MAIN FORM START -->
-      <form [formGroup]="mainForm" *ngIf="showForm">
+      <form [formGroup]="mainForm" *ngIf="showForm" class="client-form-overlay">
         <div class="recruiter-workflow-client-recruiter-workflow-client-input-form">
           <div class="recruiter-workflow-client-container12" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <span class="recruiter-workflow-client-text30">Client Input form</span>
@@ -341,7 +352,7 @@
 
       <!-- Remove Icon -->
       <svg 
-        (click)="removeLocation(i, j)" 
+        (click)="confirmRemoveLocation(i, j)" 
         *ngIf="getContactsArray(i).length > 1"
         id="remove-icon" 
         width="24" 
@@ -484,13 +495,7 @@
             id="filter-sort-download-zip-container"
             class="recruiter-workflow-client-filter-sort-download-zip-container"
           >
-            <!-- 1. FILTER BUTTON CONTAINER (Add position: relative) -->
-            <div
-              id="filtered-container"
-              class="recruiter-workflow-client-filtered-container"
-              style="position: relative;" 
-            >
-              <button
+            <button
                 id="filtered-button"
                 type="button"
                 (click)="deleteSelectedClients()"
@@ -500,6 +505,14 @@
                   Delete
                 </span>
               </button>
+              
+            <!-- 1. FILTER BUTTON CONTAINER (Add position: relative) -->
+            <div
+              id="filtered-container"
+              class="recruiter-workflow-client-filtered-container"
+              style="position: relative;" 
+              [style.zIndex]="isFilterPanelVisible ? '2001' : 'auto'"
+            >
               
               <!-- Toggle Panel Button -->
               <button
@@ -515,6 +528,25 @@
 
               <!-- 2. NEW FILTER PANEL (Popup) -->
               <div *ngIf="isFilterPanelVisible" class="filter-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                  <span style="font-weight: 600; font-size: 16px;">Filter Options</span>
+                  <svg 
+                    (click)="toggleFilterPanel()" 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="filter-close-icon"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </div>
                 <form [formGroup]="filterForm" class="filter-form-grid">
                   
                   <div class="filter-group">

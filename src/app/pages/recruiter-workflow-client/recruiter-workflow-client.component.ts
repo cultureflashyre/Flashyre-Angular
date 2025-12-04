@@ -42,6 +42,8 @@ export class RecruiterWorkflowClient implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
 
+  isErrorToast: boolean = false;
+
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
@@ -342,10 +344,11 @@ deleteSingleClient(client: any): void {
         // Optional: Show success alert or just refresh
         // this.openAlert('Client deleted successfully', ['OK']); 
         this.fetchClients(); 
+        this.showSuccessToast('Client deleted successfully');
       },
       error: (err) => {
         console.error('Delete failed', err);
-        this.openAlert('Failed to delete client', ['OK']);
+        this.showErrorToast('Failed to delete client');
       }
     });
   }
@@ -483,6 +486,11 @@ downloadClientData(client: any): void {
         case 'EDIT_MODE':
           this.proceedWithEdit(this.pendingAction.data);
           break;
+
+        case 'REMOVE_LOCATION_ROW':
+          const { clientIndex, contactIndex } = this.pendingAction.data;
+          this.removeLocation(clientIndex, contactIndex);
+          break;
           
         case 'DOWNLOAD':
           // Just a console log for now as per previous code
@@ -505,6 +513,15 @@ downloadClientData(client: any): void {
       this.showToast = false;
     }, 2000);
   }
+
+  showErrorToast(message: string): void {
+  this.isErrorToast = true; // Red mode
+  this.toastMessage = message;
+  this.showToast = true;
+  setTimeout(() => {
+    this.showToast = false;
+  }, 3000); 
+}
 
    toggleFilterPanel(): void {
     this.isFilterPanelVisible = !this.isFilterPanelVisible;
@@ -570,5 +587,17 @@ downloadClientData(client: any): void {
     this.currentSort = (event.target as HTMLSelectElement).value;
     this.applyFiltersAndSort();
   }
+
+  confirmRemoveLocation(clientIndex: number, contactIndex: number): void {
+    // Store the indices in pendingAction so we know what to delete if confirmed
+    this.pendingAction = { 
+      type: 'REMOVE_LOCATION_ROW', 
+      data: { clientIndex, contactIndex } 
+    };
+    
+    // Open the alert with OK and Cancel buttons
+    this.openAlert('Are you sure you want to remove this location?', ['Cancel', 'OK']);
+  }
+
 
 }
