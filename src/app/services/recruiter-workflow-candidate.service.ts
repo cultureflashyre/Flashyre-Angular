@@ -25,6 +25,9 @@ export interface Candidate {
   current_location: string;
   created_at?: string;
   selected?: boolean;
+  resume?: string;
+  recruiter_name?: string; // <-- ADD THIS PROPERTY
+
 }
 
 @Injectable({
@@ -51,10 +54,10 @@ export class RecruiterWorkflowCandidateService {
    * @param candidate - The candidate data to be created.
    * @returns An Observable of the newly created Candidate.
    */
-  createCandidate(candidate: Candidate): Observable<Candidate> {
-    // Construct the full URL inside the method
-    return this.http.post<Candidate>(`${this.apiUrl}${this.endpoint}`, candidate);
+  createCandidate(formData: FormData): Observable<Candidate> {
+    return this.http.post<Candidate>(`${this.apiUrl}${this.endpoint}`, formData);
   }
+
   // --- NEW METHOD: UPDATE ---
   /**
    * Updates an existing candidate by sending a PUT request.
@@ -62,8 +65,8 @@ export class RecruiterWorkflowCandidateService {
    * @param candidate - The updated candidate data.
    * @returns An Observable of the updated Candidate.
    */
-  updateCandidate(id: number, candidate: Candidate): Observable<Candidate> {
-    return this.http.put<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`, candidate);
+  updateCandidate(id: number, formData: FormData): Observable<Candidate> {
+    return this.http.put<Candidate>(`${this.apiUrl}${this.endpoint}${id}/`, formData);
   }
 
   // --- NEW METHOD: DELETE ---
@@ -75,4 +78,6 @@ export class RecruiterWorkflowCandidateService {
   deleteCandidate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${this.endpoint}${id}/`);
   }
+
+  
 }

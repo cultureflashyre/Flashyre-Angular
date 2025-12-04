@@ -2,6 +2,161 @@
   display: contents; 
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-message {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.alter-message-close-icon-container {
+  position: relative;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.alter-message-close-icon-container p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.close-icon {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  font-size: 24px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-icon:hover {
+  transform: scale(1.1);
+}
+
+.alter-message-buttons-container1 {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.alter-message-component-button {
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.alter-message-component-button:hover {
+  transform: translateY(-2px);
+}
+
+.button-cancel {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #dcdcdc;
+}
+
+.button-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.button-save-draft, .button-yes {
+  background-color: #05356C;
+  color: white;
+}
+
+/* --- STYLES FOR FORM SOURCE INDICATOR --- */
+.source-label {
+  font-size: 20px;
+  color: #a0aec0; /* Inactive color */
+  font-weight: 600;
+  cursor: default;
+}
+
+.source-label.active {
+  color: #05356C; /* Active color */
+}
+
+/* Ensure the close button in the modal is positioned correctly */
+.form-modal-container .recruiter-workflow-candidate-container12 {
+  position: relative;
+}
+
+.form-modal-container .close-panel-button {
+  position: absolute;
+  top: 10;
+  right: 10;
+}
+
+/* --- NEW STYLES FOR FORM MODAL OVERLAY --- */
+.form-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 990; /* High z-index to be on top */
+}
+
+.form-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 991; /* Above the backdrop */
+
+  width: auto;
+  max-width: 80%;
+  height: auto;
+  max-height: 90vh; /* Ensure it fits on smaller screens */
+  overflow-y: auto; /* Allow scrolling within the modal if content is long */
+
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Override existing form styles to fit the modal */
+.form-modal-container .recruiter-workflow-candidate-candidate-input-form {
+  position: static; /* Remove relative positioning */
+  padding: 24px 32px; /* Add more padding for a better look */
+}
+
+/* Ensure close button inside modal is positioned correctly */
+.form-modal-container .close-panel-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
 /* --- NEW STYLES FOR CLOSE BUTTON --- */
 .close-panel-button {
   position: absolute;
@@ -457,6 +612,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  margin-bottom: 16px;
 }
  
 .recruiter-workflow-candidate-upload-file-container {
@@ -563,6 +719,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin-bottom: 8px;
 }
  
 .recruiter-workflow-candidate-enter-manually-text {
@@ -706,7 +863,7 @@
 }
  
 .recruiter-workflow-candidate-company-name-input2 {
-  width: 100%;
+  width: 49%;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;

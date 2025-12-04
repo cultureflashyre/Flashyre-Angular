@@ -6,7 +6,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { forkJoin, catchError, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { RelativeDatePipe } from '../../pipe/relative-date.pipe'; // <-- IMPORT THE NEW PIPE
+import { AlertMessageComponent } from '../../components/alert-message/alert-message.component'; // <-- IMPORT ALERT COMPONENT
+
+
 
 // Custom validator to check if min value is less than or equal to max value
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -19,6 +24,7 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
         maxControl.setErrors({ minGreaterThanMax: true });
         return { minGreaterThanMax: true };
       } else {
+        // If the error was previously set, clear it if the condition is met
         if (maxControl.hasError('minGreaterThanMax')) {
           maxControl.setErrors(null);
         }
@@ -27,7 +33,6 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
     return null;
   };
 }
-
 
 @Component({
   standalone: true,
@@ -39,7 +44,9 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    RecruiterWorkflowNavbarComponent
+    RecruiterWorkflowNavbarComponent,
+    RelativeDatePipe,
+    AlertMessageComponent
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit {
@@ -50,17 +57,29 @@ export class RecruiterWorkflowCandidate implements OnInit {
   submissionError = '';
   formVisible = false;
   editingCandidateId: number | null = null;
+  formSource: 'Naukri' | 'External' = 'Naukri';
+
+  // --- NEW: ALERT STATE MANAGEMENT ---
+  isAlertVisible = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private pendingAction: (() => void) | null = null;
+
+
+  // --- File Management ---
+  selectedFile: File | null = null;
+  selectedFileName = '';
 
   // --- Data Management ---
-  masterCandidates: Candidate[] = []; // Single source of truth from the API
-  displayCandidates: Candidate[] = []; // The list that is actually shown in the template (can be sorted)
+  masterCandidates: Candidate[] = [];
+  displayCandidates: Candidate[] = [];
 
   // --- List Management Properties ---
   isAllSelected = false;
   isDeleting = false;
   currentSort = 'none';
 
-  // --- NEW: FILTER PANEL MANAGEMENT ---
+  // --- FILTER PANEL MANAGEMENT ---
   isFilterPanelVisible = false;
   filterForm!: FormGroup;
 
@@ -77,173 +96,11 @@ export class RecruiterWorkflowCandidate implements OnInit {
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
-    this.initializeFilterForm(); // Initialize the new filter form
-
+    this.initializeFilterForm();
   }
 
   ngOnInit(): void {
     this.loadCandidates();
-  }
-
-  private initializeFilterForm(): void {
-    this.filterForm = this.fb.group({
-      name: [''],
-      location: [''],
-      skills: [''],
-      current_ctc: [''],
-      email: ['']
-    });
-  }
-
-  loadCandidates(): void {
-    this.candidateService.getCandidates().subscribe({
-      next: (data) => {
-        this.masterCandidates = data.map(c => ({ ...c, selected: false }));
-        this.applySort();
-      },
-      error: (err) => { console.error("Failed to load candidates.", err); }
-    });
-  }
-
-  // --- CORE LOGIC: APPLY FILTERS AND SORTING ---
-  applyFiltersAndSort(): void {
-    let candidates = [...this.masterCandidates];
-    const filterValues = this.filterForm.value;
-
-    // 1. Apply Name Filter
-    if (filterValues.name) {
-      const nameFilter = filterValues.name.toLowerCase();
-      candidates = candidates.filter(c => 
-        (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
-      );
-    }
-
-    // 2. Apply Location Filter
-    if (filterValues.location) {
-      const locationFilter = filterValues.location.toLowerCase();
-      candidates = candidates.filter(c => 
-        c.current_location.toLowerCase().includes(locationFilter)
-      );
-    }
-
-    // 3. Apply Skills Filter (OR search)
-    if (filterValues.skills) {
-      const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
-      if (skillFilters.length > 0) {
-        candidates = candidates.filter(c => {
-          const candidateSkills = c.skills.toLowerCase().split(',').map(s => s.trim());
-          return skillFilters.some((skillFilter: string) => candidateSkills.includes(skillFilter));
-        });
-      }
-    }
-
-    // 4. Apply CTC Filter
-    if (filterValues.current_ctc) {
-      candidates = candidates.filter(c => c.current_ctc === filterValues.current_ctc);
-    }
-
-    // 5. Apply Email Filter
-    if (filterValues.email) {
-      const emailFilter = filterValues.email.toLowerCase();
-      candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
-    }
-
-    // 6. Apply Sorting
-    if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
-    } else if (this.currentSort === 'z-a') {
-      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
-    }
-
-    this.displayCandidates = candidates;
-    this.updateSelectAllState();
-  }
-
-    // --- NEW FILTER PANEL METHODS ---
-  toggleFilterPanel(): void {
-    this.isFilterPanelVisible = !this.isFilterPanelVisible;
-  }
-
-  applyFiltersFromPanel(): void {
-    this.applyFiltersAndSort();
-    this.isFilterPanelVisible = false; // Hide panel after applying
-  }
-
-  clearFilters(): void {
-    this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '' });
-    this.applyFiltersAndSort();
-    this.isFilterPanelVisible = false;
-  }
-
-
-  // --- CORE LOGIC: APPLY SORTING ---
-  applySort(): void {
-    let candidates = [...this.masterCandidates];
-
-    if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
-    } else if (this.currentSort === 'z-a') {
-      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
-    }
-
-    this.displayCandidates = candidates;
-    this.updateSelectAllState();
-  }
-
-  // --- SELECTION METHODS ---
-  toggleSelectAll(event: Event): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    this.isAllSelected = isChecked;
-    this.displayCandidates.forEach(c => c.selected = isChecked);
-  }
-
-  updateSelectAllState(): void {
-    if (this.displayCandidates.length === 0) {
-      this.isAllSelected = false;
-      return;
-    }
-    this.isAllSelected = this.displayCandidates.every(c => c.selected);
-  }
-
-  // --- BULK DELETE ---
-  deleteSelected(): void {
-    const selectedCandidates = this.masterCandidates.filter(c => c.selected && c.id);
-    if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate to delete.');
-      return;
-    }
-
-    if (window.confirm(`Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`)) {
-      this.isDeleting = true;
-      
-      const deleteRequests = selectedCandidates.map(c => 
-        this.candidateService.deleteCandidate(c.id!).pipe(
-          catchError(err => {
-            console.error(`Failed to delete candidate ${c.id}`, err);
-            return of(c.id); // On error, return the ID of the failed deletion
-          })
-        )
-      );
-
-      forkJoin(deleteRequests).subscribe(results => {
-        const failedIds = results.filter(res => res !== undefined && res !== null);
-        
-        this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
-        
-        this.applySort();
-        this.isDeleting = false;
-
-        if (failedIds.length > 0) {
-          alert(`Could not delete ${failedIds.length} candidate(s). Please try again.`);
-        }
-      });
-    }
-  }
-
-  // --- SORTING METHOD ---
-  sortCandidates(event: Event): void {
-    this.currentSort = (event.target as HTMLSelectElement).value;
-    this.applySort();
   }
 
   private initializeForm(): void {
@@ -274,9 +131,170 @@ export class RecruiterWorkflowCandidate implements OnInit {
     });
   }
 
+  private initializeFilterForm(): void {
+    this.filterForm = this.fb.group({
+      name: [''],
+      location: [''],
+      skills: [''],
+      current_ctc: [''],
+      email: ['']
+    });
+  }
+
+  loadCandidates(): void {
+    this.candidateService.getCandidates().subscribe({
+      next: (data) => {
+        this.masterCandidates = data.map(c => ({ ...c, selected: false }));
+        this.applyFiltersAndSort();
+      },
+      error: (err) => { console.error("Failed to load candidates.", err); }
+    });
+  }
+
+  applyFiltersAndSort(): void {
+    let candidates = [...this.masterCandidates];
+    const filterValues = this.filterForm.value;
+
+    if (filterValues.name) {
+      const nameFilter = filterValues.name.toLowerCase();
+      candidates = candidates.filter(c => 
+        (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
+      );
+    }
+
+    if (filterValues.location) {
+      const locationFilter = filterValues.location.toLowerCase();
+      candidates = candidates.filter(c => 
+        c.current_location.toLowerCase().includes(locationFilter)
+      );
+    }
+
+    if (filterValues.skills) {
+      const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
+      if (skillFilters.length > 0) {
+        candidates = candidates.filter(c => {
+          const candidateSkills = c.skills.toLowerCase().split(',').map(s => s.trim());
+          return skillFilters.some((skillFilter: string) => candidateSkills.includes(skillFilter));
+        });
+      }
+    }
+
+    if (filterValues.current_ctc) {
+      candidates = candidates.filter(c => c.current_ctc === filterValues.current_ctc);
+    }
+
+    if (filterValues.email) {
+      const emailFilter = filterValues.email.toLowerCase();
+      candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
+    }
+
+    if (this.currentSort === 'a-z') {
+      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
+    } else if (this.currentSort === 'z-a') {
+      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
+    }
+
+    this.displayCandidates = candidates;
+    this.updateSelectAllState();
+  }
+
+  toggleFilterPanel(): void {
+    this.isFilterPanelVisible = !this.isFilterPanelVisible;
+  }
+
+  applyFiltersFromPanel(): void {
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  clearFilters(): void {
+    this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '' });
+    this.applyFiltersAndSort();
+    this.isFilterPanelVisible = false;
+  }
+
+  toggleSelectAll(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.isAllSelected = isChecked;
+    this.displayCandidates.forEach(c => c.selected = isChecked);
+  }
+
+  updateSelectAllState(): void {
+    if (this.displayCandidates.length === 0) {
+      this.isAllSelected = false;
+      return;
+    }
+    this.isAllSelected = this.displayCandidates.every(c => c.selected);
+  }
+
+  deleteSelected(): void {
+    const selectedCandidates = this.masterCandidates.filter(c => c.selected && c.id);
+    if (selectedCandidates.length === 0) {
+      this.showAlert('Please select at least one candidate to delete.', ['Close']);
+      return;
+    }
+
+    this.alertMessage = `Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`;
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    this.pendingAction = () => {
+      this.isDeleting = true;
+      const deleteRequests = selectedCandidates.map(c => 
+        this.candidateService.deleteCandidate(c.id!).pipe(catchError(err => of(c.id)))
+      );
+
+      forkJoin(deleteRequests).subscribe(results => {
+        const failedIds = results.filter(id => id !== null);
+        this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
+        this.applyFiltersAndSort();
+        this.isDeleting = false;
+        
+        const successCount = selectedCandidates.length - failedIds.length;
+        this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
+      });
+    };
+
+    this.isAlertVisible = true;
+  }
+
+  // --- NEW ALERT HANDLER METHODS ---
+
+  private showAlert(message: string, buttons: string[]): void {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.isAlertVisible = true;
+    this.pendingAction = null; // Clear any pending action for info alerts
+  }
+
+  handleAlertAction(button: string): void {
+    const action = button.toLowerCase();
+
+    if (action === 'delete') {
+      if (this.pendingAction) {
+        this.pendingAction();
+      }
+    } else {
+      // Any other button ('Cancel', 'Close', etc.) will just close the alert
+      this.closeAlert();
+    }
+  }
+
+   closeAlert(): void {
+    this.isAlertVisible = false;
+    this.pendingAction = null;
+  }
+
+
+
+  sortCandidates(event: Event): void {
+    this.currentSort = (event.target as HTMLSelectElement).value;
+    this.applyFiltersAndSort();
+  }
+
   get f() { return this.candidateForm.controls; }
 
-  showForm(): void {
+  showForm(source: 'Naukri' | 'External'): void {
+    this.formSource = source;
     this.formVisible = true;
     this.submissionSuccess = false;
     this.submissionError = '';
@@ -285,26 +303,74 @@ export class RecruiterWorkflowCandidate implements OnInit {
   startEdit(candidate: Candidate): void {
     if (candidate.id) {
       this.editingCandidateId = candidate.id;
+      this.selectedFile = null;
+      this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
       this.candidateForm.patchValue(candidate);
-      this.showForm();
+      this.showForm('External'); // Default to 'External' when editing
+    }
+  }
+  
+  getFileNameFromUrl(url: string): string {
+    try {
+      const urlObject = new URL(url);
+      const pathSegments = urlObject.pathname.split('/');
+      return decodeURIComponent(pathSegments.pop() || '');
+    } catch (e) {
+      return url; // Fallback if it's not a full URL
     }
   }
 
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const file: File | null = (target.files as FileList)[0];
+    
+    if (!file) { return; }
+
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+
+    if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Please upload a PDF or Word document.');
+      target.value = '';
+      return;
+    }
+
+    if (file.size > maxSizeInBytes) {
+      alert('File is too large. Maximum size is 5 MB.');
+      target.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+  }
+  
   deleteCandidate(id: number | undefined): void {
     if (!id) return;
-    const confirmation = window.confirm('Are you sure you want to delete this candidate?');
-    if (confirmation) {
+    
+    // 1. Set up the confirmation alert
+    this.alertMessage = 'Are you sure you want to delete this candidate? This action cannot be undone.';
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    // 2. Define what happens if the user confirms
+    this.pendingAction = () => {
       this.candidateService.deleteCandidate(id).subscribe({
         next: () => {
           this.masterCandidates = this.masterCandidates.filter(c => c.id !== id);
-          this.applySort();
+          this.applyFiltersAndSort();
+          // Trigger success alert
+          this.showAlert('Candidate successfully deleted.', ['Close']);
         },
         error: (err) => {
           console.error('Failed to delete candidate', err);
-          alert('Error: Could not delete the candidate.');
+          // Trigger error alert
+          this.showAlert('Error: Could not delete the candidate.', ['Close']);
         }
       });
-    }
+    };
+
+    // 3. Show the alert
+    this.isAlertVisible = true;
   }
 
   onSubmit(): void {
@@ -317,73 +383,68 @@ export class RecruiterWorkflowCandidate implements OnInit {
     }
 
     this.isSubmitting = true;
+    const formData = new FormData();
 
-    const formValue = this.candidateForm.value;
-    const payload: Candidate = {
-      ...formValue,
-      total_experience_min: formValue.total_experience_min ?? 0,
-      total_experience_max: formValue.total_experience_max ?? 0,
-      relevant_experience_min: formValue.relevant_experience_min ?? 0,
-      relevant_experience_max: formValue.relevant_experience_max ?? 0,
-      expected_ctc_min: formValue.expected_ctc_min ?? 0,
-      expected_ctc_max: formValue.expected_ctc_max ?? 0,
+    Object.keys(this.candidateForm.controls).forEach(key => {
+      const value = this.candidateForm.get(key)?.value;
+      if (value !== null && value !== undefined) {
+        formData.append(key, value);
+      }
+    });
+
+    const userId = localStorage.getItem('user_id');
+    if (userId) {
+      formData.append('user_id', userId);
+    }
+
+    if (this.selectedFile) {
+      formData.append('resume', this.selectedFile, this.selectedFile.name);
+    }
+
+    const handleSuccess = (candidate: Candidate) => {
+      if (this.editingCandidateId) {
+        const index = this.masterCandidates.findIndex(c => c.id === this.editingCandidateId);
+        if (index !== -1) this.masterCandidates[index] = { ...candidate, selected: false };
+      } else {
+        this.masterCandidates.unshift({ ...candidate, selected: false });
+      }
+      this.applyFiltersAndSort();
+      this.submissionSuccess = true;
+      this.onCancel(); // Use onCancel to reset everything
+    };
+
+    const handleError = (err: HttpErrorResponse) => {
+      if (err.status === 400) {
+        const errors = err.error;
+        const errorMessages = Object.keys(errors).map(field => `${field.replace(/_/g, ' ')}: ${errors[field][0]}`);
+        this.submissionError = `Submission failed: ${errorMessages.join('; ')}`;
+      } else {
+        this.submissionError = 'An unexpected server error occurred. Please try again later.';
+      }
+      this.isSubmitting = false;
     };
 
     if (this.editingCandidateId) {
-      this.candidateService.updateCandidate(this.editingCandidateId, payload).subscribe({
-        next: (updatedCandidate) => {
-          const index = this.masterCandidates.findIndex(c => c.id === this.editingCandidateId);
-          if (index !== -1) {
-            this.masterCandidates[index] = { ...updatedCandidate, selected: false };
-          }
-          this.applySort();
-          
-          this.submissionSuccess = true;
-          this.formVisible = false;
-          this.isSubmitting = false;
-          this.candidateForm.reset();
-          this.editingCandidateId = null;
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error('Update failed:', err);
-          this.submissionError = 'Failed to update candidate. Please try again.';
-          this.isSubmitting = false;
-        }
+      this.candidateService.updateCandidate(this.editingCandidateId, formData).subscribe({
+        next: handleSuccess,
+        error: handleError
       });
     } else {
-      this.candidateService.createCandidate(payload).subscribe({
-        next: (newCandidate) => {
-          this.masterCandidates.unshift({ ...newCandidate, selected: false });
-          this.applySort();
-          
-          this.submissionSuccess = true;
-          this.formVisible = false;
-          this.isSubmitting = false;
-          this.candidateForm.reset();
-        },
-        error: (err: HttpErrorResponse) => {
-          if (err.status === 400) {
-            const errors = err.error;
-            console.error('Backend validation failed:', errors); 
-            const errorMessages = Object.keys(errors).map(field => {
-              const fieldName = field.replace(/_/g, ' ');
-              return `${fieldName}: ${errors[field][0]}`;
-            });
-            this.submissionError = `Submission failed: ${errorMessages.join('; ')}`;
-          } else {
-            this.submissionError = 'An unexpected server error occurred. Please try again later.';
-          }
-          this.isSubmitting = false;
-        }
+      this.candidateService.createCandidate(formData).subscribe({
+        next: handleSuccess,
+        error: handleError
       });
     }
   }
 
   onCancel(): void {
-    this.candidateForm.reset();
-    this.submissionError = '';
-    this.submissionSuccess = false;
     this.formVisible = false; 
     this.editingCandidateId = null;
+    this.candidateForm.reset();
+    this.submissionError = '';
+    // Do not reset submissionSuccess here so the message can be seen
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.isSubmitting = false;
   }
 }
