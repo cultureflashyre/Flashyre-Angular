@@ -2,6 +2,28 @@
   display: contents; 
 }
 
+.form-overlay {
+  position: fixed; /* Or 'absolute' if your main container is the reference */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999; /* Make sure it's above other content but below the form */
+  backdrop-filter: blur(12px); /* Optional: Adds a modern blur effect */
+  -webkit-backdrop-filter: blur(12px); /* For Safari support */
+  pointer-events: auto;
+}
+
+/* 
+  Make sure your form has a higher z-index than the overlay 
+  so it appears on top of it.
+*/
+
+.recruiter-workflow-requirement-requirment-listing-form {
+  position: relative; /* This is often needed for z-index to work */
+  z-index: 2000;
+}
+
 /* --- FILTER PANEL STYLES --- */
 .filter-panel {
   position: absolute;
@@ -142,7 +164,7 @@
   width: 100%;
   height: 100vh;
   display: flex;
-  box-shadow: 5px 5px 20px 10px #d4d4d4;
+  
   align-items: center;
   flex-direction: column;
 }
@@ -295,13 +317,17 @@
 .recruiter-workflow-requirement-requirements-listing-container {
   gap: 16px;
   flex: 0 0 auto;
-  width: 70%;
+  width: 88%;
   height: 90vh;
   padding: var(--dl-layout-space-unit);
   align-items: flex-start;
   border-radius: 8px;
   flex-direction: column;
   background-color: #FFFFFF;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: thin;
 }
  
 .recruiter-workflow-requirement-cvjd-upload-container {
@@ -1095,6 +1121,7 @@
   height: 24px;
   display: flex;
   align-items: center;
+  width: 100%;
 }
  
 .recruiter-workflow-requirement-skill-star-text {
@@ -1377,6 +1404,19 @@
   padding-top: var(--dl-layout-space-unit);
   flex-direction: column;
   padding-bottom: var(--dl-layout-space-unit);
+}
+
+.large-container {
+  gap: 16px;
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
 }
  
 .recruiter-workflow-requirement-select-filter-sort-download-zip-main-container {
@@ -1718,15 +1758,8 @@
   gap: 16px;
   flex: 0 0 auto;
   width: 100%;
-  height: 75vh;
+  height: auto;
   display: flex;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
 }
  
 .recruiter-workflow-requirement-container32 {
@@ -1943,7 +1976,7 @@
   width: 80%;
   height: auto;
   display: flex;
-  max-width: 70%;
+  max-width: 85%;
   align-items: flex-start;
   flex-direction: row;
 }
@@ -2993,9 +3026,11 @@
   border: none;
   outline: none;
   flex: 1;
-  min-width: 100px;
+  width: 300px;
   font-size: 14px;
   padding: 4px;
+  height: 48px;
+  width: 100%;
 }
 
 .users-dropdown-list {

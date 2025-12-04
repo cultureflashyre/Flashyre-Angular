@@ -49,6 +49,9 @@ export class RecruiterWorkflowRequirement implements OnInit {
   filterForm!: FormGroup;
   isFilterPanelVisible: boolean = false;
   currentSort: string = 'none';
+  selectedFile: File | null = null;
+  fileUploadError: string | null = null;
+  existingFileUrl: string | null = null;
 
   // Master list to keep original data safe while filtering
   masterRequirements: any[] = []; 
@@ -86,6 +89,41 @@ export class RecruiterWorkflowRequirement implements OnInit {
       ctc: ['']
     });
   }
+
+  onFileSelected(event: any): void {
+  this.fileUploadError = null;
+  const file: File = event.target.files[0];
+
+  if (file) {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      this.fileUploadError = 'Upload only pdf or word documents';
+      this.selectedFile = null;
+      event.target.value = ''; // Clear the input
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      this.fileUploadError = 'File size cannot exceed 5MB.';
+      this.selectedFile = null;
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    this.selectedFile = file;
+  }
+}
+
+getFileName(): string {
+  if (this.selectedFile) {
+    return this.selectedFile.name;
+  }
+  if (this.existingFileUrl) {
+    // Extracts filename from a URL like '.../media/requirements/files/MyDoc.pdf'
+    return decodeURIComponent(this.existingFileUrl.split('/').pop() || 'Existing File');
+  }
+  return '';
+}
 
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
@@ -350,6 +388,7 @@ toggleNoticePeriodDropdown() {
     this.jobDescription = item.job_description;
     this.interviewLocation = item.interview_location;
     this.interviewDate = item.interview_date;
+    this.existingFileUrl = item.file_attachment;
 
     this.experience = {
       totalMin: item.total_experience_min,
@@ -435,11 +474,7 @@ toggleNoticePeriodDropdown() {
 
 
  onSubmit() {
-
-  // Extract User IDs for the backend
-    const assignedUserIds = this.selectedAssignees.map(u => u.user_id);
-
-    // ... (Keep your existing validation logic here) ...
+    // --- Start: Validations (No changes here) ---
     this.validateJobDescription();
     if (!this.clientName) {
       this.triggerAlert('Client Name is required', ['OK']);
@@ -453,8 +488,42 @@ toggleNoticePeriodDropdown() {
       this.triggerAlert('Please fill in the Job Description.', ['OK']);
       return;
     }
+    // --- End: Validations ---
 
-    // Prepare Payload (Same as before)
+    // The old 'payload' object is replaced by this 'FormData' object
+    const formData = new FormData();
+
+    // --- Step 1: Append all text, number, and date fields ---
+    formData.append('client_name', this.clientName);
+    formData.append('sub_client_name', this.subClientName || '');
+    formData.append('source', 'External');
+    formData.append('total_experience_min', (this.experience.totalMin || 0).toString());
+    formData.append('total_experience_max', (this.experience.totalMax || 0).toString());
+    formData.append('relevant_experience_min', (this.experience.relevantMin || 0).toString());
+    formData.append('relevant_experience_max', (this.experience.relevantMax || 0).toString());
+    formData.append('salary_min', (this.salary.min || 0).toString());
+    formData.append('salary_max', (this.salary.max || 0).toString());
+    formData.append('current_ctc_range', this.selectedCtc || '');
+    formData.append('notice_period', this.selectedNoticePeriod || '');
+    formData.append('gender', this.selectedGender || '');
+    formData.append('interview_location', this.interviewLocation);
+    if (this.interviewDate) {
+        formData.append('interview_date', this.interviewDate);
+    }
+    formData.append('job_description', this.jobDescription);
+
+    // --- Step 2: Append the new file if one has been selected ---
+    if (this.selectedFile) {
+      formData.append('file_attachment', this.selectedFile, this.selectedFile.name);
+    }
+
+    // --- Step 3: Append arrays (like assigned users and location details) ---
+    // For assigned users, we must append each ID separately
+    this.selectedAssignees.forEach(user => {
+      formData.append('assigned_users', user.user_id);
+    });
+    
+    // For location details, we convert the array to a JSON string
     const validLocationDetails = this.additionalDetails
       .filter(d => d.location.trim() !== '' && d.spoc.trim() !== '')
       .map(d => ({
@@ -462,55 +531,40 @@ toggleNoticePeriodDropdown() {
         spoc_name: d.spoc,
         vacancies: parseInt(d.vacancies) || 1
       }));
+    // NOTE: Django REST Framework can parse a JSON string for a related field
+    if (validLocationDetails.length > 0) {
+        formData.append('location_details', JSON.stringify(validLocationDetails));
+    }
 
-    const payload = {
-      client_name: this.clientName,
-      sub_client_name: this.subClientName,
-      source: 'External',
-      total_experience_min: this.experience.totalMin || 0,
-      total_experience_max: this.experience.totalMax || 0,
-      relevant_experience_min: this.experience.relevantMin || 0,
-      relevant_experience_max: this.experience.relevantMax || 0,
-      salary_min: this.salary.min || 0,
-      salary_max: this.salary.max || 0,
-      current_ctc_range: this.selectedCtc || null,
-      notice_period: this.selectedNoticePeriod || null,
-      gender: this.selectedGender || null,
-      interview_location: this.interviewLocation,
-      interview_date: this.interviewDate ? this.interviewDate : null,
-      job_description: this.jobDescription,
-      location_details: this.additionalDetails.filter(d => d.location && d.spoc).map(d => ({
-        location: d.location,
-        spoc_name: d.spoc,
-        vacancies: parseInt(d.vacancies) || 1
-      })),
-      // NEW FIELD
-      assigned_users: assignedUserIds 
-      
-    };
-
-    // --- NEW LOGIC: Check if Editing or Creating ---
+    // --- Step 4: Call the service using the new formData object ---
+    // The service call is the same, but it now sends formData instead of 'payload'
     if (this.isEditMode && this.currentRequirementId) {
-      // UPDATE EXISTING
-      this.adbService.updateRequirement(this.currentRequirementId, payload).subscribe({
+      this.adbService.updateRequirement(this.currentRequirementId, formData).subscribe({
         next: (response) => {
           this.triggerAlert('Requirement updated successfully!', ['OK']);
-          this.onCancel(); // Reset form and mode
+          this.onCancel();
           this.showListing = true;
-          this.fetchRequirements(); // Refresh list
+          this.fetchRequirements();
         },
-        error: () => this.triggerAlert('Failed to update. Check inputs.', ['OK'])
+        error: (err) => {
+          // This new error handling shows specific messages from the backend
+          const errorMsg = err.error?.file_attachment?.[0] || 'Failed to update. Check inputs.';
+          this.triggerAlert(errorMsg, ['OK']);
+        }
       });
     } else {
-      // CREATE NEW (Existing logic)
-      this.adbService.createRequirement(payload).subscribe({
+      this.adbService.createRequirement(formData).subscribe({
         next: (response) => {
           this.triggerAlert('Requirement created successfully!', ['OK']);
           this.onCancel();
           this.showListing = true;
           this.fetchRequirements();
         },
-       error: () => this.triggerAlert('Failed to create. Check inputs.', ['OK'])
+        error: (err) => {
+          // This new error handling shows specific messages from the backend
+          const errorMsg = err.error?.file_attachment?.[0] || 'Failed to create. Check inputs.';
+          this.triggerAlert(errorMsg, ['OK']);
+        }
       });
     }
   }
@@ -525,6 +579,10 @@ toggleNoticePeriodDropdown() {
     this.showListing = true; 
     this.isEditMode = false;
     this.currentRequirementId = null;
+    this.fileUploadError = null;
+this.existingFileUrl = null;
+this.selectedFile = null;
+
 
     // 2. Clear all input fields
     this.clientName = '';

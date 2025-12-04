@@ -12,7 +12,7 @@ export class AdbRequirementService {
 
   constructor(private http: HttpClient) { }
 
-  createRequirement(data: any): Observable<any> {
+  createRequirement(data: FormData): Observable<any> {
     return this.http.post(this.apiUrl, data);
   }
 
@@ -20,7 +20,7 @@ export class AdbRequirementService {
   getRequirements(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
-  updateRequirement(id: number, data: any): Observable<any> {
+  updateRequirement(id: number, data: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}${id}/`, data);
   }
   deleteRequirement(id: number): Observable<any> {

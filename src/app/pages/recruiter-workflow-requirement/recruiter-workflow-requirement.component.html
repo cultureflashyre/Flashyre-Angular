@@ -9,6 +9,7 @@
         </div>
       </ng-template>
       <ng-template #link4>
+         <div class="form-overlay" *ngIf="!showListing"></div>
         <div class="recruiter-workflow-requirement-fragment11">
           <span class="recruiter-workflow-requirement-text11">Requirments</span>
         </div>
@@ -122,10 +123,10 @@
         
         <div class="recruiter-workflow-requirement-container12">
           <span class="recruiter-workflow-requirement-text30">Input form</span>
-          <div class="recruiter-workflow-requirement-container13">
+          <!-- <div class="recruiter-workflow-requirement-container13">
             <h1 class="recruiter-workflow-requirement-text31">Naukri</h1>
             <h1 class="recruiter-workflow-requirement-text32">External</h1>
-          </div>
+          </div> -->
           <div 
     class="close-icon-container" 
     (click)="onCancel()"
@@ -147,45 +148,63 @@
   </div>
         </div>
         <div class="recruiter-workflow-requirement-container14">
-          <div
-            id="upload-file-container"
-            class="recruiter-workflow-requirement-upload-file-container"
-          >
-            <input
-              type="text"
-              id="upload-file-input"
-              placeholder="Select file"
-              class="recruiter-workflow-requirement-upload-file-input input"
-            />
-            <div
-              id="upload-file-button-container"
-              class="recruiter-workflow-requirement-upload-file-button-container"
-            >
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                class="recruiter-workflow-requirement-icon10"
-              >
-                <path
-                  d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-              <span class="recruiter-workflow-requirement-text33">
-                Upload File
-              </span>
-            </div>
-          </div>
+          <div id="upload-file-container" class="recruiter-workflow-requirement-upload-file-container">
+
+  <!-- This input is for display only -->
+  <input
+    type="text"
+    id="upload-file-input"
+    placeholder="Select PDF or Word file (Max 5MB)"
+    class="recruiter-workflow-requirement-upload-file-input input"
+    [value]="getFileName()"
+    readonly
+  />
+  
+  <!-- This is the actual file input, now hidden. Note the new id="file-upload-input". -->
+  <input
+    type="file"
+    id="file-upload-input" 
+    (change)="onFileSelected($event)"
+    accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    style="display: none"
+  />
+
+  <!-- 
+    This is now a LABEL. Clicking it will trigger the hidden input above.
+    It's styled to look and act exactly like the original button.
+  -->
+  <label
+    for="file-upload-input"
+    id="upload-file-button-container"
+    class="recruiter-workflow-requirement-upload-file-button-container"
+    style="cursor: pointer"
+  >
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      class="recruiter-workflow-requirement-icon10"
+    >
+      <path
+        d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462"
+        fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+      ></path>
+    </svg>
+    <span class="recruiter-workflow-requirement-text33">
+      Upload File
+    </span>
+  </label>
+</div>
+
+<!-- Error message display (no change here) -->
+<div *ngIf="fileUploadError" class="error-text" style="margin-top: -10px; margin-bottom: 10px; text-align: left; width: 100%;">
+  {{ fileUploadError }}
+</div>
           <span
             id="note-for-file"
             class="recruiter-workflow-requirement-note-for-file"
           >
-            Note: Lorem ipsum dolor sit amet consectetuer adipiscing elit sed
+            Note: Maximum file size is 5MB. Supported formats are PDF and Word documents.
           </span>
         </div>
         <div class="recruiter-workflow-requirement-container15">
@@ -536,184 +555,90 @@
   />
 </div>
           </div>
-          <div class="recruiter-workflow-requirement-container26" style="margin-top: 15px;">
-
-            <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
-  
-          <div class="multi-select-container" (click)="filterUsers()">
-            
-            <!-- Selected Chips -->
-            <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
-              {{ user.first_name }} {{ user.last_name }}
-              <span class="remove-chip-icon" (click)="removeUser(i); $event.stopPropagation()">×</span>
-            </div>
-
-            <!-- Input for searching -->
-            <input 
-              type="text" 
-              class="multi-select-input" 
-              placeholder="Search Admins/Recruiters..." 
-              [(ngModel)]="userSearchText" 
-              (input)="filterUsers()"
-              (focus)="filterUsers()"
-              (blur)="closeUserDropdown()" 
-              [ngModelOptions]="{standalone: true}"
-            />
-
-            <!-- Dropdown List -->
-            <ul class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
-              <li class="users-dropdown-item" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
-                <span>{{ user.first_name }} {{ user.last_name }}</span>
-                <span class="dropdown-user-role">{{ user.user_type }}</span>
-              </li>
-            </ul>
-            
-            <!-- No results message -->
-            <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:#999;">
-              No matching users found.
-            </div>
-
-          </div>
-
-            <div
-  id="certification-issued-date-container"
-  class="recruiter-workflow-requirement-issued-date-container3"
->
-  <div
-    id="container"
-    class="recruiter-workflow-requirement-container27"
-  >
-    <span
-      id="certificate-issued-date"
-      class="recruiter-workflow-requirement-issuing-date-text3"
-    >
-      Notice Period
-    </span>
-    
-    <!-- Added position relative here -->
-    <div
-      id="select-container"
-      class="recruiter-workflow-requirement-select-container4"
-      style="position: relative;"
-    >
-      <!-- Changed form to div, added click event and pointer cursor -->
-      <div
-        id="certification-issued-date-dropdown"
-        class="recruiter-workflow-requirement-form2 input"
-        (click)="toggleNoticePeriodDropdown()"
-        style="cursor: pointer;"
-      >
-        <!-- Bind Selected Value -->
-        <span
-          id="select-text"
-          class="recruiter-workflow-requirement-select-text2"
-          [style.color]="selectedNoticePeriod ? '#000' : '#888'"
-        >
-          {{ selectedNoticePeriod || 'Select' }}
-        </span>
-        
-        <svg
-          id="issued-date-dropdown-icon"
-          width="24"
-          height="24"
-          viewBox="0 0 32 32"
-          class="recruiter-workflow-requirement-drop-down-icon2"
-          [style.transform]="isNoticePeriodDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-          style="transition: transform 0.3s ease;"
-        >
-          <path
-            d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </div>
-
-      <!-- Dropdown Options List -->
-      <!-- Reusing the 'custom-dropdown-list' class from the CTC step -->
-      <ul 
-        *ngIf="isNoticePeriodDropdownOpen" 
-        class="custom-dropdown-list"
-      >
-        <li 
-          *ngFor="let option of noticePeriodOptions" 
-          class="custom-dropdown-item"
-          (click)="selectNoticePeriod(option)"
-        >
-          {{ option }}
-        </li>
-      </ul>
-
-    </div>
-  </div>
-</div>
-            <div
-  id="certification-credentials-container"
-  class="recruiter-workflow-requirement-credentials-container"
->
-  <span
-    id="certification-credentials-text"
-    class="recruiter-workflow-requirement-credentials-text"
-  >
-    <span>Gender</span>
-    <br />
-  </span>
-  
-  <!-- Added position: relative here -->
-  <div
-    id="select-container"
-    class="recruiter-workflow-requirement-select-container5"
-    style="position: relative;"
-  >
-    <!-- Changed form to div, added click event and cursor pointer -->
-    <div
-      id="certification-credentials-dropdown"
-      class="recruiter-workflow-requirement-form3 input"
-      (click)="toggleGenderDropdown()"
-      style="cursor: pointer;"
-    >
-      <!-- Bind Selected Value -->
-      <span
-        id="select-text"
-        class="recruiter-workflow-requirement-select-text3"
-        [style.color]="selectedGender ? '#000' : '#888'"
-      >
-        {{ selectedGender || 'Select' }}
-      </span>
-      
-      <svg
-        id="credentials-dropdown-icon"
-        width="24"
-        height="24"
-        viewBox="0 0 32 32"
-        class="recruiter-workflow-requirement-drop-down-icon3"
-        [style.transform]="isGenderDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
-        style="transition: transform 0.3s ease;"
-      >
-        <path
-          d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
-          fill="currentColor"
-        ></path>
-      </svg>
+          <!-- START: New, separate container for the "Assign To" field -->
+<div style="margin-top: 15px;">
+  <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
+  <div class="multi-select-container" (click)="filterUsers()">
+    <!-- Selected Chips -->
+    <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
+      {{ user.first_name }} {{ user.last_name }}
+      <span class="remove-chip-icon" (click)="removeUser(i); $event.stopPropagation()">×</span>
     </div>
 
-    <!-- Dropdown Options List -->
-    <!-- Reusing the 'custom-dropdown-list' class -->
-    <ul 
-      *ngIf="isGenderDropdownOpen" 
-      class="custom-dropdown-list"
-    >
-      <li 
-        *ngFor="let option of genderOptions" 
-        class="custom-dropdown-item"
-        (click)="selectGender(option)"
-      >
-        {{ option }}
+    <!-- Input for searching -->
+    <input
+      type="text"
+      class="multi-select-input"
+      placeholder="Search Admins/Recruiters..."
+      [(ngModel)]="userSearchText"
+      (input)="filterUsers()"
+      (focus)="filterUsers()"
+      (blur)="closeUserDropdown()"
+      [ngModelOptions]="{standalone: true}"
+    />
+
+    <!-- Dropdown List -->
+    <ul class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
+      <li class="users-dropdown-item" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
+        <span>{{ user.first_name }} {{ user.last_name }}</span>
+        <span class="dropdown-user-role">{{ user.user_type }}</span>
       </li>
     </ul>
 
+    <!-- No results message -->
+    <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:#999;">
+      No matching users found.
+    </div>
   </div>
 </div>
-          </div>
+<!-- END: "Assign To" container -->
+
+<!-- START: New container to group "Notice Period" and "Gender" side-by-side -->
+<div class="recruiter-workflow-requirement-job-title-company-name-container2">
+  <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container3">
+    <div id="container" class="recruiter-workflow-requirement-container27">
+      <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text3">
+        Notice Period
+      </span>
+      <div id="select-container" class="recruiter-workflow-requirement-select-container4" style="position: relative;">
+        <div id="certification-issued-date-dropdown" class="recruiter-workflow-requirement-form2 input" (click)="toggleNoticePeriodDropdown()" style="cursor: pointer;">
+          <span id="select-text" class="recruiter-workflow-requirement-select-text2" [style.color]="selectedNoticePeriod ? '#000' : '#888'">
+            {{ selectedNoticePeriod || 'Select' }}
+          </span>
+          <svg id="issued-date-dropdown-icon" width="24" height="24" viewBox="0 0 32 32" class="recruiter-workflow-requirement-drop-down-icon2" [style.transform]="isNoticePeriodDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'" style="transition: transform 0.3s ease;">
+            <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <ul *ngIf="isNoticePeriodDropdownOpen" class="custom-dropdown-list">
+          <li *ngFor="let option of noticePeriodOptions" class="custom-dropdown-item" (click)="selectNoticePeriod(option)">
+            {{ option }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="certification-credentials-container" class="recruiter-workflow-requirement-credentials-container">
+    <span id="certification-credentials-text" class="recruiter-workflow-requirement-credentials-text">
+      <span>Gender</span><br />
+    </span>
+    <div id="select-container" class="recruiter-workflow-requirement-select-container5" style="position: relative;">
+      <div id="certification-credentials-dropdown" class="recruiter-workflow-requirement-form3 input" (click)="toggleGenderDropdown()" style="cursor: pointer;">
+        <span id="select-text" class="recruiter-workflow-requirement-select-text3" [style.color]="selectedGender ? '#000' : '#888'">
+          {{ selectedGender || 'Select' }}
+        </span>
+        <svg id="credentials-dropdown-icon" width="24" height="24" viewBox="0 0 32 32" class="recruiter-workflow-requirement-drop-down-icon3" [style.transform]="isGenderDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'" style="transition: transform 0.3s ease;">
+          <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
+        </svg>
+      </div>
+      <ul *ngIf="isGenderDropdownOpen" class="custom-dropdown-list">
+        <li *ngFor="let option of genderOptions" class="custom-dropdown-item" (click)="selectGender(option)">
+          {{ option }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END: "Notice Period" and "Gender" container -->
          <div
   id="skills-container"
   class="recruiter-workflow-requirement-skills-container"
@@ -1032,6 +957,7 @@
 
   <!-- JOB CARDS LOOP STARTS HERE -->
   <!-- This container repeats for every job in the database -->
+   <div class="large-container">
   <div 
      class="recruiter-workflow-requirement-container31" 
   *ngFor="let item of requirementsList; let i = index" 
@@ -1156,7 +1082,7 @@
                   </span>
                 </div>
               </div>
-              <div class="recruiter-workflow-requirement-container46">
+              <!-- <div class="recruiter-workflow-requirement-container46">
                 <span class="recruiter-workflow-requirement-text66">
                   May also Known
                 </span>
@@ -1168,7 +1094,7 @@
                     ... more
                   </span>
                 </div>
-              </div>
+              </div> -->
               <div class="recruiter-workflow-requirement-container48">
                 <div class="recruiter-workflow-requirement-container49">
                   <div class="recruiter-workflow-requirement-container50">
@@ -1265,14 +1191,20 @@
 </div>
       </div>
       <div class="recruiter-workflow-requirement-container59">
-        <div class="recruiter-workflow-requirement-container60">
-          <span class="recruiter-workflow-requirement-text75">
-            Recruiter : 
-          </span>
-          <span class="recruiter-workflow-requirement-text76">
-            Prashanth
-          </span>
-        </div>
+       <div class="recruiter-workflow-requirement-container60">
+  <span class="recruiter-workflow-requirement-text75">
+    Recruiter :&nbsp;
+  </span>
+  <span class="recruiter-workflow-requirement-text76">
+    <!-- Check if creator details exist, otherwise show 'Unassigned' -->
+    <ng-container *ngIf="item.created_by_details; else unassigned">
+      {{ item.created_by_details.first_name }} {{ item.created_by_details.last_name }}
+    </ng-container>
+    <ng-template #unassigned>
+      Unassigned
+    </ng-template>
+  </span>
+</div>
         <div class="recruiter-workflow-requirement-container61">
           <span class="recruiter-workflow-requirement-text77">
             Created at : 
@@ -1304,6 +1236,7 @@
 
       </div>
     </div>
+  </div>
   </div>
   <!-- JOB CARDS LOOP ENDS HERE -->
 </ng-container>
