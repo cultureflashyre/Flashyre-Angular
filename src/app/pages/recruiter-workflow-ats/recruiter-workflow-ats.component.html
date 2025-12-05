@@ -1,60 +1,125 @@
-<div class="ats-container">
+<div class="ats-layout-wrapper">
   
-  <!-- Header -->
-  <div class="ats-header">
-    <div>
-      <h1 class="ats-title">{{ jobTitle }}</h1>
-      <span style="color: #666; font-size: 14px;">{{ clientName }}</span>
-    </div>
-    
-    <button class="button" style="background-color: #05356C; color: white; padding: 8px 16px; border-radius: 4px;" 
-            (click)="showAddCandidate = !showAddCandidate">
-      + Add Candidate
-    </button>
+  <!-- NAVBAR INTEGRATION -->
+  <div class="ats-navbar-container">
+    <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name2">
+      <!-- Standard Navbar Templates -->
+      <ng-template #link1><span>Home</span></ng-template>
+      <ng-template #link4><span>Requirements</span></ng-template>
+      <ng-template #text1><span>Profile</span></ng-template>
+      <ng-template #text2><span>Preference</span></ng-template>
+      <ng-template #text3><span>Settings</span></ng-template>
+      <ng-template #text7><span>Dashboard</span></ng-template>
+      <ng-template #text9><span>Notifications</span></ng-template>
+      <ng-template #text10><span>Jobs Posted</span></ng-template>
+      <ng-template #text11><span>Preference</span></ng-template>
+      <ng-template #text12><span>Settings</span></ng-template>
+      <ng-template #text13><span>Logout</span></ng-template>
+      <ng-template #text14><span>2</span></ng-template>
+      <ng-template #text15><span>User Name</span></ng-template>
+      <ng-template #text16><span>Company</span></ng-template>
+      <ng-template #text31><span>Logout</span></ng-template>
+      <ng-template #text32><span>Software Development<br />Location</span></ng-template>
+      <ng-template #text1411><span>2</span></ng-template>
+    </recruiter-workflow-navbar>
   </div>
 
-  <!-- Add Candidate Dropdown (Simple Search) -->
-  <div *ngIf="showAddCandidate" class="add-candidate-overlay">
-    <h4>Add to Pipeline</h4>
-    <input type="text" placeholder="Search Candidate Name..." 
-           (input)="filterCandidates($event)" 
-           class="input" style="width: 100%; margin-bottom: 10px;">
-    
-    <div style="max-height: 200px; overflow-y: auto;">
-      <div *ngFor="let cand of filteredCandidates" 
-           (click)="addCandidateToPipeline(cand)"
-           style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; hover:bg-gray-100;">
-        {{ cand.first_name }} {{ cand.last_name }}
-      </div>
-    </div>
-  </div>
-
-  <!-- KANBAN BOARD -->
-  <div class="pipeline-board" cdkDropListGroup>
-    
-    <!-- Loop through stages -->
-    <div class="stage-column" *ngFor="let stage of stages">
-      <div class="stage-header">
-        <span>{{ stage }}</span>
-        <span class="stage-count">{{ pipelineData[stage]?.length || 0 }}</span>
-      </div>
-
-      <!-- Drop List for this column -->
-      <div class="card-list"
-           cdkDropList
-           [cdkDropListData]="pipelineData[stage]"
-           (cdkDropListDropped)="drop($event, stage)">
-
-        <!-- Draggable Cards -->
-        <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
-          <span class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</span>
-          <span class="card-detail">Exp: {{ app.candidate_details.total_experience_min }}y</span>
-          <span class="card-detail">CTC: {{ app.candidate_details.current_ctc }}</span>
-          <span class="card-detail" *ngIf="app.updated_at">Updated: {{ app.updated_at | date:'shortDate' }}</span>
+  <!-- MAIN ATS CONTENT -->
+  <div class="ats-main-content">
+    <div class="ats-container">
+      
+      <!-- Header with Workflow Switcher -->
+      <div class="ats-header">
+        <div class="header-left">
+          <label class="workflow-label">Current Workflow:</label>
+          
+          <!-- WORKFLOW SWITCHER DROPDOWN -->
+          <div class="custom-select-wrapper">
+            <select 
+              [(ngModel)]="selectedJobId" 
+              (change)="onJobSwitch()" 
+              class="workflow-switcher"
+            >
+              <option *ngFor="let job of availableJobs" [value]="job.id">
+                {{ job.client_name }} - {{ job.job_description | slice:0:30 }}...
+              </option>
+            </select>
+            <span class="dropdown-arrow">▼</span>
+          </div>
         </div>
-
+        
+        <button class="add-candidate-btn" (click)="showAddCandidate = !showAddCandidate">
+          <span>+</span> Add Candidate
+        </button>
       </div>
-    </div>
 
+      <!-- Add Candidate Dropdown Panel -->
+      <div *ngIf="showAddCandidate" class="add-candidate-overlay">
+        <h4>Add to Pipeline</h4>
+        <input type="text" placeholder="Search Candidate Name..." 
+               (input)="filterCandidates($event)" 
+               class="search-input">
+        
+        <div class="candidate-results-list">
+          <div *ngFor="let cand of filteredCandidates" 
+               (click)="addCandidateToPipeline(cand)"
+               class="candidate-result-item">
+            {{ cand.first_name }} {{ cand.last_name }}
+          </div>
+        </div>
+      </div>
+
+      <!-- KANBAN BOARD -->
+      <div class="pipeline-board" cdkDropListGroup>
+        <div class="stage-column" *ngFor="let stage of stages">
+          <div class="stage-header">
+            <span>{{ stage }}</span>
+            <span class="stage-count">{{ pipelineData[stage]?.length || 0 }}</span>
+          </div>
+
+          <!-- Used a generic 'Download' SVG icon -->
+          <button 
+            class="icon-btn download-btn" 
+            title="Download {{stage}} Report" 
+            (click)="downloadStageReport(stage)"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+
+          <div class="card-list"
+               cdkDropList
+               [cdkDropListData]="pipelineData[stage]"
+               (cdkDropListDropped)="drop($event, stage)">
+
+            <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
+              <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
+              
+              <div class="card-info-row">
+                <span class="card-label">Exp:</span> {{ app.candidate_details.total_experience_min }}y
+              </div>
+              <div class="card-info-row">
+                <span class="card-label">CTC:</span> {{ app.candidate_details.current_ctc }}
+              </div>
+              
+              <!-- Conditional Badges -->
+              <div class="card-badges">
+                <span *ngIf="app.interview_date" class="badge interview-badge">
+                  📅 {{ app.interview_date | date:'shortDate' }}
+                </span>
+                <span *ngIf="stage === 'Rejected'" class="badge rejection-badge" title="{{app.rejection_reason}}">
+                  Rejected
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

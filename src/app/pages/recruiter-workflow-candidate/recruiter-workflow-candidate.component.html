@@ -323,6 +323,25 @@
               />
               <span id="select-all-text" class="recruiter-workflow-candidate-select-all-text">Select All</span>
             </div>
+
+            <div 
+              class="recruiter-workflow-candidate-select-all-main-container2" 
+              style="cursor: pointer; margin-left: 20px;"
+              (click)="openAddToWorkflowModal()"
+              title="Add selected to ATS Workflow"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-client-icon11">
+                <path d="M14 2H4v20h16V8zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3zm-3-7V3.5L18.5 9z" fill="currentColor"></path>
+              </svg>
+              <div class="recruiter-workflow-client-container16" style="display:flex; align-items:center; gap:4px;">
+                <span style="font-size:16px;">Add</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-client-icon13">
+                  <path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" fill="currentColor" fill-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+
+
           </div>
           <div id="filter-sort-download-zip-container" class="recruiter-workflow-candidate-filter-sort-download-zip-container">
             <button 
@@ -489,3 +508,38 @@
     </div>
   </div>
 </div>
+
+<!-- WORKFLOW SELECTION MODAL -->
+<div *ngIf="showWorkflowModal" class="workflow-modal-overlay">
+  <div class="workflow-modal">
+    <div class="workflow-modal-header">
+      Add {{ selectedCandidateCount }} Candidate(s) to Workflow
+    </div>
+    
+    <div>
+      <div class="workflow-select-label">Select Job Requirement:</div>
+      <select class="workflow-job-select" [(ngModel)]="selectedJobId">
+        <option [ngValue]="null" disabled>-- Choose a Job --</option>
+        <option *ngFor="let job of availableJobs" [ngValue]="job.id">
+          {{ job.client_name }} - {{ job.job_description | slice:0:30 }}...
+        </option>
+      </select>
+    </div>
+
+    <div class="workflow-modal-actions">
+      <button class="modal-btn btn-cancel" (click)="closeWorkflowModal()">Cancel</button>
+      <button class="modal-btn btn-confirm" (click)="confirmAddToWorkflow()" [disabled]="!selectedJobId">
+        Add to Workflow
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT COMPONENT -->
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertAction($event)"
+  (close)="closeAlert()"
+></app-alert-message>

@@ -7,6 +7,8 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 import { RecruiterWorkflowCandidateService, Candidate } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, catchError, of } from 'rxjs';
+import { AdbRequirementService } from '../../services/adb-requirement.service';
+import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 
 // Custom validator to check if min value is less than or equal to max value
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -39,7 +41,8 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    RecruiterWorkflowNavbarComponent
+    RecruiterWorkflowNavbarComponent,
+    AlertMessageComponent 
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit {
@@ -69,11 +72,23 @@ export class RecruiterWorkflowCandidate implements OnInit {
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
+  // --- WORKFLOW MODAL PROPERTIES ---
+  showWorkflowModal = false;
+  selectedCandidateCount = 0;
+  availableJobs: any[] = [];
+  selectedJobId: number | null = null;
+
+  // --- ALERT PROPERTIES ---
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+
   constructor(
     private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
-    private candidateService: RecruiterWorkflowCandidateService
+    private candidateService: RecruiterWorkflowCandidateService,
+    private adbRequirementService: AdbRequirementService,
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
@@ -103,6 +118,77 @@ export class RecruiterWorkflowCandidate implements OnInit {
       },
       error: (err) => { console.error("Failed to load candidates.", err); }
     });
+  }
+
+  openAddToWorkflowModal() {
+    const selected = this.masterCandidates.filter(c => c.selected);
+    if (selected.length === 0) {
+      this.triggerAlert("Please select at least one candidate.", ["OK"]);
+      return;
+    }
+
+    this.selectedCandidateCount = selected.length;
+    this.selectedJobId = null; // Reset selection
+    
+    // Fetch Jobs for Dropdown
+    this.adbRequirementService.getRequirements().subscribe({
+      next: (jobs) => {
+        this.availableJobs = jobs;
+        this.showWorkflowModal = true;
+      },
+      error: () => this.triggerAlert("Failed to load job requirements.", ["OK"])
+    });
+  }
+
+  closeWorkflowModal() {
+    this.showWorkflowModal = false;
+  }
+
+  confirmAddToWorkflow() {
+    if (!this.selectedJobId) return;
+
+    const selectedIds = this.masterCandidates
+      .filter(c => c.selected && c.id)
+      .map(c => c.id!);
+
+    this.candidateService.addCandidatesToJob(this.selectedJobId, selectedIds).subscribe({
+      next: (res: any) => {
+        this.closeWorkflowModal();
+        
+        // Construct the logic message
+        let msg = '';
+        if (res.existing > 0) {
+          msg = `Successfully added ${res.added} candidate(s). Note: ${res.existing} candidate(s) were already in this workflow.`;
+        } else {
+          msg = `Successfully added ${res.added} candidate(s) to the workflow.`;
+        }
+        
+        this.triggerAlert(msg, ["OK"]);
+        
+        // Optional: Deselect candidates after adding
+        this.masterCandidates.forEach(c => c.selected = false);
+        this.updateSelectAllState();
+      },
+      error: (err) => {
+        this.closeWorkflowModal();
+        this.triggerAlert("Failed to add candidates to workflow.", ["OK"]);
+      }
+    });
+  }
+
+  // --- ALERT HELPER ---
+  triggerAlert(msg: string, btns: string[]) {
+    this.alertMessage = msg;
+    this.alertButtons = btns;
+    this.showAlert = true;
+  }
+
+  onAlertAction(btn: string) {
+    this.closeAlert();
+  }
+
+  closeAlert() {
+    this.showAlert = false;
   }
 
   // --- CORE LOGIC: APPLY FILTERS AND SORTING ---

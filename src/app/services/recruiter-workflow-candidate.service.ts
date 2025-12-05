@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'; // Import the environment file
+import { AdbRequirementService } from './adb-requirement.service';
 
 // Define an interface for type safety, matching the Django model
 export interface Candidate {
@@ -34,6 +35,7 @@ export class RecruiterWorkflowCandidateService {
   // Store the base API URL from the environment file
   private apiUrl = environment.apiUrl;
   private endpoint = 'api/candidates/'; // Define the specific endpoint path
+  private atsUrl = environment.apiUrl + 'api/ats/bulk-add/';
 
   constructor(private http: HttpClient) { }
 
@@ -74,5 +76,15 @@ export class RecruiterWorkflowCandidateService {
    */
   deleteCandidate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${this.endpoint}${id}/`);
+  }
+
+  /**
+   * Bulk add candidates to a specific Job Workflow
+   */
+  addCandidatesToJob(jobId: number, candidateIds: number[]): Observable<any> {
+    return this.http.post(this.atsUrl, {
+      job_id: jobId,
+      candidate_ids: candidateIds
+    });
   }
 }
