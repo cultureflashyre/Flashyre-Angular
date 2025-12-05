@@ -372,6 +372,7 @@
 <!-- ============================================= -->
 <ng-container *ngIf="formVisible">
   <div class="form-modal-backdrop" (click)="onCancel()"></div>
+  
   <div class="form-modal-container" (click)="$event.stopPropagation()">
     <div class="recruiter-workflow-candidate-candidate-input-form">
       <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()">
@@ -391,23 +392,11 @@
           </button>
         </div>
 
+        <!-- File Upload Section from OLD version -->
         <div class="recruiter-workflow-candidate-container14">
             <div id="upload-file-container" class="recruiter-workflow-candidate-upload-file-container">
-                 <input 
-                    type="file" 
-                    #fileInput 
-                    (change)="onFileSelected($event)" 
-                    style="display: none;"
-                    accept=".pdf,.doc,.docx"
-                />
-                <input 
-                    type="text" 
-                    id="upload-file-input" 
-                    placeholder="Select file" 
-                    class="recruiter-workflow-candidate-upload-file-input input" 
-                    readonly
-                    [value]="selectedFileName"
-                />
+                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.doc,.docx"/>
+                <input type="text" id="upload-file-input" placeholder="Select file" class="recruiter-workflow-candidate-upload-file-input input" readonly [value]="selectedFileName"/>
                 <div (click)="fileInput.click()" id="upload-file-button-container" class="recruiter-workflow-candidate-upload-file-button-container">
                     <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-candidate-icon10">
                         <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -415,54 +404,139 @@
                     <span class="recruiter-workflow-candidate-text33">Upload File</span>
                 </div>
             </div>
-            <span id="note-for-file" class="recruiter-workflow-candidate-note-for-file">
-                PDF or DOCX only, max 5MB.
-            </span>
+            <span id="note-for-file" class="recruiter-workflow-candidate-note-for-file">PDF or DOCX only, max 5MB.</span>
         </div>
 
-        <!-- Enter Manually Text -->
-        <div id="enter-manually-text-container" class="recruiter-workflow-candidate-enter-manually-text-container">
-            <span id="enter-manually-text" class="recruiter-workflow-candidate-enter-manually-text">Enter Manually</span>
-        </div>
-
-        <!-- Form Fields Section -->
+        <!-- Form Fields Section from OLD version -->
         <div class="recruiter-workflow-candidate-container15">
-            <!-- First and Last Name -->
+            <div id="enter-manually-text-container" class="recruiter-workflow-candidate-enter-manually-text-container">
+                <span id="enter-manually-text" class="recruiter-workflow-candidate-enter-manually-text">Enter Manually</span>
+            </div>
+            
             <div class="recruiter-workflow-candidate-job-title-company-name-container1">
                 <div class="recruiter-workflow-candidate-job-title-container1">
                     <span class="recruiter-workflow-candidate-job-title-text1">Candidate First Name</span>
-                    <input type="text" formControlName="first_name" placeholder="Enter First Name" class="recruiter-workflow-candidate-job-title-input1 input" [ngClass]="{ 'is-invalid': f['first_name'].invalid && f['first_name'].touched }"/>
-                    <div *ngIf="f['first_name'].invalid && f['first_name'].touched" class="validation-error">
-                        <small *ngIf="f['first_name'].errors?.['required']">First name is required.</small>
-                        <small *ngIf="f['first_name'].errors?.['pattern']">Must contain letters only.</small>
-                    </div>
+                    <input type="text" formControlName="first_name" placeholder="Enter First Name" class="recruiter-workflow-candidate-job-title-input1 input"/>
                 </div>
                 <div class="recruiter-workflow-candidate-company-name-container1">
                     <span class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span>
-                    <input type="text" formControlName="last_name" placeholder="Enter Last Name" class="recruiter-workflow-candidate-company-name-input1 input" [ngClass]="{ 'is-invalid': f['last_name'].invalid && f['last_name'].touched }"/>
-                    <div *ngIf="f['last_name'].invalid && f['last_name'].touched" class="validation-error">
-                    <small *ngIf="f['last_name'].errors?.['required']">Last name is required.</small>
-                    <small *ngIf="f['last_name'].errors?.['pattern']">Last name must contain letters only.</small>
-                </div>
+                    <input type="text" formControlName="last_name" placeholder="Enter Last Name" class="recruiter-workflow-candidate-company-name-input1 input"/>
                 </div>
             </div>
 
-            <!-- Phone and Email -->
             <div class="recruiter-workflow-candidate-job-title-company-name-container2">
-            <div class="recruiter-workflow-candidate-job-title-container2">
-                <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
-                <input 
-                  type="text" 
-                  formControlName="phone_number" 
-                  placeholder="Enter 10-digit Phone Number" 
-                  class="recruiter-workflow-candidate-job-title-input2 input" 
-                  [ngClass]="{ 'is-invalid': f['phone_number'].invalid && f['phone_number'].touched }"
-                  maxlength="10" 
-                />
-                <div *ngIf="f['phone_number'].invalid && f['phone_number'].touched" class="validation-error">
-                    <small *ngIf="f['phone_number'].errors?.['required']">Phone number is required.</small>
-                    <small *ngIf="f['phone_number'].errors?.['pattern']">Must be exactly 10 digits.</small>
+                <div class="recruiter-workflow-candidate-job-title-container2">
+                    <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
+                    <input type="text" formControlName="phone_number" placeholder="Enter 10-digit Phone Number" class="recruiter-workflow-candidate-job-title-input2 input" maxlength="10"/>
                 </div>
-            </div>
                 <div class="recruiter-workflow-candidate-company-name-container2">
                     <span class="recruiter-workflow-candidate-company-name-text2">Email Id</span>
+                    <input type="email" formControlName="email" placeholder="Enter Email" class="recruiter-workflow-candidate-company-name-input2 input"/>
+                </div>
+            </div>
+
+            <div class="recruiter-workflow-candidate-issued-renewal-date-container1">
+                <div class="recruiter-workflow-candidate-issued-date-container1">
+                    <span class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span>
+                    <div class="recruiter-workflow-candidate-select-container1">
+                        <input type="number" formControlName="total_experience_min" placeholder="Min Experience" class="recruiter-workflow-candidate-company-name-input3 input"/>
+                        <span>To</span>
+                        <input type="number" formControlName="total_experience_max" placeholder="Max Experience" class="recruiter-workflow-candidate-company-name-input4 input"/>
+                        <span>Years</span>
+                    </div>
+                </div>
+                <div class="recruiter-workflow-candidate-renewal-date-container">
+                    <span class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span>
+                    <div class="recruiter-workflow-candidate-select-container2">
+                        <input type="number" formControlName="relevant_experience_min" placeholder="Min Experience" class="recruiter-workflow-candidate-company-name-input5 input"/>
+                        <span>To</span>
+                        <input type="number" formControlName="relevant_experience_max" placeholder="Max Experience" class="recruiter-workflow-candidate-company-name-input6 input"/>
+                        <span>Years</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recruiter-workflow-candidate-issued-renewal-date-container2">
+                <div class="recruiter-workflow-candidate-issued-date-container2">
+                    <span class="recruiter-workflow-candidate-issuing-date-text2">Expected CTC</span>
+                    <div class="recruiter-workflow-candidate-select-container3">
+                        <input type="number" formControlName="expected_ctc_min" placeholder="Min Salary" class="recruiter-workflow-candidate-company-name-input7 input"/>
+                        <span>To</span>
+                        <input type="number" formControlName="expected_ctc_max" placeholder="Max Salary" class="recruiter-workflow-candidate-company-name-input8 input"/>
+                        <span>Years</span>
+                    </div>
+                </div>
+                <div class="recruiter-workflow-candidate-certificate-name-container">
+                    <span class="recruiter-workflow-candidate-certificate-name-text">Current CTC *</span>
+                    <select formControlName="current_ctc" class="input">
+                        <option value="" disabled>Select</option>
+                        <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="recruiter-workflow-candidate-job-title-company-name-container3">
+                <div class="recruiter-workflow-candidate-job-title-container3">
+                    <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
+                    <input type="text" formControlName="preferred_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input3 input"/>
+                </div>
+                <div class="recruiter-workflow-candidate-job-title-container4">
+                    <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
+                    <input type="text" formControlName="current_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input4 input"/>
+                </div>
+            </div>
+
+            <div class="recruiter-workflow-candidate-container28">
+                <div class="recruiter-workflow-candidate-issued-date-container3">
+                    <span class="recruiter-workflow-candidate-issuing-date-text3">Notice Period *</span>
+                    <select formControlName="notice_period" class="input">
+                        <option value="" disabled>Select</option>
+                        <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
+                    </select>
+                </div>
+                <div class="recruiter-workflow-candidate-credentials-container">
+                    <span class="recruiter-workflow-candidate-credentials-text">Gender *</span>
+                    <select formControlName="gender" class="input">
+                        <option value="" disabled>Select Gender</option>
+                        <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="recruiter-workflow-candidate-skills-container1">
+                <div class="recruiter-workflow-candidate-skill-text-container1">
+                    <span class="recruiter-workflow-candidate-skill-text1">Work Experience</span>
+                    <span class="recruiter-workflow-candidate-skill-star-text1">*</span>
+                </div>
+                <input type="text" formControlName="work_experience" placeholder="Enter Work Experience" class="recruiter-workflow-candidate-job-title-input5 input"/>
+            </div>
+
+            <div class="recruiter-workflow-candidate-skills-container2">
+                <div class="recruiter-workflow-candidate-skill-text-container2">
+                    <span class="recruiter-workflow-candidate-skill-text2">Skills</span>
+                    <span class="recruiter-workflow-candidate-skill-star-text2">*</span>
+                </div>
+                <div class="skills-input-container">
+                    <span *ngFor="let skill of skills; let i = index" class="skill-pill">
+                      {{ skill }}
+                      <button type="button" class="remove-skill-button" (click)="removeSkill(i)">&times;</button>
+                    </span>
+                    <input type="text" class="skills-entry-input" placeholder="Type a skill and press Enter" (keydown.enter)="addSkill($event)">
+                </div>
+                <input type="hidden" formControlName="skills">
+            </div>
+        </div>
+        
+        <!-- Submit/Cancel Buttons -->
+        <div class="recruiter-workflow-candidate-submit-cancel-buttons-container">
+            <button type="button" (click)="onCancel()" class="recruiter-workflow-candidate-cancel-button button">
+              <span class="recruiter-workflow-candidate-cancel-text">Cancel</span>
+            </button>
+            <button type="submit" class="recruiter-workflow-candidate-submit-button button" [disabled]="isSubmitting">
+              <span class="recruiter-workflow-candidate-submit-text">{{ isSubmitting ? 'Submitting...' : (editingCandidateId ? 'Update' : 'Submit') }}</span>
+            </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-container>
