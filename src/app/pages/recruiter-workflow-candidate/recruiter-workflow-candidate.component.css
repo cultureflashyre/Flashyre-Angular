@@ -2,6 +2,272 @@
   display: contents; 
 }
 
+/* --- NEW STYLE FOR DISABLED ICON --- */
+.icon-disabled {
+  /* Set the icon color to a neutral gray */
+  color: #C0C0C0; 
+  fill: #C0C0C0;
+
+  /* Match the size of the active icon */
+  width: 40px;
+  height: 40px;
+
+  /* Disable any hover effects or pointer events */
+  cursor: default;
+  transition: none;
+  transform: none;
+}
+
+/* Ensure the disabled icon does not react to hover */
+.icon-disabled:hover {
+  color: #C0C0C0;
+  transform: none;
+}
+
+/* --- NEW STYLES FOR SKILLS PILL INPUT --- */
+.skills-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #A7A7A7;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  min-height: 48px; /* Match other input heights */
+  min-width: 1050px;
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e7ff; /* A light blue/purple background */
+  color: #4338ca; /* A darker text color for contrast */
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.remove-skill-button {
+  background: none;
+  border: none;
+  color: #4338ca;
+  margin-left: 8px;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.remove-skill-button:hover {
+  color: #dc3545; /* Red on hover */
+}
+
+.skills-entry-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 4px;
+  background-color: transparent;
+  min-width: 150px; /* Ensure there's always some space to type */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-message {
+  background-color: #ffffff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.alter-message-close-icon-container {
+  position: relative;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.alter-message-close-icon-container p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.close-icon {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  font-size: 24px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-icon:hover {
+  transform: scale(1.1);
+}
+
+.alter-message-buttons-container1 {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.alter-message-component-button {
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.alter-message-component-button:hover {
+  transform: translateY(-2px);
+}
+
+.button-cancel {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #dcdcdc;
+}
+
+.button-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.button-save-draft, .button-yes {
+  background-color: #05356C;
+  color: white;
+}
+
+/* --- STYLES FOR FORM SOURCE INDICATOR --- */
+.source-label {
+  font-size: 20px;
+  color: #a0aec0; /* Inactive color */
+  font-weight: 600;
+  cursor: default;
+}
+
+.source-label.active {
+  color: #05356C; /* Active color */
+}
+
+/* Ensure the close button in the modal is positioned correctly */
+.form-modal-container .recruiter-workflow-candidate-container12 {
+  position: relative;
+}
+
+.form-modal-container .close-panel-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+
+
+/* --- NEW STYLES FOR FORM MODAL OVERLAY --- */
+.form-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 990; /* High z-index to be on top */
+}
+
+.form-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 991; /* Above the backdrop */
+
+  width: auto;
+  max-width: 80%;
+  height: auto;
+  max-height: 90vh; /* Ensure it fits on smaller screens */
+  overflow-y: auto; /* Allow scrolling within the modal if content is long */
+
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Override existing form styles to fit the modal */
+.form-modal-container .recruiter-workflow-candidate-candidate-input-form {
+  position: static; /* Remove relative positioning */
+  padding: 24px 32px; /* Add more padding for a better look */
+}
+
+/* Ensure close button inside modal is positioned correctly */
+.form-modal-container .close-panel-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* --- NEW STYLES FOR CLOSE BUTTON --- */
+.close-panel-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #6c757d; /* A neutral gray color */
+  border-radius: 50%; /* Makes the hover effect circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: hidden;
+}
+
+.close-panel-button:hover {
+  background-color: #f1f1f1; /* Light gray background on hover */
+  color: #333; /* Darker color on hover */
+}
+
+.filter-backdrop {
+  position: fixed; /* Use fixed positioning to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.2); /* A subtle dark, semi-transparent overlay */
+
+  /* The magic for the blur effect */
+  -webkit-backdrop-filter: blur(3px); /* For Safari */
+  backdrop-filter: blur(3px);
+
+  z-index: 90; /* Must be below the panel but above all other page content */
+}
+
 /* --- NEW STYLES FOR FILTER PANEL --- */
 .filter-panel {
   position: absolute;
@@ -371,7 +637,7 @@
   position: relative;
   align-self: center;
   align-items: flex-start;
-  padding-top: var(--dl-layout-space-unit);
+  padding: var(--dl-layout-space-unit);
   flex-direction: column;
   padding-bottom: var(--dl-layout-space-unit);
 }
@@ -420,6 +686,7 @@
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  margin-bottom: 16px;
 }
  
 .recruiter-workflow-candidate-upload-file-container {
@@ -431,7 +698,8 @@
   border-color: #ACACAD;
   border-width: 1px;
   border-radius: 5px;
-  justify-content: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
 }
  
 .recruiter-workflow-candidate-upload-file-input {
@@ -669,7 +937,7 @@
 }
  
 .recruiter-workflow-candidate-company-name-input2 {
-  width: 100%;
+  width: 49%;
   height: 48px;
   border-color: #A7A7A7;
   background-color: #FFFFFF;

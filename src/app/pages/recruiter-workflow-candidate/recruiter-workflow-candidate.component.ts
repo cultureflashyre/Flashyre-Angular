@@ -6,11 +6,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { forkJoin, catchError, of } from 'rxjs';
-import { AdbRequirementService } from '../../services/adb-requirement.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { RelativeDatePipe } from '../../pipe/relative-date.pipe';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
+// Added from Parent: Service for fetching Jobs
+import { AdbRequirementService } from '../../services/adb-requirement.service';
 
-// Custom validator to check if min value is less than or equal to max value
+// Custom validator
 export function minMaxValidator(minControlName: string, maxControlName: string) {
   return (formGroup: AbstractControl): ValidationErrors | null => {
     const minControl = formGroup.get(minControlName);
@@ -30,7 +33,6 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
   };
 }
 
-
 @Component({
   standalone: true,
   selector: 'recruiter-workflow-candidate',
@@ -42,7 +44,8 @@ export function minMaxValidator(minControlName: string, maxControlName: string) 
     ReactiveFormsModule,
     FormsModule,
     RecruiterWorkflowNavbarComponent,
-    AlertMessageComponent 
+    RelativeDatePipe,
+    AlertMessageComponent
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit {
@@ -53,51 +56,89 @@ export class RecruiterWorkflowCandidate implements OnInit {
   submissionError = '';
   formVisible = false;
   editingCandidateId: number | null = null;
+  formSource: 'Naukri' | 'External' = 'Naukri';
+
+  // --- Alert State Management (Child's system) ---
+  isAlertVisible = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
+  private pendingAction: (() => void) | null = null;
+  private isSuccessAlert = false;
+
+  // --- File Management ---
+  selectedFile: File | null = null;
+  selectedFileName = '';
 
   // --- Data Management ---
-  masterCandidates: Candidate[] = []; // Single source of truth from the API
-  displayCandidates: Candidate[] = []; // The list that is actually shown in the template (can be sorted)
+  masterCandidates: Candidate[] = [];
+  displayCandidates: Candidate[] = [];
 
   // --- List Management Properties ---
   isAllSelected = false;
   isDeleting = false;
   currentSort = 'none';
 
-  // --- NEW: FILTER PANEL MANAGEMENT ---
+  // --- Filter Panel Management ---
   isFilterPanelVisible = false;
   filterForm!: FormGroup;
+
+  // --- Skills Management ---
+  skills: string[] = [];
+
+  // --- WORKFLOW MODAL PROPERTIES (Added from Parent) ---
+  showWorkflowModal = false;
+  selectedCandidateCount = 0;
+  availableJobs: any[] = [];
+  selectedJobId: number | null = null;
 
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
-  // --- WORKFLOW MODAL PROPERTIES ---
-  showWorkflowModal = false;
-  selectedCandidateCount = 0;
-  availableJobs: any[] = [];
-  selectedJobId: number | null = null;
-
-  // --- ALERT PROPERTIES ---
-  showAlert = false;
-  alertMessage = '';
-  alertButtons: string[] = [];
-
   constructor(
     private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
     private candidateService: RecruiterWorkflowCandidateService,
+    // Added Injection
     private adbRequirementService: AdbRequirementService,
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
-    this.initializeFilterForm(); // Initialize the new filter form
-
+    this.initializeFilterForm();
   }
 
   ngOnInit(): void {
     this.loadCandidates();
+  }
+
+  private initializeForm(): void {
+    this.candidateForm = this.fb.group({
+      first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      total_experience_min: [null, [Validators.required, Validators.min(0)]],
+      total_experience_max: [null, [Validators.required, Validators.min(0)]],
+      relevant_experience_min: [null, [Validators.required, Validators.min(0)]],
+      relevant_experience_max: [null, [Validators.required, Validators.min(0)]],
+      expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
+      expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
+      current_ctc: ['', Validators.required],
+      preferred_location: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      current_location: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      notice_period: ['', Validators.required],
+      gender: ['', Validators.required],
+      work_experience: ['', Validators.required],
+      skills: ['', Validators.required],
+    }, {
+      validators: [
+        minMaxValidator('total_experience_min', 'total_experience_max'),
+        minMaxValidator('relevant_experience_min', 'relevant_experience_max'),
+        minMaxValidator('expected_ctc_min', 'expected_ctc_max'),
+      ]
+    });
   }
 
   private initializeFilterForm(): void {
@@ -114,21 +155,23 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.candidateService.getCandidates().subscribe({
       next: (data) => {
         this.masterCandidates = data.map(c => ({ ...c, selected: false }));
-        this.applySort();
+        this.applyFiltersAndSort();
       },
       error: (err) => { console.error("Failed to load candidates.", err); }
     });
   }
 
+  // --- PARENT FEATURE: Add to Workflow Logic ---
   openAddToWorkflowModal() {
     const selected = this.masterCandidates.filter(c => c.selected);
     if (selected.length === 0) {
-      this.triggerAlert("Please select at least one candidate.", ["OK"]);
+      // Using Child's alert system
+      this.showAlert("Please select at least one candidate.", ["Close"]);
       return;
     }
 
     this.selectedCandidateCount = selected.length;
-    this.selectedJobId = null; // Reset selection
+    this.selectedJobId = null; 
     
     // Fetch Jobs for Dropdown
     this.adbRequirementService.getRequirements().subscribe({
@@ -136,7 +179,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
         this.availableJobs = jobs;
         this.showWorkflowModal = true;
       },
-      error: () => this.triggerAlert("Failed to load job requirements.", ["OK"])
+      error: () => this.showAlert("Failed to load job requirements.", ["Close"])
     });
   }
 
@@ -155,7 +198,6 @@ export class RecruiterWorkflowCandidate implements OnInit {
       next: (res: any) => {
         this.closeWorkflowModal();
         
-        // Construct the logic message
         let msg = '';
         if (res.existing > 0) {
           msg = `Successfully added ${res.added} candidate(s). Note: ${res.existing} candidate(s) were already in this workflow.`;
@@ -163,7 +205,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
           msg = `Successfully added ${res.added} candidate(s) to the workflow.`;
         }
         
-        this.triggerAlert(msg, ["OK"]);
+        this.showAlert(msg, ["Close"]);
         
         // Optional: Deselect candidates after adding
         this.masterCandidates.forEach(c => c.selected = false);
@@ -171,48 +213,28 @@ export class RecruiterWorkflowCandidate implements OnInit {
       },
       error: (err) => {
         this.closeWorkflowModal();
-        this.triggerAlert("Failed to add candidates to workflow.", ["OK"]);
+        this.showAlert("Failed to add candidates to workflow.", ["Close"]);
       }
     });
   }
+  // ---------------------------------------------
 
-  // --- ALERT HELPER ---
-  triggerAlert(msg: string, btns: string[]) {
-    this.alertMessage = msg;
-    this.alertButtons = btns;
-    this.showAlert = true;
-  }
-
-  onAlertAction(btn: string) {
-    this.closeAlert();
-  }
-
-  closeAlert() {
-    this.showAlert = false;
-  }
-
-  // --- CORE LOGIC: APPLY FILTERS AND SORTING ---
   applyFiltersAndSort(): void {
     let candidates = [...this.masterCandidates];
     const filterValues = this.filterForm.value;
 
-    // 1. Apply Name Filter
     if (filterValues.name) {
       const nameFilter = filterValues.name.toLowerCase();
       candidates = candidates.filter(c => 
         (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
       );
     }
-
-    // 2. Apply Location Filter
     if (filterValues.location) {
       const locationFilter = filterValues.location.toLowerCase();
       candidates = candidates.filter(c => 
         c.current_location.toLowerCase().includes(locationFilter)
       );
     }
-
-    // 3. Apply Skills Filter (OR search)
     if (filterValues.skills) {
       const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
       if (skillFilters.length > 0) {
@@ -222,19 +244,14 @@ export class RecruiterWorkflowCandidate implements OnInit {
         });
       }
     }
-
-    // 4. Apply CTC Filter
     if (filterValues.current_ctc) {
       candidates = candidates.filter(c => c.current_ctc === filterValues.current_ctc);
     }
-
-    // 5. Apply Email Filter
     if (filterValues.email) {
       const emailFilter = filterValues.email.toLowerCase();
       candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
     }
 
-    // 6. Apply Sorting
     if (this.currentSort === 'a-z') {
       candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
     } else if (this.currentSort === 'z-a') {
@@ -245,14 +262,13 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.updateSelectAllState();
   }
 
-    // --- NEW FILTER PANEL METHODS ---
   toggleFilterPanel(): void {
     this.isFilterPanelVisible = !this.isFilterPanelVisible;
   }
 
   applyFiltersFromPanel(): void {
     this.applyFiltersAndSort();
-    this.isFilterPanelVisible = false; // Hide panel after applying
+    this.isFilterPanelVisible = false;
   }
 
   clearFilters(): void {
@@ -261,22 +277,6 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.isFilterPanelVisible = false;
   }
 
-
-  // --- CORE LOGIC: APPLY SORTING ---
-  applySort(): void {
-    let candidates = [...this.masterCandidates];
-
-    if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
-    } else if (this.currentSort === 'z-a') {
-      candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
-    }
-
-    this.displayCandidates = candidates;
-    this.updateSelectAllState();
-  }
-
-  // --- SELECTION METHODS ---
   toggleSelectAll(event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     this.isAllSelected = isChecked;
@@ -291,185 +291,230 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.isAllSelected = this.displayCandidates.every(c => c.selected);
   }
 
-  // --- BULK DELETE ---
   deleteSelected(): void {
     const selectedCandidates = this.masterCandidates.filter(c => c.selected && c.id);
     if (selectedCandidates.length === 0) {
-      alert('Please select at least one candidate to delete.');
+      this.showAlert('Please select at least one candidate to delete.', ['Close']);
       return;
     }
 
-    if (window.confirm(`Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`)) {
+    this.alertMessage = `Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`;
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    this.pendingAction = () => {
       this.isDeleting = true;
-      
       const deleteRequests = selectedCandidates.map(c => 
-        this.candidateService.deleteCandidate(c.id!).pipe(
-          catchError(err => {
-            console.error(`Failed to delete candidate ${c.id}`, err);
-            return of(c.id); // On error, return the ID of the failed deletion
-          })
-        )
+        this.candidateService.deleteCandidate(c.id!).pipe(catchError(err => of(c.id)))
       );
 
       forkJoin(deleteRequests).subscribe(results => {
-        const failedIds = results.filter(res => res !== undefined && res !== null);
-        
+        const failedIds = results.filter(id => id !== null);
         this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
-        
-        this.applySort();
+        this.applyFiltersAndSort();
         this.isDeleting = false;
-
-        if (failedIds.length > 0) {
-          alert(`Could not delete ${failedIds.length} candidate(s). Please try again.`);
-        }
+        
+        const successCount = selectedCandidates.length - failedIds.length;
+        this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
       });
+    };
+
+    this.isAlertVisible = true;
+  }
+
+  // --- ALERT HANDLER METHODS ---
+  private showAlert(message: string, buttons: string[]): void {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.isAlertVisible = true;
+    this.pendingAction = null;
+  }
+
+  handleAlertAction(button: string): void {
+    const action = button.toLowerCase();
+    if (action === 'delete') {
+      if (this.pendingAction) {
+        this.pendingAction();
+      }
+    } else {
+      this.closeAlert();
+      if (this.isSuccessAlert) {
+        this.onCancel();
+      }
     }
   }
 
-  // --- SORTING METHOD ---
-  sortCandidates(event: Event): void {
-    this.currentSort = (event.target as HTMLSelectElement).value;
-    this.applySort();
+  closeAlert(): void {
+    this.isAlertVisible = false;
+    this.pendingAction = null;
+    this.isSuccessAlert = false;
   }
 
-  private initializeForm(): void {
-    this.candidateForm = this.fb.group({
-      first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      total_experience_min: [null, [Validators.required, Validators.min(0)]],
-      total_experience_max: [null, [Validators.required, Validators.min(0)]],
-      relevant_experience_min: [null, [Validators.required, Validators.min(0)]],
-      relevant_experience_max: [null, [Validators.required, Validators.min(0)]],
-      expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
-      expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
-      current_ctc: ['', Validators.required],
-      preferred_location: ['', Validators.required],
-      current_location: ['', Validators.required],
-      notice_period: ['', Validators.required],
-      gender: ['', Validators.required],
-      work_experience: ['', Validators.required],
-      skills: ['', Validators.required],
-    }, {
-      validators: [
-        minMaxValidator('total_experience_min', 'total_experience_max'),
-        minMaxValidator('relevant_experience_min', 'relevant_experience_max'),
-        minMaxValidator('expected_ctc_min', 'expected_ctc_max'),
-      ]
-    });
+  sortCandidates(event: Event): void {
+    this.currentSort = (event.target as HTMLSelectElement).value;
+    this.applyFiltersAndSort();
   }
 
   get f() { return this.candidateForm.controls; }
 
-  showForm(): void {
+  showForm(source: 'Naukri' | 'External'): void {
+    this.formSource = source;
     this.formVisible = true;
     this.submissionSuccess = false;
     this.submissionError = '';
   }
 
+  // --- SKILLS MANAGEMENT ---
+  addSkill(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim();
+    if (value) {
+      if (!this.skills.includes(value)) {
+        this.skills.push(value);
+      }
+      input.value = '';
+      this.updateSkillsFormControl();
+    }
+    event.preventDefault();
+  }
+
+  removeSkill(index: number): void {
+    this.skills.splice(index, 1);
+    this.updateSkillsFormControl();
+  }
+
+  private updateSkillsFormControl(): void {
+    this.candidateForm.controls['skills'].setValue(this.skills.join(', '));
+  }
+
   startEdit(candidate: Candidate): void {
     if (candidate.id) {
       this.editingCandidateId = candidate.id;
+      this.selectedFile = null;
+      this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
       this.candidateForm.patchValue(candidate);
-      this.showForm();
+      this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+      this.showForm('External'); 
+    }
+  }
+  
+  getFileNameFromUrl(url: string): string {
+    try {
+      const urlObject = new URL(url);
+      const pathSegments = urlObject.pathname.split('/');
+      return decodeURIComponent(pathSegments.pop() || '');
+    } catch (e) {
+      return url;
     }
   }
 
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const file: File | null = (target.files as FileList)[0];
+    
+    if (!file) { return; }
+
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+
+    if (!allowedTypes.includes(file.type)) {
+      alert('Invalid file type. Please upload a PDF or Word document.');
+      target.value = '';
+      return;
+    }
+
+    if (file.size > maxSizeInBytes) {
+      alert('File is too large. Maximum size is 5 MB.');
+      target.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+  }
+  
   deleteCandidate(id: number | undefined): void {
     if (!id) return;
-    const confirmation = window.confirm('Are you sure you want to delete this candidate?');
-    if (confirmation) {
+    
+    this.alertMessage = 'Are you sure you want to delete this candidate? This action cannot be undone.';
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    this.pendingAction = () => {
       this.candidateService.deleteCandidate(id).subscribe({
         next: () => {
           this.masterCandidates = this.masterCandidates.filter(c => c.id !== id);
-          this.applySort();
+          this.applyFiltersAndSort();
+          this.showAlert('Candidate successfully deleted.', ['Close']);
         },
         error: (err) => {
           console.error('Failed to delete candidate', err);
-          alert('Error: Could not delete the candidate.');
+          this.showAlert('Error: Could not delete the candidate.', ['Close']);
         }
       });
-    }
+    };
+    this.isAlertVisible = true;
   }
 
   onSubmit(): void {
-    this.submissionError = '';
-    this.submissionSuccess = false;
     this.candidateForm.markAllAsTouched();
 
     if (this.candidateForm.invalid) {
+      this.showAlert('Please fill out all required fields marked with an asterisk (*).', ['Close']);
       return;
     }
 
     this.isSubmitting = true;
+    const formData = new FormData();
+    Object.keys(this.candidateForm.controls).forEach(key => {
+      const value = this.candidateForm.get(key)?.value;
+      if (value !== null && value !== undefined) { formData.append(key, value); }
+    });
 
-    const formValue = this.candidateForm.value;
-    const payload: Candidate = {
-      ...formValue,
-      total_experience_min: formValue.total_experience_min ?? 0,
-      total_experience_max: formValue.total_experience_max ?? 0,
-      relevant_experience_min: formValue.relevant_experience_min ?? 0,
-      relevant_experience_max: formValue.relevant_experience_max ?? 0,
-      expected_ctc_min: formValue.expected_ctc_min ?? 0,
-      expected_ctc_max: formValue.expected_ctc_max ?? 0,
+    const userId = localStorage.getItem('user_id');
+    if (userId) { formData.append('user_id', userId); }
+    formData.append('source', this.formSource);
+
+    if (this.selectedFile) { formData.append('resume', this.selectedFile, this.selectedFile.name); }
+
+    const handleSuccess = (candidate: Candidate) => {
+      if (this.editingCandidateId) {
+        const index = this.masterCandidates.findIndex(c => c.id === this.editingCandidateId);
+        if (index !== -1) this.masterCandidates[index] = { ...candidate, selected: false };
+      } else {
+        this.masterCandidates.unshift({ ...candidate, selected: false });
+      }
+      this.applyFiltersAndSort();
+      
+      this.isSuccessAlert = true;
+      this.showAlert(this.editingCandidateId ? 'Candidate updated successfully!' : 'Candidate created successfully!', ['Close']);
+      this.onCancel();
+    };
+
+    const handleError = (err: HttpErrorResponse) => {
+      let errorMessage = 'An unexpected server error occurred. Please try again later.';
+      if (err.status === 400) {
+        const errors = err.error;
+        const errorMessages = Object.keys(errors).map(field => `${field.replace(/_/g, ' ')}: ${errors[field][0]}`);
+        errorMessage = `Submission failed: ${errorMessages.join('; ')}`;
+      }
+      this.showAlert(errorMessage, ['Close']);
+      this.isSubmitting = false;
     };
 
     if (this.editingCandidateId) {
-      this.candidateService.updateCandidate(this.editingCandidateId, payload).subscribe({
-        next: (updatedCandidate) => {
-          const index = this.masterCandidates.findIndex(c => c.id === this.editingCandidateId);
-          if (index !== -1) {
-            this.masterCandidates[index] = { ...updatedCandidate, selected: false };
-          }
-          this.applySort();
-          
-          this.submissionSuccess = true;
-          this.formVisible = false;
-          this.isSubmitting = false;
-          this.candidateForm.reset();
-          this.editingCandidateId = null;
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error('Update failed:', err);
-          this.submissionError = 'Failed to update candidate. Please try again.';
-          this.isSubmitting = false;
-        }
-      });
+      this.candidateService.updateCandidate(this.editingCandidateId, formData).subscribe({ next: handleSuccess, error: handleError });
     } else {
-      this.candidateService.createCandidate(payload).subscribe({
-        next: (newCandidate) => {
-          this.masterCandidates.unshift({ ...newCandidate, selected: false });
-          this.applySort();
-          
-          this.submissionSuccess = true;
-          this.formVisible = false;
-          this.isSubmitting = false;
-          this.candidateForm.reset();
-        },
-        error: (err: HttpErrorResponse) => {
-          if (err.status === 400) {
-            const errors = err.error;
-            console.error('Backend validation failed:', errors); 
-            const errorMessages = Object.keys(errors).map(field => {
-              const fieldName = field.replace(/_/g, ' ');
-              return `${fieldName}: ${errors[field][0]}`;
-            });
-            this.submissionError = `Submission failed: ${errorMessages.join('; ')}`;
-          } else {
-            this.submissionError = 'An unexpected server error occurred. Please try again later.';
-          }
-          this.isSubmitting = false;
-        }
-      });
+      this.candidateService.createCandidate(formData).subscribe({ next: handleSuccess, error: handleError });
     }
   }
 
   onCancel(): void {
-    this.candidateForm.reset();
-    this.submissionError = '';
-    this.submissionSuccess = false;
     this.formVisible = false; 
     this.editingCandidateId = null;
+    this.candidateForm.reset();
+    this.submissionError = '';
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.isSubmitting = false;
+    this.skills = []; 
   }
 }
