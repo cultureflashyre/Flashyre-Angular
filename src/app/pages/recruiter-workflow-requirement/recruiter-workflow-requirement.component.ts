@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router'; 
 import { Title, Meta } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // Import this
 import { AdbRequirementService } from '../../services/adb-requirement.service';
@@ -32,10 +32,12 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 export class RecruiterWorkflowRequirement implements OnInit {
   clientName: string = '';
   subClientName: string = '';
+  jobRole: string = ''; 
   interviewLocation: string = '';
   interviewDate: string = '';
   
   // 2. View Switching & Data List
+  isFormVisible: boolean = false;
   showListing: boolean = true; // Controls Form vs Listing view
   requirementsList: any[] = []; 
   isEditMode: boolean = false;
@@ -67,7 +69,8 @@ export class RecruiterWorkflowRequirement implements OnInit {
     private title: Title, 
     private meta: Meta, 
     private adbService: AdbRequirementService,  
-    private fb: FormBuilder 
+    private fb: FormBuilder ,
+    private router: Router
   ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
@@ -86,7 +89,8 @@ export class RecruiterWorkflowRequirement implements OnInit {
       client_name: [''],
       location: [''],
       description: [''], // Will search in job_description
-      ctc: ['']
+      ctc: [''],
+      role: ['']
     });
   }
 
@@ -178,16 +182,7 @@ getFileName(): string {
     setTimeout(() => { this.isUserDropdownOpen = false; }, 200);
   }
 
-  ctcOptions: string[] = [
-    '1 LPA - 3 LPA',
-    '4 LPA - 6 LPA',
-    '7 LPA - 10 LPA',
-    '11 LPA - 15 LPA',
-    '16 LPA - 20 LPA',
-    '21 LPA - 25 LPA',
-    '26 LPA - 30 LPA',
-    '30 LPA+'
-  ];
+  
   noticePeriodOptions: string[] = [
     'Immediate',
     'Less than 15 Days',
@@ -196,8 +191,7 @@ getFileName(): string {
     'Less than 90 days'
   ];
     genderOptions: string[] = ['Male', 'Female', 'Others'];
-  selectedCtc: string = ''; // Stores the selected value
-  isCtcDropdownOpen: boolean = false; // Toggles visibility
+ 
    selectedNoticePeriod: string = '';
   isNoticePeriodDropdownOpen: boolean = false;
    selectedGender: string = '';
@@ -290,14 +284,7 @@ getFileName(): string {
       this.salaryErrors.rangeError = false;
     }
   }
-  toggleCtcDropdown() {
-    this.isCtcDropdownOpen = !this.isCtcDropdownOpen;
-  }
-
-  selectCtc(option: string) {
-    this.selectedCtc = option;
-    this.isCtcDropdownOpen = false; // Close dropdown after selection
-  }
+  
   validateLocation(event: any) {
     const input = event.target as HTMLInputElement;
     // Regex explanation:
@@ -381,10 +368,12 @@ toggleNoticePeriodDropdown() {
     this.isEditMode = true;
     this.currentRequirementId = item.id;
     this.showListing = false; // Switch to form view
+    this.isFormVisible = true;
 
     // Populate Fields
     this.clientName = item.client_name;
     this.subClientName = item.sub_client_name;
+    this.jobRole = item.job_role; 
     this.jobDescription = item.job_description;
     this.interviewLocation = item.interview_location;
     this.interviewDate = item.interview_date;
@@ -402,7 +391,6 @@ toggleNoticePeriodDropdown() {
       max: item.salary_max
     };
 
-    this.selectedCtc = item.current_ctc_range;
     this.selectedNoticePeriod = item.notice_period;
     this.selectedGender = item.gender;
 
@@ -496,6 +484,7 @@ toggleNoticePeriodDropdown() {
     // --- Step 1: Append all text, number, and date fields ---
     formData.append('client_name', this.clientName);
     formData.append('sub_client_name', this.subClientName || '');
+    formData.append('job_role', this.jobRole);
     formData.append('source', 'External');
     formData.append('total_experience_min', (this.experience.totalMin || 0).toString());
     formData.append('total_experience_max', (this.experience.totalMax || 0).toString());
@@ -503,7 +492,6 @@ toggleNoticePeriodDropdown() {
     formData.append('relevant_experience_max', (this.experience.relevantMax || 0).toString());
     formData.append('salary_min', (this.salary.min || 0).toString());
     formData.append('salary_max', (this.salary.max || 0).toString());
-    formData.append('current_ctc_range', this.selectedCtc || '');
     formData.append('notice_period', this.selectedNoticePeriod || '');
     formData.append('gender', this.selectedGender || '');
     formData.append('interview_location', this.interviewLocation);
@@ -570,46 +558,33 @@ toggleNoticePeriodDropdown() {
   }
 
   // 4. UPDATE onCancel Function
-  onCancel() {
-
-    this.selectedAssignees = [];
-    this.userSearchText = '';
-
-    // 1. Reset Edit Mode flags
-    this.showListing = true; 
+   onCancel() {
+    this.isFormVisible = false; // Hide the modal
     this.isEditMode = false;
     this.currentRequirementId = null;
     this.fileUploadError = null;
-this.existingFileUrl = null;
-this.selectedFile = null;
+    this.existingFileUrl = null;
+    this.selectedFile = null;
 
-
-    // 2. Clear all input fields
+    // Reset all form fields
     this.clientName = '';
     this.subClientName = '';
+    this.jobRole = '';
     this.interviewLocation = '';
     this.interviewDate = '';
     this.jobDescription = '';
-    
-    // 3. Reset Objects
     this.experience = { totalMin: null, totalMax: null, relevantMin: null, relevantMax: null };
     this.salary = { min: null, max: null };
-    
-    // 4. Reset Dropdowns
-    this.selectedCtc = '';
     this.selectedNoticePeriod = '';
     this.selectedGender = '';
-    
-    // 5. Reset Array to initial state
     this.additionalDetails = [{ location: '', spoc: '', vacancies: '' }];
-    
-    // 6. Reset Errors
+    this.selectedAssignees = [];
+    this.userSearchText = '';
+
+    // Reset validation errors
     this.isJobDescriptionInvalid = false;
     this.salaryErrors.rangeError = false;
     this.errors = { minExperience: false, maxExperience: false };
-    
-    // 7. CRITICAL: Switch view back to the List
-    this.showListing = true; 
   }
 
   showAddForm() {
@@ -622,6 +597,7 @@ this.selectedFile = null;
 
     // 3. Show the Form (Hide Listing)
     this.showListing = false;
+    this.isFormVisible = true;
   }
 
 
@@ -666,34 +642,50 @@ this.selectedFile = null;
     let data = [...this.masterRequirements]; // Start with full list
     const filters = this.filterForm.value;
 
-    // Filter by Client Name
+    // Filter by Client Name (SAFE VERSION)
     if (filters.client_name) {
       const term = filters.client_name.toLowerCase();
-      data = data.filter(item => item.client_name.toLowerCase().includes(term));
+      data = data.filter(item => 
+        item.client_name && item.client_name.toLowerCase().includes(term)
+      );
     }
 
-    // Filter by Location
+    // Filter by Location (SAFE VERSION)
     if (filters.location) {
       const term = filters.location.toLowerCase();
-      data = data.filter(item => item.interview_location.toLowerCase().includes(term));
+      data = data.filter(item => 
+        item.interview_location && item.interview_location.toLowerCase().includes(term)
+      );
     }
 
-    // Filter by Job Description/Skills
+    // Filter by Job Description/Skills (SAFE VERSION)
     if (filters.description) {
       const term = filters.description.toLowerCase();
-      data = data.filter(item => item.job_description.toLowerCase().includes(term));
+      data = data.filter(item => 
+        item.job_description && item.job_description.toLowerCase().includes(term)
+      );
     }
 
-    // Filter by CTC
+    // Filter by Role (Already safe, remains the same)
+    if (filters.role) {
+      const term = filters.role.toLowerCase();
+      data = data.filter(item => 
+        item.job_role && item.job_role.toLowerCase().includes(term)
+      );
+    }
+
+    // Filter by CTC (Already safe, but good practice to check)
     if (filters.ctc) {
       data = data.filter(item => item.current_ctc_range === filters.ctc);
     }
 
-    // Apply Sorting
+    // Apply Sorting (No changes here)
     if (this.currentSort === 'a-z') {
-      data.sort((a, b) => (a.client_name || '').localeCompare(b.client_name || ''));
+  // Sorts alphabetically from A-Z based on job_role
+      data.sort((a, b) => (a.job_role || '').localeCompare(b.job_role || ''));
     } else if (this.currentSort === 'z-a') {
-      data.sort((a, b) => (b.client_name || '').localeCompare(a.client_name || ''));
+      // Sorts alphabetically from Z-A based on job_role
+      data.sort((a, b) => (b.job_role || '').localeCompare(a.job_role || ''));
     }
 
     this.requirementsList = data; // Update UI
@@ -788,23 +780,13 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
       }
     });
   }
-   toggleSortDropdown() {
-    this.isSortDropdownOpen = !this.isSortDropdownOpen;
-  }
-  sortRequirements(order: string) {
-    if (order === 'asc') {
-      // Sort A to Z (Ascending) based on Client Name
-      this.requirementsList.sort((a, b) => 
-        (a.client_name || '').localeCompare(b.client_name || '')
-      );
-    } else if (order === 'desc') {
-      // Sort Z to A (Descending) based on Client Name
-      this.requirementsList.sort((a, b) => 
-        (b.client_name || '').localeCompare(a.client_name || '')
-      );
+
+  navigateToAts(id: number): void {
+    if (id) {
+      // Navigates to the URL 'recruiter-workflow-ats/:id'
+      this.router.navigate(['/recruiter-workflow-ats', id]);
+    } else {
+      console.error('Requirement ID is missing, cannot navigate to ATS.');
     }
-    
-    // Close the dropdown after selection
-    this.isSortDropdownOpen = false;
   }
 }
