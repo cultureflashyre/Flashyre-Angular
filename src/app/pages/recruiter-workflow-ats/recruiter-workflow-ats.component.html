@@ -97,6 +97,14 @@
 
             <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
               <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
+
+              <!-- NEW: VIEW ICON -->
+              <button class="view-icon-btn" (click)="viewCandidateDetails(app.candidate_details)" title="View Details">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
               
               <div class="card-info-row">
                 <span class="card-label">Exp:</span> {{ app.candidate_details.total_experience_min }}y
@@ -121,5 +129,117 @@
       </div>
 
     </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- NEW: CANDIDATE DETAILS MODAL OVERLAY       -->
+<!-- ========================================== -->
+<div *ngIf="showCandidateDetails && selectedCandidate" class="details-modal-overlay">
+  <div class="details-modal">
+    
+    <!-- Header -->
+    <div class="details-modal-header">
+      <div class="details-title-group">
+        <h2>{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
+        <span class="details-id">ID: {{ selectedCandidate.id }}</span>
+      </div>
+      <button class="close-details-btn" (click)="closeCandidateDetails()">×</button>
+    </div>
+
+    <!-- Body -->
+    <div class="details-modal-body">
+      
+      <!-- Section 1: Contact & Location -->
+      <div class="details-section">
+        <h4 class="section-title">Contact Information</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Email</label>
+            <span>{{ selectedCandidate.email }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Phone</label>
+            <span>{{ selectedCandidate.phone_number }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Current Location</label>
+            <span>{{ selectedCandidate.current_location }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Preferred Location</label>
+            <span>{{ selectedCandidate.preferred_location }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Professional Details -->
+      <div class="details-section">
+        <h4 class="section-title">Professional Overview</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Total Experience</label>
+            <span>{{ selectedCandidate.total_experience_min }} - {{ selectedCandidate.total_experience_max }} Years</span>
+          </div>
+          <div class="detail-item">
+            <label>Relevant Experience</label>
+            <span>{{ selectedCandidate.relevant_experience_min }} - {{ selectedCandidate.relevant_experience_max }} Years</span>
+          </div>
+          <div class="detail-item">
+            <label>Current CTC</label>
+            <span>{{ selectedCandidate.current_ctc }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Expected CTC</label>
+            <span>{{ selectedCandidate.expected_ctc_min }} - {{ selectedCandidate.expected_ctc_max }} LPA</span>
+          </div>
+          <div class="detail-item">
+            <label>Notice Period</label>
+            <span>{{ selectedCandidate.notice_period }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Gender</label>
+            <span>{{ selectedCandidate.gender }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Skills & Work -->
+      <div class="details-section">
+        <h4 class="section-title">Skills & Experience</h4>
+        <div class="detail-item full-width">
+          <label>Work Experience</label>
+          <p class="text-block">{{ selectedCandidate.work_experience }}</p>
+        </div>
+        <div class="detail-item full-width">
+          <label>Skills</label>
+          <div class="skills-container">
+            <span class="skill-tag">{{ selectedCandidate.skills }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer: CV Action -->
+    <div class="details-modal-footer">
+      <div *ngIf="selectedCandidate.resume_url; else noCv" class="cv-available">
+        <button class="view-cv-btn" (click)="openResume(selectedCandidate.resume_url)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          View Resume
+        </button>
+      </div>
+      <ng-template #noCv>
+        <span class="no-cv-text">No Resume Attached</span>
+      </ng-template>
+    </div>
+
   </div>
 </div>

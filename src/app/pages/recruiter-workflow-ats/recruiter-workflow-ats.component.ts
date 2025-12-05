@@ -45,6 +45,10 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   allCandidates: any[] = [];
   filteredCandidates: any[] = [];
 
+  // --- CANDIDATE DETAILS MODAL STATE ---
+  showCandidateDetails: boolean = false;
+  selectedCandidate: any = null;
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -277,5 +281,21 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     // Create format: ClientName_Stage_Date.xlsx
     const dateStr = new Date().toISOString().slice(0,10);
     FileSaver.saveAs(data, fileName + '_' + dateStr + EXCEL_EXTENSION);
+  }
+
+  viewCandidateDetails(candidate: any) {
+    this.selectedCandidate = candidate;
+    this.showCandidateDetails = true;
+  }
+
+  closeCandidateDetails() {
+    this.showCandidateDetails = false;
+    this.selectedCandidate = null;
+  }
+
+  openResume(url: string) {
+    if (url) {
+      window.open(url, '_blank');
+    }
   }
 }

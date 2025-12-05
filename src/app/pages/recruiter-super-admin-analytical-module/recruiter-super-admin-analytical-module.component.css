@@ -1812,3 +1812,54 @@
   max-height: 70vh;
   overflow-y: auto;
 }
+
+/* --- NEW FILTER BAR STYLES --- */
+.filters-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  padding: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-item label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #747474;
+}
+
+.filter-input, .filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.filter-select {
+  height: 38px; /* Match input height */
+}
+
+.download-report-btn {
+  background-color: #1F882B;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 38px;
+  margin-left: auto; /* Push to right if space permits */
+  transition: background 0.3s;
+}
+
+.download-report-btn:hover {
+  background-color: #145a1c;
+}

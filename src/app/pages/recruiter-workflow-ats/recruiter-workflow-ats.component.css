@@ -392,3 +392,204 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
+
+/* ... Existing CSS ... */
+
+/* --- CARD VIEW ICON --- */
+.view-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  padding: 2px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-icon-btn:hover {
+  color: #05356C;
+  background-color: #e3f2fd;
+}
+
+/* --- CANDIDATE DETAILS MODAL --- */
+
+.details-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop */
+  z-index: 1100; /* Higher than everything else */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.details-modal {
+  background-color: #fff;
+  width: 90%;
+  max-width: 800px; /* Wide layout */
+  max-height: 90vh; /* Don't overflow screen */
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal Header */
+.details-modal-header {
+  padding: 20px 24px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.details-title-group h2 {
+  margin: 0;
+  color: #05356C;
+  font-size: 22px;
+}
+
+.details-id {
+  font-size: 12px;
+  color: #747474;
+  margin-top: 4px;
+  display: block;
+}
+
+.close-details-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-details-btn:hover {
+  color: #F10400;
+}
+
+/* Modal Body */
+.details-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.details-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #999;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5e6c84;
+}
+
+.detail-item span, .detail-item p {
+  font-size: 15px;
+  color: #172b4d;
+  font-weight: 500;
+  margin: 0;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.text-block {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  line-height: 1.5;
+}
+
+.skill-tag {
+  display: inline-block;
+  background-color: #e3f2fd;
+  color: #05356C;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Modal Footer */
+.details-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-cv-btn {
+  background-color: #05356C;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-cv-btn:hover {
+  background-color: #042a54;
+}
+
+.no-cv-text {
+  color: #999;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media(max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr; /* Stack on mobile */
+  }
+}

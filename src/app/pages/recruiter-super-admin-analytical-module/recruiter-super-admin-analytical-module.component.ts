@@ -12,6 +12,12 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 import { ThumbnailService } from '../../services/thumbnail.service'; 
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 
+import { SuperAdminService } from '../../services/super-admin.service';
+import { AdbRequirementService } from '../../services/adb-requirement.service';
+import { AdbRequirementService as UserService } from '../../services/adb-requirement.service'; // Reusing service to get users if needed, or inject generic user service
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 @Component({
   selector: 'app-recruiter-super-admin-analytical-module',
   standalone: true,
@@ -54,12 +60,38 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
 
   private baseUrl = environment.apiUrl;
 
+  // --- ANALYTICS DATA ---
+  kpis = {
+    total_submissions: 0,
+    active_recruiters: 0,
+    avg_time_to_fill: 0,
+    pipeline: { sourced: 0, screening: 0, interview: 0, hired: 0 },
+    sourcing: { top_source: 'N/A', quality_hires: 0, active_sources: 0 }
+  };
+
+  reportTableData: any[] = [];
+
+  // --- FILTERS ---
+  filters = {
+    start_date: '',
+    end_date: '',
+    recruiter_id: '',
+    job_id: ''
+  };
+
+  // Dropdown Lists
+  recruitersList: any[] = [];
+  jobsList: any[] = [];
+
   constructor(
     private title: Title, 
     private meta: Meta,
     private fb: FormBuilder,
     private http: HttpClient,
-    private thumbnailService: ThumbnailService
+    private thumbnailService: ThumbnailService,
+    private superAdminService: SuperAdminService,
+    private reqService: AdbRequirementService,
+
   ) {
     this.title.setTitle('Super Admin Dashboard - Flashyre');
     this.meta.addTags([
@@ -77,6 +109,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
 
   ngOnInit() {
     this.initForm();
+    this.loadDropdowns();
+    this.fetchAnalytics(); // Load initial data
   }
 
   setActiveTab(tabName: string) {
@@ -410,6 +444,51 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
         catchError(() => of(null))
       );
     };
+  }
+
+  loadDropdowns() {
+    // 1. Get Jobs
+    this.reqService.getRequirements().subscribe(data => this.jobsList = data);
+    
+    // 2. Get Recruiters (Reusing the user list endpoint from User Management tab)
+    // Assuming fetchUsers logic populates userList or we call API directly
+    this.http.get(`${this.baseUrl}api/super-admin/list/`).subscribe((data: any) => {
+      this.recruitersList = data; // Filter for recruiters only if needed
+    });
+  }
+
+  fetchAnalytics() {
+    this.superAdminService.getAnalytics(this.filters).subscribe({
+      next: (data: any) => {
+        this.kpis = data.kpis;
+        this.reportTableData = data.table_data;
+      },
+      error: (err) => console.error("Failed to load analytics", err)
+    });
+  }
+
+  applyFilter() {
+    this.fetchAnalytics();
+  }
+
+  clearFilters() {
+    this.filters = { start_date: '', end_date: '', recruiter_id: '', job_id: '' };
+    this.fetchAnalytics();
+  }
+
+  // --- EXPORT TO EXCEL ---
+  downloadReport() {
+    if (this.reportTableData.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.reportTableData);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Report': worksheet }, SheetNames: ['Report'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    FileSaver.saveAs(data, 'Performance_Report.xlsx');
   }
   
 }
