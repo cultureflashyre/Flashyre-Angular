@@ -1,34 +1,56 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // Import the environment file
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdbClientService {
-  // Update this URL to match your Django server address
-  private apiUrl = 'http://localhost:8000/api/clients/';
+  // Store the base API URL from the environment file
+  private baseUrl = environment.apiUrl;
+  // Define the specific endpoint path for clients
+  private endpoint = 'api/clients/';
 
   constructor(private http: HttpClient) { }
 
-  // Fetch all clients (For the list at the bottom)
+  /**
+   * Fetches all clients from the backend.
+   * @returns An Observable array of clients.
+   */
   getClients(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    // Construct the full URL inside the method
+    return this.http.get<any[]>(`${this.baseUrl}${this.endpoint}`);
   }
 
-  // Create new clients (Bulk or Single)
+  /**
+   * Creates new clients (Bulk or Single).
+   * @param data - The client data to be created.
+   * @returns An Observable of the server's response.
+   */
   createClients(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, data);
+    // Construct the full URL inside the method
+    return this.http.post<any>(`${this.baseUrl}${this.endpoint}`, data);
   }
 
+  /**
+   * Updates an existing client by their ID.
+   * @param id - The ID of the client to update.
+   * @param data - The updated client data.
+   * @returns An Observable of the server's response.
+   */
   updateClient(id: any, data: any): Observable<any> {
-  // Remove the slash before ${id} if apiUrl already has one
-    return this.http.put(`${this.apiUrl}${id}/`, data); 
+    // Construct the full URL for a specific client
+    return this.http.put(`${this.baseUrl}${this.endpoint}${id}/`, data); 
   }
 
-// Do the same for deleteClient just in case!
+  /**
+   * Deletes a client by their ID.
+   * @param id - The ID of the client to delete.
+   * @returns An Observable of the server's response.
+   */
   deleteClient(id: any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${id}/`);
+    // Construct the full URL for a specific client
+    return this.http.delete(`${this.baseUrl}${this.endpoint}${id}/`);
   }
-
 }

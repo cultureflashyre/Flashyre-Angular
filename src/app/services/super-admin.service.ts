@@ -19,4 +19,21 @@ export class SuperAdminService {
 
     return this.http.get(this.apiUrl + 'analytics/', { params });
   }
+
+   // --- NEW METHOD FOR THE TABLE DATA ---
+  getPerformanceReport(filters: any): Observable<any[]> {
+    let params = this.buildParams(filters);
+    return this.http.get<any[]>(this.apiUrl + 'analytics/performance-report/', { params });
+  }
+
+  // Helper to avoid code duplication
+  private buildParams(filters: any): HttpParams {
+    let params = new HttpParams();
+    if (filters.start_date) params = params.set('start_date', filters.start_date);
+    if (filters.end_date) params = params.set('end_date', filters.end_date);
+    if (filters.recruiter_id) params = params.set('recruiter_id', filters.recruiter_id);
+    if (filters.job_id) params = params.set('job_id', filters.job_id);
+    // Note: client_name filter was removed as it's not a direct filter in the new logic
+    return params;
+  }
 }

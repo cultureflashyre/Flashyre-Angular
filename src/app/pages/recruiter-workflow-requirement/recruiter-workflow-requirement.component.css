@@ -2,6 +2,43 @@
   display: contents; 
 }
 
+/* --- NEW STYLES FOR FORM MODAL OVERLAY (Copied from reference) --- */
+.form-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 990; /* High z-index to be on top */
+}
+
+.form-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 991; /* Above the backdrop */
+
+  width: 90%;
+  max-width: 95%;
+  height: auto;
+  max-height: 90vh; /* Ensure it fits on smaller screens */
+  overflow-y: auto; /* Allow scrolling within the modal if content is long */
+
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Ensure the form inside the modal has appropriate padding */
+.form-modal-container .recruiter-workflow-requirement-requirment-listing-form {
+    padding: 24px 32px;
+}
+
+
 .form-overlay {
   position: fixed; /* Or 'absolute' if your main container is the reference */
   top: 0;
@@ -2293,6 +2330,17 @@
   color: #747474;
   width: auto;
   font-size: 14px;
+}
+
+.recruiter-workflow-requirement-ats-icon {
+  width: 24px;
+  height: 24px;
+  color: #555; /* Or your preferred icon color */
+  transition: color 0.2s ease-in-out;
+}
+
+.recruiter-workflow-requirement-ats-icon:hover {
+  color: #000; /* Or your preferred hover color */
 }
  
 @media(max-width: 1200px) {
