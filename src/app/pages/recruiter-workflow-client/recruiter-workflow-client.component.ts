@@ -42,6 +42,8 @@ export class RecruiterWorkflowClient implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
 
+  isErrorToast: boolean = false;
+
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
@@ -76,9 +78,9 @@ export class RecruiterWorkflowClient implements OnInit {
     });
 
     this.filterForm = this.fb.group({
-      company_name: [''],
-      client_name: [''],
-      location: [''],
+      company_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]], 
+      client_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]],
+      location: ['', [Validators.pattern('.*[a-zA-Z].*')]], 
       date_created: ['']
     });
   }
@@ -166,7 +168,7 @@ closeForm(): void {
       spoc_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]+$')]],
       
       // Req 5: Only digits (Phone numbers)
-      phone_number: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      phone_number: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       
       // Req 6: Valid Email format
       email: ['', [Validators.required, Validators.email]]
@@ -342,10 +344,11 @@ deleteSingleClient(client: any): void {
         // Optional: Show success alert or just refresh
         // this.openAlert('Client deleted successfully', ['OK']); 
         this.fetchClients(); 
+        this.showSuccessToast('Client deleted successfully');
       },
       error: (err) => {
         console.error('Delete failed', err);
-        this.openAlert('Failed to delete client', ['OK']);
+        this.showErrorToast('Failed to delete client');
       }
     });
   }
@@ -464,7 +467,7 @@ downloadClientData(client: any): void {
     }
 
     // Proceed based on the Pending Action Type
-    if (act === 'add' || act === 'update' || act === 'delete' || act === 'edit' || act === 'yes' || act === 'download') {
+    if (act === 'add' || act === 'update' || act === 'delete' || act === 'edit' || act === 'yes' || act === 'download' || act === 'ok') {
       
       switch (this.pendingAction.type) {
         case 'SUBMIT_CREATE':
@@ -482,6 +485,11 @@ downloadClientData(client: any): void {
           
         case 'EDIT_MODE':
           this.proceedWithEdit(this.pendingAction.data);
+          break;
+
+        case 'REMOVE_LOCATION_ROW':
+          const { clientIndex, contactIndex } = this.pendingAction.data;
+          this.removeLocation(clientIndex, contactIndex);
           break;
           
         case 'DOWNLOAD':
@@ -505,6 +513,15 @@ downloadClientData(client: any): void {
       this.showToast = false;
     }, 2000);
   }
+
+  showErrorToast(message: string): void {
+  this.isErrorToast = true; // Red mode
+  this.toastMessage = message;
+  this.showToast = true;
+  setTimeout(() => {
+    this.showToast = false;
+  }, 3000); 
+}
 
    toggleFilterPanel(): void {
     this.isFilterPanelVisible = !this.isFilterPanelVisible;
@@ -556,6 +573,11 @@ downloadClientData(client: any): void {
   }
 
   applyFiltersFromPanel(): void {
+    if (this.filterForm.invalid) {
+      // Optional: Add a touched mark to show errors immediately if not already shown
+      this.filterForm.markAllAsTouched();
+      return; 
+    }
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
   }
@@ -570,5 +592,17 @@ downloadClientData(client: any): void {
     this.currentSort = (event.target as HTMLSelectElement).value;
     this.applyFiltersAndSort();
   }
+
+  confirmRemoveLocation(clientIndex: number, contactIndex: number): void {
+    // Store the indices in pendingAction so we know what to delete if confirmed
+    this.pendingAction = { 
+      type: 'REMOVE_LOCATION_ROW', 
+      data: { clientIndex, contactIndex } 
+    };
+    
+    // Open the alert with OK and Cancel buttons
+    this.openAlert('Are you sure you want to remove this location?', ['Cancel', 'OK']);
+  }
+
 
 }
