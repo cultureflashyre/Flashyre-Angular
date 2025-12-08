@@ -4,6 +4,207 @@
   overflow: hidden; /* Prevent global scrollbar */
 }
 
+/* ... (Existing styles remain unchanged) ... */
+
+/* --- NEW INPUT MODALS --- */
+
+.input-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 30, 66, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1200; /* Higher than details modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-modal {
+  background: white;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.input-modal-header {
+  padding: 15px 20px;
+  background-color: #f4f5f7;
+  border-bottom: 1px solid #dfe1e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #172b4d;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b778c;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.input-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-modal-body label {
+  font-size: 14px;
+  color: #172b4d;
+  font-weight: 600;
+}
+
+.custom-input, .custom-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dfe1e6;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.custom-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.input-modal-footer {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #dfe1e6;
+  background-color: #fafbfc;
+}
+
+.modal-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+
+.modal-btn.cancel {
+  background-color: #ebecf0;
+  color: #172b4d;
+}
+
+.modal-btn.confirm {
+  background-color: #05356C;
+  color: white;
+}
+
+.modal-btn.delete {
+  background-color: #de350b;
+  color: white;
+}
+
+.modal-btn:hover {
+  opacity: 0.9;
+}
+
+/* ... (Existing Layout & Board styles remain unchanged) ... */
+
+/* --- UPDATED CARD HEADER --- */
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+/* Ensure title doesn't overlap icons */
+.card-title {
+  font-weight: 700;
+  color: #172b4d;
+  font-size: 15px;
+  line-height: 1.3;
+  margin-bottom: 0;
+  margin-right: 8px;
+  flex: 1; /* Allow title to take available space */
+}
+
+/* Container for the icons */
+.card-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0; /* Prevent icons from squishing */
+}
+
+/* Shared Icon Button Style */
+.action-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px; /* Square with rounded corners looks better in group */
+  color: #5e6c84;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon-btn:hover {
+  background-color: #e3f2fd;
+  color: #05356C;
+}
+
+/* Specific styling for the File Icon to indicate it's a document */
+.file-btn:hover {
+  color: #F10400; /* Red tint for PDF/File like Acrobat */
+  background-color: #ffebee;
+}
+
+/* Disabled state if no resume exists */
+.action-icon-btn.disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* --- MODAL UPDATES --- */
+
+.modal-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #f4f5f7;
+  color: #05356C;
+  border-radius: 50%; /* Circle for the modal header */
+}
+
+.modal-icon:hover {
+  background-color: #05356C;
+  color: white;
+}
+
+/* ... (Rest of existing CSS) ... */
+
 /* --- MAIN LAYOUT STRUCTURE --- */
 
 /* Wrapper: Stacks Navbar and Content Vertically */

@@ -28,7 +28,7 @@
   <div class="ats-main-content">
     <div class="ats-container">
       
-      <!-- Header with Workflow Switcher -->
+      <!-- HEADER: Workflow Switcher & Add Candidate -->
       <div class="ats-header">
         <div class="header-left">
           <label class="workflow-label">Current Workflow:</label>
@@ -41,7 +41,8 @@
               class="workflow-switcher"
             >
               <option *ngFor="let job of availableJobs" [value]="job.id">
-                {{ job.client_name }} - {{ job.job_description | slice:0:30 }}...
+                <!-- Displays: Client Name - Job Role (Fallback to Description) -->
+                {{ job.client_name }} - {{ job.role || job.job_role || (job.job_description | slice:0:30) }}
               </option>
             </select>
             <span class="dropdown-arrow">▼</span>
@@ -53,7 +54,7 @@
         </button>
       </div>
 
-      <!-- Add Candidate Dropdown Panel -->
+      <!-- ADD CANDIDATE OVERLAY PANEL -->
       <div *ngIf="showAddCandidate" class="add-candidate-overlay">
         <h4>Add to Pipeline</h4>
         <input type="text" placeholder="Search Candidate Name..." 
@@ -72,12 +73,14 @@
       <!-- KANBAN BOARD -->
       <div class="pipeline-board" cdkDropListGroup>
         <div class="stage-column" *ngFor="let stage of stages">
+          
+          <!-- Stage Header -->
           <div class="stage-header">
             <span>{{ stage }}</span>
             <span class="stage-count">{{ pipelineData[stage]?.length || 0 }}</span>
           </div>
 
-          <!-- Used a generic 'Download' SVG icon -->
+          <!-- Download Stage Report Button -->
           <button 
             class="icon-btn download-btn" 
             title="Download {{stage}} Report" 
@@ -90,22 +93,47 @@
             </svg>
           </button>
 
+          <!-- Drop List Area -->
           <div class="card-list"
                cdkDropList
                [cdkDropListData]="pipelineData[stage]"
                (cdkDropListDropped)="drop($event, stage)">
 
+            <!-- Candidate Card -->
             <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
-              <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
-
-              <!-- NEW: VIEW ICON -->
-              <button class="view-icon-btn" (click)="viewCandidateDetails(app.candidate_details)" title="View Details">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
               
+              <!-- Card Header Row: Name + Action Icons -->
+              <div class="card-header-row">
+                <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
+                
+                <div class="card-actions">
+                  <!-- Eye Icon (View Details) -->
+                  <button class="action-icon-btn view-btn" (click)="viewCandidateDetails(app.candidate_details)" title="View Details">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+
+                  <!-- File Icon (Open Resume) -->
+                  <button 
+                    class="action-icon-btn file-btn" 
+                    [class.disabled]="!app.candidate_details.resume && !app.candidate_details.resume_url"
+                    (click)="openResume(app.candidate_details.resume || app.candidate_details.resume_url)" 
+                    title="Open Resume"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Card Details -->
               <div class="card-info-row">
                 <span class="card-label">Exp:</span> {{ app.candidate_details.total_experience_min }}y
               </div>
@@ -134,21 +162,39 @@
 
 
 <!-- ========================================== -->
-<!-- NEW: CANDIDATE DETAILS MODAL OVERLAY       -->
+<!-- CANDIDATE DETAILS MODAL OVERLAY            -->
 <!-- ========================================== -->
 <div *ngIf="showCandidateDetails && selectedCandidate" class="details-modal-overlay">
   <div class="details-modal">
     
-    <!-- Header -->
+    <!-- Header with Name, File Icon, ID, Close Button -->
     <div class="details-modal-header">
       <div class="details-title-group">
-        <h2>{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h2>{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
+          
+          <!-- File Icon in Modal Header -->
+          <button 
+            class="action-icon-btn file-btn modal-icon" 
+            [class.disabled]="!selectedCandidate.resume && !selectedCandidate.resume_url"
+            (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)" 
+            title="Open Resume"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </button>
+        </div>
         <span class="details-id">ID: {{ selectedCandidate.id }}</span>
       </div>
       <button class="close-details-btn" (click)="closeCandidateDetails()">×</button>
     </div>
 
-    <!-- Body -->
+    <!-- Modal Body -->
     <div class="details-modal-body">
       
       <!-- Section 1: Contact & Location -->
@@ -222,28 +268,56 @@
 
     </div>
 
-    <!-- Footer: CV Action -->
+    <!-- Footer Area (Optional - Left empty as View Resume is in Header) -->
     <div class="details-modal-footer">
-      <div *ngIf="selectedCandidate.resume_url; else noCv" class="cv-available">
-        <button class="view-cv-btn" (click)="openResume(selectedCandidate.resume_url)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-          View Resume
-        </button>
-      </div>
-      <ng-template #noCv>
-        <span class="no-cv-text">No Resume Attached</span>
-      </ng-template>
     </div>
 
   </div>
 </div>
 
+<!-- ============================================== -->
+<!-- MODAL: SCHEDULE INTERVIEW                      -->
+<!-- ============================================== -->
+<div *ngIf="showInterviewModal" class="input-modal-overlay">
+  <div class="input-modal">
+    <div class="input-modal-header">
+      <h3>Schedule Interview</h3>
+      <button class="close-btn" (click)="closeModals()">×</button>
+    </div>
+    <div class="input-modal-body">
+      <label>Select Interview Date</label>
+      <input type="date" [(ngModel)]="interviewDateInput" class="custom-input">
+    </div>
+    <div class="input-modal-footer">
+      <button class="modal-btn cancel" (click)="closeModals()">Cancel</button>
+      <button class="modal-btn confirm" (click)="submitInterview()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: REJECTION REASON                        -->
+<!-- ============================================== -->
+<div *ngIf="showRejectionModal" class="input-modal-overlay">
+  <div class="input-modal">
+    <div class="input-modal-header">
+      <h3>Reason for Rejection</h3>
+      <button class="close-btn" (click)="closeModals()">×</button>
+    </div>
+    <div class="input-modal-body">
+      <label>Please specify why this candidate is being rejected:</label>
+      <textarea [(ngModel)]="rejectionReasonInput" class="custom-textarea" placeholder="e.g. Skills mismatch, high CTC expectation..."></textarea>
+    </div>
+    <div class="input-modal-footer">
+      <button class="modal-btn cancel" (click)="closeModals()">Cancel</button>
+      <button class="modal-btn delete" (click)="submitRejection()">Reject Candidate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- GENERIC ALERT MESSAGE                          -->
+<!-- ============================================== -->
 <app-alert-message
   *ngIf="showAlert"
   [message]="alertMessage"

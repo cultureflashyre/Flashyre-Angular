@@ -17,23 +17,56 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 
 // Custom validator
+// 1. Existing Min < Max Validator (Refined)
 export function minMaxValidator(minControlName: string, maxControlName: string) {
   return (formGroup: AbstractControl): ValidationErrors | null => {
     const minControl = formGroup.get(minControlName);
     const maxControl = formGroup.get(maxControlName);
 
     if (minControl && maxControl && minControl.value != null && maxControl.value != null) {
-      if (minControl.value > maxControl.value) {
-        maxControl.setErrors({ minGreaterThanMax: true });
+      // Parse float to ensure we compare numbers, not strings
+      const minVal = parseFloat(minControl.value);
+      const maxVal = parseFloat(maxControl.value);
+
+      if (minVal > maxVal) {
+        maxControl.setErrors({ ...maxControl.errors, minGreaterThanMax: true });
         return { minGreaterThanMax: true };
       } else {
-        if (maxControl.hasError('minGreaterThanMax')) {
-          maxControl.setErrors(null);
+        // Clean up this specific error if it exists
+        if (maxControl.errors && maxControl.errors['minGreaterThanMax']) {
+          delete maxControl.errors['minGreaterThanMax'];
+          if (Object.keys(maxControl.errors).length === 0) {
+            maxControl.setErrors(null);
+          }
         }
       }
     }
     return null;
   };
+}
+
+// 2. NEW: Relevant <= Total Validator
+export function relevantVsTotalValidator(group: AbstractControl): ValidationErrors | null {
+  const totalMax = group.get('total_experience_max');
+  const relevantMax = group.get('relevant_experience_max');
+
+  if (totalMax && relevantMax && totalMax.value != null && relevantMax.value != null) {
+    const totalVal = parseFloat(totalMax.value);
+    const relevantVal = parseFloat(relevantMax.value);
+
+    if (relevantVal > totalVal) {
+      relevantMax.setErrors({ ...relevantMax.errors, relevantExceedsTotal: true });
+      return { relevantExceedsTotal: true };
+    } else {
+      if (relevantMax.errors && relevantMax.errors['relevantExceedsTotal']) {
+        delete relevantMax.errors['relevantExceedsTotal'];
+        if (Object.keys(relevantMax.errors).length === 0) {
+          relevantMax.setErrors(null);
+        }
+      }
+    }
+  }
+  return null;
 }
 
 @Component({
@@ -344,20 +377,22 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   private initializeForm(): void {
+    const locationPattern = /.*[a-zA-Z].*/;
     this.candidateForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
       last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
       phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      total_experience_min: [null, [Validators.required, Validators.min(0)]],
-      total_experience_max: [null, [Validators.required, Validators.min(0)]],
-      relevant_experience_min: [null, [Validators.required, Validators.min(0)]],
-      relevant_experience_max: [null, [Validators.required, Validators.min(0)]],
+      total_experience_min: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
+      total_experience_max: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
+      relevant_experience_min: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
+      relevant_experience_max: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
       expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
       expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
       current_ctc: ['', Validators.required],
-      preferred_location: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      current_location: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      // --- MODIFIED LOCATION VALIDATORS ---
+      preferred_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
+      current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
       work_experience: ['', Validators.required],
@@ -367,6 +402,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
         minMaxValidator('total_experience_min', 'total_experience_max'),
         minMaxValidator('relevant_experience_min', 'relevant_experience_max'),
         minMaxValidator('expected_ctc_min', 'expected_ctc_max'),
+        relevantVsTotalValidator
       ]
     });
   }
@@ -380,6 +416,28 @@ export class RecruiterWorkflowCandidate implements OnInit {
       email: ['']
     });
   }
+
+  preventInvalidChars(event: KeyboardEvent): void {
+    if (['e', 'E', '+', '-'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  // === NEW HELPER: Enforce 2 digits logic on paste or strict typing ===
+  enforceTwoDigits(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 2) {
+      input.value = input.value.slice(0, 2);
+      // We must manually trigger the form control update because slicing the value 
+      // programmatically might not always trigger Angular's change detection immediately
+      const controlName = input.getAttribute('formControlName');
+      if (controlName && this.candidateForm.get(controlName)) {
+        this.candidateForm.get(controlName)?.setValue(input.value);
+      }
+    }
+  }
+
+  
 
   loadCandidates(): void {
     this.candidateService.getCandidates().subscribe({
@@ -694,7 +752,23 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.candidateForm.markAllAsTouched();
 
     if (this.candidateForm.invalid) {
-      this.showAlert('Please fill out all required fields marked with an asterisk (*).', ['Close']);
+      // 1. Identify exactly which fields are invalid
+      const invalidFields: string[] = [];
+      const controls = this.candidateForm.controls;
+      
+      for (const name in controls) {
+        if (controls[name].invalid) {
+          // Convert field name to readable text (e.g., "current_ctc" -> "Current Ctc")
+          const readableName = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          invalidFields.push(readableName);
+        }
+      }
+
+      // 2. Show the specific list in the alert
+      this.showAlert(
+        `Please check the following fields: ${invalidFields.join(', ')}`, 
+        ['Close']
+      );
       return;
     }
 

@@ -495,18 +495,53 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   }
 
   // --- EXPORT TO EXCEL ---
+  // --- EXPORT TO EXCEL (UPDATED) ---
   downloadReport() {
     if (this.reportTableData.length === 0) {
       alert("No data to export");
       return;
     }
 
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.reportTableData);
+    // 1. Map raw backend data to clean Excel columns in the desired order
+    // Order requested: Screening beside Submission, Rejected beside Hired
+    const exportData = this.reportTableData.map(row => ({
+      'Recruiter': row.recruiter_name,
+      'Client': row.client,
+      'Job Role': row.job_title,
+      'Created At': row.created_at,
+      'Location': row.location,
+      'Source': row.data_source,
+      
+      // Metrics Ordering
+      'Total Applications': row.submissions, // Renamed from Submissions for clarity
+      'Screening': row.screening,            // New Column
+      'Interviews': row.interviews,
+      
+      'Hired': row.hired,
+      'Rejected': row.rejected,              // New Column beside Hired
+      'Rejection Reasons': row.rejection_reasons, // New Column
+      
+      'Status': row.status
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    
+    // Optional: Set column widths for better readability
+    const wscols = [
+      {wch: 20}, {wch: 20}, {wch: 25}, {wch: 12}, {wch: 15}, {wch: 15},
+      {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 40}, {wch: 10} 
+    ];
+    worksheet['!cols'] = wscols;
+
     const workbook: XLSX.WorkBook = { Sheets: { 'Report': worksheet }, SheetNames: ['Report'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     
     const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-    FileSaver.saveAs(data, 'Performance_Report.xlsx');
+    
+    // Create filename with date
+    const dateStr = new Date().toISOString().slice(0, 10);
+    FileSaver.saveAs(data, `Performance_Report_${dateStr}.xlsx`);
   }
+
   
 }

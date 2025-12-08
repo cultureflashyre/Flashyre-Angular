@@ -165,8 +165,9 @@
             <label>Job Requirement</label>
             <select [(ngModel)]="filters.job_id" (change)="applyFilter()" class="filter-select">
               <option value="">All Jobs</option>
-              <option *ngFor="let job of jobsList" [value]="job.id">{{ job.client_name }} - {{ job.job_description | slice:0:15 }}</option>
-            </select>
+              <option *ngFor="let job of jobsList" [value]="job.id">
+                {{ job.client_name }} - {{ job.job_role || job.role || (job.job_description | slice:0:15) }}
+              </option>            </select>
           </div>
           <div class="filter-item">
             <label>Source</label>
