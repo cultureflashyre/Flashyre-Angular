@@ -113,6 +113,23 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.loadCandidates();
   }
 
+   // === NEW METHOD START ===
+  /**
+   * Opens the candidate's resume in a new browser tab.
+   * If the URL is absolute (starts with http), it opens directly.
+   * Logic handles cases where it might be undefined.
+   */
+  openResume(url: string | undefined): void {
+    if (!url) {
+      this.showAlert('No resume file attached for this candidate.', ['Close']);
+      return;
+    }
+
+    // Since you are using GCP, the URL returned by Django will be a full URL 
+    // (e.g., https://storage.googleapis.com/...).
+    window.open(url, '_blank');
+  }
+
   private initializeForm(): void {
     this.candidateForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
