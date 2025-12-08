@@ -14,7 +14,7 @@
   background-color: #ffffff;
   border: 1px solid #dcdcdc;
   border-radius: 0 0 5px 5px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* Stronger shadow for "floating" effect */
   z-index: 1000; /* Ensure it sits on top of other elements */
 }
 
@@ -219,15 +219,33 @@
 
 /* Ensure the close button in the modal is positioned correctly */
 .form-modal-container .recruiter-workflow-candidate-container12 {
-  position: relative;
+  position: static !important;
 }
 
 .form-modal-container .close-panel-button {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: absolute !important;
+  
+  /* Adjust these values to fine-tune distance from the corner */
+  top: -5px !important;    
+  right: 15px !important;
+  
+  /* Ensure it sits above other content */
+  z-index: 1001 !important; 
+  
+  /* Visual styling */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
 
+.form-modal-container .close-panel-button:hover {
+  background-color: #f0f0f0;
+}
 
 
 /* --- NEW STYLES FOR FORM MODAL OVERLAY --- */
@@ -1288,6 +1306,7 @@
   min-height: 76px; /* Ensures it doesn't collapse if empty */
   display: flex;
   position: relative;
+  z-index: 100;
   align-items: flex-start;
   justify-content: space-between;
   /* Add some bottom margin to push the next row down when this grows */
@@ -1349,6 +1368,10 @@
   width: 100%;
   height: auto;
   display: flex;
+  /* --- KEY CHANGES START --- */
+  position: relative;
+  z-index: 10; /* Lower priority so locations dropdown floats over this */
+  /* --- KEY CHANGES END --- */
   align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
