@@ -243,3 +243,11 @@
 
   </div>
 </div>
+
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertAction($event)"
+  (close)="onAlertClose()"
+></app-alert-message>

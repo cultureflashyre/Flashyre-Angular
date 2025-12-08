@@ -62,10 +62,27 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
 
   // --- ANALYTICS DATA ---
   kpis = {
+    // New KPIs
+    total_candidates: 0,
+    total_clients: 0,
+    total_requirements: 0,
+    
+    // Existing KPIs
     total_submissions: 0,
     active_recruiters: 0,
     avg_time_to_fill: 0,
-    pipeline: { sourced: 0, screening: 0, interview: 0, hired: 0 },
+    
+    // Expanded Pipeline (7 stages)
+    pipeline: { 
+      Sourced: 0, 
+      Screening: 0, 
+      Submission: 0, 
+      Interview: 0, 
+      Offer: 0, 
+      Hired: 0, 
+      Rejected: 0 
+    },
+    
     sourcing: { top_source: 'N/A', quality_hires: 0, active_sources: 0 }
   };
 
@@ -76,7 +93,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     start_date: '',
     end_date: '',
     recruiter_id: '',
-    job_id: ''
+    job_id: '',
+    source: '' // New Filter
   };
 
   // Dropdown Lists
@@ -472,7 +490,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   }
 
   clearFilters() {
-    this.filters = { start_date: '', end_date: '', recruiter_id: '', job_id: '' };
+    this.filters = { start_date: '', end_date: '', recruiter_id: '', job_id: '', source: '' };
     this.fetchAnalytics();
   }
 

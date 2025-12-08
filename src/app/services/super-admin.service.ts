@@ -17,6 +17,9 @@ export class SuperAdminService {
     if (filters.client_name) params = params.set('client_name', filters.client_name);
     if (filters.job_id) params = params.set('job_id', filters.job_id);
 
+    // New Filter
+    if (filters.source) params = params.set('source', filters.source);
+
     return this.http.get(this.apiUrl + 'analytics/', { params });
   }
 

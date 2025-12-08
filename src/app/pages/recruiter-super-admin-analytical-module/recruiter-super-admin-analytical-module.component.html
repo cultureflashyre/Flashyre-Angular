@@ -139,13 +139,13 @@
     </div>
 
 
-    <div *ngIf="activeTab === 'reports'" class="recruiter-super-admin-analytical-module-container12">
-      <div class="recruiter-super-admin-analytical-module-container13">
-        <h5 class="recruiter-super-admin-analytical-module-text30">
-          Filters &amp; Exports
-        </h5>
+    <!-- TAB 1: REPORTS & ANALYTICS -->
+    <div *ngIf="activeTab === 'reports'" class="dashboard-content">
+      
+      <!-- 1. FILTERS -->
+      <div class="filter-card">
+        <div class="filter-header">Dashboard Filters</div>
         <div class="filters-row">
-          <!-- Date Range -->
           <div class="filter-item">
             <label>From</label>
             <input type="date" [(ngModel)]="filters.start_date" (change)="applyFilter()" class="filter-input">
@@ -154,270 +154,163 @@
             <label>To</label>
             <input type="date" [(ngModel)]="filters.end_date" (change)="applyFilter()" class="filter-input">
           </div>
-
-          <!-- Recruiter Dropdown -->
           <div class="filter-item">
+            <label>Recruiter</label>
             <select [(ngModel)]="filters.recruiter_id" (change)="applyFilter()" class="filter-select">
               <option value="">All Recruiters</option>
-              <option *ngFor="let rec of recruitersList" [value]="rec.user_id">
-                {{ rec.first_name }} {{ rec.last_name }}
-              </option>
+              <option *ngFor="let rec of recruitersList" [value]="rec.user_id">{{ rec.first_name }} {{ rec.last_name }}</option>
             </select>
           </div>
-
-          <!-- Job Requirement Dropdown -->
           <div class="filter-item">
+            <label>Job Requirement</label>
             <select [(ngModel)]="filters.job_id" (change)="applyFilter()" class="filter-select">
               <option value="">All Jobs</option>
-              <option *ngFor="let job of jobsList" [value]="job.id">
-                {{ job.client_name }} - {{ job.job_description | slice:0:15 }}...
-              </option>
+              <option *ngFor="let job of jobsList" [value]="job.id">{{ job.client_name }} - {{ job.job_description | slice:0:15 }}</option>
             </select>
           </div>
-
-          <!-- Download Button -->
-          <button class="download-report-btn" (click)="downloadReport()">
-            <span>Download Excel</span>
-          </button>
+          <div class="filter-item">
+            <label>Source</label>
+            <select [(ngModel)]="filters.source" (change)="applyFilter()" class="filter-select">
+              <option value="">All Sources</option>
+              <option value="Naukri">Naukri</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="External">External</option>
+            </select>
+          </div>
+          <button class="download-report-btn" (click)="downloadReport()">Download Report</button>
         </div>
-
       </div>
-      <div class="recruiter-super-admin-analytical-module-container20">
-        <h2 class="recruiter-super-admin-analytical-module-text39">
-          Key Preformance Indicators
-        </h2>
-        <div class="recruiter-super-admin-analytical-module-container21">
-          <div class="recruiter-super-admin-analytical-module-container22">
-            <div class="recruiter-super-admin-analytical-module-container23">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                class="recruiter-super-admin-analytical-module-icon55"
-              >
-                <g fill="none">
-                  <path
-                    d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20c0 1.48-.804 2.773-2 3.465L26.554 29a4 4 0 0 0-3.014.23L22 30h-3l-3-1.5l-3 1.5h-3l-1.54-.77A4 4 0 0 0 5.446 29L4 29.465A4 4 0 0 1 2 26z"
-                    fill="#E1D8EC"
-                  ></path>
-                  <path
-                    d="M10 11v10H2v1h8v8h1v-8h10v8h1v-8h8v-1h-8V11h8v-1h-8V2h-1v8H11V2h-1v8H2v1zm1 0h10v10H11z"
-                    fill="#B4ACBC"
-                  ></path>
-                  <path
-                    d="M6 30h4V10.214C10 9.542 9.453 9 8.774 9H5.226C4.547 9 4 9.542 4 10.213v19.252c.588.34 1.271.535 2 .535"
-                    fill="#00D26A"
-                  ></path>
-                  <path
-                    d="M17.774 17h-3.548c-.679 0-1.226.542-1.226 1.214V30h6V18.214c0-.672-.547-1.214-1.226-1.214"
-                    fill="#F70A8D"
-                  ></path>
-                  <path
-                    d="M22 30h4c.729 0 1.412-.195 2-.535V7.209C28 6.539 27.453 6 26.774 6h-3.548C22.547 6 22 6.54 22 7.209z"
-                    fill="#00A6ED"
-                  ></path>
-                </g>
-              </svg>
-              <span class="recruiter-super-admin-analytical-module-text40">
-                Recruiter Productivity
-              </span>
-            </div>
-            <div class="recruiter-super-admin-analytical-module-container24">
-              <div class="recruiter-super-admin-analytical-module-container25">
-                <span class="recruiter-super-admin-analytical-module-text41">
-                  Total Candidates Submission : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text42">
-                  Averge  Time-to-Fill : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text43">
-                  Active Recruiters : 
-                </span>
-              </div>
-              <div class="recruiter-super-admin-analytical-module-container26">
-                <span class="recruiter-super-admin-analytical-module-text44">
-                  {{ kpis.total_submissions }}
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text45">
-                  {{ kpis.avg_time_to_fill }} days
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text46">
-                  {{ kpis.active_recruiters }}
-                </span>
-              </div>
-            </div>
+
+      <!-- 2. HIGH-LEVEL METRICS (NEW KPIs) -->
+      <div>
+        <h3 class="kpi-section-title">Overview</h3>
+        <div class="kpi-grid">
+          <!-- New KPIs -->
+          <div class="kpi-card purple">
+            <span class="kpi-title">Total Candidates</span>
+            <span class="kpi-value">{{ kpis.total_candidates }}</span>
           </div>
-          <div class="recruiter-super-admin-analytical-module-container27">
-            <div class="recruiter-super-admin-analytical-module-container28">
-              <svg width="32" height="32" viewBox="0 0 48 48">
-                <g
-                  fill="none"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M39 6H9C7.34315 6 6 7.34315 6 9V39C6 40.6569 7.34315 42 9 42H39C40.6569 42 42 40.6569 42 39V9C42 7.34315 40.6569 6 39 6Z"
-                    fill="#2F88FF"
-                    stroke="#000"
-                  ></path>
-                  <path d="M15 21L33 21" stroke="#fff"></path>
-                  <path d="M15 27L33 27" stroke="#fff"></path>
-                  <path d="M33 21L26 14" stroke="#fff"></path>
-                  <path d="M22 34L15 27" stroke="#fff"></path>
-                </g>
-              </svg>
-              <span class="recruiter-super-admin-analytical-module-text47">
-                Pipeline Health (Real-Time)
-              </span>
-            </div>
-            <div class="recruiter-super-admin-analytical-module-container29">
-              <div class="recruiter-super-admin-analytical-module-container30">
-                <span class="recruiter-super-admin-analytical-module-text48">
-                  Sourced : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text49">
-                  In Screening : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text50">
-                  In Interview : 
-                </span>
-              </div>
-              <div class="recruiter-super-admin-analytical-module-container31">
-                <span class="recruiter-super-admin-analytical-module-text51">
-                  {{ kpis.pipeline.sourced }}
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text52">
-                  {{ kpis.pipeline.screening }}
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text53">
-                  {{ kpis.pipeline.interview }}
-                </span>
-              </div>
-            </div>
+          <div class="kpi-card purple">
+            <span class="kpi-title">Requirements Added</span>
+            <span class="kpi-value">{{ kpis.total_requirements }}</span>
           </div>
-          <div class="recruiter-super-admin-analytical-module-container32">
-            <div class="recruiter-super-admin-analytical-module-container33">
-              <svg width="32" height="32" viewBox="0 0 48 48">
-                <g fill="none">
-                  <path
-                    d="M23.8887 39.8887C32.7287 39.8887 39.8887 32.7287 39.8887 23.8887C39.8887 15.0487 32.7287 7.88867 23.8887 7.88867C15.0487 7.88867 7.88867 15.0487 7.88867 23.8887C7.88867 32.7287 15.0487 39.8887 23.8887 39.8887Z"
-                    fill="#2F88FF"
-                    stroke="#000"
-                    stroke-width="4"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                  ></path>
-                  <path
-                    d="M23.8887 31.8887C28.3087 31.8887 31.8887 28.3087 31.8887 23.8887C31.8887 19.4687 28.3087 15.8887 23.8887 15.8887C19.4687 15.8887 15.8887 19.4687 15.8887 23.8887C15.8887 28.3087 19.4687 31.8887 23.8887 31.8887Z"
-                    fill="#43CCF8"
-                    stroke="#fff"
-                    stroke-width="4"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                  ></path>
-                  <path
-                    d="M23.8887 25.8887C24.9887 25.8887 25.8887 24.9887 25.8887 23.8887C25.8887 22.7887 24.9887 21.8887 23.8887 21.8887C22.7887 21.8887 21.8887 22.7887 21.8887 23.8887C21.8887 24.9887 22.7887 25.8887 23.8887 25.8887Z"
-                    fill="#000"
-                  ></path>
-                  <path
-                    d="M23.8887 7.88867V3.88867"
-                    stroke="#000"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                  ></path>
-                  <path
-                    d="M37.8887 43.8887L33.8887 36.8887"
-                    stroke="#000"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                  ></path>
-                  <path
-                    d="M13.8887 36.8887L9.88867 43.8887"
-                    stroke="#000"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                  ></path>
-                </g>
-              </svg>
-              <span class="recruiter-super-admin-analytical-module-text54">
-                Sourcing Efficiency
-              </span>
-            </div>
-            <div class="recruiter-super-admin-analytical-module-container34">
-              <div class="recruiter-super-admin-analytical-module-container35">
-                <span class="recruiter-super-admin-analytical-module-text55">
-                  Top Source - Linkdin : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text56">
-                  Quality Hires (This Month) : 
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text57">
-                  Active Data Source : 
-                </span>
-              </div>
-              <div class="recruiter-super-admin-analytical-module-container36">
-                <span class="recruiter-super-admin-analytical-module-text58">
-                  {{ kpis.sourcing.top_source }}
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text59">
-                  {{ kpis.sourcing.quality_hires }}
-                </span>
-                <span class="recruiter-super-admin-analytical-module-text60">
-                  {{ kpis.sourcing.active_sources }}
-                </span>
-              </div>
-            </div>
+          <div class="kpi-card purple">
+            <span class="kpi-title">Clients Added</span>
+            <span class="kpi-value">{{ kpis.total_clients }}</span>
+          </div>
+          <div class="kpi-card orange">
+            <span class="kpi-title">Active Recruiters</span>
+            <span class="kpi-value">{{ kpis.active_recruiters }}</span>
           </div>
         </div>
       </div>
-      <div class="recruiter-super-admin-analytical-module-container37">
-        <h2 class="recruiter-super-admin-analytical-module-text61">Detailed Performance Reports</h2>
-        
-        <div class="recruiter-super-admin-analytical-module-container38">
-          <!-- Header -->
-          <div class="recruiter-super-admin-analytical-module-container39">
-            <span class="recruiter-super-admin-analytical-module-text62">Recruiter Name</span>
-            <span class="recruiter-super-admin-analytical-module-text63">Client</span>
-            <span class="recruiter-super-admin-analytical-module-text64">Job</span>
-            <span class="recruiter-super-admin-analytical-module-text65">Submissions</span>
-            <span class="recruiter-super-admin-analytical-module-text66">Hired</span>
-            <span class="recruiter-super-admin-analytical-module-text67">Source</span>
-            <span class="recruiter-super-admin-analytical-module-text68">Status</span>
+
+      <!-- 3. PERFORMANCE METRICS -->
+      <div>
+        <h3 class="kpi-section-title">Performance & Sourcing</h3>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-title">Total Submissions</span>
+            <span class="kpi-value">{{ kpis.total_submissions }}</span>
           </div>
-
-          <!-- Scrollable Rows -->
-          <div class="recruiter-super-admin-analytical-module-container40">
-            
-            <!-- Loop this row -->
-            <div *ngFor="let row of reportTableData" 
-                [ngClass]="row.status === 'Closed' ? 'recruiter-super-admin-analytical-module-container42' : 'recruiter-super-admin-analytical-module-container41'">
-              <span class="recruiter-super-admin-analytical-module-text69">{{ row.recruiter_name }}</span>
-              <span class="recruiter-super-admin-analytical-module-text70">{{ row.client }}</span>
-              <span class="recruiter-super-admin-analytical-module-text71">{{ row.job_title }}</span>
-              <span class="recruiter-super-admin-analytical-module-text72">{{ row.submissions }}</span>
-              <span class="recruiter-super-admin-analytical-module-text73">{{ row.hired }}</span>
-              <span class="recruiter-super-admin-analytical-module-text74">{{ row.data_source }}</span>
-              <span class="recruiter-super-admin-analytical-module-text75" 
-                    [style.color]="row.status === 'Active' ? '#1F882B' : '#F10400'">
-                {{ row.status }}
-              </span>
-            </div>
-
-            <!-- No Data Message -->
-            <div *ngIf="reportTableData.length === 0" style="padding:20px; text-align:center; width:100%;">
-              No data available for the selected filters.
-            </div>
-
+          <div class="kpi-card">
+            <span class="kpi-title">Avg Time-to-Fill</span>
+            <span class="kpi-value">{{ kpis.avg_time_to_fill }} <span style="font-size:14px; font-weight:400">days</span></span>
+          </div>
+          <div class="kpi-card green">
+            <span class="kpi-title">Quality Hires</span>
+            <span class="kpi-value">{{ kpis.sourcing.quality_hires }}</span>
+          </div>
+          <div class="kpi-card green">
+            <span class="kpi-title">Top Source</span>
+            <span class="kpi-value" style="font-size:22px;">{{ kpis.sourcing.top_source }}</span>
           </div>
         </div>
       </div>
+
+      <!-- 4. PIPELINE HEALTH (ALL STAGES) -->
+      <div class="pipeline-section">
+        <h3 class="kpi-section-title" style="margin-bottom:0">Pipeline Health (Real-Time)</h3>
+        <div class="pipeline-grid">
+          <div class="pipeline-stage">
+            <span class="stage-label">Sourced</span>
+            <span class="stage-value">{{ kpis.pipeline.Sourced }}</span>
+          </div>
+          <div class="pipeline-stage">
+            <span class="stage-label">Screening</span>
+            <span class="stage-value">{{ kpis.pipeline.Screening }}</span>
+          </div>
+          <div class="pipeline-stage">
+            <span class="stage-label">Submission</span>
+            <span class="stage-value">{{ kpis.pipeline.Submission }}</span>
+          </div>
+          <div class="pipeline-stage">
+            <span class="stage-label">Interview</span>
+            <span class="stage-value">{{ kpis.pipeline.Interview }}</span>
+          </div>
+          <div class="pipeline-stage">
+            <span class="stage-label">Offer</span>
+            <span class="stage-value">{{ kpis.pipeline.Offer }}</span>
+          </div>
+          <div class="pipeline-stage" style="background-color:#e6fffa">
+            <span class="stage-label">Hired</span>
+            <span class="stage-value" style="color:#1F882B">{{ kpis.pipeline.Hired }}</span>
+          </div>
+          <div class="pipeline-stage" style="background-color:#fff5f5">
+            <span class="stage-label">Rejected</span>
+            <span class="stage-value" style="color:#F10400">{{ kpis.pipeline.Rejected }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. DETAILED REPORT TABLE -->
+      <div class="table-card">
+        <div class="table-header-row">
+          <h3 class="kpi-section-title" style="margin:0">Detailed Performance Report</h3>
+        </div>
+        <div class="table-container">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Recruiter</th>
+                <th>Client</th>
+                <th>Job Title</th>
+                <th>Created At</th>
+                <th>Location</th>
+                <th>Source</th>
+                <th style="text-align:center">Submissions</th>
+                <th style="text-align:center">Interviews</th>
+                <th style="text-align:center">Hired</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of reportTableData">
+                <td>{{ row.recruiter_name }}</td>
+                <td>{{ row.client }}</td>
+                <td title="{{row.job_title}}">{{ row.job_title }}</td>
+                <td>{{ row.created_at }}</td>
+                <td>{{ row.location }}</td>
+                <td>{{ row.data_source }}</td>
+                <td style="text-align:center">{{ row.submissions }}</td>
+                <td style="text-align:center">{{ row.interviews }}</td>
+                <td style="text-align:center">{{ row.hired }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="row.status === 'Active' ? 'status-active' : 'status-closed'">
+                    {{ row.status }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="reportTableData.length === 0">
+                <td colspan="10" style="text-align:center; padding: 20px; color:#777;">
+                  No data matches the selected filters.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
     <!-- TAB 2: USER MANAGEMENT -->
