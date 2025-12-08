@@ -2,6 +2,45 @@
   display: contents; 
 }
 
+/* ... Existing styles ... */
+
+.location-suggestions-dropdown {
+  position: absolute;
+  top: 100%; /* Directly below the input container */
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000; /* Ensure it sits on top of other elements */
+}
+
+.suggestion-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background-color: #f5f5f5;
+  color: #05356C;
+}
+
+/* Ensure relative positioning for the parent container of the dropdown */
+.recruiter-workflow-candidate-job-title-container3, 
+.recruiter-workflow-candidate-job-title-container4 {
+  position: relative; 
+}
+
 /* --- NEW STYLE FOR DISABLED ICON --- */
 .icon-disabled {
   /* Set the icon color to a neutral gray */
@@ -34,8 +73,13 @@
   border: 1px solid #A7A7A7;
   border-radius: 5px;
   background-color: #FFFFFF;
+   /* Ensure height grows with content */
+  height: auto; 
   min-height: 48px; /* Match other input heights */
-  min-width: 1050px;
+  /* Ensure width fits parent */
+  width: 100%; 
+  min-width: unset; /* Remove the 1050px min-width if it was causing horizontal scroll issues */
+  box-sizing: border-box;
 }
 
 .skill-pill {
@@ -1239,17 +1283,21 @@
 .recruiter-workflow-candidate-job-title-company-name-container3 {
   flex: 0 0 auto;
   width: 100%;
-  height: 76px;
+  /* CHANGE THIS: Was height: 76px; */
+  height: auto; 
+  min-height: 76px; /* Ensures it doesn't collapse if empty */
   display: flex;
   position: relative;
   align-items: flex-start;
   justify-content: space-between;
+  /* Add some bottom margin to push the next row down when this grows */
+  margin-bottom: 16px; 
 }
  
 .recruiter-workflow-candidate-job-title-container3 {
   flex: 0 0 auto;
   width: 49%;
-  height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -1274,7 +1322,7 @@
 .recruiter-workflow-candidate-job-title-container4 {
   flex: 0 0 auto;
   width: 49%;
-  height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

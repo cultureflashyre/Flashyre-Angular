@@ -481,12 +481,75 @@
             <div class="recruiter-workflow-candidate-job-title-company-name-container3">
                 <div class="recruiter-workflow-candidate-job-title-container3">
                     <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
-                    <input type="text" formControlName="preferred_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input3 input"/>
+                    <!-- Pill Container -->
+                    <div class="skills-input-container" style="min-width: 100%;">
+                        <span *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">
+                          {{ loc }}
+                          <button type="button" class="remove-skill-button" (click)="removeLocation('preferred', i)">&times;</button>
+                        </span>
+                        
+                        <!-- Input with Event Binding -->
+                        <input 
+                            #prefInput
+                            type="text" 
+                            class="skills-entry-input" 
+                            placeholder="Search City..." 
+                            (input)="onPreferredLocationInput($event)"
+                            (keydown.enter)="addManualLocation($event, 'preferred')"
+                        />
+                    </div>
+                    
+                    <!-- Suggestions Dropdown -->
+                    <div class="location-suggestions-dropdown" *ngIf="showPreferredSuggestions && preferredSuggestions.length > 0">
+                        <div 
+                          class="suggestion-item" 
+                          *ngFor="let suggestion of preferredSuggestions"
+                          (click)="selectPreferredLocation(suggestion, prefInput)"
+                        >
+                          {{ suggestion.description }}
+                        </div>
+                    </div>
+                     <!-- Hidden input -->
+                    <input type="hidden" formControlName="preferred_location">
                 </div>
-                <div class="recruiter-workflow-candidate-job-title-container4">
+
+                <!-- CURRENT LOCATION -->
+                <div class="recruiter-workflow-candidate-job-title-container4" style="position: relative;">
                     <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
-                    <input type="text" formControlName="current_location" placeholder="Enter Job Location" class="recruiter-workflow-candidate-job-title-input4 input"/>
+                    
+                    <!-- Pill Container -->
+                    <div class="skills-input-container" style="min-width: 100%;">
+                        <span *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">
+                          {{ loc }}
+                          <button type="button" class="remove-skill-button" (click)="removeLocation('current', i)">&times;</button>
+                        </span>
+                        
+                        <!-- Input with Event Binding -->
+                        <input 
+                            #currInput
+                            type="text" 
+                            class="skills-entry-input" 
+                            placeholder="Search City..." 
+                            (input)="onCurrentLocationInput($event)"
+                            (keydown.enter)="addManualLocation($event, 'current')"
+                        />
+                    </div>
+
+                    <!-- Suggestions Dropdown -->
+                    <div class="location-suggestions-dropdown" *ngIf="showCurrentSuggestions && currentSuggestions.length > 0">
+                        <div 
+                          class="suggestion-item" 
+                          *ngFor="let suggestion of currentSuggestions"
+                          (click)="selectCurrentLocation(suggestion, currInput)"
+                        >
+                          {{ suggestion.description }}
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden input -->
+                    <input type="hidden" formControlName="current_location">
                 </div>
+            </div>
             </div>
 
             <div class="recruiter-workflow-candidate-container28">
@@ -528,7 +591,7 @@
                 </div>
                 <input type="hidden" formControlName="skills">
             </div>
-        </div>
+        
         
         <!-- Submit/Cancel Buttons -->
         <div class="recruiter-workflow-candidate-submit-cancel-buttons-container">

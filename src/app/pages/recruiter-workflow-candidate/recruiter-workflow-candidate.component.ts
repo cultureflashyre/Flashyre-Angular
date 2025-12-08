@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -6,12 +6,15 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin, Subject, of, Observable, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { RelativeDatePipe } from '../../pipe/relative-date.pipe';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 // Added from Parent: Service for fetching Jobs
 import { AdbRequirementService } from '../../services/adb-requirement.service';
+// Import Google Maps Loader
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
 
 // Custom validator
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -96,10 +99,35 @@ export class RecruiterWorkflowCandidate implements OnInit {
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
+  // --- Google Maps Properties ---
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader;
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any;
+
+  // Streams for Debouncing Input
+  private preferredInput$ = new Subject<string>();
+  private currentInput$ = new Subject<string>();
+  
+  // Suggestions State
+  preferredSuggestions: google.maps.places.AutocompletePrediction[] = [];
+  currentSuggestions: google.maps.places.AutocompletePrediction[] = [];
+  showPreferredSuggestions = false;
+  showCurrentSuggestions = false;
+
+  // Selected Data Arrays (for Pills)
+  preferredLocationsList: string[] = [];
+  currentLocationsList: string[] = [];
+  
+  private subscriptions = new Subscription();
+
+
   constructor(
     private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
+    private ngZone: NgZone, // Needed for Google Maps callbacks
     private candidateService: RecruiterWorkflowCandidateService,
     // Added Injection
     private adbRequirementService: AdbRequirementService,
@@ -107,11 +135,196 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
     this.initializeFilterForm();
+
+     // Initialize Google Loader
+    this.loader = new Loader({
+      apiKey: this.googleMapsApiKey,
+      version: 'weekly',
+      libraries: ['places']
+    });
   }
+
+  
 
   ngOnInit(): void {
     this.loadCandidates();
+    this.setupLocationAutocomplete();
+
   }
+
+  ngAfterViewInit(): void {
+    this.initializeGooglePlaces();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  // --- Google Maps Initialization ---
+  private async initializeGooglePlaces(): Promise<void> {
+    try {
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Fatal error: Google Maps script could not be loaded.', error);
+    }
+  }
+
+  // --- Setup RxJS Streams for Locations ---
+  private setupLocationAutocomplete(): void {
+    // 1. Preferred Location Stream
+    this.subscriptions.add(
+      this.preferredInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.showPreferredSuggestions = true;
+          this.initSessionToken();
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.preferredSuggestions = suggestions;
+        });
+      })
+    );
+
+    // 2. Current Location Stream
+    this.subscriptions.add(
+      this.currentInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.showCurrentSuggestions = true;
+          this.initSessionToken();
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.currentSuggestions = suggestions;
+        });
+      })
+    );
+  }
+
+  private initSessionToken(): void {
+    if (this.google && !this.sessionToken) {
+      this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+    }
+  }
+
+  private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!term.trim() || !this.placesService) {
+      return of([]);
+    }
+    
+    // Check if sessionToken needs initialization again
+    if (!this.sessionToken && this.google) {
+      this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+    }
+
+    return new Observable(observer => {
+      const request = {
+        input: term,
+        types: ['(cities)'], // Filter for cities
+        sessionToken: this.sessionToken
+      };
+
+      this.placesService!.getPlacePredictions(request, (predictions, status) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            observer.next(predictions);
+          } else {
+            observer.next([]);
+          }
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  // --- HTML Event Handlers ---
+
+  onPreferredLocationInput(event: Event): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showPreferredSuggestions = false;
+      return;
+    }
+    this.preferredInput$.next(term);
+  }
+
+  onCurrentLocationInput(event: Event): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showCurrentSuggestions = false;
+      return;
+    }
+    this.currentInput$.next(term);
+  }
+
+  selectPreferredLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
+    const locationName = prediction.description; // or structured_formatting.main_text
+    if (!this.preferredLocationsList.includes(locationName)) {
+      this.preferredLocationsList.push(locationName);
+      this.updateLocationControl('preferred_location', this.preferredLocationsList);
+    }
+    
+    inputElement.value = '';
+    this.showPreferredSuggestions = false;
+    this.preferredSuggestions = [];
+    this.sessionToken = undefined; // Reset token after selection
+  }
+
+  selectCurrentLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
+    const locationName = prediction.description;
+    if (!this.currentLocationsList.includes(locationName)) {
+      this.currentLocationsList.push(locationName);
+      this.updateLocationControl('current_location', this.currentLocationsList);
+    }
+
+    inputElement.value = '';
+    this.showCurrentSuggestions = false;
+    this.currentSuggestions = [];
+    this.sessionToken = undefined;
+  }
+
+  // Allow manual entry (Enter key) if they type something not in Google Maps
+  addManualLocation(event: any, type: 'preferred' | 'current'): void {
+    const value = event.target.value.trim();
+    if (value) {
+      if (type === 'preferred') {
+        if (!this.preferredLocationsList.includes(value)) {
+          this.preferredLocationsList.push(value);
+          this.updateLocationControl('preferred_location', this.preferredLocationsList);
+        }
+        this.showPreferredSuggestions = false;
+      } else {
+        if (!this.currentLocationsList.includes(value)) {
+          this.currentLocationsList.push(value);
+          this.updateLocationControl('current_location', this.currentLocationsList);
+        }
+        this.showCurrentSuggestions = false;
+      }
+      event.target.value = '';
+    }
+    event.preventDefault();
+  }
+
+  removeLocation(type: 'preferred' | 'current', index: number): void {
+    if (type === 'preferred') {
+      this.preferredLocationsList.splice(index, 1);
+      this.updateLocationControl('preferred_location', this.preferredLocationsList);
+    } else {
+      this.currentLocationsList.splice(index, 1);
+      this.updateLocationControl('current_location', this.currentLocationsList);
+    }
+  }
+
+  private updateLocationControl(controlName: string, list: string[]): void {
+    this.candidateForm.controls[controlName].setValue(list.join(', '));
+  }
+
 
    // === NEW METHOD START ===
   /**
@@ -410,6 +623,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
       this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
       this.candidateForm.patchValue(candidate);
       this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+      this.preferredLocationsList = candidate.preferred_location 
+        ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean) 
+        : [];
+      this.currentLocationsList = candidate.current_location 
+        ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean) 
+        : [];
       this.showForm('External'); 
     }
   }
@@ -533,5 +752,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.selectedFileName = '';
     this.isSubmitting = false;
     this.skills = []; 
+     this.preferredLocationsList = [];
+    this.currentLocationsList = [];
+    this.preferredSuggestions = [];
+    this.currentSuggestions = [];
   }
 }
