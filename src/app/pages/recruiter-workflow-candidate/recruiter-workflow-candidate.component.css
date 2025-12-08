@@ -2,44 +2,7 @@
   display: contents; 
 }
 
-/* --- VALIDATION STYLES --- */
 
-/* Turn border red when invalid and touched */
-.input.is-invalid, 
-select.is-invalid, 
-.is-invalid .skills-input-container {
-  border-color: #dc3545 !important;
-  background-image: none;
-}
-
-/* Error message styling */
-.validation-error {
-  width: 100%;
-  margin-top: 4px;
-  font-size: 12px;
-  color: #dc3545; /* Red color */
-  font-weight: 500;
-  display: block;
-}
-
-/* Specific spacing for row-based inputs */
-.recruiter-workflow-candidate-job-title-container1,
-.recruiter-workflow-candidate-company-name-container1,
-.recruiter-workflow-candidate-job-title-container2,
-.recruiter-workflow-candidate-company-name-container2,
-.recruiter-workflow-candidate-issued-date-container1,
-.recruiter-workflow-candidate-renewal-date-container,
-.recruiter-workflow-candidate-issued-date-container2,
-.recruiter-workflow-candidate-certificate-name-container,
-.recruiter-workflow-candidate-job-title-container3,
-.recruiter-workflow-candidate-job-title-container4,
-.recruiter-workflow-candidate-issued-date-container3,
-.recruiter-workflow-candidate-credentials-container {
-  /* Ensure container allows vertical growth for error message */
-  height: auto; 
-  min-height: 76px;
-  margin-bottom: 8px; 
-}
 
 /* ... Existing styles ... */
 

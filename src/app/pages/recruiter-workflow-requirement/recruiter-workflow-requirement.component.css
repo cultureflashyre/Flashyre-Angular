@@ -596,6 +596,16 @@
   align-items: flex-start;
   justify-content: space-between;
 }
+
+.assigned-and-job-title {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  justify-content: space-between;
+}
  
 .recruiter-workflow-requirement-job-title-container1 {
   flex: 0 0 auto;
@@ -653,6 +663,7 @@
   height: 76px;
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
 }
  
 .recruiter-workflow-requirement-issued-date-container1 {
@@ -1234,7 +1245,7 @@
 .recruiter-workflow-requirement-date-input1 {
   fill: #18191C;
   color: #18191C;
-  width: 31%;
+  width: 18.4%;
   height: 100%;
   display: flex;
   font-size: 20px;
@@ -1247,12 +1258,22 @@
   justify-content: flex-start;
   background-color: #FFFFFF;
 }
+
+.email-container {
+  width: 18.4%;
+  height: 100%;
+}
+
+.phone-container {
+  width: 18.4%;
+  height: 100%;
+}
  
 .recruiter-workflow-requirement-date-input2 {
   fill: #18191C;
   color: #18191C;
-  width: 31%;
-  height: 100%;
+  width:  18.4%;
+  height: 100%;   
   display: flex;
   font-size: 20px;
   align-items: center;
@@ -1268,7 +1289,41 @@
 .recruiter-workflow-requirement-date-input3 {
   fill: #18191C;
   color: #18191C;
-  width: 31%;
+  width: 18.4%;
+  height: 100%;
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+  padding-top: 0px;
+  border-color: rgba(120, 120, 120, 0.4);
+  padding-left: var(--dl-layout-space-unit);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+
+.recruiter-workflow-requirement-date-input4 {
+  fill: #18191C;
+  color: #18191C;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+  padding-top: 0px;
+  border-color: rgba(120, 120, 120, 0.4);
+  padding-left: var(--dl-layout-space-unit);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+
+.recruiter-workflow-requirement-date-input5 {
+  fill: #18191C;
+  color: #18191C;
+  width: 100%;
   height: 100%;
   display: flex;
   font-size: 20px;
@@ -2342,6 +2397,102 @@
 .recruiter-workflow-requirement-ats-icon:hover {
   color: #000; /* Or your preferred hover color */
 }
+
+.bulk-status-container {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.bulk-status-select {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  color: #555;
+  outline: none;
+}
+
+.bulk-status-select:hover {
+  border-color: #40a9ff;
+}
+
+/* === STATUS BADGE (CHIP) === */
+.status-badge-container {
+  position: relative; /* Anchor for popover */
+  margin-left: 15px;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px; /* Pill shape */
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.status-badge:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.status-arrow {
+  margin-left: 6px;
+  font-size: 8px;
+}
+
+/* === INLINE EDIT POPOVER === */
+.status-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  list-style: none;
+  padding: 4px 0;
+  min-width: 120px;
+  z-index: 1000;
+  border: 1px solid #eee;
+}
+
+.status-popover li {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.status-popover li:hover {
+  background-color: #f5f5f5;
+}
+
+.status-popover li.selected-option {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.status-popover .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
  
 @media(max-width: 1200px) {
   .recruiter-workflow-requirement-requirements-listing-container {
@@ -3044,7 +3195,8 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #fff;
-  min-height: 40px;
+  height: 48px;
+  max-height: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3074,7 +3226,6 @@
   border: none;
   outline: none;
   flex: 1;
-  width: 300px;
   font-size: 14px;
   padding: 4px;
   height: 48px;
