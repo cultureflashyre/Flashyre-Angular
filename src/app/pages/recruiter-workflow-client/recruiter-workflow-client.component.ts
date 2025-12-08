@@ -221,6 +221,29 @@ closeForm(): void {
       return;
     }
 
+    const clients = this.mainForm.value.clients;
+
+    // Iterate through each client block
+    for (let i = 0; i < clients.length; i++) {
+      const contacts = clients[i].contacts;
+      const emails = contacts.map((c: any) => c.email.toLowerCase());
+      const phones = contacts.map((c: any) => c.phone_number);
+
+      // Check for duplicate Emails in the current form
+      const hasDuplicateEmails = emails.some((item: any, idx: number) => emails.indexOf(item) !== idx);
+      if (hasDuplicateEmails) {
+        this.openAlert(`Duplicate email addresses found in Client #${i + 1}. Each contact must have a unique email.`, ['OK']);
+        return;
+      }
+
+      // Check for duplicate Phones in the current form
+      const hasDuplicatePhones = phones.some((item: any, idx: number) => phones.indexOf(item) !== idx);
+      if (hasDuplicatePhones) {
+        this.openAlert(`Duplicate phone numbers found in Client #${i + 1}. Each contact must have a unique number.`, ['OK']);
+        return;
+      }
+    }
+
     // Trigger Alert instead of window.confirm
     if (this.isEditMode) {
       this.pendingAction = { type: 'SUBMIT_UPDATE' };
@@ -260,8 +283,21 @@ closeForm(): void {
     const handleError = (err: any) => {
       console.error(err);
       this.isLoading = false;
-      this.showForm = true;
-      this.openAlert('Failed to save data. Please check your inputs.', ['OK']);
+      this.showForm = true; // Re-open form so they can fix it
+
+      // Check if backend sent a specific validation message
+      let msg = 'Failed to save data. Please check your inputs.';
+      
+      // If Django Serializer sent a "detail" error (as we coded in Step 1)
+      if (err.error && err.error.detail) {
+        msg = err.error.detail;
+      } 
+      // If it's a list error (standard DRF)
+      else if (Array.isArray(err.error)) {
+        msg = JSON.stringify(err.error);
+      }
+
+      this.openAlert(msg, ['OK']);
     };
 
     if (this.isEditMode) {

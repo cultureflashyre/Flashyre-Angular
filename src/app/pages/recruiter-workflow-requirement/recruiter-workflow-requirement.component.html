@@ -494,21 +494,37 @@
         <div id="job-title-company-name-container" class="recruiter-workflow-requirement-job-title-company-name-container1">
           <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container1">
             <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client</span>
-            <input type="text" id="employment-job-title-input" placeholder="Enter Client Name" class="recruiter-workflow-requirement-job-title-input1 input" [(ngModel)]="clientName" (input)="validateClientName($event)" />
+            <select 
+              id="employment-job-title-input" 
+              class="recruiter-workflow-requirement-job-title-input1 input" 
+              [(ngModel)]="clientName" 
+              (change)="onClientChange()"
+              style="background: transparent;">
+              <option value="" disabled selected>Select Client Name</option>
+              <option *ngFor="let c of clientList" [value]="c.client_name">{{ c.client_name }}</option>
+            </select>
           </div>
           <div id="candidate-company-name-container" class="recruiter-workflow-requirement-company-name-container1">
             <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text1">Sub Client</span>
-            <input type="text" id="employment-company-name-input" placeholder="Enter Sub Client Name" class="recruiter-workflow-requirement-company-name-input1 input" [(ngModel)]="subClientName" (input)="validateSubClientName($event)" />
+            <select 
+              id="employment-company-name-input" 
+              class="recruiter-workflow-requirement-company-name-input1 input" 
+              [(ngModel)]="subClientName"
+              style="background: transparent;">
+              <option value="" selected>Select Sub Client</option>
+              <option *ngFor="let sc of availableSubClients" [value]="sc">{{ sc }}</option>
+            </select>
           </div>
+          
         </div>
         <div id="issued-renewal-date-container" class="recruiter-workflow-requirement-issued-renewal-date-container1">
           <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container1">
             <div id="container" class="recruiter-workflow-requirement-container16">
               <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text1"><span>Total Experience</span><br /></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container1">
-                <div class="recruiter-workflow-requirement-container17"><input type="number" id="total-exp-min" placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input2 input" [(ngModel)]="experience.totalMin" (input)="validateExperience()" min="0" /></div>
+                <div class="recruiter-workflow-requirement-container17"><input type="number" id="total-exp-min" placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input2 input" [(ngModel)]="experience.totalMin" (input)="validateExperience($event)"  min="0" /></div>
                 <span>To</span>
-                <div class="recruiter-workflow-requirement-container18"><input type="number" id="total-exp-max" placeholder="Max Experience" class="recruiter-workflow-requirement-company-name-input3 input" [(ngModel)]="experience.totalMax" (input)="validateExperience()" min="0" /></div>
+                <div class="recruiter-workflow-requirement-container18"><input type="number" id="total-exp-max" placeholder="Max Experience" class="recruiter-workflow-requirement-company-name-input3 input" [(ngModel)]="experience.totalMax" (input)="validateExperience($event)"  min="0" /></div>
                 <span>Years</span>
               </div>
             </div>
@@ -517,9 +533,9 @@
             <div id="certification-renewal-date-container" class="recruiter-workflow-requirement-container19">
               <span id="certificate-renewal-date-text" class="recruiter-workflow-requirement-renewal-date-text"><span>Relavant Experience</span><br /></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container2">
-                <div class="recruiter-workflow-requirement-container20"><input type="number" id="rel-exp-min" placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input4 input" [ngClass]="{'input-error': errors.minExperience}" [(ngModel)]="experience.relevantMin" (input)="validateExperience()" min="0" /></div>
+                <div class="recruiter-workflow-requirement-container20"><input type="number" id="rel-exp-min" placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input4 input" [ngClass]="{'input-error': errors.minExperience}" [(ngModel)]="experience.relevantMin" (input)="validateExperience($event)"  min="0" /></div>
                 <span>To</span>
-                <div class="recruiter-workflow-requirement-container21"><input type="number" id="rel-exp-max" placeholder="Max Experience" class="recruiter-workflow-requirement-company-name-input5 input" [ngClass]="{'input-error': errors.maxExperience}" [(ngModel)]="experience.relevantMax" (input)="validateExperience()" min="0" /></div>
+                <div class="recruiter-workflow-requirement-container21"><input type="number" id="rel-exp-max" placeholder="Max Experience" class="recruiter-workflow-requirement-company-name-input5 input" [ngClass]="{'input-error': errors.maxExperience}" [(ngModel)]="experience.relevantMax" (input)="validateExperience($event)"  min="0" /></div>
                 <span>Years</span>
               </div>
               <div *ngIf="errors.minExperience || errors.maxExperience" style="margin-top: 5px;">
@@ -569,7 +585,8 @@
             <input type="date" id="employment-company-name-input" placeholder="Enter Date" class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate" [min]="minDate" />
           </div>
         </div>
-        <div style="margin-top: 15px; width: 49%;">
+        <div class="assigned-and-job-title">
+        <div style="width: 49%;">
           <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
           <div class="multi-select-container" (click)="filterUsers()">
             <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
@@ -586,6 +603,31 @@
             <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:#999;">No matching users found.</div>
           </div>
         </div>
+        <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container2" style="position:relative;">
+            <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text2">Interview Location</span>
+            
+            <input 
+              type="text" 
+              id="employment-job-title-input" 
+              placeholder="Enter Job Location" 
+              class="recruiter-workflow-requirement-job-title-input2 input" 
+              [value]="interviewLocation" 
+              (input)="onLocationInput($event)" 
+              autocomplete="off"
+            />
+
+            <!-- LOCATION SUGGESTIONS DROPDOWN -->
+            <ul *ngIf="showLocationSuggestions && locationSuggestions.length > 0" 
+                class="custom-dropdown-list" 
+                style="top: 75px; width: 90%; max-height: 200px; overflow-y: auto; z-index: 1000;">
+              <li *ngFor="let loc of locationSuggestions" 
+                  class="custom-dropdown-item" 
+                  (click)="selectLocation(loc)">
+                {{ loc.display_name }}
+              </li>
+            </ul>
+          </div>
+          </div>
         <div class="recruiter-workflow-requirement-job-title-company-name-container2">
           <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container3">
             <div id="container" class="recruiter-workflow-requirement-container27">
@@ -629,6 +671,18 @@
               <input type="text" [id]="'location-input-' + i" placeholder="Location" class="recruiter-workflow-requirement-date-input1 input" [(ngModel)]="detail.location" (input)="validateDetailLocation(i, $event)" />
               <input type="text" [id]="'spoc-input-' + i" placeholder="Spoc" class="recruiter-workflow-requirement-date-input2 input" [(ngModel)]="detail.spoc" (input)="validateDetailSpoc(i, $event)" />
               <input type="text" [id]="'vacancies-input-' + i" placeholder="Number of vacencies" class="recruiter-workflow-requirement-date-input3 input" [(ngModel)]="detail.vacancies" (input)="validateDetailVacancies(i, $event)" />
+              <div class="email-container">
+                <input type="email" placeholder="Spoc Email" class="recruiter-workflow-requirement-date-input4 input" [(ngModel)]="detail.email" (input)="validateAdditionalDetails(i)"  />
+                <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
+                  <span *ngIf="additionalDetailsErrors[i]?.email">{{ additionalDetailsErrors[i].email }}</span>
+                </div>
+              </div>
+              <div class="phone-container">
+              <input type="text" placeholder="Spoc Phone" class="recruiter-workflow-requirement-date-input5 input" [(ngModel)]="detail.phone" (input)="validateAdditionalDetails(i)" maxlength="10" />
+              <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
+                <span *ngIf="additionalDetailsErrors[i]?.phone">{{ additionalDetailsErrors[i].phone }}</span>
+              </div>
+              </div>
               <svg id="remove-icon" width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-remove-icon" (click)="removeDetail(i)" style="cursor: pointer;"><path d="M19 13H5v-2h14z" fill="currentColor"></path></svg>
             </div>
           </div>

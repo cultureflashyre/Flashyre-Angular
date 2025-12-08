@@ -346,7 +346,9 @@
         <!-- Error Handling -->
         <div *ngIf="contact.get('email')?.invalid && contact.get('email')?.touched" style="color: red; font-size: 12px;">
            <span *ngIf="contact.get('email')?.errors?.['required']">Required</span>
-           <span *ngIf="contact.get('email')?.errors?.['email']">Invalid Email format.</span>
+           <span *ngIf="contact.get('email')?.errors?.['email']">
+            Invalid Email format (e.g., user&#64;example.com).
+          </span>
         </div>
       </div>
 

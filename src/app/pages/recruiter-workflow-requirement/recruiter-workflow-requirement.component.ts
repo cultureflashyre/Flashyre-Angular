@@ -7,7 +7,7 @@ import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // Add these
 
@@ -35,6 +35,15 @@ export class RecruiterWorkflowRequirement implements OnInit {
   jobRole: string = ''; 
   interviewLocation: string = '';
   interviewDate: string = '';
+
+  clientList: any[] = []; // Stores the API response
+  availableSubClients: string[] = []; // Sub-clients for the selected client
+
+  // NEW PROPERTIES FOR LOCATION SEARCH
+  locationSuggestions: any[] = [];
+  showLocationSuggestions: boolean = false;
+  searchTimeout: any;
+
   
   // 2. View Switching & Data List
   isFormVisible: boolean = false;
@@ -64,6 +73,8 @@ export class RecruiterWorkflowRequirement implements OnInit {
   selectedAssignees: any[] = [];  // Users selected in the form
   userSearchText: string = '';    // Input text
   isUserDropdownOpen: boolean = false;
+
+  additionalDetailsErrors: any[] = [];
 
   constructor(
     private title: Title, 
@@ -132,7 +143,32 @@ getFileName(): string {
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
     this.fetchAvailableUsers();
+    this.fetchClientList();
   }
+
+  fetchClientList() {
+    this.adbService.getClientsForDropdown().subscribe({
+      next: (data) => {
+        this.clientList = data;
+      },
+      error: (err) => console.error('Error loading clients', err)
+    });
+  }
+
+  onClientChange() {
+    // Find selected client object
+    const selectedClientObj = this.clientList.find(c => c.client_name === this.clientName);
+    if (selectedClientObj) {
+      this.availableSubClients = selectedClientObj.sub_clients;
+    } else {
+      this.availableSubClients = [];
+    }
+    // Clear subclient if it doesn't belong to new client
+    if (!this.availableSubClients.includes(this.subClientName)) {
+      this.subClientName = '';
+    }
+  }
+
 
   // 1. Fetch Users from Backend
   fetchAvailableUsers() {
@@ -227,16 +263,40 @@ getFileName(): string {
     input.value = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
   }
 
- validateExperience() {
-    // 1. Prevent Negative Values (Auto-correct to 0)
+ validateExperience(event: any = null) {
+    
+    // --- 1. DOM LEVEL ENFORCEMENT (The Fix) ---
+    if (event) {
+      const input = event.target as HTMLInputElement;
+      
+      // Remove any non-numeric characters (like 'e', '-', '.') and slice to 2 digits
+      // This forces the input box to physically show only 2 digits
+      const cleanValue = input.value.replace(/[^0-9]/g, '').slice(0, 2);
+
+      // If the input had more than 2 digits or invalid chars, we force the update
+      if (input.value !== cleanValue) {
+        input.value = cleanValue;
+        
+        // Manually sync the specific model variable to ensure Angular catches up
+        // (Since we modified the DOM value programmatically)
+        const val = cleanValue === '' ? null : Number(cleanValue);
+        
+        if (input.id === 'total-exp-min') this.experience.totalMin = val;
+        if (input.id === 'total-exp-max') this.experience.totalMax = val;
+        if (input.id === 'rel-exp-min') this.experience.relevantMin = val;
+        if (input.id === 'rel-exp-max') this.experience.relevantMax = val;
+      }
+    }
+
+    // --- 2. LOGICAL VALIDATION (Min vs Max) ---
+    
+    // Auto-correct negatives (fallback)
     if (this.experience.totalMin !== null && this.experience.totalMin < 0) this.experience.totalMin = 0;
     if (this.experience.totalMax !== null && this.experience.totalMax < 0) this.experience.totalMax = 0;
     if (this.experience.relevantMin !== null && this.experience.relevantMin < 0) this.experience.relevantMin = 0;
     if (this.experience.relevantMax !== null && this.experience.relevantMax < 0) this.experience.relevantMax = 0;
 
-    // 2. Validate Relevant vs Total (Set Error Flags)
-    
-    // Check Min Experience
+    // Check Min vs Max errors
     if (
       this.experience.totalMin !== null && 
       this.experience.relevantMin !== null && 
@@ -247,7 +307,6 @@ getFileName(): string {
       this.errors.minExperience = false;
     }
 
-    // Check Max Experience
     if (
       this.experience.totalMax !== null && 
       this.experience.relevantMax !== null && 
@@ -258,6 +317,7 @@ getFileName(): string {
       this.errors.maxExperience = false;
     }
   }
+
   salary = {
     min: null as number | null,
     max: null as number | null
@@ -317,7 +377,7 @@ toggleNoticePeriodDropdown() {
     }
   }
   additionalDetails = [
-    { location: '', spoc: '', vacancies: '' }
+    { location: '', spoc: '', vacancies: '', email: '', phone: '' }
   ];
 
   // 1. Validate Location: Allows a-z, A-Z, space, and comma
@@ -361,7 +421,7 @@ toggleNoticePeriodDropdown() {
     this.additionalDetails.splice(index, 1);
   }
    addDetail() {
-    this.additionalDetails.push({ location: '', spoc: '', vacancies: '' });
+    this.additionalDetails.push({ location: '', spoc: '', vacancies: '', email: '', phone: '' });
   }
 
  onEdit(item: any) {
@@ -399,10 +459,12 @@ toggleNoticePeriodDropdown() {
       this.additionalDetails = item.location_details.map((loc: any) => ({
         location: loc.location,
         spoc: loc.spoc_name,
-        vacancies: loc.vacancies.toString()
+        vacancies: loc.vacancies.toString(),
+        email: loc.email || '',
+        phone: loc.phone_number || ''
       }));
     } else {
-      this.additionalDetails = [{ location: '', spoc: '', vacancies: '' }];
+      this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '' }];
     }
 
     // POPULATE ASSIGNED USERS
@@ -411,6 +473,9 @@ toggleNoticePeriodDropdown() {
     } else {
       this.selectedAssignees = [];
     }
+    setTimeout(() => {
+        this.onClientChange();
+    }, 100);
   }
 
   downloadCardAsPdf(index: number) {
@@ -478,6 +543,20 @@ toggleNoticePeriodDropdown() {
     }
     // --- End: Validations ---
 
+    // Validate Additional Details for errors before submitting
+    let hasDetailErrors = false;
+    this.additionalDetails.forEach((_, index) => {
+        this.validateAdditionalDetails(index);
+        if (this.additionalDetailsErrors[index]?.email || this.additionalDetailsErrors[index]?.phone) {
+            hasDetailErrors = true;
+        }
+    });
+
+    if (hasDetailErrors) {
+        this.triggerAlert('Please fix errors in Additional Details (Email/Phone)', ['OK']);
+        return;
+    }
+
     // The old 'payload' object is replaced by this 'FormData' object
     const formData = new FormData();
 
@@ -517,12 +596,16 @@ toggleNoticePeriodDropdown() {
       .map(d => ({
         location: d.location,
         spoc_name: d.spoc,
-        vacancies: parseInt(d.vacancies) || 1
+        vacancies: parseInt(d.vacancies) || 1,
+        // Add new fields
+        email: d.email,
+        phone_number: d.phone
       }));
-    // NOTE: Django REST Framework can parse a JSON string for a related field
+
     if (validLocationDetails.length > 0) {
         formData.append('location_details', JSON.stringify(validLocationDetails));
     }
+
 
     // --- Step 4: Call the service using the new formData object ---
     // The service call is the same, but it now sends formData instead of 'payload'
@@ -577,7 +660,7 @@ toggleNoticePeriodDropdown() {
     this.salary = { min: null, max: null };
     this.selectedNoticePeriod = '';
     this.selectedGender = '';
-    this.additionalDetails = [{ location: '', spoc: '', vacancies: '' }];
+    this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '' }];
     this.selectedAssignees = [];
     this.userSearchText = '';
 
@@ -789,4 +872,84 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
       console.error('Requirement ID is missing, cannot navigate to ATS.');
     }
   }
+
+  // --- 3. LOCATION SEARCH SUGGESTION ---
+  onLocationInput(event: any) {
+    const query = event.target.value;
+    this.interviewLocation = query; // Update model
+    
+    // Validate characters (existing logic)
+    this.validateLocation(event); 
+
+    if (query.length < 3) {
+      this.locationSuggestions = [];
+      this.showLocationSuggestions = false;
+      return;
+    }
+
+    // Debounce API call
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    
+    this.searchTimeout = setTimeout(() => {
+      this.adbService.searchLocations(query).subscribe({
+        next: (res: any[]) => {
+          this.locationSuggestions = res;
+          this.showLocationSuggestions = true;
+        },
+        error: () => {
+          this.showLocationSuggestions = false;
+        }
+      });
+    }, 500); // Wait 500ms after typing stops
+  }
+
+  selectLocation(loc: any) {
+    this.interviewLocation = loc.display_name.split(',')[0]; // Take city name
+    this.showLocationSuggestions = false;
+  }
+
+  // --- 4. ADDITIONAL DETAILS (EMAIL/PHONE VALIDATION) ---
+  
+  // Regex patterns
+  emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  phoneRegex = /^[0-9]{10}$/; // Simple 10 digit validation
+
+  validateAdditionalDetails(index: number) {
+    // Initialize error object for this index if not exists
+    if (!this.additionalDetailsErrors[index]) {
+      this.additionalDetailsErrors[index] = { email: '', phone: '' };
+    }
+
+    const currentItem = this.additionalDetails[index];
+    const errors = this.additionalDetailsErrors[index];
+
+    // 1. Email Format
+    if (currentItem.email && !this.emailRegex.test(currentItem.email)) {
+      errors.email = 'Invalid email format';
+    } else {
+      errors.email = '';
+    }
+
+    // 2. Phone Format
+    if (currentItem.phone && !this.phoneRegex.test(currentItem.phone)) {
+      errors.phone = 'Phone must be 10 digits';
+    } else {
+      errors.phone = '';
+    }
+
+    // 3. Duplicate Check (Check against other items in the array)
+    const allEmails = this.additionalDetails.map(d => d.email).filter(e => e);
+    const allPhones = this.additionalDetails.map(d => d.phone).filter(p => p);
+
+    // Check Duplicate Email
+    if (currentItem.email && allEmails.indexOf(currentItem.email) !== allEmails.lastIndexOf(currentItem.email)) {
+       errors.email = 'Duplicate Email in list';
+    }
+
+    // Check Duplicate Phone
+    if (currentItem.phone && allPhones.indexOf(currentItem.phone) !== allPhones.lastIndexOf(currentItem.phone)) {
+       errors.phone = 'Duplicate Phone in list';
+    }
+  }
+  
 }
