@@ -30,6 +30,14 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
   ]
 })
 export class RecruiterWorkflowRequirement implements OnInit {
+  statusOptions = [
+    { label: 'Active', color: '#28a745' },  // Green
+    { label: 'On-hold', color: '#ffc107' }, // Yellow
+    { label: 'Hired', color: '#17a2b8' },   // Blue
+    { label: 'Closed', color: '#dc3545' }   // Red
+  ];
+  bulkStatusSelected: string = '';
+
   clientName: string = '';
   subClientName: string = '';
   jobRole: string = ''; 
@@ -144,6 +152,85 @@ getFileName(): string {
     this.fetchRequirements(); // Fetch the data as soon as page loads
     this.fetchAvailableUsers();
     this.fetchClientList();
+  }
+
+  getStatusColor(status: string): string {
+    const found = this.statusOptions.find(s => s.label === status);
+    return found ? found.color : '#ccc';
+  }
+
+  // 3. INLINE EDIT: Toggle Popover
+  toggleStatusPopover(item: any, event: Event) {
+    event.stopPropagation(); // Prevent card click
+    // Close others
+    this.requirementsList.forEach(req => {
+      if (req !== item) req.showStatusDropdown = false;
+    });
+    item.showStatusDropdown = !item.showStatusDropdown;
+  }
+
+  // 4. INLINE EDIT: Update Status
+  updateSingleStatus(item: any, newStatus: string, event: Event) {
+    event.stopPropagation();
+    item.showStatusDropdown = false; // Close popover
+
+    if (item.status === newStatus) return;
+
+    // Optimistic UI Update
+    const oldStatus = item.status;
+    item.status = newStatus;
+
+    // Create FormData for the backend
+    const formData = new FormData();
+    formData.append('status', newStatus);
+
+    this.adbService.updateRequirement(item.id, formData).subscribe({
+      next: () => {
+        // Success
+      },
+      error: (err) => {
+        item.status = oldStatus; // Revert on error
+        this.triggerAlert('Failed to update status', ['OK']);
+      }
+    });
+  }
+
+  // 5. BULK UPDATE LOGIC
+  // Triggered when the dropdown next to Delete button changes
+  onBulkStatusChange(event: any) {
+    const newStatus = event.target.value;
+    if (!newStatus) return;
+
+    const selectedItems = this.requirementsList.filter(item => item.selected);
+    if (selectedItems.length === 0) return;
+
+    // Prepare Observables for all selected items
+    const updateRequests = selectedItems.map(item => {
+      const formData = new FormData();
+      formData.append('status', newStatus);
+      
+      // Update local model immediately (UI feedback)
+      item.status = newStatus;
+      
+      return this.adbService.updateRequirement(item.id, formData);
+    });
+
+    // Execute all updates
+    forkJoin(updateRequests).subscribe({
+      next: () => {
+        this.triggerAlert('Selected items updated successfully', ['OK']);
+        this.bulkStatusSelected = ''; // Reset dropdown
+        // Uncheck items? Optional. keeping them selected for now.
+      },
+      error: (err) => {
+        this.triggerAlert('Some updates failed', ['OK']);
+        this.fetchRequirements(); // Refresh to get actual server state
+      }
+    });
+  }
+
+  get isAnySelected(): boolean {
+    return this.requirementsList && this.requirementsList.some(item => item.selected);
   }
 
   fetchClientList() {

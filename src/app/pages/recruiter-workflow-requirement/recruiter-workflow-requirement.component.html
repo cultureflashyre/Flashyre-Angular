@@ -185,7 +185,21 @@
             <div
               id="filter-sort-download-zip-container"
               class="recruiter-workflow-requirement-filter-sort-download-zip-container"
-            >
+            > 
+              <!-- === NEW: BULK STATUS DROPDOWN === -->
+              <!-- We use isAnySelected here instead of the arrow function -->
+              <div class="bulk-status-container" *ngIf="isAnySelected" style="margin-right: 15px;">
+                <select 
+                    class="bulk-status-select"
+                    [(ngModel)]="bulkStatusSelected"
+                    (change)="onBulkStatusChange($event)"
+                >
+                    <option value="" disabled selected>Change Status</option>
+                    <option *ngFor="let opt of statusOptions" [value]="opt.label">
+                      Set to {{ opt.label }}
+                    </option>
+                </select>
+              </div>
               <button
                 id="filtered-button"
                 type="button"
@@ -267,9 +281,34 @@
                       />
                     </div>
                     <div class="recruiter-workflow-requirement-container36">
+                      <div style="display: flex; gap: 16px; align-items: flex-start; width: auto;">
                       <span class="recruiter-workflow-requirement-text55">
                         {{ item.job_role }}
                       </span>
+                      <div class="status-badge-container">
+                        <div 
+                            class="status-badge" 
+                            [style.background-color]="getStatusColor(item.status)"
+                            [style.border-color]="getStatusColor(item.status)"
+                            (click)="toggleStatusPopover(item, $event)"
+                        >
+                            <span class="status-text">{{ item.status || 'Active' }}</span>
+                            <span class="status-arrow">▼</span>
+                        </div>
+
+                        <!-- POPOVER MENU -->
+                        <ul class="status-popover" *ngIf="item.showStatusDropdown">
+                            <li 
+                                *ngFor="let opt of statusOptions" 
+                                (click)="updateSingleStatus(item, opt.label, $event)"
+                                [class.selected-option]="item.status === opt.label"
+                            >
+                                <span class="dot" [style.background-color]="opt.color"></span>
+                                {{ opt.label }}
+                            </li>
+                        </ul>
+                      </div>
+                    </div> 
                       <div class="recruiter-workflow-requirement-container37">
                         <div class="recruiter-workflow-requirement-container38">
                           <svg
