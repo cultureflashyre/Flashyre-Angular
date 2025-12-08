@@ -1,6 +1,14 @@
 :host { 
   display: contents; 
 }
+
+.active-link {
+  color: #05356C !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid #05356C;
+  transform: scale(1.05); /* Optional: Slight scale up */
+}
+
  
 .recruiter-workflow-navbar-container10 {
   width: 100%;
