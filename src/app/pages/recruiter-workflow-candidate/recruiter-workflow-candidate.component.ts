@@ -679,7 +679,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
       this.editingCandidateId = candidate.id;
       this.selectedFile = null;
       this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
+      
       this.candidateForm.patchValue(candidate);
+      
+      // Parse Arrays
       this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
       this.preferredLocationsList = candidate.preferred_location 
         ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean) 
@@ -687,7 +690,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
       this.currentLocationsList = candidate.current_location 
         ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean) 
         : [];
-      this.showForm('External'); 
+
+      // CHECK SOURCE: If candidate.source exists, use it. Otherwise default to 'External'.
+      const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
+      this.showForm(sourceToOpen); 
     }
   }
   
