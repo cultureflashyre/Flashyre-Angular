@@ -121,7 +121,7 @@
       <!-- Main Listing Container -->
       <div class="recruiter-workflow-requirement-recruiter-workflow-requirment-listing">
         <!-- SCENARIO 1: DATA EXISTS -->
-        <ng-container *ngIf="requirementsList.length > 0">
+        <ng-container *ngIf="masterRequirements.length > 0; else noData">
           <!-- Top Bar: Filter, Sort, Download (Static Header) -->
           <div
             id="select-filter-sort-download-zip-main-container"
@@ -262,6 +262,7 @@
           </div>
 
           <!-- JOB CARDS LOOP STARTS HERE -->
+          <ng-container *ngIf="requirementsList.length > 0; else noMatches">
           <div class="large-container">
             <div 
               class="recruiter-workflow-requirement-container31" 
@@ -465,13 +466,26 @@
               </div>
             </div>
           </div>
+          </ng-container>
         </ng-container>
-        <div 
-          *ngIf="requirementsList.length === 0" 
-          style="text-align: center; padding: 50px; font-size: 18px; color: #666; width: 100%; display: flex; justify-content: center;"
-        >
-          <span>No Data is Present</span>
-        </div>
+        <ng-template #noMatches>
+  <div class="empty-list-container" style="text-align: center; align-self: center; padding: 40px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #6b7280; margin-bottom: 16px;">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 8px;">No Matches Found</h3>
+    <p style="color: #6b7280; margin-bottom: 24px;">No requirements match your current filter criteria.</p>
+    <button (click)="clearFilters()" type="button" class="recruiter-workflow-requirement-filtered-button2 button" style="width: auto; height: 48px; padding: 8px 20px;">
+      Clear Filters
+    </button>
+  </div>
+</ng-template>
+        <ng-template #noData>
+          <div style="text-align: center; padding: 50px; font-size: 18px; color: #666; width: 100%; display: flex; justify-content: center;">
+            <span>No Data is Present</span>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
