@@ -7,9 +7,15 @@ import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { forkJoin, Subject } from 'rxjs';
+import { forkJoin, Subject, Subscription } from 'rxjs';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // Add these
+import { NgZone, OnDestroy, AfterViewInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
+import { of, Observable } from 'rxjs';
+
 
 
 
@@ -29,7 +35,7 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
     ReactiveFormsModule
   ]
 })
-export class RecruiterWorkflowRequirement implements OnInit {
+export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDestroy {
   statusOptions = [
     { label: 'Active', color: '#28a745' },  // Green
     { label: 'On-hold', color: '#ffc107' }, // Yellow
@@ -37,7 +43,7 @@ export class RecruiterWorkflowRequirement implements OnInit {
     { label: 'Closed', color: '#dc3545' }   // Red
   ];
   bulkStatusSelected: string = '';
-
+   isSuperUser: boolean = false;
   clientName: string = '';
   subClientName: string = '';
   jobRole: string = ''; 
@@ -51,6 +57,25 @@ export class RecruiterWorkflowRequirement implements OnInit {
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
   searchTimeout: any;
+
+  // --- Google Maps Properties ---
+private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+private loader: Loader;
+private placesService: google.maps.places.AutocompleteService | undefined;
+private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+private google: any;
+
+// Streams for Debouncing Input
+private interviewLocationInput$ = new Subject<string>();
+
+// Suggestions State
+interviewLocationSuggestions: google.maps.places.AutocompletePrediction[] = [];
+showInterviewLocationSuggestions = false;
+
+// Selected Data Array (for Pills)
+interviewLocationsList: string[] = [];
+
+private subscriptions = new Subscription();
 
   
   // 2. View Switching & Data List
@@ -89,7 +114,8 @@ export class RecruiterWorkflowRequirement implements OnInit {
     private meta: Meta, 
     private adbService: AdbRequirementService,  
     private fb: FormBuilder ,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
@@ -100,7 +126,121 @@ export class RecruiterWorkflowRequirement implements OnInit {
     
     this.minDate = `${year}-${month}-${day}`;
     this.initializeFilterForm();
+     // Add this line at the end of the constructor
+  this.loader = new Loader({
+    apiKey: this.googleMapsApiKey,
+    version: 'weekly',
+    libraries: ['places']
+  });
   }
+
+  ngAfterViewInit(): void {
+  this.initializeGooglePlaces();
+}
+
+ngOnDestroy(): void {
+  this.subscriptions.unsubscribe();
+}
+
+// --- Google Maps Initialization ---
+private async initializeGooglePlaces(): Promise<void> {
+  try {
+    this.google = await this.loader.load();
+    this.placesService = new this.google.maps.places.AutocompleteService();
+  } catch (error) {
+    console.error('Fatal error: Google Maps script could not be loaded.', error);
+  }
+}
+
+// --- Setup RxJS Stream for Location Input ---
+private setupLocationAutocomplete(): void {
+  this.subscriptions.add(
+    this.interviewLocationInput$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => {
+        this.showInterviewLocationSuggestions = true;
+        this.initSessionToken();
+      }),
+      switchMap(term => this.getPlacePredictions(term))
+    ).subscribe(suggestions => {
+      this.ngZone.run(() => {
+        this.interviewLocationSuggestions = suggestions;
+      });
+    })
+  );
+}
+
+private initSessionToken(): void {
+  if (this.google && !this.sessionToken) {
+    this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+  }
+}
+
+private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+  if (!term.trim() || !this.placesService) {
+    return of([]);
+  }
+  
+  if (!this.sessionToken && this.google) {
+    this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+  }
+
+  return new Observable(observer => {
+    this.placesService!.getPlacePredictions({
+      input: term,
+      types: ['(cities)'],
+      sessionToken: this.sessionToken
+    }, (predictions, status) => {
+      this.ngZone.run(() => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+          observer.next(predictions);
+        } else {
+          observer.next([]);
+        }
+        observer.complete();
+      });
+    });
+  });
+}
+
+// --- HTML Event Handlers for Interview Location ---
+
+onInterviewLocationInput(event: Event): void {
+  const term = (event.target as HTMLInputElement).value;
+  if (!term.trim()) {
+    this.showInterviewLocationSuggestions = false;
+    return;
+  }
+  this.interviewLocationInput$.next(term);
+}
+
+selectInterviewLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
+  const locationName = prediction.description;
+  if (!this.interviewLocationsList.includes(locationName)) {
+    this.interviewLocationsList.push(locationName);
+  }
+  
+  inputElement.value = '';
+  this.showInterviewLocationSuggestions = false;
+  this.interviewLocationSuggestions = [];
+  this.sessionToken = undefined;
+}
+
+addManualInterviewLocation(event: any): void {
+  const value = event.target.value.trim();
+  if (value && !this.interviewLocationsList.includes(value)) {
+    this.interviewLocationsList.push(value);
+  }
+  this.showInterviewLocationSuggestions = false;
+  event.target.value = '';
+  event.preventDefault();
+}
+
+removeInterviewLocation(index: number): void {
+  this.interviewLocationsList.splice(index, 1);
+}
+
 
   // 1. Initialize the Filter Form
   private initializeFilterForm(): void {
@@ -148,10 +288,14 @@ getFileName(): string {
   return '';
 }
 
+  
+
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
     this.fetchAvailableUsers();
     this.fetchClientList();
+     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+     this.setupLocationAutocomplete();
   }
 
   getStatusColor(status: string): string {
@@ -432,13 +576,6 @@ getFileName(): string {
     }
   }
   
-  validateLocation(event: any) {
-    const input = event.target as HTMLInputElement;
-    // Regex explanation:
-    // [^a-zA-Z ] -> Matches any character that is NOT a letter (a-z, A-Z) or a space.
-    // This removes numbers and special characters immediately.
-    input.value = input.value.replace(/[^a-zA-Z ]/g, '');
-  }
 toggleNoticePeriodDropdown() {
     this.isNoticePeriodDropdownOpen = !this.isNoticePeriodDropdownOpen;
   }
@@ -522,8 +659,10 @@ toggleNoticePeriodDropdown() {
     this.subClientName = item.sub_client_name;
     this.jobRole = item.job_role; 
     this.jobDescription = item.job_description;
-    this.interviewLocation = item.interview_location;
-    this.interviewDate = item.interview_date;
+this.interviewLocationsList = item.interview_location 
+  ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean) 
+  : [];
+      this.interviewDate = item.interview_date;
     this.existingFileUrl = item.file_attachment;
 
     this.experience = {
@@ -620,10 +759,10 @@ toggleNoticePeriodDropdown() {
       this.triggerAlert('Client Name is required', ['OK']);
       return;
     }
-    if (!this.interviewLocation) {
-      this.triggerAlert('Interview Location is required', ['OK']);
-      return;
-    }
+    if (this.interviewLocationsList.length === 0) {
+  this.triggerAlert('Interview Location is required', ['OK']);
+  return;
+}
     if (this.isJobDescriptionInvalid) {
       this.triggerAlert('Please fill in the Job Description.', ['OK']);
       return;
@@ -660,7 +799,7 @@ toggleNoticePeriodDropdown() {
     formData.append('salary_max', (this.salary.max || 0).toString());
     formData.append('notice_period', this.selectedNoticePeriod || '');
     formData.append('gender', this.selectedGender || '');
-    formData.append('interview_location', this.interviewLocation);
+formData.append('interview_location', this.interviewLocationsList.join(', '));
     if (this.interviewDate) {
         formData.append('interview_date', this.interviewDate);
     }
@@ -673,21 +812,44 @@ toggleNoticePeriodDropdown() {
 
     // --- Step 3: Append arrays (like assigned users and location details) ---
     // For assigned users, we must append each ID separately
-    this.selectedAssignees.forEach(user => {
-      formData.append('assigned_users', user.user_id);
-    });
+    if (this.selectedAssignees.length > 0) {
+  // If there are selected users, loop through and append them
+  this.selectedAssignees.forEach(user => {
+    formData.append('assigned_users', user.user_id);
+  });
+} else {
+  // If the array is empty, send the key with an empty value.
+  // This explicitly tells the backend to clear the assignments.
+ formData.append('assigned_users', JSON.stringify([]));
+}
     
     // For location details, we convert the array to a JSON string
     const validLocationDetails = this.additionalDetails
-      .filter(d => d.location.trim() !== '' && d.spoc.trim() !== '')
-      .map(d => ({
-        location: d.location,
-        spoc_name: d.spoc,
-        vacancies: parseInt(d.vacancies) || 1,
-        // Add new fields
-        email: d.email,
-        phone_number: d.phone
-      }));
+  .filter(d => 
+    d.location.trim() !== '' || 
+    d.spoc.trim() !== '' || 
+    d.vacancies.trim() !== '' ||
+    d.email.trim() !== '' ||
+    d.phone.trim() !== ''
+  )
+  .map(d => {
+    const detailObject: any = {
+      location: d.location,
+      spoc_name: d.spoc,
+      email: d.email,
+      phone_number: d.phone
+    };
+
+    // Try to parse the vacancies value
+    const parsedVacancies = parseInt(d.vacancies, 10);
+
+    // Only add the 'vacancies' key to our object if the input was a valid number
+    if (!isNaN(parsedVacancies)) {
+      detailObject.vacancies = parsedVacancies;
+    }
+
+    return detailObject;
+  });
 
     if (validLocationDetails.length > 0) {
         formData.append('location_details', JSON.stringify(validLocationDetails));
@@ -740,7 +902,10 @@ toggleNoticePeriodDropdown() {
     this.clientName = '';
     this.subClientName = '';
     this.jobRole = '';
-    this.interviewLocation = '';
+this.interviewLocation = '';
+this.interviewLocationsList = [];
+this.interviewLocationSuggestions = [];
+this.showInterviewLocationSuggestions = false;
     this.interviewDate = '';
     this.jobDescription = '';
     this.experience = { totalMin: null, totalMax: null, relevantMin: null, relevantMax: null };
@@ -961,34 +1126,7 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
   }
 
   // --- 3. LOCATION SEARCH SUGGESTION ---
-  onLocationInput(event: any) {
-    const query = event.target.value;
-    this.interviewLocation = query; // Update model
-    
-    // Validate characters (existing logic)
-    this.validateLocation(event); 
 
-    if (query.length < 3) {
-      this.locationSuggestions = [];
-      this.showLocationSuggestions = false;
-      return;
-    }
-
-    // Debounce API call
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
-    
-    this.searchTimeout = setTimeout(() => {
-      this.adbService.searchLocations(query).subscribe({
-        next: (res: any[]) => {
-          this.locationSuggestions = res;
-          this.showLocationSuggestions = true;
-        },
-        error: () => {
-          this.showLocationSuggestions = false;
-        }
-      });
-    }, 500); // Wait 500ms after typing stops
-  }
 
   selectLocation(loc: any) {
     this.interviewLocation = loc.display_name.split(',')[0]; // Take city name
