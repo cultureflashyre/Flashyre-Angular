@@ -3,6 +3,7 @@ import {
   Input,
   ContentChild,
   TemplateRef,
+  OnInit, // Import OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -14,8 +15,12 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './recruiter-workflow-navbar.component.html',
   styleUrls: ['./recruiter-workflow-navbar.component.css'],
 })
-export class RecruiterWorkflowNavbarComponent {
-  // Existing ContentChildren and Inputs
+export class RecruiterWorkflowNavbarComponent implements OnInit {
+  
+  // --- NEW: Permission Flag ---
+  isSuperUser: boolean = false;
+
+  // Existing Inputs/ContentChild
   @ContentChild('text32') text32: TemplateRef<any> | null = null;
   @ContentChild('text14') text14: TemplateRef<any> | null = null;
   @Input() link4Url: string = 'https://www.teleporthq.io';
@@ -47,12 +52,14 @@ export class RecruiterWorkflowNavbarComponent {
 
   constructor(private router: Router) {}
 
+  ngOnInit() {
+    // Check permission on initialization
+    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+  }
+
   onLogout() {
-    // 1. Clear Local Storage / Session
     localStorage.clear();
     sessionStorage.clear();
-
-    // 2. Redirect to Login Page
     this.router.navigate(['/login']);
   }
 }

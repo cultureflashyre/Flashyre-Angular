@@ -122,18 +122,97 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   // --- DATA LOADING & PERMISSIONS ---
 
+  // --- UPDATED: Load List with Robust Filtering & Debugging ---
+  // --- UPDATED: Load List with Deep Inspection & Trimming ---
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
-      next: (data) => {
-        this.availableJobs = data;
+      next: (data: any[]) => {
+        
+        // 1. Get Current User Credentials & Clean them
+        const rawUserId = localStorage.getItem('user_id');
+        const currentUserId = rawUserId ? rawUserId.trim() : ''; 
+        const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+
+        console.log("ATS Filtering - Current User ID (Cleaned):", `'${currentUserId}'`);
+        console.log("ATS Filtering - Is Super User:", isSuperUser);
+
+        // 2. Apply Filtering
+        if (isSuperUser) {
+          this.availableJobs = data;
+        } else {
+          if (!currentUserId) {
+            console.warn("No user_id found in localStorage. Cannot filter jobs.");
+            this.availableJobs = [];
+            return;
+          }
+
+          // Debug: Print the structure of the first job's assigned list to console
+          if (data.length > 0) {
+            console.log("DEBUG: First Job Assigned Users Data:", JSON.stringify(data[0].assigned_users, null, 2));
+          }
+
+          this.availableJobs = data.filter(job => {
+            const assignedList = job.assigned_users || [];
+            
+            // Check if ANY entry in the assigned list matches
+            const isAssigned = assignedList.some((u: any) => {
+              // Normalize Comparison: Convert to String and Trim Whitespace
+              // This fixes issues where ' ID ' != 'ID'
+              const target = currentUserId;
+
+              // Case A: Direct Value (String/Int)
+              if (u !== null && typeof u !== 'object') {
+                return String(u).trim() === target;
+              }
+
+              // Case B: Object with user_id or id
+              if (u && typeof u === 'object') {
+                const uId = u.user_id ? String(u.user_id).trim() : '';
+                const id = u.id ? String(u.id).trim() : '';
+                return uId === target || id === target;
+              }
+
+              return false;
+            });
+
+            return isAssigned;
+          });
+        }
+
+        console.log(`ATS Filtering - Total Jobs: ${data.length}, Visible Jobs: ${this.availableJobs.length}`);
+
+        // 3. Handle Navigation / Selection
         if (targetId) {
-          this.loadJobPermissions(targetId);
+          const hasAccess = this.availableJobs.find(j => j.id === targetId);
+          if (hasAccess) {
+            this.loadJobPermissions(targetId);
+          } else {
+            this.alertMessage = "You do not have permission to view this requirement.";
+            this.alertButtons = ['OK'];
+            this.showAlert = true;
+            
+            if (this.availableJobs.length > 0) {
+               this.selectedJobId = this.availableJobs[0].id;
+               this.onJobSwitch();
+            } else {
+               this.selectedJobId = null;
+               this.stages.forEach(s => this.pipelineData[s] = []);
+            }
+          }
+        } else if (this.availableJobs.length > 0 && !this.jobId) {
+            // Optional: Auto-load first job
+            // this.selectedJobId = this.availableJobs[0].id;
+            // this.onJobSwitch();
         }
       },
-      error: (err) => console.error('Failed to load jobs', err)
+      error: (err) => {
+        // Handle 403 specifically if needed, though this call is for requirements
+        console.error('Failed to load jobs', err);
+      }
     });
   }
 
+  
   loadJobPermissions(id: number) {
     const job = this.availableJobs.find(j => j.id === id);
     if (job) {

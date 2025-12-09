@@ -144,7 +144,7 @@
                   <path d="M14 2H4v20h16V8zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3zm-3-7V3.5L18.5 9z" fill="currentColor"></path>
                 </svg>
                 <div class="recruiter-workflow-client-container16" style="display:flex; align-items:center; gap:4px;">
-                  <span style="font-size:16px;">Add</span>
+                  <span style="font-size:16px;">Add To ATS</span>
                   <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-client-icon13">
                     <path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" fill="currentColor" fill-rule="evenodd"></path>
                   </svg>
@@ -154,7 +154,7 @@
 
             </div>
             <div id="filter-sort-download-zip-container" class="recruiter-workflow-candidate-filter-sort-download-zip-container">
-              <button (click)="deleteSelected()" id="filtered-button" type="button" class="recruiter-workflow-candidate-filtered-button1 button" [disabled]="isDeleting">
+              <button *ngIf="isSuperUser" (click)="deleteSelected()" id="filtered-button" type="button" class="recruiter-workflow-candidate-filtered-button1 button" [disabled]="isDeleting">
                 <span id="start-process-text" class="recruiter-workflow-candidate-start-process-text1">{{ isDeleting ? 'Deleting...' : 'Delete' }}</span>
               </button>
               
@@ -306,10 +306,10 @@
                   <svg (click)="startEdit(candidate)" width="24" height="24" viewBox="0 0 1024 1024" class="recruiter-workflow-candidate-icon39">
                     <path d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32m-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9m67.4-174.4L687.8 215l73.3 73.3l-362.7 362.6l-88.9 15.7z" fill="currentColor"></path>
                   </svg>
-                  <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-candidate-icon42">
+                  <!-- <svg width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-candidate-icon42">
                     <path d="M14 2H4v20h16V8zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3zm-3-7V3.5L18.5 9z" fill="currentColor"></path>
-                  </svg>
-                  <svg (click)="deleteCandidate(candidate.id)" width="20" height="20" viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44">
+                  </svg> -->
+                  <svg *ngIf="isSuperUser" (click)="deleteCandidate(candidate.id)" width="20" height="20" viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44">
                     <path d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" fill="currentColor"></path>
                   </svg>
                 </div>
@@ -362,7 +362,7 @@
       <select class="workflow-job-select" [(ngModel)]="selectedJobId">
         <option [ngValue]="null" disabled>-- Choose a Job --</option>
         <option *ngFor="let job of availableJobs" [ngValue]="job.id">
-          {{ job.client_name }} - {{ job.job_description | slice:0:30 }}...
+          {{ job.client_name }} - {{ job.job_role}}
         </option>
       </select>
     </div>
@@ -384,7 +384,7 @@
   
   <div class="form-modal-container" (click)="$event.stopPropagation()">
     <div class="recruiter-workflow-candidate-candidate-input-form">
-      <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()"  style="width: 100%;">
         
         <!-- Form Header -->
         <div class="recruiter-workflow-candidate-container12">

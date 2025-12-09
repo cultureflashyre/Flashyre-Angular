@@ -4,6 +4,7 @@
 
 
 
+
 /* ... Existing styles ... */
 
 .location-suggestions-dropdown {
@@ -69,18 +70,24 @@
 .skills-input-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: center; /* Vertically center single row */
+  align-content: flex-start; /* If wrapping, stack from top */
   gap: 8px;
-  padding: 8px 12px;
+  padding: 6px 12px; /* Slight padding adjustment */
+  
   border: 1px solid #A7A7A7;
   border-radius: 5px;
   background-color: #FFFFFF;
-   /* Ensure height grows with content */
-  height: auto; 
-  min-height: 48px; /* Match other input heights */
-  /* Ensure width fits parent */
+  
+  /* 1. Base Height */
+  min-height: 48px; 
+  
+  /* 2. MAX HEIGHT & SCROLL (The Fix) */
+  max-height: 85px; /* Limits expansion to approx. 2 rows of pills */
+  overflow-y: auto; /* Adds scrollbar inside the box if content exceeds max-height */
+  
+  /* 3. Width */
   width: 100%; 
-  min-width: unset; /* Remove the 1050px min-width if it was causing horizontal scroll issues */
   box-sizing: border-box;
 }
 
@@ -270,8 +277,8 @@
   transform: translate(-50%, -50%);
   z-index: 991; /* Above the backdrop */
 
-  width: auto;
-  max-width: 80%;
+  width: 80%; /* Set explicit width instead of auto */
+  max-width: 1200px; /* Optional: prevent it from being too wide on large screens */
   height: auto;
   max-height: 90vh; /* Ensure it fits on smaller screens */
   overflow-y: auto; /* Allow scrolling within the modal if content is long */
@@ -695,7 +702,7 @@
 .recruiter-workflow-candidate-candidate-input-form {
   gap: 24px;
   flex: 0 0 auto;
-  width: 100%;
+  width: auto;
   height: auto;
   display: flex;
   position: relative;

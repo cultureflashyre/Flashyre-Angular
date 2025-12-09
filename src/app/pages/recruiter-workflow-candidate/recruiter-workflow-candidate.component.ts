@@ -127,6 +127,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   availableJobs: any[] = [];
   selectedJobId: number | null = null;
 
+  // NEW: Permission Flag
+  isSuperUser: boolean = false;
+
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
@@ -181,6 +184,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
   ngOnInit(): void {
     this.loadCandidates();
+    // The key is 'isSuperUser' and the value is the string 'true'
+    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.setupLocationAutocomplete();
 
   }
