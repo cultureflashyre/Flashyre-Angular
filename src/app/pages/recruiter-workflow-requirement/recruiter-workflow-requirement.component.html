@@ -1,4 +1,9 @@
 <div class="recruiter-workflow-requirement-container10">
+  <div *ngIf="isPageLoading || isNavigatingToAts" class="page-loading-overlay">
+    <div class="round-loader"></div>
+    <!-- Dynamic Text: changes based on the action -->
+    <p>{{ isPageLoading ? 'Loading Requirements...' : 'Opening ATS...' }}</p>
+  </div>
   <div class="recruiter-workflow-requirement-container11">
     <recruiter-workflow-navbar
       rootClassName="recruiter-workflow-navbarroot-class-name3"

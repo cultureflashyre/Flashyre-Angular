@@ -132,6 +132,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
+  isPageLoading: boolean = true;
+  isActionLoading: boolean = false;
+
   // --- Google Maps Properties ---
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
   private loader: Loader;
@@ -395,7 +398,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
-      work_experience: ['', Validators.required],
+      work_experience: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
       skills: ['', Validators.required],
     }, {
       validators: [
@@ -444,8 +447,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
       next: (data) => {
         this.masterCandidates = data.map(c => ({ ...c, selected: false }));
         this.applyFiltersAndSort();
+        this.isPageLoading = false;
       },
-      error: (err) => { console.error("Failed to load candidates.", err); }
+      error: (err) => { 
+        console.error("Failed to load candidates.", err); 
+      this.isPageLoading = false;
+      }
     });
   }
 
@@ -478,12 +485,15 @@ export class RecruiterWorkflowCandidate implements OnInit {
   confirmAddToWorkflow() {
     if (!this.selectedJobId) return;
 
+    this.isActionLoading = true;
+
     const selectedIds = this.masterCandidates
       .filter(c => c.selected && c.id)
       .map(c => c.id!);
 
     this.candidateService.addCandidatesToJob(this.selectedJobId, selectedIds).subscribe({
       next: (res: any) => {
+        this.isActionLoading = false;
         this.closeWorkflowModal();
         
         let msg = '';
@@ -500,6 +510,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
         this.updateSelectAllState();
       },
       error: (err) => {
+        this.isActionLoading = false;
         this.closeWorkflowModal();
         this.showAlert("Failed to add candidates to workflow.", ["Close"]);
       }
@@ -654,7 +665,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
   // --- SKILLS MANAGEMENT ---
   addSkill(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    const value = input.value.trim();
+    let value = input.value.trim();
+    value = value.replace(/[^a-zA-Z ]/g, '');
     if (value) {
       if (!this.skills.includes(value)) {
         this.skills.push(value);
@@ -836,5 +848,22 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.currentLocationsList = [];
     this.preferredSuggestions = [];
     this.currentSuggestions = [];
+  }
+
+  // 1. For Work Experience: Allows only Letters, Numbers, and Spaces
+  allowAlphanumericOnly(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Replace anything that is NOT (a-z, A-Z, 0-9, or space) with empty string
+    input.value = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
+    
+    // Update the form control manually to ensure the model stays in sync
+    this.candidateForm.get('work_experience')?.setValue(input.value);
+  }
+
+  // 2. For Skills: Allows only Letters and Spaces (No numbers, No special chars)
+  allowAlphabetsOnly(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Replace anything that is NOT (a-z, A-Z, or space) with empty string
+    input.value = input.value.replace(/[^a-zA-Z ]/g, '');
   }
 }

@@ -1,4 +1,8 @@
 <div class="recruiter-workflow-client-container10">
+  <div *ngIf="isPageLoading" class="page-loading-overlay">
+    <div class="round-loader"></div> <!-- Reusing your existing spinner class -->
+    <p>Loading Clients...</p>
+  </div>
   <div class="recruiter-workflow-client-container11">
     <recruiter-workflow-navbar
       rootClassName="recruiter-workflow-navbarroot-class-name4"
@@ -437,6 +441,7 @@
         </ng-template>
 
   <!-- 2. WRAPPER START for Existing Content -->
+   <ng-container *ngIf="!isPageLoading">
   <ng-container *ngIf="masterClients.length > 0; else noData">
 
         <div
@@ -746,6 +751,7 @@
           </div>
           
         </div>
+        </ng-container>
         </ng-container>
         </ng-container>
         <ng-template #noMatches>

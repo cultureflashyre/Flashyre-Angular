@@ -7,6 +7,11 @@
 </app-alert-message>
 
 <div class="recruiter-workflow-candidate-container10">
+  <div *ngIf="isPageLoading || isActionLoading" class="page-loading-overlay">
+    <div class="round-loader"></div>
+    <!-- Dynamic Text: changes based on which loading state is active -->
+    <p>{{ isPageLoading ? 'Loading Candidates...' : 'Adding to Workflow...' }}</p>
+  </div>
   <div class="recruiter-workflow-candidate-container11">
     
     <!-- SINGLE NAVBAR INSTANCE -->
@@ -118,6 +123,7 @@
 
       <!-- CANDIDATE LIST -->
       <div class="recruiter-workflow-candidate-recruiter-workflow-candidate-lists">
+        <ng-container *ngIf="!isPageLoading">
         <ng-container *ngIf="masterCandidates.length > 0; else noData">
           <!-- List Header -->
           <div id="select-filter-sort-download-zip-main-container" class="recruiter-workflow-candidate-select-filter-sort-download-zip-main-container">
@@ -332,6 +338,7 @@
             </div>
           </div>
           </ng-container>
+        </ng-container>
         </ng-container>
         <ng-template #noMatches>
           <div class="empty-list-container" style="text-align: center; padding: 40px;">
@@ -661,10 +668,17 @@
 
             <div class="recruiter-workflow-candidate-skills-container1">
                 <div class="recruiter-workflow-candidate-skill-text-container1">
-                    <span class="recruiter-workflow-candidate-skill-text1">Work Experience</span>
+                    <span class="recruiter-workflow-candidate-skill-text1">Role</span>
                     <span class="recruiter-workflow-candidate-skill-star-text1">*</span>
                 </div>
-                <input type="text" formControlName="work_experience" placeholder="Enter Work Experience" class="recruiter-workflow-candidate-job-title-input5 input"/>
+                <textarea 
+                  rows="3"
+                  formControlName="work_experience" 
+                  placeholder="Enter Role & Work Experience" 
+                  class="recruiter-workflow-candidate-job-title-input5 input"
+                  (input)="allowAlphanumericOnly($event)"
+                  style="resize: vertical; height: auto; padding-top: 10px;">
+                </textarea>
             </div>
 
             <div class="recruiter-workflow-candidate-skills-container2">
@@ -677,7 +691,12 @@
                       {{ skill }}
                       <button type="button" class="remove-skill-button" (click)="removeSkill(i)">&times;</button>
                     </span>
-                    <input type="text" class="skills-entry-input" placeholder="Type a skill and press Enter" (keydown.enter)="addSkill($event)">
+                    <input 
+                      type="text" 
+                      class="skills-entry-input" 
+                      placeholder="Type a skill and press Enter" 
+                      (input)="allowAlphabetsOnly($event)"
+                      (keydown.enter)="addSkill($event)">
                 </div>
                 <input type="hidden" formControlName="skills">
             </div>

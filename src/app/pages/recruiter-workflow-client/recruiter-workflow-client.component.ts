@@ -65,6 +65,8 @@ export class RecruiterWorkflowClient implements OnInit {
   recruiterFirstName: string = 'Loading...';
   isSuperUser: boolean = false;
 
+  isPageLoading: boolean = true;
+
   constructor(
     private title: Title, 
     private meta: Meta,
@@ -195,11 +197,12 @@ closeForm(): void {
         
         // 2. Apply current filters/sort to populate existingClients (the view list)
         this.applyFiltersAndSort();
-        
+        this.isPageLoading = false;
         if (onComplete) onComplete();
       },
       error: (err) => {
         console.error('Error fetching clients:', err);
+        this.isPageLoading = false;
         if (onComplete) onComplete();
       }
     });
