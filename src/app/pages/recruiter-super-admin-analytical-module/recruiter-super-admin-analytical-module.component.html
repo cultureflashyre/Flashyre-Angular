@@ -312,6 +312,63 @@
         </div>
       </div>
 
+       <!-- NEW: ACTIVITY LOGS SECTION -->
+      <div class="table-card" style="margin-top: 30px;">
+        
+        <!-- Header Row with Download Button -->
+        <div class="table-header-row">
+          <h3 class="kpi-section-title" style="margin:0">Recent Activity Logs</h3>
+          <button class="download-report-btn" (click)="downloadLogs()" style="height: 32px; font-size: 12px; padding: 0 15px; margin-left: auto;">
+            Download Logs
+          </button>
+        </div>
+
+        <!-- Table Container with Vertical Scroll Class -->
+        <div class="table-container logs-scroll-container">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 15%;">Date & Time</th>
+                <th style="width: 15%;">User</th>
+                <th style="width: 10%;">Module</th>
+                <th style="width: 35%;">Activity</th>
+                <th style="width: 25%;">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of activityLogs">
+                <td style="color:#555;">
+                  <span style="font-weight:600">{{ log.date }}</span> 
+                  <span style="font-size:12px; color:#888; margin-left:5px;">{{ log.time }}</span>
+                </td>
+                <td>
+                  <span style="font-weight:600; color:#05356C;">{{ log.user_name }}</span>
+                </td>
+                <td>
+                  <span class="log-badge" 
+                    [ngClass]="{
+                      'badge-ats': log.module === 'Workflow',
+                      'badge-cand': log.module === 'Candidate',
+                      'badge-client': log.module === 'Client',
+                      'badge-req': log.module === 'Requirement'
+                    }">
+                    {{ log.module }}
+                  </span>
+                </td>
+                <td style="font-weight: 500;">{{ log.action_description }}</td>
+                <td style="color:#777; font-size:12px;">{{ log.details }}</td>
+              </tr>
+              
+              <tr *ngIf="activityLogs.length === 0">
+                <td colspan="5" style="text-align:center; padding: 20px; color:#777;">
+                  No recent activities found.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
     <!-- TAB 2: USER MANAGEMENT -->

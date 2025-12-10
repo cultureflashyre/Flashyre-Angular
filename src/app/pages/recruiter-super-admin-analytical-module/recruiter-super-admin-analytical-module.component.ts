@@ -34,6 +34,7 @@ import * as FileSaver from 'file-saver';
 export class RecruiterSuperAdminAnalyticalModuleComponent {
   // Tab State
   activeTab: string = 'reports'; // Default to reports
+  activityLogs: any[] = []; // New property for logs
 
   // Data
   userList: any[] = [];
@@ -153,6 +154,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       }
     });
   }
+
+  
 
   // --- POPUP LOGIC ---
   openCreateUserPopup() {
@@ -480,6 +483,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       next: (data: any) => {
         this.kpis = data.kpis;
         this.reportTableData = data.table_data;
+        this.activityLogs = data.logs || []; // Map logs
       },
       error: (err) => console.error("Failed to load analytics", err)
     });
@@ -492,6 +496,41 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   clearFilters() {
     this.filters = { start_date: '', end_date: '', recruiter_id: '', job_id: '', source: '' };
     this.fetchAnalytics();
+  }
+
+  // --- NEW: DOWNLOAD LOGS FUNCTION ---
+  downloadLogs() {
+    if (this.activityLogs.length === 0) {
+      alert("No activity logs to export");
+      return;
+    }
+
+    // Map data to clean Excel format
+    const exportData = this.activityLogs.map(log => ({
+      'Date': log.date,
+      'Time': log.time,
+      'User': log.user_name,
+      'Module': log.module,
+      'Action Type': log.action_type,
+      'Activity Description': log.action_description,
+      'Details': log.details
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    
+    // Set column widths for better readability
+    const wscols = [
+      {wch: 12}, {wch: 10}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 40}, {wch: 30}
+    ];
+    worksheet['!cols'] = wscols;
+
+    const workbook: XLSX.WorkBook = { Sheets: { 'Activity Logs': worksheet }, SheetNames: ['Activity Logs'] };
+    
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    const dateStr = new Date().toISOString().slice(0, 10);
+    FileSaver.saveAs(data, `Activity_Logs_${dateStr}.xlsx`);
   }
 
   // --- EXPORT TO EXCEL ---

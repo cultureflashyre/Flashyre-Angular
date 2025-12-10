@@ -127,6 +127,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   availableJobs: any[] = [];
   selectedJobId: number | null = null;
 
+  // NEW: Permission Flag
+  isSuperUser: boolean = false;
+
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
@@ -181,6 +184,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
   ngOnInit(): void {
     this.loadCandidates();
+    // The key is 'isSuperUser' and the value is the string 'true'
+    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.setupLocationAutocomplete();
 
   }
@@ -679,7 +684,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
       this.editingCandidateId = candidate.id;
       this.selectedFile = null;
       this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
+      
       this.candidateForm.patchValue(candidate);
+      
+      // Parse Arrays
       this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
       this.preferredLocationsList = candidate.preferred_location 
         ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean) 
@@ -687,7 +695,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
       this.currentLocationsList = candidate.current_location 
         ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean) 
         : [];
-      this.showForm('External'); 
+
+      // CHECK SOURCE: If candidate.source exists, use it. Otherwise default to 'External'.
+      const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
+      this.showForm(sourceToOpen); 
     }
   }
   
