@@ -111,6 +111,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         if (this.availableJobs.length > 0) {
           this.loadJobPermissions(this.jobId);
         } else {
+          // If availableJobs isn't populated yet (rare race condition), 
+          // loadJobList will handle calling permissions when done.
           this.loadJobList(this.jobId);
         }
 
@@ -122,97 +124,29 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   // --- DATA LOADING & PERMISSIONS ---
 
-  // --- UPDATED: Load List with Robust Filtering & Debugging ---
-  // --- UPDATED: Load List with Deep Inspection & Trimming ---
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
       next: (data: any[]) => {
-        
-        // 1. Get Current User Credentials & Clean them
-        const rawUserId = localStorage.getItem('user_id');
-        const currentUserId = rawUserId ? rawUserId.trim() : ''; 
-        const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+        // --- CHANGED: REMOVED FILTERING ---
+        // All users can SEE all jobs now.
+        this.availableJobs = data;
 
-        console.log("ATS Filtering - Current User ID (Cleaned):", `'${currentUserId}'`);
-        console.log("ATS Filtering - Is Super User:", isSuperUser);
-
-        // 2. Apply Filtering
-        if (isSuperUser) {
-          this.availableJobs = data;
-        } else {
-          if (!currentUserId) {
-            console.warn("No user_id found in localStorage. Cannot filter jobs.");
-            this.availableJobs = [];
-            return;
-          }
-
-          // Debug: Print the structure of the first job's assigned list to console
-          if (data.length > 0) {
-            console.log("DEBUG: First Job Assigned Users Data:", JSON.stringify(data[0].assigned_users, null, 2));
-          }
-
-          this.availableJobs = data.filter(job => {
-            const assignedList = job.assigned_users || [];
-            
-            // Check if ANY entry in the assigned list matches
-            const isAssigned = assignedList.some((u: any) => {
-              // Normalize Comparison: Convert to String and Trim Whitespace
-              // This fixes issues where ' ID ' != 'ID'
-              const target = currentUserId;
-
-              // Case A: Direct Value (String/Int)
-              if (u !== null && typeof u !== 'object') {
-                return String(u).trim() === target;
-              }
-
-              // Case B: Object with user_id or id
-              if (u && typeof u === 'object') {
-                const uId = u.user_id ? String(u.user_id).trim() : '';
-                const id = u.id ? String(u.id).trim() : '';
-                return uId === target || id === target;
-              }
-
-              return false;
-            });
-
-            return isAssigned;
-          });
-        }
-
-        console.log(`ATS Filtering - Total Jobs: ${data.length}, Visible Jobs: ${this.availableJobs.length}`);
-
-        // 3. Handle Navigation / Selection
+        // Handle navigation/initial selection
         if (targetId) {
-          const hasAccess = this.availableJobs.find(j => j.id === targetId);
-          if (hasAccess) {
-            this.loadJobPermissions(targetId);
-          } else {
-            this.alertMessage = "You do not have permission to view this requirement.";
-            this.alertButtons = ['OK'];
-            this.showAlert = true;
-            
-            if (this.availableJobs.length > 0) {
-               this.selectedJobId = this.availableJobs[0].id;
-               this.onJobSwitch();
-            } else {
-               this.selectedJobId = null;
-               this.stages.forEach(s => this.pipelineData[s] = []);
-            }
-          }
-        } else if (this.availableJobs.length > 0 && !this.jobId) {
-            // Optional: Auto-load first job
+          // We still calculate permissions for the specific target ID to know if they can EDIT
+          this.loadJobPermissions(targetId);
+        } 
+        // Auto-select first job if nothing selected yet
+        else if (this.availableJobs.length > 0 && !this.jobId) {
+            // Optional: Automatically load the first available job
             // this.selectedJobId = this.availableJobs[0].id;
             // this.onJobSwitch();
         }
       },
-      error: (err) => {
-        // Handle 403 specifically if needed, though this call is for requirements
-        console.error('Failed to load jobs', err);
-      }
+      error: (err) => console.error('Failed to load jobs', err)
     });
   }
 
-  
   loadJobPermissions(id: number) {
     const job = this.availableJobs.find(j => j.id === id);
     if (job) {
@@ -230,21 +164,32 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       }
 
       // Add Assigned Users
-      const assignedList = job.assigned_users_details || job.assigned_users || [];
-      if (Array.isArray(assignedList)) {
-        assignedList.forEach((u: any) => {
-          const uid = typeof u === 'object' ? u.user_id : u;
-          this.authorizedUserIds.push(String(uid));
-        });
-      }
+      const assignedList = job.assigned_users || []; // assigned_users contains IDs based on our serializer fix
+      
+      // Ensure we handle both object list or ID list
+      assignedList.forEach((u: any) => {
+        if (u && typeof u === 'object') {
+             const uid = u.user_id ? String(u.user_id) : (u.id ? String(u.id) : '');
+             if(uid) this.authorizedUserIds.push(uid);
+        } else {
+             this.authorizedUserIds.push(String(u));
+        }
+      });
+      
+      console.log('Permission Check - Authorized IDs for this Job:', this.authorizedUserIds);
     }
   }
 
   canMoveCandidate(): boolean {
     if (this.isSuperUser) return true;
-    if (this.currentUserId && this.authorizedUserIds.includes(this.currentUserId)) {
-      return true;
+    
+    if (this.currentUserId) {
+        // Normalize current user ID to string for comparison
+        const currentIdStr = String(this.currentUserId).trim();
+        // Check if current ID exists in the authorized list
+        return this.authorizedUserIds.includes(currentIdStr);
     }
+    
     return false;
   }
 
@@ -281,14 +226,13 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   drop(event: CdkDragDrop<any[]>, newStage: string) {
     
-    // 1. Check Permissions
-    if (event.previousContainer !== event.container || event.currentIndex !== event.previousIndex) {
-       if (!this.canMoveCandidate()) {
-         this.alertMessage = "Access Denied: You are not assigned to this requirement.";
+    // 1. Check Permissions (The "Read Only" Check)
+    // We check this first. If they can't move, we stop immediately.
+    if (!this.canMoveCandidate()) {
+         this.alertMessage = "Access Denied: You are not authorized to modify the pipeline for this Job Requirement. Only assigned recruiters can perform this action.";
          this.alertButtons = ['OK'];
          this.showAlert = true;
          return; 
-       }
     }
 
     // 2. Handle Drop
@@ -396,7 +340,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   // --- EXCEL DOWNLOAD LOGIC ---
 
-   downloadStageReport(stage: string) {
+  downloadStageReport(stage: string) {
     const candidatesInStage = this.pipelineData[stage];
 
     if (!candidatesInStage || candidatesInStage.length === 0) {
@@ -408,8 +352,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
     const exportData = candidatesInStage.map(app => {
       const c = app.candidate_details;
-      
-      // FIX: Check BOTH resume_url AND resume fields to ensure we capture the link
+      // Resolve resume link
       const resumeLink = c.resume_url || c.resume || '';
 
       return {
@@ -428,7 +371,6 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         'Stage Updated': app.updated_at ? new Date(app.updated_at).toLocaleDateString() : '',
         'Rejection Reason': app.rejection_reason || 'N/A',
         'Interview Date': app.interview_date || 'N/A',
-        // Assign the resolved link here
         'CV Link': resumeLink
       };
     });
@@ -445,14 +387,10 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         const cellAddress = XLSX.utils.encode_cell({ r: R, c: linkColIndex });
         const cell = worksheet[cellAddress];
 
-        // Check if cell has a value (URL)
         if (cell && cell.v && cell.v !== '') {
-          // Set Hyperlink property
           cell.l = { Target: cell.v as string };
-          // Change display text to "OPEN RESUME"
           cell.v = "OPEN RESUME"; 
         } else if (cell) {
-          // Explicitly set text if empty
           cell.v = "No Resume";
         }
       }
@@ -491,6 +429,14 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   addCandidateToPipeline(candidate: any) {
     if (!this.jobId) return;
+
+    // --- CHECK PERMISSION ---
+    if (!this.canMoveCandidate()) {
+         this.alertMessage = "Access Denied: You are not authorized to add candidates to this Job Requirement.";
+         this.alertButtons = ['OK'];
+         this.showAlert = true;
+         return; 
+    }
 
     const payload = {
       job_requirement: this.jobId,
