@@ -2,6 +2,14 @@
   display: contents; 
 }
 
+.inline-error-text {
+  color: #dc3545; /* A standard red color for errors */
+  font-size: 12px;
+  margin-top: 4px;
+  display: block; /* Ensures it appears on its own line */
+  width: 100%;
+}
+
 /* Main container for skills/locations input */
 .skills-input-container {
   display: flex;

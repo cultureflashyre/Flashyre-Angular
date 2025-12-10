@@ -52,7 +52,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   clientList: any[] = []; // Stores the API response
   availableSubClients: string[] = []; // Sub-clients for the selected client
-
+public formErrors: { [key: string]: string } = {};
   // NEW PROPERTIES FOR LOCATION SEARCH
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
@@ -108,6 +108,79 @@ private subscriptions = new Subscription();
   isUserDropdownOpen: boolean = false;
 
   additionalDetailsErrors: any[] = [];
+
+  isClientNameInvalid: boolean = false;
+  isJobRoleInvalid: boolean = false;
+  isInterviewLocationInvalid: boolean = false;
+
+  isTotalExpInvalid: boolean = false;
+  isRelevantExpInvalid: boolean = false;
+  isSalaryInvalid: boolean = false;
+  isInterviewDateInvalid: boolean = false;
+  isNoticePeriodInvalid: boolean = false;
+  isGenderInvalid: boolean = false;
+
+  // STEP 1: REPLACE your existing parseErrorResponse function with this new, smarter version.
+  /**
+   * Parses the error response from the Django backend into a user-friendly,
+   * readable string, translating technical field names into clean labels.
+   * @param err The error object from the HttpClient request.
+   * @returns A formatted string listing all validation errors.
+   */
+  private parseErrorResponse(err: any): string {
+    const errors = err.error;
+
+    // Handle cases where the error isn't a structured object
+    if (!errors || typeof errors !== 'object') {
+      return 'An unexpected error occurred. Please try again.';
+    }
+
+    // This is the "translator" map from backend field names to user-friendly labels.
+    const fieldNameMap: { [key: string]: string } = {
+      client_name: 'Client Name',
+      sub_client_name: 'Sub Client',
+      job_role: 'Job Role',
+      job_description: 'Job Description',
+      total_experience_min: 'Total Experience (Min)',
+      total_experience_max: 'Total Experience (Max)',
+      relevant_experience_min: 'Relevant Experience (Min)',
+      relevant_experience_max: 'Relevant Experience (Max)',
+      salary_min: 'Salary (Min)',
+      salary_max: 'Salary (Max)',
+      interview_location: 'Interview Location',
+      interview_date: 'Interview Date',
+      notice_period: 'Notice Period',
+      gender: 'Gender',
+      file_attachment: 'File Upload',
+      assigned_users: 'Assigned Users',
+      location_details: 'Location Details',
+    };
+
+    const errorMessages: string[] = [];
+
+    // Loop through each key (field name) in the error object from Django
+    for (const key in errors) {
+      if (Object.prototype.hasOwnProperty.call(errors, key)) {
+        // Use the map to get the friendly name, or create a default one
+        const friendlyName = fieldNameMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+        
+        const messages = errors[key];
+        if (Array.isArray(messages) && messages.length > 0) {
+          // Join the friendly name with the error message from Django
+          errorMessages.push(`- ${friendlyName}: ${messages.join(' ')}`);
+        }
+      }
+    }
+
+    // If we successfully parsed any messages, display them
+    if (errorMessages.length > 0) {
+      return 'Please correct the following errors:\n\n' + errorMessages.join('\n');
+    }
+
+    // Fallback for any truly unexpected error format
+    return 'An unknown validation error occurred. Please check your inputs.';
+  }
+
 
   constructor(
     private title: Title, 
@@ -334,7 +407,7 @@ getFileName(): string {
       },
       error: (err) => {
         item.status = oldStatus; // Revert on error
-        this.triggerAlert('Failed to update status', ['OK']);
+        this.triggerAlert('You do not have permission to change the status of this requirement.', ['OK']);
       }
     });
   }
@@ -753,40 +826,99 @@ this.interviewLocationsList = item.interview_location
 
 
  onSubmit() {
-    // --- Start: Validations (No changes here) ---
-    this.validateJobDescription();
-    if (!this.clientName) {
-      this.triggerAlert('Client Name is required', ['OK']);
-      return;
-    }
-    if (this.interviewLocationsList.length === 0) {
-  this.triggerAlert('Interview Location is required', ['OK']);
-  return;
-}
-    if (this.isJobDescriptionInvalid) {
-      this.triggerAlert('Please fill in the Job Description.', ['OK']);
-      return;
-    }
-    // --- End: Validations ---
+  // 1. Reset Validations initially
+  this.isClientNameInvalid = false;
+  this.isJobRoleInvalid = false;
+  this.isInterviewLocationInvalid = false;
+  this.isJobDescriptionInvalid = false; // (Existing)
 
-    // Validate Additional Details for errors before submitting
-    let hasDetailErrors = false;
-    this.additionalDetails.forEach((_, index) => {
-        this.validateAdditionalDetails(index);
-        if (this.additionalDetailsErrors[index]?.email || this.additionalDetailsErrors[index]?.phone) {
-            hasDetailErrors = true;
-        }
-    });
+  this.isTotalExpInvalid = false;
+    this.isRelevantExpInvalid = false;
+    this.isSalaryInvalid = false;
+    this.isInterviewDateInvalid = false;
+    this.isNoticePeriodInvalid = false;
+    this.isGenderInvalid = false;
 
-    if (hasDetailErrors) {
-        this.triggerAlert('Please fix errors in Additional Details (Email/Phone)', ['OK']);
-        return;
+  // 2. Perform Validation Checks
+  let isValid = true;
+
+  // Validate Client Name
+  if (!this.clientName || this.clientName === '') {
+    this.isClientNameInvalid = true;
+    isValid = false;
+  }
+
+  // Validate Job Role
+  if (!this.jobRole || this.jobRole.trim() === '') {
+    this.isJobRoleInvalid = true;
+    isValid = false;
+  }
+
+  // Validate Interview Location
+  if (this.interviewLocationsList.length === 0) {
+    this.isInterviewLocationInvalid = true;
+    isValid = false;
+  }
+
+  // Validate Job Description (Existing Logic)
+  this.validateJobDescription(); 
+  if (this.isJobDescriptionInvalid) {
+    isValid = false;
+  }
+
+   if (this.experience.totalMin === null || this.experience.totalMax === null) {
+        this.isTotalExpInvalid = true;
+        isValid = false;
     }
 
-    // The old 'payload' object is replaced by this 'FormData' object
+    // 2. Relevant Experience
+    if (this.experience.relevantMin === null || this.experience.relevantMax === null) {
+        this.isRelevantExpInvalid = true;
+        isValid = false;
+    }
+
+    // 3. Salary
+    if (this.salary.min === null || this.salary.max === null) {
+        this.isSalaryInvalid = true;
+        isValid = false;
+    }
+
+    // 4. Interview Date
+    if (!this.interviewDate) {
+        this.isInterviewDateInvalid = true;
+        isValid = false;
+    }
+
+    // 5. Notice Period
+    if (!this.selectedNoticePeriod) {
+        this.isNoticePeriodInvalid = true;
+        isValid = false;
+    }
+
+    // 6. Gender
+    if (!this.selectedGender) {
+        this.isGenderInvalid = true;
+        isValid = false;
+    }
+
+
+  // Validate Additional Details (Existing Logic)
+  let hasDetailErrors = false;
+  this.additionalDetails.forEach((_, index) => {
+      this.validateAdditionalDetails(index);
+      if (this.additionalDetailsErrors[index]?.email || this.additionalDetailsErrors[index]?.phone) {
+          hasDetailErrors = true;
+      }
+  });
+
+  // 3. Stop if Invalid
+  if (!isValid || hasDetailErrors) {
+    this.triggerAlert('Please fill in all required fields marked with *.', ['OK']);
+    return; // STOP execution here
+  }
+
+    // --- Build the FormData object ---
     const formData = new FormData();
-
-    // --- Step 1: Append all text, number, and date fields ---
     formData.append('client_name', this.clientName);
     formData.append('sub_client_name', this.subClientName || '');
     formData.append('job_role', this.jobRole);
@@ -799,96 +931,78 @@ this.interviewLocationsList = item.interview_location
     formData.append('salary_max', (this.salary.max || 0).toString());
     formData.append('notice_period', this.selectedNoticePeriod || '');
     formData.append('gender', this.selectedGender || '');
-formData.append('interview_location', this.interviewLocationsList.join(', '));
+    formData.append('interview_location', this.interviewLocationsList.join(', '));
     if (this.interviewDate) {
         formData.append('interview_date', this.interviewDate);
     }
     formData.append('job_description', this.jobDescription);
-
-    // --- Step 2: Append the new file if one has been selected ---
     if (this.selectedFile) {
       formData.append('file_attachment', this.selectedFile, this.selectedFile.name);
     }
 
-    // --- Step 3: Append arrays (like assigned users and location details) ---
-    // For assigned users, we must append each ID separately
-    if (this.selectedAssignees.length > 0) {
-  // If there are selected users, loop through and append them
-  this.selectedAssignees.forEach(user => {
-    formData.append('assigned_users', user.user_id);
-  });
-} else {
-  // If the array is empty, send the key with an empty value.
-  // This explicitly tells the backend to clear the assignments.
- formData.append('assigned_users', JSON.stringify([]));
-}
-    
-    // For location details, we convert the array to a JSON string
-    const validLocationDetails = this.additionalDetails
-  .filter(d => 
-    d.location.trim() !== '' || 
-    d.spoc.trim() !== '' || 
-    d.vacancies.trim() !== '' ||
-    d.email.trim() !== '' ||
-    d.phone.trim() !== ''
-  )
-  .map(d => {
-    const detailObject: any = {
-      location: d.location,
-      spoc_name: d.spoc,
-      email: d.email,
-      phone_number: d.phone
-    };
-
-    // Try to parse the vacancies value
-    const parsedVacancies = parseInt(d.vacancies, 10);
-
-    // Only add the 'vacancies' key to our object if the input was a valid number
-    if (!isNaN(parsedVacancies)) {
-      detailObject.vacancies = parsedVacancies;
+    // =================================================================
+    // === MODIFIED LOGIC: ONLY APPEND 'assigned_users' FOR SUPERUSER ===
+    // =================================================================
+    if (this.isSuperUser) {
+        if (this.selectedAssignees.length > 0) {
+            // If users are selected, append each of their IDs
+            this.selectedAssignees.forEach(user => {
+                formData.append('assigned_users', user.user_id);
+            });
+        } else {
+            // If no users are selected (or all were removed), send '[]'
+            // This tells the backend to clear any existing assignments.
+            formData.append('assigned_users', '[]');
+        }
     }
+    // For non-superusers, the 'assigned_users' field is never added to formData.
+    // When editing, this means the backend will not touch the existing assignments.
+    // When creating, the backend will leave the assignments empty.
+    // =================================================================
 
-    return detailObject;
-  });
 
+    const validLocationDetails = this.additionalDetails
+      .filter(d => d.location.trim() || d.spoc.trim() || d.vacancies.trim() || d.email.trim() || d.phone.trim())
+      .map(d => ({
+        location: d.location,
+        spoc_name: d.spoc,
+        email: d.email,
+        phone_number: d.phone,
+        vacancies: parseInt(d.vacancies, 10) || null // Send null if not a number
+    }));
     if (validLocationDetails.length > 0) {
         formData.append('location_details', JSON.stringify(validLocationDetails));
     }
 
-
-    // --- Step 4: Call the service using the new formData object ---
-    // The service call is the same, but it now sends formData instead of 'payload'
+    // --- API Call Logic ---
     if (this.isEditMode && this.currentRequirementId) {
+      // Handle UPDATE
       this.adbService.updateRequirement(this.currentRequirementId, formData).subscribe({
         next: (response) => {
           this.triggerAlert('Requirement updated successfully!', ['OK']);
           this.onCancel();
-          this.showListing = true;
           this.fetchRequirements();
         },
         error: (err) => {
-          // This new error handling shows specific messages from the backend
-          const errorMsg = err.error?.file_attachment?.[0] || 'Failed to update. Check inputs.';
-          this.triggerAlert(errorMsg, ['OK']);
+          const errorMessage = this.parseErrorResponse(err);
+          this.triggerAlert(errorMessage, ['OK']);
         }
       });
     } else {
+      // Handle CREATE
       this.adbService.createRequirement(formData).subscribe({
         next: (response) => {
           this.triggerAlert('Requirement created successfully!', ['OK']);
           this.onCancel();
-          this.showListing = true;
           this.fetchRequirements();
         },
         error: (err) => {
-          // This new error handling shows specific messages from the backend
-          const errorMsg = err.error?.file_attachment?.[0] || 'Failed to create. Check inputs.';
-          this.triggerAlert(errorMsg, ['OK']);
+          const errorMessage = this.parseErrorResponse(err);
+          this.triggerAlert(errorMessage, ['OK']);
         }
       });
     }
   }
-
   // 4. UPDATE onCancel Function
    onCancel() {
     this.isFormVisible = false; // Hide the modal
@@ -902,10 +1016,10 @@ formData.append('interview_location', this.interviewLocationsList.join(', '));
     this.clientName = '';
     this.subClientName = '';
     this.jobRole = '';
-this.interviewLocation = '';
-this.interviewLocationsList = [];
-this.interviewLocationSuggestions = [];
-this.showInterviewLocationSuggestions = false;
+    this.interviewLocation = '';
+    this.interviewLocationsList = [];
+    this.interviewLocationSuggestions = [];
+    this.showInterviewLocationSuggestions = false;
     this.interviewDate = '';
     this.jobDescription = '';
     this.experience = { totalMin: null, totalMax: null, relevantMin: null, relevantMax: null };
@@ -920,6 +1034,18 @@ this.showInterviewLocationSuggestions = false;
     this.isJobDescriptionInvalid = false;
     this.salaryErrors.rangeError = false;
     this.errors = { minExperience: false, maxExperience: false };
+
+    this.isClientNameInvalid = false;
+    this.isJobRoleInvalid = false;
+    this.isInterviewLocationInvalid = false;
+
+    this.isTotalExpInvalid = false;
+    this.isRelevantExpInvalid = false;
+    this.isSalaryInvalid = false;
+    this.isInterviewDateInvalid = false;
+    this.isNoticePeriodInvalid = false;
+    this.isGenderInvalid = false;
+    
   }
 
   showAddForm() {
