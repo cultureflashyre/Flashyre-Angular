@@ -72,6 +72,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   pendingDragEvent: CdkDragDrop<any[]> | null = null;
   pendingNewStage: string = '';
 
+  // Merged: Added Backward Move Flag from Child Branch
   isBackwardMoveConfirmation: boolean = false;
 
   // --- PERMISSION LOGIC ---
@@ -110,11 +111,9 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.stages.forEach(stage => this.pipelineData[stage] = []);
 
         // Permission & Data Loading
-        // If jobs are loaded, calculate permissions immediately
         if (this.availableJobs.length > 0) {
           this.loadJobPermissions(this.jobId);
         } else {
-          // Otherwise loadJobList will trigger permission calculation when done
           this.loadJobList(this.jobId);
         }
 
@@ -129,23 +128,18 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
       next: (data: any[]) => {
-        // Display ALL jobs to everyone (Visibility is open, Actions are restricted)
         this.availableJobs = data;
-
-        // Handle navigation/initial selection
         if (targetId) {
           this.loadJobPermissions(targetId);
-        } 
-        // Optional: Auto-select first job if nothing selected yet
-        else if (this.availableJobs.length > 0 && !this.jobId) {
-            // this.selectedJobId = this.availableJobs[0].id;
-            // this.onJobSwitch();
+        } else if (this.availableJobs.length > 0 && !this.jobId) {
+             // Optional auto-select logic if needed
         }
       },
       error: (err) => console.error('Failed to load jobs', err)
     });
   }
 
+  // Merged: Logic from Child branch to handle assigned_users_details AND assigned_users
   loadJobPermissions(id: number) {
     const job = this.availableJobs.find(j => j.id === id);
     if (job) {
@@ -162,30 +156,29 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.authorizedUserIds.push(String(creatorId));
       }
 
-      // Add Assigned Users
-      const assignedList = job.assigned_users || [];
-      
-      // Ensure we handle both object list or ID list
-      assignedList.forEach((u: any) => {
-        if (u && typeof u === 'object') {
+      // Add Assigned Users (Handle both object array and ID array)
+      const assignedList = job.assigned_users_details || job.assigned_users || [];
+      if (Array.isArray(assignedList)) {
+        assignedList.forEach((u: any) => {
+           if (u && typeof u === 'object') {
              const uid = u.user_id ? String(u.user_id) : (u.id ? String(u.id) : '');
              if(uid) this.authorizedUserIds.push(uid);
-        } else {
+           } else {
              this.authorizedUserIds.push(String(u));
-        }
-      });
+           }
+        });
+      }
       
       console.log('Permission Check - Authorized IDs for this Job:', this.authorizedUserIds);
     }
   }
 
+  // Merged: Kept Parent's stricter string normalization for safety
   canMoveCandidate(): boolean {
     if (this.isSuperUser) return true;
     
     if (this.currentUserId) {
-        // Normalize current user ID to string for comparison
         const currentIdStr = String(this.currentUserId).trim();
-        // Check if current ID exists in the authorized list
         return this.authorizedUserIds.includes(currentIdStr);
     }
     
@@ -221,11 +214,11 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     return this.stages.find(stage => this.pipelineData[stage] === data) || '';
   }
 
-  // --- DRAG AND DROP LOGIC ---
+  // --- DRAG AND DROP LOGIC (Merged Parent & Child) ---
 
   drop(event: CdkDragDrop<any[]>, newStage: string) {
     
-    // 1. Check Permissions (The "Read Only" Check)
+    // 1. Check Permissions (Parent Logic: Strict check)
     if (!this.canMoveCandidate()) {
          this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
          this.alertButtons = ['OK'];
@@ -243,20 +236,19 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       const prevIndex = this.stages.indexOf(prevStage);
       const newIndex = this.stages.indexOf(newStage);
 
-      // 1. [NEW] Check for BACKWARD move
+      // 3. Merged: Backward Move Confirmation (Child Logic)
       if (newIndex < prevIndex) {
         this.pendingDragEvent = event;
         this.pendingNewStage = newStage;
-        this.isBackwardMoveConfirmation = true; // Set flag
+        this.isBackwardMoveConfirmation = true; 
         
-        // Trigger Alert
         this.alertMessage = `You are moving this candidate back to '${newStage}'. Are you sure?`;
         this.alertButtons = ['Yes', 'No'];
         this.showAlert = true;
         return; // Stop here and wait for Alert Action
       }
 
-      // Check for skipped stages
+      // 4. Merged: Skip Stage Prevention (Parent Logic)
       if (newStage !== 'Rejected' && newIndex > prevIndex + 1) {
         this.alertMessage = `Action Not Allowed: You cannot skip stages. Please move to '${this.stages[prevIndex + 1]}'.`;
         this.alertButtons = ['OK'];
@@ -264,29 +256,34 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         return;
       }
 
+      // 5. Process Transition (Child Logic Refactor)
       this.processStageTransition(event, newStage);
-
-      // --- LOGIC TO PAUSE DROP FOR INPUT MODALS ---
-      
-      if (newStage === 'Interview') {
-        this.pendingDragEvent = event;
-        this.pendingNewStage = newStage;
-        this.interviewDateInput = ''; // Reset input
-        this.showInterviewModal = true; // Open Input Modal
-        return; // STOP EXECUTION HERE
-      }
-
-      if (newStage === 'Rejected') {
-        this.pendingDragEvent = event;
-        this.pendingNewStage = newStage;
-        this.rejectionReasonInput = ''; // Reset input
-        this.showRejectionModal = true; // Open Input Modal
-        return; // STOP EXECUTION HERE
-      }
-
-      // If no input needed, proceed immediately
-      this.finalizeDrop(event, newStage);
     }
+  }
+
+  // Merged: Helper method from Child to handle Input Modals vs Direct Drop
+  processStageTransition(event: CdkDragDrop<any[]>, newStage: string) {
+    
+    // Check if we need the Interview Modal
+    if (newStage === 'Interview') {
+      this.pendingDragEvent = event;
+      this.pendingNewStage = newStage;
+      this.interviewDateInput = ''; 
+      this.showInterviewModal = true; 
+      return; 
+    }
+
+    // Check if we need the Rejection Modal
+    if (newStage === 'Rejected') {
+      this.pendingDragEvent = event;
+      this.pendingNewStage = newStage;
+      this.rejectionReasonInput = ''; 
+      this.showRejectionModal = true; 
+      return; 
+    }
+
+    // If no input needed, proceed immediately
+    this.finalizeDrop(event, newStage);
   }
 
   // --- MODAL SUBMISSION HANDLERS ---
@@ -365,7 +362,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
     const exportData = candidatesInStage.map(app => {
       const c = app.candidate_details;
-      // Resolve resume link - check BOTH fields
+      // Merged: Check BOTH fields to resolve resume link
       const resumeLink = c.resume_url || c.resume || '';
 
       return {
@@ -443,7 +440,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   addCandidateToPipeline(candidate: any) {
     if (!this.jobId) return;
 
-    // --- CHECK PERMISSION ---
+    // --- CHECK PERMISSION (Merged: Kept Parent logic for security) ---
     if (!this.canMoveCandidate()) {
          this.alertMessage = "Access Denied: You are not authorized to add candidates to this Job Requirement.";
          this.alertButtons = ['OK'];
@@ -500,7 +497,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     }
   }
 
-  // --- ALERT CLOSE HANDLERS ---
+  // --- ALERT CLOSE HANDLERS (Merged Child Logic) ---
   onAlertClose() {
     this.showAlert = false;
   }
@@ -508,7 +505,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   onAlertAction(btn: string) {
     this.showAlert = false;
 
-    // [NEW LOGIC] Check if we are responding to a backward move warning
+    // Merged: Handle Backward Move Confirmation
     if (this.isBackwardMoveConfirmation) {
       if (btn === 'Yes' && this.pendingDragEvent) {
         // User said YES: Continue with the move
@@ -517,34 +514,10 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         // User said NO: Cancel everything
         this.pendingDragEvent = null;
         this.pendingNewStage = '';
+        // Note: The visual drag was already reverted by CDK drag-drop default behavior if not transferred
       }
       // Reset the flag
       this.isBackwardMoveConfirmation = false;
     }
   }
-
-  processStageTransition(event: CdkDragDrop<any[]>, newStage: string) {
-  
-  // 1. Check if we need the Interview Modal
-  if (newStage === 'Interview') {
-    this.pendingDragEvent = event;
-    this.pendingNewStage = newStage;
-    this.interviewDateInput = ''; // Reset input
-    this.showInterviewModal = true; 
-    return; 
-  }
-
-  // 2. Check if we need the Rejection Modal
-  if (newStage === 'Rejected') {
-    this.pendingDragEvent = event;
-    this.pendingNewStage = newStage;
-    this.rejectionReasonInput = ''; // Reset input
-    this.showRejectionModal = true; 
-    return; 
-  }
-
-  // 3. If no modal needed, finalize immediately
-  this.finalizeDrop(event, newStage);
-}
-
 }

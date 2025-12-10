@@ -127,16 +127,17 @@ export class RecruiterWorkflowCandidate implements OnInit {
   availableJobs: any[] = [];
   selectedJobId: number | null = null;
 
-  // NEW: Permission Flag
+  // --- NEW: Loading States (From Child) ---
+  isPageLoading: boolean = true;
+  isActionLoading: boolean = false;
+
+  // --- NEW: Permission Flag (From Parent) ---
   isSuperUser: boolean = false;
 
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
   ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
-
-  isPageLoading: boolean = true;
-  isActionLoading: boolean = false;
 
   // --- Google Maps Properties ---
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
@@ -183,14 +184,11 @@ export class RecruiterWorkflowCandidate implements OnInit {
     });
   }
 
-  
-
   ngOnInit(): void {
-    this.loadCandidates();
-    // The key is 'isSuperUser' and the value is the string 'true'
+    // The key is 'isSuperUser' and the value is the string 'true' (From Parent)
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    this.loadCandidates();
     this.setupLocationAutocomplete();
-
   }
 
   ngAfterViewInit(): void {
@@ -368,19 +366,11 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
 
    // === NEW METHOD START ===
-  /**
-   * Opens the candidate's resume in a new browser tab.
-   * If the URL is absolute (starts with http), it opens directly.
-   * Logic handles cases where it might be undefined.
-   */
   openResume(url: string | undefined): void {
     if (!url) {
       this.showAlert('No resume file attached for this candidate.', ['Close']);
       return;
     }
-
-    // Since you are using GCP, the URL returned by Django will be a full URL 
-    // (e.g., https://storage.googleapis.com/...).
     window.open(url, '_blank');
   }
 
@@ -403,7 +393,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
-      work_experience: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
+      work_experience: ['', Validators.required], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
       skills: ['', Validators.required],
     }, {
       validators: [
@@ -422,7 +412,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       skills: [''],
       current_ctc: [''],
       email: [''],
-      phone: [''] // 1. ADDED: Phone Control
+      phone: [''] // 1. ADDED: Phone Control from Parent
     });
   }
 
@@ -449,6 +439,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
   
 
   loadCandidates(): void {
+    // Merged: Using Child's Loading State
+    this.isPageLoading = true;
     this.candidateService.getCandidates().subscribe({
       next: (data) => {
         this.masterCandidates = data.map(c => ({ ...c, selected: false }));
@@ -457,7 +449,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       },
       error: (err) => { 
         console.error("Failed to load candidates.", err); 
-      this.isPageLoading = false;
+        this.isPageLoading = false;
       }
     });
   }
@@ -491,6 +483,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
   confirmAddToWorkflow() {
     if (!this.selectedJobId) return;
 
+    // Merged: Using Child's Loading State
     this.isActionLoading = true;
 
     const selectedIds = this.masterCandidates
@@ -557,7 +550,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
     }
 
-     // 2. ADDED: Phone Filtering Logic
+    // 2. ADDED: Phone Filtering Logic (From Parent)
     if (filterValues.phone) {
       const phoneFilter = filterValues.phone.trim();
       candidates = candidates.filter(c => c.phone_number.includes(phoneFilter));
@@ -583,6 +576,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   clearFilters(): void {
+    // Reset phone as well (From Parent)
     this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '', phone: '' });
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
@@ -674,10 +668,11 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.submissionError = '';
   }
 
-  // --- SKILLS MANAGEMENT ---
+  // --- SKILLS MANAGEMENT (Merged Logic from Child) ---
   addSkill(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.trim();
+    // Use Child's strict regex (Only Alphabets)
     value = value.replace(/[^a-zA-Z ]/g, '');
     if (value) {
       if (!this.skills.includes(value)) {
@@ -862,6 +857,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.currentSuggestions = [];
   }
 
+  // --- NEW Helper Methods from Child ---
+  
   // 1. For Work Experience: Allows only Letters, Numbers, and Spaces
   allowAlphanumericOnly(event: Event): void {
     const input = event.target as HTMLInputElement;
