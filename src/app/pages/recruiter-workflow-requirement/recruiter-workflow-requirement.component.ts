@@ -84,6 +84,9 @@ export class RecruiterWorkflowRequirement implements OnInit {
 
   additionalDetailsErrors: any[] = [];
 
+  isPageLoading: boolean = true;
+  isNavigatingToAts: boolean = false;
+
   constructor(
     private title: Title, 
     private meta: Meta, 
@@ -786,8 +789,13 @@ toggleNoticePeriodDropdown() {
         this.requirementsList = processedData;   // Display copy
         
         this.applyFiltersAndSort(); // Re-apply any active filters
+        this.isPageLoading = false;
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.isPageLoading = false;
+      }
+      
     });
   }
 
@@ -952,13 +960,24 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
   }
 
   navigateToAts(id: number): void {
-    if (id) {
-      // Navigates to the URL 'recruiter-workflow-ats/:id'
-      this.router.navigate(['/recruiter-workflow-ats', id]);
-    } else {
-      console.error('Requirement ID is missing, cannot navigate to ATS.');
-    }
+  if (id) {
+    // 1. Start the Loader
+    this.isNavigatingToAts = true;
+
+    // 2. Navigate
+    // Note the "(success) =>" part. This defines the variable.
+    this.router.navigate(['/recruiter-workflow-ats', id]).then((success) => {
+      // If navigation fails (e.g. route guard prevents it), stop the loader
+      if (!success) {
+        this.isNavigatingToAts = false;
+      }
+      // If navigation succeeds, the component is destroyed automatically, 
+      // so we don't need to manually set isNavigatingToAts = false.
+    });
+  } else {
+    console.error('Requirement ID is missing, cannot navigate to ATS.');
   }
+}
 
   // --- 3. LOCATION SEARCH SUGGESTION ---
   onLocationInput(event: any) {

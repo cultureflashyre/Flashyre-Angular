@@ -63,6 +63,9 @@ export class RecruiterWorkflowClient implements OnInit {
 
   // USER INFO variable
   recruiterFirstName: string = 'Loading...';
+  isSuperUser: boolean = false;
+
+  isPageLoading: boolean = true;
 
   constructor(
     private title: Title, 
@@ -94,25 +97,16 @@ export class RecruiterWorkflowClient implements OnInit {
 }
 
 fetchRecruiterName(): void {
-  // Get ID from cache (Local Storage)
+  // 1. Get ID from cache
   const userId = localStorage.getItem('user_id'); 
+  
+  // 2. Check for Super User status (Based on your screenshot)
+  const isSuper = localStorage.getItem('isSuperUser');
+  this.isSuperUser = (isSuper === 'true'); // Converts string "true" to boolean true
 
   if (userId) {
-    // We assume you have a service method to get user details. 
-    // If not, we will just show the ID for now, or you can connect your API here.
-    // Ideally: this.userService.getUser(userId).subscribe(...)
-    
-    // For now, let's simulate fetching it or use a service if you have one linked to that Django model.
     console.log("Fetching name for user:", userId);
-    // Placeholder logic:
     this.recruiterFirstName = "Recruiter (" + userId + ")"; 
-    
-    // REAL WORLD CODE (Uncomment if you have the service):
-    /*
-    this.clientService.getUserName(userId).subscribe(data => {
-       this.recruiterFirstName = data.first_name;
-    });
-    */
   } else {
     this.recruiterFirstName = "Guest";
   }
@@ -203,11 +197,12 @@ closeForm(): void {
         
         // 2. Apply current filters/sort to populate existingClients (the view list)
         this.applyFiltersAndSort();
-        
+        this.isPageLoading = false;
         if (onComplete) onComplete();
       },
       error: (err) => {
         console.error('Error fetching clients:', err);
+        this.isPageLoading = false;
         if (onComplete) onComplete();
       }
     });

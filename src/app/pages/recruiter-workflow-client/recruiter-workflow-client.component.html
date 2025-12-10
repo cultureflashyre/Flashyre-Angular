@@ -1,4 +1,8 @@
 <div class="recruiter-workflow-client-container10">
+  <div *ngIf="isPageLoading" class="page-loading-overlay">
+    <div class="round-loader"></div> <!-- Reusing your existing spinner class -->
+    <p>Loading Clients...</p>
+  </div>
   <div class="recruiter-workflow-client-container11">
     <recruiter-workflow-navbar
       rootClassName="recruiter-workflow-navbarroot-class-name4"
@@ -423,22 +427,22 @@
       <!-- MAIN FORM END -->
 
       <div class="recruiter-workflow-client-recruiter-workflow-client-list" *ngIf="showList">
-        <div 
-    *ngIf="masterClients.length === 0" 
-    style="display: flex; flex-direction: column; align-self: center; align-items: center; justify-content: center; height: 300px; color: #595959; text-align: center;"
-  >
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #ccc;">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="9" cy="7" r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </svg>
-    <span style="font-size: 20px; font-weight: 600;">No Clients Available</span>
-    <span style="font-size: 14px; margin-top: 8px;">Click "+ Add Client" above to create your first client.</span>
-  </div>
+        <ng-template #noData>
+          <div style="display: flex; flex-direction: column; align-self: center; align-items: center; justify-content: center; height: 300px; color: #595959; text-align: center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; color: #ccc;">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span style="font-size: 20px; font-weight: 600;">No Clients Available</span>
+            <span style="font-size: 14px; margin-top: 8px;">Click "+ Add Client" above to create your first client.</span>
+          </div>
+        </ng-template>
 
   <!-- 2. WRAPPER START for Existing Content -->
-  <ng-container *ngIf="masterClients.length > 0">
+   <ng-container *ngIf="!isPageLoading">
+  <ng-container *ngIf="masterClients.length > 0; else noData">
 
         <div
           id="select-filter-sort-download-zip-main-container"
@@ -501,6 +505,7 @@
             class="recruiter-workflow-client-filter-sort-download-zip-container"
           >
             <button
+                *ngIf="isSuperUser"
                 id="filtered-button"
                 type="button"
                 (click)="deleteSelectedClients()"
@@ -609,9 +614,7 @@
 
           </div>
         </div>
-        <div *ngIf="existingClients.length === 0" style="text-align: center; align-self: center; padding: 40px; color: #666; font-size: 18px; font-weight: 500;">
-          No Match Found so clear the filters to view all the clients
-        </div>
+        <ng-container *ngIf="existingClients.length > 0; else noMatches">
         <div class="recruiter-workflow-client-container17" *ngIf="existingClients.length > 0">
           <div *ngFor="let clientData of existingClients" class="recruiter-workflow-client-container18">
             
@@ -702,6 +705,7 @@
                   ></path></svg
                 > -->
                 <svg
+                  *ngIf="isSuperUser"
                   width="20"
                   height="20"
                   viewBox="0 0 20 20"
@@ -748,6 +752,26 @@
           
         </div>
         </ng-container>
+        </ng-container>
+        </ng-container>
+        <ng-template #noMatches>
+          <div style="text-align: center; align-self: center; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #6b7280; margin-bottom: 16px;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 8px;">No Matches Found</h3>
+            <p style="color: #6b7280; margin-bottom: 24px;">No clients match your current filter criteria.</p>
+            <button 
+              (click)="clearFilters()" 
+              type="button" 
+              class="recruiter-workflow-client-filtered-button2 button" 
+              style="width: auto; padding: 8px 20px; color: #05356c; background-color: white;"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

@@ -72,6 +72,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   pendingDragEvent: CdkDragDrop<any[]> | null = null;
   pendingNewStage: string = '';
 
+  isBackwardMoveConfirmation: boolean = false;
+
   // --- PERMISSION LOGIC ---
   currentUserId: string | null = null;
   isSuperUser: boolean = false;
@@ -241,6 +243,19 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       const prevIndex = this.stages.indexOf(prevStage);
       const newIndex = this.stages.indexOf(newStage);
 
+      // 1. [NEW] Check for BACKWARD move
+      if (newIndex < prevIndex) {
+        this.pendingDragEvent = event;
+        this.pendingNewStage = newStage;
+        this.isBackwardMoveConfirmation = true; // Set flag
+        
+        // Trigger Alert
+        this.alertMessage = `You are moving this candidate back to '${newStage}'. Are you sure?`;
+        this.alertButtons = ['Yes', 'No'];
+        this.showAlert = true;
+        return; // Stop here and wait for Alert Action
+      }
+
       // Check for skipped stages
       if (newStage !== 'Rejected' && newIndex > prevIndex + 1) {
         this.alertMessage = `Action Not Allowed: You cannot skip stages. Please move to '${this.stages[prevIndex + 1]}'.`;
@@ -248,6 +263,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.showAlert = true;
         return;
       }
+
+      this.processStageTransition(event, newStage);
 
       // --- LOGIC TO PAUSE DROP FOR INPUT MODALS ---
       
@@ -490,5 +507,44 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   onAlertAction(btn: string) {
     this.showAlert = false;
+
+    // [NEW LOGIC] Check if we are responding to a backward move warning
+    if (this.isBackwardMoveConfirmation) {
+      if (btn === 'Yes' && this.pendingDragEvent) {
+        // User said YES: Continue with the move
+        this.processStageTransition(this.pendingDragEvent, this.pendingNewStage);
+      } else {
+        // User said NO: Cancel everything
+        this.pendingDragEvent = null;
+        this.pendingNewStage = '';
+      }
+      // Reset the flag
+      this.isBackwardMoveConfirmation = false;
+    }
   }
+
+  processStageTransition(event: CdkDragDrop<any[]>, newStage: string) {
+  
+  // 1. Check if we need the Interview Modal
+  if (newStage === 'Interview') {
+    this.pendingDragEvent = event;
+    this.pendingNewStage = newStage;
+    this.interviewDateInput = ''; // Reset input
+    this.showInterviewModal = true; 
+    return; 
+  }
+
+  // 2. Check if we need the Rejection Modal
+  if (newStage === 'Rejected') {
+    this.pendingDragEvent = event;
+    this.pendingNewStage = newStage;
+    this.rejectionReasonInput = ''; // Reset input
+    this.showRejectionModal = true; 
+    return; 
+  }
+
+  // 3. If no modal needed, finalize immediately
+  this.finalizeDrop(event, newStage);
+}
+
 }
