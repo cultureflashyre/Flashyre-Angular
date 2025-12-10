@@ -418,7 +418,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
       location: [''],
       skills: [''],
       current_ctc: [''],
-      email: ['']
+      email: [''],
+      phone: [''] // 1. ADDED: Phone Control
     });
   }
 
@@ -545,6 +546,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
       candidates = candidates.filter(c => c.email.toLowerCase().includes(emailFilter));
     }
 
+     // 2. ADDED: Phone Filtering Logic
+    if (filterValues.phone) {
+      const phoneFilter = filterValues.phone.trim();
+      candidates = candidates.filter(c => c.phone_number.includes(phoneFilter));
+    }
+
     if (this.currentSort === 'a-z') {
       candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
     } else if (this.currentSort === 'z-a') {
@@ -565,7 +572,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   clearFilters(): void {
-    this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '' });
+    this.filterForm.reset({ name: '', location: '', skills: '', current_ctc: '', email: '', phone: '' });
     this.applyFiltersAndSort();
     this.isFilterPanelVisible = false;
   }

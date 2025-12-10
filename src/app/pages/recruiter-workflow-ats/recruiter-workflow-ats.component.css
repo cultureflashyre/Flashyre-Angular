@@ -4,6 +4,11 @@
   overflow: hidden; /* Prevent global scrollbar */
 }
 
+::ng-deep app-alert-message .overlay {
+  z-index: 9999 !important;
+}
+
+
 /* ... (Existing styles remain unchanged) ... */
 
 /* --- NEW INPUT MODALS --- */
@@ -16,7 +21,7 @@
   height: 100vh;
   background-color: rgba(9, 30, 66, 0.5);
   backdrop-filter: blur(2px);
-  z-index: 1200; /* Higher than details modal */
+  z-index: 1150; /* Higher than details modal */
   display: flex;
   justify-content: center;
   align-items: center;

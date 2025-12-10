@@ -108,11 +108,11 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
         this.stages.forEach(stage => this.pipelineData[stage] = []);
 
         // Permission & Data Loading
+        // If jobs are loaded, calculate permissions immediately
         if (this.availableJobs.length > 0) {
           this.loadJobPermissions(this.jobId);
         } else {
-          // If availableJobs isn't populated yet (rare race condition), 
-          // loadJobList will handle calling permissions when done.
+          // Otherwise loadJobList will trigger permission calculation when done
           this.loadJobList(this.jobId);
         }
 
@@ -127,18 +127,15 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
       next: (data: any[]) => {
-        // --- CHANGED: REMOVED FILTERING ---
-        // All users can SEE all jobs now.
+        // Display ALL jobs to everyone (Visibility is open, Actions are restricted)
         this.availableJobs = data;
 
         // Handle navigation/initial selection
         if (targetId) {
-          // We still calculate permissions for the specific target ID to know if they can EDIT
           this.loadJobPermissions(targetId);
         } 
-        // Auto-select first job if nothing selected yet
+        // Optional: Auto-select first job if nothing selected yet
         else if (this.availableJobs.length > 0 && !this.jobId) {
-            // Optional: Automatically load the first available job
             // this.selectedJobId = this.availableJobs[0].id;
             // this.onJobSwitch();
         }
@@ -164,7 +161,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       }
 
       // Add Assigned Users
-      const assignedList = job.assigned_users || []; // assigned_users contains IDs based on our serializer fix
+      const assignedList = job.assigned_users || [];
       
       // Ensure we handle both object list or ID list
       assignedList.forEach((u: any) => {
@@ -227,9 +224,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   drop(event: CdkDragDrop<any[]>, newStage: string) {
     
     // 1. Check Permissions (The "Read Only" Check)
-    // We check this first. If they can't move, we stop immediately.
     if (!this.canMoveCandidate()) {
-         this.alertMessage = "Access Denied: You are not authorized to modify the pipeline for this Job Requirement. Only assigned recruiters can perform this action.";
+         this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
          this.alertButtons = ['OK'];
          this.showAlert = true;
          return; 
@@ -352,7 +348,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
     const exportData = candidatesInStage.map(app => {
       const c = app.candidate_details;
-      // Resolve resume link
+      // Resolve resume link - check BOTH fields
       const resumeLink = c.resume_url || c.resume || '';
 
       return {

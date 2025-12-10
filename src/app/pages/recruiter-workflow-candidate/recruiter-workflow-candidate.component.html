@@ -194,6 +194,11 @@
                       <label for="filter-email">Email</label>
                       <input id="filter-email" type="text" formControlName="email" placeholder="Filter by email..." class="input">
                     </div>
+                    <!-- NEW: Phone Number Filter -->
+                    <div class="filter-group">
+                      <label for="filter-phone">Phone Number</label>
+                      <input id="filter-phone" type="text" formControlName="phone" placeholder="Search Phone Number..." class="input">
+                    </div>
                   </form>
                   <div class="filter-panel-actions">
                     <button type="button" (click)="clearFilters()" class="button clear-button">Clear</button>
