@@ -118,7 +118,7 @@
 
       <!-- CANDIDATE LIST -->
       <div class="recruiter-workflow-candidate-recruiter-workflow-candidate-lists">
-        <ng-container *ngIf="displayCandidates.length > 0; else noCandidates">
+        <ng-container *ngIf="masterCandidates.length > 0; else noData">
           <!-- List Header -->
           <div id="select-filter-sort-download-zip-main-container" class="recruiter-workflow-candidate-select-filter-sort-download-zip-main-container">
             <div class="recruiter-workflow-candidate-container30">
@@ -213,6 +213,7 @@
           </div>
           
           <!-- List Body -->
+          <ng-container *ngIf="displayCandidates.length > 0; else noMatches">
           <div class="recruiter-workflow-candidate-container32">
             <div *ngFor="let candidate of displayCandidates" class="recruiter-workflow-candidate-container33">
               <div class="recruiter-workflow-candidate-container34">
@@ -330,10 +331,24 @@
               </div>
             </div>
           </div>
+          </ng-container>
         </ng-container>
+        <ng-template #noMatches>
+          <div class="empty-list-container" style="text-align: center; padding: 40px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #6b7280; margin-bottom: 16px;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 8px;">No Matches Found</h3>
+            <p style="color: #6b7280; margin-bottom: 24px;">No candidates match your current filter criteria.</p>
+            <button (click)="clearFilters()" type="button" class="recruiter-workflow-candidate-filtered-button2 button" style="width: auto; padding: 8px 20px;">
+              Clear Filters
+            </button>
+          </div>
+        </ng-template>
 
         <!-- Empty State Template -->
-        <ng-template #noCandidates>
+        <ng-template #noData>
           <div class="empty-list-container">
             <svg class="empty-list-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
