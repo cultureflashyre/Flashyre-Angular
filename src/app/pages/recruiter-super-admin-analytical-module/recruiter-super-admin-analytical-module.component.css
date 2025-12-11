@@ -4,6 +4,23 @@
   overflow: hidden; /* Prevent window scrollbar */
 }
 
+/* --- NEW: DETAILED REPORT SCROLL --- */
+
+.report-scroll-container {
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto;  /* Enable vertical scrolling */
+  border-top: 1px solid #eee;
+}
+
+/* Sticky Header for Performance Report */
+.report-scroll-container thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10; /* Keeps header above the rows */
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); /* visual separation */
+  background-color: #f4f4f4; /* Ensure background isn't transparent */
+}
+
 .logs-scroll-container {
   max-height: 400px; /* Fixed height to trigger scroll */
   overflow-y: auto;  /* Vertical scrollbar */
@@ -296,6 +313,9 @@ recruiter-workflow-navbar {
 .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
 .status-active { background-color: #e6fffa; color: #1F882B; }
 .status-closed { background-color: #fff5f5; color: #F10400; }
+
+.status-on-hold { background-color: #fff8e1; color: #F19000; } /* Orange/Yellow */
+.status-hired { background-color: #f3e5f5; color: #7b1fa2; } /* Purple */
 
 /* Log Badges */
 .log-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block; }

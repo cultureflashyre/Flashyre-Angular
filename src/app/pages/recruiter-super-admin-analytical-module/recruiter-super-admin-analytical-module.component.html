@@ -188,7 +188,7 @@
         <div class="kpi-grid">
           <!-- New KPIs -->
           <div class="kpi-card purple">
-            <span class="kpi-title">Total Candidates</span>
+            <span class="kpi-title">Candidates Added</span>
             <span class="kpi-value">{{ kpis.total_candidates }}</span>
           </div>
           <div class="kpi-card purple">
@@ -269,7 +269,8 @@
         <div class="table-header-row">
           <h3 class="kpi-section-title" style="margin:0">Detailed Performance Report</h3>
         </div>
-        <div class="table-container">
+        <!-- ADDED CLASS: report-scroll-container -->
+        <div class="table-container report-scroll-container">
           <table class="custom-table">
             <thead>
               <tr>
@@ -297,7 +298,13 @@
                 <td style="text-align:center">{{ row.interviews }}</td>
                 <td style="text-align:center">{{ row.hired }}</td>
                 <td>
-                  <span class="status-badge" [ngClass]="row.status === 'Active' ? 'status-active' : 'status-closed'">
+                  <span class="status-badge" 
+                    [ngClass]="{
+                      'status-active': row.status === 'Active',
+                      'status-closed': row.status === 'Closed',
+                      'status-on-hold': row.status === 'On-hold',
+                      'status-hired': row.status === 'Hired'
+                    }">
                     {{ row.status }}
                   </span>
                 </td>
@@ -310,6 +317,7 @@
             </tbody>
           </table>
         </div>
+
       </div>
 
        <!-- NEW: ACTIVITY LOGS SECTION -->
