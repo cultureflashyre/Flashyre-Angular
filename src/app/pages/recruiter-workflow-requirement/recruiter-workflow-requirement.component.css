@@ -2,6 +2,91 @@
   display: contents; 
 }
 
+.inline-error-text {
+  color: #dc3545; /* A standard red color for errors */
+  font-size: 12px;
+  margin-top: 4px;
+  display: block; /* Ensures it appears on its own line */
+  width: 100%;
+}
+
+/* Main container for skills/locations input */
+.skills-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+}
+
+/* Individual skill/location pill */
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* 'x' button to remove a pill */
+.remove-skill-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 0;
+  font-size: 18px;
+  color: #555;
+  line-height: 1;
+}
+.remove-skill-button:hover {
+  color: #000;
+}
+
+/* The actual text input field inside the container */
+.skills-entry-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 4px 0;
+  font-size: 1em;
+  min-width: 150px;
+  background-color: transparent;
+}
+
+/* Suggestions Dropdown Container */
+.location-suggestions-dropdown {
+  position: absolute;
+  top: 100%; /* Position right below the input container */
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1001; /* Ensure it's above other form elements */
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual suggestion item */
+.suggestion-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
 /* --- NEW STYLES FOR FORM MODAL OVERLAY (Copied from reference) --- */
 .form-modal-backdrop {
   position: fixed;
@@ -953,7 +1038,7 @@
 .recruiter-workflow-requirement-job-title-company-name-container2 {
   flex: 0 0 auto;
   width: 100%;
-  height: 76px;
+  height: auto;
   display: flex;
   position: relative;
   align-items: flex-start;
@@ -1486,9 +1571,9 @@
  
 .recruiter-workflow-requirement-recruiter-workflow-requirment-listing {
   gap: 16px;
-  /* flex: 0 0 auto; */
+  flex: 0 0 auto;
   width: 100%;
-  height: 80vh;
+  height: auto;
   display: flex;
   position: relative;
   align-self: center;
@@ -1501,8 +1586,8 @@
 .large-container {
   gap: 16px;
   width: 100%;
-  height: 100%;
-  max-height: 100%;
+  height: auto;
+  max-height: 500px;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -2492,42 +2577,6 @@
   border-radius: 50%;
   margin-right: 8px;
   display: inline-block;
-}
-
-.page-loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
-  backdrop-filter: blur(5px);                 /* The Blur Effect */
-  z-index: 9999;                              /* On top of everything */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.page-loading-overlay p {
-  margin-top: 15px;
-  font-weight: 600;
-  color: #05356c;
-}
-
-/* Loader Animation */
-.round-loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #05356c;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
  
 @media(max-width: 1200px) {
