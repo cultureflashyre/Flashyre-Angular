@@ -25,7 +25,8 @@ export interface Candidate {
   current_location: string;
   created_at?: string;
   selected?: boolean;
-  resume?: string;         // From Child
+  resume?: string; 
+  user?: number;         // From Child
   recruiter_name?: string; // From Child
   source?: 'Naukri' | 'External'; // From Child
 }

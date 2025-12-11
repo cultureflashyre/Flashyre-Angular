@@ -43,7 +43,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     { label: 'Closed', color: '#dc3545' }   // Red
   ];
   bulkStatusSelected: string = '';
-   isSuperUser: boolean = false;
+  isSuperUser: boolean = false;
   clientName: string = '';
   subClientName: string = '';
   jobRole: string = ''; 
@@ -277,6 +277,36 @@ private getPlacePredictions(term: string): Observable<google.maps.places.Autocom
   });
 }
 
+ /**
+   * Check if the current user is assigned to this requirement.
+   */
+  private isAssignedToRequirement(item: any): boolean {
+    const currentUserId = localStorage.getItem('user_id');
+    if (!currentUserId) return false;
+
+    // Check assigned_users_details (Array of objects) or assigned_users (Array of IDs)
+    const assignedList = item.assigned_users_details || item.assigned_users || [];
+    
+    return assignedList.some((u: any) => {
+      // Normalize comparison: Handle object {user_id: '...'} or simple string '...'
+      const uId = u.user_id ? String(u.user_id) : String(u);
+      return uId === String(currentUserId);
+    });
+  }
+
+  /**
+   * Check if the current user created this requirement.
+   */
+  private isCreatorOfRequirement(item: any): boolean {
+    const currentUserId = localStorage.getItem('user_id');
+    if (!currentUserId) return false;
+
+    // Handle nested object {user_id: '...'} or simple ID
+    const creatorId = item.created_by_details ? item.created_by_details.user_id : item.created_by;
+    
+    return String(creatorId) === String(currentUserId);
+  }
+
 // --- HTML Event Handlers for Interview Location ---
 
 onInterviewLocationInput(event: Event): void {
@@ -378,7 +408,14 @@ getFileName(): string {
 
   // 3. INLINE EDIT: Toggle Popover
   toggleStatusPopover(item: any, event: Event) {
-    event.stopPropagation(); // Prevent card click
+    event.stopPropagation();
+    
+    // PERMISSION CHECK: Only Super User OR Assigned User
+    if (!this.isSuperUser && !this.isAssignedToRequirement(item)) {
+        this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
+        return;
+    }
+
     // Close others
     this.requirementsList.forEach(req => {
       if (req !== item) req.showStatusDropdown = false;
@@ -386,28 +423,31 @@ getFileName(): string {
     item.showStatusDropdown = !item.showStatusDropdown;
   }
 
+
   // 4. INLINE EDIT: Update Status
   updateSingleStatus(item: any, newStatus: string, event: Event) {
     event.stopPropagation();
-    item.showStatusDropdown = false; // Close popover
+    item.showStatusDropdown = false;
+
+    // Double Check Permission (Safety)
+    if (!this.isSuperUser && !this.isAssignedToRequirement(item)) {
+        this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
+        return;
+    }
 
     if (item.status === newStatus) return;
 
-    // Optimistic UI Update
     const oldStatus = item.status;
-    item.status = newStatus;
+    item.status = newStatus; // Optimistic update
 
-    // Create FormData for the backend
     const formData = new FormData();
     formData.append('status', newStatus);
 
     this.adbService.updateRequirement(item.id, formData).subscribe({
-      next: () => {
-        // Success
-      },
+      next: () => {},
       error: (err) => {
-        item.status = oldStatus; // Revert on error
-        this.triggerAlert('You do not have permission to change the status of this requirement.', ['OK']);
+        item.status = oldStatus;
+        this.triggerAlert('Failed to update status on server.', ['OK']);
       }
     });
   }
@@ -418,33 +458,46 @@ getFileName(): string {
     const newStatus = event.target.value;
     if (!newStatus) return;
 
+    // Filter selected items
     const selectedItems = this.requirementsList.filter(item => item.selected);
+    
     if (selectedItems.length === 0) return;
 
-    // Prepare Observables for all selected items
-    const updateRequests = selectedItems.map(item => {
+    // PERMISSION CHECK: Filter list to only items user is allowed to change
+    const allowedItems = this.isSuperUser 
+        ? selectedItems 
+        : selectedItems.filter(item => this.isAssignedToRequirement(item));
+
+    if (allowedItems.length === 0) {
+        this.triggerAlert("Access Denied: You are not assigned to any of the selected requirements.", ['OK']);
+        this.bulkStatusSelected = '';
+        return;
+    }
+
+    if (allowedItems.length < selectedItems.length) {
+        // Warn if some were skipped
+        this.triggerAlert(`Note: You only have permission to update ${allowedItems.length} out of ${selectedItems.length} selected items. Proceeding with allowed items.`, ['OK']);
+    }
+
+    const updateRequests = allowedItems.map(item => {
       const formData = new FormData();
       formData.append('status', newStatus);
-      
-      // Update local model immediately (UI feedback)
       item.status = newStatus;
-      
       return this.adbService.updateRequirement(item.id, formData);
     });
 
-    // Execute all updates
     forkJoin(updateRequests).subscribe({
       next: () => {
-        this.triggerAlert('Selected items updated successfully', ['OK']);
-        this.bulkStatusSelected = ''; // Reset dropdown
-        // Uncheck items? Optional. keeping them selected for now.
+        // Optional success message specific to bulk
+        this.bulkStatusSelected = '';
       },
       error: (err) => {
         this.triggerAlert('Some updates failed', ['OK']);
-        this.fetchRequirements(); // Refresh to get actual server state
+        this.fetchRequirements();
       }
     });
   }
+
 
   get isAnySelected(): boolean {
     return this.requirementsList && this.requirementsList.some(item => item.selected);
@@ -722,6 +775,17 @@ toggleNoticePeriodDropdown() {
   }
 
  onEdit(item: any) {
+
+  // PERMISSION CHECK: Super User OR Assigned User OR Creator
+    const canEdit = this.isSuperUser || 
+                    this.isAssignedToRequirement(item) || 
+                    this.isCreatorOfRequirement(item);
+
+    if (!canEdit) {
+        this.triggerAlert("Access Denied: Only assigned users or the creator can edit this requirement.", ['OK']);
+        return;
+    }
+
     this.isEditMode = true;
     this.currentRequirementId = item.id;
     this.showListing = false; // Switch to form view

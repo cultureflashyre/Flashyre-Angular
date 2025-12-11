@@ -377,8 +377,16 @@ export class RecruiterWorkflowCandidate implements OnInit {
   private initializeForm(): void {
     const locationPattern = /.*[a-zA-Z].*/;
     this.candidateForm = this.fb.group({
-      first_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      last_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      first_name: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z\s]*$/), 
+        Validators.maxLength(15) 
+      ]],
+      last_name: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z\s]*$/), 
+        Validators.maxLength(15) 
+      ]],
       phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
       total_experience_min: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
@@ -694,6 +702,17 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   startEdit(candidate: Candidate): void {
+    // 1. Get Permissions
+    const currentUserId = localStorage.getItem('user_id');
+    const isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+
+    // 2. Resolve Creator ID
+    // Django returns 'user' as the ID (number). Convert to string for safe comparison.
+    const creatorId = candidate.user ? String(candidate.user) : null;
+
+    // 3. Permission Logic
+    // Allow if Super User OR if Current User matches Creator
+    if (isSuperUser || (currentUserId && creatorId === currentUserId)) {
     if (candidate.id) {
       this.editingCandidateId = candidate.id;
       this.selectedFile = null;
@@ -714,6 +733,14 @@ export class RecruiterWorkflowCandidate implements OnInit {
       const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
       this.showForm(sourceToOpen); 
     }
+        } else {
+      // 4. Access Denied
+      this.showAlert(
+        "Access Denied: You do not have permission to edit this candidate. Only the creator or a Super Admin can perform this action.", 
+        ['Close']
+      );
+    }
+
   }
   
   getFileNameFromUrl(url: string): string {

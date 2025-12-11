@@ -369,12 +369,28 @@
             <div class="recruiter-workflow-candidate-job-title-company-name-container1">
                 <div class="recruiter-workflow-candidate-job-title-container1">
                     <span class="recruiter-workflow-candidate-job-title-text1">Candidate First Name</span>
-                    <input type="text" formControlName="first_name" placeholder="Enter First Name" class="recruiter-workflow-candidate-job-title-input1 input"/>
-                </div>
+                      <input type="text" formControlName="first_name" placeholder="Enter First Name" 
+                           class="recruiter-workflow-candidate-job-title-input1 input"
+                           maxlength="50"
+                           [class.is-invalid]="f['first_name'].invalid && f['first_name'].touched"/>
+                    <div class="validation-error" *ngIf="f['first_name'].invalid && f['first_name'].touched">
+                        <span *ngIf="f['first_name'].errors?.['required']">First Name is required.</span>
+                        <span *ngIf="f['first_name'].errors?.['pattern']">Letters only.</span>
+                        <!-- NEW ERROR MESSAGE -->
+                        <span *ngIf="f['first_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
+                    </div>                </div>
                 <div class="recruiter-workflow-candidate-company-name-container1">
                     <span class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span>
-                    <input type="text" formControlName="last_name" placeholder="Enter Last Name" class="recruiter-workflow-candidate-company-name-input1 input"/>
-                </div>
+<input type="text" formControlName="last_name" placeholder="Enter Last Name" 
+                           class="recruiter-workflow-candidate-company-name-input1 input"
+                           maxlength="50"
+                           [class.is-invalid]="f['last_name'].invalid && f['last_name'].touched"/>
+                    <div class="validation-error" *ngIf="f['last_name'].invalid && f['last_name'].touched">
+                        <span *ngIf="f['last_name'].errors?.['required']">Last Name is required.</span>
+                        <span *ngIf="f['last_name'].errors?.['pattern']">Letters only.</span>
+                        <!-- NEW ERROR MESSAGE -->
+                        <span *ngIf="f['last_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
+                    </div>                </div>
             </div>
 
             <div class="recruiter-workflow-candidate-job-title-company-name-container2">

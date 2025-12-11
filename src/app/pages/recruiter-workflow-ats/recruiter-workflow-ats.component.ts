@@ -437,12 +437,23 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     );
   }
 
+ // New Method: Check permission before opening dropdown
+  toggleAddCandidate() {
+    if (!this.canMoveCandidate()) {
+      this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
+      this.alertButtons = ['OK'];
+      this.showAlert = true;
+      return;
+    }
+    this.showAddCandidate = !this.showAddCandidate;
+  }
+
   addCandidateToPipeline(candidate: any) {
     if (!this.jobId) return;
 
-    // --- CHECK PERMISSION (Merged: Kept Parent logic for security) ---
+    // Double Check Permission (Safety)
     if (!this.canMoveCandidate()) {
-         this.alertMessage = "Access Denied: You are not authorized to add candidates to this Job Requirement.";
+         this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
          this.alertButtons = ['OK'];
          this.showAlert = true;
          return; 
