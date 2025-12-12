@@ -508,7 +508,7 @@
         </div>
         <div id="job-title-company-name-container" class="recruiter-workflow-requirement-job-title-company-name-container1">
           <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container1">
-            <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client</span>
+            <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client <span style="color: red;">*</span></span>
             <select 
               id="employment-job-title-input" 
               class="recruiter-workflow-requirement-job-title-input1 input" 
@@ -539,7 +539,7 @@
         <div id="issued-renewal-date-container" class="recruiter-workflow-requirement-issued-renewal-date-container1">
           <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container1">
             <div id="container" class="recruiter-workflow-requirement-container16">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text1"><span>Total Experience</span><br /></span>
+              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text1"><span>Total Experience <span style="color: red;">*</span></span><br /></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container1">
                 <div class="recruiter-workflow-requirement-container17">
                   <input 
@@ -585,7 +585,7 @@
           </div>
           <div id="certification-renewal-date-input" class="recruiter-workflow-requirement-renewal-date-container">
             <div id="certification-renewal-date-container" class="recruiter-workflow-requirement-container19">
-              <span id="certificate-renewal-date-text" class="recruiter-workflow-requirement-renewal-date-text"><span>Relavant Experience</span><br /></span>
+              <span id="certificate-renewal-date-text" class="recruiter-workflow-requirement-renewal-date-text"><span>Relavant Experience  <span style="color: red;">*</span></span><br /></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container2">
                 <div class="recruiter-workflow-requirement-container20"><input type="number" id="rel-exp-min" placeholder="Min Experience" class="recruiter-workflow-requirement-company-name-input4 input" [ngClass]="{'input-error': errors.minExperience}" [(ngModel)]="experience.relevantMin" (input)="validateExperience($event)"  min="0" /></div>
                 <span>To</span>
@@ -605,7 +605,7 @@
         <div id="issued-renewal-date-container" class="recruiter-workflow-requirement-issued-renewal-date-container2">
           <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container2">
             <div id="container" class="recruiter-workflow-requirement-container22">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text2"><span>Salary</span><br /></span>
+              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text2"><span>Salary  <span style="color: red;">*</span></span><br /></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container3">
                 <div class="recruiter-workflow-requirement-container23"><input type="number" id="salary-min" placeholder="Min Salary" class="recruiter-workflow-requirement-company-name-input6 input" [ngClass]="{'input-error': salaryErrors.rangeError}" [(ngModel)]="salary.min" (input)="validateSalary()" min="0" /></div>
                 <span>To</span>
@@ -618,7 +618,7 @@
          <div class="recruiter-workflow-requirement-certificate-name-container">
             <div class="recruiter-workflow-requirement-certifiacate-name-container">
                 <span class="recruiter-workflow-requirement-certificate-name-text">
-                    Job Role
+                    Job Role <span style="color: red;">*</span>
                     <span class="recruiter-workflow-requirement-skill-star-text" style="font-size: 1em;">*</span>
                 </span>
                 <input
@@ -626,10 +626,15 @@
                     placeholder="Enter Job Role"
                     class="recruiter-workflow-requirement-job-title-input1 input"
                     [(ngModel)]="jobRole"
+                    [ngClass]="{'input-error': isJobRoleInvalid || isJobRoleNumericOnly}"
+                    (input)="validateJobRoleInput($event)"
                 />
                 <span *ngIf="formErrors.job_role" class="inline-error-text">{{ formErrors.job_role }}</span>
                 <span *ngIf="isJobRoleInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px; display: block;">
                   Job Role is required.
+                </span>
+                <span *ngIf="isJobRoleNumericOnly" class="error-text" style="color: red; font-size: 12px; margin-top: 4px; display: block;">
+                   Job Role cannot contain only numbers. Please include alphabets.
                 </span>
             </div>
         </div>
@@ -641,7 +646,7 @@
   
   <!-- 1. INTERVIEW DATE (Swapped to Left) -->
   <div class="recruiter-workflow-requirement-company-name-container2" style="width: 49%">
-    <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date</span>
+    <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date <span style="color: red;">*</span></span>
     <input type="date" id="employment-company-name-input" placeholder="Enter Date" class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate" [min]="minDate" />
     <span *ngIf="isInterviewDateInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
       Interview Date is required.
@@ -650,7 +655,7 @@
 
   <!-- 2. ADVANCED INTERVIEW LOCATION (Remains on Right) -->
   <div class="recruiter-workflow-requirement-job-title-container2" style="position:relative; width: 49%;">
-      <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text2">Interview Location</span>
+      <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text2">Interview Location <span style="color: red;">*</span></span>
       
       <div class="skills-input-container">
           <span *ngFor="let loc of interviewLocationsList; let i = index" class="skill-pill">
@@ -711,7 +716,7 @@
         <div class="recruiter-workflow-requirement-job-title-company-name-container2">
           <div id="certification-issued-date-container" class="recruiter-workflow-requirement-issued-date-container3">
             <div id="container" class="recruiter-workflow-requirement-container27">
-              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text3">Notice Period</span>
+              <span id="certificate-issued-date" class="recruiter-workflow-requirement-issuing-date-text3">Notice Period <span style="color: red;">*</span></span>
               <div id="select-container" class="recruiter-workflow-requirement-select-container4" style="position: relative;">
                 <div id="certification-issued-date-dropdown" class="recruiter-workflow-requirement-form2 input" (click)="toggleNoticePeriodDropdown()" style="cursor: pointer;">
                   <span id="select-text" class="recruiter-workflow-requirement-select-text2" [style.color]="selectedNoticePeriod ? '#000' : '#888'">{{ selectedNoticePeriod || 'Select' }}</span>
@@ -727,7 +732,7 @@
             </div>
           </div>
           <div id="certification-credentials-container" class="recruiter-workflow-requirement-credentials-container">
-            <span id="certification-credentials-text" class="recruiter-workflow-requirement-credentials-text"><span>Gender</span><br /></span>
+            <span id="certification-credentials-text" class="recruiter-workflow-requirement-credentials-text"><span>Gender <span style="color: red;">*</span></span><br /></span>
             <div id="select-container" class="recruiter-workflow-requirement-select-container5" style="position: relative;">
               <div id="certification-credentials-dropdown" class="recruiter-workflow-requirement-form3 input" (click)="toggleGenderDropdown()" style="cursor: pointer;">
                 <span id="select-text" class="recruiter-workflow-requirement-select-text3" [style.color]="selectedGender ? '#000' : '#888'">{{ selectedGender || 'Select' }}</span>
@@ -746,7 +751,7 @@
         <div id="skills-container" class="recruiter-workflow-requirement-skills-container">
           <div id="skill-text-container" class="recruiter-workflow-requirement-skill-text-container">
             <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description</span>
-            <span id="skill-star-text" class="recruiter-workflow-requirement-skill-star-text">*</span>
+            <span id="skill-star-text" class="recruiter-workflow-requirement-skill-star-text" style="color: red;">*</span>
           </div>
           <textarea id="job-description-input" placeholder="Enter Job Description" class="recruiter-workflow-requirement-job-title-input3 input" [ngClass]="{'input-error': isJobDescriptionInvalid}" [(ngModel)]="jobDescription" (input)="validateJobDescription()" (blur)="validateJobDescription()" style="height: 100px; padding-top: 10px; white-space: pre-wrap; word-wrap: break-word; resize: none;"></textarea>
           <div *ngIf="isJobDescriptionInvalid" style="margin-top: 5px;"><span class="error-text">Job Description is required.</span></div>

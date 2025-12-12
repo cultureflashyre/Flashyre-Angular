@@ -111,6 +111,7 @@ private subscriptions = new Subscription();
 
   isClientNameInvalid: boolean = false;
   isJobRoleInvalid: boolean = false;
+  isJobRoleNumericOnly: boolean = false;
   isInterviewLocationInvalid: boolean = false;
 
   isTotalExpInvalid: boolean = false;
@@ -615,6 +616,34 @@ getFileName(): string {
     input.value = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
   }
 
+  validateJobRoleInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    
+    // 1. STRIP SPECIAL CHARACTERS: Allow only Alphabets (a-z, A-Z), Numbers (0-9), and Spaces
+    const cleanValue = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
+    
+    // Update the input immediately if invalid characters were found
+    if (input.value !== cleanValue) {
+      input.value = cleanValue;
+      this.jobRole = cleanValue; // Sync model
+    } else {
+      this.jobRole = input.value;
+    }
+
+    // 2. CHECK FOR "NUMBERS ONLY"
+    // If the string is not empty AND consists only of digits and spaces -> Invalid
+    if (this.jobRole.trim().length > 0 && /^[0-9 ]+$/.test(this.jobRole)) {
+      this.isJobRoleNumericOnly = true;
+    } else {
+      this.isJobRoleNumericOnly = false;
+    }
+
+    // Reset the "Required" error if user types something
+    if (this.jobRole.trim().length > 0) {
+        this.isJobRoleInvalid = false;
+    }
+  }
+
   validateSubClientName(event: any) {
     const input = event.target as HTMLInputElement;
     // Replace any character that is NOT a-z, A-Z, 0-9, or a space with an empty string
@@ -918,7 +947,10 @@ this.interviewLocationsList = item.interview_location
   if (!this.jobRole || this.jobRole.trim() === '') {
     this.isJobRoleInvalid = true;
     isValid = false;
-  }
+  }else if (this.isJobRoleNumericOnly) {
+      // New Check: Block submission if it's only numbers
+      isValid = false; 
+    }
 
   // Validate Interview Location
   if (this.interviewLocationsList.length === 0) {
@@ -1087,6 +1119,7 @@ this.interviewLocationsList = item.interview_location
     this.clientName = '';
     this.subClientName = '';
     this.jobRole = '';
+    this.isJobRoleNumericOnly = false;
     this.interviewLocation = '';
     this.interviewLocationsList = [];
     this.interviewLocationSuggestions = [];
