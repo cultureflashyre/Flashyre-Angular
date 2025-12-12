@@ -603,7 +603,8 @@ getFileName(): string {
 
   errors = {
     minExperience: false,
-    maxExperience: false
+    maxExperience: false,
+    totalExpRange: false
   };
 
   validateClientName(event: any) {
@@ -621,23 +622,13 @@ getFileName(): string {
   }
 
  validateExperience(event: any = null) {
-    
-    // --- 1. DOM LEVEL ENFORCEMENT (The Fix) ---
+    // 1. DOM LEVEL ENFORCEMENT (Keep existing logic)
     if (event) {
       const input = event.target as HTMLInputElement;
-      
-      // Remove any non-numeric characters (like 'e', '-', '.') and slice to 2 digits
-      // This forces the input box to physically show only 2 digits
       const cleanValue = input.value.replace(/[^0-9]/g, '').slice(0, 2);
-
-      // If the input had more than 2 digits or invalid chars, we force the update
       if (input.value !== cleanValue) {
         input.value = cleanValue;
-        
-        // Manually sync the specific model variable to ensure Angular catches up
-        // (Since we modified the DOM value programmatically)
         const val = cleanValue === '' ? null : Number(cleanValue);
-        
         if (input.id === 'total-exp-min') this.experience.totalMin = val;
         if (input.id === 'total-exp-max') this.experience.totalMax = val;
         if (input.id === 'rel-exp-min') this.experience.relevantMin = val;
@@ -645,18 +636,29 @@ getFileName(): string {
       }
     }
 
-    // --- 2. LOGICAL VALIDATION (Min vs Max) ---
-    
-    // Auto-correct negatives (fallback)
+    // 2. LOGICAL VALIDATION
+    // Auto-correct negatives
     if (this.experience.totalMin !== null && this.experience.totalMin < 0) this.experience.totalMin = 0;
     if (this.experience.totalMax !== null && this.experience.totalMax < 0) this.experience.totalMax = 0;
     if (this.experience.relevantMin !== null && this.experience.relevantMin < 0) this.experience.relevantMin = 0;
     if (this.experience.relevantMax !== null && this.experience.relevantMax < 0) this.experience.relevantMax = 0;
 
-    // Check Min vs Max errors
+    // --- NEW LOGIC: Check Total Min vs Total Max ---
     if (
-      this.experience.totalMin !== null && 
-      this.experience.relevantMin !== null && 
+      this.experience.totalMin !== null &&
+      this.experience.totalMax !== null &&
+      this.experience.totalMin > this.experience.totalMax
+    ) {
+      this.errors.totalExpRange = true;
+    } else {
+      this.errors.totalExpRange = false;
+    }
+    // ------------------------------------------------
+
+    // Existing checks for Relevant vs Total
+    if (
+      this.experience.totalMin !== null &&
+      this.experience.relevantMin !== null &&
       this.experience.relevantMin > this.experience.totalMin
     ) {
       this.errors.minExperience = true;
@@ -665,8 +667,8 @@ getFileName(): string {
     }
 
     if (
-      this.experience.totalMax !== null && 
-      this.experience.relevantMax !== null && 
+      this.experience.totalMax !== null &&
+      this.experience.relevantMax !== null &&
       this.experience.relevantMax > this.experience.totalMax
     ) {
       this.errors.maxExperience = true;
@@ -975,6 +977,11 @@ this.interviewLocationsList = item.interview_location
       }
   });
 
+   if (this.errors.totalExpRange || this.errors.minExperience || this.errors.maxExperience) {
+        this.triggerAlert('Please correct the experience range errors.', ['OK']);
+        return;
+    }
+
   // 3. Stop if Invalid
   if (!isValid || hasDetailErrors) {
     this.triggerAlert('Please fill in all required fields marked with *.', ['OK']);
@@ -1097,7 +1104,7 @@ this.interviewLocationsList = item.interview_location
     // Reset validation errors
     this.isJobDescriptionInvalid = false;
     this.salaryErrors.rangeError = false;
-    this.errors = { minExperience: false, maxExperience: false };
+    this.errors = { minExperience: false, maxExperience: false, totalExpRange: false  };
 
     this.isClientNameInvalid = false;
     this.isJobRoleInvalid = false;

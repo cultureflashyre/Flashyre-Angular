@@ -2547,7 +2547,7 @@
   list-style: none;
   padding: 4px 0;
   min-width: 120px;
-  z-index: 1000;
+  z-index: 991;
   border: 1px solid #eee;
 }
 
@@ -3117,13 +3117,13 @@
   .recruiter-workflow-requirement-form1 {
     width: 100%;
   }
-  .recruiter-workflow-requirement-job-title-company-name-container2 {
+  /* .recruiter-workflow-requirement-job-title-company-name-container2 {
     gap: var(--dl-layout-space-unit);
     width: 100%;
     height: auto;
     flex-direction: column;
     justify-content: center;
-  }
+  } */
   .recruiter-workflow-requirement-job-title-container2 {
     width: 100%;
   }

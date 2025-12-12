@@ -285,7 +285,13 @@ export class RecruiterWorkflowCandidate implements OnInit {
   // --- HTML Event Handlers ---
 
   onPreferredLocationInput(event: Event): void {
-    const term = (event.target as HTMLInputElement).value;
+    const input = event.target as HTMLInputElement;
+    
+    // SANITIZATION: Allow only Alphabets, Numbers, Spaces, and Hyphens
+    // Regex explanation: [^a-zA-Z0-9 \-] matches anything that is NOT a letter, number, space, or hyphen.
+    input.value = input.value.replace(/[^a-zA-Z \-]/g, '');
+
+    const term = input.value;
     if (!term.trim()) {
       this.showPreferredSuggestions = false;
       return;
@@ -294,7 +300,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   onCurrentLocationInput(event: Event): void {
-    const term = (event.target as HTMLInputElement).value;
+    const input = event.target as HTMLInputElement;
+    
+    // SANITIZATION: Allow only Alphabets, Numbers, Spaces, and Hyphens
+    input.value = input.value.replace(/[^a-zA-Z \-]/g, '');
+
+    const term = input.value;
     if (!term.trim()) {
       this.showCurrentSuggestions = false;
       return;
@@ -401,7 +412,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
-      work_experience: ['', Validators.required], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
+      work_experience: ['', [Validators.required, Validators.maxLength(15)]], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
       skills: ['', Validators.required],
     }, {
       validators: [
