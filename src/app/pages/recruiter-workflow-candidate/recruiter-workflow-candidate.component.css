@@ -702,7 +702,7 @@
 .recruiter-workflow-candidate-candidate-input-form {
   gap: 24px;
   flex: 0 0 auto;
-  width: auto;
+  width: 100%;
   height: auto;
   display: flex;
   position: relative;
@@ -847,14 +847,10 @@
   gap: 16px;
   flex: 0 0 auto;
   width: 100%;
-  height: 550px;
+  height: auto;
   display: flex;
-  overflow-x: hidden;
-  overflow-y: scroll;
   align-items: flex-start;
   flex-direction: column;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
 }
  
 .recruiter-workflow-candidate-enter-manually-text-container {
@@ -1000,7 +996,7 @@
  
 .recruiter-workflow-candidate-company-name-container2 {
   flex: 0 0 auto;
-  width: 100%;
+  width: 49%;
   height: 76px;
   display: flex;
   align-items: flex-start;
@@ -1384,6 +1380,7 @@
   align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 16px;
 }
  
 .recruiter-workflow-candidate-issued-date-container3 {

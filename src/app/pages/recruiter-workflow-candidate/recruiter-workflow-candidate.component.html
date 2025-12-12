@@ -368,7 +368,10 @@
             
             <div class="recruiter-workflow-candidate-job-title-company-name-container1">
                 <div class="recruiter-workflow-candidate-job-title-container1">
-                    <span class="recruiter-workflow-candidate-job-title-text1">Candidate First Name</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-job-title-text1">Candidate First Name</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                       <input type="text" formControlName="first_name" placeholder="Enter First Name" 
                            class="recruiter-workflow-candidate-job-title-input1 input"
                            maxlength="50"
@@ -380,8 +383,11 @@
                         <span *ngIf="f['first_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
                     </div>                </div>
                 <div class="recruiter-workflow-candidate-company-name-container1">
-                    <span class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span>
-<input type="text" formControlName="last_name" placeholder="Enter Last Name" 
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-company-name-text1">Candidate Last Name</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
+                      <input type="text" formControlName="last_name" placeholder="Enter Last Name" 
                            class="recruiter-workflow-candidate-company-name-input1 input"
                            maxlength="50"
                            [class.is-invalid]="f['last_name'].invalid && f['last_name'].touched"/>
@@ -395,18 +401,27 @@
 
             <div class="recruiter-workflow-candidate-job-title-company-name-container2">
                 <div class="recruiter-workflow-candidate-job-title-container2">
-                    <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-job-title-text2">Phone Number</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span> 
+                    </div>
                     <input type="text" formControlName="phone_number" placeholder="Enter 10-digit Phone Number" class="recruiter-workflow-candidate-job-title-input2 input" maxlength="10"/>
                 </div>
                 <div class="recruiter-workflow-candidate-company-name-container2">
-                    <span class="recruiter-workflow-candidate-company-name-text2">Email Id</span>
-                    <input type="email" formControlName="email" placeholder="Enter Email" class="recruiter-workflow-candidate-company-name-input2 input"/>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-company-name-text2">Email Id</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
+                    <input type="email" formControlName="email" placeholder="Enter Email" class="recruiter-workflow-candidate-company-name-input2 input" style="width: 100%;"/>
                 </div>
             </div>
 
             <div class="recruiter-workflow-candidate-issued-renewal-date-container1">
                 <div class="recruiter-workflow-candidate-issued-date-container1">
-                    <span class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                     <div class="recruiter-workflow-candidate-select-container1">
                     <!-- MIN INPUT -->
                         <input 
@@ -452,7 +467,10 @@
                     </div>
                 </div>
                 <div class="recruiter-workflow-candidate-renewal-date-container">
-                    <span class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                     <div class="recruiter-workflow-candidate-select-container2">
                             <input 
                             type="number" 
@@ -496,7 +514,10 @@
 
             <div class="recruiter-workflow-candidate-issued-renewal-date-container2">
                 <div class="recruiter-workflow-candidate-issued-date-container2">
-                    <span class="recruiter-workflow-candidate-issuing-date-text2">Expected CTC</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-issuing-date-text2">Expected CTC</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                     <div class="recruiter-workflow-candidate-select-container3">
                         <input type="number" formControlName="expected_ctc_min" placeholder="Min Salary" class="recruiter-workflow-candidate-company-name-input7 input"/>
                         <span>To</span>
@@ -505,9 +526,12 @@
                     </div>
                 </div>
                 <div class="recruiter-workflow-candidate-certificate-name-container">
-                    <span class="recruiter-workflow-candidate-certificate-name-text">Current CTC *</span>
-                    <select formControlName="current_ctc" class="input">
-                        <option value="" disabled>Select</option>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-certificate-name-text">Current CTC</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
+                    <select formControlName="current_ctc" class="input" style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
+                        <option value="" disabled style="color: #A7A7A7;">Select</option>
                         <option *ngFor="let ctc of ctcChoices" [value]="ctc">{{ ctc }}</option>
                     </select>
                 </div>
@@ -515,9 +539,12 @@
 
             <div class="recruiter-workflow-candidate-job-title-company-name-container3">
                 <div class="recruiter-workflow-candidate-job-title-container3">
-                    <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                     <!-- Pill Container -->
-                    <div class="skills-input-container" style="min-width: 100%;">
+                    <div class="skills-input-container" style="min-width: 100%;" [class.is-invalid]="f['preferred_location'].invalid && f['preferred_location'].touched">
                         <span *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">
                           {{ loc }}
                           <button type="button" class="remove-skill-button" (click)="removeLocation('preferred', i)">&times;</button>
@@ -546,14 +573,21 @@
                     </div>
                      <!-- Hidden input -->
                     <input type="hidden" formControlName="preferred_location">
+                    <div class="validation-error" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched">
+                        <span *ngIf="f['preferred_location'].errors?.['required']">Preferred Location is required.</span>
+                        <span *ngIf="f['preferred_location'].errors?.['pattern']">Invalid location format.</span>
+                    </div>
                 </div>
 
                 <!-- CURRENT LOCATION -->
                 <div class="recruiter-workflow-candidate-job-title-container4" style="position: relative;">
-                    <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
                     
                     <!-- Pill Container -->
-                    <div class="skills-input-container" style="min-width: 100%;">
+                    <div class="skills-input-container" style="min-width: 100%;" [class.is-invalid]="f['current_location'].invalid && f['current_location'].touched">
                         <span *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">
                           {{ loc }}
                           <button type="button" class="remove-skill-button" (click)="removeLocation('current', i)">&times;</button>
@@ -583,63 +617,80 @@
                     
                     <!-- Hidden input -->
                     <input type="hidden" formControlName="current_location">
+                    <div class="validation-error" *ngIf="f['current_location'].invalid && f['current_location'].touched">
+                        <span *ngIf="f['current_location'].errors?.['required']">Current Location is required.</span>
+                        <span *ngIf="f['current_location'].errors?.['pattern']">Invalid location format.</span>
+                    </div>
                 </div>
             </div>
             </div>
 
             <div class="recruiter-workflow-candidate-container28">
                 <div class="recruiter-workflow-candidate-issued-date-container3">
-                    <span class="recruiter-workflow-candidate-issuing-date-text3">Notice Period *</span>
-                    <select formControlName="notice_period" class="input">
-                        <option value="" disabled>Select</option>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-issuing-date-text3">Notice Period</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
+                    <select formControlName="notice_period" class="input" style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
+                        <option value="" disabled style="color: #A7A7A7;">Select</option>
                         <option *ngFor="let period of noticePeriodChoices" [value]="period">{{ period }}</option>
                     </select>
                 </div>
                 <div class="recruiter-workflow-candidate-credentials-container">
-                    <span class="recruiter-workflow-candidate-credentials-text">Gender *</span>
-                    <select formControlName="gender" class="input">
-                        <option value="" disabled>Select Gender</option>
+                    <div style="display: flex; flex-direction: row;">
+                        <span class="recruiter-workflow-candidate-credentials-text" style="width: auto;">Gender</span>
+                        <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+                    </div>
+                    <select formControlName="gender" class="input" style="width: 100%; height: 48px; border-color: #A7A7A7; background-color: #FFFFFF;">
+                        <option value="" disabled style="color: #A7A7A7;">Select Gender</option>
                         <option *ngFor="let gender of genderChoices" [value]="gender">{{ gender }}</option>
                     </select>
                 </div>
             </div>
 
             <!-- Merged: Using Child's Textarea approach for Role/Experience -->
-            <div class="recruiter-workflow-candidate-skills-container1">
-                <div class="recruiter-workflow-candidate-skill-text-container1">
-                    <span class="recruiter-workflow-candidate-skill-text1">Role</span>
-                    <span class="recruiter-workflow-candidate-skill-star-text1">*</span>
-                </div>
-                <textarea 
-                  rows="3"
-                  formControlName="work_experience" 
-                  placeholder="Enter Role & Work Experience" 
-                  class="recruiter-workflow-candidate-job-title-input5 input"
-                  (input)="allowAlphanumericOnly($event)"
-                  style="resize: vertical; height: auto; padding-top: 10px;">
-                </textarea>
-            </div>
+            <div class="recruiter-workflow-candidate-job-title-company-name-container1" style="margin-bottom: 16px; justify-content: space-between;">
+    
+    <!-- LEFT SIDE: ROLE (Converted to Input) -->
+    <div class="recruiter-workflow-candidate-job-title-container1">
+        <div style="display: flex; flex-direction: row; height: auto; width: 100%;">
+            <span class="recruiter-workflow-candidate-job-title-text1" style="width: auto;">Role (work_experience)</span>
+            <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+        </div>
+        <!-- Changed from textarea to input, used standard input class -->
+        <input 
+            type="text"
+            formControlName="Role"
+            placeholder="Enter Role" 
+            class="recruiter-workflow-candidate-job-title-input1 input"
+            (input)="allowAlphanumericOnly($event)"
+        />
+    </div>
 
-            <div class="recruiter-workflow-candidate-skills-container2">
-                <div class="recruiter-workflow-candidate-skill-text-container2">
-                    <span class="recruiter-workflow-candidate-skill-text2">Skills</span>
-                    <span class="recruiter-workflow-candidate-skill-star-text2">*</span>
-                </div>
-                <div class="skills-input-container">
-                    <span *ngFor="let skill of skills; let i = index" class="skill-pill">
-                      {{ skill }}
-                      <button type="button" class="remove-skill-button" (click)="removeSkill(i)">&times;</button>
-                    </span>
-                    <!-- Merged: Using Child's Input Sanitization -->
-                    <input 
-                      type="text" 
-                      class="skills-entry-input" 
-                      placeholder="Type a skill and press Enter" 
-                      (input)="allowAlphabetsOnly($event)"
-                      (keydown.enter)="addSkill($event)">
-                </div>
-                <input type="hidden" formControlName="skills">
-            </div>
+    <!-- RIGHT SIDE: SKILLS -->
+    <div class="recruiter-workflow-candidate-company-name-container1">
+        <div style="display: flex; flex-direction: row; height: auto; width: 100%;">
+            <span class="recruiter-workflow-candidate-company-name-text1" style="width: auto;">Skills</span>
+            <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+        </div>
+        
+        <!-- Existing Skills Logic wrapped in right-side container -->
+        <div class="skills-input-container" style="min-width: 100%;">
+            <span *ngFor="let skill of skills; let i = index" class="skill-pill">
+              {{ skill }}
+              <button type="button" class="remove-skill-button" (click)="removeSkill(i)">&times;</button>
+            </span>
+            <input 
+              type="text" 
+              class="skills-entry-input" 
+              placeholder="Type a skill and press Enter" 
+              (input)="allowAlphabetsOnly($event)"
+              (keydown.enter)="addSkill($event)">
+        </div>
+        <input type="hidden" formControlName="skills">
+    </div>
+
+</div>
         
         
         <!-- Submit/Cancel Buttons -->
