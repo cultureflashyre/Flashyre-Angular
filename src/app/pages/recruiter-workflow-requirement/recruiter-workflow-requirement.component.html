@@ -750,8 +750,8 @@
         </div>
         <div id="skills-container" class="recruiter-workflow-requirement-skills-container">
           <div id="skill-text-container" class="recruiter-workflow-requirement-skill-text-container">
-            <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description</span>
-            <span id="skill-star-text" class="recruiter-workflow-requirement-skill-star-text" style="color: red;">*</span>
+            <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description<span style="color: red;">*</span></span>
+            <span id="skill-star-text" class="recruiter-workflow-requirement-skill-star-text"></span>
           </div>
           <textarea id="job-description-input" placeholder="Enter Job Description" class="recruiter-workflow-requirement-job-title-input3 input" [ngClass]="{'input-error': isJobDescriptionInvalid}" [(ngModel)]="jobDescription" (input)="validateJobDescription()" (blur)="validateJobDescription()" style="height: 100px; padding-top: 10px; white-space: pre-wrap; word-wrap: break-word; resize: none;"></textarea>
           <div *ngIf="isJobDescriptionInvalid" style="margin-top: 5px;"><span class="error-text">Job Description is required.</span></div>
