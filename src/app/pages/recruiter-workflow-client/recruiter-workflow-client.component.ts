@@ -280,15 +280,34 @@ closeForm(): void {
       this.isLoading = false;
       this.showForm = true; // Re-open form so they can fix it
 
-      // Check if backend sent a specific validation message
       let msg = 'Failed to save data. Please check your inputs.';
       
-      // If Django Serializer sent a "detail" error (as we coded in Step 1)
-      if (err.error && err.error.detail) {
-        msg = err.error.detail;
+      // 1. Check if backend sent an Array (Your current scenario)
+      // Structure: [{"detail": ["The email..."]}]
+      if (Array.isArray(err.error) && err.error.length > 0) {
+        const firstError = err.error[0]; // Get { detail: [...] }
+        
+        // Check if 'detail' exists inside that object
+        if (firstError.detail) {
+           // If 'detail' is an array (["Message"]), take the first item
+           if (Array.isArray(firstError.detail)) {
+             msg = firstError.detail[0];
+           } else {
+             // If 'detail' is just a string ("Message"), use it directly
+             msg = firstError.detail;
+           }
+        } else {
+           // Fallback: If structure isn't what we expect, show the raw JSON
+           msg = JSON.stringify(err.error);
+        }
       } 
-      // If it's a list error (standard DRF)
-      else if (Array.isArray(err.error)) {
+      // 2. Check if backend sent a simple object (Django default for some errors)
+      // Structure: { "detail": "The email..." }
+      else if (err.error && err.error.detail) {
+        msg = err.error.detail;
+      }
+      // 3. Fallback for unexpected formats
+      else if (err.error) {
         msg = JSON.stringify(err.error);
       }
 
