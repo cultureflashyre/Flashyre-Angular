@@ -1,0 +1,3255 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  MoreFiltersComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/more-filters-component/more-filters-component.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>more-filters-component</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>more-filters-component.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>more-filters-component.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button" >button</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button1" >button1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11" >text11</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text111" >text111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1111" >text1111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1112" >text1112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11121" >text11121</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text111211" >text111211</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text112" >text112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text113" >text113</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1131" >text1131</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11311" >text11311</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text31" >text31</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text311" >text311</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text3111" >text3111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text3112" >text3112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text31121" >text31121</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text311211" >text311211</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text312" >text312</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text313" >text313</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text3131" >text3131</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text31311" >text31311</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:54</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button</b></span>
+                        <a href="#button"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button1</b></span>
+                        <a href="#button1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11</b></span>
+                        <a href="#text11"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text111</b></span>
+                        <a href="#text111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1111</b></span>
+                        <a href="#text1111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1112</b></span>
+                        <a href="#text1112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11121"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11121</b></span>
+                        <a href="#text11121"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11121&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text111211"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text111211</b></span>
+                        <a href="#text111211"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text111211&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text112</b></span>
+                        <a href="#text112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text113"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text113</b></span>
+                        <a href="#text113"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text113&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1131"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1131</b></span>
+                        <a href="#text1131"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1131&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11311"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11311</b></span>
+                        <a href="#text11311"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11311&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text31"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text31</b></span>
+                        <a href="#text31"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text31&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text311"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text311</b></span>
+                        <a href="#text311"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text311&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text3111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text3111</b></span>
+                        <a href="#text3111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text3111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text3112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text3112</b></span>
+                        <a href="#text3112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text3112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text31121"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text31121</b></span>
+                        <a href="#text31121"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text31121&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text311211"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text311211</b></span>
+                        <a href="#text311211"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text311211&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text312"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text312</b></span>
+                        <a href="#text312"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text312&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text313"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text313</b></span>
+                        <a href="#text313"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text313&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text3131"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text3131</b></span>
+                        <a href="#text3131"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text3131&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text31311"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text31311</b></span>
+                        <a href="#text31311"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text31311&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/more-filters-component/more-filters-component.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;more-filters-component&#x27;,
+  templateUrl: &#x27;more-filters-component.component.html&#x27;,
+  styleUrls: [&#x27;more-filters-component.component.css&#x27;],
+})
+export class MoreFiltersComponent {
+  @ContentChild(&#x27;text31311&#x27;)
+  text31311: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text312&#x27;)
+  text312: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text3111&#x27;)
+  text3111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1112&#x27;)
+  text1112: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text11&#x27;)
+  text11: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1131&#x27;)
+  text1131: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text111211&#x27;)
+  text111211: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text313&#x27;)
+  text313: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button&#x27;)
+  button: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text3112&#x27;)
+  text3112: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text112&#x27;)
+  text112: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button1&#x27;)
+  button1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text31&#x27;)
+  text31: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text113&#x27;)
+  text113: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text3131&#x27;)
+  text3131: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text11311&#x27;)
+  text11311: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text311211&#x27;)
+  text311211: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text111&#x27;)
+  text111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text31121&#x27;)
+  text31121: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text11121&#x27;)
+  text11121: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text311&#x27;)
+  text311: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text&#x27;)
+  text: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1111&#x27;)
+  text1111: TemplateRef&lt;any&gt;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div id&#x3D;&quot;more-filters&quot; class&#x3D;&quot;more-filters-component-container10&quot;&gt;
+  &lt;div id&#x3D;&quot;more-filters-container&quot; class&#x3D;&quot;more-filters-component-container11&quot;&gt;
+    &lt;span
+      id&#x3D;&quot;more-filters-header&quot;
+      class&#x3D;&quot;more-filters-component-more-filters-header&quot;
+    &gt;
+      &lt;ng-container&gt;
+        &lt;ng-template #defaultText&gt;
+          &lt;div class&#x3D;&quot;more-filters-component-fragment31&quot;&gt;
+            &lt;span class&#x3D;&quot;more-filters-component-text49&quot;&gt;More Filters&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-container
+          *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;
+        &gt;&lt;/ng-container&gt;
+      &lt;/ng-container&gt;
+    &lt;/span&gt;
+    &lt;div
+      id&#x3D;&quot;date-experience-container&quot;
+      class&#x3D;&quot;more-filters-component-container12&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;date posted-container&quot;
+        class&#x3D;&quot;more-filters-component-date-posted-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;date-select-dropdown&quot;
+          class&#x3D;&quot;more-filters-component-container13&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;date-posted-text&quot;
+            class&#x3D;&quot;more-filters-component-date-posted-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText11&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment14&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text16&quot;&gt;
+                    &lt;span&gt;Date Posted&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text11 ? text11 : defaultText11&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container1&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;date-posted-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form10 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text10&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText31&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment22&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text32&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text31 ? text31 : defaultText31&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-down-down-icon&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;experience-level-container&quot;
+        class&#x3D;&quot;more-filters-component-experiance-level-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;experience-container&quot;
+          class&#x3D;&quot;more-filters-component-container14&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;experience-level&quot;
+            class&#x3D;&quot;more-filters-component-experiance-level-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText111&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment27&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text41&quot;&gt;
+                    &lt;span&gt;Expeiance Level&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text111 ? text111 : defaultText111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-experience-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container2&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;experience level-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form11 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text11&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText311&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment30&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text48&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text311 ? text311 : defaultText311&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon1&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;company-name-job-type-container&quot;
+      class&#x3D;&quot;more-filters-component-container15&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;company-name-container&quot;
+        class&#x3D;&quot;more-filters-component-company-name-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;company-name-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container16&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;company-name&quot;
+            class&#x3D;&quot;more-filters-component-company-name-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText112&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment20&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text28&quot;&gt;
+                    &lt;span&gt;Company Name&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text112 ? text112 : defaultText112&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container3&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;company-name-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form12 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text12&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText312&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment11&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text11&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text312 ? text312 : defaultText312&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-dropdown-icon1&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;job-type-container&quot;
+        class&#x3D;&quot;more-filters-component-job-type-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;job-type-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container17&quot;
+        &gt;
+          &lt;span id&#x3D;&quot;job-type&quot; class&#x3D;&quot;more-filters-component-job-type-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText1111&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment32&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text50&quot;&gt;
+                    &lt;span&gt;Job Type&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text1111 ? text1111 : defaultText1111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container4&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;job-type-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form13 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text13&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText3111&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment12&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text12&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text3111 ? text3111 : defaultText3111&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon2&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;location-role-container&quot;
+      class&#x3D;&quot;more-filters-component-container18&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;location-container&quot;
+        class&#x3D;&quot;more-filters-component-location-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;location-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container19&quot;
+        &gt;
+          &lt;span id&#x3D;&quot;location-text&quot; class&#x3D;&quot;more-filters-component-location-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText113&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment23&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text33&quot;&gt;
+                    &lt;span&gt;Location&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text113 ? text113 : defaultText113&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container5&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;location-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form14 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text14&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText313&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment17&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text25&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text313 ? text313 : defaultText313&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-dropdown-icon2&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;role-select-container&quot;
+        class&#x3D;&quot;more-filters-component-role-container&quot;
+      &gt;
+        &lt;div id&#x3D;&quot;role-container&quot; class&#x3D;&quot;more-filters-component-container20&quot;&gt;
+          &lt;span id&#x3D;&quot;job-role&quot; class&#x3D;&quot;more-filters-component-role-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText1112&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment13&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text13&quot;&gt;
+                    &lt;span&gt;Role&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text1112 ? text1112 : defaultText1112&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container6&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;job-role-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form15 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text15&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText3112&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment19&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text27&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text3112 ? text3112 : defaultText3112&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon3&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;salary-work-mode-container&quot;
+      class&#x3D;&quot;more-filters-component-container21&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;salary-container&quot;
+        class&#x3D;&quot;more-filters-component-salary-container&quot;
+      &gt;
+        &lt;div id&#x3D;&quot;select-container&quot; class&#x3D;&quot;more-filters-component-container22&quot;&gt;
+          &lt;span id&#x3D;&quot;salary-text&quot; class&#x3D;&quot;more-filters-component-salary-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText1131&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment15&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text19&quot;&gt;
+                    &lt;span&gt;Salary&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text1131 ? text1131 : defaultText1131&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container7&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;salary-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form16 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text16&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText3131&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment24&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text36&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text3131 ? text3131 : defaultText3131&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon4&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;work-mode-container&quot;
+        class&#x3D;&quot;more-filters-component-work-mode-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;work-mode-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container23&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;work-mode-text&quot;
+            class&#x3D;&quot;more-filters-component-work-mode-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText11121&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment29&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text45&quot;&gt;
+                    &lt;span&gt;Work mode&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text11121 ? text11121 : defaultText11121&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container8&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;work-mode-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form17 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text17&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText31121&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment28&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text44&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text31121 ? text31121 : defaultText31121&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon5&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;department-industries-container&quot;
+      class&#x3D;&quot;more-filters-component-container24&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;department-container&quot;
+        class&#x3D;&quot;more-filters-component-department-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;department-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container25&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;department-text&quot;
+            class&#x3D;&quot;more-filters-component-department-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText11311&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment25&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text37&quot;&gt;
+                    &lt;span&gt;Department&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text11311 ? text11311 : defaultText11311&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container9&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;department-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form18 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text18&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText31311&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment10&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text10&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text31311 ? text31311 : defaultText31311&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon6&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;industries-container&quot;
+        class&#x3D;&quot;more-filters-component-industries-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;industries-select-container&quot;
+          class&#x3D;&quot;more-filters-component-container26&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;industries-text&quot;
+            class&#x3D;&quot;more-filters-component-industries-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText111211&gt;
+                &lt;div class&#x3D;&quot;more-filters-component-fragment16&quot;&gt;
+                  &lt;span class&#x3D;&quot;more-filters-component-text22&quot;&gt;
+                    &lt;span&gt;Industries&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text111211 ? text111211 : defaultText111211&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;select-container&quot;
+            class&#x3D;&quot;more-filters-component-select-container10&quot;
+          &gt;
+            &lt;form
+              id&#x3D;&quot;industries-dropdown&quot;
+              class&#x3D;&quot;more-filters-component-form19 input&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;select-text&quot;
+                class&#x3D;&quot;more-filters-component-select-text19&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText311211&gt;
+                    &lt;div class&#x3D;&quot;more-filters-component-fragment26&quot;&gt;
+                      &lt;span class&#x3D;&quot;more-filters-component-text40&quot;&gt;Select&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text311211 ? text311211 : defaultText311211&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;dropdown-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;more-filters-component-drop-down-icon7&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;buttons-container&quot;
+      class&#x3D;&quot;more-filters-component-buttons-container&quot;
+    &gt;
+      &lt;button
+        id&#x3D;&quot;reset-button&quot;
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;more-filters-component-reset-button button&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;reset-text&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultButton&gt;
+              &lt;div class&#x3D;&quot;more-filters-component-fragment18&quot;&gt;
+                &lt;span class&#x3D;&quot;more-filters-component-text26&quot;&gt;Reset&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;button ? button : defaultButton&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/button&gt;
+      &lt;button
+        id&#x3D;&quot;apply-filters-button&quot;
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;more-filters-component-apply-filters-button button&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;apply-filter-text&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultButton1&gt;
+              &lt;div class&#x3D;&quot;more-filters-component-fragment21&quot;&gt;
+                &lt;span class&#x3D;&quot;more-filters-component-text31&quot;&gt;Apply Filters&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;button1 ? button1 : defaultButton1&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>more-filters-component.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.more-filters-component-container10 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container11 {
+  gap: 24px;
+  width: 712px;
+  height: 685px;
+  display: flex;
+  padding: 24px;
+  align-self: center;
+  box-shadow: 0px 4px 4px 0px #d4d4d4;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.more-filters-component-more-filters-header {
+  width: 664px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-container12 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.more-filters-component-date-posted-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container13 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-date-posted-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container1 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form10 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text10 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.more-filters-component-down-down-icon {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-experiance-level-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container14 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-experiance-level-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form11 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text11 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+ 
+.more-filters-component-drop-down-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-container15 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.more-filters-component-company-name-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container16 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-company-name-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container3 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form12 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text12 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.more-filters-component-dropdown-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-job-type-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container17 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-job-type-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container4 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form13 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text13 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+ 
+.more-filters-component-drop-down-icon2 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-container18 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.more-filters-component-location-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container19 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-location-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container5 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form14 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text14 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.more-filters-component-dropdown-icon2 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-role-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container20 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-role-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container6 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form15 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text15 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+ 
+.more-filters-component-drop-down-icon3 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-container21 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.more-filters-component-salary-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container22 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-salary-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container7 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form16 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text16 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.more-filters-component-drop-down-icon4 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-work-mode-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container23 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-work-mode-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container8 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form17 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text17 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+ 
+.more-filters-component-drop-down-icon5 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-container24 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+ 
+.more-filters-component-department-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container25 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-department-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container9 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form18 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text18 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.more-filters-component-drop-down-icon6 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-industries-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-container26 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.more-filters-component-industries-text {
+  width: 324px;
+  height: 24px;
+}
+ 
+.more-filters-component-select-container10 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.more-filters-component-form19 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.more-filters-component-select-text19 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+ 
+.more-filters-component-drop-down-icon7 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.more-filters-component-buttons-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 572px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+ 
+.more-filters-component-reset-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 122px;
+  height: 40px;
+  padding: 0px;
+  transition: 0.3s;
+  border-width: 0px;
+  background-color: #05356C;
+}
+ 
+.more-filters-component-reset-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.more-filters-component-reset-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.more-filters-component-apply-filters-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 122px;
+  height: 40px;
+  padding: 0px;
+  transition: 0.3s;
+  border-width: 0px;
+  background-color: #05356C;
+}
+ 
+.more-filters-component-apply-filters-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.more-filters-component-apply-filters-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.more-filters-component-fragment10 {
+  display: contents;
+}
+ 
+.more-filters-component-text10 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment11 {
+  display: contents;
+}
+ 
+.more-filters-component-text11 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment12 {
+  display: contents;
+}
+ 
+.more-filters-component-text12 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment13 {
+  display: contents;
+}
+ 
+.more-filters-component-text13 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment14 {
+  display: contents;
+}
+ 
+.more-filters-component-text16 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment15 {
+  display: contents;
+}
+ 
+.more-filters-component-text19 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment16 {
+  display: contents;
+}
+ 
+.more-filters-component-text22 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment17 {
+  display: contents;
+}
+ 
+.more-filters-component-text25 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment18 {
+  display: contents;
+}
+ 
+.more-filters-component-text26 {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.more-filters-component-fragment19 {
+  display: contents;
+}
+ 
+.more-filters-component-text27 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment20 {
+  display: contents;
+}
+ 
+.more-filters-component-text28 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment21 {
+  display: contents;
+}
+ 
+.more-filters-component-text31 {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.more-filters-component-fragment22 {
+  display: contents;
+}
+ 
+.more-filters-component-text32 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment23 {
+  display: contents;
+}
+ 
+.more-filters-component-text33 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment24 {
+  display: contents;
+}
+ 
+.more-filters-component-text36 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment25 {
+  display: contents;
+}
+ 
+.more-filters-component-text37 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment26 {
+  display: contents;
+}
+ 
+.more-filters-component-text40 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment27 {
+  display: contents;
+}
+ 
+.more-filters-component-text41 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment28 {
+  display: contents;
+}
+ 
+.more-filters-component-text44 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment29 {
+  display: contents;
+}
+ 
+.more-filters-component-text45 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment30 {
+  display: contents;
+}
+ 
+.more-filters-component-text48 {
+  display: inline-block;
+}
+ 
+.more-filters-component-fragment31 {
+  display: contents;
+}
+ 
+.more-filters-component-text49 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.more-filters-component-fragment32 {
+  display: contents;
+}
+ 
+.more-filters-component-text50 {
+  display: inline-block;
+}
+ 
+@media(max-width: 991px) {
+  .more-filters-component-container10 {
+    height: 723px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .more-filters-component-container10 {
+    width: 479px;
+    height: 726px;
+    justify-content: flex-start;
+  }
+  .more-filters-component-container11 {
+    width: 479px;
+    height: 726px;
+    display: flex;
+    padding-top: var(--dl-space-space-twounits);
+    padding-left: var(--dl-space-space-threeunits);
+    padding-right: var(--dl-space-space-threeunits);
+    padding-bottom: var(--dl-space-space-twounits);
+    justify-content: flex-start;
+  }
+  .more-filters-component-more-filters-header {
+    width: 420px;
+  }
+  .more-filters-component-container12 {
+    width: 383px;
+    justify-content: space-between;
+  }
+  .more-filters-component-date-posted-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container13 {
+    width: 179.5px;
+  }
+  .more-filters-component-date-posted-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container1 {
+    width: 179.5px;
+  }
+  .more-filters-component-form10 {
+    width: 179.5px;
+  }
+  .more-filters-component-experiance-level-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container14 {
+    width: 179.5px;
+  }
+  .more-filters-component-experiance-level-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container2 {
+    width: 179.5px;
+  }
+  .more-filters-component-form11 {
+    width: 179.5px;
+  }
+  .more-filters-component-container15 {
+    width: 383px;
+  }
+  .more-filters-component-company-name-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container16 {
+    width: 179.5px;
+  }
+  .more-filters-component-company-name-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container3 {
+    width: 179.5px;
+  }
+  .more-filters-component-form12 {
+    width: 179.5px;
+  }
+  .more-filters-component-job-type-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container17 {
+    width: 179.5px;
+  }
+  .more-filters-component-job-type-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container4 {
+    width: 179.5px;
+  }
+  .more-filters-component-form13 {
+    width: 179.5px;
+  }
+  .more-filters-component-container18 {
+    width: 383px;
+  }
+  .more-filters-component-location-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container19 {
+    width: 179.5px;
+  }
+  .more-filters-component-location-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container5 {
+    width: 179.5px;
+  }
+  .more-filters-component-form14 {
+    width: 179.5px;
+  }
+  .more-filters-component-role-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container20 {
+    width: 179.5px;
+  }
+  .more-filters-component-role-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container6 {
+    width: 179.5px;
+  }
+  .more-filters-component-form15 {
+    width: 179.5px;
+  }
+  .more-filters-component-container21 {
+    width: 383px;
+  }
+  .more-filters-component-salary-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container22 {
+    width: 179.5px;
+  }
+  .more-filters-component-salary-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container7 {
+    width: 179.5px;
+  }
+  .more-filters-component-form16 {
+    width: 179.5px;
+  }
+  .more-filters-component-work-mode-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container23 {
+    width: 179.5px;
+  }
+  .more-filters-component-work-mode-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container8 {
+    width: 179.5px;
+  }
+  .more-filters-component-form17 {
+    width: 179.5px;
+  }
+  .more-filters-component-container24 {
+    width: 383px;
+  }
+  .more-filters-component-department-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container25 {
+    width: 179.5px;
+  }
+  .more-filters-component-department-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container9 {
+    width: 179.5px;
+  }
+  .more-filters-component-form18 {
+    width: 179.5px;
+  }
+  .more-filters-component-industries-container {
+    width: 179.5px;
+  }
+  .more-filters-component-container26 {
+    width: 179.5px;
+  }
+  .more-filters-component-industries-text {
+    width: 179.5px;
+  }
+  .more-filters-component-select-container10 {
+    width: 179.5px;
+  }
+  .more-filters-component-form19 {
+    width: 179.5px;
+    height: 54px;
+  }
+  .more-filters-component-buttons-container {
+    gap: 0;
+    width: 383px;
+    justify-content: space-between;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div id="more-filters" class="more-filters-component-container10">  <div id="more-filters-container" class="more-filters-component-container11">    <span      id="more-filters-header"      class="more-filters-component-more-filters-header"    >      <ng-container>        <ng-template #defaultText>          <div class="more-filters-component-fragment31">            <span class="more-filters-component-text49">More Filters</span>          </div>        </ng-template>        <ng-container          *ngTemplateOutlet="text ? text : defaultText"        ></ng-container>      </ng-container>    </span>    <div      id="date-experience-container"      class="more-filters-component-container12"    >      <div        id="date posted-container"        class="more-filters-component-date-posted-container"      >        <div          id="date-select-dropdown"          class="more-filters-component-container13"        >          <span            id="date-posted-text"            class="more-filters-component-date-posted-text"          >            <ng-container>              <ng-template #defaultText11>                <div class="more-filters-component-fragment14">                  <span class="more-filters-component-text16">                    <span>Date Posted</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text11 ? text11 : defaultText11"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container1"          >            <form              id="date-posted-dropdown"              class="more-filters-component-form10 input"            >              <span                id="select-text"                class="more-filters-component-select-text10"              >                <ng-container>                  <ng-template #defaultText31>                    <div class="more-filters-component-fragment22">                      <span class="more-filters-component-text32">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text31 ? text31 : defaultText31"                  ></ng-container>                </ng-container>              </span>              <svg                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-down-down-icon"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>      <div        id="experience-level-container"        class="more-filters-component-experiance-level-container"      >        <div          id="experience-container"          class="more-filters-component-container14"        >          <span            id="experience-level"            class="more-filters-component-experiance-level-text"          >            <ng-container>              <ng-template #defaultText111>                <div class="more-filters-component-fragment27">                  <span class="more-filters-component-text41">                    <span>Expeiance Level</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text111 ? text111 : defaultText111"              ></ng-container>            </ng-container>          </span>          <div            id="select-experience-container"            class="more-filters-component-select-container2"          >            <form              id="experience level-dropdown"              class="more-filters-component-form11 input"            >              <span                id="select-text"                class="more-filters-component-select-text11"              >                <ng-container>                  <ng-template #defaultText311>                    <div class="more-filters-component-fragment30">                      <span class="more-filters-component-text48">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text311 ? text311 : defaultText311"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon1"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>    </div>    <div      id="company-name-job-type-container"      class="more-filters-component-container15"    >      <div        id="company-name-container"        class="more-filters-component-company-name-container"      >        <div          id="company-name-select-container"          class="more-filters-component-container16"        >          <span            id="company-name"            class="more-filters-component-company-name-text"          >            <ng-container>              <ng-template #defaultText112>                <div class="more-filters-component-fragment20">                  <span class="more-filters-component-text28">                    <span>Company Name</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text112 ? text112 : defaultText112"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container3"          >            <form              id="company-name-dropdown"              class="more-filters-component-form12 input"            >              <span                id="select-text"                class="more-filters-component-select-text12"              >                <ng-container>                  <ng-template #defaultText312>                    <div class="more-filters-component-fragment11">                      <span class="more-filters-component-text11">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text312 ? text312 : defaultText312"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-dropdown-icon1"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>      <div        id="job-type-container"        class="more-filters-component-job-type-container"      >        <div          id="job-type-select-container"          class="more-filters-component-container17"        >          <span id="job-type" class="more-filters-component-job-type-text">            <ng-container>              <ng-template #defaultText1111>                <div class="more-filters-component-fragment32">                  <span class="more-filters-component-text50">                    <span>Job Type</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container4"          >            <form              id="job-type-dropdown"              class="more-filters-component-form13 input"            >              <span                id="select-text"                class="more-filters-component-select-text13"              >                <ng-container>                  <ng-template #defaultText3111>                    <div class="more-filters-component-fragment12">                      <span class="more-filters-component-text12">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text3111 ? text3111 : defaultText3111"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon2"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>    </div>    <div      id="location-role-container"      class="more-filters-component-container18"    >      <div        id="location-container"        class="more-filters-component-location-container"      >        <div          id="location-select-container"          class="more-filters-component-container19"        >          <span id="location-text" class="more-filters-component-location-text">            <ng-container>              <ng-template #defaultText113>                <div class="more-filters-component-fragment23">                  <span class="more-filters-component-text33">                    <span>Location</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text113 ? text113 : defaultText113"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container5"          >            <form              id="location-dropdown"              class="more-filters-component-form14 input"            >              <span                id="select-text"                class="more-filters-component-select-text14"              >                <ng-container>                  <ng-template #defaultText313>                    <div class="more-filters-component-fragment17">                      <span class="more-filters-component-text25">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text313 ? text313 : defaultText313"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-dropdown-icon2"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>      <div        id="role-select-container"        class="more-filters-component-role-container"      >        <div id="role-container" class="more-filters-component-container20">          <span id="job-role" class="more-filters-component-role-text">            <ng-container>              <ng-template #defaultText1112>                <div class="more-filters-component-fragment13">                  <span class="more-filters-component-text13">                    <span>Role</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container6"          >            <form              id="job-role-dropdown"              class="more-filters-component-form15 input"            >              <span                id="select-text"                class="more-filters-component-select-text15"              >                <ng-container>                  <ng-template #defaultText3112>                    <div class="more-filters-component-fragment19">                      <span class="more-filters-component-text27">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text3112 ? text3112 : defaultText3112"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon3"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>    </div>    <div      id="salary-work-mode-container"      class="more-filters-component-container21"    >      <div        id="salary-container"        class="more-filters-component-salary-container"      >        <div id="select-container" class="more-filters-component-container22">          <span id="salary-text" class="more-filters-component-salary-text">            <ng-container>              <ng-template #defaultText1131>                <div class="more-filters-component-fragment15">                  <span class="more-filters-component-text19">                    <span>Salary</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text1131 ? text1131 : defaultText1131"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container7"          >            <form              id="salary-dropdown"              class="more-filters-component-form16 input"            >              <span                id="select-text"                class="more-filters-component-select-text16"              >                <ng-container>                  <ng-template #defaultText3131>                    <div class="more-filters-component-fragment24">                      <span class="more-filters-component-text36">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text3131 ? text3131 : defaultText3131"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon4"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>      <div        id="work-mode-container"        class="more-filters-component-work-mode-container"      >        <div          id="work-mode-select-container"          class="more-filters-component-container23"        >          <span            id="work-mode-text"            class="more-filters-component-work-mode-text"          >            <ng-container>              <ng-template #defaultText11121>                <div class="more-filters-component-fragment29">                  <span class="more-filters-component-text45">                    <span>Work mode</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text11121 ? text11121 : defaultText11121"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container8"          >            <form              id="work-mode-dropdown"              class="more-filters-component-form17 input"            >              <span                id="select-text"                class="more-filters-component-select-text17"              >                <ng-container>                  <ng-template #defaultText31121>                    <div class="more-filters-component-fragment28">                      <span class="more-filters-component-text44">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text31121 ? text31121 : defaultText31121"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon5"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>    </div>    <div      id="department-industries-container"      class="more-filters-component-container24"    >      <div        id="department-container"        class="more-filters-component-department-container"      >        <div          id="department-select-container"          class="more-filters-component-container25"        >          <span            id="department-text"            class="more-filters-component-department-text"          >            <ng-container>              <ng-template #defaultText11311>                <div class="more-filters-component-fragment25">                  <span class="more-filters-component-text37">                    <span>Department</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text11311 ? text11311 : defaultText11311"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container9"          >            <form              id="department-dropdown"              class="more-filters-component-form18 input"            >              <span                id="select-text"                class="more-filters-component-select-text18"              >                <ng-container>                  <ng-template #defaultText31311>                    <div class="more-filters-component-fragment10">                      <span class="more-filters-component-text10">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text31311 ? text31311 : defaultText31311"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon6"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>      <div        id="industries-container"        class="more-filters-component-industries-container"      >        <div          id="industries-select-container"          class="more-filters-component-container26"        >          <span            id="industries-text"            class="more-filters-component-industries-text"          >            <ng-container>              <ng-template #defaultText111211>                <div class="more-filters-component-fragment16">                  <span class="more-filters-component-text22">                    <span>Industries</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text111211 ? text111211 : defaultText111211"              ></ng-container>            </ng-container>          </span>          <div            id="select-container"            class="more-filters-component-select-container10"          >            <form              id="industries-dropdown"              class="more-filters-component-form19 input"            >              <span                id="select-text"                class="more-filters-component-select-text19"              >                <ng-container>                  <ng-template #defaultText311211>                    <div class="more-filters-component-fragment26">                      <span class="more-filters-component-text40">Select</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text311211 ? text311211 : defaultText311211"                  ></ng-container>                </ng-container>              </span>              <svg                id="dropdown-icon"                width="24"                height="24"                viewBox="0 0 32 32"                class="more-filters-component-drop-down-icon7"              >                <path                  d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"                  fill="currentColor"                ></path>              </svg>            </form>          </div>        </div>      </div>    </div>    <div      id="buttons-container"      class="more-filters-component-buttons-container"    >      <button        id="reset-button"        type="button"        class="more-filters-component-reset-button button"      >        <span id="reset-text">          <ng-container>            <ng-template #defaultButton>              <div class="more-filters-component-fragment18">                <span class="more-filters-component-text26">Reset</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="button ? button : defaultButton"            ></ng-container>          </ng-container>        </span>      </button>      <button        id="apply-filters-button"        type="button"        class="more-filters-component-apply-filters-button button"      >        <span id="apply-filter-text">          <ng-container>            <ng-template #defaultButton1>              <div class="more-filters-component-fragment21">                <span class="more-filters-component-text31">Apply Filters</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="button1 ? button1 : defaultButton1"            ></ng-container>          </ng-container>        </span>      </button>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'MoreFiltersComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MoreFiltersComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

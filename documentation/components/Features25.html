@@ -1,0 +1,1229 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  Features25</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/features25/features25.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-features25</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>features25.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>features25.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#activeTab" >activeTab</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature1Description" >feature1Description</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature1Title" >feature1Title</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature2Description" >feature2Description</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature2Title" >feature2Title</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature3Description" >feature3Description</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#feature3Title" >feature3Title</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#feature1ImgAlt" >feature1ImgAlt</a>
+                            </li>
+                            <li>
+                                <a href="#feature1ImgSrc" >feature1ImgSrc</a>
+                            </li>
+                            <li>
+                                <a href="#feature2ImgAlt" >feature2ImgAlt</a>
+                            </li>
+                            <li>
+                                <a href="#feature2ImgSrc" >feature2ImgSrc</a>
+                            </li>
+                            <li>
+                                <a href="#feature3ImgAlt" >feature3ImgAlt</a>
+                            </li>
+                            <li>
+                                <a href="#feature3ImgSrc" >feature3ImgSrc</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/features25/features25.component.ts:36</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature1ImgAlt"></a>
+                        <b>feature1ImgAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Image depicting easy data input&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/features25/features25.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature1ImgSrc"></a>
+                        <b>feature1ImgSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1592150053369-ed15a7f68b92?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3MXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/components/features25/features25.component.ts:23</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature2ImgAlt"></a>
+                        <b>feature2ImgAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Image showing user-friendly navigation&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/features25/features25.component.ts:10</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature2ImgSrc"></a>
+                        <b>feature2ImgSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1577351594944-a5586c757d8c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/features25/features25.component.ts:18</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature3ImgAlt"></a>
+                        <b>feature3ImgAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Image symbolizing secure information handling&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/features25/features25.component.ts:30</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="feature3ImgSrc"></a>
+                        <b>feature3ImgSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1678227547314-b5b1ab58e35b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/features25/features25.component.ts:32</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeTab"></a>
+                    <span class="name">
+                        <span ><b>activeTab</b></span>
+                        <a href="#activeTab"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/features25/features25.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature1Description"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature1Description</b></span>
+                        <a href="#feature1Description"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature1Description&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/features25/features25.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature1Title"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature1Title</b></span>
+                        <a href="#feature1Title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature1Title&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/components/features25/features25.component.ts:21</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature2Description"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature2Description</b></span>
+                        <a href="#feature2Description"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature2Description&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/features25/features25.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature2Title"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature2Title</b></span>
+                        <a href="#feature2Title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature2Title&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/features25/features25.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature3Description"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature3Description</b></span>
+                        <a href="#feature3Description"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature3Description&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/features25/features25.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feature3Title"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>feature3Title</b></span>
+                        <a href="#feature3Title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;feature3Title&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/features25/features25.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;app-features25&#x27;,
+  templateUrl: &#x27;features25.component.html&#x27;,
+  styleUrls: [&#x27;features25.component.css&#x27;],
+})
+export class Features25 {
+  @Input()
+  feature2ImgAlt: string &#x3D; &#x27;Image showing user-friendly navigation&#x27;
+  @ContentChild(&#x27;feature1Description&#x27;)
+  feature1Description: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;feature3Description&#x27;)
+  feature3Description: TemplateRef&lt;any&gt;
+  @Input()
+  feature1ImgAlt: string &#x3D; &#x27;Image depicting easy data input&#x27;
+  @Input()
+  feature2ImgSrc: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1577351594944-a5586c757d8c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;feature1Title&#x27;)
+  feature1Title: TemplateRef&lt;any&gt;
+  @Input()
+  feature1ImgSrc: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1592150053369-ed15a7f68b92?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3MXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;feature3Title&#x27;)
+  feature3Title: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;feature2Title&#x27;)
+  feature2Title: TemplateRef&lt;any&gt;
+  @Input()
+  feature3ImgAlt: string &#x3D; &#x27;Image symbolizing secure information handling&#x27;
+  @Input()
+  feature3ImgSrc: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1678227547314-b5b1ab58e35b?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;feature2Description&#x27;)
+  feature2Description: TemplateRef&lt;any&gt;
+  activeTab: number &#x3D; 0
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;thq-section-padding&quot;&gt;
+  &lt;div class&#x3D;&quot;features25-container2 thq-section-max-width&quot;&gt;
+    &lt;div class&#x3D;&quot;features25-tabs-menu&quot;&gt;
+      &lt;div (click)&#x3D;&quot;activeTab &#x3D; 0&quot; class&#x3D;&quot;features25-tab-horizontal1&quot;&gt;
+        &lt;div class&#x3D;&quot;features25-divider-container1&quot;&gt;
+          &lt;div *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;features25-container3&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;features25-content1&quot;&gt;
+          &lt;h2 class&#x3D;&quot;thq-heading-2&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature1Title&gt;
+                &lt;div class&#x3D;&quot;features25-fragment3&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text3&quot;&gt;Easy Data Input&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature1Title ? feature1Title : defaultFeature1Title&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/h2&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature1Description&gt;
+                &lt;div class&#x3D;&quot;features25-fragment1&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text1&quot;&gt;
+                    Effortlessly input your email, mobile number, certificate
+                    name, and issuing institute.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature1Description ? feature1Description : defaultFeature1Description&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div (click)&#x3D;&quot;activeTab &#x3D; 1&quot; class&#x3D;&quot;features25-tab-horizontal2&quot;&gt;
+        &lt;div class&#x3D;&quot;features25-divider-container2&quot;&gt;
+          &lt;div *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 1&quot; class&#x3D;&quot;features25-container4&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;features25-content2&quot;&gt;
+          &lt;h2 class&#x3D;&quot;thq-heading-2&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature2Title&gt;
+                &lt;div class&#x3D;&quot;features25-fragment5&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text5&quot;&gt;User-Friendly Navigation&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature2Title ? feature2Title : defaultFeature2Title&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/h2&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature2Description&gt;
+                &lt;div class&#x3D;&quot;features25-fragment6&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text6&quot;&gt;
+                    Navigate through the process smoothly with buttons like
+                    &amp;apos;Save &amp;amp; Next&amp;apos; and &amp;apos;Skip&amp;apos;.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature2Description ? feature2Description : defaultFeature2Description&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div (click)&#x3D;&quot;activeTab &#x3D; 2&quot; class&#x3D;&quot;features25-tab-horizontal3&quot;&gt;
+        &lt;div class&#x3D;&quot;features25-divider-container3&quot;&gt;
+          &lt;div *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 2&quot; class&#x3D;&quot;features25-container5&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;features25-content3&quot;&gt;
+          &lt;h2 class&#x3D;&quot;thq-heading-2&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature3Title&gt;
+                &lt;div class&#x3D;&quot;features25-fragment4&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text4&quot;&gt;
+                    Secure Information Handling
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature3Title ? feature3Title : defaultFeature3Title&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/h2&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultFeature3Description&gt;
+                &lt;div class&#x3D;&quot;features25-fragment2&quot;&gt;
+                  &lt;span class&#x3D;&quot;features25-text2&quot;&gt;
+                    Rest assured that your data is handled securely and with
+                    utmost confidentiality.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;feature3Description ? feature3Description : defaultFeature3Description&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;features25-image-container&quot;&gt;
+      &lt;img
+        [attr.alt]&#x3D;&quot;feature1ImgAlt&quot;
+        [attr.src]&#x3D;&quot;feature1ImgSrc&quot;
+        *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 0&quot;
+        class&#x3D;&quot;features25-image1 thq-img-ratio-16-9&quot;
+      /&gt;
+      &lt;img
+        [attr.alt]&#x3D;&quot;feature2ImgAlt&quot;
+        [attr.src]&#x3D;&quot;feature2ImgSrc&quot;
+        *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 1&quot;
+        class&#x3D;&quot;features25-image2 thq-img-ratio-16-9&quot;
+      /&gt;
+      &lt;img
+        [attr.alt]&#x3D;&quot;feature3ImgAlt&quot;
+        [attr.src]&#x3D;&quot;feature3ImgSrc&quot;
+        *ngIf&#x3D;&quot;activeTab &#x3D;&#x3D;&#x3D; 2&quot;
+        class&#x3D;&quot;features25-image3 thq-img-ratio-16-9&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>features25.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.features25-container2 {
+  width: 100%;
+  display: grid;
+  grid-gap: var(--dl-space-space-fiveunits);
+  position: relative;
+  grid-template-columns: 1fr 1fr;
+}
+ 
+.features25-tabs-menu {
+  gap: var(--dl-space-space-twounits);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.features25-tab-horizontal1 {
+  gap: var(--dl-space-space-twounits);
+  cursor: pointer;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.features25-divider-container1 {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+}
+ 
+.features25-container3 {
+  width: 2px;
+  align-self: stretch;
+  background-color: var(--dl-color-theme-neutral-dark);
+}
+ 
+.features25-content1 {
+  gap: 16px;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.features25-tab-horizontal2 {
+  gap: var(--dl-space-space-twounits);
+  cursor: pointer;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.features25-divider-container2 {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+}
+ 
+.features25-container4 {
+  width: 2px;
+  align-self: stretch;
+  background-color: var(--dl-color-theme-neutral-dark);
+}
+ 
+.features25-content2 {
+  gap: 16px;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.features25-tab-horizontal3 {
+  gap: var(--dl-space-space-twounits);
+  cursor: pointer;
+  display: flex;
+  overflow: hidden;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.features25-divider-container3 {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+}
+ 
+.features25-container5 {
+  width: 2px;
+  align-self: stretch;
+  background-color: var(--dl-color-theme-neutral-dark);
+}
+ 
+.features25-content3 {
+  gap: 16px;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.features25-image-container {
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+ 
+.features25-image1 {
+  animation-name: fadeIn;
+  animation-delay: 0s;
+  animation-duration: 300ms;
+  animation-direction: normal;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+}
+ 
+.features25-image2 {
+  animation-name: fadeIn;
+  animation-delay: 0s;
+  animation-duration: 300ms;
+  animation-direction: normal;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+}
+ 
+.features25-image3 {
+  animation-name: fadeIn;
+  animation-delay: 0s;
+  animation-duration: 300ms;
+  animation-direction: normal;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+}
+ 
+.features25-fragment1 {
+  display: contents;
+}
+ 
+.features25-text1 {
+  display: inline-block;
+}
+ 
+.features25-fragment2 {
+  display: contents;
+}
+ 
+.features25-text2 {
+  display: inline-block;
+}
+ 
+.features25-fragment3 {
+  display: contents;
+}
+ 
+.features25-text3 {
+  display: inline-block;
+}
+ 
+.features25-fragment4 {
+  display: contents;
+}
+ 
+.features25-text4 {
+  display: inline-block;
+}
+ 
+.features25-fragment5 {
+  display: contents;
+}
+ 
+.features25-text5 {
+  display: inline-block;
+}
+ 
+.features25-fragment6 {
+  display: contents;
+}
+ 
+.features25-text6 {
+  display: inline-block;
+}
+ 
+@media(max-width: 991px) {
+  .features25-container2 {
+    grid-gap: var(--dl-space-space-twounits);
+    grid-template-columns: 1fr;
+  }
+  .features25-tabs-menu {
+    order: 2;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="thq-section-padding">  <div class="features25-container2 thq-section-max-width">    <div class="features25-tabs-menu">      <div (click)="activeTab = 0" class="features25-tab-horizontal1">        <div class="features25-divider-container1">          <div *ngIf="activeTab === 0" class="features25-container3"></div>        </div>        <div class="features25-content1">          <h2 class="thq-heading-2">            <ng-container>              <ng-template #defaultFeature1Title>                <div class="features25-fragment3">                  <span class="features25-text3">Easy Data Input</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature1Title ? feature1Title : defaultFeature1Title"              ></ng-container>            </ng-container>          </h2>          <span class="thq-body-small">            <ng-container>              <ng-template #defaultFeature1Description>                <div class="features25-fragment1">                  <span class="features25-text1">                    Effortlessly input your email, mobile number, certificate                    name, and issuing institute.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature1Description ? feature1Description : defaultFeature1Description"              ></ng-container>            </ng-container>          </span>        </div>      </div>      <div (click)="activeTab = 1" class="features25-tab-horizontal2">        <div class="features25-divider-container2">          <div *ngIf="activeTab === 1" class="features25-container4"></div>        </div>        <div class="features25-content2">          <h2 class="thq-heading-2">            <ng-container>              <ng-template #defaultFeature2Title>                <div class="features25-fragment5">                  <span class="features25-text5">User-Friendly Navigation</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature2Title ? feature2Title : defaultFeature2Title"              ></ng-container>            </ng-container>          </h2>          <span class="thq-body-small">            <ng-container>              <ng-template #defaultFeature2Description>                <div class="features25-fragment6">                  <span class="features25-text6">                    Navigate through the process smoothly with buttons like                    &apos;Save &amp; Next&apos; and &apos;Skip&apos;.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature2Description ? feature2Description : defaultFeature2Description"              ></ng-container>            </ng-container>          </span>        </div>      </div>      <div (click)="activeTab = 2" class="features25-tab-horizontal3">        <div class="features25-divider-container3">          <div *ngIf="activeTab === 2" class="features25-container5"></div>        </div>        <div class="features25-content3">          <h2 class="thq-heading-2">            <ng-container>              <ng-template #defaultFeature3Title>                <div class="features25-fragment4">                  <span class="features25-text4">                    Secure Information Handling                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature3Title ? feature3Title : defaultFeature3Title"              ></ng-container>            </ng-container>          </h2>          <span class="thq-body-small">            <ng-container>              <ng-template #defaultFeature3Description>                <div class="features25-fragment2">                  <span class="features25-text2">                    Rest assured that your data is handled securely and with                    utmost confidentiality.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="feature3Description ? feature3Description : defaultFeature3Description"              ></ng-container>            </ng-container>          </span>        </div>      </div>    </div>    <div class="features25-image-container">      <img        [attr.alt]="feature1ImgAlt"        [attr.src]="feature1ImgSrc"        *ngIf="activeTab === 0"        class="features25-image1 thq-img-ratio-16-9"      />      <img        [attr.alt]="feature2ImgAlt"        [attr.src]="feature2ImgSrc"        *ngIf="activeTab === 1"        class="features25-image2 thq-img-ratio-16-9"      />      <img        [attr.alt]="feature3ImgAlt"        [attr.src]="feature3ImgSrc"        *ngIf="activeTab === 2"        class="features25-image3 thq-img-ratio-16-9"      />    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'Features25'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'Features25.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

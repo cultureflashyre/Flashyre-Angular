@@ -1,0 +1,2990 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AssessmentTakenPage3</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>assessment-taken-page3</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>assessment-taken-page-3.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>assessment-taken-page-3.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rawdt3n" >rawdt3n</a>
+                            </li>
+                            <li>
+                                <a href="#rawhg86" >rawhg86</a>
+                            </li>
+                            <li>
+                                <a href="#rawrm7v" >rawrm7v</a>
+                            </li>
+                            <li>
+                                <a href="#rawvdwg" >rawvdwg</a>
+                            </li>
+                            <li>
+                                <a href="#rawvn2j" >rawvn2j</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:14</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rawdt3n"></a>
+                    <span class="name">
+                        <span ><b>rawdt3n</b></span>
+                        <a href="#rawdt3n"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27; &#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:11</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rawhg86"></a>
+                    <span class="name">
+                        <span ><b>rawhg86</b></span>
+                        <a href="#rawhg86"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27; &#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rawrm7v"></a>
+                    <span class="name">
+                        <span ><b>rawrm7v</b></span>
+                        <a href="#rawrm7v"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27; &#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rawvdwg"></a>
+                    <span class="name">
+                        <span ><b>rawvdwg</b></span>
+                        <a href="#rawvdwg"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27; &#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rawvn2j"></a>
+                    <span class="name">
+                        <span ><b>rawvn2j</b></span>
+                        <a href="#rawvn2j"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27; &#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/pages/assessment-taken-page-3/assessment-taken-page-3.component.ts:13</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;
+
+@Component({
+  selector: &#x27;assessment-taken-page3&#x27;,
+  templateUrl: &#x27;assessment-taken-page-3.component.html&#x27;,
+  styleUrls: [&#x27;assessment-taken-page-3.component.css&#x27;],
+})
+export class AssessmentTakenPage3 {
+  rawhg86: string &#x3D; &#x27; &#x27;
+  rawdt3n: string &#x3D; &#x27; &#x27;
+  rawrm7v: string &#x3D; &#x27; &#x27;
+  rawvn2j: string &#x3D; &#x27; &#x27;
+  rawvdwg: string &#x3D; &#x27; &#x27;
+  constructor(private title: Title, private meta: Meta) {
+    this.title.setTitle(&#x27;Assessment-Taken-Page-3 - Flashyre&#x27;)
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Assessment-Taken-Page-3 - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ])
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;assessment-taken-page3-container10&quot;&gt;
+  &lt;div
+    id&#x3D;&quot;cloud-architecture-main-container&quot;
+    class&#x3D;&quot;assessment-taken-page3-cloud-architecture-main-container&quot;
+  &gt;
+    &lt;navbar-for-candidate-view
+      rootClassName&#x3D;&quot;navbar-for-candidate-viewroot-class-name9&quot;
+    &gt;
+      &lt;ng-template #link11&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment10&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text10&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link12&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment11&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text11&quot;&gt;Upskill&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link41&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment12&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text12&quot;&gt;Jobs for you&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text17&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment13&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text13&quot;&gt;Profile&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text21&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment14&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text14&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text33&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment15&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text15&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text74&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment16&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text16&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link111&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment17&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text17&quot;&gt;Assessment&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text104&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment18&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text18&quot;&gt;Upskill&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text114&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment19&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text19&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text124&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment20&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text20&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text134&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment21&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text21&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text154&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment22&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text22&quot;&gt;Leslie Alexander&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text163&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment23&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text23&quot;&gt;Google&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text311&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment24&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text24&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text324&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment25&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text25&quot;&gt;
+            &lt;span&gt;Software Development&lt;/span&gt;
+            &lt;br /&gt;
+            &lt;span&gt;Mountain View, CA&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text1011&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment26&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text29&quot;&gt;Assessment&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text10111&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-fragment27&quot;&gt;
+          &lt;span class&#x3D;&quot;assessment-taken-page3-text30&quot;&gt;Jobs for you&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/navbar-for-candidate-view&gt;
+    &lt;div
+      id&#x3D;&quot;cloud-architecture-details-container&quot;
+      class&#x3D;&quot;assessment-taken-page3-cloud-architecture-details-container&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;text-id-attempts-container&quot;
+        class&#x3D;&quot;assessment-taken-page3-text-id-attempts-container&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-container11&quot;&gt;
+          &lt;div
+            id&#x3D;&quot;cloud-architecture-text-container&quot;
+            class&#x3D;&quot;assessment-taken-page3-cloud-architecture-text-container&quot;
+          &gt;
+            &lt;svg
+              id&#x3D;&quot;back-icon&quot;
+              width&#x3D;&quot;32&quot;
+              height&#x3D;&quot;32&quot;
+              viewBox&#x3D;&quot;0 0 32 32&quot;
+              class&#x3D;&quot;assessment-taken-page3-back-icon&quot;
+            &gt;
+              &lt;path
+                d&#x3D;&quot;m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z&quot;
+                fill&#x3D;&quot;currentColor&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+            &lt;span
+              id&#x3D;&quot;cloud-architecture-text&quot;
+              class&#x3D;&quot;assessment-taken-page3-cloud-architecture-text&quot;
+            &gt;
+              Cloud Architecture
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div
+            id&#x3D;&quot;assessment-by-container&quot;
+            class&#x3D;&quot;assessment-taken-page3-assessment-by-container&quot;
+          &gt;
+            &lt;img
+              id&#x3D;&quot;assessment-company-logo&quot;
+              alt&#x3D;&quot;image&quot;
+              src&#x3D;&quot;https://play.teleporthq.io/static/svg/default-img.svg&quot;
+              class&#x3D;&quot;assessment-taken-page3-assessment-company-logo&quot;
+            /&gt;
+            &lt;span
+              id&#x3D;&quot;assessment-by-text&quot;
+              class&#x3D;&quot;assessment-taken-page3-assessment-by-text&quot;
+            &gt;
+              Assessment by Flashyre
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;id-attempts-container&quot;
+          class&#x3D;&quot;assessment-taken-page3-id-attempts-container&quot;
+        &gt;
+          &lt;span id&#x3D;&quot;id-text&quot; class&#x3D;&quot;assessment-taken-page3-id-text&quot;&gt;
+            Assessment ID : 109987
+          &lt;/span&gt;
+          &lt;span
+            id&#x3D;&quot;attempts-remaining-text&quot;
+            class&#x3D;&quot;assessment-taken-page3-attempts-remaining-text&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text31&quot;&gt;1&lt;/span&gt;
+            &lt;span&gt;Attempt(s) Remaining&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button
+          id&#x3D;&quot;re-attempt-container&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;assessment-taken-page3-re-attempt-container button&quot;
+        &gt;
+          Re- attempt
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;assessment-taken-page3-qa-details-container&quot;&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-qa-container1&quot;&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-number-container1&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text33&quot;&gt;Question 1/10&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-container1&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text34&quot;&gt;
+              Which of the following are the feature of cloud computing
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-options-container1&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container10&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton10&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container12&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text10&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text11&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container11&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                checked
+                class&#x3D;&quot;assessment-taken-page3-radiobutton11&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container13&quot;&gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an internet connection and a device.
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text12&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text13&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container12&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton12&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container14&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text14&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text15&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container13&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton13&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container15&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text16&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text17&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-explianation-container1&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container16&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text35&quot;&gt;Answer: &lt;/span&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-correct-option-text1&quot;&gt;D&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container17&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text36&quot;&gt;Explaination: &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;assessment-taken-page3-correct-answer-explained-text1&quot;
+              &gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an
+                  &lt;span [innerHTML]&#x3D;&quot;rawhg86&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;span&gt;internet connection and a device.&lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-qa-container2&quot;&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-number-container2&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text40&quot;&gt;Question 2/10&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-container2&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text41&quot;&gt;
+              Which of the following are the feature of cloud computing
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-options-container2&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container14&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton14&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container18&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text18&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text19&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container15&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton15&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container19&quot;&gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an internet connection and a device.
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text20&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text21&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container16&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                checked
+                class&#x3D;&quot;assessment-taken-page3-radiobutton16&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container20&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text22&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text23&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container17&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton17&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container21&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text24&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text25&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-explianation-container2&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container22&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text42&quot;&gt;Answer: &lt;/span&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-correct-option-text2&quot;&gt;D&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container23&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text43&quot;&gt;Explaination: &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;assessment-taken-page3-correct-answer-explained-text2&quot;
+              &gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an
+                  &lt;span [innerHTML]&#x3D;&quot;rawdt3n&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;span&gt;internet connection and a device.&lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-qa-container3&quot;&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-number-container3&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text47&quot;&gt;Question 2/10&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-container3&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text48&quot;&gt;
+              Which of the following are the feature of cloud computing
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-options-container3&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container18&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton18&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container24&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text26&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text27&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container19&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton19&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container25&quot;&gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an internet connection and a device.
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text28&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text29&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container20&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                checked
+                class&#x3D;&quot;assessment-taken-page3-radiobutton20&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container26&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text30&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text31&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container21&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton21&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container27&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text32&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text33&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-explianation-container3&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container28&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text49&quot;&gt;Answer: &lt;/span&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-correct-option-text3&quot;&gt;D&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container29&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text50&quot;&gt;Explaination: &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;assessment-taken-page3-correct-answer-explained-text3&quot;
+              &gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an
+                  &lt;span [innerHTML]&#x3D;&quot;rawrm7v&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;span&gt;internet connection and a device.&lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-qa-container4&quot;&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-number-container4&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text54&quot;&gt;Question 2/10&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-container4&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text55&quot;&gt;
+              Which of the following are the feature of cloud computing
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-options-container4&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container22&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton22&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container30&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text34&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text35&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container23&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton23&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container31&quot;&gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an internet connection and a device.
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text36&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text37&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container24&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                checked
+                class&#x3D;&quot;assessment-taken-page3-radiobutton24&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container32&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text38&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text39&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container25&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton25&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container33&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text40&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text41&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-explianation-container4&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container34&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text56&quot;&gt;Answer: &lt;/span&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-correct-option-text4&quot;&gt;D&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container35&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text57&quot;&gt;Explaination: &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;assessment-taken-page3-correct-answer-explained-text4&quot;
+              &gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an
+                  &lt;span [innerHTML]&#x3D;&quot;rawvn2j&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;span&gt;internet connection and a device.&lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;assessment-taken-page3-qa-container5&quot;&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-number-container5&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text61&quot;&gt;Question 2/10&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-question-container5&quot;&gt;
+            &lt;span class&#x3D;&quot;assessment-taken-page3-text62&quot;&gt;
+              Which of the following are the feature of cloud computing
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-options-container5&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container26&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton26&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container36&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text42&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text43&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container27&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton27&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container37&quot;&gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an internet connection and a device.
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text44&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text45&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container28&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                checked
+                class&#x3D;&quot;assessment-taken-page3-radiobutton28&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container38&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text46&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text47&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-option-container29&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;radio&quot;
+                disabled
+                class&#x3D;&quot;assessment-taken-page3-radiobutton29&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;assessment-taken-page3-container39&quot;&gt;
+                &lt;label&gt;Option-A&lt;/label&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text48&quot;&gt;
+                  Correct
+                &lt;/span&gt;
+                &lt;span class&#x3D;&quot;assessment-taken-page3-correct-incorrect-text49&quot;&gt;
+                  Incorrect
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page3-explianation-container5&quot;&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container40&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text63&quot;&gt;Answer: &lt;/span&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-correct-option-text5&quot;&gt;D&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;assessment-taken-page3-container41&quot;&gt;
+              &lt;span class&#x3D;&quot;assessment-taken-page3-text64&quot;&gt;Explaination: &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;assessment-taken-page3-correct-answer-explained-text5&quot;
+              &gt;
+                &lt;span&gt;
+                  One of the important features is security, the data stored is
+                  secured and cannot be accessed by unauthorized parties. In
+                  case the user exhausts the storage space allocated, the user
+                  can buy extra storage for a less amount. The data stored can
+                  be accessed by any authorized user anywhere anytime provided
+                  the user must have an
+                  &lt;span [innerHTML]&#x3D;&quot;rawvdwg&quot;&gt;&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;br /&gt;
+                &lt;span&gt;internet connection and a device.&lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>assessment-taken-page-3.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.assessment-taken-page3-container10 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-cloud-architecture-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 900px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-fragment10 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text10 {
+  display: inline-block;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page3-fragment11 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text11 {
+  display: inline-block;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page3-fragment12 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment13 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text13 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment14 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text14 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment15 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text15 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment16 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text16 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment17 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text17 {
+  display: inline-block;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page3-fragment18 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text18 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment19 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text19 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment20 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text20 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment21 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text21 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment22 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text22 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment23 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text23 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment24 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text24 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment25 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text25 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment26 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text29 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-fragment27 {
+  display: contents;
+}
+ 
+.assessment-taken-page3-text30 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page3-cloud-architecture-details-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1124px;
+  height: auto;
+  display: flex;
+  padding: 24px;
+  margin-top: 100px;
+  align-items: center;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-taken-page3-text-id-attempts-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page3-container11 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-cloud-architecture-text-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page3-back-icon {
+  width: 24px;
+  height: 24px;
+}
+ 
+.assessment-taken-page3-cloud-architecture-text {
+  height: 32px;
+  display: flex;
+  font-size: 24px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page3-assessment-by-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.assessment-taken-page3-assessment-company-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+}
+ 
+.assessment-taken-page3-assessment-by-text {
+  color: #474748;
+  height: 18px;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page3-id-attempts-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-id-text {
+  color: #6b6c6d;
+}
+ 
+.assessment-taken-page3-text31 {
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-re-attempt-container {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 127px;
+  height: 48px;
+  padding: 0px;
+  font-size: 16px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  background-color: rgb(5, 53, 108);
+}
+ 
+.assessment-taken-page3-re-attempt-container:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  background-color: #0A4992;
+}
+ 
+.assessment-taken-page3-re-attempt-container:active {
+  color: #FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #0A4992;
+}
+ 
+.assessment-taken-page3-re-attempt-container:disabled {
+  opacity: 0.4;
+}
+ 
+.assessment-taken-page3-qa-details-container {
+  gap: var(--dl-layout-space-twounits);
+  flex: 0 0 auto;
+  height: 600px;
+  display: flex;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-qa-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-question-number-container1 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text33 {
+  height: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-question-container1 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text34 {
+  height: 24px;
+}
+ 
+.assessment-taken-page3-options-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-option-container10 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton10 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container12 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text10 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text11 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container11 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton11 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container13 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text12 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text13 {
+  fill: #F10400;
+  color: #F10400;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container12 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton12 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container14 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text14 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text15 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container13 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton13 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container15 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text16 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text17 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-explianation-container1 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-container16 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text35 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-option-text1 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-container17 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text36 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-answer-explained-text1 {
+  fill: #6B6C6D;
+  color: rgb(107, 108, 109);
+}
+ 
+.assessment-taken-page3-qa-container2 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-question-number-container2 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text40 {
+  height: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-question-container2 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text41 {
+  height: 24px;
+}
+ 
+.assessment-taken-page3-options-container2 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-option-container14 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton14 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container18 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text18 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text19 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container15 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton15 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container19 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text20 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text21 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container16 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton16 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container20 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text22 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text23 {
+  fill: #F10400;
+  color: #F10400;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container17 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton17 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container21 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text24 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text25 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-explianation-container2 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-container22 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text42 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-option-text2 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-container23 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text43 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-answer-explained-text2 {
+  fill: #6B6C6D;
+  color: rgb(107, 108, 109);
+}
+ 
+.assessment-taken-page3-qa-container3 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-question-number-container3 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text47 {
+  height: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-question-container3 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text48 {
+  height: 24px;
+}
+ 
+.assessment-taken-page3-options-container3 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-option-container18 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton18 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container24 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text26 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text27 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container19 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton19 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container25 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text28 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text29 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container20 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton20 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container26 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text30 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text31 {
+  fill: #F10400;
+  color: #F10400;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container21 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton21 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container27 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text32 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text33 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-explianation-container3 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-container28 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text49 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-option-text3 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-container29 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text50 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-answer-explained-text3 {
+  fill: #6B6C6D;
+  color: rgb(107, 108, 109);
+}
+ 
+.assessment-taken-page3-qa-container4 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-question-number-container4 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text54 {
+  height: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-question-container4 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text55 {
+  height: 24px;
+}
+ 
+.assessment-taken-page3-options-container4 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-option-container22 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton22 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container30 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text34 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text35 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container23 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton23 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container31 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text36 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text37 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container24 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton24 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container32 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text38 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text39 {
+  fill: #F10400;
+  color: #F10400;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container25 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton25 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container33 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text40 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text41 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-explianation-container4 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-container34 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text56 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-option-text4 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-container35 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text57 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-answer-explained-text4 {
+  fill: #6B6C6D;
+  color: rgb(107, 108, 109);
+}
+ 
+.assessment-taken-page3-qa-container5 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-question-number-container5 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text61 {
+  height: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+ 
+.assessment-taken-page3-question-container5 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-text62 {
+  height: 24px;
+}
+ 
+.assessment-taken-page3-options-container5 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 70%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-option-container26 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton26 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container36 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text42 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text43 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container27 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton27 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container37 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text44 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text45 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container28 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton28 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container38 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text46 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text47 {
+  fill: #F10400;
+  color: #F10400;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-option-container29 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page3-radiobutton29 {
+  width: 16px;
+  height: 16px;
+}
+ 
+.assessment-taken-page3-container39 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  max-width: 90%;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text48 {
+  fill: #1F882B;
+  color: #1F882B;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-correct-incorrect-text49 {
+  fill: #F10400;
+  color: #F10400;
+  display: none;
+  font-size: 13px;
+}
+ 
+.assessment-taken-page3-explianation-container5 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page3-container40 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text63 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-option-text5 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-container41 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page3-text64 {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.assessment-taken-page3-correct-answer-explained-text5 {
+  fill: #6B6C6D;
+  color: rgb(107, 108, 109);
+}
+ 
+@media(max-width: 991px) {
+  .assessment-taken-page3-cloud-architecture-main-container {
+    gap: 20px;
+  }
+  .assessment-taken-page3-text10 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page3-text11 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page3-text12 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page3-text17 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page3-cloud-architecture-details-container {
+    width: 900px;
+    margin-top: 80px;
+  }
+  .assessment-taken-page3-text-id-attempts-container {
+    height: auto;
+  }
+  .assessment-taken-page3-cloud-architecture-text-container {
+    width: auto;
+  }
+  .assessment-taken-page3-cloud-architecture-text {
+    font-size: 22px;
+  }
+  .assessment-taken-page3-id-text {
+    font-size: 14px;
+  }
+  .assessment-taken-page3-attempts-remaining-text {
+    font-size: 14px;
+  }
+  .assessment-taken-page3-re-attempt-container {
+    width: 110px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .assessment-taken-page3-cloud-architecture-main-container {
+    gap: 16px;
+    width: 100%;
+  }
+  .assessment-taken-page3-text15 {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .assessment-taken-page3-text16 {
+    font-size: 12px;
+  }
+  .assessment-taken-page3-text18 {
+    font-size: 12px;
+  }
+  .assessment-taken-page3-text19 {
+    font-size: 10px;
+  }
+  .assessment-taken-page3-text20 {
+    font-size: 10px;
+  }
+  .assessment-taken-page3-text21 {
+    font-size: 10px;
+  }
+  .assessment-taken-page3-text22 {
+    font-size: 16px;
+  }
+  .assessment-taken-page3-text25 {
+    color: rgb(24, 25, 28);
+  }
+  .assessment-taken-page3-text29 {
+    font-size: 12px;
+  }
+  .assessment-taken-page3-text30 {
+    font-size: 12px;
+  }
+  .assessment-taken-page3-cloud-architecture-details-container {
+    gap: 16px;
+    width: 700px;
+    height: 330px;
+  }
+  .assessment-taken-page3-cloud-architecture-text-container {
+    gap: 8px;
+  }
+  .assessment-taken-page3-cloud-architecture-text {
+    display: flex;
+    font-size: 20px;
+  }
+  .assessment-taken-page3-assessment-by-container {
+    width: auto;
+  }
+  .assessment-taken-page3-assessment-by-text {
+    height: auto;
+  }
+  .assessment-taken-page3-re-attempt-container {
+    width: 100px;
+    height: 36px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .assessment-taken-page3-cloud-architecture-main-container {
+    width: 479px;
+  }
+  .assessment-taken-page3-cloud-architecture-details-container {
+    gap: 16px;
+    width: 470px;
+    height: auto;
+    padding: 12px;
+  }
+  .assessment-taken-page3-text-id-attempts-container {
+    gap: 10px;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page3-container11 {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .assessment-taken-page3-cloud-architecture-text-container {
+    gap: 8px;
+  }
+  .assessment-taken-page3-cloud-architecture-text {
+    align-self: flex-start;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page3-id-attempts-container {
+    gap: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="assessment-taken-page3-container10">  <div    id="cloud-architecture-main-container"    class="assessment-taken-page3-cloud-architecture-main-container"  >    <navbar-for-candidate-view      rootClassName="navbar-for-candidate-viewroot-class-name9"    >      <ng-template #link11>        <div class="assessment-taken-page3-fragment10">          <span class="assessment-taken-page3-text10">Dashboard</span>        </div>      </ng-template>      <ng-template #link12>        <div class="assessment-taken-page3-fragment11">          <span class="assessment-taken-page3-text11">Upskill</span>        </div>      </ng-template>      <ng-template #link41>        <div class="assessment-taken-page3-fragment12">          <span class="assessment-taken-page3-text12">Jobs for you</span>        </div>      </ng-template>      <ng-template #text17>        <div class="assessment-taken-page3-fragment13">          <span class="assessment-taken-page3-text13">Profile</span>        </div>      </ng-template>      <ng-template #text21>        <div class="assessment-taken-page3-fragment14">          <span class="assessment-taken-page3-text14">Preference</span>        </div>      </ng-template>      <ng-template #text33>        <div class="assessment-taken-page3-fragment15">          <span class="assessment-taken-page3-text15">Settings</span>        </div>      </ng-template>      <ng-template #text74>        <div class="assessment-taken-page3-fragment16">          <span class="assessment-taken-page3-text16">Dashboard</span>        </div>      </ng-template>      <ng-template #link111>        <div class="assessment-taken-page3-fragment17">          <span class="assessment-taken-page3-text17">Assessment</span>        </div>      </ng-template>      <ng-template #text104>        <div class="assessment-taken-page3-fragment18">          <span class="assessment-taken-page3-text18">Upskill</span>        </div>      </ng-template>      <ng-template #text114>        <div class="assessment-taken-page3-fragment19">          <span class="assessment-taken-page3-text19">Preference</span>        </div>      </ng-template>      <ng-template #text124>        <div class="assessment-taken-page3-fragment20">          <span class="assessment-taken-page3-text20">Settings</span>        </div>      </ng-template>      <ng-template #text134>        <div class="assessment-taken-page3-fragment21">          <span class="assessment-taken-page3-text21">Logout</span>        </div>      </ng-template>      <ng-template #text154>        <div class="assessment-taken-page3-fragment22">          <span class="assessment-taken-page3-text22">Leslie Alexander</span>        </div>      </ng-template>      <ng-template #text163>        <div class="assessment-taken-page3-fragment23">          <span class="assessment-taken-page3-text23">Google</span>        </div>      </ng-template>      <ng-template #text311>        <div class="assessment-taken-page3-fragment24">          <span class="assessment-taken-page3-text24">Logout</span>        </div>      </ng-template>      <ng-template #text324>        <div class="assessment-taken-page3-fragment25">          <span class="assessment-taken-page3-text25">            <span>Software Development</span>            <br />            <span>Mountain View, CA</span>          </span>        </div>      </ng-template>      <ng-template #text1011>        <div class="assessment-taken-page3-fragment26">          <span class="assessment-taken-page3-text29">Assessment</span>        </div>      </ng-template>      <ng-template #text10111>        <div class="assessment-taken-page3-fragment27">          <span class="assessment-taken-page3-text30">Jobs for you</span>        </div>      </ng-template>    </navbar-for-candidate-view>    <div      id="cloud-architecture-details-container"      class="assessment-taken-page3-cloud-architecture-details-container"    >      <div        id="text-id-attempts-container"        class="assessment-taken-page3-text-id-attempts-container"      >        <div class="assessment-taken-page3-container11">          <div            id="cloud-architecture-text-container"            class="assessment-taken-page3-cloud-architecture-text-container"          >            <svg              id="back-icon"              width="32"              height="32"              viewBox="0 0 32 32"              class="assessment-taken-page3-back-icon"            >              <path                d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"                fill="currentColor"              ></path>            </svg>            <span              id="cloud-architecture-text"              class="assessment-taken-page3-cloud-architecture-text"            >              Cloud Architecture            </span>          </div>          <div            id="assessment-by-container"            class="assessment-taken-page3-assessment-by-container"          >            <img              id="assessment-company-logo"              alt="image"              src="https://play.teleporthq.io/static/svg/default-img.svg"              class="assessment-taken-page3-assessment-company-logo"            />            <span              id="assessment-by-text"              class="assessment-taken-page3-assessment-by-text"            >              Assessment by Flashyre            </span>          </div>        </div>        <div          id="id-attempts-container"          class="assessment-taken-page3-id-attempts-container"        >          <span id="id-text" class="assessment-taken-page3-id-text">            Assessment ID : 109987          </span>          <span            id="attempts-remaining-text"            class="assessment-taken-page3-attempts-remaining-text"          >            <span class="assessment-taken-page3-text31">1</span>            <span>Attempt(s) Remaining</span>          </span>        </div>        <button          id="re-attempt-container"          type="button"          class="assessment-taken-page3-re-attempt-container button"        >          Re- attempt        </button>      </div>      <div class="assessment-taken-page3-qa-details-container">        <div class="assessment-taken-page3-qa-container1">          <div class="assessment-taken-page3-question-number-container1">            <span class="assessment-taken-page3-text33">Question 1/10</span>          </div>          <div class="assessment-taken-page3-question-container1">            <span class="assessment-taken-page3-text34">              Which of the following are the feature of cloud computing            </span>          </div>          <div class="assessment-taken-page3-options-container1">            <div class="assessment-taken-page3-option-container10">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton10"              />              <div class="assessment-taken-page3-container12">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text10">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text11">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container11">              <input                type="radio"                name="radio"                checked                class="assessment-taken-page3-radiobutton11"              />              <div class="assessment-taken-page3-container13">                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an internet connection and a device.                </span>                <span class="assessment-taken-page3-correct-incorrect-text12">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text13">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container12">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton12"              />              <div class="assessment-taken-page3-container14">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text14">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text15">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container13">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton13"              />              <div class="assessment-taken-page3-container15">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text16">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text17">                  Incorrect                </span>              </div>            </div>          </div>          <div class="assessment-taken-page3-explianation-container1">            <div class="assessment-taken-page3-container16">              <span class="assessment-taken-page3-text35">Answer: </span>              <span class="assessment-taken-page3-correct-option-text1">D</span>            </div>            <div class="assessment-taken-page3-container17">              <span class="assessment-taken-page3-text36">Explaination: </span>              <span                class="assessment-taken-page3-correct-answer-explained-text1"              >                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an                  <span [innerHTML]="rawhg86"></span>                </span>                <br />                <span>internet connection and a device.</span>              </span>            </div>          </div>        </div>        <div class="assessment-taken-page3-qa-container2">          <div class="assessment-taken-page3-question-number-container2">            <span class="assessment-taken-page3-text40">Question 2/10</span>          </div>          <div class="assessment-taken-page3-question-container2">            <span class="assessment-taken-page3-text41">              Which of the following are the feature of cloud computing            </span>          </div>          <div class="assessment-taken-page3-options-container2">            <div class="assessment-taken-page3-option-container14">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton14"              />              <div class="assessment-taken-page3-container18">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text18">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text19">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container15">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton15"              />              <div class="assessment-taken-page3-container19">                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an internet connection and a device.                </span>                <span class="assessment-taken-page3-correct-incorrect-text20">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text21">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container16">              <input                type="radio"                name="radio"                checked                class="assessment-taken-page3-radiobutton16"              />              <div class="assessment-taken-page3-container20">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text22">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text23">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container17">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton17"              />              <div class="assessment-taken-page3-container21">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text24">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text25">                  Incorrect                </span>              </div>            </div>          </div>          <div class="assessment-taken-page3-explianation-container2">            <div class="assessment-taken-page3-container22">              <span class="assessment-taken-page3-text42">Answer: </span>              <span class="assessment-taken-page3-correct-option-text2">D</span>            </div>            <div class="assessment-taken-page3-container23">              <span class="assessment-taken-page3-text43">Explaination: </span>              <span                class="assessment-taken-page3-correct-answer-explained-text2"              >                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an                  <span [innerHTML]="rawdt3n"></span>                </span>                <br />                <span>internet connection and a device.</span>              </span>            </div>          </div>        </div>        <div class="assessment-taken-page3-qa-container3">          <div class="assessment-taken-page3-question-number-container3">            <span class="assessment-taken-page3-text47">Question 2/10</span>          </div>          <div class="assessment-taken-page3-question-container3">            <span class="assessment-taken-page3-text48">              Which of the following are the feature of cloud computing            </span>          </div>          <div class="assessment-taken-page3-options-container3">            <div class="assessment-taken-page3-option-container18">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton18"              />              <div class="assessment-taken-page3-container24">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text26">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text27">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container19">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton19"              />              <div class="assessment-taken-page3-container25">                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an internet connection and a device.                </span>                <span class="assessment-taken-page3-correct-incorrect-text28">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text29">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container20">              <input                type="radio"                name="radio"                checked                class="assessment-taken-page3-radiobutton20"              />              <div class="assessment-taken-page3-container26">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text30">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text31">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container21">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton21"              />              <div class="assessment-taken-page3-container27">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text32">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text33">                  Incorrect                </span>              </div>            </div>          </div>          <div class="assessment-taken-page3-explianation-container3">            <div class="assessment-taken-page3-container28">              <span class="assessment-taken-page3-text49">Answer: </span>              <span class="assessment-taken-page3-correct-option-text3">D</span>            </div>            <div class="assessment-taken-page3-container29">              <span class="assessment-taken-page3-text50">Explaination: </span>              <span                class="assessment-taken-page3-correct-answer-explained-text3"              >                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an                  <span [innerHTML]="rawrm7v"></span>                </span>                <br />                <span>internet connection and a device.</span>              </span>            </div>          </div>        </div>        <div class="assessment-taken-page3-qa-container4">          <div class="assessment-taken-page3-question-number-container4">            <span class="assessment-taken-page3-text54">Question 2/10</span>          </div>          <div class="assessment-taken-page3-question-container4">            <span class="assessment-taken-page3-text55">              Which of the following are the feature of cloud computing            </span>          </div>          <div class="assessment-taken-page3-options-container4">            <div class="assessment-taken-page3-option-container22">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton22"              />              <div class="assessment-taken-page3-container30">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text34">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text35">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container23">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton23"              />              <div class="assessment-taken-page3-container31">                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an internet connection and a device.                </span>                <span class="assessment-taken-page3-correct-incorrect-text36">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text37">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container24">              <input                type="radio"                name="radio"                checked                class="assessment-taken-page3-radiobutton24"              />              <div class="assessment-taken-page3-container32">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text38">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text39">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container25">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton25"              />              <div class="assessment-taken-page3-container33">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text40">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text41">                  Incorrect                </span>              </div>            </div>          </div>          <div class="assessment-taken-page3-explianation-container4">            <div class="assessment-taken-page3-container34">              <span class="assessment-taken-page3-text56">Answer: </span>              <span class="assessment-taken-page3-correct-option-text4">D</span>            </div>            <div class="assessment-taken-page3-container35">              <span class="assessment-taken-page3-text57">Explaination: </span>              <span                class="assessment-taken-page3-correct-answer-explained-text4"              >                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an                  <span [innerHTML]="rawvn2j"></span>                </span>                <br />                <span>internet connection and a device.</span>              </span>            </div>          </div>        </div>        <div class="assessment-taken-page3-qa-container5">          <div class="assessment-taken-page3-question-number-container5">            <span class="assessment-taken-page3-text61">Question 2/10</span>          </div>          <div class="assessment-taken-page3-question-container5">            <span class="assessment-taken-page3-text62">              Which of the following are the feature of cloud computing            </span>          </div>          <div class="assessment-taken-page3-options-container5">            <div class="assessment-taken-page3-option-container26">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton26"              />              <div class="assessment-taken-page3-container36">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text42">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text43">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container27">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton27"              />              <div class="assessment-taken-page3-container37">                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an internet connection and a device.                </span>                <span class="assessment-taken-page3-correct-incorrect-text44">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text45">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container28">              <input                type="radio"                name="radio"                checked                class="assessment-taken-page3-radiobutton28"              />              <div class="assessment-taken-page3-container38">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text46">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text47">                  Incorrect                </span>              </div>            </div>            <div class="assessment-taken-page3-option-container29">              <input                type="radio"                name="radio"                disabled                class="assessment-taken-page3-radiobutton29"              />              <div class="assessment-taken-page3-container39">                <label>Option-A</label>                <span class="assessment-taken-page3-correct-incorrect-text48">                  Correct                </span>                <span class="assessment-taken-page3-correct-incorrect-text49">                  Incorrect                </span>              </div>            </div>          </div>          <div class="assessment-taken-page3-explianation-container5">            <div class="assessment-taken-page3-container40">              <span class="assessment-taken-page3-text63">Answer: </span>              <span class="assessment-taken-page3-correct-option-text5">D</span>            </div>            <div class="assessment-taken-page3-container41">              <span class="assessment-taken-page3-text64">Explaination: </span>              <span                class="assessment-taken-page3-correct-answer-explained-text5"              >                <span>                  One of the important features is security, the data stored is                  secured and cannot be accessed by unauthorized parties. In                  case the user exhausts the storage space allocated, the user                  can buy extra storage for a less amount. The data stored can                  be accessed by any authorized user anywhere anytime provided                  the user must have an                  <span [innerHTML]="rawvdwg"></span>                </span>                <br />                <span>internet connection and a device.</span>              </span>            </div>          </div>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AssessmentTakenPage3'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AssessmentTakenPage3.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

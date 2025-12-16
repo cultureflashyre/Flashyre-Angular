@@ -1,0 +1,683 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  InputDateComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/input-date-component/input-date-component.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>input-date-component</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>input-date-component.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>input-date-component.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11" >text11</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text31" >text31</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/input-date-component/input-date-component.component.ts:14</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/input-date-component/input-date-component.component.ts:14</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11</b></span>
+                        <a href="#text11"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/input-date-component/input-date-component.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text31"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text31</b></span>
+                        <a href="#text31"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text31&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/input-date-component/input-date-component.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;input-date-component&#x27;,
+  templateUrl: &#x27;input-date-component.component.html&#x27;,
+  styleUrls: [&#x27;input-date-component.component.css&#x27;],
+})
+export class InputDateComponent {
+  @ContentChild(&#x27;text31&#x27;)
+  text31: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text11&#x27;)
+  text11: TemplateRef&lt;any&gt;
+  @Input()
+  rootClassName: string &#x3D; &#x27;&#x27;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;input-date-component-date-selector&quot; [ngClass]&#x3D;&quot;rootClassName&quot;&gt;
+  &lt;div class&#x3D;&quot;input-date-component-container1&quot;&gt;
+    &lt;div class&#x3D;&quot;input-date-component-container2&quot;&gt;
+      &lt;span class&#x3D;&quot;input-date-component-text1&quot;&gt;
+        &lt;ng-container&gt;
+          &lt;ng-template #defaultText11&gt;
+            &lt;div class&#x3D;&quot;input-date-component-fragment2&quot;&gt;
+              &lt;span class&#x3D;&quot;input-date-component-text4&quot;&gt;
+                &lt;span&gt;Start Date&lt;/span&gt;
+                &lt;br /&gt;
+                &lt;br /&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-container
+            *ngTemplateOutlet&#x3D;&quot;text11 ? text11 : defaultText11&quot;
+          &gt;&lt;/ng-container&gt;
+        &lt;/ng-container&gt;
+      &lt;/span&gt;
+      &lt;div class&#x3D;&quot;input-date-component-container3&quot;&gt;
+        &lt;form class&#x3D;&quot;input-date-component-form input&quot;&gt;
+          &lt;span class&#x3D;&quot;input-date-component-text2&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText31&gt;
+                &lt;div class&#x3D;&quot;input-date-component-fragment1&quot;&gt;
+                  &lt;span class&#x3D;&quot;input-date-component-text3&quot;&gt;Select&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text31 ? text31 : defaultText31&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;svg
+            width&#x3D;&quot;24&quot;
+            height&#x3D;&quot;24&quot;
+            viewBox&#x3D;&quot;0 0 1792 1792&quot;
+            class&#x3D;&quot;input-date-component-icon1&quot;
+          &gt;
+            &lt;path
+              d&#x3D;&quot;M56 333h1553q55 0 55-56V111q0-47-32-79t-79-32H111Q64 0 32 32T0 111v166q0 56 56 56m221 998H56q-56 0-56 56v166q0 47 32 79t79 32h166q56 0 56-56v-221q0-56-56-56m1110 0q-56 0-56 56v221q0 56 56 56h166q47 0 79-32t32-79v-166q0-56-55-56zm-444 0q-56 0-56 56v221q0 56 56 56h222q55 0 55-56v-221q0-56-55-56zm-444 0q-55 0-55 56v221q0 56 55 56h222q56 0 56-56v-221q0-56-56-56zm888-444q-56 0-56 56v222q0 55 56 55h222q55 0 55-55V943q0-56-55-56zm-444 0q-56 0-56 56v222q0 55 56 55h222q55 0 55-55V943q0-56-55-56zm-887 0q-56 0-56 56v222q0 55 56 55h221q56 0 56-55V943q0-56-56-56zm443 0q-55 0-55 56v222q0 55 55 55h222q56 0 56-55V943q0-56-56-56zm888-443q-56 0-56 55v222q0 56 56 56h222q55 0 55-56V499q0-55-55-55zm-444 0q-56 0-56 55v222q0 56 56 56h222q55 0 55-56V499q0-55-55-55zm-887 0q-56 0-56 55v222q0 56 56 56h221q56 0 56-56V499q0-55-56-55zm443 0q-55 0-55 55v222q0 56 55 56h222q56 0 56-56V499q0-55-56-55z&quot;
+              fill&#x3D;&quot;currentColor&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>input-date-component.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.input-date-component-date-selector {
+  width: 672px;
+  height: 76px;
+  display: grid;
+  position: relative;
+  grid-template-columns: 1fr 1fr;
+}
+ 
+.input-date-component-container1 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.input-date-component-container2 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.input-date-component-text1 {
+  width: 324px;
+  height: 24px;
+}
+ 
+.input-date-component-container3 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.input-date-component-form {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.input-date-component-text2 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.input-date-component-fragment1 {
+  display: contents;
+}
+ 
+.input-date-component-text3 {
+  display: inline-block;
+}
+ 
+.input-date-component-fragment2 {
+  display: contents;
+}
+ 
+.input-date-component-text4 {
+  display: inline-block;
+}
+ 
+
+ 
+@media(max-width: 1200px) {
+  .input-date-component-date-selector {
+    width: auto;
+    display: flex;
+  }
+  .input-date-component-container1 {
+    align-items: center;
+  }
+  .input-date-component-form {
+    position: relative;
+  }
+  .input-date-component-icon1 {
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    bottom: 0px;
+    height: 20px;
+    position: absolute;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: var(--dl-space-space-unit);
+    margin-bottom: auto;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="input-date-component-date-selector" [ngClass]="rootClassName">  <div class="input-date-component-container1">    <div class="input-date-component-container2">      <span class="input-date-component-text1">        <ng-container>          <ng-template #defaultText11>            <div class="input-date-component-fragment2">              <span class="input-date-component-text4">                <span>Start Date</span>                <br />                <br />              </span>            </div>          </ng-template>          <ng-container            *ngTemplateOutlet="text11 ? text11 : defaultText11"          ></ng-container>        </ng-container>      </span>      <div class="input-date-component-container3">        <form class="input-date-component-form input">          <span class="input-date-component-text2">            <ng-container>              <ng-template #defaultText31>                <div class="input-date-component-fragment1">                  <span class="input-date-component-text3">Select</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text31 ? text31 : defaultText31"              ></ng-container>            </ng-container>          </span>          <svg            width="24"            height="24"            viewBox="0 0 1792 1792"            class="input-date-component-icon1"          >            <path              d="M56 333h1553q55 0 55-56V111q0-47-32-79t-79-32H111Q64 0 32 32T0 111v166q0 56 56 56m221 998H56q-56 0-56 56v166q0 47 32 79t79 32h166q56 0 56-56v-221q0-56-56-56m1110 0q-56 0-56 56v221q0 56 56 56h166q47 0 79-32t32-79v-166q0-56-55-56zm-444 0q-56 0-56 56v221q0 56 56 56h222q55 0 55-56v-221q0-56-55-56zm-444 0q-55 0-55 56v221q0 56 55 56h222q56 0 56-56v-221q0-56-56-56zm888-444q-56 0-56 56v222q0 55 56 55h222q55 0 55-55V943q0-56-55-56zm-444 0q-56 0-56 56v222q0 55 56 55h222q55 0 55-55V943q0-56-55-56zm-887 0q-56 0-56 56v222q0 55 56 55h221q56 0 56-55V943q0-56-56-56zm443 0q-55 0-55 56v222q0 55 55 55h222q56 0 56-55V943q0-56-56-56zm888-443q-56 0-56 55v222q0 56 56 56h222q55 0 55-56V499q0-55-55-55zm-444 0q-56 0-56 55v222q0 56 56 56h222q55 0 55-56V499q0-55-55-55zm-887 0q-56 0-56 55v222q0 56 56 56h221q56 0 56-56V499q0-55-56-55zm443 0q-55 0-55 55v222q0 56 55 56h222q56 0 56-56V499q0-55-56-55z"              fill="currentColor"            ></path>          </svg>        </form>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'InputDateComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'InputDateComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

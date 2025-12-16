@@ -1,0 +1,3128 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AssessmentTakenPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/assessment-taken-page/assessment-taken-page.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>assessment-taken-page</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>assessment-taken-page.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>assessment-taken-page.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#assessments" >assessments</a>
+                            </li>
+                            <li>
+                                <a href="#userProfile" >userProfile</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#getFillColor" >getFillColor</a>
+                            </li>
+                            <li>
+                                <a href="#goToAssessmentDetails" >goToAssessmentDetails</a>
+                            </li>
+                            <li>
+                                <a href="#loadUserProfile" >loadUserProfile</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onLogoutClick" >onLogoutClick</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta, assessmentTakenService: <a href="../injectables/AssessmentTakenService.html" target="_self">AssessmentTakenService</a>, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, router: Router)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:19</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>assessmentTakenService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AssessmentTakenService.html" target="_self" >AssessmentTakenService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFillColor"></a>
+                    <span class="name">
+                        <span ><b>getFillColor</b></span>
+                        <a href="#getFillColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFillColor(score: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>score</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToAssessmentDetails"></a>
+                    <span class="name">
+                        <span ><b>goToAssessmentDetails</b></span>
+                        <a href="#goToAssessmentDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToAssessmentDetails(assessment: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>assessment</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadUserProfile"></a>
+                    <span class="name">
+                        <span ><b>loadUserProfile</b></span>
+                        <a href="#loadUserProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadUserProfile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onLogoutClick"></a>
+                    <span class="name">
+                        <span ><b>onLogoutClick</b></span>
+                        <a href="#onLogoutClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onLogoutClick()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="assessments"></a>
+                    <span class="name">
+                        <span ><b>assessments</b></span>
+                        <a href="#assessments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>any[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userProfile"></a>
+                    <span class="name">
+                        <span ><b>userProfile</b></span>
+                        <a href="#userProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>UserProfile | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/pages/assessment-taken-page/assessment-taken-page.component.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;;
+import { AssessmentTakenService } from &#x27;../../services/assessment-taken.service&#x27;;
+import { AuthService } from &#x27;../../services/candidate.service&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+
+interface UserProfile {
+  first_name: string;
+  last_name: string;
+}
+
+@Component({
+  selector: &#x27;assessment-taken-page&#x27;,
+  templateUrl: &#x27;assessment-taken-page.component.html&#x27;,
+  styleUrls: [&#x27;assessment-taken-page.component.css&#x27;],
+})
+export class AssessmentTakenPage implements OnInit {
+  assessments: any[] &#x3D; [];
+  userProfile: UserProfile | null &#x3D; null;
+
+  constructor(
+    private title: Title,
+    private meta: Meta,
+    private assessmentTakenService: AssessmentTakenService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.title.setTitle(&#x27;Assessment-Taken-Page - Flashyre&#x27;);
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Assessment-Taken-Page - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ]);
+  }
+
+  ngOnInit() {
+    this.loadUserProfile();
+    this.assessmentTakenService.getAllAssessmentScores().subscribe(
+      (data) &#x3D;&gt; {
+        this.assessments &#x3D; data;
+      },
+      (error) &#x3D;&gt; {
+        console.error(&#x27;Error fetching assessment scores&#x27;, error);
+      }
+    );
+  }
+
+  loadUserProfile(): void {
+    const profileData &#x3D; localStorage.getItem(&#x27;userProfile&#x27;);
+    if (profileData) {
+      this.userProfile &#x3D; JSON.parse(profileData);
+    } else {
+      console.log(&#x27;User Profile NOT fetched&#x27;);
+    }
+  }
+
+  getFillColor(score: number): string {
+    if (score &lt;&#x3D; 40) return &#x27;red&#x27;;
+    if (score &lt;&#x3D; 60) return &#x27;orange&#x27;;
+    if (score &lt;&#x3D; 75) return &#x27;#4D91C6&#x27;;
+    if (score &lt;&#x3D; 84) return &#x27;lightgreen&#x27;;
+    return &#x27;darkgreen&#x27;;
+  }
+
+  onLogoutClick() {
+    this.authService.logout();
+    // this.router.navigate([&#x27;/login-candidate&#x27;]);
+  }
+
+  goToAssessmentDetails(assessment: any) {
+    this.router.navigate([&#x27;/assessment-taken-page-2&#x27;, assessment.assessment_id]);
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;assessment-taken-page-container10&quot;&gt;
+  &lt;div
+    id&#x3D;&quot;assessment-taken-main-container&quot;
+    class&#x3D;&quot;assessment-taken-page-assessment-taken-main-container&quot;
+  &gt; 
+    &lt;navbar-for-candidate-view
+    rootClassName&#x3D;&quot;navbar-for-candidate-viewroot-class-name&quot;
+  &gt;
+    &lt;ng-template &gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment10&quot;&gt;
+        &lt;a [routerLink]&#x3D;&quot;[&#x27;/candidate-dashboard-main&#x27;]&quot; class&#x3D;&quot;candidate-home-text100&quot;&gt;Dashboard&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template &gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment11&quot;&gt;
+        &lt;a [routerLink]&#x3D;&quot;[&#x27;/candidate-assessment&#x27;]&quot; class&#x3D;&quot;candidate-home-text101&quot;&gt;Upskill&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template &gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment12&quot;&gt;
+        &lt;a [routerLink]&#x3D;&quot;[&#x27;/candidate-assessment&#x27;]&quot; class&#x3D;&quot;candidate-home-text102&quot;&gt;Assessment&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template &gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment13&quot;&gt;
+        &lt;span [routerLink]&#x3D;&quot;[&#x27;/candidate-dashboard-main&#x27;]&quot; class&#x3D;&quot;candidate-home-text103&quot;&gt;Jobs for you&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text1&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment14&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text104&quot;&gt;Profile&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text2&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment15&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text105&quot;&gt;Preference&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text3&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment16&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text106&quot;&gt;Settings&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text4&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment17&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text107&quot;&gt;
+          {{ userProfile.first_name }} {{ userProfile.last_name }}
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text5&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment18&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text108&quot;&gt;✅ 90% Profile Completion&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text6&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment19&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text109&quot;&gt;View &amp; edit profile&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text7&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment20&quot;&gt;
+        &lt;a [routerLink]&#x3D;&quot;[&#x27;/candidate-dashboard-main&#x27;]&quot; class&#x3D;&quot;candidate-home-text110&quot;&gt;Dashboard&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text8&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment21&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text111&quot;&gt;Upskill&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text9&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment22&quot;&gt;
+        &lt;a [routerLink]&#x3D;&quot;[&#x27;/candidate-assessment&#x27;]&quot; class&#x3D;&quot;candidate-home-text112&quot;&gt;Assessment&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text10&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment23&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text113&quot;&gt;Jobs for you&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text11&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment24&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text114&quot;&gt;Preference&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text12&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment25&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text115&quot;&gt;Settings&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text13&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment26&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text116&quot;&gt;Logout&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template #text31&gt;
+      &lt;div class&#x3D;&quot;candidate-home-fragment27&quot;&gt;
+        &lt;span class&#x3D;&quot;candidate-home-text117&quot;&gt;Logout&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/ng-template&gt;
+  &lt;/navbar-for-candidate-view&gt;
+    &lt;div
+      id&#x3D;&quot;assessments-taken-container&quot;
+      class&#x3D;&quot;assessment-taken-page-assessments-taken-container1&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;assessment-taken-page-container18&quot;&gt;
+        &lt;span
+          id&#x3D;&quot;total-assessments-taken-text&quot;
+          class&#x3D;&quot;assessment-taken-page-total-assessments-taken-text&quot;
+        &gt;
+          All Assessment Taken
+        &lt;/span&gt;
+        &lt;div
+          id&#x3D;&quot;job-title-container&quot;
+          class&#x3D;&quot;assessment-taken-page-job-title-container input&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;job-title-keyword-text&quot;
+            class&#x3D;&quot;assessment-taken-page-job-title-keyword-text&quot;
+          &gt;
+            Assessment....
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;search-icon-container&quot;
+            class&#x3D;&quot;assessment-taken-page-search-icon-container&quot;
+          &gt;
+          &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; class&#x3D;&quot;assessment-taken-page-search-icon&quot;&gt;
+            &lt;g fill&#x3D;&quot;none&quot; fill-rule&#x3D;&quot;evenodd&quot;&gt;
+              &lt;path d&#x3D;&quot;M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z&quot;&gt;&lt;/path&gt;
+              &lt;path d&#x3D;&quot;M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3&quot; fill&#x3D;&quot;currentColor&quot;&gt;&lt;/path&gt;
+            &lt;/g&gt;
+          &lt;/svg&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;assessments-container&quot;
+        class&#x3D;&quot;assessment-taken-page-assessments-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;assessments-taken-container&quot;
+          class&#x3D;&quot;assessment-taken-page-assessments-taken-container2&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page-container19&quot; *ngFor&#x3D;&quot;let assessment of assessments&quot;&gt;
+            &lt;div
+              id&#x3D;&quot;first-assessment-container&quot;
+              class&#x3D;&quot;assessment-taken-page-first-assessment-container&quot;
+            &gt;
+              &lt;div
+                id&#x3D;&quot;assessment-details-container&quot;
+                class&#x3D;&quot;assessment-taken-page-assessment-details-container&quot;
+              &gt;
+                &lt;div
+                  id&#x3D;&quot;assessment-details&quot;
+                  class&#x3D;&quot;assessment-taken-page-assessment-details&quot;
+                &gt;
+                &lt;img [src]&#x3D;&quot;assessment.assessment_logo_url&quot; alt&#x3D;&quot;image&quot; class&#x3D;&quot;assessment-taken-page-assessment-image1&quot; /&gt;
+                  &lt;div id&#x3D;&quot;details&quot; class&#x3D;&quot;assessment-taken-page-details&quot;&gt;
+                    &lt;span class&#x3D;&quot;assessment-taken-page-heading-text1&quot;&gt;
+                      {{assessment.assessment_title}}
+                    &lt;/span&gt;
+                    &lt;div
+                      id&#x3D;&quot;assessment-date-id-container&quot;
+                      class&#x3D;&quot;assessment-taken-page-assessment-date-id-container&quot;
+                    &gt;
+                    &lt;span class&#x3D;&quot;assessment-taken-page-details-text&quot;&gt;
+                      Completed {{assessment.latest_end_time | date:&#x27;MM/dd/yyyy&#x27;}} | Assessment ID : {{assessment.assessment_id}}
+                    &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div
+                      id&#x3D;&quot;assessment-by-container&quot;
+                      class&#x3D;&quot;assessment-taken-page-assessment-by-container1&quot;
+                    &gt;
+                    &lt;img [src]&#x3D;&quot;assessment.assessment_logo_url&quot; alt&#x3D;&quot;image&quot; class&#x3D;&quot;assessment-taken-page-assessment-company-logo&quot; /&gt;
+                    &lt;span class&#x3D;&quot;assessment-taken-page-assessment-by-text1&quot;&gt;
+                      Assessment by {{assessment.created_by}}
+                    &lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div
+                id&#x3D;&quot;score-container&quot;
+                class&#x3D;&quot;assessment-taken-page-score-container&quot;
+              &gt;
+                &lt;div
+                  id&#x3D;&quot;score-board-container&quot;
+                  class&#x3D;&quot;assessment-taken-page-score-board-container&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;score-board-text&quot;
+                    class&#x3D;&quot;assessment-taken-page-score-board-text&quot;
+                  &gt;
+                    🏆 Score Board
+                  &lt;/span&gt;
+                  &lt;div
+                    id&#x3D;&quot;score-code-container&quot;
+                    class&#x3D;&quot;assessment-taken-page-score-code-container&quot;
+                  &gt;
+                    &lt;div class&#x3D;&quot;assessment-taken-page-container20&quot;&gt;
+                      &lt;div class&#x3D;&quot;assessment-taken-page-container21&quot;&gt;
+
+&lt;body&gt;
+  &lt;div class&#x3D;&#x27;progress-container&#x27;&gt;
+    &lt;div class&#x3D;&quot;progress&quot;&gt;
+      &lt;div class&#x3D;&quot;bar&quot; [style.width.%]&#x3D;&quot;assessment.latest_score&quot; [style.backgroundColor]&#x3D;&quot;getFillColor(assessment.latest_score)&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;span class&#x3D;&quot;score&quot;&gt;{{assessment.latest_score}}%&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;script src&#x3D;&#x27;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js&#x27;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    $(document).ready(function () {
+      const $progress &#x3D; $(&#x27;.progress&#x27;);
+      const $bar &#x3D; $progress.find(&#x27;.bar&#x27;);
+      const $score &#x3D; $(&#x27;.score&#x27;);
+      const perc &#x3D; 56.5; // Percentage value
+
+      // Determine the fill color based on the percentage
+      const getFillColor &#x3D; (value) &#x3D;&gt; {
+        if (value &lt;&#x3D; 40) return &#x27;red&#x27;;
+        if (value &lt;&#x3D; 60) return &#x27;orange&#x27;;
+        if (value &lt;&#x3D; 75) return &#x27;#4D91C6&#x27;; // Ampere color
+        if (value &lt;&#x3D; 84) return &#x27;lightgreen&#x27;;
+        return &#x27;darkgreen&#x27;;
+      };
+
+      $({ p: 0 }).animate({ p: perc }, {
+        duration: 3000,
+        easing: &#x27;swing&#x27;,
+        step: function (p) {
+          // Update the width and color of the bar
+          $bar.css({
+            width: p + &#x27;%&#x27;,
+            backgroundColor: getFillColor(p)
+          });
+
+          // Update the displayed score
+          $score.text(Math.round(p) + &#x27;%&#x27;);
+        }
+      });
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div
+                  id&#x3D;&quot;attempts-remaining-container&quot;
+                  class&#x3D;&quot;assessment-taken-page-attempts-remaining-container&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;attempts-remaining-text&quot;
+                    class&#x3D;&quot;assessment-taken-page-attempts-remaining-text&quot;
+                  &gt;
+                    Attempt(s) Remaining
+                  &lt;/span&gt;
+                  &lt;span&gt;{{assessment.attempts_remaining &lt; 0 ? 0 : assessment.attempts_remaining}}&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;svg
+                  id&#x3D;&quot;right-icon&quot;
+                  width&#x3D;&quot;24&quot;
+                  height&#x3D;&quot;24&quot;
+                  viewBox&#x3D;&quot;0 0 24 24&quot;
+                  class&#x3D;&quot;assessment-taken-page-right-icon1&quot;
+                  (click)&#x3D;&quot;goToAssessmentDetails(assessment)&quot;
+                  style&#x3D;&quot;cursor: pointer;&quot;
+                &gt;
+                  &lt;path
+                    d&#x3D;&quot;m10 16l4-4l-4-4&quot;
+                    fill&#x3D;&quot;none&quot;
+                    stroke&#x3D;&quot;currentColor&quot;
+                    stroke-width&#x3D;&quot;2&quot;
+                    stroke-linecap&#x3D;&quot;round&quot;
+                    stroke-linejoin&#x3D;&quot;round&quot;
+                  &gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;span
+            id&#x3D;&quot;see-more-text1&quot;
+            class&#x3D;&quot;assessment-taken-page-see-more-text1&quot;
+          &gt;
+            See More
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;!-- &lt;div class&#x3D;&quot;assessment-taken-page-assessments-available-container&quot;&gt;
+          &lt;span
+            id&#x3D;&quot;assessments-available-text&quot;
+            class&#x3D;&quot;assessment-taken-page-assessments-available-text&quot;
+          &gt;
+            New Assessment Available (2)
+          &lt;/span&gt;
+          &lt;div class&#x3D;&quot;assessment-taken-page-container22&quot;&gt;
+            &lt;div
+              id&#x3D;&quot;available-assessments-card-container&quot;
+              class&#x3D;&quot;assessment-taken-page-available-assessmnets-card-container&quot;
+            &gt;
+              &lt;div
+                id&#x3D;&quot;card-details-container&quot;
+                class&#x3D;&quot;assessment-taken-page-card-details-container&quot;
+              &gt;
+                &lt;div
+                  id&#x3D;&quot;details-container&quot;
+                  class&#x3D;&quot;assessment-taken-page-details-container2&quot;
+                &gt;
+                  &lt;img
+                    alt&#x3D;&quot;image&quot;
+                    src&#x3D;&quot;https://play.teleporthq.io/static/svg/default-img.svg&quot;
+                    class&#x3D;&quot;assessment-taken-page-assessment-image2&quot;
+                  /&gt;
+                  &lt;div
+                    id&#x3D;&quot;detail-container&quot;
+                    class&#x3D;&quot;assessment-taken-page-detail-container&quot;
+                  &gt;
+                    &lt;span
+                      id&#x3D;&quot;heading-text&quot;
+                      class&#x3D;&quot;assessment-taken-page-heading-text2&quot;
+                    &gt;
+                      Generative AI for Leaders
+                    &lt;/span&gt;
+                    &lt;div
+                      id&#x3D;&quot;date-id-container&quot;
+                      class&#x3D;&quot;assessment-taken-page-date-id-container&quot;
+                    &gt;
+                      &lt;span
+                        id&#x3D;&quot;date-id-text&quot;
+                        class&#x3D;&quot;assessment-taken-page-date-id-text&quot;
+                      &gt;
+                        Completed 7/03/2025 | Assessment ID : 109987
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div
+                      id&#x3D;&quot;assessment-by-container&quot;
+                      class&#x3D;&quot;assessment-taken-page-assessment-by-container2&quot;
+                    &gt;
+                      &lt;img
+                        id&#x3D;&quot;assessment-image&quot;
+                        alt&#x3D;&quot;image&quot;
+                        src&#x3D;&quot;https://play.teleporthq.io/static/svg/default-img.svg&quot;
+                        class&#x3D;&quot;assessment-taken-page-assessment-image3&quot;
+                      /&gt;
+                      &lt;span
+                        id&#x3D;&quot;Assessment-by-text&quot;
+                        class&#x3D;&quot;assessment-taken-page-assessment-by-text2&quot;
+                      &gt;
+                        Assessment by Flashyre
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div
+                id&#x3D;&quot;remaining-attempts-container&quot;
+                class&#x3D;&quot;assessment-taken-page-remaining-attempts-container&quot;
+              &gt;
+                &lt;div
+                  id&#x3D;&quot;remaining-attempts&quot;
+                  class&#x3D;&quot;assessment-taken-page-remaining-attempts&quot;
+                &gt;
+                  &lt;span class&#x3D;&quot;assessment-taken-page-text29&quot;&gt;
+                    Attempt(s) Remaining
+                  &lt;/span&gt;
+                  &lt;span&gt;2&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;svg
+                  id&#x3D;&quot;right-icon&quot;
+                  width&#x3D;&quot;24&quot;
+                  height&#x3D;&quot;24&quot;
+                  viewBox&#x3D;&quot;0 0 24 24&quot;
+                  class&#x3D;&quot;assessment-taken-page-right-icon2&quot;
+                &gt;
+                  &lt;path
+                    d&#x3D;&quot;m10 16l4-4l-4-4&quot;
+                    fill&#x3D;&quot;none&quot;
+                    stroke&#x3D;&quot;currentColor&quot;
+                    stroke-width&#x3D;&quot;2&quot;
+                    stroke-linecap&#x3D;&quot;round&quot;
+                    stroke-linejoin&#x3D;&quot;round&quot;
+                  &gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;span id&#x3D;&quot;num-text&quot; class&#x3D;&quot;assessment-taken-page-num-text2&quot;&gt;
+            See More
+          &lt;/span&gt;
+        &lt;/div&gt; --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>assessment-taken-page.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.assessment-taken-page-container10 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-assessment-taken-main-container {
+  gap: 24px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 24px;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-recruiter-navbar-container {
+  width: 100%;
+  display: flex;
+  z-index: 1000;
+  position: fixed;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-navbar-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-navbar {
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+ 
+.assessment-taken-page-navbar-interactive {
+  width: 1440px;
+  height: 72px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding-top: var(--dl-layout-space-unit);
+  padding-left: var(--dl-layout-space-threeunits);
+  padding-right: var(--dl-layout-space-threeunits);
+  padding-bottom: var(--dl-layout-space-unit);
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-taken-page-flashyre-image {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.assessment-taken-page-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page-links {
+  gap: var(--dl-layout-space-twounits);
+  flex: 1;
+  width: 385px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  flex-direction: row;
+  padding-bottom: 0px;
+  justify-content: flex-end;
+}
+ 
+.assessment-taken-page-dashboard-link1 {
+  fill: #05356C;
+  color: #05356C;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page-dashboard-link1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.assessment-taken-page-dashboard-link1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-dashboard-link2 {
+  fill: #05356C;
+  color: #05356C;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page-dashboard-link2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.assessment-taken-page-dashboard-link2:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-dashboard-link3 {
+  fill: #05356C;
+  color: #05356C;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.assessment-taken-page-dashboard-link3:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.assessment-taken-page-dashboard-link3:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-jobs-for-you-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.assessment-taken-page-jobs-for-you-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-jobs-for-you-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  text-decoration-line: underline;
+}
+ 
+.assessment-taken-page-thq-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-taken-page-dropdown-toggle1 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius2);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-taken-page-user-image1 {
+  width: 40px;
+  height: 40px;
+  align-self: flex-start;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.assessment-taken-page-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.assessment-taken-page-drop-down-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  transition: 0.3s;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-drop-down-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-drop-down-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.assessment-taken-page-profile1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-taken-page-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-taken-page-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-taken-page-profile2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-preference1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-taken-page-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-taken-page-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-taken-page-preference2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-settings1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-taken-page-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-taken-page-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-taken-page-settings2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-logout1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.assessment-taken-page-dropdown-toggle5 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.assessment-taken-page-dropdown-toggle5:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.assessment-taken-page-logout2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-burger-menu {
+  display: none;
+}
+ 
+.assessment-taken-page-burger-icon {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.assessment-taken-page-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  padding: var(--dl-layout-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.assessment-taken-page-popup-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-close-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-layout-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-icon12 {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.assessment-taken-page-container11 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-container12 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page-user-image2 {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.assessment-taken-page-container13 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 240px;
+  height: 390px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-fragment10 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text10 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment11 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text11 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment12 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text12 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment13 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text16 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment14 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text17 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-details-container1 {
+  gap: 3px;
+  flex: 0 0 auto;
+  width: 152px;
+  height: 102px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-recruiter-name {
+  fill: #18191C;
+  color: #18191C;
+  width: 128px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-container14 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 76px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: row;
+}
+ 
+.assessment-taken-page-company-image {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-self: center;
+  object-fit: cover;
+  align-items: center;
+}
+ 
+.assessment-taken-page-company-name {
+  width: 56px;
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-job-role-of-recruiter {
+  fill: #18191C;
+  color: #18191C;
+  width: 152px;
+  height: 48px;
+  display: flex;
+  font-size: 14px;
+  align-self: center;
+  text-align: center;
+  align-items: center;
+  line-height: 20px;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-container15 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-dashboard-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-jobs-for-container1 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-jobs-for-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-jobs-for-container3 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-container16 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-preference-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-settings-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-logout-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-container17 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 240px;
+  height: 390px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-fragment15 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text21 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment16 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text22 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment17 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text23 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment18 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text27 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-fragment19 {
+  display: contents;
+}
+ 
+.assessment-taken-page-text28 {
+  display: inline-block;
+}
+ 
+.assessment-taken-page-assessments-taken-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 24px;
+  z-index: 999;
+  margin-top: 100px;
+  align-items: center;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-taken-page-container18 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page-total-assessments-taken-text {
+  width: auto;
+  height: 32px;
+  display: flex;
+  font-size: 24px;
+  align-self: flex-start;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page-job-title-container {
+  flex: 0 0 auto;
+  width: 295px;
+  height: 36px;
+  display: flex;
+  min-width: 200px;
+  align-self: flex-end;
+  align-items: center;
+  border-color: #A7A7A7;
+  border-width: 1px;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.assessment-taken-page-job-title-keyword-text {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 156px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.assessment-taken-page-search-icon-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page-search-icon {
+  fill: #323232;
+  color: #323232;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-assessments-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 828px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-assessments-taken-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  max-height: 400px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-container19 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  max-height: 370px;
+  overflow-x: none;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.assessment-taken-page-first-assessment-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 102px;
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page-assessment-details-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page-assessment-details {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-assessment-image1 {
+  width: 100px;
+  height: 66.21px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+ 
+.assessment-taken-page-details {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 323px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-heading-text1 {
+  width: 100%;
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page-assessment-date-id-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-details-text {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-assessment-by-container1 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-assessment-company-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+}
+ 
+.assessment-taken-page-assessment-by-text1 {
+  color: #474748;
+  height: 18px;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-score-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-score-board-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 240px;
+  height: 43px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-score-board-text {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-score-code-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 15px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page-container20 {
+  width: 226px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-container21 {
+  display: contents;
+}
+ 
+.assessment-taken-page-attempts-remaining-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 43px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-attempts-remaining-text {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-right-icon1 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.assessment-taken-page-see-more-text1 {
+  color: rgb(5, 53, 108);
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page-see-more-text1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+}
+ 
+.assessment-taken-page-see-more-text1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.assessment-taken-page-assessments-available-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  max-height: 300px;
+  overflow-x: hidden;
+  align-items: center;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+ 
+.assessment-taken-page-assessments-available-text {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  font-size: 24px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: flex-start;
+}
+ 
+.assessment-taken-page-container22 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  max-height: 200px;
+  overflow-x: none;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.assessment-taken-page-available-assessmnets-card-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 102px;
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  justify-content: space-between;
+}
+ 
+.assessment-taken-page-card-details-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.assessment-taken-page-details-container2 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-assessment-image2 {
+  width: 100px;
+  height: 66.21px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+ 
+.assessment-taken-page-detail-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 323px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-heading-text2 {
+  width: 100%;
+  height: 24px;
+  display: flex;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page-date-id-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-date-id-text {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-assessment-by-container2 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-assessment-image3 {
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+}
+ 
+.assessment-taken-page-assessment-by-text2 {
+  color: #474748;
+  height: 18px;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.assessment-taken-page-remaining-attempts-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-remaining-attempts {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 43px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.assessment-taken-page-text29 {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.assessment-taken-page-right-icon2 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.assessment-taken-page-num-text2 {
+  color: #05356c;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.assessment-taken-page-num-text2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+}
+ 
+.assessment-taken-page-num-text2:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  margin: 0;
+  background-color: transparent; /* Transparent background */
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between the bar and score */
+}
+
+.progress {
+  position: relative;
+  width: 200px; /* Width of the progress bar */
+  height: 6px; /* Height of the progress bar */
+  background-color: #ccc; /* Background color for unfilled portion */
+  border-radius: 15px; /* Rounded corners */
+  overflow: hidden; /* Clip the progress bar inside the container */
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0; /* Initial width is 0% */
+  background-color: #0bf; /* Default color for filled portion */
+  transition: width 0.3s ease; /* Smooth width transition */
+}
+
+.score {
+  font-family: &#x27;Inter&#x27;, sans-serif; /* Font family */
+  font-size: 16px; /* Font size */
+  font-weight: 500; /* Font weight */
+  color: #474748; /* Default text color */
+}
+ 
+@media(max-width: 1200px) {
+  .assessment-taken-page-navbar-container {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-navbar-interactive {
+    width: 1199px;
+    position: relative;
+    justify-content: center;
+  }
+  .assessment-taken-page-mobile-menu {
+    justify-content: space-between;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .assessment-taken-page-assessment-taken-main-container {
+    width: 100%;
+  }
+  .assessment-taken-page-recruiter-navbar-container {
+    z-index: 1000;
+    justify-content: center;
+  }
+  .assessment-taken-page-navbar-container {
+    border-width: 0px;
+  }
+  .assessment-taken-page-navbar-interactive {
+    width: 990px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .assessment-taken-page-links {
+    gap: var(--dl-layout-space-halfunit);
+  }
+  .assessment-taken-page-dashboard-link1 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page-dashboard-link2 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page-dashboard-link3 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page-jobs-for-you-link {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .assessment-taken-page-user-image1 {
+    width: 35px;
+    height: 35px;
+  }
+  .assessment-taken-page-drop-down-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .assessment-taken-page-container13 {
+    width: auto;
+  }
+  .assessment-taken-page-details-container1 {
+    gap: 2px;
+  }
+  .assessment-taken-page-recruiter-name {
+    width: auto;
+    font-size: 14px;
+    text-align: center;
+  }
+  .assessment-taken-page-container14 {
+    width: auto;
+    justify-content: center;
+  }
+  .assessment-taken-page-company-image {
+    width: 14px;
+    height: 14px;
+  }
+  .assessment-taken-page-company-name {
+    width: auto;
+    font-size: 14px;
+  }
+  .assessment-taken-page-job-role-of-recruiter {
+    width: auto;
+    font-size: 12px;
+  }
+  .assessment-taken-page-container17 {
+    width: auto;
+  }
+  .assessment-taken-page-assessments-taken-container1 {
+    width: 100%;
+    padding: 24px;
+    margin-top: 80px;
+  }
+  .assessment-taken-page-job-title-container {
+    width: 348px;
+    height: 32px;
+  }
+  .assessment-taken-page-job-title-keyword-text {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+  }
+  .assessment-taken-page-search-icon {
+    width: 22px;
+    height: 22px;
+  }
+  .assessment-taken-page-assessments-container {
+    width: 100%;
+  }
+  .assessment-taken-page-first-assessment-container {
+    width: 100%;
+  }
+  .assessment-taken-page-assessment-details {
+    width: 400px;
+  }
+  .assessment-taken-page-assessment-image1 {
+    width: 80px;
+    height: 56.12px;
+  }
+  .assessment-taken-page-assessments-available-container {
+    width: 100%;
+  }
+  .assessment-taken-page-assessments-available-text {
+    font-size: 22px;
+  }
+  .assessment-taken-page-available-assessmnets-card-container {
+    width: 100%;
+  }
+  .assessment-taken-page-details-container2 {
+    width: 400px;
+  }
+  .assessment-taken-page-assessment-image2 {
+    width: 80px;
+    height: 56.12px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .assessment-taken-page-recruiter-navbar-container {
+    background-color: transparent;
+  }
+  .assessment-taken-page-navbar-container {
+    width: 95%;
+  }
+  .assessment-taken-page-navbar-interactive {
+    width: 766px;
+    height: 72px;
+    align-self: flex-start;
+    padding-left: var(--dl-layout-space-unit);
+    padding-right: var(--dl-layout-space-unit);
+    justify-content: space-between;
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-flashyre-image {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-desktop-menu {
+    display: none;
+  }
+  .assessment-taken-page-dropdown-toggle1 {
+    display: none;
+  }
+  .assessment-taken-page-dropdown-list {
+    display: none;
+  }
+  .assessment-taken-page-settings2 {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .assessment-taken-page-burger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-burger-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .assessment-taken-page-mobile-menu {
+    right: 0px;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    display: flex;
+    max-height: auto;
+    visibility: hidden;
+    padding-top: 0px;
+    padding-left: 0px;
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: 0px;
+    flex-direction: row;
+    padding-bottom: 0px;
+    justify-content: flex-end;
+    background-color: rgba(190, 190, 190, 0.06);
+  }
+  .assessment-taken-page-popup-container {
+    gap: var(--dl-layout-space-halfunit);
+    width: 293px;
+    height: 845px;
+    height: 50vh;
+    opacity: 1;
+    padding: var(--dl-layout-space-unit);
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-close-icon {
+    height: 100%;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .assessment-taken-page-icon12 {
+    width: 24px;
+    height: 24px;
+  }
+  .assessment-taken-page-container11 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: var(--dl-layout-space-unit);
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: var(--dl-layout-space-unit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-container12 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-user-image2 {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--dl-layout-radius-round);
+  }
+  .assessment-taken-page-container13 {
+    display: none;
+  }
+  .assessment-taken-page-text12 {
+    color: rgb(24, 25, 28);
+  }
+  .assessment-taken-page-details-container1 {
+    gap: 0px;
+    width: auto;
+    height: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-recruiter-name {
+    font-size: 12px;
+  }
+  .assessment-taken-page-company-image {
+    width: 12px;
+    height: 12px;
+  }
+  .assessment-taken-page-company-name {
+    font-size: 12px;
+  }
+  .assessment-taken-page-job-role-of-recruiter {
+    gap: 4px;
+    fill: #18191C;
+    color: #18191C;
+    width: auto;
+    height: auto;
+    display: flex;
+    font-size: 10px;
+    align-self: center;
+    text-align: center;
+    align-items: center;
+    line-height: 20px;
+    justify-content: center;
+  }
+  .assessment-taken-page-container15 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: 149px;
+    border-width: 0px;
+  }
+  .assessment-taken-page-dashboard-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-taken-page-dashboard-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-taken-page-dashboard-text {
+    font-size: 12px;
+  }
+  .assessment-taken-page-jobs-for-container1 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-taken-page-icon15 {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-taken-page-jobs-for-you-text1 {
+    font-size: 12px;
+  }
+  .assessment-taken-page-jobs-for-container2 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-taken-page-icon17 {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-taken-page-jobs-for-you-text2 {
+    font-size: 12px;
+  }
+  .assessment-taken-page-jobs-for-container3 {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .assessment-taken-page-briefcase-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-taken-page-jobs-for-you-text3 {
+    font-size: 12px;
+  }
+  .assessment-taken-page-container16 {
+    gap: 2px;
+    width: 50%;
+    display: flex;
+    align-self: center;
+    padding-left: var(--dl-layout-space-halfunit);
+    border-radius: 4px;
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .assessment-taken-page-preference-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .assessment-taken-page-preference-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-taken-page-preference-text {
+    font-size: 10px;
+  }
+  .assessment-taken-page-settings-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .assessment-taken-page-settings-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-taken-page-settings-text {
+    font-size: 10px;
+  }
+  .assessment-taken-page-logout-container {
+    gap: var(--dl-layout-space-unit);
+    width: 123px;
+    padding: 0px;
+    align-items: center;
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-logout-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .assessment-taken-page-logout-text {
+    font-size: 10px;
+  }
+  .assessment-taken-page-container17 {
+    display: none;
+  }
+  .assessment-taken-page-text23 {
+    color: rgb(24, 25, 28);
+  }
+  .assessment-taken-page-assessments-taken-container1 {
+    width: 100%;
+    padding: 12px;
+  }
+  .assessment-taken-page-total-assessments-taken-text {
+    font-size: 20px;
+  }
+  .assessment-taken-page-job-title-container {
+    width: auto;
+    height: 28px;
+    align-items: flex-start;
+    padding-left: 4px;
+    justify-content: space-between;
+  }
+  .assessment-taken-page-job-title-keyword-text {
+    width: auto;
+    font-size: 10px;
+    align-items: center;
+  }
+  .assessment-taken-page-search-icon-container {
+    width: 20px;
+    height: 20px;
+    align-self: center;
+    align-items: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    justify-content: center;
+  }
+  .assessment-taken-page-search-icon {
+    width: 16px;
+    height: 16px;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-first-assessment-container {
+    height: auto;
+    padding: 8px;
+  }
+  .assessment-taken-page-assessment-details {
+    gap: 8px;
+    width: auto;
+  }
+  .assessment-taken-page-assessment-image1 {
+    width: 60px;
+    height: 40px;
+  }
+  .assessment-taken-page-details {
+    width: auto;
+  }
+  .assessment-taken-page-heading-text1 {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+  }
+  .assessment-taken-page-assessment-date-id-container {
+    width: auto;
+    height: auto;
+  }
+  .assessment-taken-page-details-text {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-assessment-by-container1 {
+    width: auto;
+  }
+  .assessment-taken-page-assessment-by-text1 {
+    height: auto;
+  }
+  .assessment-taken-page-score-board-container {
+    width: 139px;
+  }
+  .assessment-taken-page-attempts-remaining-text {
+    height: auto;
+  }
+  .assessment-taken-page-right-icon1 {
+    width: 20px;
+    height: 20px;
+  }
+  .assessment-taken-page-assessments-available-text {
+    font-size: 20px;
+  }
+  .assessment-taken-page-available-assessmnets-card-container {
+    height: auto;
+    padding: 8px;
+  }
+  .assessment-taken-page-details-container2 {
+    gap: 8px;
+    width: auto;
+  }
+  .assessment-taken-page-assessment-image2 {
+    width: 60px;
+    height: 40px;
+  }
+  .assessment-taken-page-detail-container {
+    width: auto;
+  }
+  .assessment-taken-page-heading-text2 {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+  }
+  .assessment-taken-page-date-id-container {
+    width: auto;
+    height: auto;
+  }
+  .assessment-taken-page-date-id-text {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  .assessment-taken-page-assessment-by-container2 {
+    width: auto;
+  }
+  .assessment-taken-page-assessment-by-text2 {
+    height: auto;
+  }
+  .assessment-taken-page-text29 {
+    height: auto;
+  }
+  .assessment-taken-page-right-icon2 {
+    width: 20px;
+    height: 20px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .assessment-taken-page-assessment-taken-main-container {
+    width: 478px;
+  }
+  .assessment-taken-page-navbar-container {
+    width: 100%;
+  }
+  .assessment-taken-page-navbar {
+    width: 100%;
+  }
+  .assessment-taken-page-navbar-interactive {
+    width: 100%;
+    padding-top: var(--dl-layout-space-unit);
+    margin-right: 0px;
+    padding-left: var(--dl-layout-space-unit);
+    padding-right: var(--dl-layout-space-unit);
+    padding-bottom: var(--dl-layout-space-unit);
+  }
+  .assessment-taken-page-popup-container {
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-container15 {
+    height: 259px;
+  }
+  .assessment-taken-page-logout-container {
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .assessment-taken-page-assessments-taken-container1 {
+    width: 100%;
+  }
+  .assessment-taken-page-job-title-container {
+    gap: 0;
+    width: auto;
+    height: 30px;
+    padding-left: 0px;
+  }
+  .assessment-taken-page-first-assessment-container {
+    gap: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-assessment-details-container {
+    width: 80%;
+  }
+  .assessment-taken-page-assessment-details {
+    gap: 24px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-score-container {
+    width: auto;
+    position: relative;
+    justify-content: space-between;
+  }
+  .assessment-taken-page-right-icon1 {
+    top: -36px;
+    right: -124px;
+    position: absolute;
+  }
+  .assessment-taken-page-available-assessmnets-card-container {
+    gap: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-card-details-container {
+    width: 80%;
+  }
+  .assessment-taken-page-details-container2 {
+    gap: 24px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .assessment-taken-page-remaining-attempts-container {
+    width: 80%;
+    position: relative;
+    justify-content: space-between;
+  }
+  .assessment-taken-page-right-icon2 {
+    top: -34px;
+    right: -76px;
+    position: absolute;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="assessment-taken-page-container10">  <div    id="assessment-taken-main-container"    class="assessment-taken-page-assessment-taken-main-container"  >     <navbar-for-candidate-view    rootClassName="navbar-for-candidate-viewroot-class-name"  >    <ng-template >      <div class="candidate-home-fragment10">        <a [routerLink]="[\'/candidate-dashboard-main\']" class="candidate-home-text100">Dashboard</a>      </div>    </ng-template>    <ng-template >      <div class="candidate-home-fragment11">        <a [routerLink]="[\'/candidate-assessment\']" class="candidate-home-text101">Upskill</a>      </div>    </ng-template>    <ng-template >      <div class="candidate-home-fragment12">        <a [routerLink]="[\'/candidate-assessment\']" class="candidate-home-text102">Assessment</a>      </div>    </ng-template>    <ng-template >      <div class="candidate-home-fragment13">        <span [routerLink]="[\'/candidate-dashboard-main\']" class="candidate-home-text103">Jobs for you</span>      </div>    </ng-template>    <ng-template #text1>      <div class="candidate-home-fragment14">        <span class="candidate-home-text104">Profile</span>      </div>    </ng-template>    <ng-template #text2>      <div class="candidate-home-fragment15">        <span class="candidate-home-text105">Preference</span>      </div>    </ng-template>    <ng-template #text3>      <div class="candidate-home-fragment16">        <span class="candidate-home-text106">Settings</span>      </div>    </ng-template>    <ng-template #text4>      <div class="candidate-home-fragment17">        <span class="candidate-home-text107">          {{ userProfile.first_name }} {{ userProfile.last_name }}        </span>      </div>    </ng-template>    <ng-template #text5>      <div class="candidate-home-fragment18">        <span class="candidate-home-text108">✅ 90% Profile Completion</span>      </div>    </ng-template>    <ng-template #text6>      <div class="candidate-home-fragment19">        <span class="candidate-home-text109">View & edit profile</span>      </div>    </ng-template>    <ng-template #text7>      <div class="candidate-home-fragment20">        <a [routerLink]="[\'/candidate-dashboard-main\']" class="candidate-home-text110">Dashboard</a>      </div>    </ng-template>    <ng-template #text8>      <div class="candidate-home-fragment21">        <span class="candidate-home-text111">Upskill</span>      </div>    </ng-template>    <ng-template #text9>      <div class="candidate-home-fragment22">        <a [routerLink]="[\'/candidate-assessment\']" class="candidate-home-text112">Assessment</a>      </div>    </ng-template>    <ng-template #text10>      <div class="candidate-home-fragment23">        <span class="candidate-home-text113">Jobs for you</span>      </div>    </ng-template>    <ng-template #text11>      <div class="candidate-home-fragment24">        <span class="candidate-home-text114">Preference</span>      </div>    </ng-template>    <ng-template #text12>      <div class="candidate-home-fragment25">        <span class="candidate-home-text115">Settings</span>      </div>    </ng-template>    <ng-template #text13>      <div class="candidate-home-fragment26">        <span class="candidate-home-text116">Logout</span>      </div>    </ng-template>    <ng-template #text31>      <div class="candidate-home-fragment27">        <span class="candidate-home-text117">Logout</span>      </div>    </ng-template>  </navbar-for-candidate-view>    <div      id="assessments-taken-container"      class="assessment-taken-page-assessments-taken-container1"    >      <div class="assessment-taken-page-container18">        <span          id="total-assessments-taken-text"          class="assessment-taken-page-total-assessments-taken-text"        >          All Assessment Taken        </span>        <div          id="job-title-container"          class="assessment-taken-page-job-title-container input"        >          <span            id="job-title-keyword-text"            class="assessment-taken-page-job-title-keyword-text"          >            Assessment....          </span>          <div            id="search-icon-container"            class="assessment-taken-page-search-icon-container"          >          <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">            <g fill="none" fill-rule="evenodd">              <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>              <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>            </g>          </svg>          </div>        </div>      </div>      <div        id="assessments-container"        class="assessment-taken-page-assessments-container"      >        <div          id="assessments-taken-container"          class="assessment-taken-page-assessments-taken-container2"        >          <div class="assessment-taken-page-container19" *ngFor="let assessment of assessments">            <div              id="first-assessment-container"              class="assessment-taken-page-first-assessment-container"            >              <div                id="assessment-details-container"                class="assessment-taken-page-assessment-details-container"              >                <div                  id="assessment-details"                  class="assessment-taken-page-assessment-details"                >                <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />                  <div id="details" class="assessment-taken-page-details">                    <span class="assessment-taken-page-heading-text1">                      {{assessment.assessment_title}}                    </span>                    <div                      id="assessment-date-id-container"                      class="assessment-taken-page-assessment-date-id-container"                    >                    <span class="assessment-taken-page-details-text">                      Completed {{assessment.latest_end_time | date:\'MM/dd/yyyy\'}} | Assessment ID : {{assessment.assessment_id}}                    </span>                    </div>                    <div                      id="assessment-by-container"                      class="assessment-taken-page-assessment-by-container1"                    >                    <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />                    <span class="assessment-taken-page-assessment-by-text1">                      Assessment by {{assessment.created_by}}                    </span>                    </div>                  </div>                </div>              </div>              <div                id="score-container"                class="assessment-taken-page-score-container"              >                <div                  id="score-board-container"                  class="assessment-taken-page-score-board-container"                >                  <span                    id="score-board-text"                    class="assessment-taken-page-score-board-text"                  >                    🏆 Score Board                  </span>                  <div                    id="score-code-container"                    class="assessment-taken-page-score-code-container"                  >                    <div class="assessment-taken-page-container20">                      <div class="assessment-taken-page-container21"><body>  <div class=\'progress-container\'>    <div class="progress">      <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>    </div>    <span class="score">{{assessment.latest_score}}%</span>  </div>  <script src=\'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js\'></script>  <script>    $(document).ready(function () {      const $progress = $(\'.progress\');      const $bar = $progress.find(\'.bar\');      const $score = $(\'.score\');      const perc = 56.5; // Percentage value      // Determine the fill color based on the percentage      const getFillColor = (value) => {        if (value <= 40) return \'red\';        if (value <= 60) return \'orange\';        if (value <= 75) return \'#4D91C6\'; // Ampere color        if (value <= 84) return \'lightgreen\';        return \'darkgreen\';      };      $({ p: 0 }).animate({ p: perc }, {        duration: 3000,        easing: \'swing\',        step: function (p) {          // Update the width and color of the bar          $bar.css({            width: p + \'%\',            backgroundColor: getFillColor(p)          });          // Update the displayed score          $score.text(Math.round(p) + \'%\');        }      });    });  </script></body>                      </div>                    </div>                  </div>                </div>                <div                  id="attempts-remaining-container"                  class="assessment-taken-page-attempts-remaining-container"                >                  <span                    id="attempts-remaining-text"                    class="assessment-taken-page-attempts-remaining-text"                  >                    Attempt(s) Remaining                  </span>                  <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>                </div>                <svg                  id="right-icon"                  width="24"                  height="24"                  viewBox="0 0 24 24"                  class="assessment-taken-page-right-icon1"                  (click)="goToAssessmentDetails(assessment)"                  style="cursor: pointer;"                >                  <path                    d="m10 16l4-4l-4-4"                    fill="none"                    stroke="currentColor"                    stroke-width="2"                    stroke-linecap="round"                    stroke-linejoin="round"                  ></path>                </svg>              </div>            </div>          </div>          <span            id="see-more-text1"            class="assessment-taken-page-see-more-text1"          >            See More          </span>        </div>        <!-- <div class="assessment-taken-page-assessments-available-container">          <span            id="assessments-available-text"            class="assessment-taken-page-assessments-available-text"          >            New Assessment Available (2)          </span>          <div class="assessment-taken-page-container22">            <div              id="available-assessments-card-container"              class="assessment-taken-page-available-assessmnets-card-container"            >              <div                id="card-details-container"                class="assessment-taken-page-card-details-container"              >                <div                  id="details-container"                  class="assessment-taken-page-details-container2"                >                  <img                    alt="image"                    src="https://play.teleporthq.io/static/svg/default-img.svg"                    class="assessment-taken-page-assessment-image2"                  />                  <div                    id="detail-container"                    class="assessment-taken-page-detail-container"                  >                    <span                      id="heading-text"                      class="assessment-taken-page-heading-text2"                    >                      Generative AI for Leaders                    </span>                    <div                      id="date-id-container"                      class="assessment-taken-page-date-id-container"                    >                      <span                        id="date-id-text"                        class="assessment-taken-page-date-id-text"                      >                        Completed 7/03/2025 | Assessment ID : 109987                      </span>                    </div>                    <div                      id="assessment-by-container"                      class="assessment-taken-page-assessment-by-container2"                    >                      <img                        id="assessment-image"                        alt="image"                        src="https://play.teleporthq.io/static/svg/default-img.svg"                        class="assessment-taken-page-assessment-image3"                      />                      <span                        id="Assessment-by-text"                        class="assessment-taken-page-assessment-by-text2"                      >                        Assessment by Flashyre                      </span>                    </div>                  </div>                </div>              </div>              <div                id="remaining-attempts-container"                class="assessment-taken-page-remaining-attempts-container"              >                <div                  id="remaining-attempts"                  class="assessment-taken-page-remaining-attempts"                >                  <span class="assessment-taken-page-text29">                    Attempt(s) Remaining                  </span>                  <span>2</span>                </div>                <svg                  id="right-icon"                  width="24"                  height="24"                  viewBox="0 0 24 24"                  class="assessment-taken-page-right-icon2"                >                  <path                    d="m10 16l4-4l-4-4"                    fill="none"                    stroke="currentColor"                    stroke-width="2"                    stroke-linecap="round"                    stroke-linejoin="round"                  ></path>                </svg>              </div>            </div>          </div>          <span id="num-text" class="assessment-taken-page-num-text2">            See More          </span>        </div> -->      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AssessmentTakenPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AssessmentTakenPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

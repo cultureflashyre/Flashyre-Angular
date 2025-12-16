@@ -1,0 +1,2066 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SignupCollege1</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/signup-college1/signup-college1.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>signup-college1</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>signup-college1.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>signup-college1.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button" >button</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#heading" >heading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1" >text1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11" >text11</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text111" >text111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1111" >text1111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text112" >text112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text12" >text12</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text121" >text121</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2" >text2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text21" >text21</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text22" >text22</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text5" >text5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text6" >text6</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text71" >text71</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:42</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:18</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button</b></span>
+                        <a href="#button"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="heading"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>heading</b></span>
+                        <a href="#heading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;heading&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1</b></span>
+                        <a href="#text1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11</b></span>
+                        <a href="#text11"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text111</b></span>
+                        <a href="#text111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1111</b></span>
+                        <a href="#text1111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text112</b></span>
+                        <a href="#text112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text12"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text12</b></span>
+                        <a href="#text12"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text12&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text121"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text121</b></span>
+                        <a href="#text121"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text121&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2</b></span>
+                        <a href="#text2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text21"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text21</b></span>
+                        <a href="#text21"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text21&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text22"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text22</b></span>
+                        <a href="#text22"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text22&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text5</b></span>
+                        <a href="#text5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text6"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text6</b></span>
+                        <a href="#text6"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text6&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text71"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text71</b></span>
+                        <a href="#text71"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text71&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/signup-college1/signup-college1.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;signup-college1&#x27;,
+  templateUrl: &#x27;signup-college1.component.html&#x27;,
+  styleUrls: [&#x27;signup-college1.component.css&#x27;],
+})
+export class SignupCollege1 {
+  @ContentChild(&#x27;text6&#x27;)
+  text6: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text121&#x27;)
+  text121: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text11&#x27;)
+  text11: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text12&#x27;)
+  text12: TemplateRef&lt;any&gt;
+  @Input()
+  rootClassName: string &#x3D; &#x27;&#x27;
+  @ContentChild(&#x27;text1111&#x27;)
+  text1111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text112&#x27;)
+  text112: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button&#x27;)
+  button: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;heading&#x27;)
+  heading: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text111&#x27;)
+  text111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text21&#x27;)
+  text21: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text71&#x27;)
+  text71: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text5&#x27;)
+  text5: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text&#x27;)
+  text: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text2&#x27;)
+  text2: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text22&#x27;)
+  text22: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1&#x27;)
+  text1: TemplateRef&lt;any&gt;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div
+  id&#x3D;&quot;signup-page&quot;
+  class&#x3D;&quot;signup-college1-container&quot;
+  [ngClass]&#x3D;&quot;rootClassName&quot;
+&gt;
+  &lt;div id&#x3D;&quot;signup-container&quot; class&#x3D;&quot;signup-college1-signup-container&quot;&gt;
+    &lt;h2 id&#x3D;&quot;heading&quot; class&#x3D;&quot;signup-college1-welcome-to-flashyre&quot;&gt;
+      &lt;ng-container&gt;
+        &lt;ng-template #defaultHeading&gt;
+          &lt;div class&#x3D;&quot;signup-college1-fragment17&quot;&gt;
+            &lt;span class&#x3D;&quot;signup-college1-text18&quot;&gt;Welcome to Flashyre&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-container
+          *ngTemplateOutlet&#x3D;&quot;heading ? heading : defaultHeading&quot;
+        &gt;&lt;/ng-container&gt;
+      &lt;/ng-container&gt;
+    &lt;/h2&gt;
+    &lt;div id&#x3D;&quot;details&quot; class&#x3D;&quot;signup-college1-details-container&quot;&gt;
+      &lt;div
+        id&#x3D;&quot;first-name-container&quot;
+        class&#x3D;&quot;signup-college1-first-name-container&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;signup-first-name&quot; class&#x3D;&quot;signup-college1-first-name-text&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment22&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text23&quot;&gt;First Name&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;input
+          type&#x3D;&quot;text&quot;
+          id&#x3D;&quot;signup-first-name-input&quot;
+          placeholder&#x3D;&quot;Enter First Name&quot;
+          class&#x3D;&quot;signup-college1-first-name-input input&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;last-name-container&quot;
+        class&#x3D;&quot;signup-college1-last-name-container1&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;signup-last-name&quot; class&#x3D;&quot;signup-college1-last-name-text1&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText1&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment25&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text26&quot;&gt;Last Name&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text1 ? text1 : defaultText1&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;input
+          type&#x3D;&quot;text&quot;
+          id&#x3D;&quot;signup-last-name-input&quot;
+          placeholder&#x3D;&quot;Enter Last Name&quot;
+          class&#x3D;&quot;signup-college1-last-name-input1 input&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;last-name-container&quot;
+        class&#x3D;&quot;signup-college1-last-name-container2&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;signup-last-name&quot; class&#x3D;&quot;signup-college1-last-name-text2&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText12&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment13&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text14&quot;&gt;Phone Number&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text12 ? text12 : defaultText12&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;input
+          type&#x3D;&quot;text&quot;
+          id&#x3D;&quot;signup-phone-number-input&quot;
+          placeholder&#x3D;&quot;Enter Phone Number&quot;
+          class&#x3D;&quot;signup-college1-last-name-input2 input&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;last-name-container&quot;
+        class&#x3D;&quot;signup-college1-last-name-container3&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;signup-last-name&quot; class&#x3D;&quot;signup-college1-last-name-text3&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText121&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment11&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text12&quot;&gt;
+                  Select your University/College
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text121 ? text121 : defaultText121&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;form class&#x3D;&quot;signup-college1-form input&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-college1-text10&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText22&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment24&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text25&quot;&gt;Select&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text22 ? text22 : defaultText22&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;svg
+            width&#x3D;&quot;24&quot;
+            height&#x3D;&quot;24&quot;
+            viewBox&#x3D;&quot;0 0 32 32&quot;
+            class&#x3D;&quot;signup-college1-icon1&quot;
+          &gt;
+            &lt;path
+              d&#x3D;&quot;M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z&quot;
+              fill&#x3D;&quot;currentColor&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;email-container&quot; class&#x3D;&quot;signup-college1-email-container1&quot;&gt;
+        &lt;span id&#x3D;&quot;signup-email&quot; class&#x3D;&quot;signup-college1-email-text1&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText11&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment12&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text13&quot;&gt;
+                  University/College ID
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text11 ? text11 : defaultText11&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;input
+          type&#x3D;&quot;email&quot;
+          id&#x3D;&quot;signup-email-input&quot;
+          placeholder&#x3D;&quot;Enter  University/College ID&quot;
+          class&#x3D;&quot;signup-college1-email-input1 input&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;email-container&quot; class&#x3D;&quot;signup-college1-email-container2&quot;&gt;
+        &lt;span id&#x3D;&quot;signup-email&quot; class&#x3D;&quot;signup-college1-email-text2&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText112&gt;
+              &lt;div class&#x3D;&quot;signup-college1-fragment15&quot;&gt;
+                &lt;span class&#x3D;&quot;signup-college1-text16&quot;&gt;Email Id&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text112 ? text112 : defaultText112&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;input
+          type&#x3D;&quot;email&quot;
+          id&#x3D;&quot;signup-email-input&quot;
+          placeholder&#x3D;&quot;Enter Email Id&quot;
+          class&#x3D;&quot;signup-college1-email-input2 input&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;password-container&quot; class&#x3D;&quot;signup-college1-password-container1&quot;&gt;
+        &lt;div id&#x3D;&quot;password&quot; class&#x3D;&quot;signup-college1-password1&quot;&gt;
+          &lt;span id&#x3D;&quot;signup-Password&quot; class&#x3D;&quot;signup-college1-password-text1&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText111&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment18&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text19&quot;&gt;Password&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text111 ? text111 : defaultText111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span
+            id&#x3D;&quot;signup-password-show-button&quot;
+            class&#x3D;&quot;signup-college1-show-text1 button&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText2&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment23&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text24&quot;&gt;Show&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text2 ? text2 : defaultText2&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;password&quot;
+            id&#x3D;&quot;signup-password-input&quot;
+            placeholder&#x3D;&quot;Enter Password&quot;
+            class&#x3D;&quot;signup-college1-password-input1 input&quot;
+          /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;password-container&quot; class&#x3D;&quot;signup-college1-password-container2&quot;&gt;
+        &lt;div id&#x3D;&quot;password&quot; class&#x3D;&quot;signup-college1-password2&quot;&gt;
+          &lt;span
+            id&#x3D;&quot;signup-confirm-password&quot;
+            class&#x3D;&quot;signup-college1-password-text2&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText1111&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment14&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text15&quot;&gt;Confirm Password&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text1111 ? text1111 : defaultText1111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span
+            id&#x3D;&quot;signup-password-show-button&quot;
+            class&#x3D;&quot;signup-college1-show-text2 button&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText21&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment19&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text20&quot;&gt;Show&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text21 ? text21 : defaultText21&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;password&quot;
+            id&#x3D;&quot;signup-confirm-password-input&quot;
+            placeholder&#x3D;&quot;Confirm Password&quot;
+            class&#x3D;&quot;signup-college1-password-input2 input&quot;
+          /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;signup-signin-container&quot;
+        class&#x3D;&quot;signup-college1-signup-and-signin-container&quot;
+      &gt;
+        &lt;button
+          id&#x3D;&quot;signup-button&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;signup-college1-signup-button button&quot;
+        &gt;
+          &lt;span id&#x3D;&quot;signup&quot; class&#x3D;&quot;signup-college1-signup-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultButton&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment16&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text17&quot;&gt;Sign Up&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;button ? button : defaultButton&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class&#x3D;&quot;signup-college1-error-signup-container&quot;&gt;
+          &lt;span
+            id&#x3D;&quot;error-message-signup&quot;
+            class&#x3D;&quot;signup-college1-error-message-signup&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText71&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment20&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text21&quot;&gt;
+                    Email or Phone Number already exists!
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text71 ? text71 : defaultText71&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div id&#x3D;&quot;signin-container&quot; class&#x3D;&quot;signup-college1-signin-container&quot;&gt;
+          &lt;span
+            id&#x3D;&quot;already-have-an-account&quot;
+            class&#x3D;&quot;signup-college1-already-have-an-account-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText6&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment10&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text11&quot;&gt;
+                    Already have an account?
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text6 ? text6 : defaultText6&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span id&#x3D;&quot;signin-button&quot; class&#x3D;&quot;signup-college1-signin-text button&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText5&gt;
+                &lt;div class&#x3D;&quot;signup-college1-fragment21&quot;&gt;
+                  &lt;span class&#x3D;&quot;signup-college1-text22&quot;&gt;Sign In&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text5 ? text5 : defaultText5&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>signup-college1.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.signup-college1-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  flex-direction: column;
+  padding-bottom: 20px;
+  justify-content: center;
+}
+ 
+.signup-college1-signup-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 368px;
+  height: auto;
+  display: flex;
+  align-self: center;
+  margin-top: 0px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-welcome-to-flashyre {
+  width: 211px;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  align-self: center;
+  font-style: normal;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.signup-college1-details-container {
+  gap: var(--dl-space-space-oneandhalfunits);
+  flex: 0 0 auto;
+  width: 368px;
+  height: auto;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-first-name-container {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-first-name-text {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-first-name-input {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-last-name-container1 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-last-name-text1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-last-name-input1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-last-name-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-last-name-text2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-last-name-input2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-last-name-container3 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-last-name-text3 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-form {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border-color: #A7A7A7;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-text10 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+ 
+.signup-college1-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+ 
+.signup-college1-email-container1 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-email-text1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-email-input1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-email-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-email-text2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-college1-email-input2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-password-container1 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-password1 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-password-text1 {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.signup-college1-show-text1 {
+  right: var(--dl-space-space-halfunit);
+  width: 44px;
+  bottom: var(--dl-space-space-unit);
+  height: 24px;
+  margin: 0px;
+  display: flex;
+  padding: 0px;
+  position: absolute;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.signup-college1-show-text1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-college1-show-text1:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-college1-password-input1 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-password-container2 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-password2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-password-text2 {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.signup-college1-show-text2 {
+  right: var(--dl-space-space-halfunit);
+  width: 44px;
+  bottom: var(--dl-space-space-unit);
+  height: 24px;
+  margin: 0px;
+  display: flex;
+  padding: 0px;
+  position: absolute;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.signup-college1-show-text2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-college1-show-text2:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-college1-password-input2 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.signup-college1-signup-and-signin-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-college1-signup-button {
+  gap: 4px;
+  width: 320px;
+  height: 48px;
+  transition: 0.3s;
+  padding-top: 12px;
+  border-width: 0px;
+  padding-left: 16px;
+  border-radius: 4px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  background-color: #05356C;
+}
+ 
+.signup-college1-signup-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.signup-college1-signup-button:active {
+  transform: scale(0.90);
+  border-width: 0px;
+  background-color: 022954;
+}
+ 
+.signup-college1-signup-text {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 53px;
+  height: 24px;
+}
+ 
+.signup-college1-error-signup-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: none;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.signup-college1-error-message-signup {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  font-style: normal;
+  margin-top: var(--dl-space-space-halfunit);
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #F65E5C;
+}
+ 
+.signup-college1-signin-container {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  display: flex;
+  align-self: center;
+  justify-content: flex-start;
+}
+ 
+.signup-college1-already-have-an-account-text {
+  display: flex;
+  align-self: center;
+  align-items: center;
+}
+ 
+.signup-college1-signin-text {
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  padding-left: 0px;
+  background-color: transparent;
+}
+ 
+.signup-college1-signin-text:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-college1-signin-text:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-college1-fragment10 {
+  display: contents;
+}
+ 
+.signup-college1-text11 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment11 {
+  display: contents;
+}
+ 
+.signup-college1-text12 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment12 {
+  display: contents;
+}
+ 
+.signup-college1-text13 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment13 {
+  display: contents;
+}
+ 
+.signup-college1-text14 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment14 {
+  display: contents;
+}
+ 
+.signup-college1-text15 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.signup-college1-fragment15 {
+  display: contents;
+}
+ 
+.signup-college1-text16 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment16 {
+  display: contents;
+}
+ 
+.signup-college1-text17 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment17 {
+  display: contents;
+}
+ 
+.signup-college1-text18 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.signup-college1-fragment18 {
+  display: contents;
+}
+ 
+.signup-college1-text19 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.signup-college1-fragment19 {
+  display: contents;
+}
+ 
+.signup-college1-text20 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.signup-college1-fragment20 {
+  display: contents;
+}
+ 
+.signup-college1-text21 {
+  color: #ffffff;
+  display: inline-block;
+  background-color: rgb(246, 94, 92);
+}
+ 
+.signup-college1-fragment21 {
+  display: contents;
+}
+ 
+.signup-college1-text22 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.signup-college1-fragment22 {
+  display: contents;
+}
+ 
+.signup-college1-text23 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment23 {
+  display: contents;
+}
+ 
+.signup-college1-text24 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.signup-college1-fragment24 {
+  display: contents;
+}
+ 
+.signup-college1-text25 {
+  display: inline-block;
+}
+ 
+.signup-college1-fragment25 {
+  display: contents;
+}
+ 
+.signup-college1-text26 {
+  display: inline-block;
+}
+ 
+.signup-college1root-class-name {
+  height: auto;
+  margin-top: 100px;
+  background-color: #D9D9D9;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  id="signup-page"  class="signup-college1-container"  [ngClass]="rootClassName">  <div id="signup-container" class="signup-college1-signup-container">    <h2 id="heading" class="signup-college1-welcome-to-flashyre">      <ng-container>        <ng-template #defaultHeading>          <div class="signup-college1-fragment17">            <span class="signup-college1-text18">Welcome to Flashyre</span>          </div>        </ng-template>        <ng-container          *ngTemplateOutlet="heading ? heading : defaultHeading"        ></ng-container>      </ng-container>    </h2>    <div id="details" class="signup-college1-details-container">      <div        id="first-name-container"        class="signup-college1-first-name-container"      >        <span id="signup-first-name" class="signup-college1-first-name-text">          <ng-container>            <ng-template #defaultText>              <div class="signup-college1-fragment22">                <span class="signup-college1-text23">First Name</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text ? text : defaultText"            ></ng-container>          </ng-container>        </span>        <input          type="text"          id="signup-first-name-input"          placeholder="Enter First Name"          class="signup-college1-first-name-input input"        />      </div>      <div        id="last-name-container"        class="signup-college1-last-name-container1"      >        <span id="signup-last-name" class="signup-college1-last-name-text1">          <ng-container>            <ng-template #defaultText1>              <div class="signup-college1-fragment25">                <span class="signup-college1-text26">Last Name</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text1 ? text1 : defaultText1"            ></ng-container>          </ng-container>        </span>        <input          type="text"          id="signup-last-name-input"          placeholder="Enter Last Name"          class="signup-college1-last-name-input1 input"        />      </div>      <div        id="last-name-container"        class="signup-college1-last-name-container2"      >        <span id="signup-last-name" class="signup-college1-last-name-text2">          <ng-container>            <ng-template #defaultText12>              <div class="signup-college1-fragment13">                <span class="signup-college1-text14">Phone Number</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text12 ? text12 : defaultText12"            ></ng-container>          </ng-container>        </span>        <input          type="text"          id="signup-phone-number-input"          placeholder="Enter Phone Number"          class="signup-college1-last-name-input2 input"        />      </div>      <div        id="last-name-container"        class="signup-college1-last-name-container3"      >        <span id="signup-last-name" class="signup-college1-last-name-text3">          <ng-container>            <ng-template #defaultText121>              <div class="signup-college1-fragment11">                <span class="signup-college1-text12">                  Select your University/College                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text121 ? text121 : defaultText121"            ></ng-container>          </ng-container>        </span>        <form class="signup-college1-form input">          <span class="signup-college1-text10">            <ng-container>              <ng-template #defaultText22>                <div class="signup-college1-fragment24">                  <span class="signup-college1-text25">Select</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text22 ? text22 : defaultText22"              ></ng-container>            </ng-container>          </span>          <svg            width="24"            height="24"            viewBox="0 0 32 32"            class="signup-college1-icon1"          >            <path              d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"              fill="currentColor"            ></path>          </svg>        </form>      </div>      <div id="email-container" class="signup-college1-email-container1">        <span id="signup-email" class="signup-college1-email-text1">          <ng-container>            <ng-template #defaultText11>              <div class="signup-college1-fragment12">                <span class="signup-college1-text13">                  University/College ID                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text11 ? text11 : defaultText11"            ></ng-container>          </ng-container>        </span>        <input          type="email"          id="signup-email-input"          placeholder="Enter  University/College ID"          class="signup-college1-email-input1 input"        />      </div>      <div id="email-container" class="signup-college1-email-container2">        <span id="signup-email" class="signup-college1-email-text2">          <ng-container>            <ng-template #defaultText112>              <div class="signup-college1-fragment15">                <span class="signup-college1-text16">Email Id</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text112 ? text112 : defaultText112"            ></ng-container>          </ng-container>        </span>        <input          type="email"          id="signup-email-input"          placeholder="Enter Email Id"          class="signup-college1-email-input2 input"        />      </div>      <div id="password-container" class="signup-college1-password-container1">        <div id="password" class="signup-college1-password1">          <span id="signup-Password" class="signup-college1-password-text1">            <ng-container>              <ng-template #defaultText111>                <div class="signup-college1-fragment18">                  <span class="signup-college1-text19">Password</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text111 ? text111 : defaultText111"              ></ng-container>            </ng-container>          </span>          <span            id="signup-password-show-button"            class="signup-college1-show-text1 button"          >            <ng-container>              <ng-template #defaultText2>                <div class="signup-college1-fragment23">                  <span class="signup-college1-text24">Show</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text2 ? text2 : defaultText2"              ></ng-container>            </ng-container>          </span>          <input            type="password"            id="signup-password-input"            placeholder="Enter Password"            class="signup-college1-password-input1 input"          />        </div>      </div>      <div id="password-container" class="signup-college1-password-container2">        <div id="password" class="signup-college1-password2">          <span            id="signup-confirm-password"            class="signup-college1-password-text2"          >            <ng-container>              <ng-template #defaultText1111>                <div class="signup-college1-fragment14">                  <span class="signup-college1-text15">Confirm Password</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"              ></ng-container>            </ng-container>          </span>          <span            id="signup-password-show-button"            class="signup-college1-show-text2 button"          >            <ng-container>              <ng-template #defaultText21>                <div class="signup-college1-fragment19">                  <span class="signup-college1-text20">Show</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text21 ? text21 : defaultText21"              ></ng-container>            </ng-container>          </span>          <input            type="password"            id="signup-confirm-password-input"            placeholder="Confirm Password"            class="signup-college1-password-input2 input"          />        </div>      </div>      <div        id="signup-signin-container"        class="signup-college1-signup-and-signin-container"      >        <button          id="signup-button"          type="button"          class="signup-college1-signup-button button"        >          <span id="signup" class="signup-college1-signup-text">            <ng-container>              <ng-template #defaultButton>                <div class="signup-college1-fragment16">                  <span class="signup-college1-text17">Sign Up</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="button ? button : defaultButton"              ></ng-container>            </ng-container>          </span>        </button>        <div class="signup-college1-error-signup-container">          <span            id="error-message-signup"            class="signup-college1-error-message-signup"          >            <ng-container>              <ng-template #defaultText71>                <div class="signup-college1-fragment20">                  <span class="signup-college1-text21">                    Email or Phone Number already exists!                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text71 ? text71 : defaultText71"              ></ng-container>            </ng-container>          </span>        </div>        <div id="signin-container" class="signup-college1-signin-container">          <span            id="already-have-an-account"            class="signup-college1-already-have-an-account-text"          >            <ng-container>              <ng-template #defaultText6>                <div class="signup-college1-fragment10">                  <span class="signup-college1-text11">                    Already have an account?                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text6 ? text6 : defaultText6"              ></ng-container>            </ng-container>          </span>          <span id="signin-button" class="signup-college1-signin-text button">            <ng-container>              <ng-template #defaultText5>                <div class="signup-college1-fragment21">                  <span class="signup-college1-text22">Sign In</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text5 ? text5 : defaultText5"              ></ng-container>            </ng-container>          </span>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'SignupCollege1'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SignupCollege1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

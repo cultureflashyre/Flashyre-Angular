@@ -1,0 +1,3629 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FlashyreAssessment</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/flashyre-assessment/flashyre-assessment.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>flashyre-assessment</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>flashyre-assessment.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>flashyre-assessment.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button1" >button1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button6" >button6</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#heading" >heading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#heading1" >heading1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text12" >text12</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text13" >text13</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text14" >text14</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text144" >text144</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1441" >text1441</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text14411" >text14411</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text5" >text5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text52" >text52</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text9" >text9</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text910" >text910</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text911" >text911</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text912" >text912</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text913" >text913</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text914" >text914</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text915" >text915</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text9151" >text9151</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text92" >text92</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text93" >text93</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text94" >text94</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text95" >text95</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text96" >text96</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text97" >text97</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text98" >text98</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text99" >text99</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#imageAlt3" >imageAlt3</a>
+                            </li>
+                            <li>
+                                <a href="#imageSrc3" >imageSrc3</a>
+                            </li>
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:72</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageAlt3"></a>
+                        <b>imageAlt3</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageSrc3"></a>
+                        <b>imageSrc3</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:22</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:58</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button1</b></span>
+                        <a href="#button1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button6"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button6</b></span>
+                        <a href="#button6"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button6&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="heading"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>heading</b></span>
+                        <a href="#heading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;heading&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="heading1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>heading1</b></span>
+                        <a href="#heading1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;heading1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text12"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text12</b></span>
+                        <a href="#text12"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text12&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text13"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text13</b></span>
+                        <a href="#text13"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text13&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text14"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text14</b></span>
+                        <a href="#text14"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text14&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text144"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text144</b></span>
+                        <a href="#text144"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text144&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1441"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1441</b></span>
+                        <a href="#text1441"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1441&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text14411"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text14411</b></span>
+                        <a href="#text14411"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text14411&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text5</b></span>
+                        <a href="#text5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text52"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text52</b></span>
+                        <a href="#text52"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text52&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text9"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text9</b></span>
+                        <a href="#text9"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text9&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text910"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text910</b></span>
+                        <a href="#text910"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text910&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text911"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text911</b></span>
+                        <a href="#text911"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text911&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text912"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text912</b></span>
+                        <a href="#text912"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text912&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text913"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text913</b></span>
+                        <a href="#text913"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text913&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text914"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text914</b></span>
+                        <a href="#text914"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text914&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text915"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text915</b></span>
+                        <a href="#text915"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text915&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text9151"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text9151</b></span>
+                        <a href="#text9151"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text9151&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text92"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text92</b></span>
+                        <a href="#text92"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text92&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text93"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text93</b></span>
+                        <a href="#text93"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text93&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text94"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text94</b></span>
+                        <a href="#text94"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text94&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text95"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text95</b></span>
+                        <a href="#text95"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text95&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text96"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text96</b></span>
+                        <a href="#text96"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text96&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text97"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text97</b></span>
+                        <a href="#text97"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text97&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text98"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text98</b></span>
+                        <a href="#text98"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text98&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text99"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text99</b></span>
+                        <a href="#text99"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text99&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/flashyre-assessment/flashyre-assessment.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;flashyre-assessment&#x27;,
+  templateUrl: &#x27;flashyre-assessment.component.html&#x27;,
+  styleUrls: [&#x27;flashyre-assessment.component.css&#x27;],
+})
+export class FlashyreAssessment {
+  @ContentChild(&#x27;text912&#x27;)
+  text912: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1441&#x27;)
+  text1441: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button1&#x27;)
+  button1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;heading&#x27;)
+  heading: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text5&#x27;)
+  text5: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text97&#x27;)
+  text97: TemplateRef&lt;any&gt;
+  @Input()
+  imageSrc3: string &#x3D; &#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;
+  @ContentChild(&#x27;text95&#x27;)
+  text95: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;heading1&#x27;)
+  heading1: TemplateRef&lt;any&gt;
+  @Input()
+  imageAlt3: string &#x3D; &#x27;image&#x27;
+  @ContentChild(&#x27;text144&#x27;)
+  text144: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text52&#x27;)
+  text52: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text94&#x27;)
+  text94: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text13&#x27;)
+  text13: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text92&#x27;)
+  text92: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text96&#x27;)
+  text96: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text99&#x27;)
+  text99: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text14411&#x27;)
+  text14411: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text&#x27;)
+  text: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text913&#x27;)
+  text913: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text12&#x27;)
+  text12: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text915&#x27;)
+  text915: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text910&#x27;)
+  text910: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text14&#x27;)
+  text14: TemplateRef&lt;any&gt;
+  @Input()
+  rootClassName: string &#x3D; &#x27;&#x27;
+  @ContentChild(&#x27;text98&#x27;)
+  text98: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text93&#x27;)
+  text93: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text914&#x27;)
+  text914: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button6&#x27;)
+  button6: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text9151&#x27;)
+  text9151: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text911&#x27;)
+  text911: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text9&#x27;)
+  text9: TemplateRef&lt;any&gt;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;flashyre-assessment-container&quot;&gt;
+  &lt;div
+    id&#x3D;&quot;assessment-container&quot;
+    class&#x3D;&quot;flashyre-assessment-assessment-container&quot;
+  &gt;
+    &lt;div id&#x3D;&quot;header-container&quot; class&#x3D;&quot;flashyre-assessment-header-container&quot;&gt;
+      &lt;img
+        id&#x3D;&quot;Logo&quot;
+        [attr.alt]&#x3D;&quot;imageAlt3&quot;
+        [attr.src]&#x3D;&quot;imageSrc3&quot;
+        class&#x3D;&quot;flashyre-assessment-logo&quot;
+      /&gt;
+      &lt;span id&#x3D;&quot;timer&quot; class&#x3D;&quot;flashyre-assessment-timer&quot;&gt;
+        &lt;ng-container&gt;
+          &lt;ng-template #defaultText12&gt;
+            &lt;div class&#x3D;&quot;flashyre-assessment-fragment28&quot;&gt;
+              &lt;span class&#x3D;&quot;flashyre-assessment-text57&quot;&gt;00:00&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-container
+            *ngTemplateOutlet&#x3D;&quot;text12 ? text12 : defaultText12&quot;
+          &gt;&lt;/ng-container&gt;
+        &lt;/ng-container&gt;
+      &lt;/span&gt;
+      &lt;button
+        id&#x3D;&quot;end-test-button&quot;
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;flashyre-assessment-end-test-button button&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;end-test-text&quot; class&#x3D;&quot;flashyre-assessment-end-test-text&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultButton6&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-fragment35&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-text66&quot;&gt;End Test&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;button6 ? button6 : defaultButton6&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;question-answer-container&quot;
+      class&#x3D;&quot;flashyre-assessment-question-answer-container&quot;
+    &gt;
+      &lt;div id&#x3D;&quot;q-a-s-container&quot; class&#x3D;&quot;flashyre-assessment-qas-container&quot;&gt;
+        &lt;div id&#x3D;&quot;section-a-b&quot; class&#x3D;&quot;flashyre-assessment-section-ab&quot;&gt;
+          &lt;div id&#x3D;&quot;section-a&quot; class&#x3D;&quot;flashyre-assessment-section-a&quot;&gt;
+            &lt;span
+              id&#x3D;&quot;section-a-text&quot;
+              class&#x3D;&quot;flashyre-assessment-section-a-text&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultText5&gt;
+                  &lt;div class&#x3D;&quot;flashyre-assessment-fragment14&quot;&gt;
+                    &lt;span class&#x3D;&quot;flashyre-assessment-text32&quot;&gt;Section A&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;text5 ? text5 : defaultText5&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div id&#x3D;&quot;section-b&quot; class&#x3D;&quot;flashyre-assessment-section-b&quot;&gt;
+            &lt;span
+              id&#x3D;&quot;section-b-text&quot;
+              class&#x3D;&quot;flashyre-assessment-section-b-text&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultText52&gt;
+                  &lt;div class&#x3D;&quot;flashyre-assessment-fragment19&quot;&gt;
+                    &lt;span class&#x3D;&quot;flashyre-assessment-text39&quot;&gt;Section B&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;text52 ? text52 : defaultText52&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id&#x3D;&quot;q-and-a&quot; class&#x3D;&quot;flashyre-assessment-q-and-a&quot;&gt;
+          &lt;div
+            id&#x3D;&quot;question-container&quot;
+            class&#x3D;&quot;flashyre-assessment-question-container&quot;
+          &gt;
+            &lt;h1
+              id&#x3D;&quot;question-heading&quot;
+              class&#x3D;&quot;flashyre-assessment-question-heading&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultHeading&gt;
+                  &lt;div class&#x3D;&quot;flashyre-assessment-fragment13&quot;&gt;
+                    &lt;span class&#x3D;&quot;flashyre-assessment-text31&quot;&gt;Question&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;heading ? heading : defaultHeading&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/h1&gt;
+            &lt;div id&#x3D;&quot;question&quot; class&#x3D;&quot;flashyre-assessment-question&quot;&gt;
+              &lt;span
+                id&#x3D;&quot;question-text&quot;
+                class&#x3D;&quot;flashyre-assessment-question-text&quot;
+              &gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText13&gt;
+                    &lt;div class&#x3D;&quot;flashyre-assessment-fragment21&quot;&gt;
+                      &lt;span class&#x3D;&quot;flashyre-assessment-text41&quot;&gt;
+                        &lt;span&gt;
+                          1. What happens when no argument is happens when no
+                          argument is supplied to reset() functi
+                        &lt;/span&gt;
+                        &lt;br /&gt;
+                        &lt;span&gt;India&lt;/span&gt;
+                        &lt;span&gt;
+                          ength of its &amp;apos;Made in India&amp;apos; initiative,
+                          marking a significant milestone in the nation&amp;apos;s
+                          defence sector. In a landmark move, India has
+                          confirmed a deal to export Brahmos missiles, valued at
+                          approximately Rs 3800 crore (USD 450 million), to
+                          Indonesia, News18 reported. This agreement highlights
+                          India&amp;apos;s growing self-reliance and capabilities in
+                          defence manufacturing.India has once again
+                          demonstrated the strength of its &amp;apos;Made in
+                          India&amp;apos; initiative, marking a significant
+                          milestone in the nation&amp;apos;s defence sector. In a
+                          landmark move, India has confirmed a deal to export
+                          Brahmos missiles, valued at approximately Rs 3800
+                          crore (USD 450 million), to Indonesia, News18
+                          reported. This agreement highlights India&amp;apos;s
+                          growing self-reliance and capabilities in defence
+                          manufacturing.India has once again demonstrated the
+                          strength of its &amp;apos;Made in India&amp;apos; initiative,
+                          marking a significant milestone in the nation&amp;apos;s
+                          defence sector. In a landmark move, India has
+                          confirmed a deal to export Brahmos missiles, valued at
+                          approximately Rs 3800 crore (USD 450 million), to
+                          Indonesia, News18 reported. This agreement highlights
+                          India&amp;apos;s growing self-reliance and capabilities in
+                          defence manufacturing.vIndia has once again
+                          demonstrated the strength of its &amp;apos;Made in
+                          India&amp;apos; initiative, marking a significant
+                          milestone in the nation&amp;apos;s defence sector. In a
+                          landmark move, India has confirmed a deal to export
+                          Brahmos missiles, valued at approximately Rs 3800
+                          crore (USD 450 million), to Indonesia, News18
+                          reported. This agreement highlights India&amp;apos;s
+                          growing self-reliance and capabilities in defence
+                          manufacturing.vvvIndia has once again demonstrated the
+                          strength of its &amp;apos;Made in India&amp;apos; initiative,
+                          marking a significant milestone in the nation&amp;apos;s
+                          defence sector. In a landmark move, India has
+                          confirmed a deal to export Brahmos missiles, valued at
+                          approximately Rs 3800 crore (USD 450 million), to
+                          Indonesia, News18 reported. This agreement highlights
+                          India&amp;apos;s growing self-reliance and capabilities in
+                          defence manufacturing.India has once again
+                          demonstrated the strength of its &amp;apos;Made in
+                          India&amp;apos; initiative, marking a significant
+                          milestone in the nation&amp;apos;s defence sector. In a
+                          landmark move, India has confirmed a deal to export
+                          Brahmos missiles, valued at approximately Rs 3800
+                          crore (USD 450 million), to Indonesia, News18
+                          reported. This agreement highlights India&amp;apos;s
+                          growing self-reliance and capabilities in defence
+                          manufacturing.India has once again demonstrated the
+                          strength of its &amp;apos;Made in India&amp;apos; initiative,
+                          marking a significant milestone in the nation&amp;apos;s
+                          defence sector. In a landmark move, India has
+                          confirmed a deal to export Brahmos missiles, valued at
+                          approximately Rs 3800 crore (USD 450 million), to
+                          Indonesia, News18 reported. This agreement highlights
+                          India&amp;apos;s growing self-reliance and capabilities in
+                          defence manufacturing.India has once again
+                          demonstrated the strength of its &amp;apos;Made in
+                          India&amp;apos; initiative, marking a significant
+                          milestone in the nation&amp;apos;s defence sector. In a
+                          landmark move, India has confirmed a deal to export
+                          Brahmos missiles, valued at approximately Rs 3800
+                          crore (USD 450 million), to Indonesia, News18
+                          reported. This agreement highlights India&amp;apos;s
+                          growing self-reliance and capabilities in defence
+                          manufacturing.
+                        &lt;/span&gt;
+                        &lt;br class&#x3D;&quot;flashyre-assessment-text46&quot; /&gt;
+                        &lt;br /&gt;
+                        &lt;br /&gt;
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;text13 ? text13 : defaultText13&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div
+              id&#x3D;&quot;previous-next-container&quot;
+              class&#x3D;&quot;flashyre-assessment-previous-next-container&quot;
+            &gt;
+              &lt;button
+                id&#x3D;&quot;previous-button-container&quot;
+                type&#x3D;&quot;button&quot;
+                class&#x3D;&quot;flashyre-assessment-previous-button button&quot;
+              &gt;
+                &lt;span
+                  id&#x3D;&quot;previous-button&quot;
+                  class&#x3D;&quot;flashyre-assessment-previous-text button&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultText&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment26&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text55&quot;&gt;
+                          &amp;lt;- Previous
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/button&gt;
+              &lt;button
+                id&#x3D;&quot;next-button&quot;
+                type&#x3D;&quot;button&quot;
+                class&#x3D;&quot;flashyre-assessment-next-button button&quot;
+              &gt;
+                &lt;span id&#x3D;&quot;next-text&quot; class&#x3D;&quot;flashyre-assessment-next-text&quot;&gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultButton1&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment12&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text30&quot;&gt;
+                          Next -&amp;gt;
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;button1 ? button1 : defaultButton1&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div
+            id&#x3D;&quot;options-container&quot;
+            class&#x3D;&quot;flashyre-assessment-options-container&quot;
+          &gt;
+            &lt;h1
+              id&#x3D;&quot;options-heading&quot;
+              class&#x3D;&quot;flashyre-assessment-options-heading&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultHeading1&gt;
+                  &lt;div class&#x3D;&quot;flashyre-assessment-fragment17&quot;&gt;
+                    &lt;span class&#x3D;&quot;flashyre-assessment-text35&quot;&gt;Options&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;heading1 ? heading1 : defaultHeading1&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/h1&gt;
+            &lt;div id&#x3D;&quot;options&quot; class&#x3D;&quot;flashyre-assessment-opitons&quot;&gt;
+              &lt;div id&#x3D;&quot;option1&quot; class&#x3D;&quot;flashyre-assessment-option1&quot;&gt;
+                &lt;input
+                  type&#x3D;&quot;checkbox&quot;
+                  id&#x3D;&quot;option1-checkbox&quot;
+                  [attr.checked]&#x3D;&quot;false&quot;
+                  class&#x3D;&quot;flashyre-assessment-option1-heckbox&quot;
+                /&gt;
+                &lt;span
+                  id&#x3D;&quot;option1-text&quot;
+                  class&#x3D;&quot;flashyre-assessment-option1-text&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultText14&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment31&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text60&quot;&gt;
+                          &lt;span&gt;All bits are set to 1 in a bitset &lt;/span&gt;
+                          &lt;br /&gt;
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;text14 ? text14 : defaultText14&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div id&#x3D;&quot;option2&quot; class&#x3D;&quot;flashyre-assessment-option2&quot;&gt;
+                &lt;input
+                  type&#x3D;&quot;checkbox&quot;
+                  id&#x3D;&quot;option2-checkbox&quot;
+                  [attr.checked]&#x3D;&quot;false&quot;
+                  class&#x3D;&quot;flashyre-assessment-option2-checkbox&quot;
+                /&gt;
+                &lt;span
+                  id&#x3D;&quot;option2-text&quot;
+                  class&#x3D;&quot;flashyre-assessment-option2-text&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultText144&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment18&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text36&quot;&gt;
+                          &lt;span&gt;All bits are set to 1 in a bitset &lt;/span&gt;
+                          &lt;br /&gt;
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;text144 ? text144 : defaultText144&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div id&#x3D;&quot;option3&quot; class&#x3D;&quot;flashyre-assessment-option3&quot;&gt;
+                &lt;input
+                  type&#x3D;&quot;checkbox&quot;
+                  id&#x3D;&quot;option3-checkbox&quot;
+                  [attr.checked]&#x3D;&quot;false&quot;
+                  [attr.required]&#x3D;&quot;false&quot;
+                  [attr.defaultChecked]&#x3D;&quot;false&quot;
+                  class&#x3D;&quot;flashyre-assessment-option3-checkbox&quot;
+                /&gt;
+                &lt;span
+                  id&#x3D;&quot;option3-text&quot;
+                  class&#x3D;&quot;flashyre-assessment-option3-text&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultText1441&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment11&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text27&quot;&gt;
+                          &lt;span&gt;All bits are set to 1 in a bitset &lt;/span&gt;
+                          &lt;br /&gt;
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;text1441 ? text1441 : defaultText1441&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div id&#x3D;&quot;option4&quot; class&#x3D;&quot;flashyre-assessment-option4&quot;&gt;
+                &lt;input
+                  type&#x3D;&quot;checkbox&quot;
+                  id&#x3D;&quot;option4-checkbox&quot;
+                  [attr.checked]&#x3D;&quot;false&quot;
+                  class&#x3D;&quot;flashyre-assessment-option4-checkbox&quot;
+                /&gt;
+                &lt;span
+                  id&#x3D;&quot;option4-text&quot;
+                  class&#x3D;&quot;flashyre-assessment-option4-text&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultText14411&gt;
+                      &lt;div class&#x3D;&quot;flashyre-assessment-fragment25&quot;&gt;
+                        &lt;span class&#x3D;&quot;flashyre-assessment-text52&quot;&gt;
+                          &lt;span&gt;All bits are set to 1 in a bitset&lt;/span&gt;
+                          &lt;br /&gt;
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;text14411 ? text14411 : defaultText14411&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;que-num-video&quot; class&#x3D;&quot;flashyre-assessment-que-num-video&quot;&gt;
+        &lt;div
+          id&#x3D;&quot;video-container&quot;
+          class&#x3D;&quot;flashyre-assessment-video-container&quot;
+        &gt;&lt;/div&gt;
+        &lt;div id&#x3D;&quot;question-numbers&quot; class&#x3D;&quot;flashyre-assessment-question-numbers&quot;&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text10&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText9&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment38&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text69&quot;&gt;1&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text9 ? text9 : defaultText9&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text11&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText915&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment29&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text58&quot;&gt;2&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text915 ? text915 : defaultText915&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text12&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText9151&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment36&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text67&quot;&gt;3&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text9151 ? text9151 : defaultText9151&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text13&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText914&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment34&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text65&quot;&gt;4&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text914 ? text914 : defaultText914&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text14&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText913&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment27&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text56&quot;&gt;5&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text913 ? text913 : defaultText913&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text15&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText912&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment10&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text26&quot;&gt;6&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text912 ? text912 : defaultText912&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text16&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText911&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment37&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text68&quot;&gt;7&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text911 ? text911 : defaultText911&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text17&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText910&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment30&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text59&quot;&gt;8&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text910 ? text910 : defaultText910&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text18&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText99&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment24&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text51&quot;&gt;9&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text99 ? text99 : defaultText99&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text19&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText98&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment32&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text63&quot;&gt;10&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text98 ? text98 : defaultText98&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text20&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText97&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment15&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text33&quot;&gt;11&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text97 ? text97 : defaultText97&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text21&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText96&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment23&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text50&quot;&gt;12&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text96 ? text96 : defaultText96&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text22&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText95&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment16&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text34&quot;&gt;13&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text95 ? text95 : defaultText95&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text23&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText94&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment20&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text40&quot;&gt;14&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text94 ? text94 : defaultText94&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text24&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText93&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment33&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text64&quot;&gt;15&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text93 ? text93 : defaultText93&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-text25&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText92&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-fragment22&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-text49&quot;&gt;16&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text92 ? text92 : defaultText92&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>flashyre-assessment.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.flashyre-assessment-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-assessment-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-header-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  position: fixed;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-left: 80px;
+  padding-right: 80px;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-logo {
+  width: 350px;
+  object-fit: cover;
+}
+ 
+.flashyre-assessment-timer {
+  width: 200px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-end-test-button {
+  width: 250px;
+  height: 55px;
+  padding: 0px;
+  transition: 0.3s;
+  border-width: 0px;
+  border-radius: 8px;
+  background-color: #1F882B;
+}
+ 
+.flashyre-assessment-end-test-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: #B5E5BA;
+}
+ 
+.flashyre-assessment-end-test-button:active {
+  transform: scale(0.90);
+  background-color: #30B63F;
+}
+ 
+.flashyre-assessment-end-test-text {
+  height: auto;
+}
+ 
+.flashyre-assessment-question-answer-container {
+  gap: 24px;
+  width: 100%;
+  height: 580px;
+  display: flex;
+  margin-top: 100px;
+  align-items: flex-start;
+  padding-top: 0px;
+  flex-direction: row;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-qas-container {
+  flex: 0 0 auto;
+  width: 1150px;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  align-items: flex-start;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-section-ab {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 75px;
+  height: 100%;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-section-a {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-self: center;
+  transition: 0.3s;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment-section-a:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-section-a:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-section-a-text {
+  width: 200px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  transform: rotate(-90deg);
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-section-b {
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-self: center;
+  transition: 0.3s;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #D7DFE7;
+}
+ 
+.flashyre-assessment-section-b:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-section-b:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-section-b-text {
+  width: 200px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  transform: rotate(-90deg);
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-q-and-a {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.flashyre-assessment-question-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 515px;
+  height: 548px;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-question-heading {
+  align-self: center;
+}
+ 
+.flashyre-assessment-question {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  padding: var(--dl-space-space-twounits);
+  align-self: center;
+  overflow-x: hidden;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  justify-content: center;
+  background-color: #F4F4F4;
+}
+ 
+.flashyre-assessment-question-text {
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  align-self: flex-start;
+  text-align: justify;
+  align-items: flex-start;
+  line-height: 30px;
+  border-radius: var(--dl-radius-radius-radius8);
+  overflow-wrap: break-all;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-previous-next-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-self: flex-end;
+  align-items: flex-end;
+  padding-left: var(--dl-space-space-unit);
+  padding-right: var(--dl-space-space-unit);
+  justify-content: space-between;
+}
+ 
+.flashyre-assessment-previous-button {
+  width: 128px;
+  align-self: stretch;
+  transition: 0.3s;
+  padding-top: 0px;
+  border-color: #CEE0F5;
+  border-width: 0px;
+  padding-left: 0px;
+  border-radius: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: transparent;
+}
+ 
+.flashyre-assessment-previous-button:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  background-color: A5B6CA;
+}
+ 
+.flashyre-assessment-previous-button:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-previous-text {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 150px;
+  height: 100%;
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: 600;
+  border-width: 0px;
+  justify-content: center;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment-previous-text:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-previous-text:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-next-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 160px;
+  align-self: stretch;
+  transition: 0.3s;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment-next-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-next-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-options-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 515px;
+  height: 548px;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-options-heading {
+  align-self: center;
+}
+ 
+.flashyre-assessment-opitons {
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-space-space-twounits);
+  overflow: scroll;
+  overflow-x: hidden;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  flex-direction: column;
+  justify-content: center;
+  background-color: #F4F4F4;
+}
+ 
+.flashyre-assessment-option1 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  word-break: break-all;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option1-heckbox {
+  width: 24px;
+  height: 24px;
+}
+ 
+.flashyre-assessment-option1-text {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option2 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  word-break: break-all;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option2-checkbox {
+  width: 24px;
+  height: 24px;
+}
+ 
+.flashyre-assessment-option2-text {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option3 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  word-break: break-all;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option3-checkbox {
+  width: 24px;
+  height: 24px;
+}
+ 
+.flashyre-assessment-option3-text {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option4 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  word-break: break-all;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-option4-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--dl-radius-radius-round);
+}
+ 
+.flashyre-assessment-option4-text {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-que-num-video {
+  width: 275px;
+  height: 580px;
+  display: flex;
+  position: relative;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-video-container {
+  width: 275px;
+  height: 275px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-question-numbers {
+  left: 0px;
+  width: 100%;
+  bottom: 0px;
+  height: 290px;
+  display: grid;
+  overflow: scroll;
+  position: absolute;
+  align-self: center;
+  overflow-x: hidden;
+  padding-top: var(--dl-space-space-oneandhalfunits);
+  padding-left: var(--dl-space-space-oneandhalfunits);
+  border-radius: 8px;
+  padding-right: var(--dl-space-space-unit);
+  padding-bottom: var(--dl-space-space-oneandhalfunits);
+  background-color: #FFFFFF;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+ 
+.flashyre-assessment-text10 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text11 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #1F882B;
+}
+ 
+.flashyre-assessment-text12 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text13 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text14 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text15 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text16 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text17 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text18 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text19 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text20 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text21 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text22 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text23 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text24 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-text25 {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  font-size: 24px;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+  background-color: #ACACAD;
+}
+ 
+.flashyre-assessment-fragment10 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text26 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment11 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text27 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment-fragment12 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text30 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-fragment13 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text31 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment14 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text32 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment15 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text33 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment16 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text34 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment17 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text35 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment18 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text36 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment-fragment19 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text39 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment20 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text40 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment21 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text41 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment-fragment22 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text49 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment23 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text50 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment24 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text51 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment25 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text52 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment-fragment26 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text55 {
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-fragment27 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text56 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment28 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text57 {
+  color: #f10400;
+  display: inline-block;
+  font-size: 48px;
+}
+ 
+.flashyre-assessment-fragment29 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text58 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment30 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text59 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment31 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text60 {
+  display: inline-block;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment-fragment32 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text63 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment33 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text64 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+.flashyre-assessment-fragment34 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text65 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment35 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text66 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment36 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text67 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment37 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text68 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-fragment38 {
+  display: contents;
+}
+ 
+.flashyre-assessment-text69 {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 24px;
+}
+ 
+@media(max-width: 1200px) {
+  .flashyre-assessment-header-container {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .flashyre-assessment-logo {
+    width: 255px;
+    height: 40px;
+  }
+  .flashyre-assessment-timer {
+    height: auto;
+  }
+  .flashyre-assessment-end-test-button {
+    width: 200px;
+    height: 40px;
+    padding: 0px;
+  }
+  .flashyre-assessment-question-answer-container {
+    gap: 16px;
+    width: 100%;
+  }
+  .flashyre-assessment-qas-container {
+    gap: 16px;
+    width: 950px;
+    justify-content: space-between;
+  }
+  .flashyre-assessment-section-ab {
+    width: 60px;
+  }
+  .flashyre-assessment-question-container {
+    width: 412px;
+  }
+  .flashyre-assessment-question {
+    padding: var(--dl-space-space-unit);
+    z-index: 998;
+  }
+  .flashyre-assessment-previous-button {
+    width: 120px;
+  }
+  .flashyre-assessment-previous-text {
+    width: 120px;
+    padding: 0px;
+  }
+  .flashyre-assessment-next-button {
+    width: 120px;
+  }
+  .flashyre-assessment-options-container {
+    width: 412px;
+  }
+  .flashyre-assessment-que-num-video {
+    width: 200px;
+    position: relative;
+  }
+  .flashyre-assessment-video-container {
+    width: 200px;
+    height: 200px;
+  }
+  .flashyre-assessment-question-numbers {
+    left: 0px;
+    bottom: 0px;
+    position: absolute;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .flashyre-assessment-text46 {
+    font-size: 20px;
+  }
+  .flashyre-assessment-text57 {
+    color: rgb(241, 4, 0);
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .flashyre-assessment-text66 {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-style: inherit;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .flashyre-assessment-container {
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  .flashyre-assessment-assessment-container {
+    width: auto;
+    height: 566px;
+    margin-top: 0px;
+    justify-content: flex-start;
+  }
+  .flashyre-assessment-header-container {
+    top: 0px;
+    left: 0px;
+    width: 990px;
+    height: 8%;
+    z-index: 1000;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .flashyre-assessment-question-answer-container {
+    width: 100%;
+    height: 565px;
+    margin: 0px;
+    align-self: center;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .flashyre-assessment-qas-container {
+    gap: 16;
+    width: auto;
+    justify-content: flex-start;
+  }
+  .flashyre-assessment-section-ab {
+    width: 40px;
+    height: 500px;
+  }
+  .flashyre-assessment-section-a {
+    width: 100%;
+  }
+  .flashyre-assessment-section-a-text {
+    height: auto;
+  }
+  .flashyre-assessment-section-b-text {
+    height: auto;
+  }
+  .flashyre-assessment-question-container {
+    width: 300px;
+    height: 500px;
+    align-self: center;
+    justify-content: flex-start;
+  }
+  .flashyre-assessment-question {
+    width: 100%;
+    height: 491px;
+    padding: var(--dl-space-space-halfunit);
+    z-index: 999;
+  }
+  .flashyre-assessment-question-text {
+    width: 395px;
+    height: 100%;
+  }
+  .flashyre-assessment-previous-next-container {
+    height: 40px;
+    padding-left: var(--dl-space-space-halfunit);
+    padding-right: var(--dl-space-space-halfunit);
+  }
+  .flashyre-assessment-previous-button {
+    width: auto;
+    height: 40px;
+  }
+  .flashyre-assessment-previous-text {
+    width: 100px;
+  }
+  .flashyre-assessment-next-button {
+    width: 100px;
+    height: 40px;
+  }
+  .flashyre-assessment-next-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment-options-container {
+    width: 300px;
+    height: 500px;
+    align-self: center;
+  }
+  .flashyre-assessment-opitons {
+    width: 100%;
+    height: 100%;
+    padding: var(--dl-space-space-halfunit);
+  }
+  .flashyre-assessment-que-num-video {
+    gap: 8px;
+    width: 168px;
+    height: 100%;
+    position: relative;
+    align-items: center;
+  }
+  .flashyre-assessment-video-container {
+    width: 100%;
+  }
+  .flashyre-assessment-question-numbers {
+    gap: 8px;
+    left: 0px;
+    width: 100%;
+    bottom: 0px;
+    height: 245px;
+    display: grid;
+    padding: var(--dl-space-space-halfunit);
+    position: absolute;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .flashyre-assessment-text10 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text11 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text12 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text13 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text14 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text15 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text16 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text17 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text18 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text19 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text20 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text21 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text22 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text23 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text24 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text25 {
+    width: 40px;
+    height: 40px;
+  }
+  .flashyre-assessment-text30 {
+    color: rgb(255, 255, 255);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .flashyre-assessment-text55 {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .flashyre-assessment-container {
+    height: 1058px;
+    margin-top: 0px;
+    justify-content: flex-start;
+  }
+  .flashyre-assessment-assessment-container {
+    width: 100%;
+    height: 760px;
+  }
+  .flashyre-assessment-header-container {
+    width: 100%;
+  }
+  .flashyre-assessment-question-answer-container {
+    width: 100%;
+    height: 766px;
+    align-self: center;
+    margin-top: 100px;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .flashyre-assessment-qas-container {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    margin-top: 0px;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .flashyre-assessment-section-ab {
+    display: none;
+    flex-direction: column;
+  }
+  .flashyre-assessment-section-a {
+    height: 100%;
+  }
+  .flashyre-assessment-q-and-a {
+    width: 100%;
+    flex-direction: column;
+  }
+  .flashyre-assessment-question-container {
+    width: 100%;
+    height: 331px;
+    align-self: flex-start;
+  }
+  .flashyre-assessment-question-text {
+    width: 100%;
+  }
+  .flashyre-assessment-previous-next-container {
+    width: 100%;
+    height: 40px;
+  }
+  .flashyre-assessment-previous-button {
+    width: 100%;
+    height: 40px;
+  }
+  .flashyre-assessment-next-button {
+    height: 40px;
+  }
+  .flashyre-assessment-options-container {
+    width: 100%;
+    height: auto;
+    align-self: flex-start;
+  }
+  .flashyre-assessment-opitons {
+    width: 100%;
+    height: 270px;
+  }
+  .flashyre-assessment-que-num-video {
+    display: none;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .flashyre-assessment-previous-next-container {
+    width: auto;
+  }
+  .flashyre-assessment-previous-button {
+    width: 97px;
+  }
+  .flashyre-assessment-previous-text {
+    width: 105px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    flex-direction: row-reverse;
+    justify-content: center;
+    background-color: transparent;
+  }
+  .flashyre-assessment-next-button {
+    width: 110px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="flashyre-assessment-container">  <div    id="assessment-container"    class="flashyre-assessment-assessment-container"  >    <div id="header-container" class="flashyre-assessment-header-container">      <img        id="Logo"        [attr.alt]="imageAlt3"        [attr.src]="imageSrc3"        class="flashyre-assessment-logo"      />      <span id="timer" class="flashyre-assessment-timer">        <ng-container>          <ng-template #defaultText12>            <div class="flashyre-assessment-fragment28">              <span class="flashyre-assessment-text57">00:00</span>            </div>          </ng-template>          <ng-container            *ngTemplateOutlet="text12 ? text12 : defaultText12"          ></ng-container>        </ng-container>      </span>      <button        id="end-test-button"        type="button"        class="flashyre-assessment-end-test-button button"      >        <span id="end-test-text" class="flashyre-assessment-end-test-text">          <ng-container>            <ng-template #defaultButton6>              <div class="flashyre-assessment-fragment35">                <span class="flashyre-assessment-text66">End Test</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="button6 ? button6 : defaultButton6"            ></ng-container>          </ng-container>        </span>      </button>    </div>    <div      id="question-answer-container"      class="flashyre-assessment-question-answer-container"    >      <div id="q-a-s-container" class="flashyre-assessment-qas-container">        <div id="section-a-b" class="flashyre-assessment-section-ab">          <div id="section-a" class="flashyre-assessment-section-a">            <span              id="section-a-text"              class="flashyre-assessment-section-a-text"            >              <ng-container>                <ng-template #defaultText5>                  <div class="flashyre-assessment-fragment14">                    <span class="flashyre-assessment-text32">Section A</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="text5 ? text5 : defaultText5"                ></ng-container>              </ng-container>            </span>          </div>          <div id="section-b" class="flashyre-assessment-section-b">            <span              id="section-b-text"              class="flashyre-assessment-section-b-text"            >              <ng-container>                <ng-template #defaultText52>                  <div class="flashyre-assessment-fragment19">                    <span class="flashyre-assessment-text39">Section B</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="text52 ? text52 : defaultText52"                ></ng-container>              </ng-container>            </span>          </div>        </div>        <div id="q-and-a" class="flashyre-assessment-q-and-a">          <div            id="question-container"            class="flashyre-assessment-question-container"          >            <h1              id="question-heading"              class="flashyre-assessment-question-heading"            >              <ng-container>                <ng-template #defaultHeading>                  <div class="flashyre-assessment-fragment13">                    <span class="flashyre-assessment-text31">Question</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="heading ? heading : defaultHeading"                ></ng-container>              </ng-container>            </h1>            <div id="question" class="flashyre-assessment-question">              <span                id="question-text"                class="flashyre-assessment-question-text"              >                <ng-container>                  <ng-template #defaultText13>                    <div class="flashyre-assessment-fragment21">                      <span class="flashyre-assessment-text41">                        <span>                          1. What happens when no argument is happens when no                          argument is supplied to reset() functi                        </span>                        <br />                        <span>India</span>                        <span>                          ength of its &apos;Made in India&apos; initiative,                          marking a significant milestone in the nation&apos;s                          defence sector. In a landmark move, India has                          confirmed a deal to export Brahmos missiles, valued at                          approximately Rs 3800 crore (USD 450 million), to                          Indonesia, News18 reported. This agreement highlights                          India&apos;s growing self-reliance and capabilities in                          defence manufacturing.India has once again                          demonstrated the strength of its &apos;Made in                          India&apos; initiative, marking a significant                          milestone in the nation&apos;s defence sector. In a                          landmark move, India has confirmed a deal to export                          Brahmos missiles, valued at approximately Rs 3800                          crore (USD 450 million), to Indonesia, News18                          reported. This agreement highlights India&apos;s                          growing self-reliance and capabilities in defence                          manufacturing.India has once again demonstrated the                          strength of its &apos;Made in India&apos; initiative,                          marking a significant milestone in the nation&apos;s                          defence sector. In a landmark move, India has                          confirmed a deal to export Brahmos missiles, valued at                          approximately Rs 3800 crore (USD 450 million), to                          Indonesia, News18 reported. This agreement highlights                          India&apos;s growing self-reliance and capabilities in                          defence manufacturing.vIndia has once again                          demonstrated the strength of its &apos;Made in                          India&apos; initiative, marking a significant                          milestone in the nation&apos;s defence sector. In a                          landmark move, India has confirmed a deal to export                          Brahmos missiles, valued at approximately Rs 3800                          crore (USD 450 million), to Indonesia, News18                          reported. This agreement highlights India&apos;s                          growing self-reliance and capabilities in defence                          manufacturing.vvvIndia has once again demonstrated the                          strength of its &apos;Made in India&apos; initiative,                          marking a significant milestone in the nation&apos;s                          defence sector. In a landmark move, India has                          confirmed a deal to export Brahmos missiles, valued at                          approximately Rs 3800 crore (USD 450 million), to                          Indonesia, News18 reported. This agreement highlights                          India&apos;s growing self-reliance and capabilities in                          defence manufacturing.India has once again                          demonstrated the strength of its &apos;Made in                          India&apos; initiative, marking a significant                          milestone in the nation&apos;s defence sector. In a                          landmark move, India has confirmed a deal to export                          Brahmos missiles, valued at approximately Rs 3800                          crore (USD 450 million), to Indonesia, News18                          reported. This agreement highlights India&apos;s                          growing self-reliance and capabilities in defence                          manufacturing.India has once again demonstrated the                          strength of its &apos;Made in India&apos; initiative,                          marking a significant milestone in the nation&apos;s                          defence sector. In a landmark move, India has                          confirmed a deal to export Brahmos missiles, valued at                          approximately Rs 3800 crore (USD 450 million), to                          Indonesia, News18 reported. This agreement highlights                          India&apos;s growing self-reliance and capabilities in                          defence manufacturing.India has once again                          demonstrated the strength of its &apos;Made in                          India&apos; initiative, marking a significant                          milestone in the nation&apos;s defence sector. In a                          landmark move, India has confirmed a deal to export                          Brahmos missiles, valued at approximately Rs 3800                          crore (USD 450 million), to Indonesia, News18                          reported. This agreement highlights India&apos;s                          growing self-reliance and capabilities in defence                          manufacturing.                        </span>                        <br class="flashyre-assessment-text46" />                        <br />                        <br />                      </span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="text13 ? text13 : defaultText13"                  ></ng-container>                </ng-container>              </span>            </div>            <div              id="previous-next-container"              class="flashyre-assessment-previous-next-container"            >              <button                id="previous-button-container"                type="button"                class="flashyre-assessment-previous-button button"              >                <span                  id="previous-button"                  class="flashyre-assessment-previous-text button"                >                  <ng-container>                    <ng-template #defaultText>                      <div class="flashyre-assessment-fragment26">                        <span class="flashyre-assessment-text55">                          &lt;- Previous                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="text ? text : defaultText"                    ></ng-container>                  </ng-container>                </span>              </button>              <button                id="next-button"                type="button"                class="flashyre-assessment-next-button button"              >                <span id="next-text" class="flashyre-assessment-next-text">                  <ng-container>                    <ng-template #defaultButton1>                      <div class="flashyre-assessment-fragment12">                        <span class="flashyre-assessment-text30">                          Next -&gt;                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="button1 ? button1 : defaultButton1"                    ></ng-container>                  </ng-container>                </span>              </button>            </div>          </div>          <div            id="options-container"            class="flashyre-assessment-options-container"          >            <h1              id="options-heading"              class="flashyre-assessment-options-heading"            >              <ng-container>                <ng-template #defaultHeading1>                  <div class="flashyre-assessment-fragment17">                    <span class="flashyre-assessment-text35">Options</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="heading1 ? heading1 : defaultHeading1"                ></ng-container>              </ng-container>            </h1>            <div id="options" class="flashyre-assessment-opitons">              <div id="option1" class="flashyre-assessment-option1">                <input                  type="checkbox"                  id="option1-checkbox"                  [attr.checked]="false"                  class="flashyre-assessment-option1-heckbox"                />                <span                  id="option1-text"                  class="flashyre-assessment-option1-text"                >                  <ng-container>                    <ng-template #defaultText14>                      <div class="flashyre-assessment-fragment31">                        <span class="flashyre-assessment-text60">                          <span>All bits are set to 1 in a bitset </span>                          <br />                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="text14 ? text14 : defaultText14"                    ></ng-container>                  </ng-container>                </span>              </div>              <div id="option2" class="flashyre-assessment-option2">                <input                  type="checkbox"                  id="option2-checkbox"                  [attr.checked]="false"                  class="flashyre-assessment-option2-checkbox"                />                <span                  id="option2-text"                  class="flashyre-assessment-option2-text"                >                  <ng-container>                    <ng-template #defaultText144>                      <div class="flashyre-assessment-fragment18">                        <span class="flashyre-assessment-text36">                          <span>All bits are set to 1 in a bitset </span>                          <br />                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="text144 ? text144 : defaultText144"                    ></ng-container>                  </ng-container>                </span>              </div>              <div id="option3" class="flashyre-assessment-option3">                <input                  type="checkbox"                  id="option3-checkbox"                  [attr.checked]="false"                  [attr.required]="false"                  [attr.defaultChecked]="false"                  class="flashyre-assessment-option3-checkbox"                />                <span                  id="option3-text"                  class="flashyre-assessment-option3-text"                >                  <ng-container>                    <ng-template #defaultText1441>                      <div class="flashyre-assessment-fragment11">                        <span class="flashyre-assessment-text27">                          <span>All bits are set to 1 in a bitset </span>                          <br />                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="text1441 ? text1441 : defaultText1441"                    ></ng-container>                  </ng-container>                </span>              </div>              <div id="option4" class="flashyre-assessment-option4">                <input                  type="checkbox"                  id="option4-checkbox"                  [attr.checked]="false"                  class="flashyre-assessment-option4-checkbox"                />                <span                  id="option4-text"                  class="flashyre-assessment-option4-text"                >                  <ng-container>                    <ng-template #defaultText14411>                      <div class="flashyre-assessment-fragment25">                        <span class="flashyre-assessment-text52">                          <span>All bits are set to 1 in a bitset</span>                          <br />                        </span>                      </div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="text14411 ? text14411 : defaultText14411"                    ></ng-container>                  </ng-container>                </span>              </div>            </div>          </div>        </div>      </div>      <div id="que-num-video" class="flashyre-assessment-que-num-video">        <div          id="video-container"          class="flashyre-assessment-video-container"        ></div>        <div id="question-numbers" class="flashyre-assessment-question-numbers">          <span class="flashyre-assessment-text10">            <ng-container>              <ng-template #defaultText9>                <div class="flashyre-assessment-fragment38">                  <span class="flashyre-assessment-text69">1</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text9 ? text9 : defaultText9"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text11">            <ng-container>              <ng-template #defaultText915>                <div class="flashyre-assessment-fragment29">                  <span class="flashyre-assessment-text58">2</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text915 ? text915 : defaultText915"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text12">            <ng-container>              <ng-template #defaultText9151>                <div class="flashyre-assessment-fragment36">                  <span class="flashyre-assessment-text67">3</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text9151 ? text9151 : defaultText9151"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text13">            <ng-container>              <ng-template #defaultText914>                <div class="flashyre-assessment-fragment34">                  <span class="flashyre-assessment-text65">4</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text914 ? text914 : defaultText914"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text14">            <ng-container>              <ng-template #defaultText913>                <div class="flashyre-assessment-fragment27">                  <span class="flashyre-assessment-text56">5</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text913 ? text913 : defaultText913"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text15">            <ng-container>              <ng-template #defaultText912>                <div class="flashyre-assessment-fragment10">                  <span class="flashyre-assessment-text26">6</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text912 ? text912 : defaultText912"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text16">            <ng-container>              <ng-template #defaultText911>                <div class="flashyre-assessment-fragment37">                  <span class="flashyre-assessment-text68">7</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text911 ? text911 : defaultText911"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text17">            <ng-container>              <ng-template #defaultText910>                <div class="flashyre-assessment-fragment30">                  <span class="flashyre-assessment-text59">8</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text910 ? text910 : defaultText910"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text18">            <ng-container>              <ng-template #defaultText99>                <div class="flashyre-assessment-fragment24">                  <span class="flashyre-assessment-text51">9</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text99 ? text99 : defaultText99"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text19">            <ng-container>              <ng-template #defaultText98>                <div class="flashyre-assessment-fragment32">                  <span class="flashyre-assessment-text63">10</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text98 ? text98 : defaultText98"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text20">            <ng-container>              <ng-template #defaultText97>                <div class="flashyre-assessment-fragment15">                  <span class="flashyre-assessment-text33">11</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text97 ? text97 : defaultText97"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text21">            <ng-container>              <ng-template #defaultText96>                <div class="flashyre-assessment-fragment23">                  <span class="flashyre-assessment-text50">12</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text96 ? text96 : defaultText96"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text22">            <ng-container>              <ng-template #defaultText95>                <div class="flashyre-assessment-fragment16">                  <span class="flashyre-assessment-text34">13</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text95 ? text95 : defaultText95"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text23">            <ng-container>              <ng-template #defaultText94>                <div class="flashyre-assessment-fragment20">                  <span class="flashyre-assessment-text40">14</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text94 ? text94 : defaultText94"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text24">            <ng-container>              <ng-template #defaultText93>                <div class="flashyre-assessment-fragment33">                  <span class="flashyre-assessment-text64">15</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text93 ? text93 : defaultText93"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-text25">            <ng-container>              <ng-template #defaultText92>                <div class="flashyre-assessment-fragment22">                  <span class="flashyre-assessment-text49">16</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text92 ? text92 : defaultText92"              ></ng-container>            </ng-container>          </span>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'FlashyreAssessment'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FlashyreAssessment.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

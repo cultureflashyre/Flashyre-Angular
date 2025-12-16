@@ -1,0 +1,2855 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ProfileEducationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/profile-education-component/profile-education-component.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>profile-education-component</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./profile-education-component.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./profile-education-component.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#courses" >courses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#educationFormInstances" >educationFormInstances</a>
+                            </li>
+                            <li>
+                                <a href="#educationForms" >educationForms</a>
+                            </li>
+                            <li>
+                                <a href="#educationLevels" >educationLevels</a>
+                            </li>
+                            <li>
+                                <a href="#errorMessage" >errorMessage</a>
+                            </li>
+                            <li>
+                                <a href="#isLoading" >isLoading</a>
+                            </li>
+                            <li>
+                                <a href="#specializations" >specializations</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1" >text1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text111" >text111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1111" >text1111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1112" >text1112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text112" >text112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2" >text2</a>
+                            </li>
+                            <li>
+                                <a href="#todayDate" >todayDate</a>
+                            </li>
+                            <li>
+                                <a href="#universities" >universities</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#addNewForm" >addNewForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createEducationForm" >createEducationForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#dateRangeValidator" >dateRangeValidator</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getDropdownIdByName" >getDropdownIdByName</a>
+                            </li>
+                            <li>
+                                <a href="#goToPrevious" >goToPrevious</a>
+                            </li>
+                            <li>
+                                <a href="#loadReferenceData" >loadReferenceData</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#removeForm" >removeForm</a>
+                            </li>
+                            <li>
+                                <a href="#saveEducation" >saveEducation</a>
+                            </li>
+                            <li>
+                                <a href="#skipToNextSection" >skipToNextSection</a>
+                            </li>
+                            <li>
+                                <a href="#trackById" >trackById</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder, educationService: <a href="../injectables/EducationService.html" target="_self">EducationService</a>, router: Router)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>educationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EducationService.html" target="_self" >EducationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:35</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addNewForm"></a>
+                    <span class="name">
+                        <span ><b>addNewForm</b></span>
+                        <a href="#addNewForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>addNewForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:153</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createEducationForm"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createEducationForm</b></span>
+                        <a href="#createEducationForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createEducationForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>FormGroup</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dateRangeValidator"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>dateRangeValidator</b></span>
+                        <a href="#dateRangeValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>dateRangeValidator(form: FormGroup)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="145"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:145</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>form</td>
+                                            <td>
+                                                        <code>FormGroup</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDropdownIdByName"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getDropdownIdByName</b></span>
+                        <a href="#getDropdownIdByName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDropdownIdByName(dropdownList: <a href="../interfaces/DropdownItem.html" target="_self">DropdownItem[]</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dropdownList</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DropdownItem.html" target="_self" >DropdownItem[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>number | string</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToPrevious"></a>
+                    <span class="name">
+                        <span ><b>goToPrevious</b></span>
+                        <a href="#goToPrevious"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToPrevious()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="248"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:248</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadReferenceData"></a>
+                    <span class="name">
+                        <span ><b>loadReferenceData</b></span>
+                        <a href="#loadReferenceData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadReferenceData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:104</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeForm"></a>
+                    <span class="name">
+                        <span ><b>removeForm</b></span>
+                        <a href="#removeForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removeForm(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveEducation"></a>
+                    <span class="name">
+                        <span ><b>saveEducation</b></span>
+                        <a href="#saveEducation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>saveEducation()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="167"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:167</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skipToNextSection"></a>
+                    <span class="name">
+                        <span ><b>skipToNextSection</b></span>
+                        <a href="#skipToNextSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skipToNextSection()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="252"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:252</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackById"></a>
+                    <span class="name">
+                        <span ><b>trackById</b></span>
+                        <a href="#trackById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>trackById(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, item: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:256</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>item</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="courses"></a>
+                    <span class="name">
+                        <span ><b>courses</b></span>
+                        <a href="#courses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DropdownItem.html" target="_self" >DropdownItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="educationFormInstances"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>educationFormInstances</b></span>
+                        <a href="#educationFormInstances"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>QueryList&lt;ElementRef&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChildren(&#x27;educationFormInstance&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="educationForms"></a>
+                    <span class="name">
+                        <span ><b>educationForms</b></span>
+                        <a href="#educationForms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="educationLevels"></a>
+                    <span class="name">
+                        <span ><b>educationLevels</b></span>
+                        <a href="#educationLevels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DropdownItem.html" target="_self" >DropdownItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorMessage"></a>
+                    <span class="name">
+                        <span ><b>errorMessage</b></span>
+                        <a href="#errorMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLoading"></a>
+                    <span class="name">
+                        <span ><b>isLoading</b></span>
+                        <a href="#isLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="specializations"></a>
+                    <span class="name">
+                        <span ><b>specializations</b></span>
+                        <a href="#specializations"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DropdownItem.html" target="_self" >DropdownItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1</b></span>
+                        <a href="#text1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text111</b></span>
+                        <a href="#text111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1111</b></span>
+                        <a href="#text1111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1112</b></span>
+                        <a href="#text1112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text112</b></span>
+                        <a href="#text112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2</b></span>
+                        <a href="#text2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="todayDate"></a>
+                    <span class="name">
+                        <span ><b>todayDate</b></span>
+                        <a href="#todayDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Date().toISOString().split(&#x27;T&#x27;)[0]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="universities"></a>
+                    <span class="name">
+                        <span ><b>universities</b></span>
+                        <a href="#universities"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/DropdownItem.html" target="_self" >DropdownItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ViewChildren, QueryList, ElementRef, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+import { EducationService } from &#x27;../../services/education.service&#x27;;
+import { forkJoin } from &#x27;rxjs&#x27;;
+import { tap, catchError } from &#x27;rxjs/operators&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+
+interface DropdownItem {
+  id: number;
+  name: string;
+  [key: string]: any;
+}
+
+interface ReferenceData {
+  colleges: DropdownItem[];
+  education_levels: DropdownItem[];
+  courses: DropdownItem[];
+  specializations: DropdownItem[];
+}
+
+@Component({
+  selector: &#x27;profile-education-component&#x27;,
+  templateUrl: &#x27;./profile-education-component.component.html&#x27;,
+  styleUrls: [&#x27;./profile-education-component.component.css&#x27;]
+})
+export class ProfileEducationComponent implements OnInit {
+  @ContentChild(&#x27;text&#x27;) text: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1&#x27;) text1: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text2&#x27;) text2: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text111&#x27;) text111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text112&#x27;) text112: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1111&#x27;) text1111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1112&#x27;) text1112: TemplateRef&lt;any&gt;;
+
+  @Input() rootClassName: string &#x3D; &#x27;&#x27;;
+  @ViewChildren(&#x27;educationFormInstance&#x27;) educationFormInstances: QueryList&lt;ElementRef&gt;;
+
+  educationForms: FormGroup[] &#x3D; [];
+  universities: DropdownItem[] &#x3D; [];
+  educationLevels: DropdownItem[] &#x3D; [];
+  courses: DropdownItem[] &#x3D; [];
+  specializations: DropdownItem[] &#x3D; [];
+  todayDate: string &#x3D; new Date().toISOString().split(&#x27;T&#x27;)[0];
+  isLoading: boolean &#x3D; false;
+  errorMessage: string | null &#x3D; null;
+
+  constructor(
+    private fb: FormBuilder,
+    private educationService: EducationService,
+    private router: Router
+  ) {}
+
+ngOnInit(): void {
+  this.isLoading &#x3D; true;
+  this.errorMessage &#x3D; null;
+
+  const userProfileString &#x3D; localStorage.getItem(&#x27;userProfile&#x27;);
+  if (userProfileString) {
+    try {
+      const userProfile &#x3D; JSON.parse(userProfileString);
+      if (userProfile.educations &amp;&amp; Array.isArray(userProfile.educations) &amp;&amp; userProfile.educations.length &gt; 0) {
+        // Load reference data first
+        this.educationService.getReferenceData().subscribe({
+          next: (data: ReferenceData) &#x3D;&gt; {
+            this.universities &#x3D; data.colleges;
+            this.educationLevels &#x3D; data.education_levels;
+            this.courses &#x3D; data.courses;
+            this.specializations &#x3D; data.specializations;
+
+            this.educationForms &#x3D; []; // reset
+
+            userProfile.educations.forEach((edu: any) &#x3D;&gt; {
+              const form &#x3D; this.createEducationForm();
+              form.patchValue({
+                startDate: edu.start_date || &#x27;&#x27;,
+                endDate: edu.end_date || &#x27;&#x27;,
+                university: this.getDropdownIdByName(this.universities, edu.university),
+                educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
+                course: this.getDropdownIdByName(this.courses, edu.course),
+                specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
+              });
+              this.educationForms.push(form);
+            });
+
+            this.isLoading &#x3D; false;
+          },
+          error: (err) &#x3D;&gt; {
+            this.errorMessage &#x3D; &#x27;Failed to load dropdown data&#x27;;
+            this.addNewForm();
+            this.isLoading &#x3D; false;
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      console.warn(&#x27;Error parsing userProfile from localStorage&#x27;, e);
+    }
+  }
+
+  // Fallback for no localStorage data or errors
+  this.loadReferenceData();
+}
+
+  loadReferenceData(): void {
+    this.isLoading &#x3D; true;
+    this.errorMessage &#x3D; null;
+
+    this.educationService.getReferenceData().pipe(
+      tap((data: ReferenceData) &#x3D;&gt; {
+        console.log(&#x27;Reference data received:&#x27;, data);
+        this.universities &#x3D; data.colleges;
+        this.educationLevels &#x3D; data.education_levels;
+        this.courses &#x3D; data.courses;
+        this.specializations &#x3D; data.specializations;
+
+        this.addNewForm();
+      }),
+      catchError(error &#x3D;&gt; {
+        this.errorMessage &#x3D; error.message || &#x27;Failed to load dropdown data&#x27;;
+        this.addNewForm();
+        return [];
+      })
+    ).subscribe({
+      complete: () &#x3D;&gt; (this.isLoading &#x3D; false)
+    });
+  }
+
+private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | &#x27;&#x27; {
+  if (!name) return &#x27;&#x27;;
+  const item &#x3D; dropdownList.find(d &#x3D;&gt; d.name &#x3D;&#x3D;&#x3D; name);
+  return item ? item.id : &#x27;&#x27;;
+}
+
+  private createEducationForm(): FormGroup {
+    return this.fb.group({
+      startDate: [&#x27;&#x27;, Validators.required],
+      endDate: [&#x27;&#x27;, Validators.required],
+      university: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      educationLevel: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      course: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      specialization: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+    }, { validators: this.dateRangeValidator });
+  }
+
+  private dateRangeValidator(form: FormGroup): { [key: string]: any } | null {
+    const startDate &#x3D; form.get(&#x27;startDate&#x27;)?.value;
+    const endDate &#x3D; form.get(&#x27;endDate&#x27;)?.value;
+    return startDate &amp;&amp; endDate &amp;&amp; new Date(endDate) &lt; new Date(startDate)
+      ? { dateRangeInvalid: true }
+      : null;
+  }
+
+  addNewForm(): void {
+    this.educationForms.push(this.createEducationForm());
+    setTimeout(() &#x3D;&gt; {
+      const lastForm &#x3D; this.educationFormInstances.last;
+      if (lastForm) {
+        lastForm.nativeElement.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+      }
+    }, 0);
+  }
+
+  removeForm(index: number): void {
+    this.educationForms.splice(index, 1);
+  }
+
+  saveEducation(): Promise&lt;boolean&gt; {
+    return new Promise((resolve) &#x3D;&gt; {
+      const validForms &#x3D; this.educationForms.filter(form &#x3D;&gt; form.valid);
+      if (!validForms.length) {
+        console.log(&#x27;No valid forms to save&#x27;);
+        this.errorMessage &#x3D; &#x27;Please fill out all required fields correctly.&#x27;;
+        resolve(false);
+        return;
+      }
+
+      const saveObservables &#x3D; validForms.map(form &#x3D;&gt; {
+        console.log(&#x27;Raw form values:&#x27;, form.value);
+
+        // Validate that all dropdown fields have valid IDs
+        if (!form.value.university || !form.value.educationLevel || !form.value.course || !form.value.specialization) {
+          console.error(&#x27;Invalid or missing dropdown selections:&#x27;, form.value);
+          this.errorMessage &#x3D; &#x27;Please select valid options for all dropdowns.&#x27;;
+          return [];
+        }
+
+        // Map IDs to names
+        const university &#x3D; this.universities.find(u &#x3D;&gt; u.id &#x3D;&#x3D;&#x3D; +form.value.university)?.name;
+        const educationLevel &#x3D; this.educationLevels.find(e &#x3D;&gt; e.id &#x3D;&#x3D;&#x3D; +form.value.educationLevel)?.name;
+        const course &#x3D; this.courses.find(c &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; +form.value.course)?.name;
+        const specialization &#x3D; this.specializations.find(s &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; +form.value.specialization)?.name;
+
+        // Check if any mapped value is undefined
+        if (!university || !educationLevel || !course || !specialization) {
+          console.error(&#x27;Invalid mapped values:&#x27;, { university, educationLevel, course, specialization });
+          this.errorMessage &#x3D; &#x27;One or more selected options are invalid.&#x27;;
+          return [];
+        }
+
+        const data &#x3D; {
+          select_start_date: form.value.startDate,
+          select_end_date: form.value.endDate,
+          university: university,
+          education_level: educationLevel,
+          course: course,
+          specialization: specialization
+        };
+
+        console.log(&#x27;Sending data to backend:&#x27;, JSON.stringify(data, null, 2));
+        return this.educationService.addEducation(data).pipe(
+          catchError(error &#x3D;&gt; {
+            console.error(&#x27;Error saving form:&#x27;, error);
+            let errorMessage &#x3D; &#x27;Failed to save education data&#x27;;
+            try {
+              const parsedError &#x3D; JSON.parse(error.message);
+              errorMessage &#x3D; typeof parsedError &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? Object.values(parsedError).join(&#x27;; &#x27;) : parsedError;
+            } catch (e) {
+              errorMessage &#x3D; error.message || &#x27;Unknown error occurred&#x27;;
+            }
+            this.errorMessage &#x3D; errorMessage;
+            return [];
+          })
+        );
+      });
+
+      forkJoin(saveObservables).subscribe({
+        next: () &#x3D;&gt; {
+          console.log(&#x27;All educations saved successfully&#x27;);
+          this.errorMessage &#x3D; null;
+          resolve(true);
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;Error saving educations:&#x27;, error);
+          let errorMessage &#x3D; &#x27;Failed to save education data&#x27;;
+          try {
+            const parsedError &#x3D; JSON.parse(error.message);
+            errorMessage &#x3D; typeof parsedError &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? Object.values(parsedError).join(&#x27;; &#x27;) : parsedError;
+          } catch (e) {
+            errorMessage &#x3D; error.message || &#x27;Unknown error occurred&#x27;;
+          }
+          this.errorMessage &#x3D; errorMessage;
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  goToPrevious(): void {
+    this.router.navigate([&#x27;/profile-employment-page&#x27;]);
+  }
+
+  skipToNextSection(): void {
+    this.router.navigate([&#x27;/profile-certification-page&#x27;]);
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id || index;
+  }
+}
+
+
+
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;profile-education-component-container1&quot; [ngClass]&#x3D;&quot;rootClassName&quot;&gt;
+  &lt;div id&#x3D;&quot;profile-education-container&quot; class&#x3D;&quot;profile-education-component-profile-education-container&quot;&gt;
+    &lt;span id&#x3D;&quot;education-header&quot; class&#x3D;&quot;profile-education-component-education-text1&quot;&gt;
+      &lt;ng-container&gt;
+        &lt;ng-template #defaultText&gt;
+          &lt;div class&#x3D;&quot;profile-education-component-fragment19&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-component-text23&quot;&gt;Education&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;&gt;&lt;/ng-container&gt;
+      &lt;/ng-container&gt;
+    &lt;/span&gt;
+
+    &lt;!-- Error message display --&gt;
+    &lt;div *ngIf&#x3D;&quot;errorMessage&quot; class&#x3D;&quot;error-message&quot;&gt;
+      {{ errorMessage }}
+    &lt;/div&gt;
+
+    &lt;!-- Loading spinner --&gt;
+    &lt;div *ngIf&#x3D;&quot;isLoading&quot; class&#x3D;&quot;loading-spinner&quot;&gt;
+      Loading education data...
+    &lt;/div&gt;
+
+    &lt;!-- Scrollable container for dynamic education forms --&gt;
+    &lt;div class&#x3D;&quot;profile-education-container&quot;&gt;
+      &lt;div *ngFor&#x3D;&quot;let form of educationForms; let i &#x3D; index&quot; class&#x3D;&quot;education-form-instance&quot; #educationFormInstance&gt;
+        &lt;form [formGroup]&#x3D;&quot;form&quot;&gt;
+          &lt;div id&#x3D;&quot;duration-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-duration-container1&quot;&gt;
+            &lt;div id&#x3D;&quot;duration-{{i}}&quot; class&#x3D;&quot;profile-education-component-duration-container2&quot;&gt;
+              &lt;span id&#x3D;&quot;duration-text-{{i}}&quot; class&#x3D;&quot;profile-education-component-duration-text&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText2&gt;
+                    &lt;div class&#x3D;&quot;profile-education-component-fragment21&quot;&gt;
+                      &lt;span class&#x3D;&quot;profile-education-component-text27&quot;&gt;Duration&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text2 ? text2 : defaultText2&quot;&gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;profile-education-component-form1 input&quot;&gt;
+                &lt;input
+                  type&#x3D;&quot;date&quot;
+                  formControlName&#x3D;&quot;startDate&quot;
+                  class&#x3D;&quot;profile-education-component-select&quot;
+                  [max]&#x3D;&quot;todayDate&quot;
+                  required
+                /&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;profile-education-component-form2 input&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;date&quot;
+                formControlName&#x3D;&quot;endDate&quot;
+                class&#x3D;&quot;profile-education-component-select&quot;
+                [min]&#x3D;&quot;form.get(&#x27;startDate&#x27;)?.value&quot;
+                [max]&#x3D;&quot;todayDate&quot;
+                required
+              /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div id&#x3D;&quot;university-institute-education-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-university-institute-education-container&quot;&gt;
+            &lt;div id&#x3D;&quot;university-input-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-university-institute-container&quot;&gt;
+              &lt;span id&#x3D;&quot;university-institute-text-{{i}}&quot; class&#x3D;&quot;profile-education-component-university-institute-text&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText111&gt;
+                    &lt;div class&#x3D;&quot;profile-education-component-fragment14&quot;&gt;
+                      &lt;span class&#x3D;&quot;profile-education-component-text16&quot;&gt;University/Institute&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text111 ? text111 : defaultText111&quot;&gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;profile-education-component-form3 input&quot;&gt;
+                &lt;select formControlName&#x3D;&quot;university&quot; class&#x3D;&quot;profile-education-component-select&quot;&gt;
+                  &lt;option value&#x3D;&quot;&quot; disabled selected&gt;Select&lt;/option&gt;
+                  &lt;option *ngFor&#x3D;&quot;let uni of universities&quot; [value]&#x3D;&quot;uni.id&quot;&gt;{{ uni.name }}&lt;/option&gt;
+                &lt;/select&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div id&#x3D;&quot;education-input-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-education-container&quot;&gt;
+              &lt;span id&#x3D;&quot;education-text-{{i}}&quot; class&#x3D;&quot;profile-education-component-education-text2&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText112&gt;
+                    &lt;div class&#x3D;&quot;profile-education-component-fragment15&quot;&gt;
+                      &lt;span class&#x3D;&quot;profile-education-component-text19&quot;&gt;Education&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text112 ? text112 : defaultText112&quot;&gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;profile-education-component-form4 input&quot;&gt;
+                &lt;select formControlName&#x3D;&quot;educationLevel&quot; class&#x3D;&quot;profile-education-component-select&quot;&gt;
+                  &lt;option value&#x3D;&quot;&quot; disabled selected&gt;Select&lt;/option&gt;
+                  &lt;option *ngFor&#x3D;&quot;let level of educationLevels&quot; [value]&#x3D;&quot;level.id&quot;&gt;{{ level.name }}&lt;/option&gt;
+                &lt;/select&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;profile-education-component-container3&quot;&gt;
+            &lt;div id&#x3D;&quot;education-course-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-course-container&quot;&gt;
+              &lt;span id&#x3D;&quot;education-course-{{i}}&quot; class&#x3D;&quot;profile-education-component-course-text&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText1111&gt;
+                    &lt;div class&#x3D;&quot;profile-education-component-fragment20&quot;&gt;
+                      &lt;span class&#x3D;&quot;profile-education-component-text24&quot;&gt;Course&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text1111 ? text1111 : defaultText1111&quot;&gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;profile-education-component-form5 input&quot;&gt;
+                &lt;select formControlName&#x3D;&quot;course&quot; class&#x3D;&quot;profile-education-component-select&quot;&gt;
+                  &lt;option value&#x3D;&quot;&quot; disabled selected&gt;Select&lt;/option&gt;
+                  &lt;option *ngFor&#x3D;&quot;let course of courses&quot; [value]&#x3D;&quot;course.id&quot;&gt;{{ course.name }}&lt;/option&gt;
+                &lt;/select&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div id&#x3D;&quot;education-specialisation-container-{{i}}&quot; class&#x3D;&quot;profile-education-component-specialisation-container&quot;&gt;
+              &lt;span id&#x3D;&quot;education-specialization-dropdown-{{i}}&quot; class&#x3D;&quot;profile-education-component-specialisation-text&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultText1112&gt;
+                    &lt;div class&#x3D;&quot;profile-education-component-fragment13&quot;&gt;
+                      &lt;span class&#x3D;&quot;profile-education-component-text13&quot;&gt;Specialization&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text1112 ? text1112 : defaultText1112&quot;&gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;profile-education-component-form6 input&quot;&gt;
+                &lt;select formControlName&#x3D;&quot;specialization&quot; class&#x3D;&quot;profile-education-component-select&quot;&gt;
+                  &lt;option value&#x3D;&quot;&quot; disabled selected&gt;Select&lt;/option&gt;
+                  &lt;option *ngFor&#x3D;&quot;let spec of specializations&quot; [value]&#x3D;&quot;spec.id&quot;&gt;{{ spec.name }}&lt;/option&gt;
+                &lt;/select&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Conditionally display Remove button only when there are multiple forms --&gt;
+          &lt;button *ngIf&#x3D;&quot;educationForms.length &gt; 1&quot; class&#x3D;&quot;remove-button&quot; (click)&#x3D;&quot;removeForm(i)&quot;&gt;- Remove Education&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;!-- Add a horizontal line between positions, except after the last one --&gt;
+        &lt;hr *ngIf&#x3D;&quot;i &lt; educationForms.length - 1&quot; class&#x3D;&quot;position-divider&quot; /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Add Education Button outside the scrollable container --&gt;
+    &lt;span id&#x3D;&quot;add-education-button&quot; class&#x3D;&quot;profile-education-component-add-education-text button&quot; (click)&#x3D;&quot;addNewForm()&quot;&gt;
+      &lt;ng-container&gt;
+        &lt;ng-template #defaultText1&gt;
+          &lt;div class&#x3D;&quot;profile-education-component-fragment22&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-component-text28&quot;&gt;+ Add Education&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text1 ? text1 : defaultText1&quot;&gt;&lt;/ng-container&gt;
+      &lt;/ng-container&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./profile-education-component.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+
+.profile-education-component-container1 {
+  gap: 24px;
+  width: 720px;
+  height: 420px;
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  border: 0px solid transparent; /* Added transparent border */
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FFFFFF;
+  position: auto;
+}
+
+.profile-education-component-profile-education-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 420px; /* Original height */
+  border: 0px solid transparent; /* Added transparent border */
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  position: relative; /* Added to anchor child elements */
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.profile-education-component-education-text1 {
+  gap: 24px;
+  width: 672px;
+  height: 24px;
+  display: flex-start;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  /* padding-left: 30px;
+  margin-top: 25px; */
+  
+}
+
+.profile-education-component-duration-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 672px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.profile-education-component-duration-container2 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-education-component-duration-text {
+  width: 324px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+}
+
+.profile-education-component-form1 {
+  height: 48px;
+  display: flex;
+  align-self: stretch;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-year-text {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-education-component-form2 {
+  right: 0px;
+  width: 324px;
+  bottom: 4px;
+  height: 48px;
+  display: flex;
+  position: absolute;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  border-radius: 4px;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-month-text {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon2 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-education-component-university-institute-education-container {
+  flex: 0 0 auto;
+  width: 672px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.profile-education-component-university-institute-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-education-component-university-institute-text {
+  width: 324px;
+  height: 24px;
+  padding-left: 15px;
+}
+
+.profile-education-component-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-education-component-form3 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-text1 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon3 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-education-component-education-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-education-component-education-text2 {
+  width: 324px;
+  height: 24px;
+  padding-left: 15px;
+}
+
+.profile-education-component-education-select-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-education-component-form4 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-text2 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon4 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-education-component-container3 {
+  flex: 0 0 auto;
+  width: 672px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.profile-education-component-course-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-education-component-course-text {
+  width: 324px;
+  height: 24px;
+  padding-left: 15px;
+}
+
+.profile-education-component-select-container1 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-education-component-form5 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-text3 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon5 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.profile-education-component-specialisation-container {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-education-component-specialisation-text {
+  width: 324px;
+  height: 24px;
+  padding-left: 15px;
+}
+
+.profile-education-component-select-container2 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-education-component-form6 {
+  width: 324px;
+  height: 48px;
+  display: flex;
+  align-self: center;
+  align-items: flex-end;
+  padding-top: 0px;
+  border: none;
+  padding-right: 10px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.profile-education-component-select-text4 {
+  fill: #69737E;
+  color: #69737E;
+  align-self: flex-start;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+
+.profile-education-component-drop-down-icon6 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: auto;
+  display: flex;
+  margin-top: -28px;
+  border-color: var(--dl-color-theme-secondary1);
+  border-width: 1px;
+}
+
+.forms-container {
+  flex: 1; /* Allow it to take available space */
+  max-height: 340px; /* Fixed height to leave room for the button */
+  /* overflow-y: scroll; Enable vertical scrolling within this container
+  overflow-x: hidden; */
+  width: 100%; /* Ensure it spans the full width */
+}
+
+.profile-education-component-add-education-text {
+  width: auto;
+  height: 24px;
+  display: inline-block;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+   margin-left: 20px;
+  margin-bottom: 10px; 
+}
+
+/* .profile-education-component-add-education-text:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+
+.profile-education-component-add-education-text:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+} */
+
+.profile-education-component-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  cursor: pointer;
+  padding: 10px;
+  color: white;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+/* .education-form-instance {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+} */
+
+.remove-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: #ff4d4d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 495px;
+}
+
+.remove-button:hover {
+  cursor: pointer;
+}
+
+.profile-education-component-fragment10 {
+  display: contents;
+}
+
+.profile-education-component-text10 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment11 {
+  display: contents;
+}
+
+.profile-education-component-text11 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment12 {
+  display: contents;
+}
+
+.profile-education-component-text12 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment13 {
+  display: contents;
+}
+
+.profile-education-component-text13 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-education-component-fragment14 {
+  display: contents;
+}
+
+.profile-education-component-text16 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-education-component-fragment15 {
+  display: contents;
+}
+
+.profile-education-component-text19 {
+  color: #18191c;
+  display: inline-block;
+}
+
+.profile-education-component-fragment16 {
+  display: contents;
+}
+
+.profile-education-component-text20 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment17 {
+  display: contents;
+}
+
+.profile-education-component-text21 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment18 {
+  display: contents;
+}
+
+.profile-education-component-text22 {
+  display: inline-block;
+}
+
+.profile-education-component-fragment19 {
+  display: contents;
+}
+
+.profile-education-component-text23 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-education-component-fragment20 {
+  display: contents;
+}
+
+.profile-education-component-text24 {
+  color: #18191c;
+  display: inline-block;
+}
+
+.profile-education-component-fragment21 {
+  display: contents;
+  height: 48px;
+}
+
+.profile-education-component-text27 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-education-component-fragment22 {
+  display: contents;
+}
+
+.profile-education-component-text28 {
+  color: #05356c;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.position-divider {
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+  width: 100%;
+  text-decoration-thickness: 5px;
+}
+
+@media(max-width: 1200px) {
+  .profile-education-component-container1 {
+    gap: 24px;
+    width: 720px;
+    height: 420px;
+    padding: 24px;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+  }
+  .profile-education-component-education-text1 {
+    width: 672px;
+    height: 24px;
+    /* padding-left: 20px; */
+  }
+  .profile-education-component-university-institute-education-container {
+    width: 672px;
+    height: 76px;
+    justify-content: space-between;
+  }
+  .profile-education-component-container3 {
+    width: 672px;
+    height: 76px;
+    justify-content: space-between;
+  }
+  .profile-education-component-add-education-text {
+    width: auto;
+    height: 24px;
+  }
+  .profile-education-component-text23 {
+    color: #18191c;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .profile-education-component-text28 {
+    color: #05356c;
+    font-weight: 600;
+  }
+}
+
+@media(max-width: 479px) {
+  .profile-education-component-container1 {
+    width: 100%;
+    height: 686px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    background-color: transparent;
+  }
+   .profile-education-component-profile-education-container {
+    gap: var(--dl-space-space-twounits);
+    width: 95%;
+    height: 100%;
+    padding: var(--dl-space-space-twounits);
+    align-self: center;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #FFFFFF;
+  } 
+  .profile-education-component-education-text1 {
+    width: 100%;
+  }
+  .profile-education-component-duration-container1 {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .profile-education-component-duration-container2 {
+    width: 47%;
+  }
+  .profile-education-component-duration-text {
+    width: 100%;
+  }
+  .profile-education-component-form1 {
+    width: auto;
+    padding-left: var(--dl-space-space-halfunit);
+    padding-right: var(--dl-space-space-halfunit);
+  }
+  .profile-education-component-form2 {
+    width: 48%;
+    position: relative;
+    align-self: flex-end;
+    padding-left: var(--dl-space-space-halfunit);
+    padding-right: var(--dl-space-space-halfunit);
+  }
+  .profile-education-component-university-institute-education-container {
+    gap: var(--dl-space-space-twounits);
+    width: 100%;
+    height: 183px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .profile-education-component-university-institute-container {
+    width: 100%;
+  }
+  .profile-education-component-university-institute-text {
+    width: 100%;
+  }
+  .profile-education-component-container2 {
+    width: 100%;
+  }
+  .profile-education-component-form3 {
+    width: 100%;
+  }
+  .profile-education-component-education-container {
+    width: 100%;
+  }
+  .profile-education-component-education-text2 {
+    width: 100%;
+  }
+  .profile-education-component-education-select-container {
+    width: 100%;
+  }
+  .profile-education-component-form4 {
+    width: 100%;
+  }
+  .profile-education-component-container3 {
+    gap: var(--dl-space-space-twounits);
+    width: 100%;
+    height: 177px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .profile-education-component-course-container {
+    width: 100%;
+  }
+  .profile-education-component-course-text {
+    width: 100%;
+  }
+  .profile-education-component-select-container1 {
+    width: 100%;
+  }
+  .profile-education-component-form5 {
+    width: 100%;
+  }
+  .profile-education-component-specialisation-container {
+    width: 100%;
+  }
+  .profile-education-component-specialisation-text {
+    width: 100%;
+  }
+  .profile-education-component-select-container2 {
+    width: 100%;
+  }
+  .profile-education-component-form6 {
+    width: 100%;
+  }
+  .profile-education-componentroot-class-name2 {
+    overflow: visible;
+    position: relative;
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="profile-education-component-container1" [ngClass]="rootClassName">  <div id="profile-education-container" class="profile-education-component-profile-education-container">    <span id="education-header" class="profile-education-component-education-text1">      <ng-container>        <ng-template #defaultText>          <div class="profile-education-component-fragment19">            <span class="profile-education-component-text23">Education</span>          </div>        </ng-template>        <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>      </ng-container>    </span>    <!-- Error message display -->    <div *ngIf="errorMessage" class="error-message">      {{ errorMessage }}    </div>    <!-- Loading spinner -->    <div *ngIf="isLoading" class="loading-spinner">      Loading education data...    </div>    <!-- Scrollable container for dynamic education forms -->    <div class="profile-education-container">      <div *ngFor="let form of educationForms; let i = index" class="education-form-instance" #educationFormInstance>        <form [formGroup]="form">          <div id="duration-container-{{i}}" class="profile-education-component-duration-container1">            <div id="duration-{{i}}" class="profile-education-component-duration-container2">              <span id="duration-text-{{i}}" class="profile-education-component-duration-text">                <ng-container>                  <ng-template #defaultText2>                    <div class="profile-education-component-fragment21">                      <span class="profile-education-component-text27">Duration</span>                    </div>                  </ng-template>                  <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>                </ng-container>              </span>              <div class="profile-education-component-form1 input">                <input                  type="date"                  formControlName="startDate"                  class="profile-education-component-select"                  [max]="todayDate"                  required                />              </div>            </div>            <div class="profile-education-component-form2 input">              <input                type="date"                formControlName="endDate"                class="profile-education-component-select"                [min]="form.get(\'startDate\')?.value"                [max]="todayDate"                required              />            </div>          </div>          <div id="university-institute-education-container-{{i}}" class="profile-education-component-university-institute-education-container">            <div id="university-input-container-{{i}}" class="profile-education-component-university-institute-container">              <span id="university-institute-text-{{i}}" class="profile-education-component-university-institute-text">                <ng-container>                  <ng-template #defaultText111>                    <div class="profile-education-component-fragment14">                      <span class="profile-education-component-text16">University/Institute</span>                    </div>                  </ng-template>                  <ng-container *ngTemplateOutlet="text111 ? text111 : defaultText111"></ng-container>                </ng-container>              </span>              <div class="profile-education-component-form3 input">                <select formControlName="university" class="profile-education-component-select">                  <option value="" disabled selected>Select</option>                  <option *ngFor="let uni of universities" [value]="uni.id">{{ uni.name }}</option>                </select>              </div>            </div>            <div id="education-input-container-{{i}}" class="profile-education-component-education-container">              <span id="education-text-{{i}}" class="profile-education-component-education-text2">                <ng-container>                  <ng-template #defaultText112>                    <div class="profile-education-component-fragment15">                      <span class="profile-education-component-text19">Education</span>                    </div>                  </ng-template>                  <ng-container *ngTemplateOutlet="text112 ? text112 : defaultText112"></ng-container>                </ng-container>              </span>              <div class="profile-education-component-form4 input">                <select formControlName="educationLevel" class="profile-education-component-select">                  <option value="" disabled selected>Select</option>                  <option *ngFor="let level of educationLevels" [value]="level.id">{{ level.name }}</option>                </select>              </div>            </div>          </div>          <div class="profile-education-component-container3">            <div id="education-course-container-{{i}}" class="profile-education-component-course-container">              <span id="education-course-{{i}}" class="profile-education-component-course-text">                <ng-container>                  <ng-template #defaultText1111>                    <div class="profile-education-component-fragment20">                      <span class="profile-education-component-text24">Course</span>                    </div>                  </ng-template>                  <ng-container *ngTemplateOutlet="text1111 ? text1111 : defaultText1111"></ng-container>                </ng-container>              </span>              <div class="profile-education-component-form5 input">                <select formControlName="course" class="profile-education-component-select">                  <option value="" disabled selected>Select</option>                  <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>                </select>              </div>            </div>            <div id="education-specialisation-container-{{i}}" class="profile-education-component-specialisation-container">              <span id="education-specialization-dropdown-{{i}}" class="profile-education-component-specialisation-text">                <ng-container>                  <ng-template #defaultText1112>                    <div class="profile-education-component-fragment13">                      <span class="profile-education-component-text13">Specialization</span>                    </div>                  </ng-template>                  <ng-container *ngTemplateOutlet="text1112 ? text1112 : defaultText1112"></ng-container>                </ng-container>              </span>              <div class="profile-education-component-form6 input">                <select formControlName="specialization" class="profile-education-component-select">                  <option value="" disabled selected>Select</option>                  <option *ngFor="let spec of specializations" [value]="spec.id">{{ spec.name }}</option>                </select>              </div>            </div>          </div>          <!-- Conditionally display Remove button only when there are multiple forms -->          <button *ngIf="educationForms.length > 1" class="remove-button" (click)="removeForm(i)">- Remove Education</button>        </form>        <!-- Add a horizontal line between positions, except after the last one -->        <hr *ngIf="i < educationForms.length - 1" class="position-divider" />      </div>    </div>    <!-- Add Education Button outside the scrollable container -->    <span id="add-education-button" class="profile-education-component-add-education-text button" (click)="addNewForm()">      <ng-container>        <ng-template #defaultText1>          <div class="profile-education-component-fragment22">            <span class="profile-education-component-text28">+ Add Education</span>          </div>        </ng-template>        <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>      </ng-container>    </span>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ProfileEducationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileEducationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

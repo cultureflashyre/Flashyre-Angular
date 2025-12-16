@@ -1,0 +1,1389 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >JobDescriptionService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/services/job-description.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#apiUrl" >apiUrl</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#deleteFile" >deleteFile</a>
+                            </li>
+                            <li>
+                                <a href="#deleteJobPost" >deleteJobPost</a>
+                            </li>
+                            <li>
+                                <a href="#getJobPost" >getJobPost</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleError" >handleError</a>
+                            </li>
+                            <li>
+                                <a href="#listJobPosts" >listJobPosts</a>
+                            </li>
+                            <li>
+                                <a href="#saveJobPost" >saveJobPost</a>
+                            </li>
+                            <li>
+                                <a href="#updateJobPostStatus" >updateJobPostStatus</a>
+                            </li>
+                            <li>
+                                <a href="#uploadFile" >uploadFile</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(http: HttpClient)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/services/job-description.service.ts:13</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>http</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpClient</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteFile"></a>
+                    <span class="name">
+                        <span ><b>deleteFile</b></span>
+                        <a href="#deleteFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>deleteFile(uniqueId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Soft deletes an uploaded file</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uniqueId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Unique identifier of the file</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with success message and unique_id</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteJobPost"></a>
+                    <span class="name">
+                        <span ><b>deleteJobPost</b></span>
+                        <a href="#deleteJobPost"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>deleteJobPost(uniqueId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="123"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:123</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Soft deletes a job post</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uniqueId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Unique identifier of the job post</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with success message and unique_id</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getJobPost"></a>
+                    <span class="name">
+                        <span ><b>getJobPost</b></span>
+                        <a href="#getJobPost"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getJobPost(uniqueId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retrieves a single job post by unique_id</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uniqueId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Unique identifier of the job post</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/JobDetails.html" target="_self" >Observable&lt;JobDetails&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with job post details</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleError</b></span>
+                        <a href="#handleError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleError(error: HttpErrorResponse)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:228</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handles HTTP errors and formats error messages</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                        <code>HttpErrorResponse</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>HTTP error response</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;never&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with formatted error message</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="listJobPosts"></a>
+                    <span class="name">
+                        <span ><b>listJobPosts</b></span>
+                        <a href="#listJobPosts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>listJobPosts(token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, page?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:177</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Lists all job posts for the authenticated user (paginated)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Page number for pagination (optional)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedJobPostResponse.html" target="_self" >Observable&lt;PaginatedJobPostResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with paginated job posts</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveJobPost"></a>
+                    <span class="name">
+                        <span ><b>saveJobPost</b></span>
+                        <a href="#saveJobPost"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>saveJobPost(jobDetails: <a href="../interfaces/JobDetails.html" target="_self">JobDetails</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Creates or updates a job post</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>jobDetails</td>
+                                            <td>
+                                                            <code><a href="../interfaces/JobDetails.html" target="_self" >JobDetails</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Job details to save</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with unique_id and success message</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateJobPostStatus"></a>
+                    <span class="name">
+                        <span ><b>updateJobPostStatus</b></span>
+                        <a href="#updateJobPostStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateJobPostStatus(uniqueId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, status: "draft" | "final", token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Updates the status of a job post</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uniqueId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Unique identifier of the job post</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                        <code>&quot;draft&quot; | &quot;final&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>New status (&#39;draft&#39; or &#39;final&#39;)</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with success message and unique_id</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadFile"></a>
+                    <span class="name">
+                        <span ><b>uploadFile</b></span>
+                        <a href="#uploadFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>uploadFile(file: File, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="23"
+                                    class="link-to-prism">src/app/services/job-description.service.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Uploads a file to Google Cloud Storage, processes it with AI, and saves metadata and draft job post.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The file to upload</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>JWT token for authentication</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Observable with file URL, unique ID, job details, and MCQs</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apiUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>apiUrl</b></span>
+                        <a href="#apiUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>environment.apiUrl</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/services/job-description.service.ts:13</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { HttpClient, HttpHeaders, HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+import { Observable, throwError } from &#x27;rxjs&#x27;;
+import { catchError, map } from &#x27;rxjs/operators&#x27;;
+import { environment } from &#x27;../../environments/environment&#x27;;
+import { JobDetails, AIJobResponse, PaginatedJobPostResponse } from &#x27;../pages/create-job-post-1st-page/types&#x27;;
+
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class JobDescriptionService {
+  // Base API URL from environment configuration (e.g., &#x27;http://localhost:8000/api/&#x27;)
+  private readonly apiUrl: string &#x3D; environment.apiUrl;
+
+  constructor(private http: HttpClient) {}
+
+  /**
+   * Uploads a file to Google Cloud Storage, processes it with AI, and saves metadata and draft job post.
+   * @param file The file to upload
+   * @param token JWT token for authentication
+   * @returns Observable with file URL, unique ID, job details, and MCQs
+   */
+  uploadFile(file: File, token: string): Observable&lt;AIJobResponse &amp; { file_url: string; unique_id: string }&gt; {
+    // Validate file input
+    if (!file) {
+      console.error(&#x27;No file provided for upload&#x27;);
+      return throwError(() &#x3D;&gt; new Error(&#x27;No file selected for upload&#x27;));
+    }
+
+    // Validate file size (max 10MB, matching Django view)
+    if (file.size &gt; 10 * 1024 * 1024) {
+      return throwError(() &#x3D;&gt; new Error(&#x27;File size exceeds 10MB&#x27;));
+    }
+
+    // Validate file extension
+    const allowedExtensions &#x3D; [&#x27;.pdf&#x27;, &#x27;.docx&#x27;, &#x27;.txt&#x27;, &#x27;.xml&#x27;, &#x27;.csv&#x27;];
+    const ext &#x3D; file.name.toLowerCase().split(&#x27;.&#x27;).pop();
+    if (!ext || !allowedExtensions.includes(&#x60;.${ext}&#x60;)) {
+      return throwError(() &#x3D;&gt; new Error(&#x60;Invalid file format. Supported: ${allowedExtensions.join(&#x27;, &#x27;)}&#x60;));
+    }
+
+    // Create FormData for file upload
+    const formData &#x3D; new FormData();
+    formData.append(&#x27;file&#x27;, file, file.name);
+
+    // Set Authorization header with Bearer token
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;
+    });
+
+    return this.http
+      .post&lt;{ status: string; data: AIJobResponse &amp; { file_url: string; unique_id: string } }&gt;(
+        &#x60;${this.apiUrl}file-upload/&#x60;, // Endpoint: /api/file-upload/
+        formData,
+        { headers }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(error &#x3D;&gt; this.handleError(error))
+      );
+  }
+
+  /**
+   * Creates or updates a job post
+   * @param jobDetails Job details to save
+   * @param token JWT token for authentication
+   * @returns Observable with unique_id and success message
+   */
+  saveJobPost(jobDetails: JobDetails, token: string): Observable&lt;{ message: string; unique_id: string }&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;,
+      &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+    });
+
+    return this.http
+      .post&lt;{ status: string; data: { message: string; unique_id: string } }&gt;(
+        &#x60;${this.apiUrl}job-post/&#x60;, // Endpoint: /api/job-post/
+        jobDetails,
+        { headers }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Updates the status of a job post
+   * @param uniqueId Unique identifier of the job post
+   * @param status New status (&#x27;draft&#x27; or &#x27;final&#x27;)
+   * @param token JWT token for authentication
+   * @returns Observable with success message and unique_id
+   */
+  updateJobPostStatus(uniqueId: string, status: &#x27;draft&#x27; | &#x27;final&#x27;, token: string): Observable&lt;{ message: string; unique_id: string }&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;,
+      &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+    });
+
+    // Prepare payload matching JobPostStatusUpdateSerializer
+    const payload &#x3D; { unique_id: uniqueId, status };
+
+    return this.http
+      .post&lt;{ status: string; data: { message: string; unique_id: string } }&gt;(
+        &#x60;${this.apiUrl}job-post/update-status/&#x60;, // Endpoint: /api/job-post/update-status/
+        payload,
+        { headers }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Soft deletes a job post
+   * @param uniqueId Unique identifier of the job post
+   * @param token JWT token for authentication
+   * @returns Observable with success message and unique_id
+   */
+  deleteJobPost(uniqueId: string, token: string): Observable&lt;{ message: string; unique_id: string }&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;,
+      &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+    });
+
+    // Prepare payload matching DeleteSerializer
+    const payload &#x3D; { unique_id: uniqueId };
+
+    return this.http
+      .delete&lt;{ status: string; data: { message: string; unique_id: string } }&gt;(
+        &#x60;${this.apiUrl}job-post/delete/&#x60;, // Endpoint: /api/job-post/delete/
+        { headers, body: payload }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Soft deletes an uploaded file
+   * @param uniqueId Unique identifier of the file
+   * @param token JWT token for authentication
+   * @returns Observable with success message and unique_id
+   */
+  deleteFile(uniqueId: string, token: string): Observable&lt;{ message: string; unique_id: string }&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;,
+      &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+    });
+
+    // Prepare payload matching DeleteSerializer
+    const payload &#x3D; { unique_id: uniqueId };
+
+    return this.http
+      .delete&lt;{ status: string; data: { message: string; unique_id: string } }&gt;(
+        &#x60;${this.apiUrl}file-upload/delete/&#x60;, // Endpoint: /api/file-upload/delete/
+        { headers, body: payload }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Lists all job posts for the authenticated user (paginated)
+   * @param token JWT token for authentication
+   * @param page Page number for pagination (optional)
+   * @returns Observable with paginated job posts
+   */
+  listJobPosts(token: string, page?: number): Observable&lt;PaginatedJobPostResponse&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;
+    });
+
+    // Prepare URL with optional page parameter
+    let url &#x3D; &#x60;${this.apiUrl}job-post/&#x60;;
+    if (page) {
+      url +&#x3D; &#x60;?page&#x3D;${page}&#x60;;
+    }
+
+    return this.http
+      .get&lt;{ status: string; data: PaginatedJobPostResponse }&gt;(
+        url, // Endpoint: /api/job-post/
+        { headers }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Retrieves a single job post by unique_id
+   * @param uniqueId Unique identifier of the job post
+   * @param token JWT token for authentication
+   * @returns Observable with job post details
+   */
+  getJobPost(uniqueId: string, token: string): Observable&lt;JobDetails&gt; {
+    // Set headers for JSON request
+    const headers &#x3D; new HttpHeaders({
+      Authorization: &#x60;Bearer ${token}&#x60;
+    });
+
+    return this.http
+      .get&lt;{ status: string; data: JobDetails }&gt;(
+        &#x60;${this.apiUrl}job-post/${uniqueId}/&#x60;, // Endpoint: /api/job-post/&lt;unique_id&gt;/
+        { headers }
+      )
+      .pipe(
+        map(response &#x3D;&gt; response.data),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Handles HTTP errors and formats error messages
+   * @param error HTTP error response
+   * @returns Observable with formatted error message
+   */
+  private handleError(error: HttpErrorResponse): Observable&lt;never&gt; {
+    let errorMessage &#x3D; &#x27;An unknown error occurred&#x27;;
+
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage &#x3D; &#x60;Client-side error: ${error.error.message}&#x60;;
+    } else {
+      // Server-side error
+      if (error.status &#x3D;&#x3D;&#x3D; 400) {
+        if (error.error?.status &#x3D;&#x3D;&#x3D; &#x27;error&#x27;) {
+          // Handle Django validation errors or specific messages
+          errorMessage &#x3D; error.error.message || &#x27;Invalid request data&#x27;;
+          if (error.error.errors) {
+            errorMessage &#x3D; Object.keys(error.error.errors)
+              .map(key &#x3D;&gt; &#x60;${key}: ${error.error.errors[key].join(&#x27;, &#x27;)}&#x60;)
+              .join(&#x27;; &#x27;);
+          }
+        } else {
+          errorMessage &#x3D; &#x27;Invalid request data&#x27;;
+        }
+      } else if (error.status &#x3D;&#x3D;&#x3D; 401) {
+        errorMessage &#x3D; &#x27;Unauthorized: Please log in again&#x27;;
+      } else if (error.status &#x3D;&#x3D;&#x3D; 403) {
+        errorMessage &#x3D; &#x27;Forbidden: Invalid unique_id or unauthorized&#x27;;
+      } else if (error.status &#x3D;&#x3D;&#x3D; 404) {
+        errorMessage &#x3D; &#x27;Not found: Resource does not exist&#x27;;
+      } else if (error.status &#x3D;&#x3D;&#x3D; 500) {
+        errorMessage &#x3D; &#x60;Server error: ${error.error?.message || &#x27;Internal server error&#x27;}&#x60;;
+      } else {
+        errorMessage &#x3D; &#x60;Server error: ${error.status} - ${error.message}&#x60;;
+      }
+    }
+
+    // Log error for debugging
+    console.error(errorMessage, error);
+    return throwError(() &#x3D;&gt; new Error(errorMessage));
+  }
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'JobDescriptionService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

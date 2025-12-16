@@ -1,0 +1,2495 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FlashyreAssessmentRules</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>flashyre-assessment-rules</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>flashyre-assessment-rules.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>flashyre-assessment-rules.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button" >button</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1" >text1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2" >text2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text21" >text21</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text211" >text211</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2111" >text2111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text3" >text3</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text31" >text31</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text311" >text311</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text3111" >text3111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text4" >text4</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text41" >text41</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text411" >text411</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text4111" >text4111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text41112" >text41112</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text412" >text412</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text5" >text5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text61" >text61</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text7" >text7</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text8" >text8</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text9" >text9</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#assessmentData" >assessmentData</a>
+                            </li>
+                            <li>
+                                <a href="#imageAlt3" >imageAlt3</a>
+                            </li>
+                            <li>
+                                <a href="#imageSrc3" >imageSrc3</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#sections" >sections</a>
+                                </li>
+                                <li>
+                                    <a href="#totalDuration" >totalDuration</a>
+                                </li>
+                                <li>
+                                    <a href="#totalQuestions" >totalQuestions</a>
+                                </li>
+                                <li>
+                                    <a href="#timeLimitDisplay" >timeLimitDisplay</a>
+                                </li>
+                                <li>
+                                    <a href="#answerWithinLimitDisplay" >answerWithinLimitDisplay</a>
+                                </li>
+                                <li>
+                                    <a href="#autoSubmitMessage" >autoSubmitMessage</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:58</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="assessmentData"></a>
+                        <b>assessmentData</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:9</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageAlt3"></a>
+                        <b>imageAlt3</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:26</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="imageSrc3"></a>
+                        <b>imageSrc3</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:14</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button</b></span>
+                        <a href="#button"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1</b></span>
+                        <a href="#text1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2</b></span>
+                        <a href="#text2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text21"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text21</b></span>
+                        <a href="#text21"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text21&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text211"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text211</b></span>
+                        <a href="#text211"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text211&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2111</b></span>
+                        <a href="#text2111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text3"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text3</b></span>
+                        <a href="#text3"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text3&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text31"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text31</b></span>
+                        <a href="#text31"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text31&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text311"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text311</b></span>
+                        <a href="#text311"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text311&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text3111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text3111</b></span>
+                        <a href="#text3111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text3111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text4"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text4</b></span>
+                        <a href="#text4"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text4&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text41"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text41</b></span>
+                        <a href="#text41"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text41&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text411"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text411</b></span>
+                        <a href="#text411"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text411&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text4111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text4111</b></span>
+                        <a href="#text4111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text4111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text41112"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text41112</b></span>
+                        <a href="#text41112"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text41112&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text412"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text412</b></span>
+                        <a href="#text412"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text412&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text5</b></span>
+                        <a href="#text5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text61"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text61</b></span>
+                        <a href="#text61"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text61&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text7"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text7</b></span>
+                        <a href="#text7"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text7&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text8"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text8</b></span>
+                        <a href="#text8"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text8&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text9"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text9</b></span>
+                        <a href="#text9"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text9&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="sections"></a>
+                        <span class="name"><b>sections</b><a href="#sections"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>sections()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:62</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="totalDuration"></a>
+                        <span class="name"><b>totalDuration</b><a href="#totalDuration"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>totalDuration()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:67</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="totalQuestions"></a>
+                        <span class="name"><b>totalQuestions</b><a href="#totalQuestions"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>totalQuestions()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:72</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="timeLimitDisplay"></a>
+                        <span class="name"><b>timeLimitDisplay</b><a href="#timeLimitDisplay"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>timeLimitDisplay()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:77</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="answerWithinLimitDisplay"></a>
+                        <span class="name"><b>answerWithinLimitDisplay</b><a href="#answerWithinLimitDisplay"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>answerWithinLimitDisplay()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:84</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="autoSubmitMessage"></a>
+                        <span class="name"><b>autoSubmitMessage</b><a href="#autoSubmitMessage"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>autoSubmitMessage()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/app/components/flashyre-assessment-rules/flashyre-assessment-rules.component.ts:89</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;flashyre-assessment-rules&#x27;,
+  templateUrl: &#x27;flashyre-assessment-rules.component.html&#x27;,
+  styleUrls: [&#x27;flashyre-assessment-rules.component.css&#x27;],
+})
+export class FlashyreAssessmentRules {
+  @Input() assessmentData: any;
+
+  @ContentChild(&#x27;text2&#x27;)
+  text2: TemplateRef&lt;any&gt;
+  @Input()
+  imageSrc3: string &#x3D; &#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;
+  @ContentChild(&#x27;text311&#x27;)
+  text311: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text1&#x27;)
+  text1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text61&#x27;)
+  text61: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text9&#x27;)
+  text9: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text211&#x27;)
+  text211: TemplateRef&lt;any&gt;
+  @Input()
+  imageAlt3: string &#x3D; &#x27;image&#x27;
+  @ContentChild(&#x27;text3111&#x27;)
+  text3111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text412&#x27;)
+  text412: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text&#x27;)
+  text: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text8&#x27;)
+  text8: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text411&#x27;)
+  text411: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text41&#x27;)
+  text41: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text3&#x27;)
+  text3: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text21&#x27;)
+  text21: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text41112&#x27;)
+  text41112: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text7&#x27;)
+  text7: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text5&#x27;)
+  text5: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text31&#x27;)
+  text31: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text2111&#x27;)
+  text2111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text4&#x27;)
+  text4: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;text4111&#x27;)
+  text4111: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;button&#x27;)
+  button: TemplateRef&lt;any&gt;
+  constructor() {}
+
+  // Extract sections from assessmentData for convenient use in template
+  get sections() {
+    return this.assessmentData?.sections || [];
+  }
+
+  // Total duration from assessment (in minutes)
+  get totalDuration() {
+    return this.assessmentData?.total_duration || 0;
+  }
+
+  // Total questions across all sections
+  get totalQuestions() {
+    return this.assessmentData?.total_questions || 0;
+  }
+
+  // Example: Construct time limit display text dynamically
+  get timeLimitDisplay() {
+    return this.totalDuration &gt; 0
+      ? &#x60;The time limit for the test is ${this.totalDuration} minutes.&#x60;
+      : &#x27;Time limit not provided.&#x27;;
+  }
+
+  // Example: Construct message for answering questions within time limit
+  get answerWithinLimitDisplay() {
+    return &#x60;You must answer all ${this.totalQuestions} questions within the ${this.totalDuration}-minute time limit.&#x60;;
+  }
+
+  // Auto-submit message, dynamic based on totalDuration
+  get autoSubmitMessage() {
+    return &#x60;The test will auto-submit after ${this.totalDuration} minutes, regardless of whether you have answered all the questions or not.&#x60;;
+  }
+  
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;flashyre-assessment-rules-container1&quot;&gt;
+  &lt;div id&#x3D;&quot;header-contaner&quot; class&#x3D;&quot;flashyre-assessment-rules-header-container&quot;&gt;
+    &lt;img
+      id&#x3D;&quot;logo&quot;
+      [attr.alt]&#x3D;&quot;imageAlt3&quot;
+      [attr.src]&#x3D;&quot;imageSrc3&quot;
+      class&#x3D;&quot;flashyre-assessment-rules-logo&quot;
+    /&gt;
+    &lt;span
+      id&#x3D;&quot;assessment-name&quot;
+      class&#x3D;&quot;flashyre-assessment-rules-assessment-name&quot;
+    &gt;
+      &lt;ng-container&gt;
+        &lt;ng-template #defaultText&gt;
+          &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment18&quot;&gt;
+            &lt;span class&#x3D;&quot;flashyre-assessment-rules-text38&quot;&gt;
+              {{ assessmentData?.assessment_name || &#x27;Corporate Skill-Based Assessment&#x27; }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-container
+          *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;
+        &gt;&lt;/ng-container&gt;
+      &lt;/ng-container&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div id&#x3D;&quot;rules-container&quot; class&#x3D;&quot;flashyre-assessment-rules-rules-container&quot;&gt;
+    &lt;div id&#x3D;&quot;rules&quot; class&#x3D;&quot;flashyre-assessment-rules-rules&quot;&gt;
+      &lt;span id&#x3D;&quot;rules-header&quot; class&#x3D;&quot;flashyre-assessment-rules-rules-header&quot;&gt;
+        &lt;ng-container&gt;
+          &lt;ng-template #defaultText1&gt;
+            &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment12&quot;&gt;
+              &lt;span class&#x3D;&quot;flashyre-assessment-rules-text28&quot;&gt;
+                Rules for the Corporate Skill-Based Assessment 
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-container
+            *ngTemplateOutlet&#x3D;&quot;text1 ? text1 : defaultText1&quot;
+          &gt;&lt;/ng-container&gt;
+        &lt;/ng-container&gt;
+      &lt;/span&gt;
+      &lt;div id&#x3D;&quot;test-details&quot; class&#x3D;&quot;flashyre-assessment-rules-test-details&quot;&gt;
+        &lt;span class&#x3D;&quot;flashyre-assessment-rules-text10&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText2&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment10&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text24&quot;&gt;
+                  Test Details:
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+              &lt;div&gt;
+                &lt;ul&gt;
+                  &lt;li *ngFor&#x3D;&quot;let section of sections&quot;&gt;
+                    Section: {{ section.section_title }} — Questions: {{ section.question_count || &#x27;N/A&#x27; }}
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;flashyre-assessment-rules-container2&quot;&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText3&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment22&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text44&quot;&gt;
+                    The test consist of 5 multiple choice questions based on the
+                    Assessment skill.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text3 ? text3 : defaultText3&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText4&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment29&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text51&quot;&gt;
+                    The time limit for the test is {{ timeLimitDisplay }} minutes.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text4 ? text4 : defaultText4&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;test-taking&quot; class&#x3D;&quot;flashyre-assessment-rules-test-taking&quot;&gt;
+        &lt;span class&#x3D;&quot;flashyre-assessment-rules-text13&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText21&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment23&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text45&quot;&gt;
+                  Test Taking:
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text21 ? text21 : defaultText21&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;flashyre-assessment-rules-container3&quot;&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-rules-text14&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText31&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment27&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text49&quot;&gt;
+                    You must answer all 5 questions within the {{ answerWithinLimitDisplay }}-minute time
+                    limit.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text31 ? text31 : defaultText31&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-rules-text15&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText41&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment21&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text41&quot;&gt;
+                    &lt;span&gt;
+                      You can navigate between the questions and change your
+                      answers before submitting.
+                    &lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text41 ? text41 : defaultText41&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;flashyre-assessment-rules-text16&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText412&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment17&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text35&quot;&gt;
+                    &lt;span&gt;
+                      Once the {{totalDuration}}-minute time limit is up, the test will
+                      automatically submit, even if you have not answered all
+                      the questions.
+                    &lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text412 ? text412 : defaultText412&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div id&#x3D;&quot;scoring&quot; class&#x3D;&quot;flashyre-assessment-rules-scoring&quot;&gt;
+        &lt;span class&#x3D;&quot;flashyre-assessment-rules-text17&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText211&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment15&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text31&quot;&gt;
+                  &lt;span&gt;Scoring:&lt;/span&gt;
+                  &lt;br /&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text211 ? text211 : defaultText211&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;flashyre-assessment-rules-container4&quot;&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText311&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment11&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text25&quot;&gt;
+                    &lt;span&gt;Each correct answer will be awarded 1 point.&lt;/span&gt;
+                    &lt;br /&gt;
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text311 ? text311 : defaultText311&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText411&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment20&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text40&quot;&gt;
+                    Your final score will be displayed at the end of the test.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text411 ? text411 : defaultText411&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;important-notes&quot;
+        class&#x3D;&quot;flashyre-assessment-rules-important-notes&quot;
+      &gt;
+        &lt;span&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText2111&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment28&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text50&quot;&gt;
+                  Important Notes:
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text2111 ? text2111 : defaultText2111&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;flashyre-assessment-rules-container5&quot;&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText3111&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment16&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text34&quot;&gt;
+                    The test will auto-submit after {{ autoSubmitMessage }} minutes, regardless of
+                    whether you have answered all the questions or not.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text3111 ? text3111 : defaultText3111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText4111&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment30&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text52&quot;&gt;
+                    Make sure to review your answers carefully before the time
+                    runs out.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text4111 ? text4111 : defaultText4111&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText41112&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment24&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text46&quot;&gt;
+                    No late submissions will be accepted.
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text41112 ? text41112 : defaultText41112&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id&#x3D;&quot;notes-container&quot; class&#x3D;&quot;flashyre-assessment-rules-notes-container&quot;&gt;
+      &lt;div id&#x3D;&quot;note&quot; class&#x3D;&quot;flashyre-assessment-rules-note&quot;&gt;
+        &lt;span id&#x3D;&quot;note-heading&quot; class&#x3D;&quot;flashyre-assessment-rules-note-heading&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText7&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment25&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text47&quot;&gt;Note:&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text7 ? text7 : defaultText7&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;span id&#x3D;&quot;first-note&quot; class&#x3D;&quot;flashyre-assessment-rules-first-note&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText8&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment19&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text39&quot;&gt;
+                  1. Switching tabs or move to different application will lead
+                  to auto-submittion of this assessment.
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text8 ? text8 : defaultText8&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;span id&#x3D;&quot;second-note&quot; class&#x3D;&quot;flashyre-assessment-rules-second-note&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText9&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment14&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text30&quot;&gt;
+                  2. This assessment session is being video recorded for
+                  monitoring and evaluation purpose.
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text9 ? text9 : defaultText9&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;confirmation-container&quot;
+        class&#x3D;&quot;flashyre-assessment-rules-confirmation-container&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;good-luck&quot; class&#x3D;&quot;flashyre-assessment-rules-good-luck&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultText5&gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment26&quot;&gt;
+                &lt;span class&#x3D;&quot;flashyre-assessment-rules-text48&quot;&gt;Good luck!&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;text5 ? text5 : defaultText5&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div
+          id&#x3D;&quot;assessment-rules-container&quot;
+          class&#x3D;&quot;flashyre-assessment-rules-assessment-rules-container&quot;
+        &gt;
+          &lt;input
+            type&#x3D;&quot;checkbox&quot;
+            id&#x3D;&quot;assessment-rule-checkbox&quot;
+            checked&#x3D;&quot;true&quot;
+            class&#x3D;&quot;flashyre-assessment-rules-assessment-rule-checkbox&quot;
+          /&gt;
+          &lt;span
+            id&#x3D;&quot;assessment-rule-text&quot;
+            class&#x3D;&quot;flashyre-assessment-rules-assessment-rule-text&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText61&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment13&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text29&quot;&gt;
+                    I have read and understood the assessment rules
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text61 ? text61 : defaultText61&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button
+          id&#x3D;&quot;start-assessment-button&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment-rules-start-assessment-button button&quot;
+        &gt;
+          &lt;span id&#x3D;&quot;start-assessment-text&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultButton&gt;
+                &lt;div class&#x3D;&quot;flashyre-assessment-rules-fragment31&quot;&gt;
+                  &lt;span class&#x3D;&quot;flashyre-assessment-rules-text53&quot;&gt;
+                    Start Assessment
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;button ? button : defaultButton&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>flashyre-assessment-rules.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.flashyre-assessment-rules-container1 {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: var(--dl-radius-radius-radius8);
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-rules-header-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  z-index: 1;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-left: 100px;
+  padding-right: 100px;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-rules-logo {
+  width: 350px;
+  object-fit: cover;
+}
+ 
+.flashyre-assessment-rules-assessment-name {
+  height: 60px;
+  display: flex;
+  font-size: 32px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-rules-rules-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment-rules-rules {
+  gap: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  overflow: scroll;
+  align-self: center;
+  overflow-x: hidden;
+  border-radius: 8px;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-rules-header {
+  height: auto;
+  display: flex;
+  font-size: 24px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-test-details {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text10 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-test-taking {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 898px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text13 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container3 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.flashyre-assessment-rules-text14 {
+  display: flex;
+}
+ 
+.flashyre-assessment-rules-text15 {
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-text16 {
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment-rules-scoring {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-text17 {
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-container4 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-important-notes {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-container5 {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-notes-container {
+  flex: 0 0 auto;
+  width: 456px;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+ 
+.flashyre-assessment-rules-note {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-note-heading {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-first-note {
+  font-size: 22px;
+  text-align: left;
+  text-transform: uppercase;
+}
+ 
+.flashyre-assessment-rules-second-note {
+  font-size: 22px;
+  text-align: left;
+  text-transform: uppercase;
+}
+ 
+.flashyre-assessment-rules-confirmation-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment-rules-good-luck {
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-assessment-rules-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-assessment-rule-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--dl-radius-radius-radius4);
+}
+ 
+.flashyre-assessment-rules-assessment-rule-text {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button {
+  width: 100%;
+  height: 40px;
+  transition: 0.3s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.flashyre-assessment-rules-start-assessment-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.flashyre-assessment-rules-fragment10 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text24 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment11 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text25 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment12 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text28 {
+  display: inline-block;
+  font-size: 32px;
+}
+ 
+.flashyre-assessment-rules-fragment13 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text29 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment14 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text30 {
+  color: rgb(241, 4, 0);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment15 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text31 {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-fragment16 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text34 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment17 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text35 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment18 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text38 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment19 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text39 {
+  color: rgb(241, 4, 0);
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment20 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text40 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment21 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text41 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment22 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text44 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment23 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text45 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment24 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text46 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment25 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text47 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment26 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text48 {
+  display: inline-block;
+  font-size: 18px;
+}
+ 
+.flashyre-assessment-rules-fragment27 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text49 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment28 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text50 {
+  display: inline-block;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment-rules-fragment29 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text51 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment30 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text52 {
+  display: inline-block;
+}
+ 
+.flashyre-assessment-rules-fragment31 {
+  display: contents;
+}
+ 
+.flashyre-assessment-rules-text53 {
+  color: #ffffff;
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .flashyre-assessment-rules-container1 {
+    height: 100vh;
+    box-shadow: 5px 5px 10px 0px #d4d4d4;
+  }
+  .flashyre-assessment-rules-header-container {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  .flashyre-assessment-rules-logo {
+    width: 255px;
+    height: 40px;
+  }
+  .flashyre-assessment-rules-rules-container {
+    width: 1000px;
+  }
+  .flashyre-assessment-rules-rules {
+    width: 60%;
+  }
+  .flashyre-assessment-rules-test-taking {
+    width: auto;
+  }
+  .flashyre-assessment-rules-notes-container {
+    width: 40%;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="flashyre-assessment-rules-container1">  <div id="header-contaner" class="flashyre-assessment-rules-header-container">    <img      id="logo"      [attr.alt]="imageAlt3"      [attr.src]="imageSrc3"      class="flashyre-assessment-rules-logo"    />    <span      id="assessment-name"      class="flashyre-assessment-rules-assessment-name"    >      <ng-container>        <ng-template #defaultText>          <div class="flashyre-assessment-rules-fragment18">            <span class="flashyre-assessment-rules-text38">              {{ assessmentData?.assessment_name || \'Corporate Skill-Based Assessment\' }}            </span>          </div>        </ng-template>        <ng-container          *ngTemplateOutlet="text ? text : defaultText"        ></ng-container>      </ng-container>    </span>  </div>  <div id="rules-container" class="flashyre-assessment-rules-rules-container">    <div id="rules" class="flashyre-assessment-rules-rules">      <span id="rules-header" class="flashyre-assessment-rules-rules-header">        <ng-container>          <ng-template #defaultText1>            <div class="flashyre-assessment-rules-fragment12">              <span class="flashyre-assessment-rules-text28">                Rules for the Corporate Skill-Based Assessment               </span>            </div>          </ng-template>          <ng-container            *ngTemplateOutlet="text1 ? text1 : defaultText1"          ></ng-container>        </ng-container>      </span>      <div id="test-details" class="flashyre-assessment-rules-test-details">        <span class="flashyre-assessment-rules-text10">          <ng-container>            <ng-template #defaultText2>              <div class="flashyre-assessment-rules-fragment10">                <span class="flashyre-assessment-rules-text24">                  Test Details:                </span>              </div>            </ng-template>              <div>                <ul>                  <li *ngFor="let section of sections">                    Section: {{ section.section_title }} — Questions: {{ section.question_count || \'N/A\' }}                  </li>                </ul>              </div>          </ng-container>        </span>        <div class="flashyre-assessment-rules-container2">          <span>            <ng-container>              <ng-template #defaultText3>                <div class="flashyre-assessment-rules-fragment22">                  <span class="flashyre-assessment-rules-text44">                    The test consist of 5 multiple choice questions based on the                    Assessment skill.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text3 ? text3 : defaultText3"              ></ng-container>            </ng-container>          </span>          <span>            <ng-container>              <ng-template #defaultText4>                <div class="flashyre-assessment-rules-fragment29">                  <span class="flashyre-assessment-rules-text51">                    The time limit for the test is {{ timeLimitDisplay }} minutes.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text4 ? text4 : defaultText4"              ></ng-container>            </ng-container>          </span>        </div>      </div>      <div id="test-taking" class="flashyre-assessment-rules-test-taking">        <span class="flashyre-assessment-rules-text13">          <ng-container>            <ng-template #defaultText21>              <div class="flashyre-assessment-rules-fragment23">                <span class="flashyre-assessment-rules-text45">                  Test Taking:                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text21 ? text21 : defaultText21"            ></ng-container>          </ng-container>        </span>        <div class="flashyre-assessment-rules-container3">          <span class="flashyre-assessment-rules-text14">            <ng-container>              <ng-template #defaultText31>                <div class="flashyre-assessment-rules-fragment27">                  <span class="flashyre-assessment-rules-text49">                    You must answer all 5 questions within the {{ answerWithinLimitDisplay }}-minute time                    limit.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text31 ? text31 : defaultText31"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-rules-text15">            <ng-container>              <ng-template #defaultText41>                <div class="flashyre-assessment-rules-fragment21">                  <span class="flashyre-assessment-rules-text41">                    <span>                      You can navigate between the questions and change your                      answers before submitting.                    </span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text41 ? text41 : defaultText41"              ></ng-container>            </ng-container>          </span>          <span class="flashyre-assessment-rules-text16">            <ng-container>              <ng-template #defaultText412>                <div class="flashyre-assessment-rules-fragment17">                  <span class="flashyre-assessment-rules-text35">                    <span>                      Once the {{totalDuration}}-minute time limit is up, the test will                      automatically submit, even if you have not answered all                      the questions.                    </span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text412 ? text412 : defaultText412"              ></ng-container>            </ng-container>          </span>        </div>      </div>      <div id="scoring" class="flashyre-assessment-rules-scoring">        <span class="flashyre-assessment-rules-text17">          <ng-container>            <ng-template #defaultText211>              <div class="flashyre-assessment-rules-fragment15">                <span class="flashyre-assessment-rules-text31">                  <span>Scoring:</span>                  <br />                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text211 ? text211 : defaultText211"            ></ng-container>          </ng-container>        </span>        <div class="flashyre-assessment-rules-container4">          <span>            <ng-container>              <ng-template #defaultText311>                <div class="flashyre-assessment-rules-fragment11">                  <span class="flashyre-assessment-rules-text25">                    <span>Each correct answer will be awarded 1 point.</span>                    <br />                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text311 ? text311 : defaultText311"              ></ng-container>            </ng-container>          </span>          <span>            <ng-container>              <ng-template #defaultText411>                <div class="flashyre-assessment-rules-fragment20">                  <span class="flashyre-assessment-rules-text40">                    Your final score will be displayed at the end of the test.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text411 ? text411 : defaultText411"              ></ng-container>            </ng-container>          </span>        </div>      </div>      <div        id="important-notes"        class="flashyre-assessment-rules-important-notes"      >        <span>          <ng-container>            <ng-template #defaultText2111>              <div class="flashyre-assessment-rules-fragment28">                <span class="flashyre-assessment-rules-text50">                  Important Notes:                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text2111 ? text2111 : defaultText2111"            ></ng-container>          </ng-container>        </span>        <div class="flashyre-assessment-rules-container5">          <span>            <ng-container>              <ng-template #defaultText3111>                <div class="flashyre-assessment-rules-fragment16">                  <span class="flashyre-assessment-rules-text34">                    The test will auto-submit after {{ autoSubmitMessage }} minutes, regardless of                    whether you have answered all the questions or not.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text3111 ? text3111 : defaultText3111"              ></ng-container>            </ng-container>          </span>          <span>            <ng-container>              <ng-template #defaultText4111>                <div class="flashyre-assessment-rules-fragment30">                  <span class="flashyre-assessment-rules-text52">                    Make sure to review your answers carefully before the time                    runs out.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text4111 ? text4111 : defaultText4111"              ></ng-container>            </ng-container>          </span>          <span>            <ng-container>              <ng-template #defaultText41112>                <div class="flashyre-assessment-rules-fragment24">                  <span class="flashyre-assessment-rules-text46">                    No late submissions will be accepted.                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text41112 ? text41112 : defaultText41112"              ></ng-container>            </ng-container>          </span>        </div>      </div>    </div>    <div id="notes-container" class="flashyre-assessment-rules-notes-container">      <div id="note" class="flashyre-assessment-rules-note">        <span id="note-heading" class="flashyre-assessment-rules-note-heading">          <ng-container>            <ng-template #defaultText7>              <div class="flashyre-assessment-rules-fragment25">                <span class="flashyre-assessment-rules-text47">Note:</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text7 ? text7 : defaultText7"            ></ng-container>          </ng-container>        </span>        <span id="first-note" class="flashyre-assessment-rules-first-note">          <ng-container>            <ng-template #defaultText8>              <div class="flashyre-assessment-rules-fragment19">                <span class="flashyre-assessment-rules-text39">                  1. Switching tabs or move to different application will lead                  to auto-submittion of this assessment.                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text8 ? text8 : defaultText8"            ></ng-container>          </ng-container>        </span>        <span id="second-note" class="flashyre-assessment-rules-second-note">          <ng-container>            <ng-template #defaultText9>              <div class="flashyre-assessment-rules-fragment14">                <span class="flashyre-assessment-rules-text30">                  2. This assessment session is being video recorded for                  monitoring and evaluation purpose.                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text9 ? text9 : defaultText9"            ></ng-container>          </ng-container>        </span>      </div>      <div        id="confirmation-container"        class="flashyre-assessment-rules-confirmation-container"      >        <span id="good-luck" class="flashyre-assessment-rules-good-luck">          <ng-container>            <ng-template #defaultText5>              <div class="flashyre-assessment-rules-fragment26">                <span class="flashyre-assessment-rules-text48">Good luck!</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="text5 ? text5 : defaultText5"            ></ng-container>          </ng-container>        </span>        <div          id="assessment-rules-container"          class="flashyre-assessment-rules-assessment-rules-container"        >          <input            type="checkbox"            id="assessment-rule-checkbox"            checked="true"            class="flashyre-assessment-rules-assessment-rule-checkbox"          />          <span            id="assessment-rule-text"            class="flashyre-assessment-rules-assessment-rule-text"          >            <ng-container>              <ng-template #defaultText61>                <div class="flashyre-assessment-rules-fragment13">                  <span class="flashyre-assessment-rules-text29">                    I have read and understood the assessment rules                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text61 ? text61 : defaultText61"              ></ng-container>            </ng-container>          </span>        </div>        <button          id="start-assessment-button"          type="button"          class="flashyre-assessment-rules-start-assessment-button button"        >          <span id="start-assessment-text">            <ng-container>              <ng-template #defaultButton>                <div class="flashyre-assessment-rules-fragment31">                  <span class="flashyre-assessment-rules-text53">                    Start Assessment                  </span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="button ? button : defaultButton"              ></ng-container>            </ng-container>          </span>        </button>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'FlashyreAssessmentRules'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FlashyreAssessmentRules.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

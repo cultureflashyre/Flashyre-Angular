@@ -1,0 +1,1779 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#environment" title="src/environments/environment.prod.ts" ><b>environment</b>&nbsp;&nbsp;&nbsp;(src/.../environment.prod.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#environment" title="src/environments/environment.ts" ><b>environment</b>&nbsp;&nbsp;&nbsp;(src/.../environment.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/app.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../app.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/buffer-page/buffer-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../buffer-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/assessment-taken-page/assessment-taken-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../assessment-taken-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/assessment-taken-page-2/assessment-taken-page-2.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../assessment-taken-page-2.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/assessment-taken-page-3/assessment-taken-page-3.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../assessment-taken-page-3.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/assessment-violation-message/assessment-violation-message.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../assessment-violation-message.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/candidate-assessment/candidate-assessment.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../candidate-assessment.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/candidate-dashboard/candidate-dashboard.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../candidate-dashboard.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/candidate-home/candidate-home.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../candidate-home.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/candidate-job-detail-view/candidate-job-detail-view.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../candidate-job-detail-view.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/create-job-post-1st-page/create-job-post-1st-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../create-job-post-1st-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/error-system-requirement-failed/error-system-requirement-failed.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../error-system-requirement-failed.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../flashyre-assessment-rules-card.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/flashyre-assessment1/flashyre-assessment1.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../flashyre-assessment1.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/flashyre-assessment11/flashyre-assessment11.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../flashyre-assessment11.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/flashyre-assessments/flashyre-assessments.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../flashyre-assessments.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/home/home.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../home.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/index/index.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../index.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/login-candidate/login-candidate.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../login-candidate.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/login-college/login-college.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../login-college.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/login-corporate/login-corporate.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../login-corporate.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/not-found/not-found.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../not-found.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-basic-information/profile-basic-information.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-basic-information.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-certification-page/profile-certification-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-certification-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-education-page/profile-education-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-education-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-employment-page/profile-employment-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-employment-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-last-page1/profile-last-page1.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-last-page1.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/profile-overview-page/profile-overview-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../profile-overview-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../recruiter-view-3rd-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/recruiter-view-4th-page/recruiter-view-4th-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../recruiter-view-4th-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/recruiter-view-5th-page/recruiter-view-5th-page.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../recruiter-view-5th-page.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/signup-candidate/signup-candidate.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../signup-candidate.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/signup-college/signup-college.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../signup-college.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#routes" title="src/app/pages/signup-corporate/signup-corporate.module.ts" ><b>routes</b>&nbsp;&nbsp;&nbsp;(src/.../signup-corporate.module.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/environments/environment.prod.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="environment"></a>
+                    <span class="name">
+                        <span ><b>environment</b></span>
+                        <a href="#environment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  production: true,
+    apiUrl: &#x27;https://backend-dot-flashyre-dev-458109.el.r.appspot.com/&#x27;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/environments/environment.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="environment"></a>
+                    <span class="name">
+                        <span ><b>environment</b></span>
+                        <a href="#environment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  production: false,
+  apiUrl: &#x27;http://localhost:8000/&#x27;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/app.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/index/index.module&#x27;).then((m) &#x3D;&gt; m.IndexModule),
+  },
+  {
+    path: &#x27;profile-education-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/profile-education-page/profile-education-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.ProfileEducationPageModule),
+  },
+  {
+    path: &#x27;profile-education-page-duplicate&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/profile-education-page-duplicate/profile-education-page-duplicate.module&#x27;
+      ).then((m) &#x3D;&gt; m.ProfileEducationPageDuplicateModule),
+  },
+  {
+    path: &#x27;login-college&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/login-college/login-college.module&#x27;).then(
+        (m) &#x3D;&gt; m.LoginCollegeModule
+      ),
+  },
+  {
+    path: &#x27;profile-basic-information&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/profile-basic-information/profile-basic-information.module&#x27;).then(
+        (m) &#x3D;&gt; m.ProfileBasicInformationModule),
+     // Protect this route
+  },
+  {
+    path: &#x27;recruiter-view-3rd-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.RecruiterView3rdPageModule),
+  },
+  {
+    path: &#x27;signup-candidate&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/signup-candidate/signup-candidate.module&#x27;).then(
+        (m) &#x3D;&gt; m.SignupCandidateModule
+      ),
+  },
+  {
+    path: &#x27;signup-corporate&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/signup-corporate/signup-corporate.module&#x27;).then(
+        (m) &#x3D;&gt; m.SignupCorporateModule
+      ),
+  },
+  {
+    path: &#x27;login-forgot-password&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/login-forgot-password/login-forgot-password.module&#x27;).then(
+        (m) &#x3D;&gt; m.LoginForgotPasswordModule
+      ),
+  },
+  {
+    path: &#x27;login-reset-password&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/login-reset-password/login-reset-password.module&#x27;).then(
+        (m) &#x3D;&gt; m.LoginResetPasswordModule
+      ),
+  },
+  {
+    path: &#x27;profile-employment-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/profile-employment-page/profile-employment-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.ProfileEmploymentPageModule),
+  },
+  {
+    path: &#x27;candidate-job-detail-view&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/candidate-job-detail-view/candidate-job-detail-view.module&#x27;
+      ).then((m) &#x3D;&gt; m.CandidateJobDetailViewModule
+    ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;login-candidate&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/login-candidate/login-candidate.module&#x27;).then(
+        (m) &#x3D;&gt; m.LoginCandidateModule
+      ),
+  },
+  {
+    path: &#x27;corporate/recruiter-view-5th-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/recruiter-view-5th-page/recruiter-view-5th-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.RecruiterView5thPageModule),
+  },
+  {
+    path: &#x27;candidate-home&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/candidate-home/candidate-home.module&#x27;).then(
+        (m) &#x3D;&gt; m.CandidateHomeModule
+      ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;profile-certification-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/profile-certification-page/profile-certification-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.ProfileCertificationPageModule),
+  },
+  {
+    path: &#x27;corporate/recruiter-view-4th-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/recruiter-view-4th-page/recruiter-view-4th-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.RecruiterView4thPageModule),
+  },
+  {
+    path: &#x27;login-corporate&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/login-corporate/login-corporate.module&#x27;).then(
+        (m) &#x3D;&gt; m.LoginCorporateModule
+      ),
+  },
+  {
+    path: &#x27;signup-college&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/signup-college/signup-college.module&#x27;).then(
+        (m) &#x3D;&gt; m.SignupCollegeModule
+      ),
+  },
+  {
+    path: &#x27;flashyre-assessment-rules-card&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module&#x27;
+      ).then((m) &#x3D;&gt; m.FlashyreAssessmentRulesCardModule
+    ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;flashyre-assessments&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/flashyre-assessments/flashyre-assessments.module&#x27;).then(
+        (m) &#x3D;&gt; m.FlashyreAssessmentsModule
+      ),
+  },
+  {
+    path: &#x27;candidate-dashboard&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/candidate-dashboard/candidate-dashboard.module&#x27;).then(
+        (m) &#x3D;&gt; m.CandidateDashboardModule
+      ), canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;error-system-requirement-failed&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/error-system-requirement-failed/error-system-requirement-failed.module&#x27;).then(
+        (m) &#x3D;&gt; m.ErrorSystemRequirementFailedModule
+      ),
+  },
+  {
+    path: &#x27;flashyre-assessment1&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/flashyre-assessment1/flashyre-assessment1.module&#x27;).then(
+        (m) &#x3D;&gt; m.FlashyreAssessment1Module
+      ),
+  },
+  {
+    path: &#x27;flashyre-assessment11&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/flashyre-assessment11/flashyre-assessment11.module&#x27;).then(
+        (m) &#x3D;&gt; m.FlashyreAssessment11Module
+      ),
+      canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;profile-last-page1&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+    import(&#x27;./pages/profile-last-page1/profile-last-page1.module&#x27;).then(
+      (m) &#x3D;&gt; m.ProfileLastPage1Module
+    ),
+  },   
+  {
+    path: &#x27;candidate-assessment&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/candidate-assessment/candidate-assessment.module&#x27;).then(
+        (m) &#x3D;&gt; m.CandidateAssessmentModule
+      ),
+      canActivate: [AuthGuard],  // Protect this route
+  },
+  {
+    path: &#x27;assessment-taken-page&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/assessment-taken-page/assessment-taken-page.module&#x27;).then(
+        (m) &#x3D;&gt; m.AssessmentTakenPageModule
+      ),
+  },
+  {
+    path: &#x27;create-job-post-1st-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(
+        &#x27;./pages/create-job-post-1st-page/create-job-post-1st-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.CreateJobPost1stPageModule),
+  },
+  {
+    path: &#x27;buffer-page&#x27;, // New route
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./buffer-page/buffer-page.module&#x27;).then(
+        (m) &#x3D;&gt; m.BufferPageModule
+      ),
+  },
+  {
+    path: &#x27;profile-overview-page&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import( &#x27;./pages/profile-overview-page/profile-overview-page.module&#x27;
+      ).then((m) &#x3D;&gt; m.ProfileOverviewPageModule),
+  },
+    {
+    path: &#x27;assessment-taken-page-2/:assessmentId&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import( &#x27;./pages/assessment-taken-page-2/assessment-taken-page-2.module&#x27;
+      ).then((m) &#x3D;&gt; m.AssessmentTakenPage2Module),
+  },
+      {
+    path: &#x27;assessment-taken-page-3&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import( &#x27;./pages/assessment-taken-page-3/assessment-taken-page-3.module&#x27;
+      ).then((m) &#x3D;&gt; m.AssessmentTakenPage3Module),
+  },
+        {
+    path: &#x27;assessment-violation-message&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import( &#x27;./pages/assessment-violation-message/assessment-violation-message.module&#x27;
+      ).then((m) &#x3D;&gt; m.AssessmentViolationMessageModule),
+  },
+  {
+    path: &#x27;**&#x27;,
+    loadChildren: () &#x3D;&gt;
+      import(&#x27;./pages/not-found/not-found.module&#x27;).then(
+        (m) &#x3D;&gt; m.NotFoundModule
+      ),
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/buffer-page/buffer-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: BufferPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/assessment-taken-page/assessment-taken-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: AssessmentTakenPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/assessment-taken-page-2/assessment-taken-page-2.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: AssessmentTakenPage2,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/assessment-taken-page-3/assessment-taken-page-3.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: AssessmentTakenPage3,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/assessment-violation-message/assessment-violation-message.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: AssessmentViolationMessage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/candidate-assessment/candidate-assessment.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: CandidateAssessment,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/candidate-dashboard/candidate-dashboard.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: CandidateDashboard,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/candidate-home/candidate-home.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: CandidateHome,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/candidate-job-detail-view/candidate-job-detail-view.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: CandidateJobDetailView,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/create-job-post-1st-page/create-job-post-1st-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: CreateJobPost1stPageComponent
+  }
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/error-system-requirement-failed/error-system-requirement-failed.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ErrorSystemRequirementFailed,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: FlashyreAssessmentRulesCard,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/flashyre-assessment1/flashyre-assessment1.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: FlashyreAssessment1,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/flashyre-assessment11/flashyre-assessment11.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: FlashyreAssessment11,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/flashyre-assessments/flashyre-assessments.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: FlashyreAssessments,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/home/home.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: Home,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/index/index.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: Index,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/login-candidate/login-candidate.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: LoginCandidate,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/login-college/login-college.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: LoginCollege,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/login-corporate/login-corporate.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: LoginCorporate,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/not-found/not-found.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: NotFound,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-basic-information/profile-basic-information.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ProfileBasicInformation,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-certification-page/profile-certification-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ProfileCertificationPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-education-page/profile-education-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ProfileEducationPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-employment-page/profile-employment-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ProfileEmploymentPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-last-page1/profile-last-page1.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+   {
+     path: &#x27;&#x27;,
+     component: ProfileLastPage1,
+   },
+ ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/profile-overview-page/profile-overview-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: ProfileOverviewPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/recruiter-view-3rd-page/recruiter-view-3rd-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: RecruiterView3rdPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/recruiter-view-4th-page/recruiter-view-4th-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: RecruiterView4thPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/recruiter-view-5th-page/recruiter-view-5th-page.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: RecruiterView5thPage,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/signup-candidate/signup-candidate.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: SignupCandidate,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/signup-college/signup-college.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: SignupCollege,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/app/pages/signup-corporate/signup-corporate.module.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="routes"></a>
+                    <span class="name">
+                        <span ><b>routes</b></span>
+                        <a href="#routes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    path: &#x27;&#x27;,
+    component: SignupCorporate,
+  },
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

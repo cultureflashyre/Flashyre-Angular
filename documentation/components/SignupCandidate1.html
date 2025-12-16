@@ -1,0 +1,2502 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SignupCandidate1</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/signup-candidate1/signup-candidate1.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>signup-candidate1</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./signup-candidate1.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./signup-candidate1.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#baseUrl" >baseUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button" >button</a>
+                            </li>
+                            <li>
+                                <a href="#confirmPasswordType" >confirmPasswordType</a>
+                            </li>
+                            <li>
+                                <a href="#errorMessage" >errorMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#heading" >heading</a>
+                            </li>
+                            <li>
+                                <a href="#passwordType" >passwordType</a>
+                            </li>
+                            <li>
+                                <a href="#signupForm" >signupForm</a>
+                            </li>
+                            <li>
+                                <a href="#successMessage" >successMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1" >text1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text11" >text11</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text111" >text111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1111" >text1111</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text12" >text12</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2" >text2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text21" >text21</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text5" >text5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text6" >text6</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text71" >text71</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#emailExistsValidator" >emailExistsValidator</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmit" >onSubmit</a>
+                            </li>
+                            <li>
+                                <a href="#passwordMatchValidator" >passwordMatchValidator</a>
+                            </li>
+                            <li>
+                                <a href="#phoneExistsValidator" >phoneExistsValidator</a>
+                            </li>
+                            <li>
+                                <a href="#sanitizePhoneNumber" >sanitizePhoneNumber</a>
+                            </li>
+                            <li>
+                                <a href="#toggleConfirmPasswordVisibility" >toggleConfirmPasswordVisibility</a>
+                            </li>
+                            <li>
+                                <a href="#togglePasswordVisibility" >togglePasswordVisibility</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder, http: HttpClient, router: Router, spinner: NgxSpinnerService, userProfileService: <a href="../injectables/UserProfileService.html" target="_self">UserProfileService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:41</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>http</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpClient</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>spinner</td>
+                                                  
+                                                        <td>
+                                                                    <code>NgxSpinnerService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userProfileService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserProfileService.html" target="_self" >UserProfileService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:21</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="emailExistsValidator"></a>
+                    <span class="name">
+                        <span ><b>emailExistsValidator</b></span>
+                        <a href="#emailExistsValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>emailExistsValidator()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:153</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>AsyncValidatorFn</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                        <span ><b>onSubmit</b></span>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="passwordMatchValidator"></a>
+                    <span class="name">
+                        <span ><b>passwordMatchValidator</b></span>
+                        <a href="#passwordMatchValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>passwordMatchValidator(form: FormGroup)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>form</td>
+                                            <td>
+                                                        <code>FormGroup</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ mismatch: boolean; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="phoneExistsValidator"></a>
+                    <span class="name">
+                        <span ><b>phoneExistsValidator</b></span>
+                        <a href="#phoneExistsValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>phoneExistsValidator()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="142"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:142</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>AsyncValidatorFn</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sanitizePhoneNumber"></a>
+                    <span class="name">
+                        <span ><b>sanitizePhoneNumber</b></span>
+                        <a href="#sanitizePhoneNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>sanitizePhoneNumber(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleConfirmPasswordVisibility"></a>
+                    <span class="name">
+                        <span ><b>toggleConfirmPasswordVisibility</b></span>
+                        <a href="#toggleConfirmPasswordVisibility"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleConfirmPasswordVisibility()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="togglePasswordVisibility"></a>
+                    <span class="name">
+                        <span ><b>togglePasswordVisibility</b></span>
+                        <a href="#togglePasswordVisibility"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>togglePasswordVisibility()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="baseUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>baseUrl</b></span>
+                        <a href="#baseUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>environment.apiUrl</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button</b></span>
+                        <a href="#button"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmPasswordType"></a>
+                    <span class="name">
+                        <span ><b>confirmPasswordType</b></span>
+                        <a href="#confirmPasswordType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;password&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorMessage"></a>
+                    <span class="name">
+                        <span ><b>errorMessage</b></span>
+                        <a href="#errorMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="heading"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>heading</b></span>
+                        <a href="#heading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;heading&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="passwordType"></a>
+                    <span class="name">
+                        <span ><b>passwordType</b></span>
+                        <a href="#passwordType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;password&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signupForm"></a>
+                    <span class="name">
+                        <span ><b>signupForm</b></span>
+                        <a href="#signupForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="successMessage"></a>
+                    <span class="name">
+                        <span ><b>successMessage</b></span>
+                        <a href="#successMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1</b></span>
+                        <a href="#text1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text11"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text11</b></span>
+                        <a href="#text11"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text11&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text111</b></span>
+                        <a href="#text111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1111"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1111</b></span>
+                        <a href="#text1111"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1111&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text12"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text12</b></span>
+                        <a href="#text12"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text12&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2</b></span>
+                        <a href="#text2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text21"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text21</b></span>
+                        <a href="#text21"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text21&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text5</b></span>
+                        <a href="#text5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text6"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text6</b></span>
+                        <a href="#text6"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text6&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text71"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text71</b></span>
+                        <a href="#text71"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text71&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/signup-candidate1/signup-candidate1.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, AsyncValidatorFn } from &#x27;@angular/forms&#x27;;
+import { HttpClient } from &#x27;@angular/common/http&#x27;;
+import { Observable, of } from &#x27;rxjs&#x27;;
+import { map, catchError } from &#x27;rxjs/operators&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { NgxSpinnerService } from &#x27;ngx-spinner&#x27;; // Import NgxSpinnerService
+import { environment } from &#x27;../../../environments/environment&#x27;;
+import { UserProfileService } from &#x27;../../services/user-profile.service&#x27;;
+
+@Component({
+  selector: &#x27;signup-candidate1&#x27;,
+  templateUrl: &#x27;./signup-candidate1.component.html&#x27;,
+  styleUrls: [&#x27;./signup-candidate1.component.css&#x27;],
+})
+export class SignupCandidate1 implements OnInit {
+
+  private baseUrl &#x3D; environment.apiUrl;
+
+  // Content projection properties
+  @Input() rootClassName: string &#x3D; &#x27;&#x27;;
+  @ContentChild(&#x27;heading&#x27;) heading: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text&#x27;) text: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1&#x27;) text1: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text12&#x27;) text12: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text11&#x27;) text11: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text111&#x27;) text111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text2&#x27;) text2: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1111&#x27;) text1111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text21&#x27;) text21: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;button&#x27;) button: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text71&#x27;) text71: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text6&#x27;) text6: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text5&#x27;) text5: TemplateRef&lt;any&gt;;
+
+  // Reactive form properties
+  signupForm: FormGroup;
+  errorMessage: string &#x3D; &#x27;&#x27;;
+  successMessage: string &#x3D; &#x27;&#x27;;
+  passwordType: string &#x3D; &#x27;password&#x27;;
+  confirmPasswordType: string &#x3D; &#x27;password&#x27;;
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private userProfileService: UserProfileService,
+  ) {}
+
+  ngOnInit() {
+    this.signupForm &#x3D; this.fb.group(
+      {
+        first_name: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
+        last_name: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
+        phone_number: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
+        email: [&#x27;&#x27;, [Validators.required, Validators.email], [this.emailExistsValidator()]],
+        password: [&#x27;&#x27;, [Validators.required, Validators.minLength(8)]],
+        confirm_password: [&#x27;&#x27;, Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    return form.get(&#x27;password&#x27;).value &#x3D;&#x3D;&#x3D; form.get(&#x27;confirm_password&#x27;).value
+      ? null
+      : { mismatch: true };
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType &#x3D; this.passwordType &#x3D;&#x3D;&#x3D; &#x27;password&#x27; ? &#x27;text&#x27; : &#x27;password&#x27;;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.confirmPasswordType &#x3D; this.confirmPasswordType &#x3D;&#x3D;&#x3D; &#x27;password&#x27; ? &#x27;text&#x27; : &#x27;password&#x27;;
+  }
+
+  sanitizePhoneNumber(event: Event): void {
+    const input &#x3D; event.target as HTMLInputElement;
+    const sanitizedValue &#x3D; input.value.replace(/\D/g, &#x27;&#x27;).slice(0, 10);
+    this.signupForm.get(&#x27;phone_number&#x27;).setValue(sanitizedValue, { emitEvent: false });
+  }
+
+  onSubmit() {
+    if (this.signupForm.valid) {
+      this.spinner.show(); // Show spinner only when request starts
+
+      const formData &#x3D; {
+        first_name: this.signupForm.get(&#x27;first_name&#x27;).value,
+        last_name: this.signupForm.get(&#x27;last_name&#x27;).value,
+        phone_number: this.signupForm.get(&#x27;phone_number&#x27;).value,
+        email: this.signupForm.get(&#x27;email&#x27;).value,
+        password: this.signupForm.get(&#x27;password&#x27;).value,
+      };
+
+      this.http.post(&#x60;${this.baseUrl}api/auth/signup/&#x60;, formData).subscribe(
+        (response: any) &#x3D;&gt; {
+          console.log(&#x27;Signup successful&#x27;, response);
+          this.errorMessage &#x3D; &#x27;&#x27;;
+          this.successMessage &#x3D; response.message || &#x27;Successfully Signed up&#x27;;
+          
+          // Store JWT token in local storage or session storage
+          localStorage.setItem(&#x27;jwtToken&#x27;, response.access); // Store the access token
+          localStorage.setItem(&#x27;refreshToken&#x27;, response.refresh);
+
+          // Fetch user profile after successful login
+          this.userProfileService.fetchUserProfile().subscribe(
+            () &#x3D;&gt; {
+              this.errorMessage &#x3D; &#x27;&#x27;;
+              this.router.navigate([&#x27;/profile-overview-page&#x27;]);
+            },
+            (profileError) &#x3D;&gt; {
+              console.error(&#x27;Error fetching profile&#x27;, profileError);
+              // Navigate anyway, but with a warning
+              this.router.navigate([&#x27;/profile-overview-page&#x27;]);
+            }
+          );
+          // Hide overlay before navigation
+          this.spinner.hide();
+        },
+        (error) &#x3D;&gt; {
+          console.log(&#x27;Error response:&#x27;, error);
+          this.successMessage &#x3D; &#x27;&#x27;;
+
+          // Hide overlay on error
+          this.spinner.hide();
+
+          if (error.status &#x3D;&#x3D;&#x3D; 400 &amp;&amp; error.error.email) {
+            this.errorMessage &#x3D; &#x27;Email already exists!&#x27;;
+          } else if (error.status &#x3D;&#x3D;&#x3D; 400 &amp;&amp; error.error.phone_number) {
+            this.errorMessage &#x3D; &#x27;Phone number already exists!&#x27;;
+          } else {
+            this.errorMessage &#x3D; &#x27;Signup failed. Please try again.&#x27;;
+          }
+          console.log(&#x27;Error message set to:&#x27;, this.errorMessage);
+        }
+      );
+    }
+  }
+
+  phoneExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable&lt;ValidationErrors | null&gt; &#x3D;&gt; {
+      const phone &#x3D; control.value;
+      if (!phone) return of(null);
+      return this.http.get(&#x60;${this.baseUrl}api/auth/check-phone/?phone&#x3D;${phone}&#x60;, { withCredentials: true }).pipe(
+        map((res: any) &#x3D;&gt; (res.exists ? { phoneExists: true } : null)),
+        catchError(() &#x3D;&gt; of(null))
+      );
+    };
+  }
+
+  emailExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable&lt;ValidationErrors | null&gt; &#x3D;&gt; {
+      const email &#x3D; control.value;
+      if (!email) return of(null);
+      return this.http.get(&#x60;${this.baseUrl}api/auth/check-email/?email&#x3D;${email}&#x60;, { withCredentials: true }).pipe(
+        map((res: any) &#x3D;&gt; (res.exists ? { emailExists: true } : null)),
+        catchError(() &#x3D;&gt; of(null))
+      );
+    };
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div id&#x3D;&quot;signup-page&quot; class&#x3D;&quot;signup-candidate1-container&quot; [ngClass]&#x3D;&quot;rootClassName&quot;&gt;
+  &lt;div id&#x3D;&quot;signup-container&quot; class&#x3D;&quot;signup-candidate1-signup-container&quot;&gt;
+    &lt;h2 id&#x3D;&quot;heading&quot; class&#x3D;&quot;signup-candidate1-welcome-to-flashyre&quot;&gt;
+      &lt;span&gt;Welcome to Flashyre&lt;/span&gt;
+    &lt;/h2&gt;
+    &lt;form [formGroup]&#x3D;&quot;signupForm&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+      &lt;div id&#x3D;&quot;details&quot; class&#x3D;&quot;signup-candidate1-details-container&quot;&gt;
+        &lt;!-- First Name --&gt;
+        &lt;div id&#x3D;&quot;first-name-container&quot; class&#x3D;&quot;signup-candidate1-first-name-container&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-candidate1-first-name-text&quot;&gt;First Name&lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            id&#x3D;&quot;signup-first-name-input&quot;
+            placeholder&#x3D;&quot;Enter First Name&quot;
+            formControlName&#x3D;&quot;first_name&quot;
+            class&#x3D;&quot;signup-candidate1-first-name-input input&quot;
+          /&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;first_name&#x27;).invalid &amp;&amp; signupForm.get(&#x27;first_name&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;first_name&#x27;).errors?.required&quot;&gt;First name is required.&lt;/span&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;first_name&#x27;).errors?.pattern&quot;&gt;Only letters and spaces are allowed.&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Last Name --&gt;
+        &lt;div id&#x3D;&quot;last-name-container&quot; class&#x3D;&quot;signup-candidate1-last-name-container1&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-candidate1-last-name-text1&quot;&gt;Last Name&lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            id&#x3D;&quot;signup-last-name-input&quot;
+            placeholder&#x3D;&quot;Enter Last Name&quot;
+            formControlName&#x3D;&quot;last_name&quot;
+            class&#x3D;&quot;signup-candidate1-last-name-input1 input&quot;
+          /&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;last_name&#x27;).invalid &amp;&amp; signupForm.get(&#x27;last_name&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;last_name&#x27;).errors?.required&quot;&gt;Last name is required.&lt;/span&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;last_name&#x27;).errors?.pattern&quot;&gt;Only letters and spaces are allowed.&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Phone Number --&gt;
+        &lt;div id&#x3D;&quot;phone-container&quot; class&#x3D;&quot;signup-candidate1-last-name-container2&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-candidate1-last-name-text2&quot;&gt;Phone Number&lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            id&#x3D;&quot;signup-phone-number-input&quot;
+            placeholder&#x3D;&quot;Enter Phone Number&quot;
+            formControlName&#x3D;&quot;phone_number&quot;
+            class&#x3D;&quot;signup-candidate1-last-name-input2 input&quot;
+            maxlength&#x3D;&quot;10&quot;
+            (input)&#x3D;&quot;sanitizePhoneNumber($event)&quot;
+          /&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;phone_number&#x27;).invalid &amp;&amp; signupForm.get(&#x27;phone_number&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;phone_number&#x27;).errors?.required&quot;&gt;Phone number is required.&lt;/span&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;phone_number&#x27;).errors?.pattern&quot;&gt;Phone number must be exactly 10 digits.&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;phone_number&#x27;).errors?.phoneExists&quot; class&#x3D;&quot;error-text&quot;&gt;
+            Phone number already exists.
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Email --&gt;
+        &lt;div id&#x3D;&quot;email-container&quot; class&#x3D;&quot;signup-candidate1-email-container&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-candidate1-email-text&quot;&gt;Email Id&lt;/span&gt;
+          &lt;input
+            type&#x3D;&quot;email&quot;
+            id&#x3D;&quot;signup-email-input&quot;
+            placeholder&#x3D;&quot;Enter Email Id&quot;
+            formControlName&#x3D;&quot;email&quot;
+            class&#x3D;&quot;signup-candidate1-email-input input&quot;
+          /&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;email&#x27;).invalid &amp;&amp; signupForm.get(&#x27;email&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;email&#x27;).errors?.required&quot;&gt;Email is required.&lt;/span&gt;
+            &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;email&#x27;).errors?.email&quot;&gt;Please enter a valid email.&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;email&#x27;).errors?.emailExists&quot; class&#x3D;&quot;error-text&quot;&gt;
+            Email already exists.
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Password --&gt;
+        &lt;div id&#x3D;&quot;password-container&quot; class&#x3D;&quot;signup-candidate1-password-container1&quot;&gt;
+          &lt;div class&#x3D;&quot;signup-candidate1-password1&quot;&gt;
+            &lt;span class&#x3D;&quot;signup-candidate1-password-text1&quot;&gt;Password&lt;/span&gt;
+            &lt;span
+              class&#x3D;&quot;signup-candidate1-show-text1 button&quot;
+              (click)&#x3D;&quot;togglePasswordVisibility()&quot;
+            &gt;
+              {{ passwordType &#x3D;&#x3D;&#x3D; &#x27;password&#x27; ? &#x27;Show&#x27; : &#x27;Hide&#x27; }}
+            &lt;/span&gt;
+            &lt;input
+              [type]&#x3D;&quot;passwordType&quot;
+              id&#x3D;&quot;signup-password-input&quot;
+              placeholder&#x3D;&quot;Enter Password&quot;
+              formControlName&#x3D;&quot;password&quot;
+              class&#x3D;&quot;signup-candidate1-password-input1 input&quot;
+            /&gt;
+            &lt;div *ngIf&#x3D;&quot;signupForm.get(&#x27;password&#x27;).invalid &amp;&amp; signupForm.get(&#x27;password&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+              &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;password&#x27;).errors?.required&quot;&gt;Password is required.&lt;/span&gt;
+              &lt;span *ngIf&#x3D;&quot;signupForm.get(&#x27;password&#x27;).errors?.minlength&quot;&gt;Password must be at least 8 characters.&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Confirm Password --&gt;
+        &lt;div id&#x3D;&quot;password-container&quot; class&#x3D;&quot;signup-candidate1-password-container2&quot;&gt;
+          &lt;div class&#x3D;&quot;signup-candidate1-password2&quot;&gt;
+            &lt;span class&#x3D;&quot;signup-candidate1-password-text2&quot;&gt;Confirm Password&lt;/span&gt;
+            &lt;span
+              class&#x3D;&quot;signup-candidate1-show-text2 button&quot;
+              (click)&#x3D;&quot;toggleConfirmPasswordVisibility()&quot;
+            &gt;
+              {{ confirmPasswordType &#x3D;&#x3D;&#x3D; &#x27;password&#x27; ? &#x27;Show&#x27; : &#x27;Hide&#x27; }}
+            &lt;/span&gt;
+            &lt;input
+              [type]&#x3D;&quot;confirmPasswordType&quot;
+              id&#x3D;&quot;signup-confirm-password-input&quot;
+              placeholder&#x3D;&quot;Confirm Password&quot;
+              formControlName&#x3D;&quot;confirm_password&quot;
+              class&#x3D;&quot;signup-candidate1-password-input2 input&quot;
+            /&gt;
+            &lt;div *ngIf&#x3D;&quot;signupForm.hasError(&#x27;mismatch&#x27;) &amp;&amp; signupForm.get(&#x27;confirm_password&#x27;).touched&quot; class&#x3D;&quot;error-text&quot;&gt;
+              Passwords do not match.
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Signup Button and Error Message --&gt;
+        &lt;div class&#x3D;&quot;signup-candidate1-signup-and-signin-container&quot;&gt;
+          &lt;button
+            id&#x3D;&quot;signup-button&quot;
+            type&#x3D;&quot;submit&quot;
+            [disabled]&#x3D;&quot;signupForm.invalid&quot;
+            class&#x3D;&quot;signup-candidate1-signup-button button&quot;
+          &gt;
+            Sign Up
+          &lt;/button&gt;
+          &lt;div *ngIf&#x3D;&quot;errorMessage&quot; class&#x3D;&quot;signup-candidate1-error-signup-container&quot;&gt;
+            &lt;span class&#x3D;&quot;signup-candidate1-error-message-signup&quot;&gt;{{ errorMessage }}&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Add this after the error message div --&gt;
+          &lt;div *ngIf&#x3D;&quot;successMessage&quot; class&#x3D;&quot;signup-candidate1-success-signup-container&quot;&gt;
+          &lt;span class&#x3D;&quot;signup-candidate1-success-message-signup&quot;&gt;{{ successMessage }}&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Sign In Link --&gt;
+          &lt;div class&#x3D;&quot;signup-candidate1-signin-container&quot;&gt;
+            &lt;span class&#x3D;&quot;signup-candidate1-already-have-an-account-text&quot;&gt;
+              Already have an account?
+            &lt;/span&gt;
+            &lt;span class&#x3D;&quot;signup-candidate1-signin-text button&quot; routerLink&#x3D;&quot;/login&quot;&gt;
+              Sign In
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./signup-candidate1.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.signup-candidate1-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  overflow: visible;
+  position: relative;
+  align-items: flex-start;
+  padding-top: 20px;
+  flex-direction: column;
+  padding-bottom: 20px;
+  justify-content: center;
+}
+
+.signup-candidate1-success-signup-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-candidate1-success-message-signup {
+  color: #28a745;
+  font-weight: bold;
+}
+ 
+.signup-candidate1-signup-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 368px;
+  height: auto;
+  display: flex;
+  align-self: center;
+  margin-top: 0px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.signup-candidate1-welcome-to-flashyre {
+  width: 211px;
+  height: 24px;
+  display: flex;
+  font-size: 20px;
+  align-self: center;
+  font-style: normal;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.signup-candidate1-details-container {
+  gap: var(--dl-space-space-oneandhalfunits);
+  flex: 0 0 auto;
+  width: 368px;
+  height: auto;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-first-name-container {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-first-name-text {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-candidate1-first-name-input {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-last-name-container1 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-last-name-text1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-candidate1-last-name-input1 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-last-name-container2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-last-name-text2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-candidate1-last-name-input2 {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-email-container {
+  flex: 0 0 auto;
+  width: 320px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-email-text {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-self: flex-start;
+  text-align: justify;
+  align-items: center;
+  font-family: &quot;Inter&quot;;
+}
+ 
+.signup-candidate1-email-input {
+  fill: #18191C;
+  color: #18191C;
+  width: 320px;
+  height: 48px;
+  border-color: #ACACAD;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-password-container1 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-password1 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-password-text1 {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.signup-candidate1-show-text1 {
+  right: var(--dl-space-space-halfunit);
+  width: 44px;
+  bottom: var(--dl-space-space-unit);
+  height: 24px;
+  margin: 0px;
+  display: flex;
+  padding: 0px;
+  position: absolute;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.signup-candidate1-show-text1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-candidate1-show-text1:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-candidate1-password-input1 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-password-container2 {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-password2 {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-password-text2 {
+  width: 320px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.signup-candidate1-show-text2 {
+  right: var(--dl-space-space-halfunit);
+  width: 44px;
+  bottom: var(--dl-space-space-unit);
+  height: 24px;
+  margin: 0px;
+  display: flex;
+  padding: 0px;
+  position: absolute;
+  align-self: flex-start;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  justify-content: center;
+  background-color: transparent;
+}
+ 
+.signup-candidate1-show-text2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-candidate1-show-text2:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-candidate1-password-input2 {
+  width: 320px;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.signup-candidate1-signup-and-signin-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.signup-candidate1-signup-button {
+  gap: 4px;
+  width: 320px;
+  height: 48px;
+  transition: 0.3s;
+  padding-top: 12px;
+  border-width: 0px;
+  padding-left: 16px;
+  border-radius: 4px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  background-color: #05356C;
+  color: white;
+}
+ 
+.signup-candidate1-signup-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.signup-candidate1-signup-button:active {
+  transform: scale(0.90);
+  border-width: 0px;
+  background-color: 022954;
+}
+ 
+.signup-candidate1-signup-text {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 53px;
+  height: 24px;
+}
+ 
+.signup-candidate1-error-signup-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: none;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.signup-candidate1-error-message-signup {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  font-style: normal;
+  margin-top: var(--dl-space-space-halfunit);
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #F65E5C;
+}
+ 
+.signup-candidate1-signin-container {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  display: flex;
+  align-self: center;
+  justify-content: flex-start;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+ 
+.signup-candidate1-already-have-an-account-text {
+  display: flex;
+  align-self: center;
+  align-items: center;
+}
+ 
+.signup-candidate1-signin-text {
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  padding-left: 0px;
+  background-color: transparent;
+}
+ 
+.signup-candidate1-signin-text:hover {
+  color: FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.signup-candidate1-signin-text:active {
+  color: FFFFFF;
+  transform: scale(1.05);
+  transition: all 0.7s;
+  background-color: #D7DFE7;
+}
+ 
+.signup-candidate1-fragment10 {
+  display: contents;
+}
+ 
+.signup-candidate1-text10 {
+  color: #ffffff;
+  display: inline-block;
+  background-color: rgb(246, 94, 92);
+}
+ 
+.signup-candidate1-fragment11 {
+  display: contents;
+}
+ 
+.signup-candidate1-text11 {
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment12 {
+  display: contents;
+}
+ 
+.signup-candidate1-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.signup-candidate1-fragment13 {
+  display: contents;
+}
+ 
+.signup-candidate1-text13 {
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment14 {
+  display: contents;
+}
+ 
+.signup-candidate1-text14 {
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment15 {
+  display: contents;
+}
+ 
+.signup-candidate1-text15 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment16 {
+  display: contents;
+}
+ 
+.signup-candidate1-text16 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment17 {
+  display: contents;
+}
+ 
+.signup-candidate1-text17 {
+  color: #18191c;
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment18 {
+  display: contents;
+}
+ 
+.signup-candidate1-text18 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.signup-candidate1-fragment19 {
+  display: contents;
+}
+ 
+.signup-candidate1-text19 {
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment20 {
+  display: contents;
+}
+ 
+.signup-candidate1-text20 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.signup-candidate1-fragment21 {
+  display: contents;
+}
+ 
+.signup-candidate1-text21 {
+  display: inline-block;
+}
+ 
+.signup-candidate1-fragment22 {
+  display: contents;
+}
+ 
+.signup-candidate1-text22 {
+  display: inline-block;
+}
+ 
+.signup-candidate1root-class-name {
+  height: auto;
+  position: static;
+  align-self: center;
+  margin-top: 100px;
+  background-color: #D9D9D9;
+}
+ 
+.signup-candidate1root-class-name1 {
+  top: 100px;
+  left: 0px;
+  height: auto;
+  z-index: 999;
+  position: relative;
+  align-self: center;
+  overflow-x: visible;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div id="signup-page" class="signup-candidate1-container" [ngClass]="rootClassName">  <div id="signup-container" class="signup-candidate1-signup-container">    <h2 id="heading" class="signup-candidate1-welcome-to-flashyre">      <span>Welcome to Flashyre</span>    </h2>    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">      <div id="details" class="signup-candidate1-details-container">        <!-- First Name -->        <div id="first-name-container" class="signup-candidate1-first-name-container">          <span class="signup-candidate1-first-name-text">First Name</span>          <input            type="text"            id="signup-first-name-input"            placeholder="Enter First Name"            formControlName="first_name"            class="signup-candidate1-first-name-input input"          />          <div *ngIf="signupForm.get(\'first_name\').invalid && signupForm.get(\'first_name\').touched" class="error-text">            <span *ngIf="signupForm.get(\'first_name\').errors?.required">First name is required.</span>            <span *ngIf="signupForm.get(\'first_name\').errors?.pattern">Only letters and spaces are allowed.</span>          </div>        </div>        <!-- Last Name -->        <div id="last-name-container" class="signup-candidate1-last-name-container1">          <span class="signup-candidate1-last-name-text1">Last Name</span>          <input            type="text"            id="signup-last-name-input"            placeholder="Enter Last Name"            formControlName="last_name"            class="signup-candidate1-last-name-input1 input"          />          <div *ngIf="signupForm.get(\'last_name\').invalid && signupForm.get(\'last_name\').touched" class="error-text">            <span *ngIf="signupForm.get(\'last_name\').errors?.required">Last name is required.</span>            <span *ngIf="signupForm.get(\'last_name\').errors?.pattern">Only letters and spaces are allowed.</span>          </div>        </div>        <!-- Phone Number -->        <div id="phone-container" class="signup-candidate1-last-name-container2">          <span class="signup-candidate1-last-name-text2">Phone Number</span>          <input            type="text"            id="signup-phone-number-input"            placeholder="Enter Phone Number"            formControlName="phone_number"            class="signup-candidate1-last-name-input2 input"            maxlength="10"            (input)="sanitizePhoneNumber($event)"          />          <div *ngIf="signupForm.get(\'phone_number\').invalid && signupForm.get(\'phone_number\').touched" class="error-text">            <span *ngIf="signupForm.get(\'phone_number\').errors?.required">Phone number is required.</span>            <span *ngIf="signupForm.get(\'phone_number\').errors?.pattern">Phone number must be exactly 10 digits.</span>          </div>          <div *ngIf="signupForm.get(\'phone_number\').errors?.phoneExists" class="error-text">            Phone number already exists.          </div>        </div>        <!-- Email -->        <div id="email-container" class="signup-candidate1-email-container">          <span class="signup-candidate1-email-text">Email Id</span>          <input            type="email"            id="signup-email-input"            placeholder="Enter Email Id"            formControlName="email"            class="signup-candidate1-email-input input"          />          <div *ngIf="signupForm.get(\'email\').invalid && signupForm.get(\'email\').touched" class="error-text">            <span *ngIf="signupForm.get(\'email\').errors?.required">Email is required.</span>            <span *ngIf="signupForm.get(\'email\').errors?.email">Please enter a valid email.</span>          </div>          <div *ngIf="signupForm.get(\'email\').errors?.emailExists" class="error-text">            Email already exists.          </div>        </div>        <!-- Password -->        <div id="password-container" class="signup-candidate1-password-container1">          <div class="signup-candidate1-password1">            <span class="signup-candidate1-password-text1">Password</span>            <span              class="signup-candidate1-show-text1 button"              (click)="togglePasswordVisibility()"            >              {{ passwordType === \'password\' ? \'Show\' : \'Hide\' }}            </span>            <input              [type]="passwordType"              id="signup-password-input"              placeholder="Enter Password"              formControlName="password"              class="signup-candidate1-password-input1 input"            />            <div *ngIf="signupForm.get(\'password\').invalid && signupForm.get(\'password\').touched" class="error-text">              <span *ngIf="signupForm.get(\'password\').errors?.required">Password is required.</span>              <span *ngIf="signupForm.get(\'password\').errors?.minlength">Password must be at least 8 characters.</span>            </div>          </div>        </div>        <!-- Confirm Password -->        <div id="password-container" class="signup-candidate1-password-container2">          <div class="signup-candidate1-password2">            <span class="signup-candidate1-password-text2">Confirm Password</span>            <span              class="signup-candidate1-show-text2 button"              (click)="toggleConfirmPasswordVisibility()"            >              {{ confirmPasswordType === \'password\' ? \'Show\' : \'Hide\' }}            </span>            <input              [type]="confirmPasswordType"              id="signup-confirm-password-input"              placeholder="Confirm Password"              formControlName="confirm_password"              class="signup-candidate1-password-input2 input"            />            <div *ngIf="signupForm.hasError(\'mismatch\') && signupForm.get(\'confirm_password\').touched" class="error-text">              Passwords do not match.            </div>          </div>        </div>        <!-- Signup Button and Error Message -->        <div class="signup-candidate1-signup-and-signin-container">          <button            id="signup-button"            type="submit"            [disabled]="signupForm.invalid"            class="signup-candidate1-signup-button button"          >            Sign Up          </button>          <div *ngIf="errorMessage" class="signup-candidate1-error-signup-container">            <span class="signup-candidate1-error-message-signup">{{ errorMessage }}</span>          </div>          <!-- Add this after the error message div -->          <div *ngIf="successMessage" class="signup-candidate1-success-signup-container">          <span class="signup-candidate1-success-message-signup">{{ successMessage }}</span>          </div>          <!-- Sign In Link -->          <div class="signup-candidate1-signin-container">            <span class="signup-candidate1-already-have-an-account-text">              Already have an account?            </span>            <span class="signup-candidate1-signin-text button" routerLink="/login">              Sign In            </span>          </div>        </div>      </div>    </form>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'SignupCandidate1'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SignupCandidate1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,2662 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  CandidateJobDetailView</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>candidate-job-detail-view</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>candidate-job-detail-view.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>candidate-job-detail-view.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/pages/candidate-job-detail-view/candidate-job-detail-view.component.ts:9</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;
+
+@Component({
+  selector: &#x27;candidate-job-detail-view&#x27;,
+  templateUrl: &#x27;candidate-job-detail-view.component.html&#x27;,
+  styleUrls: [&#x27;candidate-job-detail-view.component.css&#x27;],
+})
+export class CandidateJobDetailView {
+  constructor(private title: Title, private meta: Meta) {
+    this.title.setTitle(&#x27;Candidate-Job-Detail-View - Flashyre&#x27;)
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Candidate-Job-Detail-View - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ])
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div
+  id&#x3D;&quot;candidate-job-detail-view&quot;
+  class&#x3D;&quot;candidate-job-detail-view-container1&quot;
+&gt;
+  &lt;div id&#x3D;&quot;main-container&quot; class&#x3D;&quot;candidate-job-detail-view-main-container&quot;&gt;
+    &lt;navbar-for-candidate-view
+      rootClassName&#x3D;&quot;navbar-for-candidate-viewroot-class-name1&quot;
+    &gt;
+      &lt;ng-template #link1&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment10&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text10&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link2&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment11&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text11&quot;&gt;Upskill&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link3&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment12&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text12&quot;&gt;Assessment&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link4&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment13&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text13&quot;&gt;Jobs for you&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text1&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment14&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text14&quot;&gt;Profile&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text2&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment15&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text15&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text3&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment16&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text16&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text4&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment17&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text17&quot;&gt;Kathryn Murphy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text5&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment18&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text18&quot;&gt;
+            ✅ 90% Profile Completion
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text6&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment19&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text19&quot;&gt;
+            View &amp;amp; edit profile
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text7&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment20&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text20&quot;&gt;Dashboard&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text8&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment21&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text21&quot;&gt;Upskill&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text9&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment22&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text22&quot;&gt;Assessment&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text10&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment23&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text23&quot;&gt;Jobs for you&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text11&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment24&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text24&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text12&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment25&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text25&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text13&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment26&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text26&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text31&gt;
+        &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment27&quot;&gt;
+          &lt;span class&#x3D;&quot;candidate-job-detail-view-text27&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/navbar-for-candidate-view&gt;
+    &lt;div
+      id&#x3D;&quot;details-container&quot;
+      class&#x3D;&quot;candidate-job-detail-view-details-container&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;job-search-for-candidate-main-conatiner&quot;
+        class&#x3D;&quot;candidate-job-detail-view-job-search-container&quot;
+      &gt;
+        &lt;header
+          id&#x3D;&quot;job-search-container&quot;
+          class&#x3D;&quot;candidate-job-detail-view-container2&quot;
+        &gt;
+          &lt;header
+            data-thq&#x3D;&quot;thq-navbar&quot;
+            class&#x3D;&quot;candidate-job-detail-view-navbar-interactive&quot;
+          &gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-navbar-nav&quot;
+              class&#x3D;&quot;candidate-job-detail-view-desktop-menu&quot;
+            &gt;
+              &lt;nav
+                id&#x3D;&quot;job-search-location-experience-container&quot;
+                class&#x3D;&quot;candidate-job-detail-view-links1&quot;
+              &gt;
+                &lt;div
+                  id&#x3D;&quot;candidate-job-location-experience-container&quot;
+                  class&#x3D;&quot;candidate-job-detail-view-container3&quot;
+                &gt;
+                  &lt;div
+                    id&#x3D;&quot;job-title-container&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-job-title-container1&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;job-search-icon&quot;
+                      width&#x3D;&quot;32&quot;
+                      height&#x3D;&quot;32&quot;
+                      viewBox&#x3D;&quot;0 0 32 32&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-search-icon1&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-job-title-input&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-job-title-text1&quot;
+                    &gt;
+                      Job tittle, Keyword...
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;location-container&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-location-container1&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;location-icon&quot;
+                      width&#x3D;&quot;1024&quot;
+                      height&#x3D;&quot;1024&quot;
+                      viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-location-icon1&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                      &lt;path
+                        d&#x3D;&quot;M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-location-input&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-location-text&quot;
+                    &gt;
+                      Your Location
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;experience-container&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-experience-container1&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;briefcase-icon&quot;
+                      width&#x3D;&quot;256&quot;
+                      height&#x3D;&quot;256&quot;
+                      viewBox&#x3D;&quot;0 0 256 256&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-briefcase-icon1&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M216 58h-42V48a22 22 0 0 0-22-22h-48a22 22 0 0 0-22 22v10H40a14 14 0 0 0-14 14v128a14 14 0 0 0 14 14h176a14 14 0 0 0 14-14V72a14 14 0 0 0-14-14M94 48a10 10 0 0 1 10-10h48a10 10 0 0 1 10 10v10H94ZM40 70h176a2 2 0 0 1 2 2v74H38V72a2 2 0 0 1 2-2m176 132H40a2 2 0 0 1-2-2v-42h180v42a2 2 0 0 1-2 2&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-experience-input&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-experence-text&quot;
+                    &gt;
+                      Experience
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/nav&gt;
+              &lt;svg
+                id&#x3D;&quot;filter-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+                class&#x3D;&quot;candidate-job-detail-view-filter-icon1&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17&quot;
+                  fill&#x3D;&quot;none&quot;
+                  color&#x3D;&quot;currentColor&quot;
+                  stroke&#x3D;&quot;currentColor&quot;
+                  stroke-width&#x3D;&quot;1.5&quot;
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+              &lt;div
+                id&#x3D;&quot;search-preference-button&quot;
+                class&#x3D;&quot;candidate-job-detail-view-buttons1&quot;
+              &gt;
+                &lt;button
+                  id&#x3D;&quot;search-button&quot;
+                  type&#x3D;&quot;button&quot;
+                  class&#x3D;&quot;candidate-job-detail-view-search-button1 button&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;search-text&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-search-text1&quot;
+                  &gt;
+                    Search
+                  &lt;/span&gt;
+                &lt;/button&gt;
+                &lt;button
+                  id&#x3D;&quot;preference-button&quot;
+                  type&#x3D;&quot;button&quot;
+                  class&#x3D;&quot;candidate-job-detail-view-preference-button1 button&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;preference-text&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-preference-text1&quot;
+                  &gt;
+                    Preference
+                  &lt;/span&gt;
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-burger-menu&quot;
+              class&#x3D;&quot;candidate-job-detail-view-burger-menu&quot;
+            &gt;
+              &lt;span
+                id&#x3D;&quot;jobs-title-search-bar&quot;
+                class&#x3D;&quot;candidate-job-detail-view-job-title-text2&quot;
+              &gt;
+                Job title, skills...
+              &lt;/span&gt;
+              &lt;svg
+                id&#x3D;&quot;job-search-icon-navbar&quot;
+                viewBox&#x3D;&quot;0 0 32 32&quot;
+                class&#x3D;&quot;candidate-job-detail-view-search-icon2&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-mobile-menu&quot;
+              class&#x3D;&quot;candidate-job-detail-view-mobile-menu&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-nav&quot;&gt;
+                &lt;div class&#x3D;&quot;candidate-job-detail-view-top&quot;&gt;
+                  &lt;div
+                    data-thq&#x3D;&quot;thq-close-menu&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-close-menu&quot;
+                  &gt;
+                    &lt;svg
+                      viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-close-icon&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;nav
+                  id&#x3D;&quot;links-container&quot;
+                  class&#x3D;&quot;candidate-job-detail-view-links2&quot;
+                &gt;
+                  &lt;div
+                    id&#x3D;&quot;job-container&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-job-title-container2&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;search-icon&quot;
+                      viewBox&#x3D;&quot;0 0 32 32&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-search-icon3&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-job-title-input-navbar&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-search-text2&quot;
+                    &gt;
+                      Job tittle, Keyword...
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;experience-navbar-container&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-experience-container2&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;briefcase-icon-navbar&quot;
+                      width&#x3D;&quot;24&quot;
+                      height&#x3D;&quot;24&quot;
+                      viewBox&#x3D;&quot;0 0 24 24&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-briefcase-icon2&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-experience-input-navbar&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-experience-text&quot;
+                    &gt;
+                      Experience
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;location-container-navbar&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-location-container2&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;location-icon-navbar&quot;
+                      width&#x3D;&quot;1024&quot;
+                      height&#x3D;&quot;1024&quot;
+                      viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-location-icon2&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                      &lt;path
+                        d&#x3D;&quot;M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;search-location-input-navbar&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-your-location-text&quot;
+                    &gt;
+                      Your Location
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/nav&gt;
+                &lt;div
+                  id&#x3D;&quot;buttons-conatiner&quot;
+                  class&#x3D;&quot;candidate-job-detail-view-buttons2&quot;
+                &gt;
+                  &lt;svg
+                    id&#x3D;&quot;job-filter-icon&quot;
+                    width&#x3D;&quot;24&quot;
+                    height&#x3D;&quot;24&quot;
+                    viewBox&#x3D;&quot;0 0 24 24&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-filter-icon2&quot;
+                  &gt;
+                    &lt;path
+                      d&#x3D;&quot;M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17&quot;
+                      fill&#x3D;&quot;none&quot;
+                      color&#x3D;&quot;currentColor&quot;
+                      stroke&#x3D;&quot;currentColor&quot;
+                      stroke-width&#x3D;&quot;1.5&quot;
+                      stroke-linecap&#x3D;&quot;round&quot;
+                      stroke-linejoin&#x3D;&quot;round&quot;
+                    &gt;&lt;/path&gt;
+                  &lt;/svg&gt;
+                  &lt;button
+                    id&#x3D;&quot;job-search-button&quot;
+                    type&#x3D;&quot;button&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-search-button2 button&quot;
+                  &gt;
+                    &lt;span
+                      id&#x3D;&quot;job-search-text&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-search-text3&quot;
+                    &gt;
+                      Search
+                    &lt;/span&gt;
+                  &lt;/button&gt;
+                  &lt;button
+                    id&#x3D;&quot;preference-button-navbar&quot;
+                    type&#x3D;&quot;button&quot;
+                    class&#x3D;&quot;candidate-job-detail-view-preference-button2 button&quot;
+                  &gt;
+                    &lt;span
+                      id&#x3D;&quot;preference-text-navbar&quot;
+                      class&#x3D;&quot;candidate-job-detail-view-preferece-text&quot;
+                    &gt;
+                      Preference
+                    &lt;/span&gt;
+                  &lt;/button&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/header&gt;
+        &lt;/header&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;job-recommended-preference-container&quot;
+        class&#x3D;&quot;candidate-job-detail-view-job-recommended-preference-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;job-recommended-container&quot;
+          class&#x3D;&quot;candidate-job-detail-view-job-recommended-container&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;job-recommended-text&quot;
+            class&#x3D;&quot;candidate-job-detail-view-job-recommended-text&quot;
+          &gt;
+            Jobs recommended (75)
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;preference-container&quot;
+          class&#x3D;&quot;candidate-job-detail-view-preference-container&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;preference-text&quot;
+            class&#x3D;&quot;candidate-job-detail-view-preference-text2&quot;
+          &gt;
+            Preference (4)
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;job-details-main-container&quot;
+        class&#x3D;&quot;candidate-job-detail-view-job-details-main-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;job-cards-container&quot;
+          class&#x3D;&quot;candidate-job-detail-view-job-cards-container&quot;
+        &gt;
+          &lt;candidate-view-last-page-card
+            rootClassName&#x3D;&quot;candidate-view-last-page-cardroot-class-name&quot;
+          &gt;
+            &lt;ng-template #text&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment28&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text28&quot;&gt;
+                  Senior Software Engineer
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment29&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text29&quot;&gt;Google&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text2&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment30&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text30&quot;&gt;
+                  Bengaluru, Karnataka, India (On-site)
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/candidate-view-last-page-card&gt;
+          &lt;candidate-view-last-page-card
+            rootClassName&#x3D;&quot;candidate-view-last-page-cardroot-class-name1&quot;
+          &gt;
+            &lt;ng-template #text&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment31&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text31&quot;&gt;
+                  Senior Software Engineer
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment32&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text32&quot;&gt;Google&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text2&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment33&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text33&quot;&gt;
+                  Bengaluru, Karnataka, India (On-site)
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/candidate-view-last-page-card&gt;
+          &lt;candidate-view-last-page-card
+            rootClassName&#x3D;&quot;candidate-view-last-page-cardroot-class-name2&quot;
+          &gt;
+            &lt;ng-template #text&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment34&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text34&quot;&gt;
+                  Senior Software Engineer
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment35&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text35&quot;&gt;Google&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text2&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment36&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text36&quot;&gt;
+                  Bengaluru, Karnataka, India (On-site)
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/candidate-view-last-page-card&gt;
+          &lt;candidate-view-last-page-card
+            rootClassName&#x3D;&quot;candidate-view-last-page-cardroot-class-name3&quot;
+          &gt;
+            &lt;ng-template #text&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment37&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text37&quot;&gt;
+                  Senior Software Engineer
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment38&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text38&quot;&gt;Google&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text2&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment39&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text39&quot;&gt;
+                  Bengaluru, Karnataka, India (On-site)
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/candidate-view-last-page-card&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;job-cards-popup-container&quot;
+          class&#x3D;&quot;candidate-job-detail-view-job-cards-popup-container&quot;
+        &gt;
+          &lt;about-the-job rootClassName&#x3D;&quot;about-the-jobroot-class-name&quot;&gt;
+            &lt;ng-template #text&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment40&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text40&quot;&gt;Google&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment41&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text41&quot;&gt;
+                  Senior Software Engineer
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #text2&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment42&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text42&quot;&gt;
+                  Bengaluru, Karnataka, India (On-site) | Posted 2 days ago
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #button&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment43&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text43&quot;&gt;Apply&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-template #button1&gt;
+              &lt;div class&#x3D;&quot;candidate-job-detail-view-fragment44&quot;&gt;
+                &lt;span class&#x3D;&quot;candidate-job-detail-view-text44&quot;&gt;
+                  Take Assessment
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/about-the-job&gt;
+          &lt;span
+            id&#x3D;&quot;about-the-job-text&quot;
+            class&#x3D;&quot;candidate-job-detail-view-about-the-job-text&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text45&quot;&gt;About the job&lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text46&quot; /&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text47&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text48&quot;&gt;
+              At Google, we follow a simple but vital premise: &amp;quot;Focus on
+              the user and all else will follow.&amp;quot; Google’s Interaction
+              Designers take complex tasks and make them intuitive and
+              easy-to-use for billions of people around the globe. Throughout
+              the design process—from creating user flows and wireframes to
+              building user interface mockups and prototypes—you’ll envision how
+              people will experience our products, and bring that vision to life
+              in a way that feels inspired, refined, and even magical.
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text49&quot; /&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text50&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text51&quot;&gt;
+              Google User Experience (UX) is made up of multi-disciplinary teams
+              of UX Designers, Researchers, Writers, Content Strategists,
+              Program Managers, and Engineers: we care deeply about the people
+              who use our products. The UX team plays an integral part in
+              gathering insights about the attitudes, emotions, and behaviors of
+              people who use our products to inspire and inform design. We
+              collaborate closely with each other and with engineering and
+              product management to create industry-leading products that
+              deliver value for the people who use them, and for Google’s
+              businesses.
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text52&quot; /&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text53&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text54&quot;&gt;
+              Minimum qualifications:
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text55&quot; /&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text56&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text57&quot;&gt;
+              Bachelor&amp;apos;s degree in Design, Human-Computer Interaction,
+              Computer Science, a related field, or equivalent practical
+              experience.
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text58&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text59&quot;&gt;
+              4 years of experience in product design or UX.
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text60&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text61&quot;&gt;
+              Experience designing across multiple platforms, and working with
+              technical/design teams to create user flows, wireframes, and
+              building user interface mockups and prototypes.
+            &lt;/span&gt;
+            &lt;br class&#x3D;&quot;candidate-job-detail-view-text62&quot; /&gt;
+            &lt;span class&#x3D;&quot;candidate-job-detail-view-text63&quot;&gt;
+              Include a portfolio, website, or any other relevant link to your
+              work in your resume (providing a viewable link or access
+              instructions).
+            &lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>candidate-job-detail-view.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.candidate-job-detail-view-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  padding-top: 0px;
+  flex-direction: row;
+}
+ 
+.candidate-job-detail-view-main-container {
+  gap: 24px;
+  flex: 1;
+  width: 1440px;
+  height: 1176px;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+}
+ 
+.candidate-job-detail-view-fragment10 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text10 {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-fragment11 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text11 {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-fragment12 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment13 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text13 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment14 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text14 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment15 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text15 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment16 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text16 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment17 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text17 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment18 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text18 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment19 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text19 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment20 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text20 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment21 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text21 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment22 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text22 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment23 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text23 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment24 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text24 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment25 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text25 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment26 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text26 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment27 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text27 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-details-container {
+  gap: 16px;
+  width: 1124px;
+  height: 1080px;
+  display: flex;
+  padding: 24px;
+  z-index: 999;
+  align-self: center;
+  margin-top: 100px;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-detail-view-job-search-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-container2 {
+  width: 1076px;
+  height: 72px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.candidate-job-detail-view-navbar-interactive {
+  gap: 12px;
+  width: 1135px;
+  height: 72px;
+  display: flex;
+  padding: 12px;
+  align-self: center;
+  align-items: center;
+  border-color: #E4E5E8;
+  border-width: 1px;
+  border-radius: 8px;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-detail-view-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.candidate-job-detail-view-links1 {
+  flex: 1;
+  width: 780px;
+  height: 56px;
+  display: flex;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-container3 {
+  gap: var(--dl-space-space-unit);
+  width: auto;
+  height: 56px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.candidate-job-detail-view-job-title-container1 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 260px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-color: #E4E5E8;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 0px;
+}
+ 
+.candidate-job-detail-view-search-icon1 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+ 
+.candidate-job-detail-view-job-title-text1 {
+  color: #747474;
+  width: 221px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-location-container1 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 260px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-color: #E4E5E8;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 0px;
+}
+ 
+.candidate-job-detail-view-location-icon1 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-detail-view-location-text {
+  color: rgb(116, 116, 116);
+  width: 220px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-experience-container1 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 204px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px;
+}
+ 
+.candidate-job-detail-view-briefcase-icon1 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-detail-view-experence-text {
+  color: rgb(116, 116, 116);
+  width: 162px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-filter-icon1 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  transition: 0.3s;
+  justify-content: center;
+  background-color: #F7F7F8;
+}
+ 
+.candidate-job-detail-view-filter-icon1:hover {
+  cursor: pointer;
+}
+ 
+.candidate-job-detail-view-buttons1 {
+  gap: var(--dl-space-space-halfunit);
+  width: 232px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-search-button1 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 79px;
+  height: 40px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: #05356C;
+}
+ 
+.candidate-job-detail-view-search-button1:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.candidate-job-detail-view-search-button1:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.candidate-job-detail-view-search-text1 {
+  width: 55px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-preference-button1 {
+  width: 117px;
+  height: 40px;
+  transition: 0.3s;
+  border-color: #05356C;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-detail-view-preference-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-detail-view-preference-button1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-detail-view-preference-text1 {
+  color: #05356c;
+  width: 85px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-burger-menu {
+  display: none;
+}
+ 
+.candidate-job-detail-view-job-title-text2 {
+  display: none;
+}
+ 
+.candidate-job-detail-view-search-icon2 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+ 
+.candidate-job-detail-view-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  padding: var(--dl-space-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.candidate-job-detail-view-nav {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-detail-view-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.candidate-job-detail-view-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-close-icon {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.candidate-job-detail-view-links2 {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.candidate-job-detail-view-job-title-container2 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 188px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-color: #E4E5E8;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 0px;
+}
+ 
+.candidate-job-detail-view-search-icon3 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+ 
+.candidate-job-detail-view-search-text2 {
+  color: #747474;
+  width: 156px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-experience-container2 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 118px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px;
+}
+ 
+.candidate-job-detail-view-experience-text {
+  color: rgb(116, 116, 116);
+  width: 84px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-location-container2 {
+  gap: var(--dl-space-space-halfunit);
+  flex: 0 0 auto;
+  width: 188px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  border-color: #E4E5E8;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 0px;
+}
+ 
+.candidate-job-detail-view-location-icon2 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.candidate-job-detail-view-your-location-text {
+  color: rgb(116, 116, 116);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.candidate-job-detail-view-buttons2 {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+  margin-top: var(--dl-space-space-twounits);
+  align-items: center;
+  flex-direction: row;
+}
+ 
+.candidate-job-detail-view-filter-icon2 {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background-color: #F7F7F8;
+}
+ 
+.candidate-job-detail-view-search-button2 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: 79px;
+  height: 40px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: #05356C;
+}
+ 
+.candidate-job-detail-view-search-button2:hover {
+  transform: scale(1.05);
+  transition: all 0.8s;
+  animation-play-state: 0A4992;
+}
+ 
+.candidate-job-detail-view-search-button2:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.candidate-job-detail-view-search-text3 {
+  width: 55px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-preference-button2 {
+  width: 117px;
+  height: 40px;
+  transition: 0.3s;
+  border-color: #05356C;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-detail-view-preference-button2:hover {
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-detail-view-preference-button2:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.candidate-job-detail-view-preferece-text {
+  color: #05356c;
+  width: 85px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-job-recommended-preference-container {
+  gap: 32px;
+  flex: 0 0 auto;
+  width: 350px;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.candidate-job-detail-view-job-recommended-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 190px;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 12px;
+  flex-direction: row;
+  padding-bottom: 12px;
+}
+ 
+.candidate-job-detail-view-job-recommended-text {
+  fill: #05356C;
+  color: #05356C;
+  width: 190px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-preference-container {
+  flex: 0 0 auto;
+  width: 128px;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.candidate-job-detail-view-preference-text2 {
+  fill: #05356C;
+  color: #05356C;
+  width: 113px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+  justify-content: center;
+}
+ 
+.candidate-job-detail-view-job-details-main-container {
+  gap: 0;
+  width: 1076px;
+  height: 880px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.candidate-job-detail-view-job-cards-container {
+  flex: 0 0 auto;
+  width: 364.01px;
+  height: 429px;
+  display: flex;
+  align-items: flex-start;
+  border-color: #D9D9D9;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0px;
+  flex-direction: column;
+  border-right-width: 1px;
+}
+ 
+.candidate-job-detail-view-fragment28 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text28 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+ 
+.candidate-job-detail-view-fragment29 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text29 {
+  color: #18191c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.candidate-job-detail-view-fragment30 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text30 {
+  color: #6b6c6d;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.candidate-job-detail-view-fragment31 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text31 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment32 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text32 {
+  color: #18191c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.candidate-job-detail-view-fragment33 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text33 {
+  color: #6b6c6d;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.candidate-job-detail-view-fragment34 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text34 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment35 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text35 {
+  color: #18191c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.candidate-job-detail-view-fragment36 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text36 {
+  color: #6b6c6d;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.candidate-job-detail-view-fragment37 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text37 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment38 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text38 {
+  color: #18191c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.candidate-job-detail-view-fragment39 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text39 {
+  color: #6b6c6d;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+}
+ 
+.candidate-job-detail-view-job-cards-popup-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 712.99px;
+  height: 880px;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  border-color: #D9D9D9;
+  border-style: solid;
+  border-width: 1px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.candidate-job-detail-view-fragment40 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text40 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment41 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text41 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment42 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text42 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment43 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text43 {
+  display: inline-block;
+}
+ 
+.candidate-job-detail-view-fragment44 {
+  display: contents;
+}
+ 
+.candidate-job-detail-view-text44 {
+  color: #05356c;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.candidate-job-detail-view-about-the-job-text {
+  color: rgb(107, 108, 109);
+  width: 664.99px;
+  height: 648px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+ 
+.candidate-job-detail-view-text48 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text51 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text54 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text57 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text59 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text61 {
+  font-style: normal;
+}
+ 
+.candidate-job-detail-view-text63 {
+  font-style: normal;
+}
+ 
+@media(max-width: 1200px) {
+  .candidate-job-detail-view-main-container {
+    width: 1200px;
+    margin-right: 0px;
+  }
+  .candidate-job-detail-view-job-title-text2 {
+    display: none;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .candidate-job-detail-view-main-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-details-container {
+    width: 990px;
+  }
+  .candidate-job-detail-view-job-search-container {
+    height: auto;
+    border-color: 0;
+    border-width: 0px;
+  }
+  .candidate-job-detail-view-container2 {
+    width: 100%;
+    height: auto;
+    border-color: null;
+    border-width: 0px;
+    background-color: transparent;
+  }
+  .candidate-job-detail-view-navbar-interactive {
+    width: 100%;
+    height: auto;
+    padding: 0px;
+    position: relative;
+    align-self: flex-end;
+    align-items: center;
+    border-color: null;
+    border-width: 0px;
+    background-color: transparent;
+  }
+  .candidate-job-detail-view-desktop-menu {
+    display: none;
+  }
+  .candidate-job-detail-view-burger-menu {
+    width: 100%;
+    height: 65px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+  }
+  .candidate-job-detail-view-job-title-text2 {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border-color: #E0E0E0;
+    border-width: 1px;
+    padding-left: var(--dl-space-space-unit);
+    border-radius: 8px;
+    padding-right: 0px;
+    justify-content: flex-start;
+    background-color: #FFFFFF;
+  }
+  .candidate-job-detail-view-search-icon2 {
+    top: 11px;
+    right: 21px;
+    margin: 0px;
+    position: absolute;
+    align-self: center;
+  }
+  .candidate-job-detail-view-mobile-menu {
+    width: 100%;
+    height: auto;
+    padding: 0px;
+  }
+  .candidate-job-detail-view-nav {
+    gap: var(--dl-space-space-unit);
+    padding-top: var(--dl-space-space-halfunit);
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+    padding-bottom: var(--dl-space-space-twounits);
+  }
+  .candidate-job-detail-view-top {
+    align-self: flex-end;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-detail-view-close-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .candidate-job-detail-view-links2 {
+    gap: var(--dl-space-space-oneandhalfunits);
+    width: 100%;
+    padding-left: var(--dl-space-space-halfunit);
+  }
+  .candidate-job-detail-view-job-title-container2 {
+    width: 100%;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-search-text2 {
+    width: auto;
+  }
+  .candidate-job-detail-view-experience-container2 {
+    width: 100%;
+    border-color: #E4E5E8;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-briefcase-icon2 {
+    width: 24px;
+    height: 24px;
+  }
+  .candidate-job-detail-view-experience-text {
+    justify-content: center;
+  }
+  .candidate-job-detail-view-location-container2 {
+    width: 100%;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-your-location-text {
+    color: rgb(116, 116, 116);
+  }
+  .candidate-job-detail-view-buttons2 {
+    width: 100%;
+    position: relative;
+    align-self: flex-end;
+    margin-top: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-detail-view-search-button2 {
+    width: 75px;
+    height: 35px;
+  }
+  .candidate-job-detail-view-preference-button2 {
+    width: 110px;
+    height: 35px;
+  }
+  .candidate-job-detail-view-preferece-text {
+    color: rgb(5, 53, 108);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-detail-view-job-details-main-container {
+    width: 740px;
+  }
+  .candidate-job-detail-view-job-cards-container {
+    width: 314px;
+    height: auto;
+    border-left-width: 1px;
+    border-right-width: 0px;
+  }
+  .candidate-job-detail-view-text28 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text29 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text30 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text31 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text32 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text33 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text34 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text35 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text36 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text37 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text38 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text39 {
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-job-cards-popup-container {
+    width: 621px;
+    border-left-width: 1px;
+  }
+  .candidate-job-detail-view-about-the-job-text {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .candidate-job-detail-view-container1 {
+    justify-content: flex-start;
+  }
+  .candidate-job-detail-view-main-container {
+    width: 766px;
+  }
+  .candidate-job-detail-view-text17 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .candidate-job-detail-view-text18 {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text19 {
+    color: #05356c;
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-text20 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text21 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text22 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text23 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text24 {
+    font-size: 10px;
+  }
+  .candidate-job-detail-view-text25 {
+    font-size: 10px;
+  }
+  .candidate-job-detail-view-text26 {
+    font-size: 10px;
+  }
+  .candidate-job-detail-view-details-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-job-search-container {
+    border-color: 0;
+    border-radius: 8px;
+  }
+  .candidate-job-detail-view-container2 {
+    width: 100%;
+    height: auto;
+    border-color: null;
+    border-width: 0px;
+  }
+  .candidate-job-detail-view-navbar-interactive {
+    width: 100%;
+    padding: 0px;
+    border-color: 0;
+    justify-content: center;
+  }
+  .candidate-job-detail-view-container3 {
+    gap: var(--dl-space-space-halfunit);
+    width: 517px;
+  }
+  .candidate-job-detail-view-briefcase-icon1 {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-detail-view-search-button1 {
+    padding: 0px;
+  }
+  .candidate-job-detail-view-preference-button1 {
+    padding-top: 0px;
+    border-color: #05356C;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+  .candidate-job-detail-view-preference-text1 {
+    color: #05356c;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-detail-view-burger-menu {
+    width: 100%;
+    height: 65px;
+    align-items: center;
+    border-radius: 8px;
+    justify-content: center;
+  }
+  .candidate-job-detail-view-job-title-text2 {
+    color: rgb(116, 116, 116);
+    font-size: 14px;
+  }
+  .candidate-job-detail-view-search-icon2 {
+    top: 19px;
+    right: 28px;
+    margin: auto;
+  }
+  .candidate-job-detail-view-mobile-menu {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    position: absolute;
+    align-self: center;
+    padding-top: 0px;
+    padding-left: mixed;
+    padding-right: mixed;
+    padding-bottom: mixed;
+  }
+  .candidate-job-detail-view-nav {
+    gap: 4px;
+    height: auto;
+    margin: 0px;
+    padding-top: var(--dl-space-space-halfunit);
+    padding-left: var(--dl-space-space-oneandhalfunits);
+    padding-right: var(--dl-space-space-oneandhalfunits);
+    padding-bottom: var(--dl-space-space-oneandhalfunits);
+  }
+  .candidate-job-detail-view-top {
+    align-self: flex-start;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-detail-view-close-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-detail-view-links2 {
+    width: 100%;
+  }
+  .candidate-job-detail-view-job-title-container2 {
+    width: 100%;
+    height: 40px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-search-text2 {
+    color: rgb(116, 116, 116);
+  }
+  .candidate-job-detail-view-experience-container2 {
+    width: 100%;
+    height: 40px;
+    border-color: #E4E5E8;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-experience-text {
+    color: rgb(116, 116, 116);
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-location-container2 {
+    width: 100%;
+    height: 40px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-your-location-text {
+    color: rgb(116, 116, 116);
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-buttons2 {
+    width: 100%;
+    align-self: flex-end;
+    margin-top: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-detail-view-filter-icon2 {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-detail-view-search-button2 {
+    width: 70px;
+    height: 30px;
+    padding: 0px;
+  }
+  .candidate-job-detail-view-preference-button2 {
+    width: 100px;
+    height: 30px;
+    padding-top: 0px;
+    border-color: #05356C;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+  .candidate-job-detail-view-preferece-text {
+    color: #05356c;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .candidate-job-detail-view-job-recommended-preference-container {
+    width: auto;
+  }
+  .candidate-job-detail-view-job-details-main-container {
+    gap: 8px;
+    width: 723px;
+    flex-direction: column;
+  }
+  .candidate-job-detail-view-job-cards-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-text28 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text29 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text30 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text31 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text32 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text33 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text34 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text35 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text36 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text37 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text38 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-text39 {
+    font-size: 12px;
+  }
+  .candidate-job-detail-view-job-cards-popup-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-about-the-job-text {
+    color: rgb(107, 108, 109);
+  }
+  .candidate-job-detail-view-text45 {
+    font-weight: 700;
+  }
+  .candidate-job-detail-view-text46 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text47 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text48 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text49 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text50 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text51 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text52 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text53 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text54 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text55 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text56 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text57 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text58 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text59 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text60 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text61 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text62 {
+    font-style: normal;
+    font-weight: 400;
+  }
+  .candidate-job-detail-view-text63 {
+    font-style: normal;
+    font-weight: 400;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .candidate-job-detail-view-main-container {
+    width: 478px;
+  }
+  .candidate-job-detail-view-job-search-container {
+    position: static;
+  }
+  .candidate-job-detail-view-container2 {
+    width: 100%;
+    align-items: center;
+    padding-left: 0px;
+    justify-content: center;
+  }
+  .candidate-job-detail-view-navbar-interactive {
+    width: 100%;
+    position: static;
+    align-self: center;
+    padding-top: 0px;
+    border-color: 0;
+    border-width: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    justify-content: center;
+  }
+  .candidate-job-detail-view-container3 {
+    gap: var(--dl-space-space-halfunit);
+    width: 202px;
+    height: 81px;
+    flex-direction: column;
+  }
+  .candidate-job-detail-view-job-title-container1 {
+    height: auto;
+    border-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-location-container1 {
+    width: auto;
+    height: auto;
+    border-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-experience-container1 {
+    height: auto;
+    border-color: #E4E5E8;
+    border-width: 0px;
+  }
+  .candidate-job-detail-view-filter-icon1 {
+    width: var(--dl-size-size-small);
+  }
+  .candidate-job-detail-view-burger-menu {
+    flex: 1;
+    width: 100%;
+    height: 50px;
+    position: relative;
+    border-color: 0;
+    border-width: 0px;
+  }
+  .candidate-job-detail-view-job-title-text2 {
+    color: rgb(116, 116, 116);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+  }
+  .candidate-job-detail-view-search-icon2 {
+    top: 12px;
+    right: 20px;
+    width: auto24px;
+  }
+  .candidate-job-detail-view-mobile-menu {
+    top: 3px;
+    left: -5px;
+    width: 100%;
+    height: auto;
+    padding: var(--dl-space-space-halfunit);
+    position: absolute;
+  }
+  .candidate-job-detail-view-nav {
+    height: 215px;
+    padding: 0px;
+    border-color: null;
+  }
+  .candidate-job-detail-view-links2 {
+    width: 393px;
+  }
+  .candidate-job-detail-view-job-title-container2 {
+    height: auto;
+    border-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-experience-container2 {
+    height: auto;
+    border-color: #E4E5E8;
+    border-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-location-container2 {
+    width: 100%;
+    height: auto;
+    border-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .candidate-job-detail-view-buttons2 {
+    gap: var(--dl-space-space-unit);
+    align-self: flex-start;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .candidate-job-detail-view-filter-icon2 {
+    width: 24px;
+  }
+  .candidate-job-detail-view-job-details-main-container {
+    width: 100%;
+    flex-direction: column;
+  }
+  .candidate-job-detail-view-job-cards-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-job-cards-popup-container {
+    width: 100%;
+  }
+  .candidate-job-detail-view-text41 {
+    font-size: 14px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  id="candidate-job-detail-view"  class="candidate-job-detail-view-container1">  <div id="main-container" class="candidate-job-detail-view-main-container">    <navbar-for-candidate-view      rootClassName="navbar-for-candidate-viewroot-class-name1"    >      <ng-template #link1>        <div class="candidate-job-detail-view-fragment10">          <span class="candidate-job-detail-view-text10">Dashboard</span>        </div>      </ng-template>      <ng-template #link2>        <div class="candidate-job-detail-view-fragment11">          <span class="candidate-job-detail-view-text11">Upskill</span>        </div>      </ng-template>      <ng-template #link3>        <div class="candidate-job-detail-view-fragment12">          <span class="candidate-job-detail-view-text12">Assessment</span>        </div>      </ng-template>      <ng-template #link4>        <div class="candidate-job-detail-view-fragment13">          <span class="candidate-job-detail-view-text13">Jobs for you</span>        </div>      </ng-template>      <ng-template #text1>        <div class="candidate-job-detail-view-fragment14">          <span class="candidate-job-detail-view-text14">Profile</span>        </div>      </ng-template>      <ng-template #text2>        <div class="candidate-job-detail-view-fragment15">          <span class="candidate-job-detail-view-text15">Preference</span>        </div>      </ng-template>      <ng-template #text3>        <div class="candidate-job-detail-view-fragment16">          <span class="candidate-job-detail-view-text16">Settings</span>        </div>      </ng-template>      <ng-template #text4>        <div class="candidate-job-detail-view-fragment17">          <span class="candidate-job-detail-view-text17">Kathryn Murphy</span>        </div>      </ng-template>      <ng-template #text5>        <div class="candidate-job-detail-view-fragment18">          <span class="candidate-job-detail-view-text18">            ✅ 90% Profile Completion          </span>        </div>      </ng-template>      <ng-template #text6>        <div class="candidate-job-detail-view-fragment19">          <span class="candidate-job-detail-view-text19">            View &amp; edit profile          </span>        </div>      </ng-template>      <ng-template #text7>        <div class="candidate-job-detail-view-fragment20">          <span class="candidate-job-detail-view-text20">Dashboard</span>        </div>      </ng-template>      <ng-template #text8>        <div class="candidate-job-detail-view-fragment21">          <span class="candidate-job-detail-view-text21">Upskill</span>        </div>      </ng-template>      <ng-template #text9>        <div class="candidate-job-detail-view-fragment22">          <span class="candidate-job-detail-view-text22">Assessment</span>        </div>      </ng-template>      <ng-template #text10>        <div class="candidate-job-detail-view-fragment23">          <span class="candidate-job-detail-view-text23">Jobs for you</span>        </div>      </ng-template>      <ng-template #text11>        <div class="candidate-job-detail-view-fragment24">          <span class="candidate-job-detail-view-text24">Preference</span>        </div>      </ng-template>      <ng-template #text12>        <div class="candidate-job-detail-view-fragment25">          <span class="candidate-job-detail-view-text25">Settings</span>        </div>      </ng-template>      <ng-template #text13>        <div class="candidate-job-detail-view-fragment26">          <span class="candidate-job-detail-view-text26">Logout</span>        </div>      </ng-template>      <ng-template #text31>        <div class="candidate-job-detail-view-fragment27">          <span class="candidate-job-detail-view-text27">Logout</span>        </div>      </ng-template>    </navbar-for-candidate-view>    <div      id="details-container"      class="candidate-job-detail-view-details-container"    >      <div        id="job-search-for-candidate-main-conatiner"        class="candidate-job-detail-view-job-search-container"      >        <header          id="job-search-container"          class="candidate-job-detail-view-container2"        >          <header            data-thq="thq-navbar"            class="candidate-job-detail-view-navbar-interactive"          >            <div              data-thq="thq-navbar-nav"              class="candidate-job-detail-view-desktop-menu"            >              <nav                id="job-search-location-experience-container"                class="candidate-job-detail-view-links1"              >                <div                  id="candidate-job-location-experience-container"                  class="candidate-job-detail-view-container3"                >                  <div                    id="job-title-container"                    class="candidate-job-detail-view-job-title-container1"                  >                    <svg                      id="job-search-icon"                      width="32"                      height="32"                      viewBox="0 0 32 32"                      class="candidate-job-detail-view-search-icon1"                    >                      <path                        d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-job-title-input"                      class="candidate-job-detail-view-job-title-text1"                    >                      Job tittle, Keyword...                    </span>                  </div>                  <div                    id="location-container"                    class="candidate-job-detail-view-location-container1"                  >                    <svg                      id="location-icon"                      width="1024"                      height="1024"                      viewBox="0 0 1024 1024"                      class="candidate-job-detail-view-location-icon1"                    >                      <path                        d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"                        fill="currentColor"                      ></path>                      <path                        d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-location-input"                      class="candidate-job-detail-view-location-text"                    >                      Your Location                    </span>                  </div>                  <div                    id="experience-container"                    class="candidate-job-detail-view-experience-container1"                  >                    <svg                      id="briefcase-icon"                      width="256"                      height="256"                      viewBox="0 0 256 256"                      class="candidate-job-detail-view-briefcase-icon1"                    >                      <path                        d="M216 58h-42V48a22 22 0 0 0-22-22h-48a22 22 0 0 0-22 22v10H40a14 14 0 0 0-14 14v128a14 14 0 0 0 14 14h176a14 14 0 0 0 14-14V72a14 14 0 0 0-14-14M94 48a10 10 0 0 1 10-10h48a10 10 0 0 1 10 10v10H94ZM40 70h176a2 2 0 0 1 2 2v74H38V72a2 2 0 0 1 2-2m176 132H40a2 2 0 0 1-2-2v-42h180v42a2 2 0 0 1-2 2"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-experience-input"                      class="candidate-job-detail-view-experence-text"                    >                      Experience                    </span>                  </div>                </div>              </nav>              <svg                id="filter-icon"                width="24"                height="24"                viewBox="0 0 24 24"                class="candidate-job-detail-view-filter-icon1"              >                <path                  d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"                  fill="none"                  color="currentColor"                  stroke="currentColor"                  stroke-width="1.5"                  stroke-linecap="round"                  stroke-linejoin="round"                ></path>              </svg>              <div                id="search-preference-button"                class="candidate-job-detail-view-buttons1"              >                <button                  id="search-button"                  type="button"                  class="candidate-job-detail-view-search-button1 button"                >                  <span                    id="search-text"                    class="candidate-job-detail-view-search-text1"                  >                    Search                  </span>                </button>                <button                  id="preference-button"                  type="button"                  class="candidate-job-detail-view-preference-button1 button"                >                  <span                    id="preference-text"                    class="candidate-job-detail-view-preference-text1"                  >                    Preference                  </span>                </button>              </div>            </div>            <div              data-thq="thq-burger-menu"              class="candidate-job-detail-view-burger-menu"            >              <span                id="jobs-title-search-bar"                class="candidate-job-detail-view-job-title-text2"              >                Job title, skills...              </span>              <svg                id="job-search-icon-navbar"                viewBox="0 0 32 32"                class="candidate-job-detail-view-search-icon2"              >                <path                  d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"                  fill="currentColor"                ></path>              </svg>            </div>            <div              data-thq="thq-mobile-menu"              class="candidate-job-detail-view-mobile-menu"            >              <div class="candidate-job-detail-view-nav">                <div class="candidate-job-detail-view-top">                  <div                    data-thq="thq-close-menu"                    class="candidate-job-detail-view-close-menu"                  >                    <svg                      viewBox="0 0 1024 1024"                      class="candidate-job-detail-view-close-icon"                    >                      <path                        d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"                      ></path>                    </svg>                  </div>                </div>                <nav                  id="links-container"                  class="candidate-job-detail-view-links2"                >                  <div                    id="job-container"                    class="candidate-job-detail-view-job-title-container2"                  >                    <svg                      id="search-icon"                      viewBox="0 0 32 32"                      class="candidate-job-detail-view-search-icon3"                    >                      <path                        d="m29 27.586l-7.552-7.552a11.018 11.018 0 1 0-1.414 1.414L27.586 29ZM4 13a9 9 0 1 1 9 9a9.01 9.01 0 0 1-9-9"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-job-title-input-navbar"                      class="candidate-job-detail-view-search-text2"                    >                      Job tittle, Keyword...                    </span>                  </div>                  <div                    id="experience-navbar-container"                    class="candidate-job-detail-view-experience-container2"                  >                    <svg                      id="briefcase-icon-navbar"                      width="24"                      height="24"                      viewBox="0 0 24 24"                      class="candidate-job-detail-view-briefcase-icon2"                    >                      <path                        d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-experience-input-navbar"                      class="candidate-job-detail-view-experience-text"                    >                      Experience                    </span>                  </div>                  <div                    id="location-container-navbar"                    class="candidate-job-detail-view-location-container2"                  >                    <svg                      id="location-icon-navbar"                      width="1024"                      height="1024"                      viewBox="0 0 1024 1024"                      class="candidate-job-detail-view-location-icon2"                    >                      <path                        d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416M512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544"                        fill="currentColor"                      ></path>                      <path                        d="M512 512a96 96 0 1 0 0-192a96 96 0 0 0 0 192m0 64a160 160 0 1 1 0-320a160 160 0 0 1 0 320"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="search-location-input-navbar"                      class="candidate-job-detail-view-your-location-text"                    >                      Your Location                    </span>                  </div>                </nav>                <div                  id="buttons-conatiner"                  class="candidate-job-detail-view-buttons2"                >                  <svg                    id="job-filter-icon"                    width="24"                    height="24"                    viewBox="0 0 24 24"                    class="candidate-job-detail-view-filter-icon2"                  >                    <path                      d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"                      fill="none"                      color="currentColor"                      stroke="currentColor"                      stroke-width="1.5"                      stroke-linecap="round"                      stroke-linejoin="round"                    ></path>                  </svg>                  <button                    id="job-search-button"                    type="button"                    class="candidate-job-detail-view-search-button2 button"                  >                    <span                      id="job-search-text"                      class="candidate-job-detail-view-search-text3"                    >                      Search                    </span>                  </button>                  <button                    id="preference-button-navbar"                    type="button"                    class="candidate-job-detail-view-preference-button2 button"                  >                    <span                      id="preference-text-navbar"                      class="candidate-job-detail-view-preferece-text"                    >                      Preference                    </span>                  </button>                </div>              </div>            </div>          </header>        </header>      </div>      <div        id="job-recommended-preference-container"        class="candidate-job-detail-view-job-recommended-preference-container"      >        <div          id="job-recommended-container"          class="candidate-job-detail-view-job-recommended-container"        >          <span            id="job-recommended-text"            class="candidate-job-detail-view-job-recommended-text"          >            Jobs recommended (75)          </span>        </div>        <div          id="preference-container"          class="candidate-job-detail-view-preference-container"        >          <span            id="preference-text"            class="candidate-job-detail-view-preference-text2"          >            Preference (4)          </span>        </div>      </div>      <div        id="job-details-main-container"        class="candidate-job-detail-view-job-details-main-container"      >        <div          id="job-cards-container"          class="candidate-job-detail-view-job-cards-container"        >          <candidate-view-last-page-card            rootClassName="candidate-view-last-page-cardroot-class-name"          >            <ng-template #text>              <div class="candidate-job-detail-view-fragment28">                <span class="candidate-job-detail-view-text28">                  Senior Software Engineer                </span>              </div>            </ng-template>            <ng-template #text1>              <div class="candidate-job-detail-view-fragment29">                <span class="candidate-job-detail-view-text29">Google</span>              </div>            </ng-template>            <ng-template #text2>              <div class="candidate-job-detail-view-fragment30">                <span class="candidate-job-detail-view-text30">                  Bengaluru, Karnataka, India (On-site)                </span>              </div>            </ng-template>          </candidate-view-last-page-card>          <candidate-view-last-page-card            rootClassName="candidate-view-last-page-cardroot-class-name1"          >            <ng-template #text>              <div class="candidate-job-detail-view-fragment31">                <span class="candidate-job-detail-view-text31">                  Senior Software Engineer                </span>              </div>            </ng-template>            <ng-template #text1>              <div class="candidate-job-detail-view-fragment32">                <span class="candidate-job-detail-view-text32">Google</span>              </div>            </ng-template>            <ng-template #text2>              <div class="candidate-job-detail-view-fragment33">                <span class="candidate-job-detail-view-text33">                  Bengaluru, Karnataka, India (On-site)                </span>              </div>            </ng-template>          </candidate-view-last-page-card>          <candidate-view-last-page-card            rootClassName="candidate-view-last-page-cardroot-class-name2"          >            <ng-template #text>              <div class="candidate-job-detail-view-fragment34">                <span class="candidate-job-detail-view-text34">                  Senior Software Engineer                </span>              </div>            </ng-template>            <ng-template #text1>              <div class="candidate-job-detail-view-fragment35">                <span class="candidate-job-detail-view-text35">Google</span>              </div>            </ng-template>            <ng-template #text2>              <div class="candidate-job-detail-view-fragment36">                <span class="candidate-job-detail-view-text36">                  Bengaluru, Karnataka, India (On-site)                </span>              </div>            </ng-template>          </candidate-view-last-page-card>          <candidate-view-last-page-card            rootClassName="candidate-view-last-page-cardroot-class-name3"          >            <ng-template #text>              <div class="candidate-job-detail-view-fragment37">                <span class="candidate-job-detail-view-text37">                  Senior Software Engineer                </span>              </div>            </ng-template>            <ng-template #text1>              <div class="candidate-job-detail-view-fragment38">                <span class="candidate-job-detail-view-text38">Google</span>              </div>            </ng-template>            <ng-template #text2>              <div class="candidate-job-detail-view-fragment39">                <span class="candidate-job-detail-view-text39">                  Bengaluru, Karnataka, India (On-site)                </span>              </div>            </ng-template>          </candidate-view-last-page-card>        </div>        <div          id="job-cards-popup-container"          class="candidate-job-detail-view-job-cards-popup-container"        >          <about-the-job rootClassName="about-the-jobroot-class-name">            <ng-template #text>              <div class="candidate-job-detail-view-fragment40">                <span class="candidate-job-detail-view-text40">Google</span>              </div>            </ng-template>            <ng-template #text1>              <div class="candidate-job-detail-view-fragment41">                <span class="candidate-job-detail-view-text41">                  Senior Software Engineer                </span>              </div>            </ng-template>            <ng-template #text2>              <div class="candidate-job-detail-view-fragment42">                <span class="candidate-job-detail-view-text42">                  Bengaluru, Karnataka, India (On-site) | Posted 2 days ago                </span>              </div>            </ng-template>            <ng-template #button>              <div class="candidate-job-detail-view-fragment43">                <span class="candidate-job-detail-view-text43">Apply</span>              </div>            </ng-template>            <ng-template #button1>              <div class="candidate-job-detail-view-fragment44">                <span class="candidate-job-detail-view-text44">                  Take Assessment                </span>              </div>            </ng-template>          </about-the-job>          <span            id="about-the-job-text"            class="candidate-job-detail-view-about-the-job-text"          >            <span class="candidate-job-detail-view-text45">About the job</span>            <br class="candidate-job-detail-view-text46" />            <br class="candidate-job-detail-view-text47" />            <span class="candidate-job-detail-view-text48">              At Google, we follow a simple but vital premise: &quot;Focus on              the user and all else will follow.&quot; Google’s Interaction              Designers take complex tasks and make them intuitive and              easy-to-use for billions of people around the globe. Throughout              the design process—from creating user flows and wireframes to              building user interface mockups and prototypes—you’ll envision how              people will experience our products, and bring that vision to life              in a way that feels inspired, refined, and even magical.            </span>            <br class="candidate-job-detail-view-text49" />            <br class="candidate-job-detail-view-text50" />            <span class="candidate-job-detail-view-text51">              Google User Experience (UX) is made up of multi-disciplinary teams              of UX Designers, Researchers, Writers, Content Strategists,              Program Managers, and Engineers: we care deeply about the people              who use our products. The UX team plays an integral part in              gathering insights about the attitudes, emotions, and behaviors of              people who use our products to inspire and inform design. We              collaborate closely with each other and with engineering and              product management to create industry-leading products that              deliver value for the people who use them, and for Google’s              businesses.            </span>            <br class="candidate-job-detail-view-text52" />            <br class="candidate-job-detail-view-text53" />            <span class="candidate-job-detail-view-text54">              Minimum qualifications:            </span>            <br class="candidate-job-detail-view-text55" />            <br class="candidate-job-detail-view-text56" />            <span class="candidate-job-detail-view-text57">              Bachelor&apos;s degree in Design, Human-Computer Interaction,              Computer Science, a related field, or equivalent practical              experience.            </span>            <br class="candidate-job-detail-view-text58" />            <span class="candidate-job-detail-view-text59">              4 years of experience in product design or UX.            </span>            <br class="candidate-job-detail-view-text60" />            <span class="candidate-job-detail-view-text61">              Experience designing across multiple platforms, and working with              technical/design teams to create user flows, wireframes, and              building user interface mockups and prototypes.            </span>            <br class="candidate-job-detail-view-text62" />            <span class="candidate-job-detail-view-text63">              Include a portfolio, website, or any other relevant link to your              work in your resume (providing a viewable link or access              instructions).            </span>          </span>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'CandidateJobDetailView'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'CandidateJobDetailView.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
