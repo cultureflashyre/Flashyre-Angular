@@ -1,5 +1,5 @@
 import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -15,6 +15,10 @@ import {
 
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { AdbClientService } from '../../services/adb-client.service'; // Adjust path as needed
+import { Loader } from '@googlemaps/js-api-loader';
+import { environment } from 'src/environments/environment';
+import { Subject, Subscription, Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -30,7 +34,7 @@ import { AdbClientService } from '../../services/adb-client.service'; // Adjust 
     AlertMessageComponent
   ]
 })
-export class RecruiterWorkflowClient implements OnInit {
+export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy {
   mainForm: FormGroup;
   existingClients: any[] = []; // Stores data fetched from DB
 
@@ -47,6 +51,26 @@ export class RecruiterWorkflowClient implements OnInit {
   showAlert = false;
   alertMessage = '';
   alertButtons: string[] = [];
+
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader = new Loader({
+    apiKey: this.googleMapsApiKey,
+    version: 'weekly',
+    libraries: ['places']
+  });
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any;
+  
+  // Stream for input
+  private locationInput$ = new Subject<string>();
+  private subscriptions = new Subscription();
+
+  // State for suggestions
+  locationSuggestions: google.maps.places.AutocompletePrediction[] = [];
+  
+  // Track WHICH input is currently active (Client Index -> Contact Index)
+  activeField: { clientIndex: number, contactIndex: number } | null = null;
   
   // Stores the action waiting for confirmation
   // type: 'SUBMIT_CREATE', 'SUBMIT_UPDATE', 'DELETE_BULK', 'DELETE_SINGLE', 'EDIT_MODE', 'DOWNLOAD'
@@ -71,7 +95,8 @@ export class RecruiterWorkflowClient implements OnInit {
     private title: Title, 
     private meta: Meta,
     private fb: FormBuilder,
-    private clientService: AdbClientService
+    private clientService: AdbClientService,
+    private ngZone: NgZone
   ) {
     this.title.setTitle('Recruiter-Workflow-Client - Flashyre');
     
@@ -653,6 +678,113 @@ downloadClientData(client: any): void {
     // Open the alert with OK and Cancel buttons
     this.openAlert('Are you sure you want to remove this location?', ['Cancel', 'OK']);
   }
+ngAfterViewInit(): void {
+    this.initializeGooglePlaces();
+    this.setupLocationAutocomplete();
+  }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  // --- Google Maps Initialization ---
+  private async initializeGooglePlaces(): Promise<void> {
+    try {
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Google Maps script could not be loaded.', error);
+    }
+  }
+
+  // --- Setup RxJS Stream ---
+  private setupLocationAutocomplete(): void {
+    this.subscriptions.add(
+      this.locationInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.locationSuggestions = suggestions;
+        });
+      })
+    );
+  }
+
+  // --- Fetch Predictions from Google ---
+  private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!term.trim() || !this.placesService) {
+      return of([]);
+    }
+    
+    // Initialize session token if missing
+    if (!this.sessionToken && this.google) {
+      this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+    }
+
+    return new Observable(observer => {
+      const request = {
+        input: term,
+        types: ['(cities)'], // Filter for cities
+        sessionToken: this.sessionToken
+      };
+
+      this.placesService!.getPlacePredictions(request, (predictions, status) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            observer.next(predictions);
+          } else {
+            observer.next([]);
+          }
+          observer.complete();
+        });
+      });
+    });
+  }
+
+  // --- HTML Event: User Types ---
+  onLocationInput(event: Event, cIndex: number, locIndex: number): void {
+    const input = event.target as HTMLInputElement;
+    
+    // Sanitize: Allow Alphabets, spaces, hyphens
+    input.value = input.value.replace(/[^a-zA-Z \-]/g, '');
+    
+    // Mark which specific row is active
+    this.activeField = { clientIndex: cIndex, contactIndex: locIndex };
+
+    const term = input.value;
+    if (!term.trim()) {
+      this.locationSuggestions = [];
+      return;
+    }
+    this.locationInput$.next(term);
+  }
+
+  // --- HTML Event: User Clicks Suggestion ---
+  selectLocation(suggestion: google.maps.places.AutocompletePrediction, cIndex: number, locIndex: number): void {
+    const locationName = suggestion.description;
+    
+    // Update the specific Form Control
+    const contactsArray = this.getContactsArray(cIndex);
+    const contactGroup = contactsArray.at(locIndex);
+    
+    if (contactGroup) {
+      contactGroup.get('location')?.setValue(locationName);
+    }
+
+    // Clear suggestion state
+    this.locationSuggestions = [];
+    this.activeField = null;
+    this.sessionToken = undefined; // Reset token for billing efficiency
+  }
+  
+  // --- HTML Event: Blur (Click away) ---
+  closeSuggestions(): void {
+    // Delay to allow 'selectLocation' (mousedown) to fire first
+    setTimeout(() => {
+        this.activeField = null;
+    }, 200);
+  }
 
 }

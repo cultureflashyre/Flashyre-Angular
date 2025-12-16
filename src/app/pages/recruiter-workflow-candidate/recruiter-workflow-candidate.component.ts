@@ -740,6 +740,10 @@ export class RecruiterWorkflowCandidate implements OnInit {
         ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean) 
         : [];
 
+         this.candidateForm.controls['skills'].setValue(this.skills.join(', '));
+        this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
+        this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+
       // CHECK SOURCE: If candidate.source exists, use it. Otherwise default to 'External'.
       const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
       this.showForm(sourceToOpen); 

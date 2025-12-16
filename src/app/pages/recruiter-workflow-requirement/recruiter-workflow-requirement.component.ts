@@ -329,6 +329,7 @@ selectInterviewLocation(prediction: google.maps.places.AutocompletePrediction, i
   this.showInterviewLocationSuggestions = false;
   this.interviewLocationSuggestions = [];
   this.sessionToken = undefined;
+  this.isInterviewLocationInvalid = false;
 }
 
 addManualInterviewLocation(event: any): void {
@@ -339,6 +340,8 @@ addManualInterviewLocation(event: any): void {
   this.showInterviewLocationSuggestions = false;
   event.target.value = '';
   event.preventDefault();
+
+  this.isInterviewLocationInvalid = false;
 }
 
 removeInterviewLocation(index: number): void {
@@ -672,6 +675,15 @@ getFileName(): string {
     if (this.experience.relevantMin !== null && this.experience.relevantMin < 0) this.experience.relevantMin = 0;
     if (this.experience.relevantMax !== null && this.experience.relevantMax < 0) this.experience.relevantMax = 0;
 
+     // --- NEW ADDITION START: Clear "Required" errors immediately ---
+    if (this.experience.totalMin !== null && this.experience.totalMax !== null) {
+        this.isTotalExpInvalid = false;
+    }
+
+    if (this.experience.relevantMin !== null && this.experience.relevantMax !== null) {
+        this.isRelevantExpInvalid = false;
+    }
+
     // --- NEW LOGIC: Check Total Min vs Total Max ---
     if (
       this.experience.totalMin !== null &&
@@ -740,6 +752,7 @@ toggleNoticePeriodDropdown() {
   selectNoticePeriod(option: string) {
     this.selectedNoticePeriod = option;
     this.isNoticePeriodDropdownOpen = false;
+    this.isNoticePeriodInvalid = false;
   }
    toggleGenderDropdown() {
     this.isGenderDropdownOpen = !this.isGenderDropdownOpen;
@@ -748,6 +761,7 @@ toggleNoticePeriodDropdown() {
   selectGender(option: string) {
     this.selectedGender = option;
     this.isGenderDropdownOpen = false;
+    this.isGenderInvalid = false;
   }
   validateJobDescription() {
     // Check if the description is empty or just whitespace

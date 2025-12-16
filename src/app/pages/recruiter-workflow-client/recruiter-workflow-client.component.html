@@ -298,19 +298,36 @@
       class="recruiter-workflow-client-different-stage-container"
     >
       <!-- Location -->
-      <div>
-        <input 
-          type="text" 
-          formControlName="location" 
-          placeholder="Location" 
-          class="recruiter-workflow-client-date-input1 input"
-        />
-        <!-- Error Handling -->
-        <div *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" style="color: red; font-size: 12px;">
-           <span *ngIf="contact.get('location')?.errors?.['required']">Required</span>
-           <span *ngIf="contact.get('location')?.errors?.['pattern']">Must contain alphabets.</span>
-        </div>
-      </div>
+      <!-- Replace your existing Location Input Div with this block -->
+<div style="position: relative;">
+  <input 
+    type="text" 
+    formControlName="location" 
+    placeholder="Location" 
+    class="recruiter-workflow-client-date-input1 input"
+    (input)="onLocationInput($event, i, j)"
+    (blur)="closeSuggestions()"
+    autocomplete="off"
+  />
+  
+  <!-- SUGGESTIONS DROPDOWN -->
+  <div class="location-suggestions-dropdown" 
+       *ngIf="locationSuggestions.length > 0 && activeField?.clientIndex === i && activeField?.contactIndex === j">
+    <div 
+      class="suggestion-item" 
+      *ngFor="let suggestion of locationSuggestions"
+      (mousedown)="selectLocation(suggestion, i, j)"
+    >
+      {{ suggestion.description }}
+    </div>
+  </div>
+
+  <!-- Error Handling -->
+  <div *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" style="color: red; font-size: 12px;">
+     <span *ngIf="contact.get('location')?.errors?.['required']">Required</span>
+     <span *ngIf="contact.get('location')?.errors?.['pattern']">Must contain alphabets.</span>
+  </div>
+</div>
 
       <!-- Spoc -->
       <div>

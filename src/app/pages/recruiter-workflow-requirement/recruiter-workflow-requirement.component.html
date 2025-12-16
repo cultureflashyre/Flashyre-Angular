@@ -545,6 +545,7 @@
               class="recruiter-workflow-requirement-job-title-input1 input" 
               [(ngModel)]="clientName" 
               (change)="onClientChange()"
+              (ngModelChange)="isClientNameInvalid = false"
               style="background: transparent;">
               <option value="" disabled selected>Select Client Name</option>
               <option *ngFor="let c of clientList" [value]="c.client_name">{{ c.client_name }}</option>
@@ -678,7 +679,7 @@
   <!-- 1. INTERVIEW DATE (Swapped to Left) -->
   <div class="recruiter-workflow-requirement-company-name-container2" style="width: 49%">
     <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date <span style="color: red;">*</span></span>
-    <input type="date" id="employment-company-name-input" placeholder="Enter Date" class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate" [min]="minDate" />
+    <input type="date" id="employment-company-name-input" placeholder="Enter Date" class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate" (ngModelChange)="isInterviewDateInvalid = false" [min]="minDate" />
     <span *ngIf="isInterviewDateInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
       Interview Date is required.
     </span>

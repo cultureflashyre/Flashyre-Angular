@@ -462,7 +462,44 @@
   justify-content: flex-start;
   background-color: #FFFFFF;
 }
- 
+
+/* --- MODIFIED CODE FOR DROPDOWN --- */
+
+.location-suggestions-dropdown {
+  position: absolute;
+  top: 40px; /* Matches input height */
+  left: 0;
+  width: 100%;
+  
+  /* 1. FORCE HEIGHT LIMIT & SCROLL */
+  max-height: 200px;
+  overflow-y: auto; 
+  
+  /* 2. STOP PARENT SCROLLING (The Magic Fix) */
+  overscroll-behavior: contain; 
+  
+  /* Visuals */
+  background-color: #FFFFFF;
+  border: 1px solid rgba(120, 120, 120, 0.4);
+  border-top: none; /* Merges with input visually */
+  border-radius: 0 0 4px 4px;
+  
+  /* Ensure it sits on top of everything */
+  z-index: 9999; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.suggestion-item {
+  padding: 10px var(--dl-layout-space-unit);
+  cursor: pointer;
+  font-size: 14px;
+  color: #18191C;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:hover {
+  background-color: #f2f4f8; /* Slight grey on hover */
+} 
 .recruiter-workflow-client-date-input2 {
   fill: #18191C;
   color: #18191C;
