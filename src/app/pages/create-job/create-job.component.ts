@@ -842,7 +842,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     let activeSuggestionIndex = -1;
 
     const addSkillTag = (skillName: string) => {
-      const sanitizedSkill = skillName.replace(/[^a-zA-Z ]/g, '').trim();
+    const sanitizedSkill = skillName.replace(/[^a-zA-Z +#]/g, '').trim();
       if (!sanitizedSkill) {
         return;
       }
@@ -933,7 +933,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       }),
       map(() => {
         const originalValue = tagInput.value;
-        const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, '');
+        const sanitizedValue = originalValue.replace(/[^a-zA-Z +#]/g, '');
         if (originalValue !== sanitizedValue) {
           const caretPosition = tagInput.selectionStart;
           const diff = originalValue.length - sanitizedValue.length;
