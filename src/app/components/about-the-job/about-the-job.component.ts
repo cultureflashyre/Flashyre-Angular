@@ -1,9 +1,14 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 
 @Component({
-  selector: 'about-the-job',
-  templateUrl: 'about-the-job.component.html',
-  styleUrls: ['about-the-job.component.css'],
+    selector: 'about-the-job',
+    templateUrl: 'about-the-job.component.html',
+    styleUrls: ['about-the-job.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, DangerousHtmlComponent,],
 })
 export class AboutTheJob {
   @ContentChild('text')

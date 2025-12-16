@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ResetService } from '../../services/reset.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
 @Component({
   selector: 'app-login-reset-password',
+  standalone: true,
+    imports: [ RouterModule, FormsModule, CommonModule,
+      ],
   templateUrl: './login-reset-password.component.html',
   styleUrls: ['./login-reset-password.component.css'],
 })
-export class LoginResetPasswordComponent implements OnInit {
+export class LoginResetPasswordComponent implements OnInit, OnDestroy {
   email: string | null = null;
   otp: string = '';
   password: string = '';
@@ -16,6 +23,10 @@ export class LoginResetPasswordComponent implements OnInit {
   error: string = '';
   loading: boolean = false;
   isOTPVerified: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  countdown: number = 60;
+  private countdownInterval: any;
 
   constructor(
     private resetService: ResetService,
@@ -48,17 +59,92 @@ export class LoginResetPasswordComponent implements OnInit {
         console.log('No email found in state, query params, or local storage');
         this.error = 'Email is missing. Redirecting to Forgot Password page...';
         setTimeout(() => {
-          window.location.href = '/login-forgot-password'; // Fallback navigation
+          window.location.href = '/login-forgot-password';
         }, 3000);
       } else {
         localStorage.setItem('resetEmail', this.email);
         console.log('Email retrieved successfully, rendering form');
+        this.startCountdown();
       }
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clear countdown interval to prevent memory leaks
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  startCountdown(): void {
+    this.countdown = 60;
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+    const key = `otpExpiry_${this.email}`;
+  const expiryTime = localStorage.getItem(key);
+
+  if (expiryTime) {
+    // If an expiry time exists, calculate remaining seconds
+    const remainingSeconds = Math.round((+expiryTime - Date.now()) / 1000);
+
+    if (remainingSeconds > 0) {
+      this.countdown = remainingSeconds;
+    } else {
+      this.countdown = 0; // OTP has already expired
+    }
+  } else {
+    // If no expiry time, this is a new OTP. Set a 60-second timer.
+    this.countdown = 60;
+    const newExpiryTime = Date.now() + this.countdown * 1000;
+    localStorage.setItem(key, String(newExpiryTime));
+  }
+    this.countdownInterval = setInterval(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        clearInterval(this.countdownInterval);
+      }
+    }, 1000);
+  }
+
+  resendOTP(): void {
+    if (!this.email) {
+      this.error = 'Email is required to resend OTP.';
+      console.log('resendOTP failed: missing email');
+      return;
+    }
+
+    this.loading = true;
+    this.message = '';
+    this.error = '';
+    this.otp = ''; // Clear previous OTP
+
+    this.resetService.forgotPassword(this.email).subscribe({
+      next: (response) => {
+        console.log('Resend OTP response:', response);
+        this.message = response.message || 'New OTP sent successfully.';
+        this.loading = false;
+        localStorage.removeItem(`otpExpiry_${this.email}`);
+        this.startCountdown();
+      },
+      error: (err) => {
+        console.error('Resend OTP error:', err);
+        this.error = err.message || 'Failed to resend OTP. Please try again.';
+        this.loading = false;
+      },
     });
   }
 
   verifyOTP() {
     console.log('verifyOTP called with email:', this.email, 'OTP:', this.otp);
+
+     if (this.countdown === 0) {
+      this.error = 'OTP has expired. Please request a new one by clicking "Resend".';
+      console.log('verifyOTP failed: OTP expired on the frontend.');
+      return; // Stop the function from proceeding
+    }
+
     if (!this.email || !this.otp) {
       this.error = 'Please enter a valid OTP.';
       console.log('verifyOTP failed: missing email or OTP');
@@ -75,6 +161,7 @@ export class LoginResetPasswordComponent implements OnInit {
         this.message = response.message || 'OTP verified successfully.';
         this.isOTPVerified = true;
         this.loading = false;
+        clearInterval(this.countdownInterval); // Stop countdown on successful verification
       },
       error: (err) => {
         console.error('Verify OTP error:', err);
@@ -103,6 +190,15 @@ export class LoginResetPasswordComponent implements OnInit {
       return;
     }
 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,15}$/;
+    if (!passwordRegex.test(this.password)) {
+      // See the next section for the recommended error message
+      this.error = `Password does not meet requirements. It must be 8-15 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character.`;
+      this.loading = false;
+      console.log('resetPassword failed: password complexity validation failed');
+      return;
+    }
+
     this.loading = true;
     this.message = '';
     this.error = '';
@@ -113,8 +209,9 @@ export class LoginResetPasswordComponent implements OnInit {
         this.message = response.message || 'Password reset successfully. You can now log in.';
         this.loading = false;
         localStorage.removeItem('resetEmail');
+        localStorage.removeItem(`otpExpiry_${this.email}`);
         setTimeout(() => {
-          window.location.href = '/login-candidate'; // Adjusted to candidate login
+          window.location.href = '/login';
         }, 2000);
       },
       error: (err) => {
@@ -144,5 +241,24 @@ export class LoginResetPasswordComponent implements OnInit {
 
   getButtonAriaLabel(): string {
     return this.getButtonText();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onKeydown(event: KeyboardEvent, field: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (field === 'password') {
+        this.togglePasswordVisibility();
+      } else if (field === 'confirmPassword') {
+        this.toggleConfirmPasswordVisibility();
+      }
+    }
   }
 }

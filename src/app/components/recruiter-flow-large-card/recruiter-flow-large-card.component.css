@@ -1,6 +1,30 @@
 :host { 
   display: contents; 
 }
+/* components/recruiter-flow-large-card.component.css */
+.recruiter-flow-large-card-view-jd-btn {
+  margin-left: 12px;               /* space after the job title */
+  display: inline-flex;            /* keep icon + text aligned */
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #41327B;
+  background: transparent;
+  border: 1px solid #41327B;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.recruiter-flow-large-card-view-jd-btn:hover {
+  background: #41327B;
+  color: #fff;
+}
+.recruiter-flow-large-card-view-jd-icon {
+  width: 16px;
+  height: 16px;
+}
  
 .recruiter-flow-large-card-container1 {
   width: auto;
@@ -25,7 +49,7 @@
 .recruiter-flow-large-card-company-name-logo-container {
   gap: var(--dl-space-space-halfunit);
   flex: 0 0 auto;
-  width: 88px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: flex-start;
@@ -36,9 +60,24 @@
   height: 24px;
   object-fit: cover;
 }
+
+.company-initials-avatar {
+  width: 24px;
+  height: 24px;
+  background-color: #1565c0; /* Or set dynamically for each company */
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: bold;
+  user-select: none;
+}
+
  
 .recruiter-flow-large-card-company-name {
-  width: 55px;
+  width: auto;
   height: 24px;
   display: flex;
   align-items: center;
@@ -46,7 +85,7 @@
 }
  
 .recruiter-flow-large-card-job-role {
-  width: 296px;
+  width: auto;
   height: 32px;
   display: flex;
   align-items: center;
@@ -82,7 +121,7 @@
   width: 24px;
   height: 24px;
   object-fit: cover;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-image2 {
@@ -94,7 +133,7 @@
   object-fit: cover;
   border-color: #FFFFFF;
   border-width: 1px;
-  border-radius: var(--dl-radius-radius-round);
+  border-radius: 50%; /* Makes the images circular */
 }
  
 .recruiter-flow-large-card-number-of-candidates-applied {

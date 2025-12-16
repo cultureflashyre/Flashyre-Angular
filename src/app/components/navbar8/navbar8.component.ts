@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-navbar8',
-  templateUrl: 'navbar8.component.html',
-  styleUrls: ['navbar8.component.css'],
+    selector: 'app-navbar8',
+    templateUrl: 'navbar8.component.html',
+    styleUrls: ['navbar8.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf],
 })
 export class Navbar8 {
   @ContentChild('page2Description')

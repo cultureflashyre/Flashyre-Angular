@@ -2,17 +2,22 @@
   id="recruiter-profile"
   class="recruiter-profile-container1"
   [ngClass]="rootClassName"
->
+  >
   <div
     id="recruiter-profile-container"
     class="recruiter-profile-recruiter-profile-container"
-  >
-    <img
-      id="recruiter-profile-picture"
-      [attr.alt]="imageAlt"
-      [attr.src]="imageSrc"
-      class="recruiter-profile-recruiter-image"
-    />
+    >
+    @if (recruiterProfile.profile_picture_url) {
+      <img
+        id="recruiter-profile-picture"
+        [src]="recruiterProfile.profile_picture_url ? recruiterProfile.profile_picture_url : defaultProfilePicture"
+        class="recruiter-view3rd-page1-user-image thq-img-ratio-1-1 thq-img-round"
+        />
+    } @else {
+      <div class="initials-avatar thq-img-ratio-1-1 thq-img-round recruiter-view3rd-page1-user-image">
+        {{ recruiterProfile.initials }}
+      </div>
+    }
     <div id="recruiter-details" class="recruiter-profile-details-container">
       <span id="recruiter-name" class="recruiter-profile-recruiter-name">
         <ng-container>
@@ -29,17 +34,17 @@
       <div
         id="recruiter-company-logo-and-name"
         class="recruiter-profile-container2"
-      >
-        <img
-          id="recruiter-company-image"
-          [attr.alt]="imageAlt1"
-          [attr.src]="imageSrc1"
-          class="recruiter-profile-company-image"
-        />
+        >
+        <!--<img
+        id="recruiter-company-image"
+        [attr.alt]="imageAlt1"
+        [attr.src]="imageSrc1"
+        class="recruiter-profile-company-image"
+        /> -->
         <span
           id="recruiter-company-name"
           class="recruiter-profile-company-name"
-        >
+          >
           <ng-container>
             <ng-template #defaultText1>
               <div class="recruiter-profile-fragment2">

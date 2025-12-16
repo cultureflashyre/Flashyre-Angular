@@ -1,0 +1,267 @@
+<!-- src/app/components/admin-candidate-sourced-component/admin-candidate-sourced-component.html -->
+
+<div
+  id="admin-page1-component"
+  class="admin-candidate-sourced-component-admin-candidate-sourced-component"
+  [ngClass]="rootClassName"
+  >
+  <div
+    id="candidate-profiles-main-container"
+    class="admin-candidate-sourced-component-candidate-profiles-main-container"
+    >
+    <div
+      id="select-filter-sort-download-zip-main-container"
+      class="admin-candidate-sourced-component-select-filter-sort-download-zip-main-container"
+      >
+      <div
+        id="select-all-main-container"
+        class="admin-candidate-sourced-component-select-all-main-container"
+        >
+        <!-- MODIFIED: Two-way binding for the "Select All" checkbox is now connected to component logic -->
+        <input
+          type="checkbox"
+          id="select-checkbox"
+          class="admin-candidate-sourced-component-select-checkbox1"
+          [(ngModel)]="isAllSelected"
+          (ngModelChange)="toggleSelectAll()"
+          [disabled]="isLoading || sourcedCandidates.length === 0"
+          />
+          <!-- MODIFIED: Text is now static as content projection is removed -->
+          <span
+            id="select-all-text"
+            class="admin-candidate-sourced-component-select-all-text"
+            >
+            Select All
+          </span>
+        </div>
+        <div
+          id="filter-sort-download-zip-container"
+          class="admin-candidate-sourced-component-filter-sort-download-zip-container"
+          >
+          <!-- REMOVED: The "Filtered By" button is no longer needed as filtering is handled by the parent component -->
+
+          <!-- MODIFIED: Sort dropdown now triggers sorting methods and has a simpler structure -->
+          <div
+            data-thq="thq-dropdown"
+            class="admin-candidate-sourced-component-sort-dropdown list-item"
+            >
+            <div
+              data-thq="thq-dropdown-toggle"
+              class="admin-candidate-sourced-component-dropdown-toggle1"
+              >
+              <!-- Text is now static -->
+              <span class="admin-candidate-sourced-component-text10">
+                Sort By
+              </span>
+              <div
+                data-thq="thq-dropdown-arrow"
+                class="admin-candidate-sourced-component-dropdown-arrow"
+                >
+                <svg
+                  viewBox="0 0 1024 1024"
+                  class="admin-candidate-sourced-component-icon1"
+                  >
+                  <path d="M426 726v-428l214 214z"></path>
+                </svg>
+              </div>
+            </div>
+            <!-- MODIFIED: Dropdown list items now call the applySort method with specific keys -->
+            <ul
+              data-thq="thq-dropdown-list"
+              class="admin-candidate-sourced-component-dropdown-list"
+              >
+              <li
+                data-thq="thq-dropdown"
+                class="admin-candidate-sourced-component-dropdown1 list-item"
+                (click)="applySort('score_desc')"
+                >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="admin-candidate-sourced-component-dropdown-toggle2"
+                  >
+                  <span>Score: High to Low</span>
+                </div>
+              </li>
+              <li
+                data-thq="thq-dropdown"
+                class="admin-candidate-sourced-component-dropdown2 list-item"
+                (click)="applySort('score_asc')"
+                >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="admin-candidate-sourced-component-dropdown-toggle3"
+                  >
+                  <span>Score: Low to High</span>
+                </div>
+              </li>
+              <li
+                data-thq="thq-dropdown"
+                class="admin-candidate-sourced-component-dropdown3 list-item"
+                (click)="applySort('name_asc')"
+                >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="admin-candidate-sourced-component-dropdown-toggle4"
+                  >
+                  <span>Name: A to Z</span>
+                </div>
+              </li>
+              <li
+                data-thq="thq-dropdown"
+                class="admin-candidate-sourced-component-dropdown3 list-item"
+                (click)="applySort('name_desc')"
+                >
+                <div
+                  data-thq="thq-dropdown-toggle"
+                  class="admin-candidate-sourced-component-dropdown-toggle4"
+                  >
+                  <span>Name: Z to A</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <!-- MODIFIED: Download button now triggers the bulk download method -->
+          <div
+            id="download-zip-container"
+            class="admin-candidate-sourced-component-download-zip-container"
+            (click)="triggerBulkDownload()"
+            title="Download Excel report for selected candidates"
+            >
+            <svg
+              id="download-icon"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              class="admin-candidate-sourced-component-download-icon1"
+              >
+              <path
+                d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <!-- MODIFIED: Text is now static -->
+            <span
+              id="download-zip-text"
+              class="admin-candidate-sourced-component-download-zip-text"
+              >
+              Download Report
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW: Loading and Empty State Handling -->
+      <!-- This container is shown while fetching data from the API -->
+      @if (isLoading) {
+        <div class="loading-container" style="text-align: center; padding: 40px; font-style: italic; color: #555;">
+          Loading candidates...
+        </div>
+      }
+      <!-- This container is shown if the API returns no candidates -->
+      @if (!isLoading && sourcedCandidates.length === 0) {
+        <div class="empty-state-container" style="text-align: center; padding: 40px; font-style: italic; color: #555;">
+          No sourced candidates found for this job description.
+        </div>
+      }
+      <!-- END NEW -->
+
+      <!-- MODIFIED: The candidate list is now rendered dynamically with *ngFor -->
+      <!-- This entire container will only be shown if there are candidates to display -->
+      @if (!isLoading && sourcedCandidates.length > 0) {
+        <div
+          id="candidate-details-download-cv-main-container"
+          class="admin-candidate-sourced-component-candidate-details-download-cv-main-container"
+          >
+          <!-- A single row template that will be repeated for each candidate in the array -->
+          @for (candidate of sourcedCandidates; track candidate) {
+            <div
+              class="admin-candidate-sourced-component-candidate-details-download-cv-container"
+              >
+              <div
+                id="candidate-name-container"
+                class="admin-candidate-sourced-component-candidate-name-container"
+                >
+                <!-- MODIFIED: Binding for individual candidate selection -->
+                <input
+                  type="checkbox"
+                  [id]="'candidate-checkbox-' + candidate.candidate_id"
+                  class="admin-candidate-sourced-component-select-checkbox2"
+                  [(ngModel)]="candidate.selected"
+                  (ngModelChange)="updateSelectAllState()"
+                  />
+                  <!-- MODIFIED: Displaying the candidate's name from the data object -->
+                  <span
+                    id="candidate-name-text"
+                    class="admin-candidate-sourced-component-candidate-name-text"
+                    >
+                    {{ candidate.full_name || 'N/A' }}
+                  </span>
+                </div>
+                <div
+                  id="job-title-container"
+                  class="admin-candidate-sourced-component-job-title-container"
+                  >
+                  <!-- MODIFIED: Displaying the job match score from the data object -->
+                  <span
+                    id="job-title-text"
+                    class="admin-candidate-sourced-component-job-title-text"
+                    >
+                    Score: {{ candidate.job_match_score }}%
+                  </span>
+                </div>
+                <div
+                  id="view-cv-container"
+                  class="admin-candidate-sourced-component-view-cv-container"
+                  title="View CV in new tab"
+                  >
+                  <!-- MODIFIED: Link to view the CV directly (still useful for quick peeks) -->
+                  <a [href]="candidate.cv_file_path" target="_blank" rel="noopener noreferrer" style="display: contents; text-decoration: none; color: inherit;">
+                    <svg
+                      id="eye-icon"
+                      width="1024"
+                      height="1024"
+                      viewBox="0 0 1024 1024"
+                      class="admin-candidate-sourced-component-eye-icon"
+                      >
+                      <path
+                        d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3c7.7-16.2 7.7-35 0-51.5M512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258s279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766m-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                    <span
+                      id="view-cv-text"
+                      class="admin-candidate-sourced-component-view-cv-text"
+                      >
+                      View CV
+                    </span>
+                  </a>
+                </div>
+                <!-- MODIFIED: Download icon now calls the method to download the actual resume file securely -->
+                <svg
+                  id="download-icon"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 48 48"
+                  class="admin-candidate-sourced-component-download-icon2"
+                  (click)="downloadCandidateResume(candidate)"
+                  title="Download this candidate's resume"
+                  >
+                  <path
+                    d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 10.119L24 37.076L31.132 30M24 20v13.538"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>

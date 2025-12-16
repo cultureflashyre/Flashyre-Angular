@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'landing-page-article-card',
-  templateUrl: 'landing-page-article-card.component.html',
-  styleUrls: ['landing-page-article-card.component.css'],
+    selector: 'landing-page-article-card',
+    templateUrl: 'landing-page-article-card.component.html',
+    styleUrls: ['landing-page-article-card.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class LandingPageArticleCard {
   @ContentChild('text1')

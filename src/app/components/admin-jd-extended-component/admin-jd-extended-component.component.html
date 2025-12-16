@@ -1,0 +1,125 @@
+<!-- src/app/components/admin-jd-extended-component/admin-jd-extended-component.html -->
+
+<!--
+--- FIX: Added the <form> tag with the [formGroup]="jdForm" directive. ---
+This is the critical link that connects this entire HTML template to the 'jdForm' FormGroup
+object in the component's TypeScript file. Without this, formControlName has no effect on displaying data.
+-->
+<form [formGroup]="jdForm" class="admin-jd-extended-component-container1" [ngClass]="rootClassName">
+  <div id="role-container" class="admin-jd-extended-component-role-container">
+    <label for="Role-Input-Field" class="admin-jd-extended-component-role-text-container">
+      <span class="admin-jd-extended-component-role-text">Role</span>
+      <span class="admin-jd-extended-component-role-star-text">*</span>
+    </label>
+    <div class="admin-jd-extended-component-role-input-container">
+      <input type="text" id="Role-Input-Field" formControlName="role" [placeholder]="roleInputFieldPlaceholder" class="admin-jd-extended-component-role-input-field input" />
+    </div>
+  </div>
+
+  <!-- Location Autocomplete Widget -->
+  <div id="location-container" class="admin-jd-extended-component-location-container">
+    <label for="location" class="admin-jd-extended-component-location-text-container">
+      <span class="admin-jd-extended-component-location-text">Location</span>
+      <span class="admin-jd-extended-component-location-star-text">*</span>
+    </label>
+    <div id="location-input-container" class="admin-jd-extended-component-location-input-container">
+      <div class="location-widget-wrapper">
+        <div class="input-wrapper">
+          <input type="text" id="location" class="location-input" placeholder="Enter your location" autocomplete="off" formControlName="location" />
+          @if (isLocationLoading) {
+            <div class="loading"></div>
+          }
+          <svg class="location-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        @if (locationSuggestions.length > 0) {
+          <div class="suggestions">
+            @for (suggestion of locationSuggestions; track suggestion) {
+              <div class="suggestion-item" (click)="selectLocation(suggestion)">
+                {{ suggestion }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <div id="total-and-relevant-experience-container" class="admin-jd-extended-component-total-and-relevant-experience-container">
+    <!-- Total Experience Slider -->
+    <div id="total-experience-container" class="admin-jd-extended-component-total-experience-container">
+      <div class="admin-jd-extended-component-total-experience-text-container">
+        <span class="admin-jd-extended-component-total-experience-text">Total Experience</span>
+      </div>
+      <div #totalExperienceSlider class="admin-jd-extended-component-total-experience-code-container experience-range-slider">
+        <div class="range-indicator" #totalExperienceContainer>
+          <div class="line"></div>
+          <div class="filled-segment" #totalFilledSegment></div>
+          <div class="marker" #totalMarkerLeft (mousedown)="onMouseDown($event, 'total')"></div>
+          <div class="marker" #totalMarkerRight (mousedown)="onMouseDown($event, 'total')"></div>
+          <div class="label" #totalLabelLeft></div>
+          <div class="label" #totalLabelRight></div>
+        </div>
+      </div>
+    </div>
+    <!-- Relevant Experience Slider -->
+    <div id="relevant-experience-container" class="admin-jd-extended-component-relevant-experience-container">
+      <div class="admin-jd-extended-component-relevant-experience-text-container">
+        <span class="admin-jd-extended-component-relevant-experience-text">Relevant Experience</span>
+      </div>
+      <div #relevantExperienceSlider class="admin-jd-extended-component-relevant-experience-code-container experience-range-slider">
+        <div class="range-indicator" #relevantExperienceContainer>
+          <div class="line"></div>
+          <div class="filled-segment" #relevantFilledSegment></div>
+          <div class="marker" #relevantMarkerLeft (mousedown)="onMouseDown($event, 'relevant')"></div>
+          <div class="marker" #relevantMarkerRight (mousedown)="onMouseDown($event, 'relevant')"></div>
+          <div class="label" #relevantLabelLeft></div>
+          <div class="label" #relevantLabelRight></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="notice-period-container" class="admin-jd-extended-component-notice-period-container">
+    <label for="notice-period-input-field" class="admin-jd-extended-component-notice-period-text-container">
+      <span class="admin-jd-extended-component-university-institute-text">Notice Period</span>
+      <span class="admin-jd-extended-component-notice-period-star-text">*</span>
+    </label>
+    <div class="admin-jd-extended-component-notice-period-input-container">
+      <input type="text" id="notice-period-input-field" formControlName="noticePeriod" [placeholder]="noticePeriodInputFiledPlaceholder" class="admin-jd-extended-component-notice-period-input-filed input" />
+    </div>
+  </div>
+
+  <div
+    id="skills-container"
+    class="admin-jd-extended-component-skills-container"
+    >
+    <div class="admin-jd-extended-component-skill-text-container">
+      <span class="admin-jd-extended-component-skill-text">Skills</span>
+      <span class="admin-jd-extended-component-skill-star-text">*</span>
+    </div>
+    <div id="skills-input-container" class="admin-jd-extended-component-skills-input-container">
+      <div class="skills-widget-wrapper">
+        <div class="tag-container" (click)="skillInput.focus()">
+          @for (tag of selectedSkills; track tag) {
+            <div class="tag">
+              <span>{{ tag }}</span>
+              <!-- Added type="button" to prevent form submission -->
+              <button type="button" (click)="removeSkill(tag)">&times;</button>
+            </div>
+          }
+          <input #skillInput type="text" class="tag-input" formControlName="skillInput" placeholder="Type to add Skills..." (keydown)="onSkillInputKeyDown($event)" />
+        </div>
+        @if (skillSuggestions.length > 0) {
+          <div class="suggestions">
+            @for (suggestion of skillSuggestions; track suggestion; let i = $index) {
+              <div class="suggestion-item" [class.active-suggestion]="i === activeSkillSuggestionIndex" (click)="addSkill(suggestion)">
+                {{ suggestion }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</form> <!-- --- FIX: Closed the form tag --- -->

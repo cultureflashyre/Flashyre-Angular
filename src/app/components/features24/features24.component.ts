@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-features24',
-  templateUrl: 'features24.component.html',
-  styleUrls: ['features24.component.css'],
+    selector: 'app-features24',
+    templateUrl: 'features24.component.html',
+    styleUrls: ['features24.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class Features24 {
   @ContentChild('feature2Description')

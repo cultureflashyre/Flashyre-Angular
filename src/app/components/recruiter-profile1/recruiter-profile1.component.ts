@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-profile1',
-  templateUrl: 'recruiter-profile1.component.html',
-  styleUrls: ['recruiter-profile1.component.css'],
+    selector: 'recruiter-profile1',
+    templateUrl: 'recruiter-profile1.component.html',
+    styleUrls: ['recruiter-profile1.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterProfile1 {
   @Input()

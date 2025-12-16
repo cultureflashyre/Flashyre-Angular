@@ -1,0 +1,390 @@
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+}
+
+<!-- src/app/components/create-job-post-22/create-job-post-22.component.html -->
+
+<!-- The ng-container handles the loading state without adding an extra element to the DOM -->
+@if (!isLoading) {
+  <!-- Popup Message -->
+  @if (showPopup) {
+    <div class="alert" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+      @if (popupType === 'success') {
+        <span class="tick">✔</span>
+      }
+      {{ popupMessage }}
+      <span class="closebtn" (click)="closePopup()"> × </span>
+    </div>
+  }
+  <!-- The form tag wraps the entire component to manage settings with ReactiveFormsModule -->
+  <form [formGroup]="assessmentForm" class="create-job-post-22-container10" [ngClass]="rootClassName">
+    <div id="create-job-post-2.2-main-container" class="create-job-post-22-create-job-post22-main-container">
+      <!-- Assessment Name and All Settings Section -->
+      <div id="assessment-additional-settings-main-container" class="create-job-post-22-assessment-additional-settings-main-container">
+        <!-- Assessment Name Input -->
+        <div id="assessment-container" class="create-job-post-22-assessment-container">
+          <span id="assessment-text" class="create-job-post-22-assessment-text">Assessment Name *</span>
+          <input type="text" id="enter-name-input" placeholder="Enter Name" class="create-job-post-22-enter-name-input input" formControlName="assessmentName" maxlength="50"/>
+        </div>
+        <!-- Validation message for Assessment Name -->
+        @if (assessmentForm.get('assessmentName')?.touched && assessmentForm.get('assessmentName')?.errors?.required) {
+          <div class="field-error-message">
+            Assessment Name is required.
+          </div>
+        }
+        @if (assessmentForm.get('assessmentName')?.touched && assessmentForm.get('assessmentName')?.errors?.pattern) {
+          <div class="field-error-message">
+            please enter correct Assessment name.
+          </div>
+        }
+        <!-- This container holds all the settings checkboxes, slider, and time limit -->
+        <div id="additional-settings-slide-bar-time-limit-container" class="create-job-post-22-additional-settings-slide-bar-time-limit-container2">
+          <div id="additional-settings-container" class="create-job-post-22-additional-settings-container2">
+            <div class="create-job-post-22-container14">
+              <div id="assessment-options-container" class="create-job-post-22-assessment-options-container2">
+                <!-- Shuffle questions checkbox -->
+                <div id="shuffle-questions-container" class="create-job-post-22-shuffle-questions-container2">
+                  <input type="checkbox" id="shuffle-questions-checkbox" class="create-job-post-22-shuffle-questions-checkbox2" formControlName="shuffleQuestions" />
+                  <label for="shuffle-questions-checkbox" id="shuffle-questions-text" class="create-job-post-22-shuffle-questions-text2">Shuffle questions for Candidate</label>
+                </div>
+                <!-- Proctored checkbox with tooltip -->
+                <div id="proctored-container" class="create-job-post-22-proctored-container2" title="When enabled, the assessment gets auto-submitted when the user tries to switch tabs or applications.">
+                  <input type="checkbox" id="proctored-checkbox" class="create-job-post-22-proctored-checkbox2" formControlName="isProctored" />
+                  <label for="proctored-checkbox" id="proctored-text" class="create-job-post-22-proctored-text2">Proctored</label>
+                  <svg id="info-icon" viewBox="0 0 256 256" class="create-job-post-22-info-icon2"><path d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88m16-40a8 8 0 0 1-8 8a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 8 8m-32-92a12 12 0 1 1 12 12a12 12 0 0 1-12-12" fill="currentColor"></path></svg>
+                </div>
+                <!-- Phone Access checkbox -->
+                <div id="allow-phone-access-container" class="create-job-post-22-allow-phone-access-container2">
+                  <input type="checkbox" id="phone-access-checkbox" class="create-job-post-22-phone-access-checkbox2" formControlName="allowPhoneAccess" />
+                  <label for="phone-access-checkbox" id="allow-phone-access-text" class="create-job-post-22-allow-phone-access-text2">Allow Phone Access</label>
+                </div>
+                <!-- Video Recording checkbox -->
+                <div id="video-recording-container" class="create-job-post-22-video-recording-container2">
+                  <input type="checkbox" id="video-recorder-checkbox" class="create-job-post-22-video-recorder-checkbox2" formControlName="allowVideoRecording" />
+                  <label for="video-recorder-checkbox" id="allow-video-recording-text" class="create-job-post-22-allow-video-recording-text2">Allow Video Recording</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="slide-bar-main-container" class="create-job-post-22-slide-bar-main-container2">
+            <!-- Difficulty Slider -->
+            <div id="slide-bar-container" class="create-job-post-22-slide-bar-container2">
+              <span id="difficulty-level-text" class="create-job-post-22-difficulty-level-text2">Choose difficulty level ({{ difficultyPercentage | number:'1.0-0' }}%)</span>
+              <div class="slider-container-angular">
+                <div class="slider-labels"><span>Easy</span><span>Hard</span></div>
+                <input
+                  #difficultySlider
+                  type="range"
+                  min="0"
+                  max="100"
+                  class="difficulty-slider-input"
+                  [value]="difficultyPercentage"
+                  (input)="onDifficultyChange($event)"
+                />              </div>
+              </div>
+              <!-- Time Limit Input -->
+              <div id="time-limit-container" class="create-job-post-22-time-limit-container2">
+                <span id="time-limit-text" class="create-job-post-22-time-limit-text2">Set time limit *</span>
+                <input type="text" id="time-input" placeholder="HH:MM" class="create-job-post-22-time-input2 input" formControlName="timeLimit" />
+                @if (assessmentForm.get('timeLimit')?.touched && (assessmentForm.get('timeLimit')?.hasError('required') || assessmentForm.get('timeLimit')?.hasError('pattern'))) {
+                  <div class="field-error-message"
+                    >
+                    Valid HH:MM format required.
+                  </div>
+                }
+                @if (assessmentForm.get('timeLimit')?.touched && assessmentForm.get('timeLimit')?.hasError('timeIsZero')) {
+                  <div class="field-error-message"
+                    >
+                    time can not be 00:00
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Questions Main Section -->
+        <div id="questions-main-container" class="create-job-post-22-questions-main-container1">
+          <div id="questions-ai-upload-button-container" class="create-job-post-22-questions-ai-upload-button-container">
+            <div id="questions-score-container" class="create-job-post-22-questions-score-container">
+              <span id="questions-text" class="create-job-post-22-questions-text1">Questions</span>
+              <span id="selected-text" class="create-job-post-22-selected-text">(Selected {{ totalSelectedCount }} / {{ totalQuestionCount }})</span>
+            </div>
+            <div class="create-job-post-22-container17">
+              <button id="add-questions-with-ai-button" type="button" class="create-job-post-22-add-questions-with-ai-button button" (click)="addMoreAiQuestions()" [disabled]="isSubmitting || skillSections.length === 0">
+                <span id="add-questions-with-ai-text" class="create-job-post-22-add-questions-with-ai-text">✨ {{ isSubmitting ? 'Generating...' : 'Add Question with AI' }}</span>
+              </button>
+              <!-- Upload button is re-added visually but disabled as functionality is not needed yet -->
+              <div id="upload-file-button-container" class="create-job-post-22-upload-file-button-container" [class.disabled]="true" title="Upload functionality is not yet active.">
+                <svg id="upload-icon" viewBox="0 0 48 48" class="create-job-post-22-upload-icon"><path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span id="upload-text" class="create-job-post-22-upload-text">Upload</span>
+              </div>
+            </div>
+          </div>
+          <div id="ai-generated-uploaded-questions-main-container" class="create-job-post-22-ai-generated-uploaded-questions-main-container">
+            <div id="ai-generated-uploaded-container" class="create-job-post-22-ai-generated-uploaded-container">
+              <div id="ai-generated-container"
+                class="create-job-post-22-ai-generated-container"
+                [class.active-tab]="activeTab === 'ai-generated'"
+                (click)="activeTab = 'ai-generated'">
+                <span id="ai-generated-text" class="create-job-post-22-ai-generated-text">AI Generated ({{totalAIQuestionCount}})</span>
+              </div>
+              <div id="uploaded-container"
+                class="create-job-post-22-uploaded-container"
+                [class.active-tab]="activeTab === 'uploaded'"
+                (click)="activeTab = 'uploaded'">
+                <div id="border-line-container" class="create-job-post-22-border-line-container">
+                  <span id="uploaded-text" class="create-job-post-22-uploaded-text">Uploaded ({{ uploadedQuestionCount }})</span>
+                </div>
+              </div>
+            </div>
+            <div id="language-questions-main-container" class="create-job-post-22-language-questions-main-container">
+              <div id="languages-main-container" class="create-job-post-22-languages-main-container">
+                <!-- Left Arrow Icon (can be implemented with a scroll function later if needed) -->
+                <div
+                  id="left-arrow-container"
+                  class="arrow-container left-arrow-shadow"
+                  [class.disabled]="currentScrollIndex === 0"
+                  (click)="navigateCarousel('prev')">
+                  <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m10.828 12l4.95 4.95l-1.414 1.415L8 12l6.364-6.364l1.414 1.414z" fill="currentColor"></path></svg>
+                </div>
+                <!-- Dynamic looping through skill sections -->
+                @if (activeTab === 'ai-generated') {
+                  <div class="create-job-post-22-container18">
+                    <div class="skill-scroll-track">
+                      @for (section of skillSections; track section; let i = $index) {
+                        <div
+                          class="create-job-post-22-language-tab"
+                          [ngClass]="{'active-section': i === activeSectionIndex}"
+                          (click)="selectSection(i)">
+                          <span class="skill-tab-name">{{ section.skillName }}</span>
+                          <span class="skill-tab-count">({{ section.selectedCount }}/{{ section.totalCount }})</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Uploaded Skills List Viewport -->
+                @if (activeTab === 'uploaded') {
+                  <div class="create-job-post-22-container18">
+                    <div class="skill-scroll-track">
+                      @for (section of uploadedSkillSections; track section; let i = $index) {
+                        <div
+                          class="create-job-post-22-language-tab"
+                          [ngClass]="{'active-section': i === activeUploadedSectionIndex}"
+                          (click)="selectUploadedSection(i)">
+                          <span class="skill-tab-name">{{ section.skillName }}</span>
+                          <span class="skill-tab-count">({{ section.selectedCount || 0 }}/{{ section.totalCount }})</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Right Arrow Icon -->
+                <div
+                  id="right-arrow-container"
+                  class="arrow-container right-arrow-shadow"
+                  [class.disabled]="currentScrollIndex >= maxScrollIndex"
+                  (click)="navigateCarousel('next')">
+                  <svg viewBox="0 0 24 24" class="nav-arrow-icon"><path d="m13.172 12l-4.95-4.95l1.414-1.413L16 12l-6.364 6.364l-1.414-1.415z" fill="currentColor"></path></svg>
+                </div>
+              </div>
+              <!-- Questions display: switch by active tab -->
+              <!-- AI Generated Questions -->
+              <!-- This container shows the questions for the currently active section -->
+              @if (activeTab === 'ai-generated' && skillSections.length > 0 && skillSections[activeSectionIndex]; as activeSection) {
+                <div id="select-all-container" class="create-job-post-22-select-all-container">
+                  <div id="check-box-container" class="create-job-post-22-check-box-container">
+                    <input type="checkbox" id="select-all-checkbox" class="create-job-post-22-checkbox-icon" [(ngModel)]="activeSection.isAllSelected" [ngModelOptions]="{standalone: true}" (change)="toggleSelectAllForSection($event)" />
+                  </div>
+                  <label for="select-all-checkbox" id="select-all-text" class="create-job-post-22-select-all-text">Select all ({{ activeSection.questions.length }})</label>
+                </div>
+                <div id="questions-main-container" class="create-job-post-22-questions-main-container2">
+                  <!-- Looping through each question in the active section -->
+                  @for (question of activeSection.questions; track question; let i = $index) {
+                    <div id="questions-container" class="create-job-post-22-questions-container">
+                      <div class="create-job-post-22-container19">
+                        <div id="questions-checkbox-container" class="create-job-post-22-questions-checkbox-container">
+                          <input type="checkbox" [id]="'q-checkbox-' + question.mcq_item_id" class="create-job-post-22-questions-checkbox" [(ngModel)]="question.isSelected" [ngModelOptions]="{standalone: true}" (ngModelChange)="onQuestionSelectionChange()" />
+                        </div>
+                        <div id="question-1-container" class="create-job-post-22-question1-container">
+                          <label [for]="'q-checkbox-' + question.mcq_item_id" id="questions-text" class="create-job-post-22-questions-text2">
+                            <!-- AI icon shown conditionally -->
+                            <span>✨ </span>
+                            <!-- Display question text -->
+                            {{ question.parsed.question }}
+                          </label>
+                          <div id="options-container" class="create-job-post-22-options-container">
+                            @for (option of question.parsed.options; track option; let j = $index) {
+                              <div class="create-job-post-22-option1-container">
+                                <input type="radio"
+                                  [id]="'q-' + question.mcq_item_id + '-option-' + j"
+                                  [name]="'q-radio-' + question.mcq_item_id"
+                                  class="create-job-post-22-radio-icon"
+                                  [checked]="'abcd'[j] === question.parsed.correctAnswer" disabled />
+                                  <div class="option-text-wrapper">
+                                    <label [for]="'q-' + question.mcq_item_id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div id="marks-container" class="create-job-post-22-marks-container">
+                          <span id="marks-text" class="create-job-post-22-marks-text">2 marks</span>
+                          <div id="levels-container" class="create-job-post-22-levels-container">
+                            <span class="create-job-post-22-level-tag" [ngClass]="question.parsed.difficulty.toLowerCase()">{{ question.parsed.difficulty }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                    @if (activeSection.questions.length === 0) {
+                      <div class="no-questions-message">
+                        No questions found for this skill.
+                      </div>
+                    }
+                  </div>
+                }
+                @if (activeTab === 'uploaded' && uploadedSkillSections.length > 0 && uploadedSkillSections[activeUploadedSectionIndex]; as activeUploadedSection) {
+                  <div id="select-all-container" class="create-job-post-22-select-all-container">
+                    <div id="check-box-container" class="create-job-post-22-check-box-container">
+                      <input type="checkbox" id="select-all-checkbox" class="create-job-post-22-checkbox-icon"
+                        [(ngModel)]="activeUploadedSection.isAllSelected"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="toggleSelectAllForUploadedSection($event)" />
+                      </div>
+                      <label for="select-all-checkbox" id="select-all-text" class="create-job-post-22-select-all-text">
+                        Select all ({{ activeUploadedSection.questions.length }})
+                      </label>
+                    </div>
+                    <div id="questions-main-container" class="create-job-post-22-questions-main-container2">
+                      @for (question of activeUploadedSection.questions; track question; let i = $index) {
+                        <div id="questions-container" class="create-job-post-22-questions-container">
+                          <div class="create-job-post-22-container19">
+                            <div id="questions-checkbox-container" class="create-job-post-22-questions-checkbox-container">
+                              <input type="checkbox" [id]="'uq-checkbox-' + question.id" class="create-job-post-22-questions-checkbox"
+                                [(ngModel)]="question.isSelected"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onUploadedQuestionSelectionChange()"
+                                (ngModelChange)="onQuestionSelectionChange()" />
+                              </div>
+                              <div id="question-1-container" class="create-job-post-22-question1-container">
+                                <label [for]="'uq-checkbox-' + question.id" id="questions-text" class="create-job-post-22-questions-text2">
+                                  {{ question.question }}
+                                </label>
+                                <div id="options-container" class="create-job-post-22-options-container">
+                                  @for (option of question.options; track option; let j = $index) {
+                                    <div class="create-job-post-22-option1-container">
+                                      <input type="radio"
+                                        [id]="'uq-' + question.id + '-option-' + j"
+                                        [name]="'uq-radio-' + question.id"
+                                        class="create-job-post-22-radio-icon"
+                                        [checked]="'abcd'[j] === question.correctAnswer" disabled />
+                                        <div class="option-text-wrapper">
+                                          <label [for]="'uq-' + question.id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                                        </div>
+                                      </div>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+                              <div id="marks-container" class="create-job-post-22-marks-container">
+                                <span id="marks-text" class="create-job-post-22-marks-text">{{ question.marks }} marks</span>
+                                <div id="levels-container" class="create-job-post-22-levels-container">
+                                  <span class="create-job-post-22-level-tag" [ngClass]="question.difficulty.toLowerCase()">{{ question.difficulty }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                          @if (activeUploadedSection.questions.length === 0) {
+                            <div class="no-questions-message">
+                              No questions found for this skill.
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                    <!--<div *ngIf="uploadedSkillSections.length > 0 && uploadedSkillSections[activeUploadedSectionIndex] as activeUploadedSection">
+                    <div id="select-all-container" class="create-job-post-22-select-all-container">
+                      <div id="check-box-container" class="create-job-post-22-check-box-container">
+                        <input
+                          type="checkbox"
+                          id="select-all-uploaded-checkbox"
+                          class="create-job-post-22-checkbox-icon"
+                          [(ngModel)]="activeUploadedSection.isAllSelected"
+                          [ngModelOptions]="{standalone: true}"
+                          (change)="toggleSelectAllForUploadedSection($event)" />
+                        </div>
+                        <label for="select-all-uploaded-checkbox" id="select-all-uploaded-text" class="create-job-post-22-select-all-text">
+                          Select all ({{ activeUploadedSection.questions.length }})
+                        </label>
+                      </div>
+                      <div id="uploaded-questions-main-container" class="create-job-post-22-questions-main-container2">
+                        <div *ngFor="let question of activeUploadedSection.questions; let i = index"
+                          id="uploaded-questions-container" class="create-job-post-22-questions-container">
+                          <div class="create-job-post-22-container19">
+                            <div id="questions-checkbox-container" class="create-job-post-22-questions-checkbox-container">
+                              <input type="checkbox"
+                                [id]="'uq-checkbox-' + question.id"
+                                class="create-job-post-22-questions-checkbox"
+                                [(ngModel)]="question.isSelected"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onUploadedQuestionSelectionChange()" />
+                              </div>
+                              <div id="question-text-container" class="create-job-post-22-question1-container">
+                                <label [for]="'uq-checkbox-' + question.id" id="uploaded-questions-text" class="create-job-post-22-questions-text2">
+                                  {{ question.question }}
+                                </label>
+                                <div id="options-container" class="create-job-post-22-options-container">
+                                  <div *ngFor="let option of question.options; let j = index" class="create-job-post-22-option1-container">
+                                    <input type="radio"
+                                      [id]="'uq-' + question.id + '-option-' + j"
+                                      [name]="'uq-radio-' + question.id"
+                                      class="create-job-post-22-radio-icon"
+                                      [checked]="option === question.correctAnswer"
+                                      disabled />
+                                      <div class="option-text-wrapper">
+                                        <label [for]="'uq-' + question.id + '-option-' + j" class="create-job-post-22-option1-text">{{ option }}</label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div id="marks-container" class="create-job-post-22-marks-container">
+                                <span id="marks-text" class="create-job-post-22-marks-text">{{ question.marks }} marks</span>
+                                <div id="levels-container" class="create-job-post-22-levels-container">
+                                  <span class="create-job-post-22-level-tag" [ngClass]="question.difficulty.toLowerCase()">{{ question.difficulty }}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="activeUploadedSection.questions.length === 0" class="no-questions-message">
+                              No uploaded questions found for this skill.
+                            </div>
+                          </div>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- The footer is now part of this component's template, directly calling its methods -->
+                  <create-job-post-footer2
+                    rootClassName="create-job-post-footer2root-class-name2"
+                    [isNextDisabled]="totalSelectedCount === 0 || isSubmitting"
+                    (cancelClick)="onCancel()"
+                    (previousClick)="onPrevious()"
+                    (skipClick)="onSkip()"
+                    (nextClick)="onNext()"
+                    (saveDraftClick)="onSaveDraft()">
+                  </create-job-post-footer2>
+                </form>
+              } @else {
+                <div class="loading-container">
+                  <p>Loading assessment questions...</p>
+                  <!-- A material spinner or other loading indicator could be placed here -->
+                </div>
+              }
+
+              <!-- Loading indicator template shown while isLoading is true -->

@@ -70,7 +70,7 @@
               <ng-container>
                 <ng-template #defaultText>
                   <div class="landing-page-navbar-fragment15">
-                    <span class="landing-page-navbar-text16">Sign Up</span>
+                    <span class="landing-page-navbar-text16">Get Started</span>
                   </div>
                 </ng-template>
                 <ng-container
@@ -97,7 +97,7 @@
             data-thq="thq-dropdown"
             class="landing-page-navbar-candidate list-item"
           >
-            <a routerLink="/login-candidate">
+            <a routerLink="/login">
               <div
                 data-thq="thq-dropdown-toggle"
                 class="landing-page-navbar-dropdown-toggle2"
@@ -110,7 +110,7 @@
                     <ng-template #defaultText1>
                       <div class="landing-page-navbar-fragment17">
                         <span class="landing-page-navbar-text18">
-                          Candidate
+                          Login
                         </span>
                       </div>
                     </ng-template>
@@ -126,7 +126,7 @@
             data-thq="thq-dropdown"
             class="landing-page-navbar-universitycollege list-item"
           >
-            <a routerLink="/login-college">
+            <a routerLink="/signup">
               <div
                 data-thq="thq-dropdown-toggle"
                 class="landing-page-navbar-dropdown-toggle3"
@@ -139,7 +139,7 @@
                     <ng-template #defaultText2>
                       <div class="landing-page-navbar-fragment10">
                         <span class="landing-page-navbar-text11">
-                          University / College
+                          Sign-up
                         </span>
                       </div>
                     </ng-template>
@@ -151,35 +151,7 @@
               </div>
             </a>
           </li>
-          <li
-            data-thq="thq-dropdown"
-            class="landing-page-navbar-corporate list-item"
-          >
-            <a routerLink="/login-corporate">
-              <div
-                data-thq="thq-dropdown-toggle"
-                class="landing-page-navbar-dropdown-toggle4"
-              >
-                <span
-                  id="corporate-signup"
-                  class="landing-page-navbar-corporate-text1"
-                >
-                  <ng-container>
-                    <ng-template #defaultText3>
-                      <div class="landing-page-navbar-fragment12">
-                        <span class="landing-page-navbar-text13">
-                          Corporate
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text3 ? text3 : defaultText3"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-            </a>
-          </li>
+
         </ul>
       </div>
       <div data-thq="thq-burger-menu" class="landing-page-navbar-burger-menu" (click)="toggleMobileMenu()">        <svg
@@ -247,7 +219,7 @@
               class="landing-page-navbar-different-signup-container"
             >
               <a
-                routerLink="/login-candidate"
+                routerLink="/login"
                 class="landing-page-navbar-navlink4"
               >
                 <div
@@ -262,7 +234,7 @@
                       <ng-template #defaultText11>
                         <div class="landing-page-navbar-fragment19">
                           <span class="landing-page-navbar-text20">
-                            Candidate
+                            Login
                           </span>
                         </div>
                       </ng-template>
@@ -274,7 +246,7 @@
                 </div>
               </a>
               <a
-                routerLink="/login-college"
+                routerLink="/signup"
                 class="landing-page-navbar-navlink5"
               >
                 <div
@@ -286,7 +258,7 @@
                       <ng-template #defaultText12>
                         <div class="landing-page-navbar-fragment18">
                           <span class="landing-page-navbar-text19">
-                            University / College
+                            Signup
                           </span>
                         </div>
                       </ng-template>
@@ -297,30 +269,7 @@
                   </span>
                 </div>
               </a>
-              <a
-                routerLink="/login-corporate"
-                class="landing-page-navbar-navlink6"
-              >
-                <div
-                  id="corporate-signup-mobile-view"
-                  class="landing-page-navbar-corporate-container button"
-                >
-                  <span id="corporate-signup-button">
-                    <ng-container>
-                      <ng-template #defaultText13>
-                        <div class="landing-page-navbar-fragment14">
-                          <span class="landing-page-navbar-text15">
-                            Corporate
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text13 ? text13 : defaultText13"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                </div>
-              </a>
+
             </div>
           </div>
         </div>

@@ -1,9 +1,13 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 
 @Component({
-  selector: 'app-component',
-  templateUrl: 'component.component.html',
-  styleUrls: ['component.component.css'],
+    selector: 'app-component',
+    templateUrl: 'component.component.html',
+    styleUrls: ['component.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, DangerousHtmlComponent,],
 })
 export class AppComponent {
   @ContentChild('settings')

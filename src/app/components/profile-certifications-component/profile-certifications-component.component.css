@@ -11,12 +11,20 @@
   align-items: flex-start;
   flex-direction: column;
 }
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+  width: 100%; /* Ensure it takes full width of its container */
+}
  
 .profile-certifications-component-profile-certification-container {
   gap: 24px;
   flex: 0 0 auto;
   width: 720px;
-  height: 420px;
+  height: 430px;
   display: flex;
   padding: 24px;
   align-self: center;
@@ -26,7 +34,7 @@
   border-radius: 8px;
   flex-direction: column;
   scroll-behavior: smooth;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   background-color: #FFFFFF;
 }
  
@@ -53,12 +61,14 @@
   height: 76px;
   display: flex;
   align-items: flex-start;
+  margin-bottom: 24px;
 }
  
 .profile-certifications-component-certificate-name-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -98,10 +108,11 @@
   align-items: flex-start;
   padding-top: 0px;
   border-color: #A7A7A7;
-  padding-right: 10px;
+  padding-right: 8px;
   flex-direction: row;
   padding-bottom: 0px;
   justify-content: center;
+  background-color: white;
 }
  
 /* .profile-certifications-component-select-text1 {
@@ -125,7 +136,8 @@
 .profile-certifications-component-certificate-issuing-institute-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -170,6 +182,7 @@
   flex-direction: column;
   padding-bottom: 0px;
   justify-content: center;
+  background-color: white;
 }
  
 .profile-certifications-component-select-text2 {
@@ -196,13 +209,15 @@
   width: 672px;
   height: 76px;
   display: flex;
+  margin-bottom: 24px;
 }
  
 .profile-certifications-component-issued-date-container {
   flex: 0 0 auto;
   width: 324px;
   gap: 24px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -247,6 +262,8 @@
   flex-direction: column;
   padding-bottom: 0px;
   justify-content: space-between;
+  color: #747474;
+  background-color: white;
 }
  
 .profile-certifications-component-select-text3 {
@@ -270,7 +287,8 @@
 .profile-certifications-component-renewal-date-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -314,6 +332,8 @@
   flex-direction: column;
   padding-bottom: 0px;
   justify-content: space-between;
+  color: #747474;
+  background-color: white;
 }
  
 .profile-certifications-component-select-text4 {
@@ -337,9 +357,13 @@
 .profile-certifications-component-credentials-container {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  min-height: 76px;
+  height: auto;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
  
 .profile-certifications-component-credentials-text {
@@ -351,7 +375,7 @@
  
 .profile-certifications-component-select-container3 {
   flex: 0 0 auto;
-  width: auto;
+  width: 100%;
   height: 48px;
   display: flex;
   align-items: flex-start;
@@ -371,6 +395,7 @@
   flex-direction: row;
   padding-bottom: 0px;
   justify-content: center;
+  background-color: white;
 }
  
 .profile-certifications-component-select-text5 {
@@ -435,7 +460,7 @@
   height: 24px;
   display: flex;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   border: 0;
   align-items: center;
   justify-content: center;
@@ -582,10 +607,16 @@ button.profile-certifications-component-remove-certification--text {
 }
 
 .certification-divider {
-  border: 0;                /* Removes default border */
-  height: 2px;             /* Sets the thickness of the line */
-  background-color: #E0E0E0;  /* Sets the color of the line (black in this case) */
-  margin: 10px 0;          /* Adds spacing above and below the line */
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+  width: 100%;
+  text-decoration-thickness: 5px;          /* Adds spacing above and below the line */
+}
+
+.error-message {
+  font-size: 12px;
+  color: #F10400;
 }
 
 
@@ -646,9 +677,15 @@ button.profile-certifications-component-remove-certification--text {
 }
  
 @media(max-width: 479px) {
+  .profile-certifications-component-select-container3 {
+    width: 100%;
+  }
+  .profile-certifications-component-certifiacate-name-container {
+    width: 100%;
+  }
   .profile-certifications-component-container {
     width: 100%;
-    height: auto;
+    height: 580px;
   }
   .profile-certifications-component-container1 {
     width: 100%;
@@ -656,10 +693,10 @@ button.profile-certifications-component-remove-certification--text {
   }
   .profile-certifications-component-profile-certification-container {
     gap: 16px;
-    width: 95%;
+    width: 100%;
     height: 595px;
     align-items: center;
-    padding: 24px;
+    padding: 16px;
     justify-content: flex-start;
     background-color: #FFFFFF;
   }
@@ -667,15 +704,19 @@ button.profile-certifications-component-remove-certification--text {
     width: 100%;
   }
   .profile-certifications-component-container2 {
-    width: 324px;
+    width: 100%;
     gap: 16px;
+  }
+  .ng-untouched {
+    width: 100%;
   }
   .profile-certifications-component-certificate-name-and-issuing-institute-container {
     gap: 16px;
     width: 100%;
-    height: 180px;
+    height: auto;
     flex-direction: column;
     padding-bottom: 0px;
+    margin-bottom: 16px;
   }
   .profile-certifications-component-certificate-name-container {
     width: 100%;
@@ -706,10 +747,11 @@ button.profile-certifications-component-remove-certification--text {
     width: 100%;
   }
   .profile-certifications-component-issued-renewal-date-container {
-    gap: var(--dl-layout-space-unit);
+    gap: 16px;
     width: 100%;
-    height: 180px;
+    height: auto;
     flex-direction: column;
+    margin-bottom: 16px;
   }
   .profile-certifications-component-issued-date-container {
     width: 100%;

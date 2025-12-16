@@ -1,88 +1,245 @@
+// src/app/services/job-description.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { JobDetails, AIJobResponse, PaginatedJobPostResponse } from '../pages/create-job-post-1st-page/types';
+import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment'; // Ensure this path is correct
+import { JobDetails, AIJobResponse, PaginatedJobPostResponse, MCQItem } from '../pages/create-job-post-1st-page/types'; // Ensure this path is correct
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobDescriptionService {
-  // Base API URL from environment configuration (e.g., 'http://localhost:8000/api/')
+  // Base API URL from environment configuration (e.g., 'http://localhost:8000')
   private readonly apiUrl: string = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Uploads a file to Google Cloud Storage, processes it with AI, and saves metadata and draft job post.
+   * Uploads a file, processes it with AI for job details (NO MCQs).
    * @param file The file to upload
    * @param token JWT token for authentication
-   * @returns Observable with file URL, unique ID, job details, and MCQs
+   * @returns Observable with file URL, unique ID, and job details.
    */
-  uploadFile(file: File, token: string): Observable<AIJobResponse & { file_url: string; unique_id: string }> {
-    // Validate file input
+  uploadFile(file: File, token: string): Observable<Omit<AIJobResponse, 'mcqs'> & { file_url: string; unique_id: string }> {
     if (!file) {
       console.error('No file provided for upload');
       return throwError(() => new Error('No file selected for upload'));
     }
 
-    // Validate file size (max 10MB, matching Django view)
     if (file.size > 10 * 1024 * 1024) {
       return throwError(() => new Error('File size exceeds 10MB'));
     }
 
-    // Validate file extension
-    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv'];
+    const allowedExtensions = ['.pdf', '.docx', '.txt', '.xml', '.csv', '.doc'];
     const ext = file.name.toLowerCase().split('.').pop();
     if (!ext || !allowedExtensions.includes(`.${ext}`)) {
       return throwError(() => new Error(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`));
     }
 
-    // Create FormData for file upload
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    // Set Authorization header with Bearer token
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
+      // 'Content-Type' is not set for FormData, browser handles it with boundary
     });
 
+    // Corrected URL construction:
+    const endpoint = `${this.apiUrl}file-upload/`;
+
     return this.http
-      .post<{ status: string; data: AIJobResponse & { file_url: string; unique_id: string } }>(
-        `${this.apiUrl}file-upload/`, // Endpoint: /api/file-upload/
+      .post<{ status: string; data: Omit<AIJobResponse, 'mcqs'> & { file_url: string; unique_id: string } }>(
+        endpoint,
         formData,
         { headers }
       )
       .pipe(
-        map(response => response.data),
-        catchError(error => this.handleError(error))
+        map(response => {
+          if (response.status === 'success' && response.data) {
+            return response.data;
+          }
+          throw new Error(response.data?.toString() || 'Unexpected response structure during file upload');
+        }),
+        catchError(error => this.handleError(error, 'uploadFile'))
       );
   }
 
-  /**
-   * Creates or updates a job post
-   * @param jobDetails Job details to save
-   * @param token JWT token for authentication
-   * @returns Observable with unique_id and success message
-   */
-  saveJobPost(jobDetails: JobDetails, token: string): Observable<{ message: string; unique_id: string }> {
-    // Set headers for JSON request
+
+  uploadExcelFile(file: File, jobUniqueId:string, token: string): Observable<{ file_url: string; unique_id: string }> {
+    if (!file) {
+      console.error('No file provided for upload');
+      return throwError(() => new Error('No file selected for upload'));
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return throwError(() => new Error('File size exceeds 10MB'));
+    }
+
+    const allowedExtensions = ['.xlsx', '.xls'];
+    const ext = file.name.toLowerCase().split('.').pop();
+    if (!ext || !allowedExtensions.includes(`.${ext}`)) {
+      return throwError(() => new Error(`Invalid file format. Supported: ${allowedExtensions.join(', ')}`));
+    }
+
+    const formData = new FormData();
+    formData.append('excel_file', file, file.name); // Use backend expected key
+    formData.append('jobUniqueId', jobUniqueId);
+
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
+      // omit content-type for FormData
+    });
+
+    const endpoint = `${this.apiUrl}upload-mcq-excel/`; // adjust to your backend URL
+
+    return this.http.post<{ status: string; data: { file_url: string; unique_id: string } }>(
+      endpoint,
+      formData,
+      { headers }
+    ).pipe(
+      tap(response => console.log('Raw uploadExcelFile response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error(response.data?.toString() || 'Unexpected response during Excel upload');
+      }),
+      catchError(error => this.handleError(error, 'uploadExcelFile'))
+    );
+
+  }
+
+  getUploadedQuestions(jobUniqueId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/uploaded-questions/`;
+
+    return this.http.get<{ status: string; data: any }>(endpoint, { headers }).pipe(
+      tap(response => console.log('getUploadedQuestions response:', response)),
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response;
+        }
+        throw new Error('Unexpected response structure in getUploadedQuestions');
+      }),
+      catchError(error => this.handleError(error, 'getUploadedQuestions'))
+    );
+  }
+
+
+  /**
+   * Saves or updates a job post by sending a POST request to the backend.
+   * @param jobDetails The job post details to save or update.
+   * @param token JWT token for authentication.
+   * @returns Observable with the response containing unique_id and message.
+   */
+  saveJobPost(jobDetails: JobDetails, token: string): Observable<{ unique_id: string, message: string }> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
 
-    return this.http
-      .post<{ status: string; data: { message: string; unique_id: string } }>(
-        `${this.apiUrl}job-post/`, // Endpoint: /api/job-post/
-        jobDetails,
-        { headers }
-      )
-      .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
-      );
+    const endpoint = `${this.apiUrl}job-post/`;
+
+    return this.http.post<{ status: string, data: { message: string, unique_id: string }, errors?: any }>(
+      endpoint,
+      jobDetails,
+      { headers }
+    ).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return {
+            unique_id: response.data.unique_id,
+            message: response.data.message
+          };
+        }
+        if (response.status === 'error' && response.errors) {
+            throw new HttpErrorResponse({ error: response, status: 400 }); // Simulate an error
+        }
+        throw new Error('Unexpected response status or missing data during save job post');
+      }),
+      catchError(error => this.handleError(error, 'saveJobPost'))
+    );
+  }
+
+  /**
+   * Triggers the backend to generate MCQs for a specific job post.
+   * This is for the initial generation step.
+   * @param uniqueId The unique ID of the job post.
+   * @param token JWT token for authentication.
+   */
+  generateMcqsForJob(uniqueId: string, token: string): Observable<{ status: string; message: string; }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${uniqueId}/generate-mcqs/`;
+
+    return this.http.post<{ status: string; message: string; }>(endpoint, {}, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success') {
+          return response;
+        }
+        throw new Error(response.message || 'Failed to generate MCQs due to an unknown server issue.');
+      }),
+      catchError(error => this.handleError(error, 'generateMcqsForJob'))
+    );
+  }
+
+  // ==============================================================================
+  // === NEW METHOD TO CHECK MCQ STATUS ===========================================
+  // ==============================================================================
+  checkMcqStatus(jobUniqueId: string, token: string): Observable<{ has_mcqs: boolean }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    // The '/api/' prefix was missing, causing the 404 Not Found error.
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/mcq-status/`;
+
+    return this.http.get<{ status: string; data: { has_mcqs: boolean } }>(endpoint, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Unexpected response structure when checking MCQ status.');
+      }),
+      catchError(error => this.handleError(error, 'checkMcqStatus'))
+    );
+  }
+
+  /**
+   * Retrieves all existing MCQs for a given job post.
+   * @param uniqueId The unique ID of the job post.
+   * @param token JWT token for authentication.
+   */
+  job_post_mcqs_list_api(uniqueId: string, token: string): Observable<{ status: string; data: { [skill: string]: { mcq_items: MCQItem[] } } }> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${uniqueId}/mcqs/`;
+    return this.http.get<{ status: string; data: { [skill: string]: { mcq_items: MCQItem[] } } }>(endpoint, { headers }).pipe(
+      catchError(error => this.handleError(error, 'job_post_mcqs_list_api'))
+    );
+  }
+
+  /**
+   * NEW METHOD: Generates more MCQs for a specific skill.
+   * @param jobUniqueId The unique identifier of the job post.
+   * @param skill The name of the skill to generate questions for.
+   * @param token JWT token for authentication.
+   * @returns An Observable containing the list of newly generated MCQItems.
+   */
+  generateMoreMcqsForSkill(jobUniqueId: string, skill: string, token: string): Observable<MCQItem[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const endpoint = `${this.apiUrl}job-post/${jobUniqueId}/generate-more-mcqs/`;
+    const body = { skill };
+
+    return this.http.post<{ status: string; data: MCQItem[] }>(endpoint, body, { headers }).pipe(
+      map(response => {
+        if (response.status === 'success' && response.data) {
+          return response.data;
+        }
+        throw new Error('Failed to generate more questions or unexpected response structure.');
+      }),
+      catchError(error => this.handleError(error, 'generateMoreMcqsForSkill'))
+    );
   }
 
   /**
@@ -93,24 +250,20 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   updateJobPostStatus(uniqueId: string, status: 'draft' | 'final', token: string): Observable<{ message: string; unique_id: string }> {
-    // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-    // Prepare payload matching JobPostStatusUpdateSerializer
     const payload = { unique_id: uniqueId, status };
+    const endpoint = `${this.apiUrl}job-post/update-status/`;
 
-    return this.http
-      .post<{ status: string; data: { message: string; unique_id: string } }>(
-        `${this.apiUrl}job-post/update-status/`, // Endpoint: /api/job-post/update-status/
-        payload,
-        { headers }
-      )
+    return this.http.post<{ status: string; data: { message: string; unique_id: string } }>(endpoint, payload, { headers })
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map(response => {
+            if (response.status === 'success' && response.data) { return response.data; }
+            throw new Error('Unexpected response structure during status update');
+        }),
+        catchError(error => this.handleError(error, 'updateJobPostStatus'))
       );
   }
 
@@ -121,23 +274,20 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   deleteJobPost(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
-    // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-    // Prepare payload matching DeleteSerializer
     const payload = { unique_id: uniqueId };
+    const endpoint = `${this.apiUrl}job-post/delete/`;
 
-    return this.http
-      .delete<{ status: string; data: { message: string; unique_id: string } }>(
-        `${this.apiUrl}job-post/delete/`, // Endpoint: /api/job-post/delete/
-        { headers, body: payload }
-      )
+    return this.http.delete<{ status: string; data: { message: string; unique_id: string } }>(endpoint, { headers, body: payload })
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map(response => {
+            if (response.status === 'success' && response.data) { return response.data; }
+            throw new Error('Unexpected response structure during delete job post');
+        }),
+        catchError(error => this.handleError(error, 'deleteJobPost'))
       );
   }
 
@@ -148,23 +298,20 @@ export class JobDescriptionService {
    * @returns Observable with success message and unique_id
    */
   deleteFile(uniqueId: string, token: string): Observable<{ message: string; unique_id: string }> {
-    // Set headers for JSON request
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-    // Prepare payload matching DeleteSerializer
     const payload = { unique_id: uniqueId };
+    const endpoint = `${this.apiUrl}file-upload/delete/`;
 
-    return this.http
-      .delete<{ status: string; data: { message: string; unique_id: string } }>(
-        `${this.apiUrl}file-upload/delete/`, // Endpoint: /api/file-upload/delete/
-        { headers, body: payload }
-      )
+    return this.http.delete<{ status: string; data: { message: string; unique_id: string } }>(endpoint, { headers, body: payload })
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map(response => {
+            if (response.status === 'success' && response.data) { return response.data; }
+            throw new Error('Unexpected response structure during delete file');
+        }),
+        catchError(error => this.handleError(error, 'deleteFile'))
       );
   }
 
@@ -175,25 +322,19 @@ export class JobDescriptionService {
    * @returns Observable with paginated job posts
    */
   listJobPosts(token: string, page?: number): Observable<PaginatedJobPostResponse> {
-    // Set headers for JSON request
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    // Prepare URL with optional page parameter
-    let url = `${this.apiUrl}job-post/`;
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    let endpoint = `${this.apiUrl}job-post/`;
     if (page) {
-      url += `?page=${page}`;
+      endpoint += `?page=${page}`;
     }
 
-    return this.http
-      .get<{ status: string; data: PaginatedJobPostResponse }>(
-        url, // Endpoint: /api/job-post/
-        { headers }
-      )
+    return this.http.get<{ status: string; data: PaginatedJobPostResponse }>(endpoint, { headers })
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map(response => {
+          if (response.status === 'success' && response.data) { return response.data; }
+          throw new Error('Unexpected response structure when listing job posts');
+        }),
+        catchError(error => this.handleError(error, 'listJobPosts'))
       );
   }
 
@@ -204,62 +345,64 @@ export class JobDescriptionService {
    * @returns Observable with job post details
    */
   getJobPost(uniqueId: string, token: string): Observable<JobDetails> {
-    // Set headers for JSON request
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const endpoint = `${this.apiUrl}job-post/${uniqueId}/`;
 
-    return this.http
-      .get<{ status: string; data: JobDetails }>(
-        `${this.apiUrl}job-post/${uniqueId}/`, // Endpoint: /api/job-post/<unique_id>/
-        { headers }
-      )
+    return this.http.get<{ status: string; data: JobDetails }>(endpoint, { headers })
       .pipe(
-        map(response => response.data),
-        catchError(this.handleError)
+        map(response => {
+          if (response.status === 'success' && response.data) { return response.data; }
+          throw new Error('Unexpected response structure when fetching a single job post');
+        }),
+        catchError(error => this.handleError(error, 'getJobPost'))
       );
   }
 
   /**
-   * Handles HTTP errors and formats error messages
-   * @param error HTTP error response
-   * @returns Observable with formatted error message
+   * Handles HTTP errors and formats error messages for user display.
+   * @param error The HTTP error response.
+   * @param operation The name of the operation that failed (for logging).
+   * @returns Observable that throws a formatted error.
    */
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred';
+  private handleError(error: HttpErrorResponse, operation: string = 'operation'): Observable<never> {
+    let errorMessage = `An unknown error occurred during ${operation}`;
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Client-side error: ${error.error.message}`;
+      errorMessage = `Client-side error in ${operation}: ${error.error.message}`;
     } else {
-      // Server-side error
-      if (error.status === 400) {
-        if (error.error?.status === 'error') {
-          // Handle Django validation errors or specific messages
-          errorMessage = error.error.message || 'Invalid request data';
-          if (error.error.errors) {
-            errorMessage = Object.keys(error.error.errors)
-              .map(key => `${key}: ${error.error.errors[key].join(', ')}`)
-              .join('; ');
-          }
+      const serverError = error.error;
+      if (serverError) {
+        if (serverError.status === 'error') {
+            if (serverError.message) {
+                errorMessage = serverError.message;
+            }
+            if (serverError.errors && typeof serverError.errors === 'object') {
+                const fieldErrors = Object.keys(serverError.errors)
+                .map(key => `${key}: ${Array.isArray(serverError.errors[key]) ? serverError.errors[key].join(', ') : serverError.errors[key]}`)
+                .join('; ');
+                if (fieldErrors) {
+                    errorMessage = fieldErrors;
+                } else if (!serverError.message) {
+                    errorMessage = `Validation errors occurred in ${operation}.`;
+                }
+            } else if (serverError.errors && typeof serverError.errors === 'string') {
+                errorMessage = serverError.errors;
+            } else if (!serverError.message && !serverError.errors) {
+                errorMessage = `An error occurred on the server during ${operation}.`;
+            }
+        } else if (serverError.detail) {
+            errorMessage = serverError.detail;
+        } else if (typeof serverError === 'string') {
+            errorMessage = serverError;
         } else {
-          errorMessage = 'Invalid request data';
+            errorMessage = `Server error ${error.status} in ${operation}: ${error.message || 'No specific message'}`;
         }
-      } else if (error.status === 401) {
-        errorMessage = 'Unauthorized: Please log in again';
-      } else if (error.status === 403) {
-        errorMessage = 'Forbidden: Invalid unique_id or unauthorized';
-      } else if (error.status === 404) {
-        errorMessage = 'Not found: Resource does not exist';
-      } else if (error.status === 500) {
-        errorMessage = `Server error: ${error.error?.message || 'Internal server error'}`;
       } else {
-        errorMessage = `Server error: ${error.status} - ${error.message}`;
+        errorMessage = `HTTP ${error.status} in ${operation}: ${error.statusText || error.message || 'Server error'}`;
       }
     }
 
-    // Log error for debugging
-    console.error(errorMessage, error);
+    console.error(`Operation: ${operation} failed. Status: ${error.status}. Message: ${errorMessage}. Full Error:`, error);
     return throwError(() => new Error(errorMessage));
   }
 }

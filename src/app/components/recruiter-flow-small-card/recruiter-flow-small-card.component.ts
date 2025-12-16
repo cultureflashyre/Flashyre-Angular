@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-flow-small-card',
-  templateUrl: 'recruiter-flow-small-card.component.html',
-  styleUrls: ['recruiter-flow-small-card.component.css'],
+    selector: 'recruiter-flow-small-card',
+    templateUrl: 'recruiter-flow-small-card.component.html',
+    styleUrls: ['recruiter-flow-small-card.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterFlowSmallCard {
   @ContentChild('text')

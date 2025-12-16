@@ -3,16 +3,16 @@
   class="profile-employment-component-container"
   [ngClass]="rootClassName"
   style="height: 424px; overflow-y: scroll; overflow-x: hidden;"
->
+  >
   <div
     id="profile-employment-container"
     #scrollContainer
     class="profile-employment-component-profile-employment-container"
-  >
+    >
     <span
       id="employment-header"
       class="profile-employment-component-employment-text"
-    >
+      >
       <ng-container>
         <ng-template #defaultText>
           <div class="profile-employment-component-fragment1">
@@ -26,175 +26,271 @@
     </span>
 
     <!-- Employment Positions List -->
-    <div *ngFor="let position of positions; let i = index" #positionBlock>
-      <div
-        id="job-title-company-name-container"
-        class="profile-employment-component-job-title-company-name-container"
-      >
+    @for (position of positions; track position; let i = $index) {
+      <div #positionBlock>
         <div
-          id="candidate-job-title"
-          class="profile-employment-component-job-title-container"
-        >
-          <span
-            id="employment-job-title-text"
-            class="profile-employment-component-job-title-text"
+          id="job-title-company-name-container"
+          class="profile-employment-component-job-title-company-name-container"
           >
-            <span class="profile-employment-component-text10">Job Title</span>
-            <br />
-          </span>
-          <input
-            type="text"
-            id="employment-job-title-input-{{i}}"
-            placeholder="Enter Job Title"
-            class="profile-employment-component-job-title-input input"
-            [(ngModel)]="position.jobTitle"
-            name="jobTitle-{{i}}"
-            required
-          />
-        </div>
-        <div
-          id="candidate-company-name-container"
-          class="profile-employment-component-company-name-container"
-        >
-          <span
-            id="employment-company-name"
-            class="profile-employment-component-company-name-text"
-          >
-            <span class="profile-employment-component-text12">Company Name</span>
-            <br />
-          </span>
-          <input
-            type="text"
-            id="employment-company-name-input-{{i}}"
-            placeholder="Enter Company Name"
-            class="profile-employment-component-company-name-input input"
-            [(ngModel)]="position.companyName"
-            name="companyName-{{i}}"
-            required
-          />
-        </div>
-      </div>
-
-      <div id="date-selector" class="profile-employment-component-date-selector">
-        <div
-          id="candidate-job-start-date-container"
-          class="profile-employment-component-start-date-container"
-        >
-          <span
-            id="employment-start-date-text"
-            class="profile-employment-component-start-date-text"
-          >
-            <ng-container>
-              <ng-template #defaultText111>
-                <div class="profile-employment-component-fragment6">
-                  <span class="profile-employment-component-text19">
-                    <span>Start Date</span>
-                    <br />
-                    <br />
-                  </span>
+          <div
+            id="candidate-job-title"
+            class="profile-employment-component-job-title-container"
+            >
+            <span
+              id="employment-job-title-text"
+              class="profile-employment-component-job-title-text"
+              >
+              <span class="profile-employment-component-text10">Job Title</span>
+              <br />
+            </span>
+            <input
+              type="text"
+              id="employment-job-title-input-{{i}}"
+              placeholder="Enter Job Title"
+              class="profile-employment-component-job-title-input input"
+              [(ngModel)]="position.jobTitle"
+              (input)="sanitizeAlphaNumeric($event, position, 'jobTitle')"
+              name="jobTitle-{{i}}"
+              #jobTitleModel="ngModel"
+              pattern="[a-zA-Z0-9 ]*"
+              required
+              />
+              @if (position.errors?.jobTitle) {
+                <div class="error-message">
+                  {{ position.errors.jobTitle }}
                 </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text111 ? text111 : defaultText111"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <input
-            type="date"
-            id="employment-start-date-input-{{i}}"
-            class="profile-employment-component-form1 input"
-            [(ngModel)]="position.startDate"
-            name="startDate-{{i}}"
-            [max]="getTodayDate()"
-            required
-          />
-        </div>
-        <div
-          id="candidate-job-end-date-container"
-          class="profile-employment-component-end-date-container"
-        >
-          <span
-            id="employment-end-date-text"
-            class="profile-employment-component-end-date-text"
-          >
-            <ng-container>
-              <ng-template #defaultText12>
-                <div class="profile-employment-component-fragment4">
-                  <span class="profile-employment-component-text17">
-                    End Date
-                  </span>
+              }
+              @if (jobTitleModel.touched && jobTitleModel.errors?.['pattern']) {
+                <div class="error-message">
+                  Only letters and numbers are allowed.
                 </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text12 ? text12 : defaultText12"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <input
-            type="date"
-            id="employment-end-date-input-{{i}}"
-            class="profile-employment-component-form2 input"
-            [(ngModel)]="position.endDate"
-            name="endDate-{{i}}"
-            [min]="position.startDate"
-            [max]="getTodayDate()"
-          />
-        </div>
-      </div>
+              }
+            </div>
+            <div
+              id="candidate-company-name-container"
+              class="profile-employment-component-company-name-container autocomplete-container"
+              >
+              <span
+                id="employment-company-name"
+                class="profile-employment-component-company-name-text"
+                >
+                <span class="profile-employment-component-text12">Company Name</span>
+                <br />
+              </span>
+              <input
+                type="text"
+                id="employment-company-name-input-{{i}}"
+                placeholder="Enter Company Name"
+                class="profile-employment-component-company-name-input input"
+                [(ngModel)]="position.companyName"
+                (input)="onCompanyInput($event, i)"
+                (click)="$event.stopPropagation()"
+                name="companyName-{{i}}"
+                #companyNameModel="ngModel"
+                required
+                />
+                <!-- START: NEW SUGGESTIONS LIST BLOCK -->
+                @if (showCompanySuggestions && activeCompanyInputIndex === i) {
+                  <div class="suggestions-list">
+                    @if (isLoadingCompanies) {
+                      <div class="suggestion-item">Loading...</div>
+                    }
+                    @for (suggestion of companySuggestions; track suggestion) {
+                      <div class="suggestion-item" (click)="selectCompanySuggestion(suggestion, i)">
+                        {{ suggestion.description }}
+                      </div>
+                    }
+                    @if (!isLoadingCompanies && companySuggestions.length === 0) {
+                      <div class="suggestion-item">
+                        No matches found.
+                      </div>
+                    }
+                  </div>
+                }
+                <!-- END: NEW SUGGESTIONS LIST BLOCK -->
+                @if (position.errors?.companyName) {
+                  <div class="error-message">
+                    {{ position.errors.companyName }}
+                  </div>
+                }
+                <!-- Note: The pattern validation might be removed if you want to allow company names with special characters from Google API -->
+                @if (companyNameModel.touched && companyNameModel.errors?.['pattern']) {
+                  <div class="error-message">
+                    Only letters and numbers are allowed.
+                  </div>
+                }
+              </div>
+            </div>
+            <div id="date-selector" class="profile-employment-component-date-selector">
+              <div
+                id="candidate-job-start-date-container"
+                class="profile-employment-component-start-date-container"
+                >
+                <span
+                  id="employment-start-date-text"
+                  class="profile-employment-component-start-date-text"
+                  >
+                  <ng-container>
+                    <ng-template #defaultText111>
+                      <div class="profile-employment-component-fragment6">
+                        <span class="profile-employment-component-text19">
+                          <span>Start Date</span>
+                          <br />
+                          <br />
+                        </span>
+                      </div>
+                    </ng-template>
+                    <ng-container
+                      *ngTemplateOutlet="text111 ? text111 : defaultText111"
+                    ></ng-container>
+                  </ng-container>
+                </span>
+                <input
+                  type="date"
+                  id="employment-start-date-input-{{i}}"
+                  class="profile-employment-component-form1 input"
+                  [(ngModel)]="position.startDate"
+                  (change)="onDateChange(i)"
+                  name="startDate-{{i}}"
+                  [max]="getTodayDate()"
+                  required
+                  />
+                  @if (position.errors?.startDate) {
+                    <div class="error-message">
+                      {{ position.errors.startDate }}
+                    </div>
+                  }
+                </div>
+                <div
+                  id="candidate-job-end-date-container"
+                  class="profile-employment-component-end-date-container"
+                  >
+                  <span
+                    id="employment-end-date-text"
+                    class="profile-employment-component-end-date-text"
+                    >
+                    <ng-container>
+                      <ng-template #defaultText12>
+                        <div class="profile-employment-component-fragment4">
+                          <span class="profile-employment-component-text17">
+                            End Date
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-container
+                        *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                      ></ng-container>
+                    </ng-container>
+                  </span>
+                  <input
+                    type="date"
+                    id="employment-end-date-input-{{i}}"
+                    class="profile-employment-component-form2 input"
+                    [(ngModel)]="position.endDate"
+                    (change)="onDateChange(i)"
+                    name="endDate-{{i}}"
+                    [min]="position.startDate"
+                    />
+                    @if (position.errors?.endDate) {
+                      <div class="error-message">
+                        {{ position.errors.endDate }}
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div
+                  id="candidate-Job-details-container"
+                  class="profile-employment-component-job-details-container"
+                  >
+                  <span
+                    id="employment-job-details-text"
+                    class="profile-employment-component-job-details-text"
+                    >
+                    Job Details
+                  </span>
+                  <textarea
+                    id="employment-job-detail-input-{{i}}"
+                    placeholder="Type here..."
+                    class="profile-employment-component-job-details-input input"
+                    [(ngModel)]="position.jobDetails"
+                    name="jobDetails-{{i}}"
+                    #jobDetailsModel="ngModel"
+                    pattern=".*[a-zA-Z]+.*"
+                    required
+                    rows="4"
+                  ></textarea>
+                  @if (position.errors?.jobDetails) {
+                    <div class="error-message">
+                      {{ position.errors.jobDetails }}
+                      @if (jobDetailsModel.errors?.['pattern']) {
+                        <div>Job details must include letters.</div>
+                      }
+                    </div>
+                  }
+                </div>
+                <!-- Remove Position Button (visible only if more than one position) -->
+                  <button
+                    type="button"
+                    (click)="promptRemovePosition(i)"
+                    class="profile-employment-component-remove-position button"
+                    >
+                    - Remove Position
+                  </button>
 
-      <div
-        id="candidate-Job-details-container"
-        class="profile-employment-component-job-details-container"
-      >
-        <span
-          id="employment-job-details-text"
-          class="profile-employment-component-job-details-text"
-        >
-          Job Details
-        </span>
-        <input
-          type="text"
-          id="employment-job-detail-input-{{i}}"
-          placeholder="Type here..."
-          class="profile-employment-component-job-details-input input"
-          [(ngModel)]="position.jobDetails"
-          name="jobDetails-{{i}}"
-          required
-        />
-      </div>
+                <!-- Add a horizontal line between positions, except after the last one -->
+                @if (i < positions.length - 1) {
+                  <hr class="position-divider" />
+                }
+              </div>
+            }
 
-      <!-- Remove Position Button (visible only if more than one position) -->
-      <button
-        *ngIf="positions.length > 1"
-        type="button"
-        (click)="removePosition(i)"
-        class="profile-employment-component-remove-position button"
-      >
-        - Remove Position
-      </button>
-
-      <!-- Add a horizontal line between positions, except after the last one -->
-      <hr *ngIf="i < positions.length - 1" class="position-divider" />
-    </div>
-
-    <!-- Add Position Button -->
-    <span
-      id="add-position-button"
-      class="profile-employment-component-addposition-text button"
-      (click)="addPosition()"
-    >
-      <ng-container>
-        <ng-template #defaultText7>
-          <div class="profile-employment-component-fragment3">
-            <span class="profile-employment-component-text16">
-              + Add Position
+            <!-- Add Position Button -->
+            <span
+              id="add-position-button"
+              class="profile-employment-component-addposition-text button"
+              (click)="addPosition()"
+              >
+              <ng-container>
+                <ng-template #defaultText7>
+                  <div class="profile-employment-component-fragment3">
+                    <span class="profile-employment-component-text16">
+                      + Add Position
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text7 ? text7 : defaultText7"
+                ></ng-container>
+              </ng-container>
             </span>
           </div>
-        </ng-template>
-        <ng-container
-          *ngTemplateOutlet="text7 ? text7 : defaultText7"
-        ></ng-container>
-      </ng-container>
-    </span>
-  </div>
-</div>
+
+          @if (showRemoveConfirmation) {
+            <app-alert-message
+              [message]="'Are you sure you want to remove this position?'"
+              [buttons]="['Cancel', 'Remove']"
+              (buttonClicked)="handleRemoveConfirmation($event)"
+              (close)="closeRemoveConfirmationModal()"
+            ></app-alert-message>
+          }
+
+          @if (showOverlapAlert) {
+            <app-alert-message
+              [message]="overlapMessage"
+              [buttons]="['Remove the last entered job', 'Continue editing the job']"
+              (buttonClicked)="handleOverlapAction($event)"
+              (close)="handleOverlapAction('close')"
+            ></app-alert-message>
+          }
+
+          @if (showShortTenureAlert) {
+            <app-alert-message
+              [message]="shortTenureMessage"
+              [buttons]="['Confirm Dates', 'Continue Editing']"
+              (buttonClicked)="handleShortTenureConfirmation($event)"
+              (close)="handleShortTenureConfirmation('close')"
+            ></app-alert-message>
+          }
+
+        </div>
+

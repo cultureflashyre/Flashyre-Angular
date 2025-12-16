@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'write-a-job-post-for-recruiter',
-  templateUrl: 'write-a-job-post-for-recruiter.component.html',
-  styleUrls: ['write-a-job-post-for-recruiter.component.css'],
+    selector: 'write-a-job-post-for-recruiter',
+    templateUrl: 'write-a-job-post-for-recruiter.component.html',
+    styleUrls: ['write-a-job-post-for-recruiter.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class WriteAJobPostForRecruiter {
   @Input()

@@ -1,11 +1,17 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-profile',
-  templateUrl: 'recruiter-profile.component.html',
-  styleUrls: ['recruiter-profile.component.css'],
+    selector: 'recruiter-profile',
+    templateUrl: 'recruiter-profile.component.html',
+    styleUrls: ['recruiter-profile.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
-export class RecruiterProfile {
+export class RecruiterProfile implements OnInit {
+  recruiterProfile: any = {};
+  defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
+
   @Input()
   imageSrc1: string =
     'https://s3-alpha-sig.figma.com/img/cb33/d035/72e938963245d419674c3c2e71065794?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=AWePlF-pHGfkDpvAxQkVOEKn6ei0wCQlVYu2oyaio65v32g8ylOmVbTs0muKAqz~iUBe-CPQTwUxEliMP5iFCiNMWlvaUDmnDaQ-9hL50Y2Rj~XfChKWsk1VhZQeHfMHDKP3KjN5DqeJBjU3k3Y3mOBUO9Fti0wsO9NNgpx1w4Kzu2hgpAP4Tf-EvspJzKotE8oB5AZzw1Qq6A~Vf6j1~AUW5vncBp6~E1xz7xUg0j59ZNm-wCSegvZWTPmBQ0fffJ95NegzQoPhltiUTwYrUPuIYjMEMcWOY3Poet~fqbTxf8bLNC1SRF3brHyO894K9GtoUm~V7HPmDgnR9J4qTg__'
@@ -25,4 +31,18 @@ export class RecruiterProfile {
   @ContentChild('text')
   text: TemplateRef<any>
   constructor() {}
+
+    ngOnInit(): void {
+  // Check if running in a browser environment before accessing localStorage
+  if (typeof window !== 'undefined' && window.localStorage) {
+    this.loadUserProfile();
+  }
+
+}
+
+  loadUserProfile(): void {
+    const profileData = localStorage.getItem('userProfile');
+    if (profileData) 
+      this.recruiterProfile = JSON.parse(profileData);
+  } 
 }

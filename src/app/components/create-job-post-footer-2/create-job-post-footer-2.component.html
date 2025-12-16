@@ -1,0 +1,57 @@
+<!-- src/app/components/create-job-post-footer-2/create-job-post-footer-2.component.html -->
+
+<div class="create-job-post-footer-2-container1" [ngClass]="rootClassName">
+  <div class="create-job-post-footer-2-container2">
+
+    <!-- 
+      ACTION: The complex <ng-container> and <ng-template> structure has been replaced
+      with a simple (click) event emitter.
+    -->
+    <button type="button" class="create-job-post-footer-2-button1 button" (click)="cancelClick.emit()">
+      <span class="create-job-post-footer-2-text10">
+        <!-- The button text is now a simple span -->
+        <span class="create-job-post-footer-2-text20">Cancel</span>
+      </span>
+    </button>
+
+    <div class="create-job-post-footer-2-container3">
+      <!-- Previous Button -->
+      <button type="button" class="create-job-post-footer-2-button2 button" (click)="previousClick.emit()">
+        <span class="create-job-post-footer-2-text11">
+          <span class="create-job-post-footer-2-text16">Previous</span>
+        </span>
+      </button>
+
+      <!-- Save Draft Button -->
+      <button type="button" class="create-job-post-footer-2-button3 button" (click)="saveDraftClick.emit()">
+        <span class="create-job-post-footer-2-text12">
+          <span class="create-job-post-footer-2-text21">Save Draft</span>
+        </span>
+      </button>
+
+      <!-- 
+        NOTE: The "Generate Assessment question" button (button4) has been removed 
+        as it was specific to a different workflow and is not handled by the current page's logic.
+      -->
+
+      <!-- Skip Button -->
+      <button type="button" class="create-job-post-footer-2-button5 button" (click)="skipClick.emit()">
+        <span class="create-job-post-footer-2-text14">
+          <span class="create-job-post-footer-2-text18">Skip</span>
+        </span>
+      </button>
+      
+      <!-- Next Button -->
+      <button
+        type="button"
+        class="create-job-post-footer-2-button6 button"
+        [disabled]="isNextDisabled"
+        (click)="nextClick.emit()"
+      >
+        <span class="create-job-post-footer-2-text15">
+          <span class="create-job-post-footer-2-text19">{{nextButtonText}}</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

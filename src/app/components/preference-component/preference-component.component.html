@@ -1,0 +1,280 @@
+<app-alert-message
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [buttons]="alertButtons"
+  (buttonClicked)="onAlertButtonClicked($event)"
+  (close)="showAlert = false">
+</app-alert-message>
+
+<div
+  id="preference-component"
+  class="preference-component-container10"
+  >
+  <div class="preference-component-container11">
+    <span class="preference-component-text10">
+      <ng-container>
+        <ng-template #defaultText1>
+          <div class="preference-component-fragment21">
+            <span class="preference-component-text35">Preference</span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text1 ? text1 : defaultText1"
+        ></ng-container>
+      </ng-container>
+    </span>
+    <div class="preference-component-container12">
+      <button
+        type="button"
+        class="preference-component-button button"
+        (click)="addNewPreference()"
+        [title]="remainingPreferences > 0 ? remainingPreferences + ' preferences remaining' : 'Maximum preferences reached'"
+        [disabled]="preferences.length >= 3"
+        [class.grey-out]="preferences.length >= 3">
+        <span class="preference-component-text11">
+          <ng-container>
+            <ng-template #defaultButton2>
+              <div class="preference-component-fragment12">
+                <span class="preference-component-text26">
+                  Add New Preference
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="button2 ? button2 : defaultButton2"
+            ></ng-container>
+          </ng-container>
+        </span>
+      </button>
+    </div>
+  </div>
+  <span class="preference-limit-message">
+    You can save up to <strong>3 preferences</strong> only.
+  </span>
+  @for (preference of preferences; track preference) {
+    <div class="preference-component-container13" [class.expanded]="preference.expanded" (click)="applyPreferenceToFilters(preference)" style="cursor: pointer;"
+      title="Click to load this preference into the filters">
+      <div class="preference-component-container14">
+        <div class="preference-component-container15">
+          <div class="preference-component-container16">
+            <div class="preference-component-container17">
+              <span class="preference-component-text12">
+                <ng-container>
+                  <ng-template #defaultText12>
+                    <div class="preference-component-fragment20">
+                      <span class="preference-component-text34">Job tittle</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text12 ? text12 : defaultText12"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <span class="preference-component-text13">
+                <ng-container>
+                  <ng-template #defaultText121>
+                    <div class="preference-component-fragment23">
+                      <span class="preference-component-text37">Location</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text121 ? text121 : defaultText121"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              <span class="preference-component-text14">
+                <ng-container>
+                  <ng-template #defaultText114>
+                    <div class="preference-component-fragment14">
+                      <span class="preference-component-text28">Experience</span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text114 ? text114 : defaultText114"
+                  ></ng-container>
+                </ng-container>
+              </span>
+              @if (preference.expanded) {
+                <span class="preference-component-text14">Work Mode</span>
+              }
+              <!-- <span *ngIf="preference.expanded" class="preference-component-text14">Department</span> -->
+            </div>
+            <div class="preference-component-container18">
+              <span class="preference-component-text15">
+                <!-- <ng-container>
+                <ng-template #defaultText2> -->
+                  <div class="preference-component-fragment22">
+                    <span class="preference-component-text36">
+                      {{ preference.role || 'N/A' }}
+                    </span>
+                  </div>
+                <!-- </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container> -->
+            </span>
+            <span class="preference-component-text16">
+              <!-- <ng-container>
+              <ng-template #defaultText21> -->
+                <div class="preference-component-fragment17">
+                  <span class="preference-component-text31">{{ preference.location || 'N/A' }}</span>
+                </div>
+              <!-- </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text21 ? text21 : defaultText21"
+              ></ng-container>
+            </ng-container> -->
+          </span>
+          <span class="preference-component-text17">
+            <!-- <ng-container>
+            <ng-template #defaultText211> -->
+              <div class="preference-component-fragment10">
+                <span class="preference-component-text24">{{ preference.experience_level || 'N/A' }}</span>
+              </div>
+            <!-- </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text211 ? text211 : defaultText211"
+            ></ng-container>
+          </ng-container> -->
+        </span>
+        <span class="preference-component-text17">
+          <div class="preference-component-fragment10">
+            @if (preference.expanded) {
+              <span class="more-filters-and-preference-component-text63">{{ preference.work_mode || 'N/A' }}</span>
+            }
+          </div>
+        </span>
+        <span class="preference-component-text17">
+          <div class="preference-component-fragment10">
+            <!-- <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text63">{{ preference.department || 'N/A' }}</span> -->
+          </div>
+        </span>
+      </div>
+    </div>
+    <div class="preference-component-container19">
+      <div class="preference-component-container20">
+        <span class="preference-component-text18">
+          <ng-container>
+            <ng-template #defaultText13>
+              <div class="preference-component-fragment18">
+                <span class="preference-component-text32">Date Posted</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text13 ? text13 : defaultText13"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span class="preference-component-text19">
+          <ng-container>
+            <ng-template #defaultText1211>
+              <div class="preference-component-fragment13">
+                <span class="preference-component-text27">
+                  Company name
+                </span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1211 ? text1211 : defaultText1211"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <span class="preference-component-text20">
+          <ng-container>
+            <ng-template #defaultText1113>
+              <div class="preference-component-fragment19">
+                <span class="preference-component-text33">Job Type</span>
+              </div>
+            </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1113 ? text1113 : defaultText1113"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <!-- <span *ngIf="preference.expanded" class="preference-component-text20">Industries</span> -->
+        @if (preference.expanded) {
+          <span class="preference-component-text20">Salary</span>
+        }
+      </div>
+      <div class="preference-component-container21">
+        <span class="preference-component-text21">
+          <!-- <ng-container>
+          <ng-template #defaultText22> -->
+            <div class="preference-component-fragment16">
+              <span class="preference-component-text30">{{ preference.date_posted || 'N/A' }}</span>
+            </div>
+          <!-- </ng-template>
+          <ng-container
+            *ngTemplateOutlet="text22 ? text22 : defaultText22"
+          ></ng-container>
+        </ng-container> -->
+      </span>
+      <span class="preference-component-text22">
+        <!-- <ng-container>
+        <ng-template #defaultText212> -->
+          <div class="preference-component-fragment15">
+            <span class="preference-component-text29">{{ preference.company_name || 'N/A' }}</span>
+          </div>
+        <!-- </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text212 ? text212 : defaultText212"
+        ></ng-container>
+      </ng-container> -->
+    </span>
+    <span class="preference-component-text23">
+      <!-- <ng-container>
+      <ng-template #defaultText2111> -->
+        <div class="preference-component-fragment11">
+          <span class="preference-component-text25">{{ preference.job_type || 'N/A' }}</span>
+        </div>
+      <!-- </ng-template>
+      <ng-container
+        *ngTemplateOutlet="text2111 ? text2111 : defaultText2111"
+      ></ng-container>
+    </ng-container> -->
+  </span>
+  <!-- <span class="preference-component-text23">
+  <div class="preference-component-fragment11">
+    <span *ngIf="preference.expanded" class="more-filters-and-preference-component-text67">{{ preference.industries || 'N/A' }}</span>
+  </div>
+</span> -->
+<span class="preference-component-text23">
+  <div class="preference-component-fragment11">
+    @if (preference.expanded) {
+      <span class="more-filters-and-preference-component-text67">{{ preference.salary || 'N/A' }}</span>
+    }
+  </div>
+</span>
+</div>
+</div>
+</div>
+<svg
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  class="preference-component-icon1"
+  (click)="deletePreference(preference.id); $event.stopPropagation()"
+  > 
+  <path
+    d="M7.616 20q-.672 0-1.144-.472T6 18.385V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.153T16.384 20zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.23 0 .423-.192t.192-.424zM9.808 17h1V8h-1zm3.384 0h1V8h-1zM7 6v13z"
+    fill="currentColor"
+  ></path>
+</svg>
+</div>
+<svg
+  width="16"
+  height="16"
+  viewBox="0 0 32 32"
+  class="preference-component-icon3"
+  (click)="toggleExpand(preference); $event.stopPropagation()"
+  [class.expanded]="preference.expanded"
+  >
+  <path
+    d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z"
+    fill="currentColor"
+  ></path>
+</svg>
+</div>
+}
+</div>

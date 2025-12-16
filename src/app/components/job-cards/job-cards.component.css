@@ -1,0 +1,288 @@
+:host { 
+  display: contents; 
+}
+ 
+.job-cards-container {
+  width: auto;
+  height: 880px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.job-cards-container:hover {
+  cursor: pointer;
+}
+ 
+.job-cards-job-cards-main-container {
+  flex: 0 0 auto;
+  width: 364px;
+  height: 880px;
+  display: flex;
+  align-self: center;
+  max-height: 900px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  border-width: 1px;
+  border-color: #D9D9D9;
+  border-right-width: 0px;
+}
+ 
+.job-cards-job-cards-first-container {
+  flex: 0 0 auto;
+  width: 364px;
+  height: auto;
+  display: flex;
+  padding: 16px;
+  transition: 0.3s;
+  align-items: flex-start;
+  border-color: #D9D9D9;
+  border-style: solid;
+  border-width: 1px;
+  flex-direction: column;
+  background-color: #F5F7F9;
+  border-right-width: 0px;
+  border-top-width: 0px;
+}
+ 
+.job-cards-job-cards-first-container:active {
+  background-color: #FFFFFF;
+}
+
+.job-cards-job-cards-first-container.clicked {
+  background-color: #FFFFFF;
+}
+ 
+.job-cards-job-card-job-details-container {
+  gap: 11px;
+  flex: 0 0 auto;
+  width: 332px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.job-cards-company-logo-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--dl-layout-radius-round);
+  flex-direction: row;
+}
+ 
+.job-cards-company-image {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+  background-color: #747474;
+}
+
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #7f8c8d; /* You may set this dynamically in TS */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  user-select: none;
+}
+ 
+.job-cards-role-company-location-main-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 280px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.job-cards-role-company-location-container {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 280px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.job-cards-job-role-text {
+  fill: #18191C;
+  color: #18191C;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.job-cards-company-name-text {
+  width: 100%;
+  height: auto;
+  fill: #18191C;
+  color: #18191C;
+  font-style: normal;
+  font-weight: 500;
+
+    /* --- Added styles for truncation --- */
+  white-space: nowrap;      /* Prevent the text from wrapping to a new line */
+  overflow: hidden;         /* Hide the content that overflows the max-width */
+  text-overflow: ellipsis;  /* Display "..." for the hidden text */
+  display: inline-block;    /* Required for text-overflow to work on a span */
+  vertical-align: middle;   /* Ensures proper vertical alignment with adjacent elements */
+}
+ 
+.job-cards-job-location-text {
+  fill: #6B6C6D;
+  color: #6B6C6D;
+}
+ 
+.job-cards-fragment1 {
+  display: contents;
+}
+ 
+.job-cards-text1 {
+  display: inline-block;
+}
+ 
+.job-cards-fragment2 {
+  width: 100%;
+  height: auto;
+  display: contents;
+}
+ 
+.job-cards-text2 {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  line-break: auto;
+}
+ 
+.job-cards-fragment3 {
+  display: contents;
+}
+ 
+.job-cards-text3 {
+  display: inline-block;
+}
+
+.job-cards-no-jobs {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+}
+ 
+
+ 
+@media(max-width: 1200px) {
+  .job-cards-job-cards-main-container {
+    align-self: center;
+    align-items: flex-start;
+  }
+  .job-cards-job-cards-first-container {
+    align-self: center;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .job-cards-job-cards-main-container {
+    width: 314px;
+    height: auto;
+  }
+  .job-cards-job-cards-first-container {
+    width: 321px;
+    height: auto;
+    padding: 12px;
+    align-self: flex-start;
+  }
+  .job-cards-job-card-job-details-container {
+    width: 297px;
+    height: auto;
+  }
+  .job-cards-company-logo-container {
+    width: 35px;
+    height: 35px;
+  }
+  .job-cards-company-image {
+    width: 35px;
+    height: 35px;
+  }
+  .job-cards-role-company-location-main-container {
+    width: auto;
+    height: auto;
+  }
+  .job-cards-role-company-location-container {
+    gap: 4px;
+    width: 100%;
+    height: auto;
+  }
+  .job-cards-job-role-text {
+    font-size: 14px;
+  }
+  .job-cards-company-name-text {
+    font-size: 14px;
+  }
+  .job-cards-job-location-text {
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .job-cards-job-cards-main-container {
+    width: 100%;
+  }
+  .job-cards-job-cards-first-container {
+    width: 100%;
+    padding: 8px;
+    align-self: flex-start;
+  }
+  .job-cards-job-card-job-details-container {
+    width: auto;
+  }
+  .job-cards-company-logo-container {
+    width: 25px;
+    height: 25px;
+  }
+  .job-cards-company-image {
+    width: 25px;
+    height: 25px;
+  }
+  .job-cards-role-company-location-container {
+    gap: 2;
+  }
+  .job-cards-job-role-text {
+    font-size: 12px;
+  }
+  .job-cards-company-name-text {
+    font-size: 12px;
+  }
+  .job-cards-job-location-text {
+    font-size: 12px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .job-cards-job-cards-main-container {
+    width: 100%;
+  }
+  .job-cards-job-cards-first-container {
+    width: 100%;
+    align-self: flex-start;
+  }
+  .job-cards-job-card-job-details-container {
+    gap: 8px;
+    width: 240px;
+  }
+}

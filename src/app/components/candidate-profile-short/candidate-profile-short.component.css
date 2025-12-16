@@ -16,7 +16,7 @@
   gap: var(--dl-space-space-oneandhalfunits);
   flex: 0 0 auto;
   width: 240px;
-  height: 322px;
+  height: auto;
   display: flex;
   align-items: center;
   padding-top: 24px;
@@ -34,12 +34,27 @@
   width: 104px;
   height: 104px;
 }
+
+.avatar-icon {
+  width: 104px;
+  height: 104px;
+  /*background-color: #6c757d;  or any preferred color */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
  
 .candidate-profile-short-candidate-details-container {
   gap: 3px;
   flex: 0 0 auto;
   width: 168px;
-  height: 75px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -47,7 +62,7 @@
 }
  
 .candidate-profile-short-container3 {
-  gap: 0;
+  gap: 8px;
   flex: 0 0 auto;
   display: flex;
   align-self: center;
@@ -75,7 +90,7 @@
   fill: #18191C;
   color: #18191C;
   width: 168px;
-  height: 48px;
+  height: auto;
   display: flex;
   align-self: center;
   text-align: center;
@@ -185,6 +200,11 @@
     width: 94px;
     height: 94px;
   }
+  .avatar-icon {
+  width: 94px;
+  height: 94px;
+  font-size: 20px;
+  }
   .candidate-profile-short-name-of-the-candidate {
     font-size: 14px;
   }
@@ -222,6 +242,11 @@
   .candidate-profile-short-candidate-image {
     width: 74px;
     height: 74px;
+  }
+  .avatar-icon {
+  width: 74px;
+  height: 74px;
+  font-size: 18px;
   }
   .candidate-profile-short-name-of-the-candidate {
     font-size: 12px;

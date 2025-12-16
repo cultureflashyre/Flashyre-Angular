@@ -5,8 +5,10 @@
 .navbar-for-candidate-view-container10 {
   width: 100%;
   display: flex;
-  position: relative;
+  position: fixed;
   justify-content: center;
+  z-index: 1000;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
 }
  
 .navbar-for-candidate-view-container11 {
@@ -167,6 +169,18 @@
   align-self: flex-start;
   object-fit: cover;
   border-radius: var(--dl-radius-radius-round);
+}
+
+.avatar-icon {
+  /*background-color: #6c757d;  or any preferred color */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
 }
  
 .navbar-for-candidate-view-dropdown-arrow {
@@ -722,7 +736,7 @@
 }
  
 .navbar-for-candidate-viewroot-class-name1 {
-  width: auto;
+  width: 100%;
   z-index: 1000;
   position: fixed;
   align-self: stretch;

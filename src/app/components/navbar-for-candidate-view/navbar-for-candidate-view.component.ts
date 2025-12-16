@@ -1,16 +1,27 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
-import { AuthService } from '../../services/candidate.service'; // Import AuthService
+import { AuthService } from '../../services/candidate.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router'; // Import AuthService
+import { DangerousHtmlComponent } from '../dangerous-html/dangerous-html.component';
 
 @Component({
-  selector: 'navbar-for-candidate-view',
-  templateUrl: 'navbar-for-candidate-view.component.html',
-  styleUrls: ['navbar-for-candidate-view.component.css'],
+    selector: 'navbar-for-candidate-view',
+    templateUrl: 'navbar-for-candidate-view.component.html',
+    styleUrls: ['navbar-for-candidate-view.component.css'],
+    standalone: true,
+    imports: [
+        NgClass,
+        DangerousHtmlComponent,
+        RouterLink,
+        NgTemplateOutlet,
+    ],
 })
 export class NavbarForCandidateView {
 
   userProfile: any = {};
   defaultProfilePicture: string = "/assets/placeholders/profile-placeholder.jpg";
-  
+  public avatarBgColor: string = '#6c757d'; // default fallback color
+
   @Input()
   rootClassName: string = ''
   @ContentChild('text11')
@@ -72,6 +83,8 @@ export class NavbarForCandidateView {
   text6: TemplateRef<any>
   @Input()
   link2Url: string = ''
+  @Input() 
+  homeLink: TemplateRef<any>
   
   constructor(
     private authService: AuthService,
@@ -86,12 +99,32 @@ export class NavbarForCandidateView {
     this.loadUserProfile();
   }
 
+  getColorFromString(str: string): string {
+    const colors = [
+      '#1abc9c', '#3498db', '#9b59b6', '#e67e22', '#e74c3c',
+      '#2ecc71', '#34495e', '#16a085', '#27ae60', '#2980b9',
+      '#8e44ad', '#d35400', '#c0392b', '#7f8c8d'
+    ];
+
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  }
+
   loadUserProfile(): void {
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       this.userProfile = JSON.parse(profileData);
+      if (this.userProfile.initials) {
+        this.avatarBgColor = this.getColorFromString(this.userProfile.initials);
+      }
     } else {
       console.log("User Profile NOT fetched");
     }
   }
+  
 }

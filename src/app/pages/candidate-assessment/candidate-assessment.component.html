@@ -25,7 +25,7 @@
     </ng-template>
     <ng-template #text1>
       <div class="candidate-assessment-fragment14">
-        <span class="candidate-assessment-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-assessment-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -52,7 +52,7 @@
     </ng-template>
     <ng-template #text6>
       <div class="candidate-assessment-fragment19">
-        <span class="candidate-assessment-text109">View & edit profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-assessment-text109">View & edit profile</span>
       </div>
     </ng-template>
     <ng-template #text7>
@@ -95,7 +95,7 @@
         <span class="candidate-assessment-text117">Logout</span>
       </div>
     </ng-template>
-  </navbar-for-candidate-view>
+      </navbar-for-candidate-view>
       <div id="details-container" class="candidate-assessment-details-container">
         <div id="main-container" class="candidate-assessment-main-container">
           <div
@@ -103,13 +103,23 @@
             class="candidate-assessment-profile-container"
           >
             <candidate-profile-short [placeholderImageAlt]="'Image of ' + candidateName">
-  <ng-template #text>
-    <span>{{ candidateName }}</span>
-  </ng-template>
-  <ng-template #text1>
-    <span>{{ candidateJobRole }}</span>
-  </ng-template>
-</candidate-profile-short>
+              <ng-template #text>
+                <span>{{ candidateName }}</span>
+              </ng-template>
+              <ng-template #text1>
+                <span 
+                    class="profile-info-line" 
+                    [title]="userProfile.latest_job_title 
+                      ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                      : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--')">
+                        {{ userProfile.latest_job_title 
+                          ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                          : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
+                </span>
+              </ng-template>
+            </candidate-profile-short>
+
+            <!--
             <candidate-profile-score
               rootClassName="candidate-profile-scoreroot-class-name2"
             >
@@ -121,6 +131,8 @@
                 </div>
               </ng-template>
             </candidate-profile-score>
+            
+
             <recruiter-job-posted1
               rootClassName="recruiter-job-posted1root-class-name13"
             >
@@ -135,69 +147,131 @@
                 </div>
               </ng-template>
             </recruiter-job-posted1>
+            -->
+            
           </div>
           <div
             id="assessment-available-main-container"
             class="candidate-assessment-assessment-available-main-container"
           >
+          <div class="Name-search-container">
             <span
               id="assessment-available-text"
               class="candidate-assessment-assessment-available-text"
             >
               Assessments Available
             </span>
-            <div
-  id="assessments-main-container"
-  class="candidate-assessment-assessments-main-container"
->
-  <!-- Loop through assessments dynamically -->
-  <div
-    *ngFor="let assessment of assessments"
-    id="assessment-article-card1-container"
-    class="candidate-assessment-assessment-article-card1-container"
-  >
-    <div
-      id="company-icon-container"
-      class="candidate-assessment-company-icon-container"
-    >
-      <img
-        [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
-        alt="Assessment Logo"
-        id="company-image"
-        class="candidate-assessment-company-image"
-      />
+            <div id="job-title-container" class="candidate-assessment-search-container input">
+    <input 
+      type="text" 
+      placeholder="Search assessments..." 
+      [(ngModel)]="searchQuery" 
+      class="candidate-assessment-search-input" 
+    />
+    <div id="search-icon-container" class="candidate-assessment-search-icon-container">
+      <svg width="24" height="24" viewBox="0 0 24 24" class="candidate-assessment-search-icon">
+        <g fill="none" fill-rule="evenodd">
+          <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>
+          <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>
+        </g>
+      </svg>
     </div>
-    <div
-      id="assessment-description1-container"
-      class="candidate-assessment-assessment-description1-container"
-    >
-      <span
-        id="assessment1-name-container"
-        class="candidate-assessment-assessment1-name-container"
-      >
-        {{ assessment.assessment_title }}
-      </span>
-      <span
-        id="assessment1-description"
-        class="candidate-assessment-assessment1-description"
-      >
-        <span class="candidate-assessment-text6">
-          {{ assessment.assessment_description }}
-        </span>
-      </span>
-    </div>
-    <button
-      type="button"
-      id="lets-go1-button"
-      class="candidate-assessment-lets-go1-button button"
-      (click)="startAssessment(assessment.assessment_id)"
-    >
-      Let's Go
-    </button>
   </div>
-</div>
+  </div>
+            <div *ngIf="isLoading$ | async" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading assessments...</p>
+  </div>
+
+  <!-- EDIT 2: WRAPPED EXISTING CONTENT -->
+  <!-- This container hides the assessment list while loading is in progress. -->
+  <div *ngIf="!(isLoading$ | async)">
+    <!-- All the original logic below this line remains unchanged. -->
+    <div
+    *ngIf="assessments$ | async as assessments; else loadingOrError"
+    >
+            <div
+              *ngIf="assessments.length > 0; else noAssessmentsTemplate"
+              id="assessments-main-container"
+              class="candidate-assessment-assessments-main-container"
+            >
+              <!-- Loop through assessments dynamically -->
+              <div
+                *ngFor="let assessment of getFilteredAssessments(); let i = index"
+                id="assessment-article-card1-container"
+                class="candidate-assessment-assessment-article-card1-container"
+              >
+                <div
+                  id="company-icon-container"
+                  class="candidate-assessment-company-icon-container"
+                >
+                  <img
+                    [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
+                    alt="Assessment Logo"
+                    id="company-image"
+                    class="candidate-assessment-company-image"
+                  />
+                </div>
+                <div
+                  id="assessment-description1-container"
+                  class="candidate-assessment-assessment-description1-container"
+                >
+                  <span
+                    id="assessment1-name-container"
+                    class="candidate-assessment-assessment1-name-container"
+                  >
+                    {{ assessment.assessment_title }}
+                  </span>
+                  <span
+                    #descriptionElement
+                    id="assessment1-description"
+                    class="candidate-assessment-assessment1-description"
+                    [ngClass]="{'expanded': assessment.isExpanded, 'scrollable': assessment.isScrollable}"
+                  >
+                    <span class="candidate-assessment-text6">
+                      {{ assessment.assessment_description }}
+                    </span>
+                  </span>
+                  <button
+                    *ngIf="!assessment.isExpanded && assessment.showReadMore"
+                    class="candidate-assessment-read-more-button"
+                    (click)="expandDescription(assessment, i)"
+                  >
+                    Read More
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  id="lets-go1-button"
+                  class="candidate-assessment-lets-go1-button button"
+                  (click)="startAssessment(assessment)"
+                  [disabled]="assessment.attempts_remaining === 0"
+                  [title]="assessment.attempts_remaining === 0 ? 'Attempts remaining: 0' : 'Start assessment'"
+                >
+                  Let's Go
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 
+  Template #1: This will be displayed if the 'assessments$' observable has not yet emitted
+  data or has thrown an error. Because we have a dedicated spinner, we can leave this empty.
+-->
+<ng-template #loadingOrError>
+  <!-- Spinner is handled globally above, so this can remain empty or contain a placeholder skeleton UI -->
+</ng-template>
+
+<!-- 
+  Template #2: This template is shown by the inner *ngIf when the 'assessments' array
+  has loaded but is empty.
+-->
+<ng-template #noAssessmentsTemplate>
+  <div class="no-assessments-container">
+    <p class="no-assessments-text">No assessments are available at this time.</p>
+  </div>
+</ng-template>

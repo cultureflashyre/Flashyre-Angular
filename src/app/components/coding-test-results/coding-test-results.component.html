@@ -1,0 +1,59 @@
+<!-- an-assessment/src/app/coding-test-results/coding-test-results.component.html -->
+
+<!-- MODIFICATION: REMOVED *ngIf="isVisible" from this root div -->
+<div class="results-container" [ngClass]="{ minimized: isMinimized }">
+  <div class="header">
+    <div class="results-title">Test Results</div>
+    <button class="btn" (click)="toggleMinimize()">{{ isMinimized ? 'Maximize' : 'Minimize' }}</button>
+    <button class="btn" (click)="toggleVisibility()">Hide</button>
+  </div>
+  @if (!isMinimized) {
+    <div class="results-content">
+      <!-- The rest of this file remains the same -->
+      @if (results.length === 0) {
+        <div class="empty-results">
+          No results available. Run your code to see test case results.
+        </div>
+      }
+      @for (result of results; track result; let i = $index) {
+        <div>
+          @if (result.includes('Accepted')) {
+            <div class="test-case passed">
+              <div class="status-icon passed">✓</div>
+              <div>{{ result }}</div>
+            </div>
+          }
+          @if (result.includes('Code submitted successfully')) {
+            <div class="submission-success">
+              <div class="status-icon passed">✓</div>
+              <div>{{ result }}</div>
+            </div>
+          }
+          @if (result.includes('Wrong Answer') || result.includes('Compilation Error') || result.includes('Runtime Error') || result.includes('Time Limit Exceeded')) {
+            <div class="test-case failed">
+              <div class="status-icon failed">✗</div>
+              <div>{{ result }}</div>
+            </div>
+          }
+          @if (result.includes('Language Mismatch')) {
+            <div class="test-case language-mismatch">
+              <div class="status-icon failed">⚠</div>
+              <div>{{ result }}</div>
+            </div>
+          }
+          @if (result.includes('Judge0 API Error') || result.includes('Network Error') || result.includes('Submission Failed') || result.includes('User does not exist') || result.includes('endpoint not found')) {
+            <div class="error-message">
+              <div class="status-icon failed">⚠</div>
+              <div>{{ result }}</div>
+            </div>
+          }
+          @if (!result.includes('Accepted') && !result.includes('Wrong Answer') && !result.includes('Compilation Error') && !result.includes('Runtime Error') && !result.includes('Time Limit Exceeded') && !result.includes('Language Mismatch') && !result.includes('Judge0 API Error') && !result.includes('Network Error') && !result.includes('Submission Failed') && !result.includes('User does not exist') && !result.includes('endpoint not found') && !result.includes('Code submitted successfully')) {
+            <div class="error-message">                <div class="status-icon failed">⚠</div>
+            <div>{{ result }}</div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+</div>

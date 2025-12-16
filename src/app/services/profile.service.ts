@@ -37,6 +37,8 @@ export class ProfileService {
   // Save profile information with file uploads
 saveProfile(profileData: FormData): Observable<any> {
     const url = `${this.baseUrl}save-profile-basic-info/`;
+    console.log("Sending basic info data: ", profileData);
+    console.log("To URL: ", url);
 
     this.spinner.show();
 

@@ -1,24 +1,554 @@
-import { Component } from '@angular/core'
-import { Title, Meta } from '@angular/platform-browser'
+// candidate-job-detail-view.component.ts
+
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
+import { JobsService } from '../../services/job.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { MoreFiltersAndPreferenceComponent } from 'src/app/components/more-filters-and-preference-component/more-filters-and-preference-component.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { JobCardsComponent } from 'src/app/components/job-cards/job-cards.component';
+import { CandidateJobDetailsComponent } from 'src/app/components/candidate-job-details/candidate-job-details.component';
+import { AuthService } from 'src/app/services/candidate.service';
+
 
 @Component({
   selector: 'candidate-job-detail-view',
-  templateUrl: 'candidate-job-detail-view.component.html',
-  styleUrls: ['candidate-job-detail-view.component.css'],
+      standalone: true,
+    imports: [ RouterModule, FormsModule, CommonModule,
+    MoreFiltersAndPreferenceComponent, AlertMessageComponent, 
+    NavbarForCandidateView, JobCardsComponent, 
+    CandidateJobDetailsComponent,
+    ],
+  templateUrl: './candidate-job-detail-view.component.html',
+  styleUrls: ['./candidate-job-detail-view.component.css'],
+  // Animation for the filter popup
+  animations: [
+    trigger('popupAnimation', [
+      state('void', style({
+        opacity: 0,
+        transform: 'scale(0.3) translateY(-10px)',
+      })),
+      transition(':enter', [
+        animate('300ms ease-out', keyframes([
+          style({ opacity: 0, transform: 'scale(0.3) translateY(-10px)', offset: 0 }),
+          style({ opacity: 0.5, transform: 'scale(0.8) translateY(0px)', offset: 0.3 }),
+          style({ opacity: 1, transform: 'scale(1) translateY(0px)', offset: 1 }),
+        ]))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({
+          opacity: 0,
+          transform: 'scale(0.8) translateY(-10px)',
+        }))
+      ])
+    ])
+  ]
 })
-export class CandidateJobDetailView {
-  constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Candidate-Job-Detail-View - Flashyre')
+export class CandidateJobDetailView implements OnInit, OnDestroy {
+  selectedJobId: number | null = null;
+  selectedJob: any | null = null;
+  public activeTab: 'recommended' | 'saved' | 'applied' = 'recommended';
+
+  isLoading: boolean = true;
+  errorMessage: string | null = null;
+
+  // Master lists for each category (unfiltered data)
+  private masterRecommendedJobs: any[] = [];
+  private masterSavedJobs: any[] = [];
+  private masterAppliedJobs: any[] = [];
+
+  // Filtered lists for each category
+  private filteredRecommendedJobs: any[] = [];
+  private filteredSavedJobs: any[] = [];
+  private filteredAppliedJobs: any[] = [];
+
+  // This list is bound to the job-cards component
+  public jobsToDisplay: any[] = [];
+
+  public allAssessments: any[] = [];
+
+  // Properties for Filtering and Preferences
+  private destroy$ = new Subject<void>();
+
+  // Main search bar models
+  searchJobTitle: string = '';
+  searchLocation: string = '';
+  searchExperience: string = '';
+
+  // "More Filters" popup models
+  searchDatePosted: string = '';
+  searchExperienceLevel: string = '';
+  searchSalary: string = '';
+  searchCompanyName: string = '';
+  searchWorkMode: string = '';
+  searchJobType: string = '';
+  searchRole: string = '';
+
+  // UI State for popup
+  showMoreFilters: boolean = false;
+  public initialFilterTab: 'filters' | 'preferences' = 'filters';
+  noMatchesFound: boolean = false;
+
+  @ViewChild('filterIcon', { static: false }) filterIcon!: ElementRef;
+  filterPosition = { top: 0, left: 0 };
+
+  showAssessmentAlert = false;
+  assessmentAlertMessage = '';
+  assessmentAlertButtons: string[] = [];
+
+  constructor(
+    private title: Title,
+    private meta: Meta,
+    private route: ActivatedRoute,
+    private jobService: JobsService,
+    private router: Router,
+    private authService: AuthService,
+  ) {
+    this.title.setTitle('Candidate-Job-Detail-View - Flashyre');
     this.meta.addTags([
       {
         property: 'og:title',
         content: 'Candidate-Job-Detail-View - Flashyre',
       },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
+    ]);
+  }
+
+  ngOnInit(): void {
+    this.fetchAllJobs();
+  }
+
+  // Lifecycle hook for popup positioning
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.updateFilterPosition();
+    }, 100);
+  }
+
+  // HostListeners for popup positioning
+  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:resize', ['$event'])
+  onWindowScrollOrResize(): void {
+    if (this.showMoreFilters) {
+      this.updateFilterPosition();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Core Filtering Logic
+  updateFilterPosition(): void {
+    if (this.filterIcon && this.filterIcon.nativeElement) {
+      const rect = this.filterIcon.nativeElement.getBoundingClientRect();
+      this.filterPosition = {
+        top: rect.bottom + window.scrollY + 10,
+        left: rect.left + window.scrollX + (rect.width / 2) - 450
+      };
+    }
+  }
+
+  openFiltersPopup(initialTab: 'filters' | 'preferences'): void {
+    this.initialFilterTab = initialTab;
+    this.showMoreFilters = true;
+    this.updateFilterPosition();
+  }
+
+  private resetMoreFilters(): void {
+    this.searchDatePosted = '';
+    this.searchExperienceLevel = '';
+    this.searchSalary = '';
+    this.searchCompanyName = '';
+    this.searchWorkMode = '';
+    this.searchJobType = '';
+    this.searchRole = '';
+  }
+
+  onSearch(): void {
+    this.resetMoreFilters();
+    this.runFilterPipeline();
+  }
+
+  onApplyFilters(filters: any): void {
+    this.searchDatePosted = filters.datePosted;
+    this.searchExperienceLevel = filters.experienceLevel;
+    this.searchSalary = filters.salary;
+    this.searchLocation = filters.location || this.searchLocation;
+    this.searchCompanyName = filters.companyName;
+    this.searchWorkMode = filters.workMode;
+    this.searchJobType = filters.jobType;
+    this.searchRole = filters.role;
+    
+    this.showMoreFilters = false;
+    this.runFilterPipeline();
+  }
+
+  private parseFirstNumber(input: string): number | null {
+    if (!input || typeof input !== 'string') return null;
+    const match = input.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
+  }
+
+  private runFilterPipeline(): void {
+    let sourceList: any[] = [];
+    
+    // Determine which master list to filter
+    switch(this.activeTab) {
+      case 'recommended': sourceList = this.masterRecommendedJobs; break;
+      case 'saved': sourceList = this.masterSavedJobs; break;
+      case 'applied': sourceList = this.masterAppliedJobs; break;
+    }
+    
+    let tempJobs = [...sourceList];
+
+    // Main search bar filters
+    const mainKeyword = this.searchJobTitle.toLowerCase().trim();
+    if (mainKeyword) {
+      tempJobs = tempJobs.filter(job => 
+        (job.title || '').toLowerCase().includes(mainKeyword) ||
+        (job.description || '').toLowerCase().includes(mainKeyword) ||
+        (job.company_name || '').toLowerCase().includes(mainKeyword)
+      );
+    }
+
+    const mainLocation = this.searchLocation.toLowerCase().trim();
+    if (mainLocation) {
+      tempJobs = tempJobs.filter(job => (job.location || '').toLowerCase().includes(mainLocation));
+    }
+
+    const mainExperience = this.parseFirstNumber(this.searchExperience);
+    if (mainExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            mainExperience >= j.total_experience_min &&
+            mainExperience <= j.total_experience_max
+        );
+    }
+
+    // "More Filters" popup filters
+    if (this.searchDatePosted) {
+      const now = new Date();
+      let cutoffDate = new Date();
+      if (this.searchDatePosted === '24h') cutoffDate.setDate(now.getDate() - 1);
+      else if (this.searchDatePosted === 'week') cutoffDate.setDate(now.getDate() - 7);
+      else if (this.searchDatePosted === 'month') cutoffDate.setMonth(now.getMonth() - 1);
+      tempJobs = tempJobs.filter(job => job.created_at && new Date(job.created_at) >= cutoffDate);
+    }
+    
+    const popupExperience = this.parseFirstNumber(this.searchExperienceLevel);
+    if (popupExperience !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.total_experience_min != null && j.total_experience_max != null &&
+            popupExperience >= j.total_experience_min &&
+            popupExperience <= j.total_experience_max
+        );
+    }
+
+    if (this.searchCompanyName && this.searchCompanyName.trim()) {
+        const searchCompany = this.searchCompanyName.toLowerCase().trim();
+        tempJobs = tempJobs.filter(j => (j.company_name || '').toLowerCase().includes(searchCompany));
+    }
+    
+    const searchSal = this.parseFirstNumber(this.searchSalary);
+    if (searchSal !== null) {
+        tempJobs = tempJobs.filter(j => 
+            j.min_budget != null && j.max_budget != null &&
+            searchSal >= j.min_budget && searchSal <= j.max_budget
+        );
+    }
+
+    if (this.searchWorkMode) {
+        tempJobs = tempJobs.filter(j => (j.workplace_type || '').toLowerCase() === this.searchWorkMode.toLowerCase());
+    }
+
+    if (this.searchJobType) {
+      tempJobs = tempJobs.filter(j => (j.job_type || '').toLowerCase() === this.searchJobType.toLowerCase());
+    }
+
+    if (this.searchRole && this.searchRole.trim()) {
+      const searchRol = this.searchRole.toLowerCase().trim();
+      tempJobs = tempJobs.filter(j => (j.title || '').toLowerCase().includes(searchRol));
+    }
+    
+    // Update the correct filtered list
+    switch(this.activeTab) {
+      case 'recommended': this.filteredRecommendedJobs = tempJobs; break;
+      case 'saved': this.filteredSavedJobs = tempJobs; break;
+      case 'applied': this.filteredAppliedJobs = tempJobs; break;
+    }
+    
+    const activeFilter = this.searchJobTitle || this.searchLocation || this.searchExperience || this.searchDatePosted || this.searchExperienceLevel || this.searchSalary || this.searchCompanyName || this.searchWorkMode || this.searchRole || this.searchJobType;
+    this.noMatchesFound = tempJobs.length === 0 && !!activeFilter;
+
+    // Refresh the jobs displayed in the UI
+    this.updateJobsToDisplay();
+  }
+
+  private fetchAllJobs(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      this.errorMessage = "User not found. Please log in again.";
+      this.isLoading = false;
+      this.masterRecommendedJobs = this.filteredRecommendedJobs = [];
+      this.masterSavedJobs = this.filteredSavedJobs = [];
+      this.masterAppliedJobs = this.filteredAppliedJobs = [];
+      this.updateJobsToDisplay();
+      return;
+    }
+
+    forkJoin({
+      recommended: this.jobService.fetchJobs(),
+      saved: this.jobService.fetchSavedJobs(userId),
+      applied: this.jobService.fetchAppliedJobDetails(),
+      assessments: this.jobService.fetchAssessments(),
+      disliked: this.authService.getDislikedJobs(userId) // New API call from JobService
+    }).subscribe({
+      next: (results) => {
+        this.allAssessments = results.assessments;
+
+        // Create Sets for efficient filtering.
+        const dislikedJobIds = new Set(results.disliked.disliked_jobs || []);
+        const savedJobIds = new Set(results.saved.map(j => j.job_id));
+        const appliedJobIds = new Set(results.applied.map(j => j.job_id));
+
+        // 1. Filter Recommended Jobs: Must not be disliked, saved, or applied.
+        const filteredRecommended = results.recommended.filter(job =>
+          !dislikedJobIds.has(job.job_id) &&
+          !savedJobIds.has(job.job_id) &&
+          !appliedJobIds.has(job.job_id)
+        );
+
+        // 2. Filter Saved Jobs: Must not be disliked.
+        const filteredSaved = results.saved.filter(job => !dislikedJobIds.has(job.job_id));
+
+        // 3. Filter Applied Jobs: Must not be disliked.
+        const filteredApplied = results.applied.filter(job => !dislikedJobIds.has(job.job_id));
+
+        // Sort the filtered lists
+        filteredRecommended.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        filteredSaved.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
+        filteredApplied.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+
+        // Populate master lists with the correctly filtered and sorted data.
+        this.masterRecommendedJobs = this.filteredRecommendedJobs = filteredRecommended;
+        this.masterSavedJobs = this.filteredSavedJobs = filteredSaved;
+        this.masterAppliedJobs = this.filteredAppliedJobs = filteredApplied;
+        
+        console.log('All jobs fetched, filtered by dislike status, and sorted successfully.');
+
+        this.runFilterPipeline();
+        this.isLoading = false;
       },
-    ])
+      error: (err) => {
+        console.error('Failed to fetch all jobs:', err);
+        this.errorMessage = 'Failed to load job data. Please try again later.';
+        this.isLoading = false;
+        // Reset all lists on error
+        this.masterRecommendedJobs = this.filteredRecommendedJobs = [];
+        this.masterSavedJobs = this.filteredSavedJobs = [];
+        this.masterAppliedJobs = this.filteredAppliedJobs = [];
+        this.updateJobsToDisplay();
+      }
+    });
+    // --- MODIFICATION END ---
+  }
+
+  private setInitialJobSelection(): void {
+  const jobIdFromUrl = this.route.snapshot.queryParams['jobId'];
+  
+  if (jobIdFromUrl) {
+    const numericJobId = parseInt(jobIdFromUrl, 10);
+    // CORRECTED: 'jobFromUrl' is correctly defined and used here
+    const jobFromUrl = this.jobsToDisplay.find(job => job.job_id === numericJobId);
+    
+    if (jobFromUrl) {
+      this.selectedJobId = numericJobId;
+      this.selectedJob = jobFromUrl;
+      return;
+    }
+  }
+  
+  if (this.jobsToDisplay.length > 0) {
+    this.selectedJobId = this.jobsToDisplay[0].job_id;
+    this.selectedJob = this.jobsToDisplay[0];
+  } else {
+    this.selectedJobId = null;
+    this.selectedJob = null;
+  }
+}
+
+  // Updates the displayed jobs based on the active tab's filtered list
+  private updateJobsToDisplay(): void {
+    this.selectedJobId = null; 
+    switch (this.activeTab) {
+      case 'recommended':
+        this.jobsToDisplay = [...this.filteredRecommendedJobs]; 
+        break;
+      case 'saved':
+        this.jobsToDisplay = [...this.filteredSavedJobs];
+        break;
+      case 'applied':
+        this.jobsToDisplay = [...this.filteredAppliedJobs];
+        break;
+    }
+    this.setInitialJobSelection();
+  }
+
+  // Runs filter pipeline on tab change
+  private selectTab(tab: 'recommended' | 'saved' | 'applied'): void {
+    if (this.activeTab !== tab) {
+      console.log(`Switching to ${tab} tab`);
+      this.activeTab = tab;
+      this.runFilterPipeline(); // This will filter the new source and update jobsToDisplay
+    }
+  }
+
+  selectRecommendedTab(): void { this.selectTab('recommended'); }
+  selectSavedTab(): void { this.selectTab('saved'); }
+  selectAppliedTab(): void { this.selectTab('applied'); }
+
+  /**
+   * MODIFIED: This method now also checks if the successfully applied job
+   * has an assessment and triggers the prompt if necessary.
+   */
+  onJobApplied(appliedJob: any): void {
+    // Add an application date to the job object for immediate sorting
+    appliedJob.applied_at = new Date().toISOString();
+
+    // The existing logic to move the job between lists remains the same
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== appliedJob.job_id);
+    this.masterAppliedJobs.unshift(appliedJob);
+    this.masterAppliedJobs.sort((a, b) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime());
+    
+    this.runFilterPipeline();
+
+    // --- [NEW LOGIC] After handling the UI lists, check for the assessment ---
+    if (appliedJob.assessment != null && (appliedJob.attempts_remaining || 0) > 0) {
+      this.assessmentAlertMessage = 'You have successfully applied! Take the assessment now to complete your application.';
+      this.assessmentAlertButtons = ['Later', 'Assessment Now'];
+      this.showAssessmentAlert = true;
+    }
+  }
+
+
+  /**
+   * Navigates to the assessment rules page with the full assessment object.
+   * It looks up the assessment details from the `allAssessments` list.
+   * @param assessmentId The ID of the assessment to navigate to.
+   */
+  navigateToAssessment(assessmentId: number): void {
+    // 1. Find the full assessment object from the master list stored in this component.
+    const selectedAssessment = this.allAssessments.find(a => a.assessment_id === assessmentId);
+
+    // 2. Check if the assessment was found.
+    if (!selectedAssessment) {
+      console.error("Assessment details not found for id:", assessmentId);
+      // Optionally, show an alert to the user.
+      alert("Could not start the assessment. Details not found. Please try again later.");
+      return;
+    }
+
+    // 3. Serialize the full object into a JSON string.
+    const assessmentDataString = JSON.stringify(selectedAssessment);
+
+    // 4. Navigate to the rules page with the serialized data as a query parameter.
+    this.router.navigate(['/flashyre-assessment-rules-card'], { 
+      queryParams: { data: assessmentDataString } 
+    });
+  }
+  
+    /**
+   * Handles the user's choice from the assessment prompt.
+   * @param button The text of the button clicked ('Later' or 'Assessment Now').
+   */
+  handleAssessmentAlertAction(button: string): void {
+    this.showAssessmentAlert = false; // Always hide the alert
+
+    if (button.toLowerCase() === 'assessment now') {
+      // Find the assessment ID from the currently selected job
+      const assessmentId = this.selectedJob?.assessment;
+      if (assessmentId) {
+        this.navigateToAssessment(assessmentId);
+      } else {
+        console.error("Could not navigate to assessment: assessment ID is missing from the selected job.");
+      }
+    }
+    // If the user clicks 'Later', no action is required.
+  }
+
+  onJobSaved(savedJob: any): void {
+  // Add a saved date to the job object for immediate sorting
+  savedJob.saved_at = new Date().toISOString();
+
+  this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== savedJob.job_id);
+  if (!this.masterSavedJobs.some(j => j.job_id === savedJob.job_id)) {
+    // Add to saved list and re-sort
+    this.masterSavedJobs.unshift(savedJob);
+    this.masterSavedJobs.sort((a, b) => new Date(b.saved_at).getTime() - new Date(a.saved_at).getTime());
+  }
+  this.runFilterPipeline();
+}
+
+  onJobUnsaved(unsavedJob: any): void {
+  this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== unsavedJob.job_id);
+  if (!this.masterRecommendedJobs.some(j => j.job_id === unsavedJob.job_id)) {
+    // Add back to recommended list and re-sort
+    this.masterRecommendedJobs.unshift(unsavedJob);
+    this.masterRecommendedJobs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
+  this.runFilterPipeline();
+}
+
+  onJobDisliked(dislikedJob: any): void {
+    this.masterRecommendedJobs = this.masterRecommendedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+    this.masterSavedJobs = this.masterSavedJobs.filter(j => j.job_id !== dislikedJob.job_id);
+    this.runFilterPipeline();
+  }
+
+  onJobUndisliked(undislikedJob: any): void {
+    if (!this.masterRecommendedJobs.some(j => j.job_id === undislikedJob.job_id)) {
+      this.masterRecommendedJobs.unshift(undislikedJob);
+    }
+    this.runFilterPipeline();
+  }
+
+  onApplicationRevoked(revokedJobId: number): void {
+    const revokedJob = this.masterAppliedJobs.find(job => job.job_id === revokedJobId);
+    if (revokedJob) {
+      this.masterAppliedJobs = this.masterAppliedJobs.filter(job => job.job_id !== revokedJobId);
+      if (!this.masterRecommendedJobs.some(job => job.job_id === revokedJobId)) {
+          this.masterRecommendedJobs.unshift(revokedJob);
+      }
+    }
+    this.runFilterPipeline();
+  }
+
+  // Getters for counts now use the filtered lists to reflect the UI
+  get recommendedJobCount(): number | null {
+    return this.filteredRecommendedJobs?.length ?? null;
+  }
+  get savedJobCount(): number | null {
+    return this.filteredSavedJobs?.length ?? null;
+  }
+  get appliedJobCount(): number | null {
+    return this.filteredAppliedJobs?.length ?? null;
+  }
+  
+  onJobSelected(job: any): void {
+    this.selectedJobId = job?.job_id ?? null;
+    this.selectedJob = job;
   }
 }

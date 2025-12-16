@@ -2,50 +2,68 @@
   id="navbar-candidate-view-container"
   class="navbar-for-candidate-view-container10"
   [ngClass]="rootClassName"
->
+  >
   <div
     id="candidate-view-container"
     class="navbar-for-candidate-view-container11"
-  >
+    >
     <header
       data-thq="thq-navbar"
       class="navbar-for-candidate-view-navbar-interactive"
-    >
+      >
       <img
         id="flashyre-logo"
         [attr.alt]="imageAlt1"
         [attr.src]="imageSrc1"
         class="navbar-for-candidate-view-flashyre-image"
         [routerLink]="['/candidate-home']"
-      />
-      <div
-        data-thq="thq-navbar-nav"
-        class="navbar-for-candidate-view-desktop-menu"
-      >
-        <nav id="header-links" class="navbar-for-candidate-view-links">
-          <a
-            [attr.href]="link1Url"
-            id="navbar-dashboard-link"
-            class="navbar-for-candidate-view-dashboard-link thq-body-small button"
+        />
+        <div
+          data-thq="thq-navbar-nav"
+          class="navbar-for-candidate-view-desktop-menu"
           >
-            <ng-container>
-              <ng-template #defaultLink1>
-                <div class="navbar-for-candidate-view-fragment12">
-                  <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text12">
-                    Dashboard
-                  </a>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="link1 ? link1 : defaultLink1"
-              ></ng-container>
-            </ng-container>
-          </a>
-          <a
+          <nav id="header-links" class="navbar-for-candidate-view-links">
+            <a
+              id="navbar-home-link"
+              rel="noreferrer noopener"
+              class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
+              [routerLink]="['/candidate-home']"
+              >
+              <ng-container>
+                <ng-template #defaultHomeLink>
+                  <div class="navbar-for-candidate-view-fragment17">
+                    <span class="navbar-for-candidate-view-text17">
+                      Home
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="homeLink ? homeLink : defaultHomeLink"
+                ></ng-container>
+              </ng-container>
+            </a>
+            <a
+              id="navbar-dashboard-link"
+              class="navbar-for-candidate-view-dashboard-link thq-body-small button"
+              >
+              <ng-container>
+                <ng-template #defaultLink1>
+                  <div class="navbar-for-candidate-view-fragment12">
+                    <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text12">
+                      Dashboard
+                    </a>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="link1 ? link1 : defaultLink1"
+                ></ng-container>
+              </ng-container>
+            </a>
+            <!-- <a
             [attr.href]="link2Url"
             id="navbar-upskill-link"
             class="navbar-for-candidate-view-upskill-link thq-body-small button"
-          >
+            >
             <ng-container>
               <ng-template #defaultLink2>
                 <div class="navbar-for-candidate-view-fragment15">
@@ -57,12 +75,12 @@
               ></ng-container>
             </ng-container>
           </a>
+          -->
           <a
-            [attr.href]="link3Url"
             id="navbar-assessment-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-assessment-link thq-body-small button"
-          >
+            >
             <ng-container>
               <ng-template #defaultLink3>
                 <div class="navbar-for-candidate-view-fragment19">
@@ -77,12 +95,11 @@
             </ng-container>
           </a>
           <a
-            [attr.href]="link4Url"
             id="navbar-jobs-for-you-link"
             rel="noreferrer noopener"
             class="navbar-for-candidate-view-jobs-for-you-link thq-body-small button"
-            [routerLink]="['/candidate-home']"
-          >
+            [routerLink]="['/candidate-job-detail-view']"
+            >
             <ng-container>
               <ng-template #defaultLink4>
                 <div class="navbar-for-candidate-view-fragment17">
@@ -101,28 +118,34 @@
       <div
         data-thq="thq-dropdown"
         class="navbar-for-candidate-view-thq-dropdown list-item"
-      >
+        >
         <div
           data-thq="thq-dropdown-toggle"
           class="navbar-for-candidate-view-dropdown-toggle1"
-        >
-          <img
-            id="user-image"
-            [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
-            [attr.alt]="imageAlt3"
-            class="navbar-for-candidate-view-user-image1"
-          />
+          >
+          @if (userProfile.profile_picture_url) {
+            <img
+              id="user-image"
+              [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+              [attr.alt]="imageAlt3"
+              class="navbar-for-candidate-view-user-image1"
+              />
+          } @else {
+            <div class="avatar-icon navbar-for-candidate-view-user-image1" [style.background-color]="avatarBgColor">
+              {{ userProfile.initials }}
+            </div>
+          }
           <div
             data-thq="thq-dropdown-arrow"
             class="navbar-for-candidate-view-dropdown-arrow"
-          >
+            >
             <svg
               id="dropdown"
               width="32"
               height="32"
               viewBox="0 0 32 32"
               class="navbar-for-candidate-view-drop-down-icon"
-            >
+              >
               <path
                 d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"
                 fill="currentColor"
@@ -133,25 +156,25 @@
         <ul
           data-thq="thq-dropdown-list"
           class="navbar-for-candidate-view-dropdown-list"
-        >
+          >
           <li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view-profile1 list-item"
-          >
+            >
             <div
               data-thq="thq-dropdown-toggle"
               class="navbar-for-candidate-view-dropdown-toggle2"
-            >
+              >
               <span
                 id="navbar-profile-button"
                 class="navbar-for-candidate-view-profile2"
-              >
+                >
                 <ng-container>
                   <ng-template #defaultText1>
                     <div class="navbar-for-candidate-view-fragment14">
-                      <span class="navbar-for-candidate-view-text14">
+                      <a [routerLink]="['/profile-overview-page']" class="navbar-for-candidate-view-text14">
                         Profile
-                      </span>
+                      </a>
                     </div>
                   </ng-template>
                   <ng-container
@@ -161,152 +184,152 @@
               </span>
             </div>
           </li>
-          <li
-            data-thq="thq-dropdown"
-            class="navbar-for-candidate-view-preference1 list-item"
+          <!-- <li
+          data-thq="thq-dropdown"
+          class="navbar-for-candidate-view-preference1 list-item"
           >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="navbar-for-candidate-view-dropdown-toggle3"
-            >
-              <span
-                id="navbar-preference-button"
-                class="navbar-for-candidate-view-preference2"
-              >
-                <ng-container>
-                  <ng-template #defaultText2>
-                    <div class="navbar-for-candidate-view-fragment20">
-                      <span class="navbar-for-candidate-view-text20">
-                        Preference
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text2 ? text2 : defaultText2"
-                  ></ng-container>
-                </ng-container>
-              </span>
-            </div>
-          </li>
-          <li
-            data-thq="thq-dropdown"
-            class="navbar-for-candidate-view-settings1 list-item"
-          >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="navbar-for-candidate-view-dropdown-toggle4"
-            >
-              <span
-                id="navbar-settings-button"
-                class="navbar-for-candidate-view-settings2"
-              >
-                <ng-container>
-                  <ng-template #defaultText3>
-                    <div class="navbar-for-candidate-view-fragment26">
-                      <span class="navbar-for-candidate-view-text26">
-                        Settings
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text3 ? text3 : defaultText3"
-                  ></ng-container>
-                </ng-container>
-              </span>
-            </div>
-          </li>
-          <li
-            data-thq="thq-dropdown"
-            class="navbar-for-candidate-view-logout1 list-item"
-          >
-            <div
-              data-thq="thq-dropdown-toggle"
-              class="navbar-for-candidate-view-dropdown-toggle5"
-            >
-              <span
-                id="navbar-logout-button"
-                class="navbar-for-candidate-view-logout2"
-                (click)="onLogoutClick()"
-              >
-                <ng-container>
-                  <ng-template #defaultText31>
-                    <div class="navbar-for-candidate-view-fragment16">
-                      <span class="navbar-for-candidate-view-text16">
-                        Logout
-                      </span>
-                    </div>
-                  </ng-template>
-                  <ng-container
-                    *ngTemplateOutlet="text31 ? text31 : defaultText31"
-                  ></ng-container>
-                </ng-container>
-              </span>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div
-        data-thq="thq-burger-menu"
-        class="navbar-for-candidate-view-burger-menu"
-      >
-        <svg
-          id="burger-icon"
-          viewBox="0 0 1024 1024"
-          class="navbar-for-candidate-view-burger-icon"
-        >
-          <path
-            d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"
-          ></path>
-        </svg>
-      </div>
-      <div
-        data-thq="thq-mobile-menu"
-        class="navbar-for-candidate-view-mobile-menu"
-      >
-        <div
-          id="mobile-pop-up-container"
-          class="navbar-for-candidate-view-popup-container"
-        >
-          <div id="close-icon" class="navbar-for-candidate-view-close-icon">
-            <div
-              data-thq="thq-close-menu"
-              class="navbar-for-candidate-view-close-menu"
-            >
-              <svg
-                id="close-menu-icon"
-                viewBox="0 0 1024 1024"
-                class="navbar-for-candidate-view-icon12"
-              >
-                <path
-                  d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
-                ></path>
-              </svg>
-            </div>
-          </div>
           <div
-            id="mobile-view-container"
-            class="navbar-for-candidate-view-container12"
-          >
-            <div class="navbar-for-candidate-view-container13">
-              <div
-                id="candidate-profile-container"
-                class="navbar-for-candidate-view-container14"
+            data-thq="thq-dropdown-toggle"
+            class="navbar-for-candidate-view-dropdown-toggle3"
+            >
+            <span
+              id="navbar-preference-button"
+              class="navbar-for-candidate-view-preference2"
               >
-                <img
-                  id="candidate-profile-picture"
-                  [src]="defaultProfilePicture"
-                  [attr.alt]="imageAlt4"
-                  [attr.src]="imageSrc4"
-                  class="navbar-for-candidate-view-user-image2"
+              <ng-container>
+                <ng-template #defaultText2>
+                  <div class="navbar-for-candidate-view-fragment20">
+                    <span class="navbar-for-candidate-view-text20">
+                      Preference
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text2 ? text2 : defaultText2"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </li>
+        <li
+          data-thq="thq-dropdown"
+          class="navbar-for-candidate-view-settings1 list-item"
+          >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="navbar-for-candidate-view-dropdown-toggle4"
+            >
+            <span
+              id="navbar-settings-button"
+              class="navbar-for-candidate-view-settings2"
+              >
+              <ng-container>
+                <ng-template #defaultText3>
+                  <div class="navbar-for-candidate-view-fragment26">
+                    <span class="navbar-for-candidate-view-text26">
+                      Settings
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </li> -->
+        <li
+          data-thq="thq-dropdown"
+          class="navbar-for-candidate-view-logout1 list-item"
+          >
+          <div
+            data-thq="thq-dropdown-toggle"
+            class="navbar-for-candidate-view-dropdown-toggle5"
+            >
+            <span
+              id="navbar-logout-button"
+              class="navbar-for-candidate-view-logout2"
+              (click)="onLogoutClick()"
+              >
+              <ng-container>
+                <ng-template #defaultText31>
+                  <div class="navbar-for-candidate-view-fragment16">
+                    <span class="navbar-for-candidate-view-text16">
+                      Logout
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text31 ? text31 : defaultText31"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      data-thq="thq-burger-menu"
+      class="navbar-for-candidate-view-burger-menu"
+      >
+      <svg
+        id="burger-icon"
+        viewBox="0 0 1024 1024"
+        class="navbar-for-candidate-view-burger-icon"
+        >
+        <path
+          d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"
+        ></path>
+      </svg>
+    </div>
+    <div
+      data-thq="thq-mobile-menu"
+      class="navbar-for-candidate-view-mobile-menu"
+      >
+      <div
+        id="mobile-pop-up-container"
+        class="navbar-for-candidate-view-popup-container"
+        >
+        <div id="close-icon" class="navbar-for-candidate-view-close-icon">
+          <div
+            data-thq="thq-close-menu"
+            class="navbar-for-candidate-view-close-menu"
+            >
+            <svg
+              id="close-menu-icon"
+              viewBox="0 0 1024 1024"
+              class="navbar-for-candidate-view-icon12"
+              >
+              <path
+                d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <div
+          id="mobile-view-container"
+          class="navbar-for-candidate-view-container12"
+          >
+          <div class="navbar-for-candidate-view-container13">
+            <div
+              id="candidate-profile-container"
+              class="navbar-for-candidate-view-container14"
+              >
+              <img
+                id="candidate-profile-picture"
+                [src]="defaultProfilePicture"
+                [attr.alt]="imageAlt4"
+                [attr.src]="imageSrc4"
+                class="navbar-for-candidate-view-user-image2"
                 />
                 <div
                   id="candidate-details-container"
                   class="navbar-for-candidate-view-user-details-container"
-                >
+                  >
                   <span
                     id="navbar-candidate-name"
                     class="navbar-for-candidate-view-user-name"
-                  >
+                    >
                     <ng-container>
                       <ng-template #defaultText4>
                         <div class="navbar-for-candidate-view-fragment22">
@@ -337,7 +360,7 @@
                   <span
                     id="navbar-candidate-view-edit-profile-button"
                     class="button navbar-for-candidate-view-view-edit-profile"
-                  >
+                    >
                     <ng-container>
                       <ng-template #defaultText6>
                         <div class="navbar-for-candidate-view-fragment27">
@@ -356,17 +379,17 @@
               <div
                 id="candidate-score-board-container"
                 class="navbar-for-candidate-view-container15"
-              >
+                >
                 <span
                   id="candidate-profile-score-board"
                   class="navbar-for-candidate-view-profile-score-board"
-                >
+                  >
                   Profile Score Board
                 </span>
                 <div
                   id="progress-bar-container"
                   class="navbar-for-candidate-view-progress-bar-container"
-                >
+                  >
                   <div class="navbar-for-candidate-view-container16">
                     <div class="navbar-for-candidate-view-container17">
                       <dangerous-html
@@ -442,278 +465,278 @@
 </body>
 </html>
 "
-                      ></dangerous-html>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="pop-up-for-mobile-view"
-              class="navbar-for-candidate-view-container18"
-            >
-              <div
-                id="dashboard-container"
-                class="navbar-for-candidate-view-dashboard-container"
-              >
-                <svg
-                  id="dashboard-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="navbar-for-candidate-view-dashboard-icon"
-                >
-                  <path
-                    d="M21 16V4H3v12zm0-14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v2h2v2H8v-2h2v-2H3a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2zM5 6h9v5H5zm10 0h4v2h-4zm4 3v5h-4V9zM5 12h4v2H5zm5 0h4v2h-4z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-                <span id="dashboard-button">
-                  <ng-container>
-                    <ng-template #defaultText7>
-                      <div class="navbar-for-candidate-view-fragment25">
-                        <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text25">
-                          Dashboard
-                        </a>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text7 ? text7 : defaultText7"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-              <div
-                id="upskill-container"
-                class="navbar-for-candidate-view-upskill-container"
-              >
-                <svg
-                  id="upskill-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="navbar-for-candidate-view-upskill-icon"
-                >
-                  <path
-                    d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2m0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-                <span id="upskill-button">
-                  <ng-container>
-                    <ng-template #defaultText8>
-                      <div class="navbar-for-candidate-view-fragment13">
-                        <span class="navbar-for-candidate-view-text13">
-                          Upskill
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text8 ? text8 : defaultText8"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-              <div
-                id="assessment-container"
-                class="navbar-for-candidate-view-assessment-container"
-              >
-                <svg
-                  id="assessment-icon"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  class="navbar-for-candidate-view-assessment-icon"
-                >
-                  <path
-                    d="m23 9.2l-2.6-2.6L19 8l4 4l7-7l-1.4-1.4zM12 5.4L10.6 4L8 6.6L5.4 4L4 5.4L6.6 8L4 10.6L5.4 12L8 9.4l2.6 2.6l1.4-1.4L9.4 8zm0 16L10.6 20L8 22.6L5.4 20L4 21.4L6.6 24L4 26.6L5.4 28L8 25.4l2.6 2.6l1.4-1.4L9.4 24z"
-                    fill="currentColor"
-                  ></path>
-                  <path
-                    d="M17 15V2h-2v13H2v2h13v13h2V17h13v-2z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-                <span id="assessment-button-mob-view">
-                  <ng-container>
-                    <ng-template #defaultText9>
-                      <div class="navbar-for-candidate-view-fragment23">
-                        <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text23">
-                          Assessment
-                        </a>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text9 ? text9 : defaultText9"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-              <div
-                id="jobs-for-you-container"
-                class="navbar-for-candidate-view-jobs-for-container"
-                [routerLink]="['/candidate-home']"
-              >
-                <svg
-                  id="briefcase-icon"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 22 22"
-                  class="navbar-for-candidate-view-briefcase-icon"
-                >
-                  <path
-                    d="M2 6h5V3h1V2h6v1h1v3h5v1h1v12h-1v1H2v-1H1V7h1zm7 0h4V4H9zm10 2H3v10h16z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-                <span id="jobs-for-you-button">
-                  <ng-container>
-                    <ng-template #defaultText10>
-                      <div class="navbar-for-candidate-view-fragment24">
-                        <span class="navbar-for-candidate-view-text24">
-                          Jobs for you
-                        </span>
-                      </div>
-                    </ng-template>
-                    <ng-container
-                      *ngTemplateOutlet="text10 ? text10 : defaultText10"
-                    ></ng-container>
-                  </ng-container>
-                </span>
-              </div>
-              <div
-                id="profile-dropdown"
-                class="navbar-for-candidate-view-container19"
-              >
-                <div
-                  id="preference-container"
-                  class="navbar-for-candidate-view-preference-container"
-                >
-                  <svg
-                    id="preference-icon"
-                    width="48"
-                    height="48"
-                    viewBox="0 0 48 48"
-                    class="navbar-for-candidate-view-preference-icon"
-                  >
-                    <g fill="currentColor">
-                      <path
-                        d="M23 22.922c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 1 1-2 0z"
-                      ></path>
-                      <path
-                        d="M20 16a4 4 0 0 1 3-3.874V7a1 1 0 1 1 2 0v5.126A4.002 4.002 0 0 1 24 20a4 4 0 0 1-4-4m4 2a2 2 0 1 0 0-4a2 2 0 0 0 0 4m-8 14a4 4 0 1 1-4.992-3.876A1 1 0 0 1 11 28V7a1 1 0 1 1 2 0v21q0 .063-.008.124A4 4 0 0 1 16 32m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                      ></path>
-                      <path
-                        d="M36 42a1 1 0 0 1-1-1v-7.078c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 0 1-1 1"
-                      ></path>
-                      <path
-                        d="M36 6a1 1 0 0 0-1 1v16.126A4.002 4.002 0 0 0 36 31a4 4 0 0 0 1-7.874V7a1 1 0 0 0-1-1m0 19a2 2 0 1 0 0 4a2 2 0 0 0 0-4"
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                      ></path>
-                      <path
-                        d="M11 41a1 1 0 1 0 2 0v-2.078c0-.526-.474-.922-1-.922s-1 .396-1 .922z"
-                      ></path>
-                    </g>
-                  </svg>
-                  <span id="navbar-preference-button-mob-view">
-                    <ng-container>
-                      <ng-template #defaultText11>
-                        <div class="navbar-for-candidate-view-fragment10">
-                          <span class="navbar-for-candidate-view-text10">
-                            Preference
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text11 ? text11 : defaultText11"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                </div>
-                <div
-                  id="settings-container"
-                  class="navbar-for-candidate-view-settings-container"
-                >
-                  <svg
-                    id="settings-icon"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    class="navbar-for-candidate-view-settings-icon"
-                  >
-                    <path
-                      d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z"
-                      fill="currentColor"
-                    ></path>
-                    <path
-                      d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                  <span id="navbar-settings-button-mob-view">
-                    <ng-container>
-                      <ng-template #defaultText12>
-                        <div class="navbar-for-candidate-view-fragment11">
-                          <span class="navbar-for-candidate-view-text11">
-                            Settings
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text12 ? text12 : defaultText12"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                </div>
-                <div
-                  id="logout-container"
-                  class="navbar-for-candidate-view-logout-container button"
-                  (click)="onLogoutClick()"
-                >
-                  <svg
-                    id="logout-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    class="navbar-for-candidate-view-logout-icon"
-                  >
-                    <g fill="none">
-                      <path
-                        d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
-                      ></path>
-                      <path
-                        d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"
-                        fill="currentColor"
-                      ></path>
-                    </g>
-                  </svg>
-                  <span id="navbar-logout-button-mob-view">
-                    <ng-container>
-                      <ng-template #defaultText13>
-                        <div class="navbar-for-candidate-view-fragment18">
-                          <span class="navbar-for-candidate-view-text18">
-                            Logout
-                          </span>
-                        </div>
-                      </ng-template>
-                      <ng-container
-                        *ngTemplateOutlet="text13 ? text13 : defaultText13"
-                      ></ng-container>
-                    </ng-container>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+      ></dangerous-html>
+    </div>
   </div>
+</div>
+</div>
+</div>
+<div
+  id="pop-up-for-mobile-view"
+  class="navbar-for-candidate-view-container18"
+  >
+  <div
+    id="dashboard-container"
+    class="navbar-for-candidate-view-dashboard-container"
+    >
+    <svg
+      id="dashboard-icon"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      class="navbar-for-candidate-view-dashboard-icon"
+      >
+      <path
+        d="M21 16V4H3v12zm0-14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v2h2v2H8v-2h2v-2H3a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2zM5 6h9v5H5zm10 0h4v2h-4zm4 3v5h-4V9zM5 12h4v2H5zm5 0h4v2h-4z"
+        fill="currentColor"
+      ></path>
+    </svg>
+    <span id="dashboard-button">
+      <ng-container>
+        <ng-template #defaultText7>
+          <div class="navbar-for-candidate-view-fragment25">
+            <a [routerLink]="['/assessment-taken-page']" class="navbar-for-candidate-view-text25">
+              Dashboard
+            </a>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text7 ? text7 : defaultText7"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div
+    id="upskill-container"
+    class="navbar-for-candidate-view-upskill-container"
+    >
+    <svg
+      id="upskill-icon"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      class="navbar-for-candidate-view-upskill-icon"
+      >
+      <path
+        d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2m0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></path>
+    </svg>
+    <span id="upskill-button">
+      <ng-container>
+        <ng-template #defaultText8>
+          <div class="navbar-for-candidate-view-fragment13">
+            <span class="navbar-for-candidate-view-text13">
+              Upskill
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text8 ? text8 : defaultText8"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div
+    id="assessment-container"
+    class="navbar-for-candidate-view-assessment-container"
+    >
+    <svg
+      id="assessment-icon"
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      class="navbar-for-candidate-view-assessment-icon"
+      >
+      <path
+        d="m23 9.2l-2.6-2.6L19 8l4 4l7-7l-1.4-1.4zM12 5.4L10.6 4L8 6.6L5.4 4L4 5.4L6.6 8L4 10.6L5.4 12L8 9.4l2.6 2.6l1.4-1.4L9.4 8zm0 16L10.6 20L8 22.6L5.4 20L4 21.4L6.6 24L4 26.6L5.4 28L8 25.4l2.6 2.6l1.4-1.4L9.4 24z"
+        fill="currentColor"
+      ></path>
+      <path
+        d="M17 15V2h-2v13H2v2h13v13h2V17h13v-2z"
+        fill="currentColor"
+      ></path>
+    </svg>
+    <span id="assessment-button-mob-view">
+      <ng-container>
+        <ng-template #defaultText9>
+          <div class="navbar-for-candidate-view-fragment23">
+            <a [routerLink]="['/candidate-assessment']" class="navbar-for-candidate-view-text23">
+              Assessment
+            </a>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text9 ? text9 : defaultText9"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div
+    id="jobs-for-you-container"
+    class="navbar-for-candidate-view-jobs-for-container"
+    [routerLink]="['/candidate-job-detail-view']"
+    >
+    <svg
+      id="briefcase-icon"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      class="navbar-for-candidate-view-briefcase-icon"
+      >
+      <path
+        d="M2 6h5V3h1V2h6v1h1v3h5v1h1v12h-1v1H2v-1H1V7h1zm7 0h4V4H9zm10 2H3v10h16z"
+        fill="currentColor"
+      ></path>
+    </svg>
+    <span id="jobs-for-you-button">
+      <ng-container>
+        <ng-template #defaultText10>
+          <div class="navbar-for-candidate-view-fragment24">
+            <span class="navbar-for-candidate-view-text24">
+              Jobs for you
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text10 ? text10 : defaultText10"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div>
+  <div
+    id="profile-dropdown"
+    class="navbar-for-candidate-view-container19"
+    >
+    <!--<div
+    id="preference-container"
+    class="navbar-for-candidate-view-preference-container"
+    >
+    <svg
+      id="preference-icon"
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      class="navbar-for-candidate-view-preference-icon"
+      >
+      <g fill="currentColor">
+        <path
+          d="M23 22.922c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 1 1-2 0z"
+        ></path>
+        <path
+          d="M20 16a4 4 0 0 1 3-3.874V7a1 1 0 1 1 2 0v5.126A4.002 4.002 0 0 1 24 20a4 4 0 0 1-4-4m4 2a2 2 0 1 0 0-4a2 2 0 0 0 0 4m-8 14a4 4 0 1 1-4.992-3.876A1 1 0 0 1 11 28V7a1 1 0 1 1 2 0v21q0 .063-.008.124A4 4 0 0 1 16 32m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
+          clip-rule="evenodd"
+          fill-rule="evenodd"
+        ></path>
+        <path
+          d="M36 42a1 1 0 0 1-1-1v-7.078c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 0 1-1 1"
+        ></path>
+        <path
+          d="M36 6a1 1 0 0 0-1 1v16.126A4.002 4.002 0 0 0 36 31a4 4 0 0 0 1-7.874V7a1 1 0 0 0-1-1m0 19a2 2 0 1 0 0 4a2 2 0 0 0 0-4"
+          clip-rule="evenodd"
+          fill-rule="evenodd"
+        ></path>
+        <path
+          d="M11 41a1 1 0 1 0 2 0v-2.078c0-.526-.474-.922-1-.922s-1 .396-1 .922z"
+        ></path>
+      </g>
+    </svg>
+    <span id="navbar-preference-button-mob-view">
+      <ng-container>
+        <ng-template #defaultText11>
+          <div class="navbar-for-candidate-view-fragment10">
+            <span class="navbar-for-candidate-view-text10">
+              Preference
+            </span>
+          </div>
+        </ng-template>
+        <ng-container
+          *ngTemplateOutlet="text11 ? text11 : defaultText11"
+        ></ng-container>
+      </ng-container>
+    </span>
+  </div> -->
+  <!-- <div
+  id="settings-container"
+  class="navbar-for-candidate-view-settings-container"
+  >
+  <svg
+    id="settings-icon"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    class="navbar-for-candidate-view-settings-icon"
+    >
+    <path
+      d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4"
+      fill="currentColor"
+    ></path>
+  </svg>
+  <span id="navbar-settings-button-mob-view">
+    <ng-container>
+      <ng-template #defaultText12>
+        <div class="navbar-for-candidate-view-fragment11">
+          <span class="navbar-for-candidate-view-text11">
+            Settings
+          </span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="text12 ? text12 : defaultText12"
+      ></ng-container>
+    </ng-container>
+  </span>
+</div> -->
+<div
+  id="logout-container"
+  class="navbar-for-candidate-view-logout-container button"
+  (click)="onLogoutClick()"
+  >
+  <svg
+    id="logout-icon"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    class="navbar-for-candidate-view-logout-icon"
+    >
+    <g fill="none">
+      <path
+        d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+      ></path>
+      <path
+        d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"
+        fill="currentColor"
+      ></path>
+    </g>
+  </svg>
+  <span id="navbar-logout-button-mob-view">
+    <ng-container>
+      <ng-template #defaultText13>
+        <div class="navbar-for-candidate-view-fragment18">
+          <span class="navbar-for-candidate-view-text18">
+            Logout
+          </span>
+        </div>
+      </ng-template>
+      <ng-container
+        *ngTemplateOutlet="text13 ? text13 : defaultText13"
+      ></ng-container>
+    </ng-container>
+  </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+</div>
 </header>

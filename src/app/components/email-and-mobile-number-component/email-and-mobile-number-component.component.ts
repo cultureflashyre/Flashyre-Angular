@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'email-and-mobile-number-component',
-  templateUrl: 'email-and-mobile-number-component.component.html',
-  styleUrls: ['email-and-mobile-number-component.component.css'],
+    selector: 'email-and-mobile-number-component',
+    templateUrl: 'email-and-mobile-number-component.component.html',
+    styleUrls: ['email-and-mobile-number-component.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class EmailAndMobileNumberComponent {
   @Input()

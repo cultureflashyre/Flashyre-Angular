@@ -1,0 +1,401 @@
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (buttonClicked)="onAlertButtonClicked($event)"
+    (close)="showAlert = false">
+  </app-alert-message>
+}
+
+@if (showSuccessPopup) {
+  <div class="success-popup-overlay">
+    <div class="success-popup-box">
+      <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+      <p class="success-message">Successfully Created!</p>
+    </div>
+  </div>
+}
+<div class="create-job-post3rd-page-container1">
+  <div
+    id="create-job-post-3rd-page-main-container"
+    class="create-job-post3rd-page-create-job-post3rd-page-main-container"
+    >
+    <navbar-for-recruiter-view
+      rootClassName="navbar-for-recruiter-viewroot-class-name6"
+      >
+      <ng-template #text>
+        <div class="create-job-post3rd-page-fragment10">
+          <span class="create-job-post3rd-page-text10">2</span>
+        </div>
+      </ng-template>
+      <ng-template #link1>
+        <div class="create-job-post3rd-page-fragment11">
+          <span class="create-job-post3rd-page-text11">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #link4>
+        <div class="create-job-post3rd-page-fragment12">
+          <span class="create-job-post3rd-page-text12">Job Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="create-job-post3rd-page-fragment13">
+          <span class="create-job-post3rd-page-text13">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="create-job-post3rd-page-fragment14">
+          <span class="create-job-post3rd-page-text14">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="create-job-post3rd-page-fragment15">
+          <span class="create-job-post3rd-page-text15">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="create-job-post3rd-page-fragment16">
+          <span class="create-job-post3rd-page-text16">Dashboard</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="create-job-post3rd-page-fragment17">
+          <span class="create-job-post3rd-page-text17">Notifications</span>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="create-job-post3rd-page-fragment18">
+          <span class="create-job-post3rd-page-text18">Jobs Posted</span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="create-job-post3rd-page-fragment19">
+          <span class="create-job-post3rd-page-text19">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="create-job-post3rd-page-fragment20">
+          <span class="create-job-post3rd-page-text20">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="create-job-post3rd-page-fragment21">
+          <span class="create-job-post3rd-page-text21">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text14>
+        <div class="create-job-post3rd-page-fragment22">
+          <span class="create-job-post3rd-page-text22">2</span>
+        </div>
+      </ng-template>
+      <ng-template #text15>
+        <div class="create-job-post3rd-page-fragment23">
+          <span class="create-job-post3rd-page-text23">Leslie Alexander</span>
+        </div>
+      </ng-template>
+      <ng-template #text16>
+        <div class="create-job-post3rd-page-fragment24">
+          <span class="create-job-post3rd-page-text24">Google</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="create-job-post3rd-page-fragment25">
+          <span class="create-job-post3rd-page-text25">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text32>
+        <div class="create-job-post3rd-page-fragment26">
+          <span class="create-job-post3rd-page-text26">
+            <span>Software Development</span>
+            <br />
+            <span>Mountain View, CA</span>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1411>
+        <div class="create-job-post3rd-page-fragment27">
+          <span class="create-job-post3rd-page-text30">2</span>
+        </div>
+      </ng-template>
+    </navbar-for-recruiter-view>
+    <div
+      id="interview-container"
+      class="create-job-post3rd-page-interview-container"
+      >
+      <div
+        id="progress-bar-3-container"
+        class="create-job-post3rd-page-progress-bar3-container1"
+        >
+        <div
+          id="progressBar-3-container"
+          class="create-job-post3rd-page-progress-bar3-container2"
+          >
+          <div class="create-job-post3rd-page-container2">
+            <div class="create-job-post3rd-page-container3">
+              <!-- <!DOCTYPE html>
+              <html lang='en'>
+                <head> -->
+                  <meta charset='UTF-8'>
+                  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                  <title>Responsive Progress Bar</title>
+                  <style>
+                    /* Container for the progress bar */
+                    .progress-bar {
+                    display: flex;
+                    overflow: visible;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 500px;
+                    max-width: auto;
+                    font-family: Inter, sans-serif;
+                    background-color: #FFFFFF;
+                  }
+
+                  /* Style for each step */
+                  .step {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  text-align: center;
+                  position: relative;
+                  flex: 1;
+                }
+
+                /* Line between steps */
+                .step:before {
+                content: '';
+                position: absolute;
+                top: 30%;
+                left: calc(-40% + 15px); /* Adjust position to align the line between circles */
+                width: calc(80% - 30px); /* Width adjusted to match circle diameter */
+                height: 2px;
+                background-color: #ccc;
+                z-index: 0;
+              }
+
+              /* Remove line before the first step */
+              .step:first-child:before {
+              display: none;
+            }
+
+            /* Circle for each step */
+            .step-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #3AC14A;
+            color: white;
+            font-size: 1rem;
+            z-index: 1;
+          }
+
+          /* Change background color for the last three step circles */
+          .step:nth-last-child(-n+1) .step-circle {
+          background-color: #747474;
+          color: white;
+          border: none;
+        }
+
+        /* Label under each circle */
+        .step span {
+        margin-top: 8px;
+        font-size: 1rem;
+        color: #18191C;
+      }
+
+
+      /* Media query for responsiveness */
+      @media (max-width: 728px) {
+      .progress-bar {
+      width: 90%;
+    }
+
+    .step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+
+  .step span {
+  font-size: 0.8rem;
+}
+}
+
+@media (max-width: 478px) {
+
+.step-circle {
+width: 25px;
+height: 25px;
+font-size: 0.6rem;
+}
+
+.step span {
+font-size: 0.5rem;
+}
+}
+</style>
+<!-- </head> -->
+<body>
+  <div class='progress-bar'>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Create Job Post</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Assessment for Job</span>
+    </div>
+    <div class='step'>
+      <div class='step-circle'>&#10003;</div>
+      <span>Interview process</span>
+    </div>
+  </div>
+</body>
+<!-- </html> -->
+
+</div>
+</div>
+</div>
+</div>
+<div
+  id="interview-process-container"
+  class="create-job-post3rd-page-interview-process-container"
+  >
+  <span
+    id="interview-process-text"
+    class="create-job-post3rd-page-interview-process-text"
+    >
+    Interview Process
+  </span>
+  <!-- Form binds to the main FormGroup in the component -->
+  <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
+    <!-- Container binds to the 'stages' FormArray -->
+    <div formArrayName="stages" class="create-job-post3rd-page-different-stages-container">
+
+      <!-- This div will be repeated for each stage in the FormArray -->
+      @for (stageControl of stages.controls; track stageControl; let i = $index) {
+        <div [formGroupName]="i" class="create-job-post3rd-page-different-stage-container">
+          <!-- 1. Stage Name (Conditional Dropdown/Input) -->
+          <div class="form-field-wrapper stage-field">
+            <label [for]="'stage-name-' + i">Interview Stage <span class="required-asterisk">*</span></label>
+            <!-- Show dropdown if 'Customize' is NOT selected -->
+            @if (stageControl.get('stage_name')?.value !== 'Customize') {
+              <select formControlName="stage_name" [id]="'stage-name-' + i">
+                <option value="Screening">Screening</option>
+                <option value="Technical interview - 1">Technical interview - 1</option>
+                <option value="Technical interview - 2">Technical interview - 2</option>
+                <option value="HR interview">HR interview</option>
+                <option value="Customize">Customize</option>
+              </select>
+            }
+            <!-- Show text input ONLY if 'Customize' is selected -->
+            @if (stageControl.get('stage_name')?.value === 'Customize') {
+              <input type="text" formControlName="custom_stage_name" placeholder="Enter Custom Stage Name" [id]="'custom-stage-name-' + i">
+            }
+            <!-- Validation Message -->
+            @if (stageControl.get('custom_stage_name')?.touched && stageControl.get('custom_stage_name')?.errors?.required) {
+              <div class="field-error-message">
+                Custom name is required.
+              </div>
+            }
+          </div>
+          <!-- 2. Date Picker -->
+          <!-- 2. Date Picker -->
+          <!-- 2. Date Picker (Corrected) -->
+          <div class="form-field-wrapper date-field">
+            <label [for]="'date-input-' + i">Enter Date <span class="required-asterisk">*</span></label>
+            <div class="compact-date-input-wrapper">
+              <input
+                type="date"
+                formControlName="stage_date"
+                [min]="minDateString"
+                [id]="'date-input-' + i"
+                class="compact-date-input"
+                (input)="validateDateInput($event, stageControl)"
+                >
+              </div>
+              <!-- Error for invalid format (High Priority) -->
+              @if (stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched) {
+                <div class="field-error-message">
+                  A valid date is required.
+                </div>
+              }
+              <!-- Error for empty field (Low Priority) -->
+              @if (stageControl.get('stage_date')?.hasError('required') && !stageControl.get('stage_date')?.hasError('invalidDate') && stageControl.get('stage_date')?.touched) {
+                <div class="field-error-message">
+                  Date is Required
+                </div>
+              }
+            </div>
+            <!-- 3. Mode Dropdown -->
+            <div class="form-field-wrapper mode-field">
+              <label [for]="'mode-select-' + i">Interview Mode <span class="required-asterisk">*</span></label>
+              <select formControlName="mode" [id]="'mode-select-' + i">
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+            </div>
+            <!-- 4. Assigned To Input -->
+            <div class="form-field-wrapper assigned-to-field">
+              <label [for]="'assigned-to-' + i">Assigned To <span class="required-asterisk">*</span></label>
+              <input type="email" formControlName="assigned_to" placeholder="interviewer@company.com" [id]="'assigned-to-' + i">
+              <!-- Validation Messages -->
+              @if (stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.required) {
+                <div class="field-error-message">
+                  Email is required.
+                </div>
+              }
+              @if (stageControl.get('assigned_to')?.touched && stageControl.get('assigned_to')?.errors?.email) {
+                <div class="field-error-message">
+                  Please enter a valid email.
+                </div>
+              }
+            </div>
+            <!-- 5. Remove Button -->
+            <div class="remove-icon-wrapper">
+              <svg
+                (click)="removeStage(i)"
+                id="remove-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                class="create-job-post3rd-page-remove-icon"
+                title="Remove Stage">
+                <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+              </svg>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- 6. Add Stage Button -->
+      <div id="add-section-container" class="create-job-post3rd-page-add-section-container">
+        <button type="button" (click)="addStage()" class="create-job-post3rd-page-add-section-text button">
+          + Add Stage
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+<create-job-post-footer2
+  [rootClassName]="'create-job-post-3rd-page-footer'"
+  [isNextDisabled]="isSubmitting || interviewForm.invalid"
+  [nextButtonText]="'Save'"
+  (cancelClick)="onCancel()"
+  (previousClick)="onPrevious()"
+  (saveDraftClick)="onSaveDraft()"
+  (skipClick)="onSkip()"
+  (nextClick)="onNext()"
+></create-job-post-footer2>
+
+</div>
+</div>

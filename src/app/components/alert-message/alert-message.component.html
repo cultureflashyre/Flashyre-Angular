@@ -1,0 +1,26 @@
+<div class="overlay">
+  <div class="alert-message">
+    <div class="alter-message-close-icon-container">
+      <span class="close-icon" (click)="onClose()">x</span>
+      <p>{{ message }}</p>
+    </div>
+
+    <div class="alter-message-buttons-container1">
+      @for (btn of buttons; track btn) {
+        <button
+          (click)="onButtonClick(btn)"
+            [ngClass]="{
+            'button-cancel': btn.toLowerCase() === 'cancel',
+            'button-save-draft': btn.toLowerCase() === 'save draft' || btn.toLowerCase() === 'yes',
+            'button-yes': btn.toLowerCase() === 'yes',
+            'button-delete': btn.toLowerCase() === 'delete'
+            }"
+          class="alter-message-component-button"
+          >
+          {{ btn }}
+        </button>
+      }
+    </div>
+
+  </div>
+</div>

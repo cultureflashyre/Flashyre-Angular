@@ -1,0 +1,16 @@
+<div class="progress-bar-container">
+  <div class="progress-bar">
+    @for (step of steps; track step; let i = $index) {
+      <div class="step" [ngClass]="{ 'completed': i < currentStep - 1, 'active': i === currentStep - 1 }">
+        <div class="step-circle">
+          @if (i < currentStep - 1) {
+            <span>&#10003;</span>
+          } @else {
+            <span>{{ i + 1 }}</span>
+          }
+        </div>
+        <span class="step-label">{{ step }}</span>
+      </div>
+    }
+  </div>
+</div>

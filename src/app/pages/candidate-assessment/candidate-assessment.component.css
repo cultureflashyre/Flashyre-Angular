@@ -1,7 +1,15 @@
 :host { 
     display: contents; 
   }
-   
+  
+  .profile-info-line {
+  display: block; /* or inline-block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px; /* Adjust this width to fit your layout */
+}
+
   .candidate-assessment-container10 {
     gap: 24px;
     width: 100%;
@@ -599,7 +607,6 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: flex-start;
-    background-color: #F4F4F4;
   }
    
   .candidate-assessment-main-container {
@@ -828,7 +835,8 @@
     align-items: flex-start;
     flex-direction: column;
     scroll-behavior: smooth;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    box-shadow: 0 -8px 12px -8px #d4d4d4;
   }
    
   .candidate-assessment-assessment-article-card1-container {
@@ -840,6 +848,8 @@
     box-shadow: 5px 5px 10px 0px #d4d4d4;
     align-items: center;
     border-radius: 8px;
+    border-width: 0.5px;
+    border-color: #ACACAD;
     justify-content: space-between;
     background-color: #FFFFFF;
   }
@@ -889,10 +899,45 @@
     width: auto;
     height: auto;
     font-size: 14px;
+    display: block;
+    max-height: 60px;
+    overflow: hidden;
+  }
+   
+  .candidate-assessment-assessment1-description.expanded {
+    max-height: 120px;
+  }
+   
+  .candidate-assessment-assessment1-description.scrollable {
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
    
   .candidate-assessment-text6 {
     color: #5e6670;
+  }
+   
+  .candidate-assessment-read-more-button {
+    width: 200px;
+    color: #05356C;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: 0.3s;
+    
+  }
+   
+  .candidate-assessment-read-more-button:hover {
+    transform: scale(0.95);
+  }
+   
+  .candidate-assessment-read-more-button:active {
+    transform: scale(1.05);
   }
    
   .candidate-assessment-lets-go1-button {
@@ -912,11 +957,98 @@
     transition: all 0.8s;
     background-color: 0A4992;
   }
+
+  .candidate-assessment-search-container {
+  flex: 0 0 auto;
+  width: 295px;
+  height: 36px;
+  display: flex;
+  min-width: 200px;
+  align-self: flex-end;
+  align-items: center;
+  border-color: #A7A7A7;
+  border-width: 1px;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+
+.candidate-assessment-search-input {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: 156px;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.candidate-assessment-search-icon-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  align-items: flex-start;
+}
+
+.candidate-assessment-search-icon {
+  fill: #323232;
+  color: #323232;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+  .Name-search-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
    
   .candidate-assessment-lets-go1-button:active {
     transform: scale(0.90);
     background-color: #30B63F;
   }
+
+  .candidate-assessment-lets-go1-button[disabled] {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  border: 1px solid #aaa;
+}
+
+.ng-star-inserted {
+  width: 100%;
+}
+
+.loading-container {
+  align-self: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3; /* Light grey circle */
+  border-top: 4px solid #3498db; /* Blue spinning part */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
    
   @media(max-width: 1200px) {
     .candidate-assessment-container10 {

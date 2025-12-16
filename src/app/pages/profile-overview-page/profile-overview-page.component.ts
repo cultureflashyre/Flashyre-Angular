@@ -12,17 +12,45 @@ import { ProfileEmploymentComponent } from '../../components/profile-employment-
 import { ProfileEducationComponent } from '../../components/profile-education-component/profile-education-component.component';
 import { ProfileCertificationsComponent } from '../../components/profile-certifications-component/profile-certifications-component.component';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { AlertMessageComponent } from 'src/app/components/alert-message/alert-message.component';
+import { ProgressBarStep1 } from 'src/app/components/progress-bar-step-1/progress-bar-step-1.component';
+import { ProgressBarStep2 } from 'src/app/components/progress-bar-step-2/progress-bar-step-2.component';
+import { ProgressBarStep3 } from 'src/app/components/progress-bar-step-3/progress-bar-step-3.component';
+import { ProgressBarStep4 } from 'src/app/components/progress-bar-step-4/progress-bar-step-4.component';
+import { ProgressBarStep5 } from 'src/app/components/progress-bar-step-5/progress-bar-step-5.component';
+import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
+import { BufferName1 } from 'src/app/components/buffer-name-1/buffer-name-1.component';
+
 @Component({
   selector: 'profile-overview-page',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, AlertMessageComponent,
+    ProgressBarStep1, ProgressBarStep3, ProgressBarStep4,
+    ProgressBarStep2, ProgressBarStep5, ProfileCreationNavigation2,
+    ProfileBasicinformationComponent, ProfileEmploymentComponent,
+    ProfileEducationComponent, ProfileCertificationsComponent,
+    BufferName1,
+  ],
   templateUrl: './profile-overview-page.component.html',
   styleUrls: ['./profile-overview-page.component.css'],
 })
 export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   currentStep: number = 1;
   isSaving: boolean = false;
+  
+  // New Alert and Popup Properties
+  showAlert = false;
+  alertMessage = '';
+  alertButtons: string[] = [];
   showPopup: boolean = false;
   popupMessage: string = '';
-  popupType: 'success' | 'error' | 'warning' = 'success';
+  popupType: 'success' | 'error' = 'success';
 
   // Basic Information
   firstName: string = '';
@@ -35,6 +63,11 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   imageSrc: string = '';
   defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
   
+  userType: 'candidate' | 'recruiter' | 'admin' = 'candidate'; // Default value
+  isCandidate: boolean = true;
+
+  navigationSource: 'candidate' | 'recruiter' = 'candidate'; // default
+
   @ViewChild('profilePictureInput') profilePictureInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resumeInput') resumeInput!: ElementRef<HTMLInputElement>;
 
@@ -67,6 +100,19 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     console.log('ngOnInit called');
+
+     // Get userType from localStorage instead of navigation state
+    const storedUserType = localStorage.getItem('userType');
+
+    if (storedUserType && ['candidate', 'recruiter', 'admin'].includes(storedUserType)) {
+      this.userType = storedUserType as 'candidate' | 'recruiter' | 'admin';
+      console.log('User type set to:', this.userType);
+    } else {
+      this.userType = 'candidate'; // Fallback or default value
+      console.log('No valid userType found in localStorage, defaulting to:', this.userType);
+    }
+    this.isCandidate = this.userType === 'candidate';
+
     const profileData = localStorage.getItem('userProfile');
     if (profileData) {
       try {
@@ -103,28 +149,18 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // --- Popup Handling ---
-  showSuccessPopup() {
-    this.popupMessage = 'Successfully Saved';
+  showSuccessPopup(message: string) {
+    this.popupMessage = message;
     this.popupType = 'success';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
   }
 
-  showErrorPopup(message?: string) {
-    this.popupMessage = message || 'Failed to upload';
+  showErrorPopup(message: string) {
+    this.popupMessage = message;
     this.popupType = 'error';
     this.showPopup = true;
     setTimeout(() => this.closePopup(), 3000); // Auto-close after 3 seconds
-  }
-
-  
-
-  // New method for the rate-limit warning
-  showRateLimitWarningPopup(message: string) {
-    this.popupMessage = message;
-    this.popupType = 'warning';
-    this.showPopup = true;
-    setTimeout(() => this.closePopup(), 3000);
   }
 
   closePopup() {
@@ -132,135 +168,195 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     this.popupMessage = '';
   }
 
-  // --- Navigation (Enhanced with Rate Limiting) ---
-  async onSaveAndNext() {
-    if (this.isSaving) return;
-    console.log('onSaveAndNext called, currentStep:', this.currentStep);
-    this.isSaving = true;
-    let success = false;
+  // --- Alert Handling ---
+  openAlert(message: string, buttons: string[]) {
+    this.alertMessage = message;
+    this.alertButtons = buttons;
+    this.showAlert = true;
+  }
+
+  onAlertButtonClicked(action: string) {
+    this.showAlert = false;
+    switch(action.toLowerCase()) {
+      case 'save & next':
+        this.onSaveAndNextConfirmed();
+        break;
+      case 'previous':
+        this.onPreviousConfirmed();
+        break;
+      case 'skip':
+        this.onSkipConfirmed();
+        break;
+      case 'cancel':
+        // Do nothing
+        break;
+      case 'ok':
+        // Do nothing, just close the alert
+        break;
+    }
+  }
+
+
+    // --- MODIFICATION START ---
+  // This new handler is triggered when the employment component detects a short date range.
+  handleDateConfirmationRequest(): void {
+    this.openAlert('Is your entered Start Date and End Date correct?', ['OK']);
+  }
+  // --- MODIFICATION END ---
+
+  // --- Navigation ---
+    onSaveAndNext() {
+    let formIsEmpty = false;
+    let hasDeletions = false; // Variable to hold the deletion state
     
+    // Check the state of the form for the current step
+    switch (this.currentStep) {
+      case 2: // Employment
+        if (this.employmentComponent) {
+          formIsEmpty = this.employmentComponent.isFormEmpty();
+
+          hasDeletions = this.employmentComponent.hasPendingDeletions;
+          // --- MODIFICATION START ---
+          // Before showing the save confirmation, check if there's a short employment duration.
+          // If so, show the date warning instead of the regular save/skip prompt.
+          if (this.employmentComponent.checkForShortEmploymentDurations()) {
+            this.openAlert('Is your entered Start Date and End Date correct?', ['Cancel', 'Save & Next']);
+            return; // Stop further execution to wait for user input.
+
+        }}
+        break;
+      case 3: // Education
+        if (this.educationComponent) {
+          formIsEmpty = this.educationComponent.isFormEmpty();
+          // Check the new public property from the child component
+          hasDeletions = this.educationComponent.hasPendingDeletions;
+        }
+        break;
+      case 5: // Certifications
+        if (this.certificationComponent) {
+          formIsEmpty = this.certificationComponent.isFormEmpty();
+        }
+        break;
+      // Step 1 (Basic Info) doesn't have a traditional form, so we always treat it as a "save" action.
+      default:
+        formIsEmpty = false;
+        break;
+    }
+
+    // If the form is empty, show the "skip" confirmation pop-up.
+    // Otherwise, show the regular "save" confirmation pop-up.
+    if (formIsEmpty && !hasDeletions) {
+      this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
+    } else {
+      this.openAlert('Do you want to save your changes and proceed?', ['Cancel', 'Save & Next']);
+    }
+  }
+
+  onPrevious() {
+    this.openAlert('Are you sure you want to go to the previous step?', ['Cancel', 'Previous']);
+  }
+
+  onSkip() {
+    this.openAlert('Are you sure you want to skip this step?', ['Cancel', 'Skip']);
+  }
+
+  // --- Confirmed Actions ---
+  async onSaveAndNextConfirmed() {
+    console.log('onSaveAndNext confirmed, currentStep:', this.currentStep);
+    this.isSaving = true;
+    let wasSaveSuccessful = false;
+
     try {
-      // --- LOGIC IS NOW ISOLATED BY STEP ---
+      // --- Step 1: Perform validation and save data based on the current step ---
       switch (this.currentStep) {
-        
-        case 1: { // Special handling for Basic Information
-          console.log('Saving profile information...');
+        case 1:
+          // First, validate. If it fails, exit immediately.
+          if (!this.profileComponent || !this.profileComponent.validateInputs()) {
+            this.isSaving = false;
+            return;
+          }
           const result = await this.profileComponent.saveProfile();
-          success = result.success;
+          wasSaveSuccessful = result.success;
           if (result.success) {
-            if (result.rateLimited) {
-              // Show rate-limit warning only for step 1
-              this.showRateLimitWarningPopup(result.message);
-            } else {
-              // Show standard success for step 1
-              this.showSuccessPopup();
-            }
+            this.showSuccessPopup("Successfully Saved");
           } else {
             this.showErrorPopup(result.message || 'Failed to save profile.');
           }
           break;
-        }
-        
-        case 2: { // Standard handling for Employment
-          console.log('Saving employment information...');
-          success = await this.employmentComponent.saveEmployment();
-          if (success) {
-            this.showSuccessPopup();
+        case 2:
+          wasSaveSuccessful = await this.employmentComponent.saveEmployment();
+          if (wasSaveSuccessful) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save employment details.');
+          break;
+        case 3:
+          wasSaveSuccessful = await this.educationComponent.saveEducation();
+          if (wasSaveSuccessful) this.showSuccessPopup("Successfully Saved"); else this.showErrorPopup('Failed to save education details.');
+          break;
+        case 5:
+          wasSaveSuccessful = await this.certificationComponent.saveCertifications();
+          if (wasSaveSuccessful) {
+            this.showSuccessPopup("Successfully Saved");
           } else {
-            this.showErrorPopup('Failed to save employment details.');
+            this.showErrorPopup("Failed to upload");
           }
           break;
-        }
-        
-        case 3: { // Standard handling for Education
-          console.log('Saving education information...');
-          success = await this.educationComponent.saveEducation();
-          if (success) {
-            this.showSuccessPopup();
-          } else {
-            this.showErrorPopup('Failed to save education details.');
-          }
-          break;
-        }
-          
-        case 5: { // Standard handling for Certifications
-          console.log('Saving certifications information...');
-          success = await this.certificationComponent.saveCertifications();
-          if (success) {
-            this.showSuccessPopup();
-          } else {
-            this.showErrorPopup('Failed to save certification details.');
-          }
-          break;
-        }
-        
-        default:
-          console.warn('No save action for this step, proceeding.');
-          success = true; // Allow navigation if no save action is defined
       }
-      
-      // --- COMMON NAVIGATION LOGIC ---
-      // This part runs if ANY step reported success.
-      if (success) {
-        // Navigate immediately for a better user experience,
-        // the popup will show over the new component for 3 seconds.
-        if (this.currentStep < 6) {
-          this.currentStep++;
-          if (this.currentStep === 4) {
-            console.log('Skipping step 4 as per logic.');
-            this.currentStep = 5; // Skip step 4
-          }
-        }
-        
-        // After the final save on step 5, navigate to the home page.
-        if (this.currentStep === 6 || (this.currentStep > 5 && this.currentStep !== 5)) {
-          // Use a timeout here so the user can see the final "Success" message
+
+      // --- Step 2: Navigate to the next step ONLY if the save was successful ---
+      if (wasSaveSuccessful) {
+        if (this.currentStep === 5) {
+          // Special case for the last step to navigate away
           setTimeout(() => {
-            this.router.navigate(['/candidate-home']);
+            if (this.userType === 'recruiter') this.router.navigate(['job-post-list']);
+            else this.router.navigate(['candidate-home']);
           }, 3000);
+        } else if (this.currentStep < 6) {
+          // For all other steps, advance to the next one
+          this.currentStep++;
+          if (this.currentStep === 3 && !this.isCandidate) {
+            this.currentStep = 5; // Skip Education step for non-candidates
+          } else if (this.currentStep === 4) {
+            this.currentStep = 5; // Skip step 4 (existing logic)
+          }
         }
       }
     } catch (error) {
-      console.error(`Exception caught during save at step ${this.currentStep}:`, error);
-      this.showErrorPopup();
+      this.showErrorPopup('An unexpected error occurred.');
     } finally {
       this.isSaving = false;
     }
   }
 
-  onPrevious() {
+  onPreviousConfirmed() {
     if (this.currentStep > 1) {
       this.currentStep--;
       if (this.currentStep === 4) {
-        console.log('Skipping step 4 on previous, moving back to step 3');
-        this.currentStep = 3; // Skip step 4
+        this.currentStep = 3; // Skip back over step 4
+      }
+      // If user is not a candidate and we landed on step 3, go back to step 2
+      if (this.currentStep === 3 && !this.isCandidate) {
+        this.currentStep = 2;
       }
     }
-    console.log('onPrevious called, currentStep:', this.currentStep);
   }
 
-  onSkip() {
+  onSkipConfirmed() {
     if (this.currentStep < 6) {
       this.currentStep++;
-      if (this.currentStep === 4) {
-        console.log('Skipping step 4 on skip, moving forward to step 5');
-        this.currentStep = 5; // Skip step 4
+      if (this.currentStep === 3 && !this.isCandidate) {
+        this.currentStep = 5; // Skip Education step for non-candidates
+      } else if (this.currentStep === 4) {
+        this.currentStep = 5; // Skip step 4 (existing logic)
       }
     }
-    console.log('onSkip called, currentStep:', this.currentStep);
-
-    // If user has reached or passed the last step, navigate to candidate-home
     if (this.currentStep >= 6) {
-      console.log('All steps skipped or completed, navigating to candidate-home');
       setTimeout(() => {
-        this.router.navigate(['candidate-home']);
-      }, 3000);
+        if (this.userType === 'recruiter') this.router.navigate(['job-post-list']);
+        else this.router.navigate(['candidate-home']);
+      }, 1000);
     }
   }
 
   isStepVisible(step: number): boolean {
-    const visible = this.currentStep === step;
-    console.log(`isStepVisible(${step}) called, returning:`, visible);
-    return visible;
+    return this.currentStep === step;
   }
 }

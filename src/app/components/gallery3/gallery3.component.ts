@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-gallery3',
-  templateUrl: 'gallery3.component.html',
-  styleUrls: ['gallery3.component.css'],
+    selector: 'app-gallery3',
+    templateUrl: 'gallery3.component.html',
+    styleUrls: ['gallery3.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class Gallery3 {
   @Input()

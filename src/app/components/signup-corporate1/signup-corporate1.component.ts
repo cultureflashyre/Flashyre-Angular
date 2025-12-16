@@ -1,14 +1,28 @@
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, ContentChild, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Router, RouterLink } from '@angular/router';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { environment } from '../../../environments/environment';
+import { UserProfileService } from '../../services/user-profile.service';
+import { ThumbnailService } from '../../services/thumbnail.service';
+import { NgClass, NgTemplateOutlet } from '@angular/common';  // Import ThumbnailService
+
 
 @Component({
-  selector: 'signup-corporate1',
-  templateUrl: './signup-corporate1.component.html',
-  styleUrls: ['./signup-corporate1.component.css']
+    selector: 'signup-corporate1',
+    templateUrl: './signup-corporate1.component.html',
+    styleUrls: ['./signup-corporate1.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, FormsModule, ReactiveFormsModule, RouterLink]
 })
-export class SignupCorporate1 {
+export class SignupCorporate1 implements OnInit {
+
+  private baseUrl = environment.apiUrl;
+
   @ContentChild('button') button: TemplateRef<any>;
   @ContentChild('text12') text12: TemplateRef<any>;
   @ContentChild('text13') text13: TemplateRef<any>;
@@ -27,6 +41,7 @@ export class SignupCorporate1 {
 
   signupForm: FormGroup;
   errorMessage: string = '';
+  successMessage: string = '';
   showSuccessPopup: boolean = false;
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
@@ -36,17 +51,104 @@ export class SignupCorporate1 {
   constructor(
     private fb: FormBuilder,
     private corporateAuthService: CorporateAuthService,
-    private router: Router
-  ) {
-    this.signupForm = this.fb.group({
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      company_name: ['', Validators.required],
-      phone_number: ['', [Validators.required, Validators.pattern(/^\d{10,15}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirm_password: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private http: HttpClient,
+    private userProfileService: UserProfileService,
+    private thumbnailService: ThumbnailService  // Inject ThumbnailService
+  ) {  }
+
+  ngOnInit() {
+    this.signupForm = this.fb.group(
+      {
+        first_name: ['', [Validators.required, 
+          Validators.pattern(/^[a-zA-Z ]+$/), 
+          Validators.minLength(3),
+          Validators.maxLength(10),
+        ]],
+        last_name: ['', [Validators.required, 
+          Validators.pattern(/^[a-zA-Z ]+$/), 
+          Validators.minLength(3),
+          Validators.maxLength(10),
+      ]],
+        //company_name: ['', Validators.required], // keep simple for now or add validators if needed
+        phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
+        email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
+        password: ['', [Validators.required, 
+          this.passwordComplexityValidator(), 
+          Validators.minLength(8),
+          Validators.maxLength(15)
+        ]],
+        confirm_password: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+  }
+
+ phoneExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const phone = control.value;
+      if (!phone) return of(null);
+      // FROM: return this.http.get(`${this.baseUrl}check-phone/?phone=${phone}`).pipe(
+      // TO:
+      return this.http.get(`${this.baseUrl}api/auth/check-phone/?phone=${phone}`).pipe(
+        map((res: any) => (res.exists ? { phoneExists: true } : null)),
+        catchError(() => of(null))
+      );
+    };
+  }
+    
+ emailExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const email = control.value;
+      if (!email) return of(null);
+      // FROM: return this.http.get(`${this.baseUrl}check-email/?email=${email}`).pipe(
+      // TO:
+      return this.http.get(`${this.baseUrl}api/auth/check-email/?email=${email}`).pipe(
+        map((res: any) => (res.exists ? { emailExists: true } : null)),
+        catchError(() => of(null))
+      );
+    };
+  }
+
+  sanitizePhoneNumber(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const sanitizedValue = input.value.replace(/\D/g, '').slice(0, 10);
+    this.signupForm.get('phone_number').setValue(sanitizedValue, { emitEvent: false });
+  }
+
+  passwordComplexityValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value || '';
+
+      if (!value) {
+        return null; // Let required validator handle empty case
+      }
+
+      const errors: ValidationErrors = {};
+
+      if (value.length < 8) {
+        errors.minlength = { requiredLength: 8, actualLength: value.length };
+      }
+      if (!/[A-Z]/.test(value)) {
+        errors.uppercase = true;
+      }
+      if (!/[a-z]/.test(value)) {
+        errors.lowercase = true;
+      }
+      if (!/[0-9]/.test(value)) {
+        errors.number = true;
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+        errors.specialChar = true;
+      }
+      // At least one alphabet is covered by uppercase or lowercase, but if you want to explicitly check:
+      if (!/[a-zA-Z]/.test(value)) {
+        errors.alphabet = true;
+      }
+
+      return Object.keys(errors).length ? errors : null;
+    };
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -57,23 +159,63 @@ export class SignupCorporate1 {
 
   onSubmit() {
     if (this.signupForm.valid) {
+      this.spinner.show(); // show spinner as in candidate signup
+
+      const firstName = this.signupForm.get('first_name').value;
+      const lastName = this.signupForm.get('last_name').value;
+      const initials = this.thumbnailService.getUserInitials(`${firstName} ${lastName}`);
+
       const formData = { ...this.signupForm.value };
+      
+      // Remove confirm_password as backend does not need it
       delete formData.confirm_password;
-      this.corporateAuthService.signupCorporate(formData).subscribe({
-        next: (response) => {
+      
+      // Add explicit user_type for corporate (recruiter)
+      formData.user_type = 'recruiter';
+      formData.initials = initials;  // Add initials here
+
+      // Make POST request to same candidate signup API path (e.g., 'signup-candidate/' or unified backend path)
+      this.http.post(`${this.baseUrl}api/auth/signup/`, formData).subscribe({
+        next: (response: any) => {
           this.showSuccessPopup = true;
           this.errorMessage = '';
+          
+          // Store JWT tokens in localStorage just like candidate signup
+          localStorage.setItem('jwtToken', response.access);
+          localStorage.setItem('refreshToken', response.refresh);
+          localStorage.setItem('user_id', response.user_id); // Store the user_id
+          localStorage.setItem('userType', response.role);
+          
+          // Fetch user profile
+          this.userProfileService.fetchUserProfile().subscribe(
+            () => {
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
+            },
+            (profileError) => {
+              console.error('Error fetching profile', profileError);
+              this.router.navigate(['/profile-overview-page'], { state: { source: 'recruiter' } });
+            }
+          );
+
+          this.spinner.hide(); // hide spinner after all done
         },
         error: (error) => {
-          this.errorMessage = error.error?.error || 'An error occurred during signup.';
+          this.spinner.hide(); // hide spinner on error
+          if (error.status === 400 && error.error.email) {
+            this.errorMessage = 'Email already exists!';
+          } else if (error.status === 400 && error.error.phone_number) {
+            this.errorMessage = 'Phone number already exists!';
+          } else {
+            this.errorMessage = error.error?.error || 'Signup failed. Please try again.';
+          }
         }
       });
     } else {
       this.errorMessage = 'Please fill in all required fields correctly.';
-      // Mark all fields as touched to show error messages
       this.signupForm.markAllAsTouched();
     }
   }
+
 
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
@@ -86,11 +228,11 @@ export class SignupCorporate1 {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login-corporate']);
+    this.router.navigate(['/login']);
   }
 
   closePopup() {
     this.showSuccessPopup = false;
-    this.router.navigate(['/login-corporate']);
+    this.router.navigate(['/login']);
   }
 }

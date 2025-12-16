@@ -2,7 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AssessmentTakenService } from '../../services/assessment-taken.service';
 import { AuthService } from '../../services/candidate.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { JobsService } from '../../services/job.service'; // [ADDED] Import the JobsService
+
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+import { NavbarForCandidateView } from 'src/app/components/navbar-for-candidate-view/navbar-for-candidate-view.component';
+import { AssessmentAttemptsListComponent } from 'src/app/components/assessment-attempts-list/assessment-attempts-list';
 
 interface UserProfile {
   first_name: string;
@@ -11,42 +21,75 @@ interface UserProfile {
 
 @Component({
   selector: 'assessment-taken-page',
+  standalone: true,
+  imports: [
+    RouterModule, CommonModule, CommonModule, FormsModule,
+    AssessmentAttemptsListComponent,
+    NavbarForCandidateView,
+  ],
   templateUrl: 'assessment-taken-page.component.html',
-  styleUrls: ['assessment-taken-page.component.css'],
+  styleUrls: ['assessment-taken-page.component.css']
 })
 export class AssessmentTakenPage implements OnInit {
   assessments: any[] = [];
+  showAttempts: { [key: string]: boolean } = {};
+  selectedAssessmentId: string | null = null;
+  searchQuery: string = '';
   userProfile: UserProfile | null = null;
+
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6; // Set how many items to load per page/scroll
+
+    // UI State
+  isLoading: boolean = true;
 
   constructor(
     private title: Title,
     private meta: Meta,
     private assessmentTakenService: AssessmentTakenService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private jobsService: JobsService // [ADDED] Inject the JobsService
+
   ) {
     this.title.setTitle('Assessment-Taken-Page - Flashyre');
     this.meta.addTags([
-      {
-        property: 'og:title',
-        content: 'Assessment-Taken-Page - Flashyre',
-      },
-      {
-        property: 'og:image',
-        content:
-          'https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml=1&force_format=original',
-      },
+      { property: 'og:title', content: 'Assessment-Taken-Page - Flashyre' },
+      // ... other meta tags
     ]);
   }
 
-  ngOnInit() {
+   ngOnInit() {
+
+    // [ADDED] This is the crucial fix.
+    // When this page loads, we know the user has just completed an assessment.
+    // We signal the JobsService to mark its job list cache as "dirty".
+    // The next time the user navigates to the candidate-home page, the service will be forced
+    // to fetch a fresh list from the server, reflecting the new assessment status.
+    this.jobsService.invalidateCache();
+
     this.loadUserProfile();
+    
+    this.route.queryParams.subscribe(params => {
+      this.selectedAssessmentId = params['assessmentId'] || null;
+    });
+    
+    this.isLoading = true; // Start loading before request
     this.assessmentTakenService.getAllAssessmentScores().subscribe(
       (data) => {
-        this.assessments = data;
+        // Sort assessments by the latest_end_time in descending order (recent first)
+        this.assessments = data.sort((a, b) => {
+          const dateA = new Date(a.latest_end_time).getTime();
+          const dateB = new Date(b.latest_end_time).getTime();
+          return dateB - dateA;
+        });
+        this.isLoading = false; // Loading done after data received
       },
-      (error) => {
-        console.error('Error fetching assessment scores', error);
+      (error) => { 
+        console.error('Error fetching assessment scores', error); 
+        this.isLoading = false; // Loading done even if error occurs
       }
     );
   }
@@ -70,10 +113,63 @@ export class AssessmentTakenPage implements OnInit {
 
   onLogoutClick() {
     this.authService.logout();
-    // this.router.navigate(['/login-candidate']);
   }
 
-  goToAssessmentDetails(assessment: any) {
-    this.router.navigate(['/assessment-taken-page-2', assessment.assessment_id]);
+  selectAssessment(assessmentId: string) {
+    this.router.navigate([], { 
+      relativeTo: this.route,
+      queryParams: { assessmentId: assessmentId },
+      queryParamsHandling: 'merge' 
+    });
+  }
+
+  closeDetailView() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { assessmentId: null, attemptIndex: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // This method provides the full filtered list
+  getFilteredAssessments() {
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      return this.assessments;
+    }
+    return this.assessments.filter(assessment =>
+      assessment.assessment_title.toLowerCase().includes(query) ||
+      String(assessment.assessment_id).toLowerCase().includes(query)
+    );
+  }
+
+  // When the user searches, we must reset to the first page
+  onSearchQueryChange(query: string) {
+    this.searchQuery = query;
+    this.currentPage = 1; 
+  }
+
+  // MODIFIED: This method now returns a growing list of displayed items
+  getDisplayedAssessments() {
+    const filtered = this.getFilteredAssessments();
+    // It slices from the beginning to the end of the current page
+    return filtered.slice(0, this.currentPage * this.itemsPerPage);
+  }
+
+  // MODIFIED: This method now handles loading the next page on scroll
+  onScroll(event: any) {
+    const target = event.target;
+    const threshold = 5; // A small pixel buffer
+    
+    // Check if the user has scrolled to the bottom of the container
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - threshold) {
+      const totalAssessments = this.getFilteredAssessments().length;
+      const currentlyDisplayed = this.getDisplayedAssessments().length;
+
+      // Load more assessments only if there are more to show
+      if (currentlyDisplayed < totalAssessments) {
+        this.currentPage++;
+      }
+    }
   }
 }

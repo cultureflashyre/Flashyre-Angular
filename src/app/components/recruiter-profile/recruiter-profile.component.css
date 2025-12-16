@@ -46,17 +46,19 @@
 .recruiter-profile-details-container {
   gap: 3px;
   flex: 0 0 auto;
-  width: 152px;
+  gap: 16px;
+  width: 100%;
   height: 102px;
-  display: flex;
-  align-items: flex-start;
+  display: flex;  
+  align-items: center;
   flex-direction: column;
+  justify-content: center;
 }
  
 .recruiter-profile-recruiter-name {
   fill: #18191C;
   color: #18191C;
-  width: 128px;
+  width: auto;
   height: 24px;
   display: flex;
   align-self: center;
@@ -67,14 +69,15 @@
 }
  
 .recruiter-profile-container2 {
-  gap: 4px;
+  /*gap: 4px;*/
   flex: 0 0 auto;
-  width: 76px;
+  width: 100%;
   height: 24px;
   display: flex;
   align-self: center;
   align-items: center;
   flex-direction: row;
+  justify-content: center;
 }
  
 .recruiter-profile-company-image {
@@ -87,11 +90,12 @@
 }
  
 .recruiter-profile-company-name {
-  width: 56px;
+  /*width: 80%;*/
   height: 24px;
   display: flex;
   font-style: normal;
   align-items: center;
+  text-align: center;
   font-weight: 700;
   justify-content: flex-start;
 }
@@ -99,7 +103,7 @@
 .recruiter-profile-job-role-of-recruiter {
   fill: #18191C;
   color: #18191C;
-  width: 152px;
+  width: 100%;
   height: 48px;
   display: flex;
   font-size: 14px;
@@ -138,7 +142,25 @@
   height: auto;
 }
  
+.recruiter-view3rd-page1-user-image {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+}
 
+.initials-avatar {
+  width: 48px;
+  height: 48px;
+  background-color: #4CAF50; /* adjust color or make dynamic */
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
  
 
  
@@ -165,6 +187,10 @@
   .recruiter-profile-recruiter-image {
     width: 100px;
     height: 100px;
+  }
+  .recruiter-view3rd-page1-user-image {
+    width: 94px;
+    height: 94px;
   }
   .recruiter-profile-details-container {
     gap: 2px;
@@ -227,6 +253,13 @@
     width: 161px;
     height: 264px;
   }
+
+  .recruiter-view3rd-page1-user-image {
+    width: 74px;
+    height: 74px;
+    border-radius: var(--dl-layout-radius-round);
+  }
+
   .recruiter-profile-recruiter-image {
     width: 96px;
     height: 96px;

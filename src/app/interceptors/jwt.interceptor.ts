@@ -1,90 +1,102 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+// src/app/interceptors/jwt.interceptor.ts
+import { inject } from '@angular/core';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { AuthService } from '../services/candidate.service';
-import { CorporateAuthService } from '../services/corporate-auth.service'; // Import corporate service
-
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService,
-    private corporateAuthService: CorporateAuthService
-  ) {}
+import { AuthService } from '../services/candidate.service';
+import { CorporateAuthService } from '../services/corporate-auth.service';
 
-  private isRefreshing = false;
-  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+interface JwtPayload {
+  exp: number;
+}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Determine which auth service to use based on request URL
-    const authService = this.getAuthService(request.url);
-    const token = authService.getJWTToken();
+// --- State and Helpers moved to the module scope ---
+let isRefreshing = false;
+const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-    let authReq = request;
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded = jwtDecode<JwtPayload>(token);
+    return new Date(decoded.exp * 1000) < new Date();
+  } catch (e) {
+    return true;
+  }
+};
 
-    if (token) {
-      authReq = this.addToken(request, token);
-    }
+const addToken = (request: HttpRequest<any>, token: string) => {
+  return request.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
-    return next.handle(authReq).pipe(
-      catchError(error => {
-        if (error instanceof HttpErrorResponse && 
-          error.status === 401 &&
-          !authReq.url.includes('refresh-token')) {
-          // Access token might have expired
-          return this.handle401Error(authReq, next, authService);
-        }
-        return throwError(() => error);
+// --- Main Interceptor Function ---
+export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
+  // Inject dependencies
+  const candidateAuthService = inject(AuthService);
+  const corporateAuthService = inject(CorporateAuthService);
+  const router = inject(Router);
+
+  // Determine which service to use based on the request URL
+  const authService = req.url.includes('/corporate/') ? corporateAuthService : candidateAuthService;
+  let token = authService.getJWTToken();
+
+  if (token && isTokenExpired(token)) {
+    authService.clearTokens();
+    token = null;
+  }
+
+  let authReq = req;
+  if (token) {
+    authReq = addToken(req, token);
+  }
+
+  return next(authReq).pipe(
+    catchError(error => {
+      if (error instanceof HttpErrorResponse && error.status === 401 && !authReq.url.includes('api/auth/login/')) {
+        return handle401Error(authReq, next, authService, router);
+      }
+      return throwError(() => error);
+    })
+  );
+};
+
+// --- Token Refresh Logic Helper ---
+function handle401Error(
+  request: HttpRequest<any>,
+  next: HttpHandlerFn,
+  authService: AuthService | CorporateAuthService,
+  router: Router
+): Observable<HttpEvent<any>> {
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshTokenSubject.next(null);
+
+    return authService.refreshToken().pipe(
+      switchMap((tokenResponse: any) => {
+        isRefreshing = false;
+        const newAccessToken = tokenResponse.access;
+        refreshTokenSubject.next(newAccessToken);
+        authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
+        return next(addToken(request, newAccessToken));
+      }),
+      catchError(err => {
+        isRefreshing = false;
+        authService.logout(); // A single logout method is cleaner
+        const loginRoute = '/login';
+        router.navigate([loginRoute]);
+        return throwError(() => err);
       })
     );
-  }
-
-  private getAuthService(url: string): AuthService | CorporateAuthService {
-    // Check URL to determine service type
-    return url.includes('/corporate/') ? this.corporateAuthService : this.authService;
-  }
-
-  private addToken(request: HttpRequest<any>, token: string) {
-    return request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-
-private handle401Error(request: HttpRequest<any>, next: HttpHandler, authService: AuthService | CorporateAuthService) {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenSubject.next(null);
-
-      return authService.refreshToken().pipe(
-        switchMap((tokenResponse: any) => {
-          this.isRefreshing = false;
-          const newAccessToken = tokenResponse.access;
-          this.refreshTokenSubject.next(newAccessToken);
-          authService.saveTokens(newAccessToken, tokenResponse.refresh || authService.getRefreshToken());
-          return next.handle(this.addToken(request, newAccessToken));
-        }),
-        catchError(err => {
-          this.isRefreshing = false;
-          authService.logout();
-          // Redirect to appropriate login
-          if (authService instanceof CorporateAuthService) {
-            // Add corporate logout navigation if needed
-          } else {
-            // Existing candidate logout navigation
-          }
-          return throwError(() => err);
-        })
-      );
-    } else {
-      return this.refreshTokenSubject.pipe(
-        filter(token => token !== null),
-        take(1),
-        switchMap(token => next.handle(this.addToken(request, token!)))
-      );
-    }
+  } else {
+    return refreshTokenSubject.pipe(
+      filter(token => token !== null),
+      take(1),
+      switchMap(token => next(addToken(request, token!)))
+    );
   }
 }

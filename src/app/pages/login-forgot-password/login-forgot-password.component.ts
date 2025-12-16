@@ -2,8 +2,15 @@ import { Component } from '@angular/core';
 import { ResetService } from '../../services/reset.service';
 import { Router } from '@angular/router';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
 @Component({
   selector: 'app-login-forgot-password',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    ],
   templateUrl: './login-forgot-password.component.html',
   styleUrls: ['./login-forgot-password.component.css'],
 })
@@ -36,6 +43,7 @@ onSubmit() {
       console.log('Forgot password response:', response);
       this.message = response.message || 'OTP sent to your email';
       this.loading = false;
+      localStorage.removeItem(`otpExpiry_${this.email}`);
       this.router.navigate(['/login-reset-password'], {
         state: { email: this.email },
         queryParams: { email: this.email }

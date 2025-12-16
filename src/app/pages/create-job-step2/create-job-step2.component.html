@@ -1,0 +1,278 @@
+<ngx-spinner
+  name="ai-spinner"
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+  [fullScreen]="true"
+  >
+  <p style="color: white; font-size: 18px;">Generating AI Questions...</p>
+</ngx-spinner>
+<navbar-for-admin-view
+  rootClassName="navbar-for-candidate-viewroot-class-name"
+  >
+  <ng-template>
+    <div class="candidate-home-fragment10">
+      <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment11">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment12">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
+    </div>
+  </ng-template>
+  <ng-template>
+    <div class="candidate-home-fragment13">
+      <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
+    </div>
+  </ng-template>
+  <ng-template #text1>
+    <div class="candidate-home-fragment14">
+      <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
+    </div>
+  </ng-template>
+  <ng-template #text2>
+    <div class="candidate-home-fragment15">
+      <span class="candidate-home-text105">Preference</span>
+    </div>
+  </ng-template>
+  <ng-template #text3>
+    <div class="candidate-home-fragment16">
+      <span class="candidate-home-text106">Settings</span>
+    </div>
+  </ng-template>
+  <ng-template #text4>
+    <div class="candidate-home-fragment17">
+      <span class="candidate-home-text107">
+        {{ userProfile.first_name }} {{ userProfile.last_name }}
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text5>
+    <div class="candidate-home-fragment18">
+      <span class="candidate-home-text108">✅ 90% Profile Completion</span>
+    </div>
+  </ng-template>
+  <ng-template #text6>
+    <div class="candidate-home-fragment19">
+      <span class="candidate-home-text109">View & edit profile</span>
+    </div>
+  </ng-template>
+  <ng-template #text7>
+    <div class="candidate-home-fragment20">
+      <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
+    </div>
+  </ng-template>
+  <ng-template #text8>
+    <div class="candidate-home-fragment21">
+      <span class="candidate-home-text111">Upskill</span>
+    </div>
+  </ng-template>
+  <ng-template #text9>
+    <div class="candidate-home-fragment22">
+      <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
+    </div>
+  </ng-template>
+  <ng-template #text10>
+    <div class="candidate-home-fragment23">
+      <span class="candidate-home-text113">Jobs for you</span>
+    </div>
+  </ng-template>
+  <ng-template #text11>
+    <div class="candidate-home-fragment24">
+      <span class="candidate-home-text114">Preference</span>
+    </div>
+  </ng-template>
+  <ng-template #text12>
+    <div class="candidate-home-fragment25">
+      <span class="candidate-home-text115">Settings</span>
+    </div>
+  </ng-template>
+  <ng-template #text13>
+    <div class="candidate-home-fragment26">
+      <span class="candidate-home-text116">Logout</span>
+    </div>
+  </ng-template>
+  <ng-template #text31>
+    <div class="candidate-home-fragment27">
+      <span class="candidate-home-text117">Logout</span>
+    </div>
+  </ng-template>
+</navbar-for-admin-view>
+
+
+<!-- START: Corrected Navbar Implementation -->
+<navbar-for-admin-view rootClassName="navbar-for-candidate-viewroot-class-name">
+  <!-- You can include all the necessary ng-template slots just like in your first component -->
+  <!-- This example includes the key one for the user's name -->
+  <ng-template #text4>
+    <div class="candidate-home-fragment17">
+      <span class="candidate-home-text107">
+        {{ userProfile.first_name }} {{ userProfile.last_name }}
+      </span>
+    </div>
+  </ng-template>
+  <!-- Add other ng-template slots as needed for Logout, Settings, etc. -->
+</navbar-for-admin-view>
+
+<div class="page-container">
+  <div class="content-wrapper">
+    @if (showAlert) {
+      <app-alert-message
+        [message]="alertMessage"
+        [buttons]="alertButtons"
+        (buttonClicked)="onAlertButtonClicked($event)"
+        (close)="showAlert = false"
+      ></app-alert-message>
+    } @if (showPopup) {
+      <div
+        class="alert"
+        [ngClass]="{ success: popupType === 'success', error: popupType === 'error' }"
+      >
+        @if (popupType === 'success') {
+          <span class="tick">✔</span>
+        }
+        {{ popupMessage }}
+        <span class="closebtn" (click)="closePopup()"> × </span>
+      </div>
+    }
+
+    <div class="main-content-card">
+      <!-- START: Updated Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="create-job-progress-bar">
+          <div class="step completed">
+            <div class="step-circle">✓</div>
+            <span>Create Job Post</span>
+          </div>
+          <div class="step active">
+            <div class="step-circle">2</div>
+            <span>Assessment for Job</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">3</div>
+            <span>Interview process</span>
+          </div>
+        </div>
+      </div>
+      <!-- END: Updated Progress Bar -->
+
+      <div class="page-header">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          class="back-icon"
+          (click)="onPrevious()"
+        >
+          <path
+            d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+            fill="currentColor"
+          ></path>
+        </svg>
+        <span class="page-title">Assessment for Job</span>
+      </div>
+
+      <div class="questions-section">
+        <span class="questions-title">
+          How do you want to add questions to the assessment?
+        </span>
+        <div class="buttons-container">
+          <button
+            id="generate-questions-button"
+            class="generate-button"
+            [ngClass]="{ 'regenerate': aiQuestionsGenerated }"
+            (click)="onGenerateAi()"
+            [disabled]="isGenerating"
+            [title]="isGenerating ? 'Generating...' : (aiQuestionsGenerated ? 'Regenerate questions using AI' : 'Generate questions using AI')"
+          >
+            <span id="generate-questions-text" class="generate-text">
+    @if (isGenerating) {
+      <span>Generating...</span>
+    } @else {
+      <span>
+        <span class="generate-label">{{ aiQuestionsGenerated ? 'Regenerate with AI' : 'Generate with AI' }}</span>
+        <span class="sparkle"> ✨</span>
+      </span>
+    }
+  </span>
+          </button>
+
+          <button
+            id="upload-questions-button"
+            class="upload-button"
+            (click)="handleUploadClick()"
+            [disabled]="isGenerating"
+            title="Upload your own questions"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="upload-icon"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+              <!-- Your SVG path -->
+            </svg>
+            <span id="upload-text" class="upload-text">Upload from Device</span>
+          </button>
+        </div>
+        @if (showAiSuccessMessage) {
+  <div class="ai-success-message">
+    AI questions have been generated.
+  </div>
+}
+@if (uploadedFileName) {
+  <div class="uploaded-file-name">
+    <strong>Uploaded file:</strong> {{ uploadedFileName }}
+  </div>
+}
+      </div>
+    </div>
+
+    <!-- The footer remains outside the main card for consistent placement -->
+    <create-job-post-footer2
+      rootClassName="create-job-post-footer2root-class-name1"
+      [isNextDisabled]="!questionsAreReady || isGenerating"
+      (cancelClick)="onCancel()"
+      (previousClick)="onPrevious()"
+      (skipClick)="onSkip()"
+      (nextClick)="onNext()"
+      (saveDraftClick)="onSaveDraft()"
+    ></create-job-post-footer2>
+
+    <!-- Upload Popup -->
+    @if (showUploadPopup) {
+      <div class="upload-popup-backdrop">
+        <div class="upload-popup-card">
+          <h3>Upload Questions Template</h3>
+          <div class="step-info">
+            <strong>Step 1:</strong> Download and fill out the Excel template in the specified format.<br />
+            <button class="download-template-button" (click)="downloadTemplate()">
+              Download Template <span class="download-icon">⬇️</span>
+            </button>
+          </div>
+          <div class="step-info">
+            <strong>Step 2:</strong> Upload the completed Excel file to extract the questions.<br />
+            <input
+              type="file"
+              class="file-input"
+              accept=".xlsx,.xls"
+              (change)="onFileSelected($event)"
+            />
+          </div>
+          <div class="popup-actions">
+            <button class="close-popup-button" (click)="closeUploadPopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

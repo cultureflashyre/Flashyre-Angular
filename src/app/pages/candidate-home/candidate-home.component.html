@@ -1,30 +1,71 @@
+<div 
+  *ngIf="showMoreFilters" 
+  [@popupAnimation] 
+  [ngStyle]="{
+    position: 'absolute',
+    top: filterPosition.top + 'px',
+    left: filterPosition.left + 'px',
+    zIndex: 1002
+  }"
+  class="filter-popup-wrapper"
+  (click)="$event.stopPropagation()"
+>
+  <more-filters-and-preference-component
+  [callerType]="'candidate'" 
+  (closeEvent)="showMoreFilters = false"
+  (applyFiltersEvent)="onApplyFilters($event)"
+  [initialTab]="initialFilterTab"
+></more-filters-and-preference-component>
+</div>
+
+<!-- Backdrop (separate for fade animation) -->
+<div 
+  *ngIf="showMoreFilters" 
+  class="filter-backdrop"
+  [@popupAnimation]
+  (click)="showMoreFilters = false"
+></div>
+
 <div id="candidate-home" class="candidate-home-container1">
+  <!-- [ADD THIS HTML SNIPPET FOR THE POPUP] -->
+  <div *ngIf="successMessage" class="success-popup">
+    {{ successMessage }}
+  </div>
+
+    <app-alert-message
+      *ngIf="showAssessmentAlert"
+      [message]="assessmentAlertMessage"
+      [buttons]="assessmentAlertButtons"
+      (buttonClicked)="handleAssessmentAlertAction($event)"
+      (close)="handleAssessmentAlertAction('Later')">
+    </app-alert-message>
+
   <navbar-for-candidate-view
     rootClassName="navbar-for-candidate-viewroot-class-name"
   >
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment10">
         <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment11">
         <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment12">
         <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
       </div>
     </ng-template>
-    <ng-template >
+    <ng-template>
       <div class="candidate-home-fragment13">
         <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
       </div>
     </ng-template>
     <ng-template #text1>
       <div class="candidate-home-fragment14">
-        <span class="candidate-home-text104">Profile</span>
+        <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
       </div>
     </ng-template>
     <ng-template #text2>
@@ -99,19 +140,23 @@
     <div id="main-container" class="candidate-home-main-container">
       <div id="profile-container" class="candidate-home-profile-container">
         <candidate-profile-short [placeholderImageAlt]="'Image of ' + userProfile.first_name + ' ' + userProfile.last_name">
-  <ng-template #text>
-    <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
-  </ng-template>
-  <ng-template #text1>
-    <span>
-      {{
-        userProfile.job_title 
-          ? userProfile.job_title + ' @ ' + userProfile.company_name 
-          : (userProfile.education_level ? userProfile.education_level + ' from ' + userProfile.university : '--')
-      }}
-    </span>
-  </ng-template>
-</candidate-profile-short>
+          <ng-template #text>
+            <span>{{ userProfile.first_name }} {{ userProfile.last_name }}</span>
+          </ng-template>
+          <ng-template #text1>
+            <span 
+                class="profile-info-line" 
+                [title]="userProfile.latest_job_title 
+                  ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                  : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--')">
+                    {{ userProfile.latest_job_title 
+                      ? userProfile.latest_job_title + ' @ ' + userProfile.latest_company_name 
+                      : (userProfile.latest_education_level ? userProfile.latest_education_level + ' from ' + userProfile.latest_university : '--') }}
+            </span>
+          </ng-template>
+        </candidate-profile-short>
+
+        <!--
         <candidate-profile-score
           rootClassName="candidate-profile-scoreroot-class-name"
         >
@@ -121,6 +166,8 @@
             </div>
           </ng-template>
         </candidate-profile-score>
+
+
         <recruiter-job-posted1
           rootClassName="recruiter-job-posted1root-class-name"
         >
@@ -135,6 +182,8 @@
             </div>
           </ng-template>
         </recruiter-job-posted1>
+        -->
+
       </div>
       <div id="jobs-container" class="candidate-home-jobs-container1">
         <div
@@ -177,12 +226,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-job-title-input"
                         class="candidate-home-job-title-text1"
-                      >
-                        Job tittle, Keyword...
-                      </span>
+                        placeholder="Job title, Keyword..."
+                        [(ngModel)]="searchJobTitle"
+                      />
                     </div>
                     <div
                       id="location-container"
@@ -204,12 +254,13 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-location-input"
                         class="candidate-home-your-location-text1"
-                      >
-                        Your Location
-                      </span>
+                        placeholder="Your Location"
+                        [(ngModel)]="searchLocation"
+                      />
                     </div>
                     <div
                       id="experience-search-container"
@@ -226,21 +277,24 @@
                           fill="currentColor"
                         ></path>
                       </svg>
-                      <span
+                      <input
+                        type="text"
                         id="search-experience-input"
                         class="candidate-home-experience-text1"
-                      >
-                        Experience
-                      </span>
+                        placeholder="Experience"
+                        [(ngModel)]="searchExperience"
+                      />
                     </div>
                   </div>
                 </nav>
                 <svg
+                  #filterIcon
                   id="filter-icon"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
                   class="candidate-home-filter-icon1"
+                  (click)="openFiltersPopup('filters')"
                 >
                   <path
                     d="M3 7h3M3 17h6m9 0h3M15 7h6M6 7c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C7.602 4 8.068 4 9 4s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C12 5.602 12 6.068 12 7s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C10.398 10 9.932 10 9 10s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C6 8.398 6 7.932 6 7m6 10c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C13.602 14 14.068 14 15 14s1.398 0 1.765.152a2 2 0 0 1 1.083 1.083C18 15.602 18 16.068 18 17s0 1.398-.152 1.765a2 2 0 0 1-1.083 1.083C16.398 20 15.932 20 15 20s-1.398 0-1.765-.152a2 2 0 0 1-1.083-1.083C12 18.398 12 17.932 12 17"
@@ -257,6 +311,7 @@
                     id="search-button"
                     type="button"
                     class="candidate-home-search-button1 button"
+                    (click)="onSearch()"
                   >
                     <span id="search-text" class="candidate-home-search-text1">
                       Search
@@ -266,6 +321,7 @@
                     id="preference-button"
                     type="button"
                     class="candidate-home-preference-button1 button"
+                    (click)="openFiltersPopup('preferences')"
                   >
                     <span
                       id="preference-text"
@@ -444,124 +500,139 @@
           </header>
         </div>
         <div id="Jobs-for-you" class="candidate-home-jobs-for-you-container">
-  <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
-    Jobs for you
-  </span>
-  
-  <!-- Refresh button (optional) -->
-  <!-- <div class="refresh-container" style="text-align: right; margin-bottom: 10px;">
-    <button 
-      (click)="refreshJobs()" 
-      [disabled]="isLoading"
-      class="refresh-button"
-      style="padding: 8px 16px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer;">
-      🔄 Refresh Jobs
-    </button>
-  </div> -->
+          <span id="jobs-for-you-text" class="candidate-home-jobs-for-you-text">
+            Jobs for you
+          </span>
+          <div id="job-container" class="candidate-home-jobs-container2">
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="loading-spinner"></div>
+              <p>Loading jobs...</p>
+            </div>
+            
+            <!-- No jobs message -->
+            <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
+              <p>No new jobs available. You've applied to all open positions!</p>
+            </div>
 
-  <div id="job-container" class="candidate-home-jobs-container2">
-    <!-- Initial loading indicator -->
-    <div *ngIf="isLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Loading jobs...</p>
-    </div>
-    
-    <!-- No jobs message -->
-    <div *ngIf="!isLoading && jobs.length === 0" class="no-jobs-container">
-      <p>No new jobs available. You've applied to all open positions!</p>
-    </div>
-    
-    <!-- Job listings -->
-    <candidate-job-for-you-card
-      *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
-      [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
-      [imageSrc]="job.logo"
-      [imageAlt]="job.company_name + ' logo'"
-    >
-      <ng-template #text>
-        <div class="candidate-home-fragment31">
-          <span class="candidate-home-text123">{{ job.title }}</span>
-        </div>
-      </ng-template>
-      <ng-template #text1>
-        <div class="candidate-home-fragment32">
-          <span class="candidate-home-text124">{{ job.company_name }}</span>
-        </div>
-      </ng-template>
-      <ng-template #text2>
-        <div class="candidate-home-fragment33">
-          <span class="candidate-home-text125">{{ job.experience_required ? job.experience_required + ' Years' : 'Not specified' }}</span>
-        </div>
-      </ng-template>
-      <ng-template #text3>
-        <div class="candidate-home-fragment34">
-          <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
-        </div>
-      </ng-template>
-      <ng-template #text4>
-        <div class="candidate-home-fragment35">
-          <span class="candidate-home-text127">{{ job.description }}</span>
-        </div>
-      </ng-template>
-      <ng-template #button>
-        <div class="candidate-home-fragment36">
-          <button
-            [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
-            [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
-            (click)="applyForJob(job.job_id, i)"
-          >
-            <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
-            <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
-            <span *ngIf="applicationSuccess[job.job_id]">
-              <span class="tick-mark">✓</span> Applied Successfully
+            <!-- "No match found" message -->
+            <div *ngIf="!isLoading && noMatchesFound" class="no-jobs-container">
+              <p>No match found.</p>
+            </div>
+
+            <!-- Heading for Similar Jobs -->
+            <span *ngIf="!isLoading && noMatchesFound" class="candidate-home-jobs-for-you-text" style="margin-top: 20px;">
+              Similar Jobs
             </span>
-          </button>
+            
+            <!-- Job listings -->
+            <candidate-job-for-you-card
+              *ngFor="let job of displayedJobs; let i = index; trackBy: trackByJobId"
+              [rootClassName]="'candidate-job-for-you-cardroot-class-name' + i"
+              [jobId]="job.job_id?.toString() || ''"
+              [imageSrc]="getImageOrInitials(job)"
+              [imageAlt]="job.company_name + ' logo'"
+              [matchingScore]="job.matching_score"
+              [companyInitials]="job.initials" 
+            >
+              <ng-template #text>
+                <div class="candidate-home-fragment31">
+                  <span class="candidate-home-text123">{{ job.title }}</span>
+                </div>
+              </ng-template>
+              <ng-template #text1>
+                <div class="candidate-home-fragment32">
+                  <span class="company-name" [title]="job.company_name">{{ job.company_name }}</span>
+                </div>
+              </ng-template>
+              <ng-template #text2>
+                <div class="candidate-home-fragment33">
+                  <span class="candidate-home-text125">
+                    {{ (job.total_experience_min != null && job.total_experience_max != null) ? 
+                      (job.total_experience_min === job.total_experience_max ? 
+                          job.total_experience_min + ' Years' : 
+                          job.total_experience_min + '-' + job.total_experience_max + ' Years') : 
+                      'Not specified' }}
+                  </span>
+                </div>
+              </ng-template>
+              <ng-template #text3>
+                <div class="candidate-home-fragment34">
+                  <span class="candidate-home-text126">{{ job.location }} ({{ job.job_type }})</span>
+                </div>
+              </ng-template>
+              <ng-template #text4>
+                <div class="candidate-home-fragment35">
+                  <div class="candidate-home-text127" [innerHTML]="job.safeDescription"></div>
+                </div>
+              </ng-template>
+              <ng-template #button>
+                <div class="candidate-home-fragment36">
+                  <button
+                    [disabled]="processingApplications[job.job_id] || applicationSuccess[job.job_id]"
+                    [ngClass]="{'apply-button': true, 'applying': processingApplications[job.job_id], 'applied': applicationSuccess[job.job_id]}"
+                    (click)="applyForJob(job.job_id, i)"
+                  >
+                    <span *ngIf="!processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Apply</span>
+                    <span *ngIf="processingApplications[job.job_id] && !applicationSuccess[job.job_id]">Applying...</span>
+                    <span *ngIf="applicationSuccess[job.job_id]">
+                      <span class="tick-mark">✓</span> Applied Successfully
+                    </span>
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template #button1>  
+                <div class="candidate-home-fragment37" *ngIf="job.assessment != null">
+                  <span 
+                    class="candidate-home-text129"
+                    [ngClass]="{'disabled': (job.attempts_remaining || 0) <= 0}"
+                    (click)="(job.attempts_remaining || 0) > 0 && navigateToAssessment(job.assessment)"
+                    [title]="(job.attempts_remaining || 0) + ' ' + (job.attempts_remaining === 1 ? 'attempt' : 'attempts') + ' remaining'"
+                  >
+                    Take Assessment
+                  </span>
+                </div>
+              </ng-template>
+            </candidate-job-for-you-card>
+            
+            <!-- Load more indicator -->
+            <div 
+              *ngIf="!isLoading && hasMoreJobs" 
+              id="load-more" 
+              class="load-more-container"
+              style="text-align: center; padding: 20px;"
+            >
+              <div *ngIf="isLoadingMoreJobs" class="loading-more">
+                <div class="small-spinner"></div>
+                <p>Loading more jobs...</p>
+              </div>
+              <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
+                <p style="color: #666; font-size: 14px;">"No results found. Try broadening your search criteria"</p>
+              </div>
+            </div>
+            
+            <!-- End of jobs indicator -->
+            <div *ngIf="!isLoading && !hasMoreJobs && displayedJobs.length > 0" class="end-of-jobs">
+              <p style="text-align: center; color: #666; padding: 20px; font-size: 14px;">
+                🎉 You've seen all available jobs! ({{ displayedJobs.length }} total)
+              </p>
+            </div>
+            
+            <!-- Job statistics -->
+            <div *ngIf="!isLoading && displayedJobs.length > 0" class="job-stats" style="text-align: center; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+              <small style="color: #666;">
+                Showing {{ displayedJobs.length }} of {{ jobs.length }} available jobs
+                <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
+              </small>
+            </div>
+          </div>
         </div>
-      </ng-template>
-      <ng-template #button1>
-        <div class="candidate-home-fragment37">
-          <span class="candidate-home-text129" (click)="navigateToAssessment(job.job_id)">Take Assessment</span>
-        </div>
-      </ng-template>
-    </candidate-job-for-you-card>
-    
-    <!-- Load more indicator - only show if there are more jobs to load -->
-    <div 
-      *ngIf="!isLoading && hasMoreJobs" 
-      id="load-more" 
-      class="load-more-container"
-      style="text-align: center; padding: 20px;">
-      
-      <!-- Loading more indicator -->
-      <div *ngIf="isLoadingMoreJobs" class="loading-more">
-        <div class="small-spinner"></div>
-        <p>Loading more jobs...</p>
       </div>
-      
-      <!-- Trigger element for intersection observer -->
-      <div *ngIf="!isLoadingMoreJobs" class="load-trigger">
-        <p style="color: #666; font-size: 14px;">Scroll to load more jobs...</p>
-      </div>
-    </div>
-    
-    <!-- End of jobs indicator -->
-    <div *ngIf="!isLoading && !hasMoreJobs && displayedJobs.length > 0" class="end-of-jobs">
-      <p style="text-align: center; color: #666; padding: 20px; font-size: 14px;">
-        🎉 You've seen all available jobs! ({{ displayedJobs.length }} total)
-      </p>
-    </div>
-    
-    <!-- Job statistics -->
-    <div *ngIf="!isLoading && displayedJobs.length > 0" class="job-stats" style="text-align: center; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
-      <small style="color: #666;">
-        Showing {{ displayedJobs.length }} of {{ jobs.length }} available jobs
-        <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
-      </small>
     </div>
   </div>
 </div>
 
-<!-- Add these styles to your component CSS -->
+<!-- Styles for pagination and loading indicators -->
 <style>
 .loading-spinner {
   border: 4px solid #f3f3f3;
@@ -599,17 +670,4 @@
   align-items: center;
   justify-content: center;
 }
-
-/*.refresh-button:hover:not(:disabled) {
-  background: #e9e9e9;
-}
-
-.refresh-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}*/
 </style>
-      </div>
-    </div>
-  </div>
-</div>

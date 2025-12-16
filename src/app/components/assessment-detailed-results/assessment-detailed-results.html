@@ -1,0 +1,315 @@
+<div
+  id="cloud-architecture-details-container"
+  class="assessment-taken-page3-cloud-architecture-details-container"
+  >
+
+  <div
+    id="text-id-attempts-container"
+    class="assessment-taken-page3-text-id-attempts-container"
+    >
+    <div class="assessment-taken-page3-container11">
+      <div
+        id="cloud-architecture-text-container"
+        class="assessment-taken-page3-cloud-architecture-text-container"
+        >
+        <svg
+          id="back-icon"
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          class="assessment-taken-page3-back-icon"
+          (click)="onBackClick()"
+          >
+          <path
+            d="m14 26l1.41-1.41L7.83 17H28v-2H7.83l7.58-7.59L14 6L4 16z"
+            fill="currentColor"
+          ></path>
+        </svg>
+        <span
+          id="cloud-architecture-text"
+          class="assessment-taken-page3-cloud-architecture-text"
+          >
+          {{ assessmentData.assessment_title }}
+        </span>
+      </div>
+      <div
+        id="assessment-by-container"
+        class="assessment-taken-page3-assessment-by-container"
+        >
+        <img
+          id="assessment-company-logo"
+          alt="image"
+          [src]="assessmentData.assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+          class="assessment-taken-page3-assessment-company-logo"
+          />
+          <span
+            id="assessment-by-text"
+            class="assessment-taken-page3-assessment-by-text"
+            >
+            Assessment by {{ assessmentData.created_by }}
+          </span>
+        </div>
+      </div>
+      <div
+        id="id-attempts-container"
+        class="assessment-taken-page3-id-attempts-container"
+        >
+        <span id="id-text" class="assessment-taken-page3-id-text">
+          Assessment ID : {{ assessmentData.assessment_id }}
+        </span>
+
+        <div class='progress-container'>
+          <div class='progress'>
+            <div class='bar'
+              [style.width.%]="assessmentData.score"
+              [style.backgroundColor]="getFillColor(assessmentData.score)">
+            </div>
+          </div>
+          <span
+            id="score-board-text"
+            class="assessment-taken-page2-score-board-text"
+          >Score: </span>
+          <span
+            class="score"
+            [style.color]="getFillColor(assessmentData.score)">
+            {{ assessmentData.score }}%
+          </span>
+        </div>
+
+      </div>
+      <div class="attempts-remaining-and-button-container">
+        <button
+          id="re-attempt-container"
+          type="button"
+          class="assessment-taken-page3-re-attempt-container button"
+          [disabled]="assessmentData.attempts_remaining <= 0"
+          (click)="onReattempt()"
+          [style.background-color]="isReattempting ? '#cccccc' : ''"
+          [style.color]="isReattempting ? '#666666' : ''"
+          [style.cursor]="isReattempting ? 'not-allowed' : ''"
+
+          >
+          @if (!isReattempting) {
+            <span>Re-attempt</span>
+          }
+          @if (isReattempting) {
+            <span>Loading...</span>
+          }
+        </button>
+        <span
+          id="attempts-remaining-text"
+          class="assessment-taken-page3-attempts-remaining-text"
+          >
+          <span class="assessment-taken-page3-text31">
+            {{ assessmentData.attempts_remaining < 0 ? 0 : assessmentData.attempts_remaining }}
+          </span>
+          <span>Attempt(s) Remaining</span>
+        </span>
+      </div>
+
+    </div>
+    <div class="assessment-taken-page3-qa-details-container">
+      <div class="ai-recommendation-container">
+        <h3>AI Performance Analysis</h3>
+
+        <!-- PENDING STATE -->
+        @if (recommendationStatus === 'PENDING') {
+          <div class="recommendation-state pending-state">
+            <div class="spinner"></div>
+            <p>Our AI is analyzing your performance to generate personalized feedback. This may take a moment...</p>
+          </div>
+        }
+
+        <!-- FAILED STATE -->
+        @if (recommendationStatus === 'FAILED') {
+          <div class="recommendation-state failed-state">
+            <p>Sorry, we couldn't generate the AI analysis at this time. Please try refreshing the page later.</p>
+          </div>
+        }
+
+        <!-- COMPLETE STATE -->
+        @if (recommendationStatus === 'COMPLETE' && recommendation) {
+          <div class="recommendation-state complete-state">
+            <!-- Weak Topics -->
+            @if (recommendation.weak_topics?.length > 0) {
+              <div class="rec-section">
+                <h4>Areas for Improvement</h4>
+                @for (item of recommendation.weak_topics; track item) {
+                  <div class="rec-card">
+                    <strong>{{ item.topic }}</strong>
+                    <p>{{ item.explanation }}</p>
+                  </div>
+                }
+              </div>
+            }
+            <!-- Improvement Suggestions -->
+            @if (recommendation.improvement_suggestions?.length > 0) {
+              <div class="rec-section">
+                <h4>Actionable Suggestions</h4>
+                <ul>
+                  @for (item of recommendation.improvement_suggestions; track item) {
+                    <li>
+                      <strong>{{ item.topic }}:</strong> {{ item.suggestion }}
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+            <!-- Suggested Resources -->
+            @if (recommendation.suggested_resources?.length > 0) {
+              <div class="rec-section">
+                <h4>Learning Resources</h4>
+                @for (item of recommendation.suggested_resources; track item) {
+                  <div class="rec-card">
+                    <strong><a [href]="item.url" target="_blank" rel="noopener noreferrer">{{ item.title }}</a></strong>
+                    <p>{{ item.description }}</p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      @if (totalQuestions > 0) {
+        <div>
+          <!-- New: Sections capsule container -->
+          <div class="sections-scroller-wrapper">
+            <!-- Left Arrow -->
+            <button class="scroll-arrow left-arrow" (click)="scrollLeft()">
+              &#x2039;
+            </button>
+            <!-- Sections capsule container -->
+            <div #capsuleContainer class="sections-capsule-container">
+              <!-- ADD THE NEW WRAPPER DIV AROUND THE NGFOR DIV -->
+              <div class="capsule-content-holder">
+                @for (section of sectionOrder; track section) {
+                  <div
+                    class="section-capsule"
+                    [class.active]="selectedSection === section"
+                    (click)="selectSection(section)">
+                    {{ section.trim() }}
+                  </div>
+                }
+              </div>
+            </div>
+            <!-- Right Arrow -->
+            <button class="scroll-arrow right-arrow" (click)="scrollRight()">
+              &#x203A;
+            </button>
+          </div>
+          <!-- Questions for selected section -->
+          <!-- Questions for selected section -->
+          @if (selectedSection) {
+            <div class="selected-section-questions">
+              <!-- ====================================================== -->
+              <!-- VIEW 1: RENDER THIS BLOCK IF IT'S AN MCQ SECTION       -->
+              <!-- ====================================================== -->
+              @if (!isCodingSection(selectedSection)) {
+                @for (question of groupedQuestions[selectedSection]; track question; let qi = $index) {
+                  <div>
+                    <!-- (This is your existing question card code, no changes needed inside) -->
+                    <div class="question-card">
+                      <div class="assessment-taken-page3-question-number-container1">
+                        <span class="assessment-taken-page3-text33">
+                          Question {{ qi + 1 }}/{{ groupedQuestions[selectedSection].length }}
+                        </span>
+                      </div>
+                      <div class="assessment-taken-page3-question-container1">
+                        <span class="assessment-taken-page3-text34">
+                          {{ question.question_text }}
+                        </span>
+                        @if (question.question_image) {
+                          <img [src]="question.question_image" class="question-image" />
+                        }
+                      </div>
+                      <div class="assessment-taken-page3-options-container1">
+                        @for (opt of getOptions(question); track opt; let optIdx = $index) {
+                          <div class="assessment-taken-page3-option-container10">
+                            <input type="radio" [name]="'radio-' + question.questionNumber" [checked]="logRadioStatus(question, opt, question.questionNumber - 1)" disabled class="assessment-taken-page3-radiobutton13" />
+                            <div class="assessment-taken-page3-container15">
+                              <label>{{ opt.value }}</label>
+                              @if (getOptionStatus(question, opt) === 'correct') {
+                                <span class="assessment-taken-page3-correct-incorrect-text16">
+                                  Correct
+                                </span>
+                              }
+                              @if (getOptionStatus(question, opt) === 'incorrect') {
+                                <span class="assessment-taken-page3-correct-incorrect-text17">
+                                  Incorrect
+                                </span>
+                              }
+                            </div>
+                          </div>
+                        }
+                      </div>
+                      <div class="assessment-taken-page3-explianation-container1">
+                        <div class="assessment-taken-page3-container16">
+                          <span class="assessment-taken-page3-text35">Answer:&nbsp;</span>
+                          <span class="assessment-taken-page3-correct-option-text1">
+                            {{ getCorrectOptionLetter(question) }}
+                          </span>
+                        </div>
+                        <div class="assessment-taken-page3-container17">
+                          <span class="assessment-taken-page3-text36">Explanation:&nbsp;</span>
+                          <span class="assessment-taken-page3-correct-answer-explained-text1">
+                            {{ question.q_answer_explained || 'No explanation provided.' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              }
+              <!-- ====================================================== -->
+              <!-- VIEW 2: RENDER THIS BLOCK IF IT'S THE CODING SECTION   -->
+              <!-- ====================================================== -->
+              @if (isCodingSection(selectedSection)) {
+                <div class="coding-details-container">
+                  <!-- Problem Description -->
+                  <div class="problem-card">
+                    <h3>Problem: {{ codingSectionsMap[selectedSection].problem_details.title }}</h3>
+                    <p [innerHTML]="codingSectionsMap[selectedSection].problem_details.description"></p>
+                    <h4>Input Format</h4>
+                    <p>{{ codingSectionsMap[selectedSection].problem_details.input_format }}</p>
+                    <h4>Output Format</h4>
+                    <p>{{ codingSectionsMap[selectedSection].problem_details.output_format }}</p>
+                    <h4>Constraints</h4>
+                    <pre>{{ codingSectionsMap[selectedSection].problem_details.constraints }}</pre>
+                    <h4>Example</h4>
+                    <pre>{{ codingSectionsMap[selectedSection].problem_details.example }}</pre>
+                  </div>
+                  <!-- User's Submission -->
+                  <div class="submission-card">
+                    <h3>Your Submission</h3>
+                    @if (codingSectionsMap[selectedSection].user_submission) {
+                      <div>
+                        <pre class="code-block"><code>{{ codingSectionsMap[selectedSection].user_submission.source_code }}</code></pre>
+                        @if (codingSectionsMap[selectedSection].user_submission.score === 100) {
+                          <div class="submission-status-container">
+                            <span class="submission-correct-text">Correct</span>
+                          </div>
+                        }
+                        @if (codingSectionsMap[selectedSection].user_submission.score < 100) {
+                          <div class="submission-status-container incorrect">
+                            <span class="submission-incorrect-text">Incorrect</span>
+                          </div>
+                        }
+                      </div>
+                    } @else {
+                      <p class="no-submission-message">You did not submit a solution for this problem during the assessment.</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (totalQuestions === 0) {
+        <div class="no-questions-message">
+          No questions attended.
+        </div>
+      }
+    </div>
+  </div>

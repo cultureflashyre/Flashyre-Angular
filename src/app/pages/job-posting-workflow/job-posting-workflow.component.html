@@ -1,0 +1,63 @@
+<ngx-spinner name="main-spinner" bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-scale-multiple"></ngx-spinner>
+
+<div class="workflow-container">
+  <app-progress-bar [currentStep]="currentStep" [steps]="stepLabels"></app-progress-bar>
+
+  <div class="workflow-content-card">
+    <div [ngSwitch]="currentStep">
+      <!-- STEP 1: JOB DETAILS -->
+      <app-job-details-form 
+        *ngSwitchCase="1"
+        [initialData]="jobDetailsData"
+        (dataChanged)="handleJobDetailsUpdate($event)"
+        (validityChanged)="handleJobDetailsValidity($event)"
+        (jobCreated)="jobUniqueId = $event">
+      </app-job-details-form>
+      
+      <!-- STEP 2: ASSESSMENT SETUP -->
+      <app-assessment-setup 
+        *ngSwitchCase="2" 
+        [jobUniqueId]="jobUniqueId"
+        (dataChanged)="handleAssessmentUpdate($event)"
+        (validityChanged)="handleAssessmentValidity($event)">
+      </app-assessment-setup>
+
+      <!-- STEP 3: INTERVIEW FLOW -->
+      <app-interview-flow 
+        *ngSwitchCase="3"
+        [jobUniqueId]="jobUniqueId"
+        (dataChanged)="handleInterviewUpdate($event)"
+        (validityChanged)="handleInterviewValidity($event)">
+      </app-interview-flow>
+    </div>
+  </div>
+
+  <!-- NAVIGATION FOOTER -->
+  <div class="workflow-navigation">
+    <button class="button-secondary" (click)="onSaveDraft()" [disabled]="isSubmitting">Save Draft & Exit</button>
+    
+    <div class="nav-buttons-right">
+      @if (currentStep > 1) {
+        <button class="button-secondary" (click)="goToPreviousStep()" [disabled]="isSubmitting">Previous</button>
+      }
+
+      @if (currentStep < totalSteps) {
+        <button 
+          class="button-primary" 
+          (click)="goToNextStep()" 
+          [disabled]="isSubmitting || (currentStep === 1 && !isStep1Valid) || (currentStep === 2 && !isStep2Valid)">
+          Next
+        </button>
+      }
+
+      @if (currentStep === totalSteps) {
+        <button 
+          class="button-primary" 
+          (click)="onFinalizeJob()" 
+          [disabled]="isSubmitting || !isStep3Valid">
+          {{ isEditMode ? 'Update Job' : 'Save Job' }}
+        </button>
+      }
+    </div>
+  </div>
+</div>

@@ -5,386 +5,389 @@
       [attr.alt]="imageAlt3"
       [attr.src]="imageSrc3"
       class="flashyre-assessment-rules-logo"
-    />
-    <span
-      id="assessment-name"
-      class="flashyre-assessment-rules-assessment-name"
-    >
-      <ng-container>
-        <ng-template #defaultText>
-          <div class="flashyre-assessment-rules-fragment18">
-            <span class="flashyre-assessment-rules-text38">
-              {{ assessmentData?.assessment_name || 'Corporate Skill-Based Assessment' }}
-            </span>
-          </div>
-        </ng-template>
-        <ng-container
-          *ngTemplateOutlet="text ? text : defaultText"
-        ></ng-container>
-      </ng-container>
-    </span>
-  </div>
-  <div id="rules-container" class="flashyre-assessment-rules-rules-container">
-    <div id="rules" class="flashyre-assessment-rules-rules">
-      <span id="rules-header" class="flashyre-assessment-rules-rules-header">
+      />
+      <span
+        id="assessment-name"
+        class="flashyre-assessment-rules-assessment-name"
+        >
         <ng-container>
-          <ng-template #defaultText1>
-            <div class="flashyre-assessment-rules-fragment12">
-              <span class="flashyre-assessment-rules-text28">
-                Rules for the Corporate Skill-Based Assessment 
+          <ng-template #defaultText>
+            <div class="flashyre-assessment-rules-fragment18">
+              <span class="flashyre-assessment-rules-text38">
+                {{ assessmentData?.assessment_name || 'Corporate Skill-Based Assessment' }}
               </span>
             </div>
           </ng-template>
           <ng-container
-            *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            *ngTemplateOutlet="text ? text : defaultText"
           ></ng-container>
         </ng-container>
       </span>
-      <div id="test-details" class="flashyre-assessment-rules-test-details">
-        <span class="flashyre-assessment-rules-text10">
+    </div>
+    <div id="rules-container" class="flashyre-assessment-rules-rules-container">
+      <div id="rules" class="flashyre-assessment-rules-rules">
+        <span id="rules-header" class="flashyre-assessment-rules-rules-header">
           <ng-container>
-            <ng-template #defaultText2>
-              <div class="flashyre-assessment-rules-fragment10">
-                <span class="flashyre-assessment-rules-text24">
-                  Test Details:
+            <ng-template #defaultText1>
+              <div class="flashyre-assessment-rules-fragment12">
+                <span class="flashyre-assessment-rules-text28">
+                  Rules for the Corporate Skill-Based Assessment
                 </span>
               </div>
             </ng-template>
+            <ng-container
+              *ngTemplateOutlet="text1 ? text1 : defaultText1"
+            ></ng-container>
+          </ng-container>
+        </span>
+        <div id="test-details" class="flashyre-assessment-rules-test-details">
+          <span class="flashyre-assessment-rules-text10">
+            <ng-container>
+              <ng-template #defaultText2>
+                <div class="flashyre-assessment-rules-fragment10">
+                  <span class="flashyre-assessment-rules-text24">
+                    Test Details:
+                  </span>
+                </div>
+              </ng-template>
               <div>
                 <ul>
-                  <li *ngFor="let section of sections">
-                    Section: {{ section.section_title }} — Questions: {{ section.question_count || 'N/A' }}
-                  </li>
+                  @for (section of sections; track section) {
+                    <li>
+                      Section: {{ section.section_title }} — Questions: {{ section.question_count || 'N/A' }}
+                    </li>
+                  }
                 </ul>
               </div>
-          </ng-container>
-        </span>
-        <div class="flashyre-assessment-rules-container2">
-          <span>
-            <ng-container>
-              <ng-template #defaultText3>
-                <div class="flashyre-assessment-rules-fragment22">
-                  <span class="flashyre-assessment-rules-text44">
-                    The test consist of 5 multiple choice questions based on the
-                    Assessment skill.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text3 ? text3 : defaultText3"
-              ></ng-container>
             </ng-container>
           </span>
-          <span>
-            <ng-container>
-              <ng-template #defaultText4>
-                <div class="flashyre-assessment-rules-fragment29">
-                  <span class="flashyre-assessment-rules-text51">
-                    The time limit for the test is {{ timeLimitDisplay }} minutes.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text4 ? text4 : defaultText4"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </div>
-      </div>
-      <div id="test-taking" class="flashyre-assessment-rules-test-taking">
-        <span class="flashyre-assessment-rules-text13">
-          <ng-container>
-            <ng-template #defaultText21>
-              <div class="flashyre-assessment-rules-fragment23">
-                <span class="flashyre-assessment-rules-text45">
-                  Test Taking:
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text21 ? text21 : defaultText21"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div class="flashyre-assessment-rules-container3">
-          <span class="flashyre-assessment-rules-text14">
-            <ng-container>
-              <ng-template #defaultText31>
-                <div class="flashyre-assessment-rules-fragment27">
-                  <span class="flashyre-assessment-rules-text49">
-                    You must answer all 5 questions within the {{ answerWithinLimitDisplay }}-minute time
-                    limit.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text31 ? text31 : defaultText31"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span class="flashyre-assessment-rules-text15">
-            <ng-container>
-              <ng-template #defaultText41>
-                <div class="flashyre-assessment-rules-fragment21">
-                  <span class="flashyre-assessment-rules-text41">
-                    <span>
-                      You can navigate between the questions and change your
-                      answers before submitting.
+          <div class="flashyre-assessment-rules-container2">
+            <span>
+              <ng-container>
+                <ng-template #defaultText3>
+                  <div class="flashyre-assessment-rules-fragment22">
+                    <span class="flashyre-assessment-rules-text44">
+                      The test consist of 5 multiple choice questions based on the
+                      Assessment skill.
                     </span>
-                    <br />
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text41 ? text41 : defaultText41"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span class="flashyre-assessment-rules-text16">
-            <ng-container>
-              <ng-template #defaultText412>
-                <div class="flashyre-assessment-rules-fragment17">
-                  <span class="flashyre-assessment-rules-text35">
-                    <span>
-                      Once the {{totalDuration}}-minute time limit is up, the test will
-                      automatically submit, even if you have not answered all
-                      the questions.
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3 ? text3 : defaultText3"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span>
+              <ng-container>
+                <ng-template #defaultText4>
+                  <div class="flashyre-assessment-rules-fragment29">
+                    <span class="flashyre-assessment-rules-text51">
+                      The time limit for the test is {{ timeLimitDisplay }} minutes.
                     </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text4 ? text4 : defaultText4"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+        <div id="test-taking" class="flashyre-assessment-rules-test-taking">
+          <span class="flashyre-assessment-rules-text13">
+            <ng-container>
+              <ng-template #defaultText21>
+                <div class="flashyre-assessment-rules-fragment23">
+                  <span class="flashyre-assessment-rules-text45">
+                    Test Taking:
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text21 ? text21 : defaultText21"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div class="flashyre-assessment-rules-container3">
+            <span class="flashyre-assessment-rules-text14">
+              <ng-container>
+                <ng-template #defaultText31>
+                  <div class="flashyre-assessment-rules-fragment27">
+                    <span class="flashyre-assessment-rules-text49">
+                      You must answer all 5 questions within the {{ answerWithinLimitDisplay }}-minute time
+                      limit.
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text31 ? text31 : defaultText31"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span class="flashyre-assessment-rules-text15">
+              <ng-container>
+                <ng-template #defaultText41>
+                  <div class="flashyre-assessment-rules-fragment21">
+                    <span class="flashyre-assessment-rules-text41">
+                      <span>
+                        You can navigate between the questions and change your
+                        answers before submitting.
+                      </span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text41 ? text41 : defaultText41"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span class="flashyre-assessment-rules-text16">
+              <ng-container>
+                <ng-template #defaultText412>
+                  <div class="flashyre-assessment-rules-fragment17">
+                    <span class="flashyre-assessment-rules-text35">
+                      <span>
+                        Once the {{totalDuration}}-minute time limit is up, the test will
+                        automatically submit, even if you have not answered all
+                        the questions.
+                      </span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text412 ? text412 : defaultText412"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+        <div id="scoring" class="flashyre-assessment-rules-scoring">
+          <span class="flashyre-assessment-rules-text17">
+            <ng-container>
+              <ng-template #defaultText211>
+                <div class="flashyre-assessment-rules-fragment15">
+                  <span class="flashyre-assessment-rules-text31">
+                    <span>Scoring:</span>
                     <br />
                   </span>
                 </div>
               </ng-template>
               <ng-container
-                *ngTemplateOutlet="text412 ? text412 : defaultText412"
+                *ngTemplateOutlet="text211 ? text211 : defaultText211"
               ></ng-container>
             </ng-container>
           </span>
+          <div class="flashyre-assessment-rules-container4">
+            <span>
+              <ng-container>
+                <ng-template #defaultText311>
+                  <div class="flashyre-assessment-rules-fragment11">
+                    <span class="flashyre-assessment-rules-text25">
+                      <span>Each correct answer will be awarded 1 point.</span>
+                      <br />
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text311 ? text311 : defaultText311"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span>
+              <ng-container>
+                <ng-template #defaultText411>
+                  <div class="flashyre-assessment-rules-fragment20">
+                    <span class="flashyre-assessment-rules-text40">
+                      Your final score will be displayed at the end of the test.
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text411 ? text411 : defaultText411"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
         </div>
-      </div>
-      <div id="scoring" class="flashyre-assessment-rules-scoring">
-        <span class="flashyre-assessment-rules-text17">
-          <ng-container>
-            <ng-template #defaultText211>
-              <div class="flashyre-assessment-rules-fragment15">
-                <span class="flashyre-assessment-rules-text31">
-                  <span>Scoring:</span>
-                  <br />
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text211 ? text211 : defaultText211"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div class="flashyre-assessment-rules-container4">
-          <span>
-            <ng-container>
-              <ng-template #defaultText311>
-                <div class="flashyre-assessment-rules-fragment11">
-                  <span class="flashyre-assessment-rules-text25">
-                    <span>Each correct answer will be awarded 1 point.</span>
-                    <br />
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text311 ? text311 : defaultText311"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span>
-            <ng-container>
-              <ng-template #defaultText411>
-                <div class="flashyre-assessment-rules-fragment20">
-                  <span class="flashyre-assessment-rules-text40">
-                    Your final score will be displayed at the end of the test.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text411 ? text411 : defaultText411"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </div>
-      </div>
-      <div
-        id="important-notes"
-        class="flashyre-assessment-rules-important-notes"
-      >
-        <span>
-          <ng-container>
-            <ng-template #defaultText2111>
-              <div class="flashyre-assessment-rules-fragment28">
-                <span class="flashyre-assessment-rules-text50">
-                  Important Notes:
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text2111 ? text2111 : defaultText2111"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <div class="flashyre-assessment-rules-container5">
-          <span>
-            <ng-container>
-              <ng-template #defaultText3111>
-                <div class="flashyre-assessment-rules-fragment16">
-                  <span class="flashyre-assessment-rules-text34">
-                    The test will auto-submit after {{ autoSubmitMessage }} minutes, regardless of
-                    whether you have answered all the questions or not.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text3111 ? text3111 : defaultText3111"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span>
-            <ng-container>
-              <ng-template #defaultText4111>
-                <div class="flashyre-assessment-rules-fragment30">
-                  <span class="flashyre-assessment-rules-text52">
-                    Make sure to review your answers carefully before the time
-                    runs out.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text4111 ? text4111 : defaultText4111"
-              ></ng-container>
-            </ng-container>
-          </span>
-          <span>
-            <ng-container>
-              <ng-template #defaultText41112>
-                <div class="flashyre-assessment-rules-fragment24">
-                  <span class="flashyre-assessment-rules-text46">
-                    No late submissions will be accepted.
-                  </span>
-                </div>
-              </ng-template>
-              <ng-container
-                *ngTemplateOutlet="text41112 ? text41112 : defaultText41112"
-              ></ng-container>
-            </ng-container>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div id="notes-container" class="flashyre-assessment-rules-notes-container">
-      <div id="note" class="flashyre-assessment-rules-note">
-        <span id="note-heading" class="flashyre-assessment-rules-note-heading">
-          <ng-container>
-            <ng-template #defaultText7>
-              <div class="flashyre-assessment-rules-fragment25">
-                <span class="flashyre-assessment-rules-text47">Note:</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text7 ? text7 : defaultText7"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <span id="first-note" class="flashyre-assessment-rules-first-note">
-          <ng-container>
-            <ng-template #defaultText8>
-              <div class="flashyre-assessment-rules-fragment19">
-                <span class="flashyre-assessment-rules-text39">
-                  1. Switching tabs or move to different application will lead
-                  to auto-submittion of this assessment.
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text8 ? text8 : defaultText8"
-            ></ng-container>
-          </ng-container>
-        </span>
-        <span id="second-note" class="flashyre-assessment-rules-second-note">
-          <ng-container>
-            <ng-template #defaultText9>
-              <div class="flashyre-assessment-rules-fragment14">
-                <span class="flashyre-assessment-rules-text30">
-                  2. This assessment session is being video recorded for
-                  monitoring and evaluation purpose.
-                </span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text9 ? text9 : defaultText9"
-            ></ng-container>
-          </ng-container>
-        </span>
-      </div>
-      <div
-        id="confirmation-container"
-        class="flashyre-assessment-rules-confirmation-container"
-      >
-        <span id="good-luck" class="flashyre-assessment-rules-good-luck">
-          <ng-container>
-            <ng-template #defaultText5>
-              <div class="flashyre-assessment-rules-fragment26">
-                <span class="flashyre-assessment-rules-text48">Good luck!</span>
-              </div>
-            </ng-template>
-            <ng-container
-              *ngTemplateOutlet="text5 ? text5 : defaultText5"
-            ></ng-container>
-          </ng-container>
-        </span>
         <div
-          id="assessment-rules-container"
-          class="flashyre-assessment-rules-assessment-rules-container"
-        >
-          <input
-            type="checkbox"
-            id="assessment-rule-checkbox"
-            checked="true"
-            class="flashyre-assessment-rules-assessment-rule-checkbox"
-          />
-          <span
-            id="assessment-rule-text"
-            class="flashyre-assessment-rules-assessment-rule-text"
+          id="important-notes"
+          class="flashyre-assessment-rules-important-notes"
           >
+          <span>
             <ng-container>
-              <ng-template #defaultText61>
-                <div class="flashyre-assessment-rules-fragment13">
-                  <span class="flashyre-assessment-rules-text29">
-                    I have read and understood the assessment rules
+              <ng-template #defaultText2111>
+                <div class="flashyre-assessment-rules-fragment28">
+                  <span class="flashyre-assessment-rules-text50">
+                    Important Notes:
                   </span>
                 </div>
               </ng-template>
               <ng-container
-                *ngTemplateOutlet="text61 ? text61 : defaultText61"
+                *ngTemplateOutlet="text2111 ? text2111 : defaultText2111"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <div class="flashyre-assessment-rules-container5">
+            <span>
+              <ng-container>
+                <ng-template #defaultText3111>
+                  <div class="flashyre-assessment-rules-fragment16">
+                    <span class="flashyre-assessment-rules-text34">
+                      The test will auto-submit after {{ autoSubmitMessage }} minutes, regardless of
+                      whether you have answered all the questions or not.
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text3111 ? text3111 : defaultText3111"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span>
+              <ng-container>
+                <ng-template #defaultText4111>
+                  <div class="flashyre-assessment-rules-fragment30">
+                    <span class="flashyre-assessment-rules-text52">
+                      Make sure to review your answers carefully before the time
+                      runs out.
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text4111 ? text4111 : defaultText4111"
+                ></ng-container>
+              </ng-container>
+            </span>
+            <span>
+              <ng-container>
+                <ng-template #defaultText41112>
+                  <div class="flashyre-assessment-rules-fragment24">
+                    <span class="flashyre-assessment-rules-text46">
+                      No late submissions will be accepted.
+                    </span>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngTemplateOutlet="text41112 ? text41112 : defaultText41112"
+                ></ng-container>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div id="notes-container" class="flashyre-assessment-rules-notes-container">
+        <div id="note" class="flashyre-assessment-rules-note">
+          <span id="note-heading" class="flashyre-assessment-rules-note-heading">
+            <ng-container>
+              <ng-template #defaultText7>
+                <div class="flashyre-assessment-rules-fragment25">
+                  <span class="flashyre-assessment-rules-text47">Note:</span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text7 ? text7 : defaultText7"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span id="first-note" class="flashyre-assessment-rules-first-note">
+            <ng-container>
+              <ng-template #defaultText8>
+                <div class="flashyre-assessment-rules-fragment19">
+                  <span class="flashyre-assessment-rules-text39">
+                    1. Switching tabs or move to different application will lead
+                    to auto-submittion of this assessment.
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text8 ? text8 : defaultText8"
+              ></ng-container>
+            </ng-container>
+          </span>
+          <span id="second-note" class="flashyre-assessment-rules-second-note">
+            <ng-container>
+              <ng-template #defaultText9>
+                <div class="flashyre-assessment-rules-fragment14">
+                  <span class="flashyre-assessment-rules-text30">
+                    2. This assessment session is being video recorded for
+                    monitoring and evaluation purpose.
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="text9 ? text9 : defaultText9"
               ></ng-container>
             </ng-container>
           </span>
         </div>
-        <button
-          id="start-assessment-button"
-          type="button"
-          class="flashyre-assessment-rules-start-assessment-button button"
-        >
-          <span id="start-assessment-text">
+        <div
+          id="confirmation-container"
+          class="flashyre-assessment-rules-confirmation-container"
+          >
+          <span id="good-luck" class="flashyre-assessment-rules-good-luck">
             <ng-container>
-              <ng-template #defaultButton>
-                <div class="flashyre-assessment-rules-fragment31">
-                  <span class="flashyre-assessment-rules-text53">
-                    Start Assessment
-                  </span>
+              <ng-template #defaultText5>
+                <div class="flashyre-assessment-rules-fragment26">
+                  <span class="flashyre-assessment-rules-text48">Good luck!</span>
                 </div>
               </ng-template>
               <ng-container
-                *ngTemplateOutlet="button ? button : defaultButton"
+                *ngTemplateOutlet="text5 ? text5 : defaultText5"
               ></ng-container>
             </ng-container>
           </span>
-        </button>
+          <div
+            id="assessment-rules-container"
+            class="flashyre-assessment-rules-assessment-rules-container"
+            >
+            <input
+              type="checkbox"
+              id="assessment-rule-checkbox"
+              checked="true"
+              class="flashyre-assessment-rules-assessment-rule-checkbox"
+              />
+              <span
+                id="assessment-rule-text"
+                class="flashyre-assessment-rules-assessment-rule-text"
+                >
+                <ng-container>
+                  <ng-template #defaultText61>
+                    <div class="flashyre-assessment-rules-fragment13">
+                      <span class="flashyre-assessment-rules-text29">
+                        I have read and understood the assessment rules
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="text61 ? text61 : defaultText61"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </div>
+            <button
+              id="start-assessment-button"
+              type="button"
+              class="flashyre-assessment-rules-start-assessment-button button"
+              (click)="onStartAssessment()"
+              >
+              <span id="start-assessment-text">
+                <ng-container>
+                  <ng-template #defaultButton>
+                    <div class="flashyre-assessment-rules-fragment31">
+                      <span class="flashyre-assessment-rules-text53">
+                        Start Assessment
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-container
+                    *ngTemplateOutlet="button ? button : defaultButton"
+                  ></ng-container>
+                </ng-container>
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>

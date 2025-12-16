@@ -2,394 +2,263 @@
   <div
     id="assessment-taken-main-container"
     class="assessment-taken-page-assessment-taken-main-container"
-  > 
-    <navbar-for-candidate-view
-    rootClassName="navbar-for-candidate-viewroot-class-name"
-  >
-    <ng-template >
-      <div class="candidate-home-fragment10">
-        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
-      </div>
-    </ng-template>
-    <ng-template >
-      <div class="candidate-home-fragment11">
-        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
-      </div>
-    </ng-template>
-    <ng-template >
-      <div class="candidate-home-fragment12">
-        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
-      </div>
-    </ng-template>
-    <ng-template >
-      <div class="candidate-home-fragment13">
-        <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
-      </div>
-    </ng-template>
-    <ng-template #text1>
-      <div class="candidate-home-fragment14">
-        <span class="candidate-home-text104">Profile</span>
-      </div>
-    </ng-template>
-    <ng-template #text2>
-      <div class="candidate-home-fragment15">
-        <span class="candidate-home-text105">Preference</span>
-      </div>
-    </ng-template>
-    <ng-template #text3>
-      <div class="candidate-home-fragment16">
-        <span class="candidate-home-text106">Settings</span>
-      </div>
-    </ng-template>
-    <ng-template #text4>
-      <div class="candidate-home-fragment17">
-        <span class="candidate-home-text107">
-          {{ userProfile.first_name }} {{ userProfile.last_name }}
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text5>
-      <div class="candidate-home-fragment18">
-        <span class="candidate-home-text108">✅ 90% Profile Completion</span>
-      </div>
-    </ng-template>
-    <ng-template #text6>
-      <div class="candidate-home-fragment19">
-        <span class="candidate-home-text109">View & edit profile</span>
-      </div>
-    </ng-template>
-    <ng-template #text7>
-      <div class="candidate-home-fragment20">
-        <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
-      </div>
-    </ng-template>
-    <ng-template #text8>
-      <div class="candidate-home-fragment21">
-        <span class="candidate-home-text111">Upskill</span>
-      </div>
-    </ng-template>
-    <ng-template #text9>
-      <div class="candidate-home-fragment22">
-        <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
-      </div>
-    </ng-template>
-    <ng-template #text10>
-      <div class="candidate-home-fragment23">
-        <span class="candidate-home-text113">Jobs for you</span>
-      </div>
-    </ng-template>
-    <ng-template #text11>
-      <div class="candidate-home-fragment24">
-        <span class="candidate-home-text114">Preference</span>
-      </div>
-    </ng-template>
-    <ng-template #text12>
-      <div class="candidate-home-fragment25">
-        <span class="candidate-home-text115">Settings</span>
-      </div>
-    </ng-template>
-    <ng-template #text13>
-      <div class="candidate-home-fragment26">
-        <span class="candidate-home-text116">Logout</span>
-      </div>
-    </ng-template>
-    <ng-template #text31>
-      <div class="candidate-home-fragment27">
-        <span class="candidate-home-text117">Logout</span>
-      </div>
-    </ng-template>
-  </navbar-for-candidate-view>
-    <div
-      id="assessments-taken-container"
-      class="assessment-taken-page-assessments-taken-container1"
     >
-      <div class="assessment-taken-page-container18">
-        <span
-          id="total-assessments-taken-text"
-          class="assessment-taken-page-total-assessments-taken-text"
-        >
-          All Assessment Taken
-        </span>
-        <div
-          id="job-title-container"
-          class="assessment-taken-page-job-title-container input"
-        >
-          <span
-            id="job-title-keyword-text"
-            class="assessment-taken-page-job-title-keyword-text"
-          >
-            Assessment....
-          </span>
-          <div
-            id="search-icon-container"
-            class="assessment-taken-page-search-icon-container"
-          >
-          <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>
-              <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>
-            </g>
-          </svg>
-          </div>
-        </div>
-      </div>
-      <div
-        id="assessments-container"
-        class="assessment-taken-page-assessments-container"
+    <navbar-for-candidate-view
+      rootClassName="navbar-for-candidate-viewroot-class-name"
       >
-        <div
-          id="assessments-taken-container"
-          class="assessment-taken-page-assessments-taken-container2"
-        >
-          <div class="assessment-taken-page-container19" *ngFor="let assessment of assessments">
-            <div
-              id="first-assessment-container"
-              class="assessment-taken-page-first-assessment-container"
-            >
-              <div
-                id="assessment-details-container"
-                class="assessment-taken-page-assessment-details-container"
-              >
-                <div
-                  id="assessment-details"
-                  class="assessment-taken-page-assessment-details"
-                >
-                <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-image1" />
-                  <div id="details" class="assessment-taken-page-details">
-                    <span class="assessment-taken-page-heading-text1">
-                      {{assessment.assessment_title}}
-                    </span>
-                    <div
-                      id="assessment-date-id-container"
-                      class="assessment-taken-page-assessment-date-id-container"
-                    >
-                    <span class="assessment-taken-page-details-text">
-                      Completed {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
-                    </span>
-                    </div>
-                    <div
-                      id="assessment-by-container"
-                      class="assessment-taken-page-assessment-by-container1"
-                    >
-                    <img [src]="assessment.assessment_logo_url" alt="image" class="assessment-taken-page-assessment-company-logo" />
-                    <span class="assessment-taken-page-assessment-by-text1">
-                      Assessment by {{assessment.created_by}}
-                    </span>
-                    </div>
-                  </div>
-                </div>
+      <ng-template >
+        <div class="candidate-home-fragment10">
+          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text100">Dashboard</a>
+        </div>
+      </ng-template>
+      <ng-template >
+        <div class="candidate-home-fragment11">
+          <a [routerLink]="['/candidate-assessment']" class="candidate-home-text101">Upskill</a>
+        </div>
+      </ng-template>
+      <ng-template >
+        <div class="candidate-home-fragment12">
+          <a [routerLink]="['/candidate-assessment']" class="candidate-home-text102">Assessment</a>
+        </div>
+      </ng-template>
+      <ng-template >
+        <div class="candidate-home-fragment13">
+          <span [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text103">Jobs for you</span>
+        </div>
+      </ng-template>
+      <ng-template #text1>
+        <div class="candidate-home-fragment14">
+          <span [routerLink]="['/profile-overview-page']" class="candidate-home-text104">Profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="candidate-home-fragment15">
+          <span class="candidate-home-text105">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text3>
+        <div class="candidate-home-fragment16">
+          <span class="candidate-home-text106">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text4>
+        <div class="candidate-home-fragment17">
+          <span class="candidate-home-text107">
+            {{ userProfile.first_name }} {{ userProfile.last_name }}
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text5>
+        <div class="candidate-home-fragment18">
+          <span class="candidate-home-text108">✅ 90% Profile Completion</span>
+        </div>
+      </ng-template>
+      <ng-template #text6>
+        <div class="candidate-home-fragment19">
+          <span [routerLink]="['/profile-overview-page']" class="candidate-home-text109">View & edit profile</span>
+        </div>
+      </ng-template>
+      <ng-template #text7>
+        <div class="candidate-home-fragment20">
+          <a [routerLink]="['/candidate-dashboard-main']" class="candidate-home-text110">Dashboard</a>
+        </div>
+      </ng-template>
+      <ng-template #text8>
+        <div class="candidate-home-fragment21">
+          <span class="candidate-home-text111">Upskill</span>
+        </div>
+      </ng-template>
+      <ng-template #text9>
+        <div class="candidate-home-fragment22">
+          <a [routerLink]="['/candidate-assessment']" class="candidate-home-text112">Assessment</a>
+        </div>
+      </ng-template>
+      <ng-template #text10>
+        <div class="candidate-home-fragment23">
+          <span class="candidate-home-text113">Jobs for you</span>
+        </div>
+      </ng-template>
+      <ng-template #text11>
+        <div class="candidate-home-fragment24">
+          <span class="candidate-home-text114">Preference</span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="candidate-home-fragment25">
+          <span class="candidate-home-text115">Settings</span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="candidate-home-fragment26">
+          <span class="candidate-home-text116">Logout</span>
+        </div>
+      </ng-template>
+      <ng-template #text31>
+        <div class="candidate-home-fragment27">
+          <span class="candidate-home-text117">Logout</span>
+        </div>
+      </ng-template>
+    </navbar-for-candidate-view>
+    <div id="assessments-taken-container" class="assessment-taken-page-assessments-taken-container1">
+      @if (selectedAssessmentId === null) {
+        <div class="assessment-taken-page-container18">
+          <span id="total-assessments-taken-text" class="assessment-taken-page-total-assessments-taken-text">
+            All Assessment Taken
+          </span>
+          @if (assessments?.length > 0) {
+            <div id="job-title-container" class="assessment-taken-page-job-title-container input">
+              <input type="text" placeholder="Search assessments..." [(ngModel)]="searchQuery" class="assessment-taken-page-job-title-keyword-text" />
+              <div id="search-icon-container" class="assessment-taken-page-search-icon-container">
+                <svg width="24" height="24" viewBox="0 0 24 24" class="assessment-taken-page-search-icon">
+                  <g fill="none" fill-rule="evenodd">
+                    <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"></path>
+                    <path d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3" fill="currentColor"></path>
+                  </g>
+                </svg>
               </div>
-              <div
-                id="score-container"
-                class="assessment-taken-page-score-container"
-              >
-                <div
-                  id="score-board-container"
-                  class="assessment-taken-page-score-board-container"
-                >
-                  <span
-                    id="score-board-text"
-                    class="assessment-taken-page-score-board-text"
-                  >
-                    🏆 Score Board
-                  </span>
-                  <div
-                    id="score-code-container"
-                    class="assessment-taken-page-score-code-container"
-                  >
-                    <div class="assessment-taken-page-container20">
-                      <div class="assessment-taken-page-container21">
-
-<body>
-  <div class='progress-container'>
-    <div class="progress">
-      <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
-    </div>
-    <span class="score">{{assessment.latest_score}}%</span>
-  </div>
-
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-  <script>
-    $(document).ready(function () {
-      const $progress = $('.progress');
-      const $bar = $progress.find('.bar');
-      const $score = $('.score');
-      const perc = 56.5; // Percentage value
-
-      // Determine the fill color based on the percentage
-      const getFillColor = (value) => {
-        if (value <= 40) return 'red';
-        if (value <= 60) return 'orange';
-        if (value <= 75) return '#4D91C6'; // Ampere color
-        if (value <= 84) return 'lightgreen';
-        return 'darkgreen';
-      };
-
-      $({ p: 0 }).animate({ p: perc }, {
-        duration: 3000,
-        easing: 'swing',
-        step: function (p) {
-          // Update the width and color of the bar
-          $bar.css({
-            width: p + '%',
-            backgroundColor: getFillColor(p)
-          });
-
-          // Update the displayed score
-          $score.text(Math.round(p) + '%');
-        }
-      });
-    });
-  </script>
-</body>
-
+            </div>
+          }
+        </div>
+      }
+      <div id="assessments-container" class="assessment-taken-page-assessments-container" (scroll)="onScroll($event)">
+        <!-- Show the assessment list only if no assessment is selected -->
+        @if (selectedAssessmentId === null) {
+          <div>
+            <!-- Loading indicator -->
+            @if (isLoading) {
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Loading Assessment Results...</p>
+              </div>
+            }
+            <!-- Show message if assessments array is empty -->
+            @if (!isLoading && assessments?.length === 0) {
+              <div class="no-assessments-message">
+                No assessments taken yet.
+              </div>
+            }
+            <!-- Show assessments if array is not empty -->
+            @if (assessments?.length > 0) {
+              <div>
+                @for (assessment of getDisplayedAssessments(); track assessment) {
+                  <div>
+                    <div class="assessment-taken-page-first-assessment-container">
+                      <div class="assessment-taken-page-assessment-details-container">
+                        <img [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'" alt="image" class="assessment-taken-page-assessment-image1" />
+                        <div id="details" class="assessment-taken-page-details">
+                          <span class="assessment-taken-page-heading-text1">{{assessment.assessment_title}}</span>
+                          <div class="assessment-taken-page-assessment-date-id-container">
+                            <span class="assessment-taken-page-details-text">
+                              Completed: {{assessment.latest_end_time | date:'MM/dd/yyyy'}} | Assessment ID : {{assessment.assessment_id}}
+                            </span>
+                          </div>
+                          <div class="assessment-taken-page-assessment-by-container1">
+                            <img [src]="assessment.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'" alt="image" class="assessment-taken-page-assessment-company-logo" />
+                            <span class="assessment-taken-page-assessment-by-text1">Assessment by {{assessment.created_by}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="assessment-taken-page-score-board-container">
+                        <span class="assessment-taken-page-score-board-text">🏆 Score Board</span>
+                        <div class="assessment-taken-page-score-code-container">
+                          <div class="assessment-taken-page-container20">
+                            <div class="assessment-taken-page-container21">
+                              <div class='progress-container'>
+                                <div class="progress">
+                                  <div class="bar" [style.width.%]="assessment.latest_score" [style.backgroundColor]="getFillColor(assessment.latest_score)"></div>
+                                </div>
+                                <span class="score">{{assessment.latest_score}}%</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="assessment-taken-page-score-container">
+                        <div class="assessment-taken-page-attempts-remaining-container">
+                          <span class="assessment-taken-page-attempts-remaining-text">Attempt(s) Remaining</span>
+                          <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
+                        </div>
+                        <svg
+                          id="right-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          class="assessment-taken-page-right-icon1"
+                          (click)="selectAssessment(assessment.assessment_id)"
+                          style="cursor: pointer;"
+                          >
+                          <path
+                            d="m10 16l4-4l-4-4"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </svg>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  id="attempts-remaining-container"
-                  class="assessment-taken-page-attempts-remaining-container"
-                >
-                  <span
-                    id="attempts-remaining-text"
-                    class="assessment-taken-page-attempts-remaining-text"
-                  >
-                    Attempt(s) Remaining
-                  </span>
-                  <span>{{assessment.attempts_remaining < 0 ? 0 : assessment.attempts_remaining}}</span>
-                </div>
-                <svg
-                  id="right-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="assessment-taken-page-right-icon1"
-                  (click)="goToAssessmentDetails(assessment)"
-                  style="cursor: pointer;"
-                >
-                  <path
-                    d="m10 16l4-4l-4-4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <span
-            id="see-more-text1"
-            class="assessment-taken-page-see-more-text1"
-          >
-            See More
-          </span>
-        </div>
-        <!-- <div class="assessment-taken-page-assessments-available-container">
-          <span
-            id="assessments-available-text"
-            class="assessment-taken-page-assessments-available-text"
-          >
-            New Assessment Available (2)
-          </span>
-          <div class="assessment-taken-page-container22">
-            <div
-              id="available-assessments-card-container"
-              class="assessment-taken-page-available-assessmnets-card-container"
-            >
-              <div
-                id="card-details-container"
-                class="assessment-taken-page-card-details-container"
-              >
-                <div
-                  id="details-container"
-                  class="assessment-taken-page-details-container2"
-                >
-                  <img
-                    alt="image"
-                    src="https://play.teleporthq.io/static/svg/default-img.svg"
-                    class="assessment-taken-page-assessment-image2"
-                  />
-                  <div
-                    id="detail-container"
-                    class="assessment-taken-page-detail-container"
-                  >
-                    <span
-                      id="heading-text"
-                      class="assessment-taken-page-heading-text2"
-                    >
-                      Generative AI for Leaders
-                    </span>
-                    <div
-                      id="date-id-container"
-                      class="assessment-taken-page-date-id-container"
-                    >
-                      <span
-                        id="date-id-text"
-                        class="assessment-taken-page-date-id-text"
-                      >
-                        Completed 7/03/2025 | Assessment ID : 109987
-                      </span>
-                    </div>
-                    <div
-                      id="assessment-by-container"
-                      class="assessment-taken-page-assessment-by-container2"
-                    >
-                      <img
-                        id="assessment-image"
-                        alt="image"
-                        src="https://play.teleporthq.io/static/svg/default-img.svg"
-                        class="assessment-taken-page-assessment-image3"
-                      />
-                      <span
-                        id="Assessment-by-text"
-                        class="assessment-taken-page-assessment-by-text2"
-                      >
-                        Assessment by Flashyre
-                      </span>
-                    </div>
+                }
+                @if (getFilteredAssessments().length === 0) {
+                  <div class="no-assessments-message">
+                    No assessment found.
                   </div>
-                </div>
+                }
+                <!-- <span id="see-more-text1" class="assessment-taken-page-see-more-text1" *ngIf="assessments?.length > 0">See More</span> -->
               </div>
-              <div
-                id="remaining-attempts-container"
-                class="assessment-taken-page-remaining-attempts-container"
-              >
-                <div
-                  id="remaining-attempts"
-                  class="assessment-taken-page-remaining-attempts"
-                >
-                  <span class="assessment-taken-page-text29">
-                    Attempt(s) Remaining
-                  </span>
-                  <span>2</span>
-                </div>
-                <svg
-                  id="right-icon"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  class="assessment-taken-page-right-icon2"
-                >
-                  <path
-                    d="m10 16l4-4l-4-4"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
-            </div>
+            }
           </div>
-          <span id="num-text" class="assessment-taken-page-num-text2">
-            See More
-          </span>
-        </div> -->
+        }
+        <!-- Show the attempts list when an assessment is selected -->
+        @if (selectedAssessmentId !== null) {
+          <assessment-attempts-list
+            [assessmentId]="selectedAssessmentId"
+            (back)="closeDetailView()">
+          </assessment-attempts-list>
+        }
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- Styles for pagination and loading indicators -->
+    <style>
+      .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    .small-spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 5px;
+  }
+
+  @keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container, .loading-more {
+text-align: center;
+padding: 40px 20px;
+}
+
+.load-more-container {
+min-height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+</style>
+
+
+

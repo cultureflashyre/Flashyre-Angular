@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-flow-profile-card',
-  templateUrl: 'recruiter-flow-profile-card.component.html',
-  styleUrls: ['recruiter-flow-profile-card.component.css'],
+    selector: 'recruiter-flow-profile-card',
+    templateUrl: 'recruiter-flow-profile-card.component.html',
+    styleUrls: ['recruiter-flow-profile-card.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterFlowProfileCard {
   @Input()

@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'flashyre-navbar',
-  templateUrl: 'flashyre-navbar.component.html',
-  styleUrls: ['flashyre-navbar.component.css'],
+    selector: 'flashyre-navbar',
+    templateUrl: 'flashyre-navbar.component.html',
+    styleUrls: ['flashyre-navbar.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class FlashyreNavbar {
   @ContentChild('text121')

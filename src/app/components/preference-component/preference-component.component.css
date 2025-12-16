@@ -1,0 +1,645 @@
+:host { 
+  display: contents; 
+}
+ 
+.preference-component-container10 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  position: relative;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+ 
+.preference-component-container11 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.preference-component-text10 {
+  height: 100%;
+  display: flex;
+  font-size: 16px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 600;
+}
+ 
+.preference-component-container12 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.preference-component-button {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  width: auto;
+  height: 100%;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: 0px;
+  border-width: 0px;
+  padding-left: var(--dl-layout-space-halfunit);
+  padding-right: var(--dl-layout-space-halfunit);
+  padding-bottom: 0px;
+  justify-content: center;
+  background-color: #05356C;
+  cursor: pointer;
+}
+ 
+.preference-component-button:hover {
+  
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: 0A4992;
+}
+ 
+.preference-component-button:active {
+  transform: scale(0.90);
+  background-color: 022954;
+}
+ 
+.preference-component-text11 {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.preference-component-container13 {
+  gap: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  max-height: 380px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: center;
+  border-color: #A7A7A7;
+  border-width: 1px;
+  border-radius: 4px;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.preference-component-container14 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 8px;
+  align-items: flex-start;
+  border-radius: 5px;
+  justify-content: flex-start;
+}
+ 
+.preference-component-container15 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 90%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.preference-component-container16 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.preference-component-container17 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.preference-component-text12 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-text13 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-text14 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-container18 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.preference-component-text15 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-text16 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-text17 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-container19 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 49%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.preference-component-container20 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.preference-component-text18 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-text19 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-text20 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+ 
+.preference-component-container21 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.preference-component-text21 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-text22 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-text23 {
+  width: auto;
+  height: auto;
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+}
+ 
+.preference-component-icon1 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+  transition: 0.3s;
+}
+ 
+.preference-component-icon1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+}
+ 
+.preference-component-icon1:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.preference-component-icon3 {
+  align-self: center;
+}
+ 
+.preference-component-fragment10 {
+  display: contents;
+}
+ 
+.preference-component-text24 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment11 {
+  display: contents;
+}
+ 
+.preference-component-text25 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment12 {
+  display: contents;
+}
+ 
+.preference-component-text26 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment13 {
+  display: contents;
+}
+ 
+.preference-component-text27 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment14 {
+  display: contents;
+}
+ 
+.preference-component-text28 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment15 {
+  display: contents;
+}
+ 
+.preference-component-text29 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment16 {
+  display: contents;
+}
+ 
+.preference-component-text30 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment17 {
+  display: contents;
+}
+ 
+.preference-component-text31 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment18 {
+  display: contents;
+}
+ 
+.preference-component-text32 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment19 {
+  display: contents;
+}
+ 
+.preference-component-text33 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment20 {
+  display: contents;
+}
+ 
+.preference-component-text34 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment21 {
+  display: contents;
+}
+ 
+.preference-component-text35 {
+  display: inline-block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.preference-component-fragment22 {
+  display: contents;
+}
+ 
+.preference-component-text36 {
+  display: inline-block;
+}
+ 
+.preference-component-fragment23 {
+  display: contents;
+}
+ 
+.preference-component-text37 {
+  display: inline-block;
+}
+ 
+.preference-componentroot-class-name {
+  width: 100%;
+  display: none;
+}
+
+.preference-component-icon3 {
+  transition: transform 0.3s;
+}
+
+.preference-component-icon3.expanded {
+  transform: rotate(180deg);
+}
+
+.preference-component-container13 {
+  overflow: hidden;
+  transition: height 0.3s;
+}
+
+.preference-limit-message {
+  width: auto;
+  color: #F10400;
+  font-size: 12px;
+}
+
+.grey-out {
+  background-color: #ccc; /*This will change the background color of the button to grey*/
+  cursor: not-allowed; /*This will change the cursor to a "not-allowed" symbol when hovering over the button*/
+}
+ 
+@media(max-width: 991px) {
+  .preference-component-container10 {
+    width: 100%;
+  }
+  .preference-component-container11 {
+    height: 36px;
+  }
+  .preference-component-text10 {
+    font-size: 18px;
+  }
+  .preference-component-button {
+    width: 170px;
+  }
+  .preference-component-text11 {
+    font-size: 14px;
+  }
+  .preference-component-container14 {
+    height: auto;
+    padding: 8px;
+    justify-content: space-between;
+  }
+  .preference-component-container16 {
+    gap: 8px;
+    width: auto;
+  }
+  .preference-component-container17 {
+    gap: 6px;
+    width: auto;
+  }
+  .preference-component-text12 {
+    font-size: 14px;
+  }
+  .preference-component-text13 {
+    font-size: 14px;
+  }
+  .preference-component-text14 {
+    font-size: 14px;
+  }
+  .preference-component-container18 {
+    gap: 6px;
+    width: auto;
+  }
+  .preference-component-text15 {
+    font-size: 14px;
+  }
+  .preference-component-text16 {
+    font-size: 14px;
+  }
+  .preference-component-text17 {
+    font-size: 14px;
+  }
+  .preference-component-container19 {
+    width: auto;
+  }
+  .preference-component-container20 {
+    gap: 6px;
+    width: auto;
+  }
+  .preference-component-text18 {
+    font-size: 14px;
+  }
+  .preference-component-text19 {
+    font-size: 14px;
+  }
+  .preference-component-text20 {
+    font-size: 14px;
+  }
+  .preference-component-container21 {
+    gap: 6px;
+  }
+  .preference-component-text21 {
+    font-size: 14px;
+  }
+  .preference-component-text22 {
+    font-size: 14px;
+  }
+  .preference-component-text23 {
+    font-size: 14px;
+  }
+  .preference-component-icon1 {
+    width: 22px;
+    height: 22px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .preference-component-container10 {
+    width: 100%;
+  }
+  .preference-component-container11 {
+    height: 32px;
+  }
+  .preference-component-text10 {
+    font-size: 16px;
+  }
+  .preference-component-button {
+    width: 140px;
+  }
+  .preference-component-text11 {
+    font-size: 12px;
+  }
+  .preference-component-container14 {
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  .preference-component-container17 {
+    gap: 4px;
+  }
+  .preference-component-text12 {
+    font-size: 12px;
+  }
+  .preference-component-text13 {
+    font-size: 12px;
+  }
+  .preference-component-text14 {
+    font-size: 12px;
+  }
+  .preference-component-container18 {
+    gap: 4px;
+  }
+  .preference-component-text15 {
+    font-size: 12px;
+  }
+  .preference-component-text16 {
+    font-size: 12px;
+  }
+  .preference-component-text17 {
+    font-size: 12px;
+  }
+  .preference-component-container20 {
+    gap: 4px;
+  }
+  .preference-component-text18 {
+    font-size: 12px;
+  }
+  .preference-component-text19 {
+    font-size: 12px;
+  }
+  .preference-component-text20 {
+    font-size: 12px;
+  }
+  .preference-component-container21 {
+    gap: 4px;
+    width: auto;
+  }
+  .preference-component-text21 {
+    font-size: 12px;
+  }
+  .preference-component-text22 {
+    font-size: 12px;
+  }
+  .preference-component-text23 {
+    font-size: 12px;
+  }
+  .preference-component-icon1 {
+    width: 20px;
+    height: 20px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .preference-component-container10 {
+    width: 100%;
+    padding: var(--dl-layout-space-halfunit);
+  }
+  .preference-component-container13 {
+    width: 100%;
+    align-self: center;
+  }
+  .preference-component-container14 {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .preference-component-container16 {
+    height: auto;
+  }
+  .preference-component-container19 {
+    width: auto;
+    height: auto;
+  }
+  .preference-component-container21 {
+    width: auto;
+  }
+  .preference-component-icon1 {
+    width: 22px;
+    height: 22px;
+    align-self: flex-start;
+  }
+}

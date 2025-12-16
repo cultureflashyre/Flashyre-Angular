@@ -3,8 +3,23 @@ import { Title, Meta } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { NavbarForCandidateView1 } from 'src/app/components/navbar-for-candidate-view1/navbar-for-candidate-view1.component';
+import { ProgressBarStep3 } from 'src/app/components/progress-bar-step-3/progress-bar-step-3.component';
+import { ProfileCertificationsComponent } from 'src/app/components/profile-certifications-component/profile-certifications-component.component';
+import { ProfileCreationNavigation2 } from 'src/app/components/profile-creation-navigation2/profile-creation-navigation2.component';
+import { ProgressBarStep4 } from 'src/app/components/progress-bar-step-4/progress-bar-step-4.component';
+
 @Component({
   selector: 'profile-certification-page',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    NavbarForCandidateView1, ProgressBarStep3, ProfileCertificationsComponent,
+    ProfileCreationNavigation2, ProgressBarStep4,
+    ],
   templateUrl: './profile-certification-page.component.html',
   styleUrls: ['./profile-certification-page.component.css'],
 })

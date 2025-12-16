@@ -1,13 +1,18 @@
-// FIXED Component.ts - Remove SafeUrl and keep it simple
+// components/profile-basicinformation-component/profile-basicinformation-component.component.ts
+
 import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'profile-basicinformation-component',
-  templateUrl: './profile-basicinformation-component.component.html',
-  styleUrls: ['./profile-basicinformation-component.component.css'],
+    selector: 'profile-basicinformation-component',
+    templateUrl: './profile-basicinformation-component.component.html',
+    styleUrls: ['./profile-basicinformation-component.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class ProfileBasicinformationComponent implements OnInit {
   @Input() rootClassName: string = '';
@@ -29,37 +34,69 @@ export class ProfileBasicinformationComponent implements OnInit {
   phoneNumber: string = '';
   profilePicture: File | null = null;
   resume: File | null = null;
-  imageSrc: string = ''; // FIXED: Back to simple string
-  defaultImageSrc: string = 'https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg';
+  profile_completion_score: number = 0;
+  
+  // --- MODIFICATION START ---
+  // This will hold the name of the *existing* resume from the backend.
+  resumeFileName: string = ''; 
+  resumeError: string = '';
+  profilePictureError: string = '';
+  // --- MODIFICATION END ---
+
+  imageSrc: string = '';
+  
+  defaultImageSrc: string =   environment.defaultProfilePicture;
   imageAlt: string = 'Profile Picture';
 
   constructor(
-  private profileService: ProfileService, 
-  private router: Router,
-  private cdr: ChangeDetectorRef,
-  private userProfileService: UserProfileService,
-) {}
+    private profileService: ProfileService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private userProfileService: UserProfileService,
+  ) {}
+
   ngOnInit() {
     console.log('Component initialized');
-    console.log('Default image source:', this.defaultImageSrc);
     const profileData = localStorage.getItem('userProfile');
-      if (profileData) {
-        try {
-          const userProfile = JSON.parse(profileData);
-          this.firstName = userProfile.first_name || '';
-          this.lastName = userProfile.last_name || '';
-          this.email = userProfile.email || '';
-          this.phoneNumber = userProfile.phone_number || '';
-          this.imageSrc = userProfile.profile_picture_url || '';
-          console.log('Loaded user profile from localStorage:', userProfile);
-        } catch (error) {
-          console.error('Error parsing userProfile from localStorage:', error);
-          this.fetchUserDetails();
+    if (profileData) {
+      try {
+        const userProfile = JSON.parse(profileData);
+        this.firstName = userProfile.first_name || '';
+        this.lastName = userProfile.last_name || '';
+        this.email = userProfile.email || '';
+        this.phoneNumber = userProfile.phone_number || '';
+        this.imageSrc = userProfile.profile_picture_url || '';
+        this.profile_completion_score = userProfile.profile_completion_score || 0;
+        
+        // --- MODIFICATION START ---
+        // If a resume URL exists in local storage, extract the file name to display it.
+        if (userProfile.resume_url) {
+          this.resumeFileName = this.extractFileNameFromUrl(userProfile.resume_url);
         }
-      } else {
+        // --- MODIFICATION END ---
+
+        console.log('Loaded user profile from localStorage:', userProfile);
+      } catch (error) {
+        console.error('Error parsing userProfile from localStorage:', error);
         this.fetchUserDetails();
       }
+    } else {
+      this.fetchUserDetails();
     }
+  }
+
+  // --- MODIFICATION START ---
+  // Helper function to get the filename from a full GCS URL.
+  extractFileNameFromUrl(url: string): string {
+    try {
+      // Decodes URL-encoded characters (like %20 for space) and gets the last part.
+      return decodeURIComponent(url.split('/').pop() || '');
+    } catch (e) {
+      console.error('Could not extract file name from URL', e);
+      return 'resume.pdf'; // Fallback
+    }
+  }
+  // --- MODIFICATION END ---
 
   fetchUserDetails() {
     this.profileService.getUserDetails().subscribe(
@@ -69,9 +106,18 @@ export class ProfileBasicinformationComponent implements OnInit {
         this.email = response.email || '';
         this.phoneNumber = response.phone_number || '';
         this.imageSrc = response.profile_picture_url || '';
+        this.profile_completion_score = response.profile_completion_score || 0;
+
+        // --- MODIFICATION START ---
+        // The backend now sends the resume_url, so we process it here.
+        if (response.resume_url) {
+          this.resumeFileName = this.extractFileNameFromUrl(response.resume_url);
+        }
+        // --- MODIFICATION END ---
+
         console.log('User details fetched:', response);
 
-        // Async localStorage save with setTimeout
+        // Save the complete response (including new resume_url) to localStorage.
         setTimeout(() => {
           try {
             localStorage.setItem('userProfile', JSON.stringify(response));
@@ -84,7 +130,7 @@ export class ProfileBasicinformationComponent implements OnInit {
       (error) => {
         console.error('Error fetching user details', error);
         if (error.status === 401) {
-          this.router.navigate(['/login-candidate']);
+          this.router.navigate(['/login']);
         } else {
           alert('Failed to load user details. Please try again.');
         }
@@ -92,9 +138,21 @@ export class ProfileBasicinformationComponent implements OnInit {
     );
   }
 
+  public validateInputs(): boolean {
+  let isValid = true;
+  this.profilePictureError = '';
+  this.resumeError = '';
+
+  // Check if there is neither a newly selected resume nor an existing one.
+  if (!this.resume && !this.resumeFileName) {
+    this.resumeError = 'Resume field is mandatory';
+    isValid = false;
+  }
+
+  return isValid;
+}
 
   triggerProfilePictureUpload() {
-    console.log('Trigger profile picture upload clicked');
     this.profilePictureInput.nativeElement.click();
   }
 
@@ -102,56 +160,46 @@ export class ProfileBasicinformationComponent implements OnInit {
     this.resumeInput.nativeElement.click();
   }
 
-  onProfilePictureSelected(event: any) {
-  console.log('🔍 File selection triggered');
-  
+onProfilePictureSelected(event: any) {
   const file = event.target.files[0];
-  console.log('🔍 Selected file:', file);
-  
   if (!file) {
-    console.log('❌ No file selected');
-    return;
+    return; // Exit if no file was selected
   }
 
   if (this.validateProfilePicture(file)) {
-    console.log('✅ File validation passed');
-    this.profilePicture = file;
+        this.profilePictureError = ''; // Clear error on valid selection
+
+    this.profilePicture = file; // This sets the file that will be saved
     
-    // Clean up previous URL
+
+    // --- START: New and More Reliable FileReader Logic ---
+
+    // If the previous image was a temporary "blob" preview, we clean it up
+    // to prevent memory leaks from multiple selection changes.
     if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
       URL.revokeObjectURL(this.imageSrc);
     }
-    
-    // Create new object URL
-    const objectURL = URL.createObjectURL(file);
-    console.log('🔗 Object URL created:', objectURL);
-    
-    // Set the image source
-    this.imageSrc = objectURL;
-    console.log('📝 imageSrc set to:', this.imageSrc);
-    
-    // Force change detection
-    this.cdr.detectChanges();
-    console.log('🔄 Change detection triggered');
-    
-    // Backup: Direct DOM manipulation
-    setTimeout(() => {
-      const imgElement = document.getElementById('candidate-profile-picture') as HTMLImageElement;
-      if (imgElement) {
-        console.log('🖼️ Setting image src directly');
-        imgElement.src = objectURL;
-        
-        imgElement.onload = () => {
-          console.log('✅ Image loaded successfully');
-        };
-        imgElement.onerror = (error) => {
-          console.log('❌ Image failed to load:', error);
-        };
-      }
-    }, 50);
-    
+
+    // 1. Create a new FileReader object.
+    const reader = new FileReader();
+
+    // 2. Tell the reader what to do once it has finished reading the file.
+    reader.onload = () => {
+      // The result is the image content encoded as a string (a data URL).
+      // We assign this directly to our image source.
+      this.imageSrc = reader.result as string;
+
+      // 3. Manually tell Angular to update the screen. This ensures the
+      //    preview appears instantly after the file is read.
+      this.cdr.detectChanges();
+    };
+
+    // 4. Instruct the reader to start reading the selected image file.
+    reader.readAsDataURL(file);
+
+    // --- END: New and More Reliable FileReader Logic ---
+
   } else {
-    console.log('❌ File validation failed');
     alert('Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.');
     this.profilePictureInput.nativeElement.value = '';
   }
@@ -160,7 +208,12 @@ export class ProfileBasicinformationComponent implements OnInit {
   onResumeSelected(event: any) {
     const file = event.target.files[0];
     if (file && this.validateResume(file)) {
+      this.resumeError = ''; 
       this.resume = file;
+      // --- MODIFICATION START ---
+      // When a new file is selected, clear the old file name to show the new one.
+      this.resumeFileName = ''; 
+      // --- MODIFICATION END ---
     } else {
       alert('Invalid file. Only PDF and Word documents (.pdf, .doc, .docx) allowed. Max size: 1MB.');
       this.resumeInput.nativeElement.value = '';
@@ -168,104 +221,93 @@ export class ProfileBasicinformationComponent implements OnInit {
   }
 
   validateProfilePicture(file: File): boolean {
-    console.log('🔍 Validating file:', file.name, file.type, file.size);
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     const maxSize = 5 * 1024 * 1024; // 5MB
-    
-    const isValidType = allowedTypes.includes(file.type);
-    const isValidSize = file.size <= maxSize;
-    
-    console.log('📋 Type valid:', isValidType);
-    console.log('📋 Size valid:', isValidSize, `(${file.size} bytes vs ${maxSize} max)`);
-    
-    return isValidType && isValidSize;
+    return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
   validateResume(file: File): boolean {
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ];
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const maxSize = 1 * 1024 * 1024; // 1MB
     return allowedTypes.includes(file.type) && file.size <= maxSize;
   }
 
   saveProfile(): Promise<{ success: boolean; rateLimited: boolean; message: string; }> {
-  return new Promise((resolve) => {
-    if (!this.resume) {
-      // If only a profile picture is being saved
+    return new Promise((resolve) => {
+      const formData = new FormData();
+      let hasDataToSave = false;
+
       if (this.profilePicture) {
-        const formData = new FormData();
         formData.append('profile_picture', this.profilePicture);
-        
-        this.profileService.saveProfile(formData).subscribe(
-          (response) => {
-            console.log('Profile picture saved successfully', response);
-            resolve({ 
-              success: true, 
-              rateLimited: response.rate_limited || false, 
-              message: response.message || 'Profile picture saved successfully'
-            });
-          },
-          (error) => {
-            console.error('Error saving profile picture', error);
-            alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
-            resolve({ 
-              success: false, 
-              rateLimited: false, 
-              message: 'Error saving profile picture' 
-            });
+        hasDataToSave = true;
+      }
+      if (this.resume) {
+        formData.append('resume', this.resume);
+        hasDataToSave = true;
+      }
+
+      // If no new files are selected, resolve successfully without an API call.
+      if (!hasDataToSave) {
+        console.log("No new files to save.");
+        resolve({ success: true, rateLimited: false, message: 'No new information to save.' });
+        return;
+      }
+
+      this.profileService.saveProfile(formData).subscribe(
+        (response) => {
+          console.log('Profile saved successfully', response);
+
+          // --- MODIFICATION START ---
+          // After a successful save, update local state and storage.
+          try {
+            const profileData = localStorage.getItem('userProfile');
+            if (profileData) {
+              const userProfile = JSON.parse(profileData);
+              // Update the user profile object with the new URLs from the response.
+              userProfile.profile_picture_url = response.profile_picture_url || userProfile.profile_picture_url;
+              userProfile.resume_url = response.resume_url || userProfile.resume_url;
+
+              // If a new resume was uploaded, update the file name for display.
+              if (response.resume_url) {
+                  this.resumeFileName = this.extractFileNameFromUrl(response.resume_url);
+              }
+              
+              // Save the updated profile back to local storage.
+              localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
+              // Clear the file inputs as they have been saved.
+              this.resume = null;
+              this.profilePicture = null;
+            }
+          } catch (e) {
+            console.error('Failed to update localStorage after save.', e);
           }
-        );
-      } else {
-        alert('Recommended to upload a Resume before saving.');
-        resolve({ 
-          success: false, 
-          rateLimited: false, 
-          message: 'No resume or profile picture selected' 
-        });
-      }
-      return;
-    }
+          // --- MODIFICATION END ---
 
-    const formData = new FormData();
-    if (this.profilePicture) {
-      formData.append('profile_picture', this.profilePicture);
-    }
-    formData.append('resume', this.resume);
-
-    this.profileService.saveProfile(formData).subscribe(
-      (response) => {
-        console.log('Profile saved successfully', response);
-        // Resolve with the detailed object from the backend
-        resolve({ 
-          success: true, 
-          rateLimited: response.rate_limited || false, 
-          message: response.message || 'Profile saved successfully'
-        });
-      },
-      (error) => {
-        console.error('Error saving profile', error);
-        alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
-        // Resolve with a consistent error object
-        resolve({ 
-          success: false, 
-          rateLimited: false, 
-          message: 'Error saving profile' 
-        });
-      }
-    );
-  });
-}
-
+          resolve({
+            success: true,
+            rateLimited: response.rate_limited || false,
+            message: response.message || 'Profile saved successfully'
+          });
+        },
+        (error) => {
+          console.error('Error saving profile', error);
+          alert('Error saving profile: ' + (error.error?.detail || 'Unknown error'));
+          resolve({
+            success: false,
+            rateLimited: false,
+            message: 'Error saving profile'
+          });
+        }
+      );
+    });
+  }
 
   skip() {
     this.router.navigate(['/profile-employment-page']);
   }
 
   ngOnDestroy() {
-    // FIXED: Now works properly with string type
     if (this.imageSrc && this.imageSrc.startsWith('blob:')) {
       URL.revokeObjectURL(this.imageSrc);
     }

@@ -1,0 +1,125 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.interview-process-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.interview-process-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #18191c;
+}
+
+.stages-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stage-row-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field-wrapper label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+.form-field-wrapper select,
+.form-field-wrapper input {
+  height: 44px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 16px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-field-wrapper input.custom-stage-input {
+    margin-top: 8px;
+}
+
+.required-asterisk {
+  color: #d92d20;
+}
+
+.field-error-message {
+  color: #d92d20;
+  font-size: 12px;
+}
+
+/* Field-specific widths */
+.stage-field { flex: 2.5; }
+.date-field { flex: 1.5; }
+.mode-field { flex: 1; }
+.assigned-to-field { flex: 2; }
+
+.remove-icon-wrapper {
+  padding-top: 28px; /* Align with input fields */
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: #d92d20;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+
+.add-stage-container {
+  margin-top: 16px;
+}
+
+.add-stage-button {
+  background: none;
+  border: none;
+  color: #05356C;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media(max-width: 991px) {
+  .stage-row-container {
+    flex-wrap: wrap;
+  }
+  .stage-field, .assigned-to-field { width: calc(50% - 8px); }
+  .date-field, .mode-field { width: calc(50% - 8px); }
+}
+
+@media(max-width: 767px) {
+  .stage-field, .date-field, .mode-field, .assigned-to-field {
+    width: 100%;
+    flex: auto;
+  }
+}

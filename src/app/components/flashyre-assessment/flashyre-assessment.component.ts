@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'flashyre-assessment',
-  templateUrl: 'flashyre-assessment.component.html',
-  styleUrls: ['flashyre-assessment.component.css'],
+    selector: 'flashyre-assessment',
+    templateUrl: 'flashyre-assessment.component.html',
+    styleUrls: ['flashyre-assessment.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class FlashyreAssessment {
   @ContentChild('text912')

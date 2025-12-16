@@ -1,12 +1,27 @@
 import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/candidate.service';
 import { CorporateAuthService } from '../../services/corporate-auth.service';
+import { catchError, of } from 'rxjs';
+import { SocialAuthService, GoogleLoginProvider,SocialUser, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
 
 @Component({
-  selector: 'log-in-page',
-  templateUrl: './log-in-page.component.html',
-  styleUrls: ['./log-in-page.component.css']
+    selector: 'log-in-page',
+    templateUrl: './log-in-page.component.html',
+    styleUrls: ['./log-in-page.component.css'],
+    standalone: true,
+    imports: [
+      FormsModule, ReactiveFormsModule, CommonModule,
+      AlertMessageComponent, NgClass, 
+      NgTemplateOutlet, FormsModule, 
+      ReactiveFormsModule, RouterLink,
+    GoogleSigninButtonModule ,]
 })
 export class LogInPage implements OnInit {
   @ContentChild('text11') text11: TemplateRef<any>;
@@ -26,17 +41,22 @@ export class LogInPage implements OnInit {
 
   loginForm: FormGroup;
   showPassword: boolean = false;
-  errorMessage: string = '';
+  @Input() errorMessage: string = '';
+
+    // Properties for the alert message
+  showLoginSuccessAlert = false;
+  loginSuccessMessage = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private corporateAuthService: CorporateAuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private socialAuthService: SocialAuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)]]
     });
   }
 
@@ -49,6 +69,36 @@ export class LogInPage implements OnInit {
         this.errorMessage = '';
         this.cdr.detectChanges();
       }
+    }); 
+    // --- ADDED: Google Sign-In Subscription Logic ---
+    // This is the new, correct way to handle Google Sign-In.
+    // It listens for a successful login from the <asl-google-signin-button> component
+    // in your HTML and then executes our logic.
+    this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
+      console.log('Google user authenticated:', socialUser);
+      const idToken = socialUser.idToken;
+      const selectedUserType = '';
+
+      const authObservable = this.authService.googleAuthCheck(idToken, selectedUserType);
+
+      authObservable.subscribe({
+        next: (response) => {
+          if (response.status === 'LOGIN_SUCCESS' || response.status === 'ROLE_MISMATCH') {
+            this.errorMessage = '';
+            // The backend returns a full login response, so we emit it
+            // to the parent component (login-candidate.component).
+            this.loginSubmit.emit(response);
+          } else {
+            // This happens if a new user (not in your DB) tries to log in.
+            this.errorMessage = 'Account not found. Please sign up first.';
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.error || 'Google login failed. Please try again.';
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
 
@@ -56,12 +106,10 @@ export class LogInPage implements OnInit {
     console.log('onSubmit called', {
       formValues: this.loginForm.value,
       isValid: this.loginForm.valid,
-      isInvalid: this.loginForm.invalid
     });
 
     if (this.loginForm.invalid) {
       this.errorMessage = 'Please enter both email and password';
-      console.log('Setting errorMessage:', this.errorMessage);
       this.cdr.detectChanges();
       return;
     }
@@ -73,19 +121,52 @@ export class LogInPage implements OnInit {
 
     loginObservable.subscribe({
       next: (response: any) => {
-        console.log(`${this.userType} login successful:`, response);
-        this.errorMessage = '';
-        localStorage.setItem('jwtToken', response.access);
-        this.loginSubmit.emit(response);
-        this.cdr.detectChanges();
+        if (response.message === 'Login successful' && response.access) {
+          this.errorMessage = '';
+          localStorage.setItem('jwtToken', response.access);
+
+          let roleMessage = '';
+          switch (response.role) {
+            case 'candidate':
+              roleMessage = 'You are logged in as Candidate.';
+              break;
+            case 'recruiter':
+              roleMessage = 'You are logged in as Recruiter.';
+              break;
+            case 'admin':
+              roleMessage = 'You are logged in as Admin.';
+              break;
+            default:
+              roleMessage = 'Login successful.';
+              break;
+          }
+          this.loginSuccessMessage = roleMessage;
+          this.showLoginSuccessAlert = true;
+          this.cdr.detectChanges(); // Immediately show the alert message
+
+          // Set a timeout to hide the message and then emit the login event
+          setTimeout(() => {
+            this.showLoginSuccessAlert = false;
+            // --- MOVE THE EMIT CALL HERE ---
+            this.loginSubmit.emit(response);
+            this.cdr.detectChanges(); // Update the view after hiding the alert
+          }, 5000); // 5-second delay
+
+        } else {
+          this.errorMessage = response.error || 'Invalid Email or Password';
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => {
-        console.error(`${this.userType} login failed:`, err);
         this.errorMessage = 'Invalid Email or Password';
-        console.log('Setting errorMessage:', this.errorMessage);
         this.cdr.detectChanges();
       }
     });
+  }
+
+    // Function to close the alert manually if needed
+  onAlertClose() {
+    this.showLoginSuccessAlert = false;
   }
 
   togglePasswordVisibility() {

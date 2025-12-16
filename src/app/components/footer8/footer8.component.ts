@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-footer8',
-  templateUrl: 'footer8.component.html',
-  styleUrls: ['footer8.component.css'],
+    selector: 'app-footer8',
+    templateUrl: 'footer8.component.html',
+    styleUrls: ['footer8.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet],
 })
 export class Footer8 {
   @Input()

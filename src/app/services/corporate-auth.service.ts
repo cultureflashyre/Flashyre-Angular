@@ -4,6 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 interface CorporateSignupData {
   first_name: string;
@@ -31,7 +33,11 @@ export class CorporateAuthService {
   
   private apiUrl = environment.apiUrl; // Adjust the API URL as needed
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private socialAuthService: SocialAuthService,
+) {}
 
 loginCorporate(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}api/auth/login/`, { email, password }).pipe(
@@ -74,9 +80,9 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
   }
 
   saveTokens(access: string, refresh: string): void {
-  localStorage.setItem('jwtToken', access);
-  localStorage.setItem('refreshToken', refresh);
-}
+    localStorage.setItem('jwtToken', access);
+    localStorage.setItem('refreshToken', refresh);
+  }
 
   getJWTToken(): string | null {
     return localStorage.getItem('jwtToken');
@@ -98,11 +104,53 @@ loginCorporate(email: string, password: string): Observable<AuthResponse> {
     return !!this.getJWTToken();
   }
 
-  logout(): void {
+async logout(): Promise<void> {
+  try {
+    // 1. Sign out from the social provider (Google). This will resolve even
+    //    if the user was not logged in with a social provider.
+    await this.socialAuthService.signOut();
+    console.log('User signed out from social provider.');
+  } catch (error) {
+    console.error('Error signing out from social provider:', error);
+  } finally {
+    // 2. Clear all your application's session data from localStorage.
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
-    // Optionally clear other stored corporate user data
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
+
+    // 3. Redirect the user to the login page.
+    this.router.navigate(['/login']);
+  }
+}
+
+  clearTokens(): void {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('userType');
   }
   
+  // --- NEW METHOD 1: Initial Google Auth Check ---
+  googleAuthCheck(idToken: string, selectedUserType: string): Observable<any> {
+    // The user type is implicitly 'recruiter' (corporate) when using this service.
+    return this.http.post(`${this.apiUrl}api/auth/google/check/`, { idToken, selectedUserType });
+  }
+
+  // --- NEW METHOD 2: Complete Google Signup ---
+  completeGoogleSignup(userData: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+  }): Observable<any> {
+    const payload = {
+      ...userData,
+      user_type: 'recruiter' // Hardcoded as 'recruiter' for corporate users
+    };
+    return this.http.post(`${this.apiUrl}api/auth/google/complete/`, payload);
+  }
 
 }

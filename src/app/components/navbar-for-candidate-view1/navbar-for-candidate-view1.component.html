@@ -16,6 +16,7 @@
         [attr.alt]="imageAlt1"
         [attr.src]="imageSrc1"
         class="navbar-for-candidate-view1-flashyre-image"
+        [routerLink]="['/candidate-home']"
       />
       <div
         data-thq="thq-dropdown"
@@ -27,8 +28,8 @@
         >
           <img
             id="recruiter-profile-picture"
-            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
             [src]="userProfile.profile_picture_url ? userProfile.profile_picture_url : defaultProfilePicture"
+            alt="Image of {{ userProfile.first_name }} {{ userProfile.last_name }}"
             class="navbar-for-candidate-view1-user-image1"
           />
           <div
@@ -68,9 +69,9 @@
                 <ng-container>
                   <ng-template #defaultText1>
                     <div class="navbar-for-candidate-view1-fragment14">
-                      <span class="navbar-for-candidate-view1-text14">
+                      <a [routerLink]="['/profile-overview-page']" class="navbar-for-candidate-view1-text14">
                         Profile
-                      </span>
+                      </a>
                     </div>
                   </ng-template>
                   <ng-container
@@ -80,7 +81,7 @@
               </span>
             </div>
           </li>
-          <li
+          <!--<li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view1-preference1 list-item"
           >
@@ -106,8 +107,8 @@
                 </ng-container>
               </span>
             </div>
-          </li>
-          <li
+          </li>-->
+          <!-- <li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view1-settings1 list-item"
           >
@@ -133,7 +134,7 @@
                 </ng-container>
               </span>
             </div>
-          </li>
+          </li> -->
           <li
             data-thq="thq-dropdown"
             class="navbar-for-candidate-view1-logout1 list-item"
@@ -145,6 +146,7 @@
               <span
                 id="recruiter-logout-Button"
                 class="navbar-for-candidate-view1-logout2"
+                (click)="onLogoutClick()"
               >
                 <ng-container>
                   <ng-template #defaultText31>
@@ -353,6 +355,7 @@
                 <div
                   id="logout-container"
                   class="navbar-for-candidate-view1-logout-container button"
+                  (click)="onLogoutClick()"
                 >
                   <svg
                     id="logout-icon"

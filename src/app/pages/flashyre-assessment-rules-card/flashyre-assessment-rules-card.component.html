@@ -1,164 +1,144 @@
-<div class="flashyre-assessment-rules-card-container">
-  <flashyre-assessment-rules [assessmentData]="assessmentData"
-    rootClassName="flashyre-assessment-rulesroot-class-name"
-  >
-    <ng-template #text2>
-      <div class="flashyre-assessment-rules-card-fragment10">
-        <span class="flashyre-assessment-rules-card-text10">Test Details:</span>
-      </div>
-    </ng-template>
-    <ng-template #text311>
-      <div class="flashyre-assessment-rules-card-fragment11">
-        <span class="flashyre-assessment-rules-card-text11">
-          <span>Each correct answer will be awarded 1 point.</span>
-          <br />
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text1>
-      <div class="flashyre-assessment-rules-card-fragment12">
-        <span class="flashyre-assessment-rules-card-text14">
-          Rules for the {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }} 
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text61>
-      <div class="flashyre-assessment-rules-card-fragment13">
-        <span class="flashyre-assessment-rules-card-text15">
-          I have read and understood the assessment rules
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text9>
-      <div *ngIf="showVideoRecordingRule" class="flashyre-assessment-rules-card-fragment14">
-        <span class="flashyre-assessment-rules-card-text16">
-          {{ videoRecordingRuleNumber }}. This assessment session is being video recorded for monitoring and evaluation purpose.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text211>
-      <div class="flashyre-assessment-rules-card-fragment15">
-        <span class="flashyre-assessment-rules-card-text17">
-          <span>Scoring:</span>
-          <br />
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text3111>
-      <div class="flashyre-assessment-rules-card-fragment16">
-        <span class="flashyre-assessment-rules-card-text20">
-          The test will auto-submit after {{ assessmentData?.total_duration || 'Unknown' }} minutes, regardless of whether you
-          have answered all the questions or not.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text412>
-      <div class="flashyre-assessment-rules-card-fragment17">
-        <span class="flashyre-assessment-rules-card-text21">
-          <span>
-            Once the {{ assessmentData?.total_duration || 'Unknown' }}-minute time limit is up, the test will automatically
-            submit, even if you have not answered all the questions.
-          </span>
-          <br />
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text>
-      <div class="flashyre-assessment-rules-card-fragment18">
-        <span class="flashyre-assessment-rules-card-text24">
-          {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }} 
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text8>
-      <div *ngIf="showProctoredRule" class="flashyre-assessment-rules-card-fragment19">
-        <span class="flashyre-assessment-rules-card-text25">
-          {{ proctoredRuleNumber }}. Switching tabs or move to different application will lead to auto-submission of this assessment.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text411>
-      <div class="flashyre-assessment-rules-card-fragment20">
-        <span class="flashyre-assessment-rules-card-text26">
-          Your final score will be displayed at the end of the test.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text41>
-      <div class="flashyre-assessment-rules-card-fragment21">
-        <span class="flashyre-assessment-rules-card-text27">
-          <span>
-            You can navigate between the questions and change your answers
-            before submitting.
-          </span>
-          <br />
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text3>
-      <div class="flashyre-assessment-rules-card-fragment22">
-        <span class="flashyre-assessment-rules-card-text30">
-          The test consist of {{ assessmentData?.total_questions }} multiple choice questions based on the
-          Assessment skill.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text21>
-      <div class="flashyre-assessment-rules-card-fragment23">
-        <span class="flashyre-assessment-rules-card-text31">Test Taking:</span>
-      </div>
-    </ng-template>
-    <ng-template #text41112>
-      <div class="flashyre-assessment-rules-card-fragment24">
-        <span class="flashyre-assessment-rules-card-text32">
-          No late submissions will be accepted.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text7>
-      <div class="flashyre-assessment-rules-card-fragment25">
-        <span class="flashyre-assessment-rules-card-text33">Note:</span>
-      </div>
-    </ng-template>
-    <ng-template #text5>
-      <div class="flashyre-assessment-rules-card-fragment26">
-        <span class="flashyre-assessment-rules-card-text34">Good luck!</span>
-      </div>
-    </ng-template>
-    <ng-template #text31>
-      <div class="flashyre-assessment-rules-card-fragment27">
-        <span class="flashyre-assessment-rules-card-text35">
-          You must answer all {{ assessmentData?.total_questions }} questions within the {{ assessmentData?.total_duration || 'Unknown' }}-minute time limit.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text2111>
-      <div class="flashyre-assessment-rules-card-fragment28">
-        <span class="flashyre-assessment-rules-card-text36">
-          Important Notes:
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text4>
-      <div class="flashyre-assessment-rules-card-fragment29">
-        <span class="flashyre-assessment-rules-card-text37">
-          The time limit for the test is {{ assessmentData?.total_duration || 'Unknown' }} minutes.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #text4111>
-      <div class="flashyre-assessment-rules-card-fragment30">
-        <span class="flashyre-assessment-rules-card-text38">
-          Make sure to review your answers carefully before the time runs out.
-        </span>
-      </div>
-    </ng-template>
-    <ng-template #button>
-      <div class="flashyre-assessment-rules-card-fragment31" (click)="startAssessment()">
-        <span class="flashyre-assessment-rules-card-text39">
-          Start Assessment
-        </span>
-      </div>
-    </ng-template>
-  </flashyre-assessment-rules>
-</div>
+<!-- Main Page Container -->
+<div class="assessment-rules-page">
+  <main class="assessment-card">
+    <!-- Header Section -->
+    <header class="assessment-card__header">
+      <img
+        id="logo"
+        alt="Flashy"
+        src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"
+        class="assessment-card__logo"
+        />
+        <h1 class="assessment-card__title">
+          {{ assessmentData?.assessment_title || 'Corporate Skill-Based Assessment' }}
+        </h1>
+      </header>
+
+      <!-- Main Content Grid -->
+      <div class="assessment-card__grid">
+        <!-- Left Column: Rules (No changes here) -->
+        <div class="assessment-card__rules">
+          <h2>Rules for the Assessment</h2>
+          <section class="rules-section">
+            <h3>Test Details</h3>
+            <ul>
+              @for (section of sections; track section) {
+                <li>
+                  <strong>{{ section.section_title }}:</strong> {{ section.question_count || 'N/A' }} Questions
+                </li>
+              }
+              <li>Consists of <strong>{{ assessmentData?.total_questions }} multiple-choice questions</strong>.</li>
+              <li>Total time limit is <strong>{{ assessmentData?.total_duration || 'Unknown' }} minutes</strong>.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Test Taking</h3>
+            <ul>
+              <li>You must answer all questions within the time limit.</li>
+              <li>You can navigate between questions and change your answers before submitting.</li>
+              <li>The test will automatically submit when the time limit is reached.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Scoring</h3>
+            <ul>
+              <li>Each correct answer is awarded 1 point.</li>
+              <li>Your final score will be displayed at the end of the test.</li>
+            </ul>
+          </section>
+          <section class="rules-section">
+            <h3>Important Notes</h3>
+            <ul>
+              <li>The test will auto-submit after {{ assessmentData?.total_duration || 'Unknown' }} minutes.</li>
+              <li>Review your answers carefully before the time runs out.</li>
+              <li>No late submissions will be accepted.</li>
+            </ul>
+          </section>
+        </div>
+
+        <!-- Right Column: Notes & Actions -->
+        <aside class="assessment-card__actions">
+          <div class="notes-container">
+            <h3>Please Note:</h3>
+            @if (showProctoredRule) {
+              <p class="note-item--warning">
+                Switching tabs or applications will lead to the automatic submission of this assessment.
+              </p>
+            }
+            @if (showVideoRecordingRule) {
+              <p class="note-item--warning">
+                This assessment session is being video recorded for monitoring purposes.
+              </p>
+            }
+          </div>
+
+          <div class="confirmation-container">
+            <p class="good-luck-text">Good luck!</p>
+            <label for="assessment-rule-checkbox" class="custom-checkbox" (click)="onLabelClick()">
+              <input type="checkbox"
+                id="assessment-rule-checkbox"
+                [checked]="rulesUnderstood"
+                (change)="onCheckboxChange($event)"
+                (click)="onInputClick($event)" />
+                <span class="checkmark"></span>
+                I have read and understood the assessment rules.
+              </label>
+
+              <!-- MODIFIED: Button Group with new logic -->
+              <div class="button-group">
+                <!-- This button only appears if a system check is necessary -->
+                @if (showVideoRecordingRule) {
+                  <button
+                    type="button"
+                    class="button button--secondary"
+                    (click)="checkSystemRequirements()"
+                    [disabled]="!rulesUnderstood || isCheckingRequirements"
+                    >
+                    @if (!isCheckingRequirements) {
+                      <span>Check System</span>
+                    }
+                    @if (isCheckingRequirements) {
+                      <span class="button-spinner"></span>
+                    }
+                  </button>
+                }
+
+                <button
+                  type="button"
+                  class="button button--primary"
+                  [class.full-width]="!showVideoRecordingRule"
+                  (click)="startAssessment()"
+                  [disabled]="!systemRequirementsMet || !rulesUnderstood"
+                  >
+                  Start Assessment
+                </button>
+              </div>
+
+
+              @if (systemRequirementsMet && showVideoRecordingRule) {
+                <p class="status-message--success">
+                  ✓ System requirements met. You are ready to start.
+                </p>
+              }
+
+            </div>
+          </aside>
+        </div>
+      </main>
+
+      <!-- NEW: System Requirement Failed Overlay -->
+      @if (showSystemCheckOverlay) {
+        <div class="system-req-popup-overlay">
+          <div class="system-req-popup-content">
+            <h3>System Requirement Check Failed</h3>
+            <p class="popup-note">
+              To proceed, please enable camera and microphone permissions in your browser. Look for an icon in your address bar to manage site settings.
+            </p>
+            <div class="popup-actions">
+              <button class="popup-button cancel" (click)="closeOverlay()">Go Back</button>
+              <button class="popup-button generate" (click)="retrySystemCheck()">Retry</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

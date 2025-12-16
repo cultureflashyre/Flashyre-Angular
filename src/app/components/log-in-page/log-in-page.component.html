@@ -1,3 +1,15 @@
+<!-- Alert Message Component Integration -->
+@if (showLoginSuccessAlert) {
+  <div>
+    <app-alert-message
+      [message]="loginSuccessMessage"
+      [buttons]="[]"
+      (close)="onAlertClose()">
+    </app-alert-message>
+  </div>
+}
+
+
 <div id="login-page" class="log-in-page-container1" [ngClass]="rootClassName">
   <div id="login-page-container" class="log-in-page-container2">
     <h1 id="flashyre-welcome-page" class="log-in-page-text10">
@@ -27,91 +39,129 @@
               [attr.placeholder]="textinputPlaceholder"
               class="log-in-page-email-input input"
               required
-            />
+              />
+              <!-- Error messages for email -->
+              @if (loginForm.get('email').invalid && loginForm.get('email').touched) {
+                <div class="error-text">
+                  @if (loginForm.get('email').errors?.required) {
+                    <span>Email is required.</span>
+                  }
+                  @if (loginForm.get('email').errors?.email) {
+                    <span>Please enter a valid email address.</span>
+                  }
+                </div>
+              }
+            </div>
           </div>
-        </div>
-        <div id="password-container" class="log-in-page-password-container">
-          <div id="login-password-container" class="log-in-page-container5">
-            <span id="login-password" class="log-in-page-password-text">
-              <ng-container *ngTemplateOutlet="text11 ? text11 : defaultText11"></ng-container>
-              <ng-template #defaultText11>
-                <div class="log-in-page-fragment1">
-                  <span class="log-in-page-text11">Password</span>
+          <div id="password-container" class="log-in-page-password-container">
+            <div id="login-password-container" class="log-in-page-container5">
+              <span id="login-password" class="log-in-page-password-text">
+                <ng-container *ngTemplateOutlet="text11 ? text11 : defaultText11"></ng-container>
+                <ng-template #defaultText11>
+                  <div class="log-in-page-fragment1">
+                    <span class="log-in-page-text11">Password</span>
+                  </div>
+                </ng-template>
+              </span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="login-password-input"
+                formControlName="password"
+                [attr.placeholder]="textinputPlaceholder1"
+                class="log-in-page-password-input input"
+                required
+                />
+                <span
+                  id="login-password-show-button"
+                  class="log-in-page-show-text button"
+                  (click)="togglePasswordVisibility()"
+                  >
+                  {{ showPassword ? 'Hide' : 'Show' }}
+                </span>
+              </div>
+              @if (loginForm.get('password').invalid && loginForm.get('password').touched) {
+                <div class="error-text">
+                  @if (loginForm.get('password').errors?.required) {
+                    <span>Password is required.</span>
+                  }
+                  @if (loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) {
+                    <span>
+                      Password should be 8-15 characters.
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+            <button
+              id="login-button-container"
+              type="submit"
+              class="log-in-page-login-button button"
+              >
+              <span id="login-text">
+                <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
+                <ng-template #defaultButton>
+                  <div class="log-in-page-fragment8">
+                    <span class="log-in-page-text18">Login</span>
+                  </div>
+                </ng-template>
+              </span>
+            </button>
+          </form>
+
+          <div class="google-signin-container">
+            <div class="separator">OR</div>
+            <!-- This component renders the official Google button -->
+            <asl-google-signin-button
+              type='standard'
+              size='large'
+              theme='outline'
+              shape='rectangular'
+              width='320px'
+            ></asl-google-signin-button>
+          </div>
+
+          <!-- Error message display -->
+          @if (errorMessage) {
+            <div class="log-in-page-error-login-container">
+              <span id="error-message-login" class="log-in-page-error-message-login">
+                {{ errorMessage }}
+              </span>
+            </div>
+          }
+          <div id="signup-container" class="log-in-page-container6">
+            <span id="don't-have-an-account-text" class="log-in-page-dont-have-an-account-text">
+              <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
+              <ng-template #defaultText3>
+                <div class="log-in-page-fragment5">
+                  <span class="log-in-page-text15">Don’t have an account?</span>
                 </div>
               </ng-template>
             </span>
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              id="login-password-input"
-              formControlName="password"
-              [attr.placeholder]="textinputPlaceholder1"
-              class="log-in-page-password-input input"
-              required
-            />
             <span
-              id="login-password-show-button"
-              class="log-in-page-show-text button"
-              (click)="togglePasswordVisibility()"
-            >
-              {{ showPassword ? 'Hide' : 'Show' }}
+              id="login-signup-button"
+              class="log-in-page-signup-text button"
+              [routerLink]="userType === 'corporate' ? '/signup' : userType === 'admin' ? '/signup' : '/signup'"
+              >
+              <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
+              <ng-template #defaultText4>
+                <div class="log-in-page-fragment2">
+                  <span class="log-in-page-text12">Sign up</span>
+                </div>
+              </ng-template>
             </span>
           </div>
-        </div>
-        <button
-          id="login-button-container"
-          type="submit"
-          class="log-in-page-login-button button"
-        >
-          <span id="login-text">
-            <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>
-            <ng-template #defaultButton>
-              <div class="log-in-page-fragment8">
-                <span class="log-in-page-text18">Login</span>
+          <span
+            id="forgot-password"
+            class="log-in-page-forgot-password button"
+            routerLink="/login-forgot-password"
+            >
+            <ng-container *ngTemplateOutlet="forgotPassword ? forgotPassword : defaultForgotPassword"></ng-container>
+            <ng-template #defaultForgotPassword>
+              <div class="log-in-page-fragment7">
+                <span class="log-in-page-text17">Forgot Password</span>
               </div>
             </ng-template>
           </span>
-        </button>
-      </form>
-      <!-- Error message display -->
-      <div class="log-in-page-error-login-container" *ngIf="errorMessage">
-        <span id="error-message-login" class="log-in-page-error-message-login">
-          {{ errorMessage }}
-        </span>
+        </div>
       </div>
-      <div id="signup-container" class="log-in-page-container6">
-        <span id="don't-have-an-account-text" class="log-in-page-dont-have-an-account-text">
-          <ng-container *ngTemplateOutlet="text3 ? text3 : defaultText3"></ng-container>
-          <ng-template #defaultText3>
-            <div class="log-in-page-fragment5">
-              <span class="log-in-page-text15">Don’t have an account?</span>
-            </div>
-          </ng-template>
-        </span>
-        <span
-          id="login-signup-button"
-          class="log-in-page-signup-text button"
-          [routerLink]="userType === 'corporate' ? '/signup-corporate' : '/signup-candidate'"
-        >
-          <ng-container *ngTemplateOutlet="text4 ? text4 : defaultText4"></ng-container>
-          <ng-template #defaultText4>
-            <div class="log-in-page-fragment2">
-              <span class="log-in-page-text12">Sign up</span>
-            </div>
-          </ng-template>
-        </span>
-      </div>
-      <span
-        id="forgot-password"
-        class="log-in-page-forgot-password button"
-        routerLink="/login-forgot-password"
-      >
-        <ng-container *ngTemplateOutlet="forgotPassword ? forgotPassword : defaultForgotPassword"></ng-container>
-        <ng-template #defaultForgotPassword>
-          <div class="log-in-page-fragment7">
-            <span class="log-in-page-text17">Forgot Password</span>
-          </div>
-        </ng-template>
-      </span>
     </div>
-  </div>
-</div>

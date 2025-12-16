@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'recruiter-navbar',
-  templateUrl: 'recruiter-navbar.component.html',
-  styleUrls: ['recruiter-navbar.component.css'],
+    selector: 'recruiter-navbar',
+    templateUrl: 'recruiter-navbar.component.html',
+    styleUrls: ['recruiter-navbar.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class RecruiterNavbar {
   @ContentChild('text8')

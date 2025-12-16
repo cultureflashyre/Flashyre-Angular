@@ -1,18 +1,30 @@
 import { Component } from '@angular/core'
 import { Title, Meta } from '@angular/platform-browser'
 
+import { RouterModule } from '@angular/router'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+
+import { SignupPageNavbar } from 'src/app/components/signup-page-navbar/signup-page-navbar.component'
+import { SignupCandidate1 } from 'src/app/components/signup-candidate1/signup-candidate1.component'
+
+
 @Component({
-  selector: 'signup-candidate',
+  selector: 'signup',
+  standalone: true,
+  imports: [ RouterModule, FormsModule, CommonModule,
+    SignupCandidate1, SignupPageNavbar,
+  ],
   templateUrl: 'signup-candidate.component.html',
   styleUrls: ['signup-candidate.component.css'],
 })
 export class SignupCandidate {
   constructor(private title: Title, private meta: Meta) {
-    this.title.setTitle('Signup-Candidate - Flashyre')
+    this.title.setTitle('Signup - Flashyre')
     this.meta.addTags([
       {
         property: 'og:title',
-        content: 'Signup-Candidate - Flashyre',
+        content: 'Signup - Flashyre',
       },
       {
         property: 'og:image',

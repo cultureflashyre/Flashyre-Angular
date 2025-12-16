@@ -1,0 +1,836 @@
+:host { 
+  display: contents; 
+}
+
+/* --- ADD THESE STYLES FOR READ-ONLY BEHAVIOR --- */
+
+/* Style disabled input fields to look static and non-interactive */
+:host ::ng-deep input:disabled, 
+:host ::ng-deep .tag-input:disabled {
+  background-color: #f2f2f2 !important;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+  color: #555;
+}
+
+/* Make the sliders non-interactive when in read-only mode */
+:host ::ng-deep .read-only-mode .experience-range-slider .marker {
+  cursor: default;
+  pointer-events: none; /* A stronger way to prevent interaction */
+}
+
+/* Make the tag container look disabled */
+:host ::ng-deep .read-only-mode .tag-container {
+  background-color: #f2f2f2;
+}
+
+/* --- (Rest of your existing CSS file) --- */
+
+
+/* General component styles from original file */
+
+/* ... (all other original styles from the .css file) ... */
+
+/* --- STYLES MOVED FROM HTML --- */
+
+/* --- Location Autocomplete Widget Styles --- */
+.location-widget-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.location-widget-wrapper .input-wrapper {
+  position: relative;
+  height: 100%;
+}
+.location-widget-wrapper .location-input {
+  width: 100%;
+  height: 100%;
+  padding-left: 14px;
+  border: 1px solid #A7A7A7;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+.location-widget-wrapper .location-input:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+.location-widget-wrapper .location-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A7A7A7;
+}
+.location-widget-wrapper .suggestions {
+  position: absolute;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #A7A7A7;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  z-index: 10;
+}
+.location-widget-wrapper .suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f4f8;
+}
+.location-widget-wrapper .suggestion-item:last-child {
+  border-bottom: none;
+}
+.location-widget-wrapper .suggestion-item:hover {
+  background-color: #f0f4f8;
+}
+.location-widget-wrapper .loading {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e2e8f0;
+  border-top: 2px solid #4299e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* --- Reusable Experience Range Slider Styles --- */
+.experience-range-slider {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.experience-range-slider .range-indicator {
+  position: relative;
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+}
+.experience-range-slider .line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #E4E5E8;
+  transform: translateY(-50%);
+}
+.experience-range-slider .filled-segment {
+  position: absolute;
+  top: 50%;
+  height: 5px;
+  background-color: #05356C;
+  transform: translateY(-50%);
+}
+.experience-range-slider .marker {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #05356C;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  z-index: 2;
+  transform: translateY(-50%);
+}
+.experience-range-slider .label {
+  position: absolute;
+  top: 0;
+  color: #6B7280;
+  font-family: sans-serif;
+  font-size: 12px;
+  transform: translateX(-50%);
+}
+
+/* --- Skills (Tag) Input Widget Styles --- */
+.skills-widget-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.skills-widget-wrapper .tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid #A7A7A7;
+  border-radius: 4px;
+  height: 100%;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+.skills-widget-wrapper .tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e1f5fe;
+  color: #0288d1;
+  padding: 4px 8px;
+  border-radius: 16px;
+  margin: 2px;
+  font-size: 14px;
+}
+.skills-widget-wrapper .tag span {
+  margin-right: 6px;
+}
+.skills-widget-wrapper .tag button {
+  background: none;
+  border: none;
+  color: #0288d1;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 4px;
+}
+.skills-widget-wrapper .tag-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 16px;
+  min-width: 150px;
+}
+.skills-widget-wrapper .suggestions {
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  box-sizing: border-box;
+}
+.skills-widget-wrapper .suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.skills-widget-wrapper .suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+.skills-widget-wrapper .active-suggestion {
+  background-color: #e1f5fe;
+}
+ 
+.admin-jd-extended-component-container1 {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-role-location-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.admin-jd-extended-component-role-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-role-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-role-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-role-star-text {
+  fill: #F10400;
+  color: rgb(241, 4, 0);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-role-input-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-role-input-field {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: transparent;
+}
+ 
+.admin-jd-extended-component-location-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-location-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-location-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-location-star-text {
+  fill: #f10400;
+  color: #f10400;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-location-input-container {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.admin-jd-extended-component-container2 {
+  width: 100%;
+  height: 100%;
+}
+ 
+.admin-jd-extended-component-container3 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-total-and-relevant-experience-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.admin-jd-extended-component-total-experience-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-total-experience-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-total-experience-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-total-experience-code-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-container4 {
+  width: 100%;
+  height: 100%;
+}
+ 
+.admin-jd-extended-component-container5 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-relevant-experience-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-relevant-experience-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-relevant-experience-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-relevant-experience-code-container {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.admin-jd-extended-component-container6 {
+  width: 100%;
+  height: 100%;
+}
+ 
+.admin-jd-extended-component-container7 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-notice-period-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 49%;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-notice-period-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-university-institute-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-notice-period-star-text {
+  fill: #F10400;
+  color: rgb(241, 4, 0);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-notice-period-input-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-notice-period-input-filed {
+  width: 100%;
+  height: 48px;
+  border-color: #A7A7A7;
+  background-color: #FFFFFF;
+}
+ 
+.admin-jd-extended-component-skills-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.admin-jd-extended-component-skill-text-container {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-skill-text {
+  color: rgb(24, 25, 28);
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+ 
+.admin-jd-extended-component-skill-star-text {
+  fill: #F10400;
+  color: #F10400;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-skills-input-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 72px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.admin-jd-extended-component-container8 {
+  width: 100%;
+  height: 72px;
+  align-self: center;
+}
+ 
+.admin-jd-extended-component-container9 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-fragment10 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text10 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment11 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text11 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment12 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text12 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment13 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text13 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment14 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text14 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment15 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text15 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment16 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text16 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment17 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text17 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment18 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text18 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-component-fragment19 {
+  display: contents;
+}
+ 
+.admin-jd-extended-component-text19 {
+  display: inline-block;
+}
+ 
+.admin-jd-extended-componentroot-class-name {
+  height: auto;
+}
+ 
+@media(max-width: 1200px) {
+  .admin-jd-extended-component-role-location-container {
+    width: 100%;
+    height: 76px;
+    justify-content: space-between;
+  }
+  .admin-jd-extended-component-location-star-text {
+    display: none;
+  }
+  .admin-jd-extended-component-total-and-relevant-experience-container {
+    width: 100%;
+    height: 76px;
+    justify-content: space-between;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .admin-jd-extended-component-role-location-container {
+    height: auto;
+  }
+  .admin-jd-extended-component-role-container {
+    gap: 4px;
+    height: auto;
+  }
+  .admin-jd-extended-component-role-text {
+    font-size: 14px;
+  }
+  .admin-jd-extended-component-role-input-container {
+    height: 44px;
+  }
+  .admin-jd-extended-component-role-input-field {
+    height: 44px;
+  }
+  .admin-jd-extended-component-location-container {
+    height: auto;
+  }
+  .admin-jd-extended-component-location-text {
+    font-size: 14px;
+  }
+  .admin-jd-extended-component-location-input-container {
+    height: 44px;
+    justify-content: center;
+  }
+  .admin-jd-extended-component-container2 {
+    height: 44px;
+  }
+  .admin-jd-extended-component-total-and-relevant-experience-container {
+    height: auto;
+  }
+  .admin-jd-extended-component-total-experience-container {
+    gap: 4px;
+    height: auto;
+  }
+  .admin-jd-extended-component-total-experience-text {
+    font-size: 14px;
+  }
+  .admin-jd-extended-component-total-experience-code-container {
+    height: 44px;
+  }
+  .admin-jd-extended-component-relevant-experience-container {
+    height: auto;
+  }
+  .admin-jd-extended-component-relevant-experience-text {
+    font-size: 14px;
+  }
+  .admin-jd-extended-component-relevant-experience-code-container {
+    height: 44px;
+  }
+  .admin-jd-extended-component-notice-period-container {
+    gap: 4px;
+    height: auto;
+  }
+  .admin-jd-extended-component-university-institute-text {
+    font-size: 14px;
+  }
+  .admin-jd-extended-component-notice-period-input-container {
+    height: 44px;
+  }
+  .admin-jd-extended-component-notice-period-input-filed {
+    height: 44px;
+  }
+  .admin-jd-extended-component-skill-text {
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .admin-jd-extended-component-role-container {
+    gap: 4px;
+  }
+  .admin-jd-extended-component-location-container {
+    gap: 4px;
+    width: 49%;
+  }
+  .admin-jd-extended-component-total-experience-container {
+    gap: 4px;
+  }
+  .admin-jd-extended-component-relevant-experience-container {
+    gap: 4px;
+    width: 49%;
+  }
+  .admin-jd-extended-component-notice-period-container {
+    gap: 4px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .admin-jd-extended-component-role-location-container {
+    gap: 20px;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .admin-jd-extended-component-role-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-role-text {
+    width: auto;
+  }
+  .admin-jd-extended-component-role-input-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-role-input-field {
+    width: 100%;
+  }
+  .admin-jd-extended-component-location-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-location-text {
+    width: 100%;
+  }
+  .admin-jd-extended-component-location-input-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-total-and-relevant-experience-container {
+    gap: 20px;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .admin-jd-extended-component-total-experience-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-total-experience-text {
+    width: 100%;
+  }
+  .admin-jd-extended-component-total-experience-code-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-relevant-experience-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-relevant-experience-text {
+    width: 100%;
+  }
+  .admin-jd-extended-component-relevant-experience-code-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-notice-period-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-university-institute-text {
+    width: auto;
+  }
+  .admin-jd-extended-component-notice-period-input-container {
+    width: 100%;
+  }
+  .admin-jd-extended-component-notice-period-input-filed {
+    width: 100%;
+  }
+  .admin-jd-extended-component-skills-container {
+    width: 100%;
+    height: auto;
+  }
+  .admin-jd-extended-component-skill-text {
+    width: auto;
+  }
+}

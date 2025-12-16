@@ -1,0 +1,292 @@
+<div id="more-filters" class="more-filters-and-preference-component-container1">
+  <div
+    id="main-container"
+    class="more-filters-and-preference-component-main-container"
+  >
+    <div
+      id="job-recommended-preference-container"
+      class="more-filters-and-preference-component-job-recommended-preference-container"
+    >
+      <div class="more-filters-and-preference-component-container2">
+        <div
+          id="job-recommended-container"
+          class="more-filters-and-preference-component-job-recommended-container"
+          (click)="setTab('filters')"
+          [ngClass]="{'active-tab': activeTab === 'filters'}"
+        >
+          <span
+            id="job-recommended-text"
+            class="more-filters-and-preference-component-job-recommended-text"
+          >
+            <ng-container>
+              <ng-template #defaultJobRecommendedText>
+                <div class="more-filters-and-preference-component-fragment49">
+                  <span class="more-filters-and-preference-component-text69">
+                    More Filters
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="jobRecommendedText ? jobRecommendedText : defaultJobRecommendedText"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+        <div id="preference-container" class="more-filters-and-preference-component-preference-container" (click)="setTab('preferences')" [ngClass]="{'active-tab': activeTab === 'preferences'}">
+          <span
+            id="preference-text"
+            class="more-filters-and-preference-component-preference-text"
+          >
+            <ng-container>
+              <ng-template #defaultPreferenceText>
+                <div class="more-filters-and-preference-component-fragment48">
+                  <span class="more-filters-and-preference-component-text68">
+                    Preferences
+                  </span>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngTemplateOutlet="preferenceText ? preferenceText : defaultPreferenceText"
+              ></ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        class="more-filters-and-preference-component-icon1"
+        (click)="onClose()"
+      >
+        <path
+          d="m6 6l12 12m0-12L6 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+        ></path>
+      </svg>
+    </div>
+    <app-morefilterscomponent1
+  [callerType]="callerType"
+  *ngIf="activeTab === 'filters'"
+  rootClassName="morefilterscomponent1root-class-name"
+  (applyFiltersEvent)="onApplyFilters($event)"
+  (savePreferenceEvent)="onSavePreference($event)" 
+  [preferenceToLoad]="selectedPreferenceData"
+>
+  <ng-template #text>
+    <div class="more-filters-and-preference-component-fragment10">
+      <span class="more-filters-and-preference-component-text10">
+        More Filters
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #button>
+    <div class="more-filters-and-preference-component-fragment11">
+      <span class="more-filters-and-preference-component-text11">
+        Reset
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text11>
+    <div class="more-filters-and-preference-component-fragment12">
+      <span class="more-filters-and-preference-component-text12">
+        <span>Date Posted</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #button1>
+    <div class="more-filters-and-preference-component-fragment14">
+      <span class="more-filters-and-preference-component-text16">
+        Apply Filters
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #button2>
+    <div class="more-filters-and-preference-component-fragment15">
+      <span class="more-filters-and-preference-component-text17">
+        Save Preference
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text114>
+    <div class="more-filters-and-preference-component-fragment16">
+      <span class="more-filters-and-preference-component-text18">
+        <span>Experieance Level</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text115>
+    <div class="more-filters-and-preference-component-fragment17">
+      <span class="more-filters-and-preference-component-text21">
+        <span>Department</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text116>
+    <div class="more-filters-and-preference-component-fragment18">
+      <span class="more-filters-and-preference-component-text24">
+        <span>Salary</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text117>
+    <div class="more-filters-and-preference-component-fragment19">
+      <span class="more-filters-and-preference-component-text27">
+        <span>Location</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text118>
+    <div class="more-filters-and-preference-component-fragment20">
+      <span class="more-filters-and-preference-component-text30">
+        <span>Company Name</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text1141>
+    <div class="more-filters-and-preference-component-fragment26">
+      <span class="more-filters-and-preference-component-text38">
+        <span>Industries</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text1142>
+    <div class="more-filters-and-preference-component-fragment27">
+      <span class="more-filters-and-preference-component-text41">
+        <span>Work Mode</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text1143>
+    <div class="more-filters-and-preference-component-fragment28">
+      <span class="more-filters-and-preference-component-text44">
+        <span>Role</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template #text1144>
+    <div class="more-filters-and-preference-component-fragment29">
+      <span class="more-filters-and-preference-component-text47">
+        <span>Job Type</span>
+        <br />
+      </span>
+    </div>
+  </ng-template>
+    </app-morefilterscomponent1>
+    <preference-component  
+    [callerType]="callerType"
+    *ngIf="activeTab === 'preferences'" 
+    rootClassName="preference-componentroot-class-name" 
+    (applyPreference)="onApplyPreference($event)">
+      <ng-template #text1>
+        <div class="more-filters-and-preference-component-fragment34">
+          <span class="more-filters-and-preference-component-text54">
+            Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text2>
+        <div class="more-filters-and-preference-component-fragment35">
+          <span class="more-filters-and-preference-component-text55">
+            Senior UX Designer
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text12>
+        <div class="more-filters-and-preference-component-fragment36">
+          <span class="more-filters-and-preference-component-text56">
+            Job tittle
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text13>
+        <div class="more-filters-and-preference-component-fragment37">
+          <span class="more-filters-and-preference-component-text57">
+            Date Posted
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text21>
+        <div class="more-filters-and-preference-component-fragment38">
+          <span class="more-filters-and-preference-component-text58">
+            Bengaluru
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text22>
+        <div class="more-filters-and-preference-component-fragment39">
+          <span class="more-filters-and-preference-component-text59">
+            12/7/2025
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #button2>
+        <div class="more-filters-and-preference-component-fragment40">
+          <span class="more-filters-and-preference-component-text60">
+            Add New Preference
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text114>
+        <div class="more-filters-and-preference-component-fragment41">
+          <span class="more-filters-and-preference-component-text61">
+            Experience
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text121>
+        <div class="more-filters-and-preference-component-fragment42">
+          <span class="more-filters-and-preference-component-text62">
+            Location
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text211>
+        <div class="more-filters-and-preference-component-fragment43">
+          <span class="more-filters-and-preference-component-text63">
+            8 years
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text212>
+        <div class="more-filters-and-preference-component-fragment44">
+          <span class="more-filters-and-preference-component-text64">
+            Bengaluru
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1113>
+        <div class="more-filters-and-preference-component-fragment45">
+          <span class="more-filters-and-preference-component-text65">
+            Job Type
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text1211>
+        <div class="more-filters-and-preference-component-fragment46">
+          <span class="more-filters-and-preference-component-text66">
+            Company name
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #text2111>
+        <div class="more-filters-and-preference-component-fragment47">
+          <span class="more-filters-and-preference-component-text67">
+            Permanent
+          </span>
+        </div>
+      </ng-template>
+    </preference-component>
+  </div>
+</div>

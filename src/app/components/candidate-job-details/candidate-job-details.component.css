@@ -1,0 +1,881 @@
+:host { 
+  display: contents; 
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: transparent;
+}
+
+.candidate-job-details-icon-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* In candidate-job-details.component.css */
+
+/* This container will align the icons next to the buttons */
+.candidate-job-details-icon-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Base styles for both Save and Dislike icons */
+.action-icon {
+  cursor: pointer;
+  color: #777; /* Default icon color */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.action-icon:hover {
+  color: #333; /* Darker color on hover */
+  transform: scale(1.1);
+}
+
+/* Style for when an icon is 'filled' (i.e., active) */
+.action-icon1.filled {
+  color: red;
+}
+
+.action-icon2.filled {
+  color: #28A745;
+}
+
+
+/* 
+  --- Custom Tooltip Styles --- 
+  This is the exact block of code you provided.
+*/
+
+/* 
+  The wrapper container for the icon. 
+  It's positioned relatively so the absolute tooltip is positioned relative to it.
+*/
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Ensures the cursor changes to a pointer on hover */
+}
+
+/* 
+  The tooltip text itself. Hidden by default.
+*/
+.tooltip-text {
+  visibility: hidden;
+  width: 160px; /* Adjust width as needed */
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  margin-left: -80px; /* Use half of the width to center it */
+
+  /* Fade-in transition */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 
+  An optional arrow for the tooltip.
+*/
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* 
+  The magic: Show the tooltip when hovering over the icon-wrapper.
+*/
+.icon-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Style for when an icon is disabled */
+/* This rule applies to the icon itself */
+.action-icon.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents clicks on the icon */
+}
+
+/* This rule applies to the wrapper when the icon inside is disabled */
+.icon-wrapper .disabled {
+   cursor: not-allowed;
+}
+
+/* 
+  When an icon is disabled, we don't want to show a tooltip.
+  Note: Since the icon itself has pointer-events: none, hover might not trigger.
+  This rule is a fallback. A better approach is handling this in the component logic if needed.
+*/
+.icon-wrapper:has(.disabled):hover .tooltip-text {
+  display: none;
+}
+
+.candidate-job-details-for-progress-bar {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.progress-container {
+  position: relative;
+  text-align: center;
+  stroke-linecap: round;
+}
+
+.progress-container.mobile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress {
+  width: 100px;
+  height: 6px;
+  background-color: #E8F6FD;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 0;
+  background-color: #4D91C6;
+  /* transition: width 0.2s ease; */
+}
+
+.score {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #474748;
+}
+
+.progress-container.desktop svg {
+  width: 80px;
+  height: 80px;
+}
+
+.loader {
+  stroke-dasharray: 0 19;
+  transition: stroke-dasharray 2s linear, stroke 0.5s;
+  stroke-linecap: round;
+}
+
+.progress-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+}
+
+.progress-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-description {
+  margin-top: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  color: #474748;
+  text-align: center;
+}
+
+.candidate-job-details-container1 {
+  gap: 16px;
+  width: 713px;
+  height: auto;
+  display: flex;
+  padding: 20px;
+  position: relative;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  gap: 24px;
+}
+
+.candidate-job-details-job-details-main-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.candidate-job-details-job-details-container {
+  gap: 16px;
+  flex: auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.candidate-job-details-company-name-role-location-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 521px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.candidate-job-details-company-image-name-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.candidate-job-details-image-container {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--dl-layout-radius-round);
+}
+
+.candidate-job-details-image {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+  background-color: #747474;
+}
+
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #7f8c8d; /* You may set this dynamically in TS */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  user-select: none;
+}
+
+.candidate-job-details-company-name-text {
+  fill: #333;
+  color: #333;
+  display: inline-block;
+  align-self: center;
+  font-style: normal;
+  align-items: center;
+  font-weight: bold;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+
+  /* --- Added styles for truncation --- */
+  max-width: 200px;         /* Set the width limit */
+  white-space: nowrap;      /* Prevent the text from wrapping to a new line */
+  overflow: hidden;         /* Hide the overflowing text */
+  text-overflow: ellipsis;  /* Add the "..." at the end */
+  vertical-align: middle;   /* Ensures proper alignment with the company logo */
+}
+
+.candidate-job-details-progress-bar-container {
+  flex: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.candidate-job-details-container2 {
+  display: none;
+}
+
+.candidate-job-details-container3 {
+  display: contents;
+}
+
+.candidate-job-details-job-role-container {
+  flex: auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.candidate-job-details-job-role-text {
+  fill: #333;
+  color: #333;
+  display: inline-block;
+  align-self: flex-start;
+  font-style: normal;
+  align-items: center;
+  font-weight: normal;
+  justify-content: center;
+}
+
+.candidate-job-details-location-text {
+  fill: #555;
+  color: #555;
+  width: auto;
+  height: 24px;
+  display: inline-block;
+  align-items: center;
+}
+
+.candidate-job-details-apply-take-assessment-button-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.candidate-job-details-apply-button {
+  width: 144px;
+  height: 40px;
+  align-self: center;
+  transition: 0.3s;
+  padding-top: var(--dl-unit-space-halfunit);
+  border-width: 0px;
+  padding-left: var(--dl-unit-space-halfunit);
+  padding-right: var(--dl-unit-space-halfunit);
+  padding-bottom: var(--dl-unit-space-halfunit);
+  background-color: #41327B;
+}
+
+.candidate-job-details-apply-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+}
+
+.candidate-job-details-apply-button:active {
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+
+.candidate-job-details-apply-text {
+  gap: 12px;
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  background-color: #41327B;
+}
+
+.candidate-job-details-take-assessment-button {
+  gap: 8px;
+  width: auto;
+  height: 40px;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: 12px;
+  border-color: #41327B;
+  border-width: 1px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  justify-content: center;
+}
+
+.candidate-job-details-take-assessment-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+
+.candidate-job-details-take-assessment-button:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+
+.candidate-job-details-take-assessment-text :enabled {
+  fill: #41327B;
+  color: #41327B;
+  display: inline-block;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+  justify-content: center;
+}
+
+.candidate-job-details-job-matching-score-container {
+  flex: 0 0 auto;
+  width: 120px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+
+.candidate-job-details-container4 {
+  width: 100%;
+  height: auto;
+}
+
+.candidate-job-details-container5 {
+  display: contents;
+}
+
+.candidate-job-details-about-the-job-text {
+  fill: #555;
+  color: #555;
+  width: 100%;
+  display: inline-block;
+  justify-content: center;
+}
+
+.candidate-job-details-fragment1 {
+  display: contents;
+}
+
+.candidate-job-details-text10 {
+  display: inline-block;
+}
+
+.candidate-job-details-fragment2 {
+  display: contents;
+}
+
+.candidate-job-details-text11 {
+  display: inline-block;
+  font-weight: 500;
+}
+
+.candidate-job-details-fragment3 {
+  display: contents;
+}
+
+.candidate-job-details-text12 {
+  display: inline-block;
+}
+
+.candidate-job-details-fragment4 {
+  display: contents;
+}
+
+.candidate-job-details-text13 {
+  display: inline-block;
+}
+
+.candidate-job-details-fragment5 {
+  display: contents;
+}
+
+.candidate-job-details-text14 {
+  display: inline-block;
+}
+
+.candidate-job-details-fragment6 {
+  display: contents;
+  width: 100%;
+}
+
+.candidate-job-details-text15 {
+  display: inline-block;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.candidate-job-details-text16 {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.candidate-job-details-text19 {
+  font-weight: normal;
+  width: 100%;
+}
+
+.candidate-job-detailsroot-class-name {
+  align-self: flex-start;
+}
+
+/* Base styles for the apply button */
+.apply-button {
+  color: #FFFFFF;           /* Text color as specified */
+  background-color: #41327B; /* Background color as specified */
+  min-width: 69px;
+  height: 40px;
+  border: none;             /* Remove default border */
+  border-radius: 5px;       /* Rounded corners */
+  cursor: pointer;          /* Hand cursor on hover */
+  font-size: 16px;          /* Readable font size */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+  outline: none;            /* Remove default outline */
+}
+
+/* Focus state for accessibility */
+.apply-button:focus {
+  outline: 2px solid #FFFFFF; /* White outline for visibility */
+  outline-offset: 2px;       /* Offset to avoid overlapping content */
+}
+
+/* Disabled state */
+.apply-button:disabled {
+  opacity: 0.5;             /* Semi-transparent to indicate disabled */
+  cursor: not-allowed;      /* Not-allowed cursor */
+}
+
+/* Applying state */
+.apply-button.applying {
+  background-color: #6C5B9E; /* Lighter purple to indicate processing */
+}
+
+/* Applied state */
+.apply-button.applied {
+  background-color: #28A745; /* Green to indicate success */
+}
+
+/* Styling for spans inside the button */
+.apply-button span {
+  display: inline-block;    /* Inline-block for proper alignment */
+  vertical-align: middle;   /* Vertically center the content */
+}
+
+/* Styling for the tick mark in the applied state */
+.tick-mark {
+  font-weight: bold;        /* Bold tick mark */
+  font-size: 1.2em;         /* Slightly larger size */
+  margin-right: 5px;        /* Space between tick and text */
+}
+
+.apply-button :hover{
+  cursor: pointer;
+  transition: all 0.8s;
+  transform: scale(1.05);
+}
+
+.apply-button :active{
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+
+.candidate-job-details-take-assessment-button:disabled {
+  color: #666666;           /* Darker grey text */
+  background-color: #FFFFFF;
+  border-color: #666666;
+  cursor: not-allowed;     /* Show a 'not-allowed' cursor on hover */
+  opacity: 0.7;              /* Make it slightly transparent */
+}
+
+.candidate-job-details-take-assessment-text :disabled{
+  color: #666666;
+}
+
+.candidate-job-for-you-card-icon14,
+.candidate-job-for-you-card-icon16 {
+  fill: #05356c;
+  color: #05356c;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease, fill 0.2s ease;
+  cursor: pointer; /* pointer cursor */
+}
+
+.candidate-job-for-you-card-icon14:hover,
+.candidate-job-for-you-card-icon16:hover {
+  transform: scale(1.1); /* slight grow */
+}
+
+/* Filled state for disliked and saved icons */
+.candidate-job-for-you-card-icon14.filled {
+  fill: #e74c3c; /* example: red fill for dislike */
+  color: #e74c3c;
+}
+
+.candidate-job-for-you-card-icon16.filled {
+  fill: #2ecc71; /* example: green fill for save */
+  color: #2ecc71;
+}
+
+.minimum-qualifiation {
+  font-weight: 600;
+  font-style: Bold;
+}
+
+/* Responsive styles */
+@media(max-width: 991px) {
+  .candidate-job-details-container1 {
+    width: 670px;
+  }
+  .candidate-job-details-job-details-main-container {
+    width: 603px;
+  }
+  .candidate-job-details-container4 {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+  }
+  .candidate-job-details-text15 {
+    font-size: 14px;
+  }
+  .candidate-job-details-text16 {
+    font-style: normal;
+    font-weight: bold;
+  }
+  .candidate-job-details-text17 {
+    font-style: normal;
+    font-weight: bold;
+  }
+  .candidate-job-details-text19 {
+    font-weight: normal;
+  }
+  .candidate-job-details-text20 {
+    font-weight: normal;
+  }
+}
+
+@media(max-width: 767px) {
+  .candidate-job-details-container1 {
+    gap: 16px;
+    width: 600px;
+  }
+  .candidate-job-details-job-details-main-container {
+    gap: 16px;
+    width: 400px;
+    flex-direction: row;
+  }
+  .candidate-job-details-job-details-container {
+    gap: 16px;
+    width: 419px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-name-role-location-container {
+    width: 100%;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-image-name-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .candidate-job-details-image-container {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-details-image {
+    width: 20px;
+    height: 20px;
+  }
+  .candidate-job-details-company-name-text {
+    font-size: 12px;
+  }
+  .candidate-job-details-progress-bar-container {
+    width: 401px;
+    align-self: flex-start;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-container2 {
+    width: 281px;
+    height: 20px;
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-details-job-role-text {
+    font-size: 12px;
+  }
+  .candidate-job-details-location-text {
+    width: auto;
+    height: auto;
+    font-size: 12px;
+  }
+  .candidate-job-details-apply-take-assessment-button-container {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+  }
+  .candidate-job-details-apply-button {
+    width: 60px;
+    height: 28px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .candidate-job-details-apply-text {
+    align-items: center;
+  }
+  .candidate-job-details-take-assessment-button {
+    width: auto;
+    height: 28px;
+    padding: 0px;
+    align-items: center;
+  }
+  .candidate-job-details-take-assessment-text {
+    display: inline-block;
+    font-size: 12px;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .candidate-job-details-job-matching-score-container {
+    width: 150px;
+    height: 50px;
+  }
+  .candidate-job-details-container4 {
+    display: none;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+    font-size: 12px;
+  }
+  .candidate-job-details-text15 {
+    font-size: 12px;
+  }
+  .candidate-job-details-text16 {
+    font-style: normal;
+    font-weight: bold;
+  }
+  .candidate-job-details-text17 {
+    font-style: normal;
+    font-weight: bold;
+  }
+  .candidate-job-details-text19 {
+    font-weight: normal;
+  }
+  .candidate-job-details-text20 {
+    font-weight: normal;
+  }
+  .progress-container.desktop {
+    display: none;
+  }
+  .progress-container.mobile {
+    display: flex;
+  }
+}
+
+@media(max-width: 479px) {
+  .candidate-job-details-container1 {
+    gap: 16px;
+    width: 95%;
+    flex-direction: column;
+  }
+  .candidate-job-details-job-details-main-container {
+    gap: 0;
+    width: 430px;
+    flex-direction: row;
+  }
+  .candidate-job-details-job-details-container {
+    gap: 16px;
+    width: 335px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-name-role-location-container {
+    gap: 4px;
+    width: 332px;
+    padding-right: 0px;
+    flex-direction: column;
+  }
+  .candidate-job-details-company-image-name-container {
+    gap: 4px;
+    width: 100%;
+    align-self: flex-start;
+  }
+  .candidate-job-details-progress-bar-container {
+    width: 258px;
+    height: auto;
+    border-width: 0px;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-container2 {
+    width: 141px;
+    justify-content: flex-end;
+  }
+  .candidate-job-details-job-role-container {
+    gap: 4px;
+  }
+  .candidate-job-details-location-text {
+    width: 325px;
+  }
+  .candidate-job-details-apply-take-assessment-button-container {
+    gap: 8px;
+  }
+  .candidate-job-details-job-matching-score-container {
+    width: 109px;
+    height: auto;
+  }
+  .candidate-job-details-about-the-job-text {
+    width: 100%;
+  }
+  .progress-container.desktop {
+    display: none;
+  }
+  .progress-container.mobile {
+    display: flex;
+  }
+  .progress-container.mobile svg {
+    width: 60px;
+    height: 60px;
+  }
+  .progress-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .progress-label {
+    font-size: 12px;
+  }
+  .progress-description {
+    font-size: 10px;
+  }
+}
+
+@media(min-width: 768px) {
+  .progress-container.desktop {
+    display: block;
+  }
+  .progress-container.mobile {
+    display: none;
+  }
+}

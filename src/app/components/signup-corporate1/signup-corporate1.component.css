@@ -1,7 +1,13 @@
 :host { 
   display: contents; 
 }
- 
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .signup-corporate1-container {
   width: 100%;
   height: auto;
@@ -11,6 +17,16 @@
   flex-direction: column;
   padding-bottom: 20px;
   justify-content: center;
+}
+
+.signup-corporate1-success-signup-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-corporate1-success-message-signup {
+  color: #28a745;
+  font-weight: bold;
 }
  
 .signup-corporate1-signup-container {
@@ -202,7 +218,7 @@
 .signup-corporate1-password-container1 {
   flex: 0 0 auto;
   width: 324px;
-  height: 76px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -241,6 +257,7 @@
   justify-content: center;
   background-color: transparent;
   color: #05356C;
+  font-weight: 600;
 }
  
 .signup-corporate1-show-text1:hover {
@@ -305,6 +322,8 @@
   justify-content: center;
   background-color: transparent;
   color: #05356C;
+  font-weight: 600;
+
 }
  
 .signup-corporate1-show-text2:hover {

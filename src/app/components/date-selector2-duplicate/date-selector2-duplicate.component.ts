@@ -1,9 +1,13 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'date-selector2-duplicate',
-  templateUrl: 'date-selector2-duplicate.component.html',
-  styleUrls: ['date-selector2-duplicate.component.css'],
+    selector: 'date-selector2-duplicate',
+    templateUrl: 'date-selector2-duplicate.component.html',
+    styleUrls: ['date-selector2-duplicate.component.css'],
+    standalone: true,
+    imports: [NgTemplateOutlet, FormsModule],
 })
 export class DateSelector2Duplicate {
   @ContentChild('text1')

@@ -2,6 +2,76 @@
   display: contents; 
 }
 
+
+/* --- [NEW] Custom Tooltip Styles --- */
+
+/* 
+  The wrapper container for the icon. 
+  It's positioned relatively so the absolute tooltip is positioned relative to it.
+*/
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Ensures the cursor changes to a pointer on hover */
+}
+
+/* 
+  The tooltip text itself. Hidden by default.
+*/
+.tooltip-text {
+  visibility: hidden;
+  width: 160px; /* Adjust width as needed */
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  margin-left: -80px; /* Use half of the width to center it */
+
+  /* Fade-in transition */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 
+  An optional arrow for the tooltip.
+*/
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* 
+  The magic: Show the tooltip when hovering over the icon-wrapper.
+*/
+.icon-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 
+  When an icon is disabled, we don't want to show a tooltip or change the cursor.
+*/
+.icon-wrapper .disabled + .tooltip-text {
+  display: none;
+}
+
+.icon-wrapper .disabled {
+   cursor: not-allowed;
+}
+
 .candidate-job-for-you-card-container10 {
   width: 100%;
   height: auto;
@@ -10,6 +80,10 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: center;
+}
+
+.candidate-job-for-you-card-container10:hover {
+  cursor: pointer;
 }
 
 .candidate-job-for-you-card-container11 {
@@ -21,7 +95,7 @@
   padding: 24px;
   align-self: center;
   align-items: flex-start;
-  border-color: #D9D9D9;
+  border-color: #ACACAD;
   border-width: 1px;
   border-radius: 8px;
   background-color: #FFFFFF;
@@ -43,6 +117,34 @@
   object-fit: cover;
   border-radius: var(--dl-radius-radius-round);
   flex-shrink: 0; /* Prevent shrinking */
+}
+
+.avatar-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #CFCCDE; /* You may set this dynamically in TS */
+  color: #41327B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  user-select: none;
+}
+
+.avatar-icon-small {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  background-color: #CFCCDE; /* You may set this dynamically in TS */
+  color: #41327B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  user-select: none;
 }
 
 .candidate-job-for-you-card-container13 {
@@ -203,12 +305,12 @@
   gap: 8px;
   flex: 0 0 auto;
   width: auto; /* Changed from 528px */
-  height: 40px;
+  height: auto;
   display: flex;
   align-items: center; /* Improved alignment */
 }
 
-.candidate-job-for-you-card-button1 {
+/* .candidate-job-for-you-card-button1 {
   width: 77px;
   height: 40px;
   border-color: #05356C;
@@ -231,7 +333,7 @@
   transform: scale(0.90);
   border-width: 0px;
   background-color: 022954;
-}
+} */
 
 .candidate-job-for-you-card-button2 {
   width: 169px;
@@ -486,6 +588,42 @@ svg {
   color: #474748;
 }
 
+.candidate-job-for-you-card-container25 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+}
+
+.candidate-job-for-you-card-icon14,
+.candidate-job-for-you-card-icon16 {
+  fill: #05356c;
+  color: #05356c;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease, fill 0.2s ease;
+  cursor: pointer; /* pointer cursor */
+}
+
+.candidate-job-for-you-card-icon14:hover,
+.candidate-job-for-you-card-icon16:hover {
+  transform: scale(1.1); /* slight grow */
+}
+
+/* Filled state for disliked and saved icons */
+.candidate-job-for-you-card-icon14.filled {
+  fill: #e74c3c; /* example: red fill for dislike */
+  color: #e74c3c;
+}
+
+.candidate-job-for-you-card-icon16.filled {
+  fill: #2ecc71; /* example: green fill for save */
+  color: #2ecc71;
+}
+
+
 @media (max-width: 1200px) {
   .candidate-job-for-you-card-progress-bar-for-mobile {
     display: none;
@@ -521,6 +659,10 @@ svg {
     width: 36px;
     height: 36px;
   }
+
+  .avatar-icon {
+    font-size: 18px;
+  }
   .candidate-job-for-you-card-container13 {
     width: 536px;
     justify-content: space-between;
@@ -553,10 +695,10 @@ svg {
     width: auto;
     height: 36px;
   }
-  .candidate-job-for-you-card-button1 {
+  /* .candidate-job-for-you-card-button1 {
     width: 70px;
     height: 36px;
-  }
+  } */
   .candidate-job-for-you-card-button2 {
     width: 160px;
     height: 36px;

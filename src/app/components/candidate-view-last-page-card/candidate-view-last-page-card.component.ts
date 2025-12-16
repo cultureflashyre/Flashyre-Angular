@@ -1,9 +1,12 @@
 import { Component, Input, ContentChild, TemplateRef } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'candidate-view-last-page-card',
-  templateUrl: 'candidate-view-last-page-card.component.html',
-  styleUrls: ['candidate-view-last-page-card.component.css'],
+    selector: 'candidate-view-last-page-card',
+    templateUrl: 'candidate-view-last-page-card.component.html',
+    styleUrls: ['candidate-view-last-page-card.component.css'],
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet],
 })
 export class CandidateViewLastPageCard {
   @Input()
