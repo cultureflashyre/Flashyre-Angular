@@ -57,7 +57,7 @@
             <!-- List Header -->
             <div id="select-filter-sort-download-zip-main-container" class="recruiter-workflow-candidate-select-filter-sort-download-zip-main-container">
               <div class="recruiter-workflow-candidate-container30">
-                <div id="select-all-main-container" class="recruiter-workflow-candidate-select-all-main-container1">
+                <div  *ngIf="isSuperUser" id="select-all-main-container" class="recruiter-workflow-candidate-select-all-main-container1">
                   <input 
                     type="checkbox" 
                     id="select-checkbox" 
@@ -160,6 +160,7 @@
                   <div class="recruiter-workflow-candidate-container34">
                     <div class="recruiter-workflow-candidate-container35">
                       <input 
+                       *ngIf="isSuperUser"
                         type="checkbox" 
                         class="recruiter-workflow-candidate-select-checkbox" 
                         style="align-self: flex-start; margin-top: 8px;"
@@ -351,11 +352,12 @@
                  <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,.doc,.docx"/>
                 <input type="text" id="upload-file-input" placeholder="Select file" class="recruiter-workflow-candidate-upload-file-input input" readonly [value]="selectedFileName"/>
                 <div (click)="fileInput.click()" id="upload-file-button-container" class="recruiter-workflow-candidate-upload-file-button-container">
-                    <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-candidate-icon10">
-                        <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                    <span class="recruiter-workflow-candidate-text33">Upload File</span>
-                </div>
+    <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-candidate-icon10">
+        <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <!-- ADDED RED ASTERISK HERE -->
+    <span class="recruiter-workflow-candidate-text33">Upload File </span>
+</div>
             </div>
             <span id="note-for-file" class="recruiter-workflow-candidate-note-for-file">PDF or DOCX only, max 5MB.</span>
         </div>
@@ -664,7 +666,12 @@
             placeholder="Enter Role" 
             class="recruiter-workflow-candidate-job-title-input1 input"
             (input)="allowAlphanumericOnly($event)"
+             [class.is-invalid]="f['work_experience'].invalid && f['work_experience'].touched"
         />
+         <div class="validation-error" *ngIf="f['work_experience'].invalid && f['work_experience'].touched">
+            <span *ngIf="f['work_experience'].errors?.['required']">Please enter the Role.</span>
+            <span *ngIf="f['work_experience'].errors?.['maxlength']">Max 15 characters allowed.</span>
+        </div>
     </div>
 
     <!-- RIGHT SIDE: SKILLS -->

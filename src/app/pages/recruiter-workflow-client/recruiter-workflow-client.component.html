@@ -470,6 +470,7 @@
         >
           <div class="recruiter-workflow-client-container14">
             <div
+              *ngIf="isSuperUser"
               id="select-all-main-container"
               class="recruiter-workflow-client-select-all-main-container1"
             >
@@ -627,8 +628,8 @@
                 <option value="none" selected>Sort</option>
                 <option value="a-z">Company (A-Z)</option>
                 <option value="z-a">Company (Z-A)</option>
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
+                <option value="newest">Recent</option>
+                <option value="oldest">Oldest</option>
               </select>
             </div>
 
@@ -642,7 +643,8 @@
             <div class="recruiter-workflow-client-container19">
               <div class="recruiter-workflow-client-container20">
                 <div class="recruiter-workflow-client-container21">
-                  <input type="checkbox" class="recruiter-workflow-client-select-checkbox2" [(ngModel)]="clientData.selected"/>
+                  
+                  <input *ngIf="isSuperUser" type="checkbox" class="recruiter-workflow-client-select-checkbox2" [(ngModel)]="clientData.selected"/>
                 </div>
                 
                 <div class="recruiter-workflow-client-container22">

@@ -143,7 +143,9 @@ export class LogInPage implements OnInit {
               roleMessage = 'You are logged in as Recruiter.';
               break;
             case 'admin':
-              roleMessage = 'You are logged in as Admin.';
+              roleMessage = response.is_superuser 
+                ? 'You are logged in as Super admin.' 
+                : 'You are logged in as Admin.';
               break;
             default:
               roleMessage = 'Login successful.';

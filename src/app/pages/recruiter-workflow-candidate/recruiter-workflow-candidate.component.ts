@@ -413,7 +413,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
       work_experience: ['', [Validators.required, Validators.maxLength(15)]], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
-      skills: ['', Validators.required],
+      skills: ['', Validators.required,],
     }, {
       validators: [
         minMaxValidator('total_experience_min', 'total_experience_max'),
@@ -692,7 +692,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     const input = event.target as HTMLInputElement;
     let value = input.value.trim();
     // Use Child's strict regex (Only Alphabets)
-    value = value.replace(/[^a-zA-Z ]/g, '');
+    value = value.replace(/[^a-zA-Z #+]/g, '');
     if (value) {
       if (!this.skills.includes(value)) {
         this.skills.push(value);
@@ -822,12 +822,25 @@ export class RecruiterWorkflowCandidate implements OnInit {
       // 1. Identify exactly which fields are invalid
       const invalidFields: string[] = [];
       const controls = this.candidateForm.controls;
+
+     if (!this.selectedFileName || this.selectedFileName.trim() === '') {
+      this.showAlert('Resume file is required.', ['Close']);
+      return;
+    }  
       
       for (const name in controls) {
         if (controls[name].invalid) {
+          if (name === 'work_experience') {
+            invalidFields.push('Role');
+          } 
+          else if (name === 'current_ctc') {
+            invalidFields.push('Current CTC');
+          }
+          else {
           // Convert field name to readable text (e.g., "current_ctc" -> "Current Ctc")
           const readableName = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
           invalidFields.push(readableName);
+          }
         }
       }
 
@@ -915,6 +928,6 @@ export class RecruiterWorkflowCandidate implements OnInit {
   allowAlphabetsOnly(event: Event): void {
     const input = event.target as HTMLInputElement;
     // Replace anything that is NOT (a-z, A-Z, or space) with empty string
-    input.value = input.value.replace(/[^a-zA-Z ]/g, '');
+    input.value = input.value.replace(/[^a-zA-Z #+]/g, '');
   }
 }

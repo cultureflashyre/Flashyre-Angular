@@ -133,6 +133,7 @@
             <!-- ... (Keep your existing Header content exactly as it is) ... -->
             <div class="recruiter-workflow-requirement-container28">
               <div
+               *ngIf="isSuperUser"
                 id="select-all-main-container"
                 class="recruiter-workflow-requirement-select-all-main-container1"
               >
@@ -246,6 +247,7 @@
                   <div class="recruiter-workflow-requirement-container34">
                     <div class="recruiter-workflow-requirement-container35">
                       <input
+                       *ngIf="isSuperUser"
                         type="checkbox"
                         id="select-checkbox-{{i}}"
                         class="recruiter-workflow-requirement-select-checkbox2"

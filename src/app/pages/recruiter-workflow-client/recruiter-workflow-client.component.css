@@ -461,6 +461,10 @@
   padding-bottom: 0px;
   justify-content: flex-start;
   background-color: #FFFFFF;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /* --- MODIFIED CODE FOR DROPDOWN --- */
@@ -473,10 +477,9 @@
   
   /* 1. FORCE HEIGHT LIMIT & SCROLL */
   max-height: 200px;
-  overflow-y: auto; 
+  overflow-y: scroll; 
   
   /* 2. STOP PARENT SCROLLING (The Magic Fix) */
-  overscroll-behavior: contain; 
   
   /* Visuals */
   background-color: #FFFFFF;
