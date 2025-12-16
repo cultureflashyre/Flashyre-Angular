@@ -1,0 +1,2894 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ProfileBasicinformationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>profile-basicinformation-component</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./profile-basicinformation-component.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./profile-basicinformation-component.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#button" >button</a>
+                            </li>
+                            <li>
+                                <a href="#defaultImageSrc" >defaultImageSrc</a>
+                            </li>
+                            <li>
+                                <a href="#email" >email</a>
+                            </li>
+                            <li>
+                                <a href="#firstName" >firstName</a>
+                            </li>
+                            <li>
+                                <a href="#imageAlt" >imageAlt</a>
+                            </li>
+                            <li>
+                                <a href="#imageSrc" >imageSrc</a>
+                            </li>
+                            <li>
+                                <a href="#lastName" >lastName</a>
+                            </li>
+                            <li>
+                                <a href="#phoneNumber" >phoneNumber</a>
+                            </li>
+                            <li>
+                                <a href="#profilePicture" >profilePicture</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#profilePictureInput" >profilePictureInput</a>
+                            </li>
+                            <li>
+                                <a href="#resume" >resume</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#resumeInput" >resumeInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text" >text</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text1" >text1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text2" >text2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text5" >text5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text51" >text51</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text52" >text52</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text6" >text6</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#fetchUserDetails" >fetchUserDetails</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onProfilePictureSelected" >onProfilePictureSelected</a>
+                            </li>
+                            <li>
+                                <a href="#onResumeSelected" >onResumeSelected</a>
+                            </li>
+                            <li>
+                                <a href="#saveProfile" >saveProfile</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                <a href="#triggerProfilePictureUpload" >triggerProfilePictureUpload</a>
+                            </li>
+                            <li>
+                                <a href="#triggerResumeUpload" >triggerResumeUpload</a>
+                            </li>
+                            <li>
+                                <a href="#validateProfilePicture" >validateProfilePicture</a>
+                            </li>
+                            <li>
+                                <a href="#validateResume" >validateResume</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(profileService: <a href="../injectables/ProfileService.html" target="_self">ProfileService</a>, router: Router, cdr: ChangeDetectorRef, userProfileService: <a href="../injectables/UserProfileService.html" target="_self">UserProfileService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>profileService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ProfileService.html" target="_self" >ProfileService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cdr</td>
+                                                  
+                                                        <td>
+                                                                    <code>ChangeDetectorRef</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userProfileService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserProfileService.html" target="_self" >UserProfileService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:13</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchUserDetails"></a>
+                    <span class="name">
+                        <span ><b>fetchUserDetails</b></span>
+                        <a href="#fetchUserDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fetchUserDetails()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:267</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onProfilePictureSelected"></a>
+                    <span class="name">
+                        <span ><b>onProfilePictureSelected</b></span>
+                        <a href="#onProfilePictureSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onProfilePictureSelected(event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="105"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:105</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onResumeSelected"></a>
+                    <span class="name">
+                        <span ><b>onResumeSelected</b></span>
+                        <a href="#onResumeSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onResumeSelected(event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:160</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveProfile"></a>
+                    <span class="name">
+                        <span ><b>saveProfile</b></span>
+                        <a href="#saveProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>saveProfile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="263"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:263</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="triggerProfilePictureUpload"></a>
+                    <span class="name">
+                        <span ><b>triggerProfilePictureUpload</b></span>
+                        <a href="#triggerProfilePictureUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>triggerProfilePictureUpload()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="triggerResumeUpload"></a>
+                    <span class="name">
+                        <span ><b>triggerResumeUpload</b></span>
+                        <a href="#triggerResumeUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>triggerResumeUpload()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:101</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateProfilePicture"></a>
+                    <span class="name">
+                        <span ><b>validateProfilePicture</b></span>
+                        <a href="#validateProfilePicture"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateProfilePicture(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:170</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateResume"></a>
+                    <span class="name">
+                        <span ><b>validateResume</b></span>
+                        <a href="#validateResume"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateResume(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="184"
+                                    class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="button"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>button</b></span>
+                        <a href="#button"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;button&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultImageSrc"></a>
+                    <span class="name">
+                        <span ><b>defaultImageSrc</b></span>
+                        <a href="#defaultImageSrc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="email"></a>
+                    <span class="name">
+                        <span ><b>email</b></span>
+                        <a href="#email"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="firstName"></a>
+                    <span class="name">
+                        <span ><b>firstName</b></span>
+                        <a href="#firstName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="imageAlt"></a>
+                    <span class="name">
+                        <span ><b>imageAlt</b></span>
+                        <a href="#imageAlt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Profile Picture&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="imageSrc"></a>
+                    <span class="name">
+                        <span ><b>imageSrc</b></span>
+                        <a href="#imageSrc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastName"></a>
+                    <span class="name">
+                        <span ><b>lastName</b></span>
+                        <a href="#lastName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="phoneNumber"></a>
+                    <span class="name">
+                        <span ><b>phoneNumber</b></span>
+                        <a href="#phoneNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profilePicture"></a>
+                    <span class="name">
+                        <span ><b>profilePicture</b></span>
+                        <a href="#profilePicture"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>File | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profilePictureInput"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>profilePictureInput</b></span>
+                        <a href="#profilePictureInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLInputElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;profilePictureInput&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resume"></a>
+                    <span class="name">
+                        <span ><b>resume</b></span>
+                        <a href="#resume"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>File | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resumeInput"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>resumeInput</b></span>
+                        <a href="#resumeInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLInputElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;resumeInput&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text</b></span>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text1</b></span>
+                        <a href="#text1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text2</b></span>
+                        <a href="#text2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text5</b></span>
+                        <a href="#text5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text51"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text51</b></span>
+                        <a href="#text51"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text51&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text52"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text52</b></span>
+                        <a href="#text52"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text52&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:21</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text6"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text6</b></span>
+                        <a href="#text6"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text6&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/profile-basicinformation-component/profile-basicinformation-component.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, Input, ContentChild, TemplateRef, ViewChild, ElementRef, ChangeDetectorRef } from &#x27;@angular/core&#x27;;
+import { ProfileService } from &#x27;../../services/profile.service&#x27;;
+import { UserProfileService } from &#x27;src/app/services/user-profile.service&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+
+@Component({
+  selector: &#x27;profile-basicinformation-component&#x27;,
+  templateUrl: &#x27;./profile-basicinformation-component.component.html&#x27;,
+  styleUrls: [&#x27;./profile-basicinformation-component.component.css&#x27;],
+})
+export class ProfileBasicinformationComponent implements OnInit {
+  @Input() rootClassName: string &#x3D; &#x27;&#x27;;
+  @ContentChild(&#x27;text&#x27;) text: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1&#x27;) text1: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text2&#x27;) text2: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text5&#x27;) text5: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text6&#x27;) text6: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;button&#x27;) button: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text51&#x27;) text51: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text52&#x27;) text52: TemplateRef&lt;any&gt;;
+
+  @ViewChild(&#x27;profilePictureInput&#x27;) profilePictureInput!: ElementRef&lt;HTMLInputElement&gt;;
+  @ViewChild(&#x27;resumeInput&#x27;) resumeInput!: ElementRef&lt;HTMLInputElement&gt;;
+
+  firstName: string &#x3D; &#x27;&#x27;;
+  lastName: string &#x3D; &#x27;&#x27;;
+  email: string &#x3D; &#x27;&#x27;;
+  phoneNumber: string &#x3D; &#x27;&#x27;;
+  profilePicture: File | null &#x3D; null;
+  resume: File | null &#x3D; null;
+  imageSrc: string &#x3D; &#x27;&#x27;; // FIXED: Back to simple string
+  defaultImageSrc: string &#x3D; &#x27;https://storage.googleapis.com/cv-storage-sample1/placeholder_images/profile-placeholder.jpg&#x27;;
+  imageAlt: string &#x3D; &#x27;Profile Picture&#x27;;
+
+  constructor(
+  private profileService: ProfileService, 
+  private router: Router,
+  private cdr: ChangeDetectorRef,
+  private userProfileService: UserProfileService,
+) {}
+  ngOnInit() {
+    console.log(&#x27;Component initialized&#x27;);
+    console.log(&#x27;Default image source:&#x27;, this.defaultImageSrc);
+    const profileData &#x3D; localStorage.getItem(&#x27;userProfile&#x27;);
+      if (profileData) {
+        try {
+          const userProfile &#x3D; JSON.parse(profileData);
+          this.firstName &#x3D; userProfile.first_name || &#x27;&#x27;;
+          this.lastName &#x3D; userProfile.last_name || &#x27;&#x27;;
+          this.email &#x3D; userProfile.email || &#x27;&#x27;;
+          this.phoneNumber &#x3D; userProfile.phone_number || &#x27;&#x27;;
+          this.imageSrc &#x3D; userProfile.profile_picture_url || &#x27;&#x27;;
+          console.log(&#x27;Loaded user profile from localStorage:&#x27;, userProfile);
+        } catch (error) {
+          console.error(&#x27;Error parsing userProfile from localStorage:&#x27;, error);
+          this.fetchUserDetails();
+        }
+      } else {
+        this.fetchUserDetails();
+      }
+    }
+
+  fetchUserDetails() {
+    this.profileService.getUserDetails().subscribe(
+      (response: any) &#x3D;&gt; {
+        this.firstName &#x3D; response.first_name || &#x27;&#x27;;
+        this.lastName &#x3D; response.last_name || &#x27;&#x27;;
+        this.email &#x3D; response.email || &#x27;&#x27;;
+        this.phoneNumber &#x3D; response.phone_number || &#x27;&#x27;;
+        this.imageSrc &#x3D; response.profile_picture_url || &#x27;&#x27;;
+        console.log(&#x27;User details fetched:&#x27;, response);
+
+        // Async localStorage save with setTimeout
+        setTimeout(() &#x3D;&gt; {
+          try {
+            localStorage.setItem(&#x27;userProfile&#x27;, JSON.stringify(response));
+            console.log(&#x27;User profile saved asynchronously to localStorage&#x27;);
+          } catch (e) {
+            console.warn(&#x27;Could not save userProfile to localStorage&#x27;, e);
+          }
+        }, 0);
+      },
+      (error) &#x3D;&gt; {
+        console.error(&#x27;Error fetching user details&#x27;, error);
+        if (error.status &#x3D;&#x3D;&#x3D; 401) {
+          this.router.navigate([&#x27;/login-candidate&#x27;]);
+        } else {
+          alert(&#x27;Failed to load user details. Please try again.&#x27;);
+        }
+      }
+    );
+  }
+
+
+  triggerProfilePictureUpload() {
+    console.log(&#x27;Trigger profile picture upload clicked&#x27;);
+    this.profilePictureInput.nativeElement.click();
+  }
+
+  triggerResumeUpload() {
+    this.resumeInput.nativeElement.click();
+  }
+
+  onProfilePictureSelected(event: any) {
+  console.log(&#x27;🔍 File selection triggered&#x27;);
+  
+  const file &#x3D; event.target.files[0];
+  console.log(&#x27;🔍 Selected file:&#x27;, file);
+  
+  if (!file) {
+    console.log(&#x27;❌ No file selected&#x27;);
+    return;
+  }
+
+  if (this.validateProfilePicture(file)) {
+    console.log(&#x27;✅ File validation passed&#x27;);
+    this.profilePicture &#x3D; file;
+    
+    // Clean up previous URL
+    if (this.imageSrc &amp;&amp; this.imageSrc.startsWith(&#x27;blob:&#x27;)) {
+      URL.revokeObjectURL(this.imageSrc);
+    }
+    
+    // Create new object URL
+    const objectURL &#x3D; URL.createObjectURL(file);
+    console.log(&#x27;🔗 Object URL created:&#x27;, objectURL);
+    
+    // Set the image source
+    this.imageSrc &#x3D; objectURL;
+    console.log(&#x27;📝 imageSrc set to:&#x27;, this.imageSrc);
+    
+    // Force change detection
+    this.cdr.detectChanges();
+    console.log(&#x27;🔄 Change detection triggered&#x27;);
+    
+    // Backup: Direct DOM manipulation
+    setTimeout(() &#x3D;&gt; {
+      const imgElement &#x3D; document.getElementById(&#x27;candidate-profile-picture&#x27;) as HTMLImageElement;
+      if (imgElement) {
+        console.log(&#x27;🖼️ Setting image src directly&#x27;);
+        imgElement.src &#x3D; objectURL;
+        
+        imgElement.onload &#x3D; () &#x3D;&gt; {
+          console.log(&#x27;✅ Image loaded successfully&#x27;);
+        };
+        imgElement.onerror &#x3D; (error) &#x3D;&gt; {
+          console.log(&#x27;❌ Image failed to load:&#x27;, error);
+        };
+      }
+    }, 50);
+    
+  } else {
+    console.log(&#x27;❌ File validation failed&#x27;);
+    alert(&#x27;Invalid file. Only JPG, JPEG, PNG allowed. Max size: 5MB.&#x27;);
+    this.profilePictureInput.nativeElement.value &#x3D; &#x27;&#x27;;
+  }
+}
+
+  onResumeSelected(event: any) {
+    const file &#x3D; event.target.files[0];
+    if (file &amp;&amp; this.validateResume(file)) {
+      this.resume &#x3D; file;
+    } else {
+      alert(&#x27;Invalid file. Only PDF and Word documents (.pdf, .doc, .docx) allowed. Max size: 1MB.&#x27;);
+      this.resumeInput.nativeElement.value &#x3D; &#x27;&#x27;;
+    }
+  }
+
+  validateProfilePicture(file: File): boolean {
+    console.log(&#x27;🔍 Validating file:&#x27;, file.name, file.type, file.size);
+    const allowedTypes &#x3D; [&#x27;image/jpeg&#x27;, &#x27;image/jpg&#x27;, &#x27;image/png&#x27;];
+    const maxSize &#x3D; 5 * 1024 * 1024; // 5MB
+    
+    const isValidType &#x3D; allowedTypes.includes(file.type);
+    const isValidSize &#x3D; file.size &lt;&#x3D; maxSize;
+    
+    console.log(&#x27;📋 Type valid:&#x27;, isValidType);
+    console.log(&#x27;📋 Size valid:&#x27;, isValidSize, &#x60;(${file.size} bytes vs ${maxSize} max)&#x60;);
+    
+    return isValidType &amp;&amp; isValidSize;
+  }
+
+  validateResume(file: File): boolean {
+    const allowedTypes &#x3D; [
+      &#x27;application/pdf&#x27;,
+      &#x27;application/msword&#x27;,
+      &#x27;application/vnd.openxmlformats-officedocument.wordprocessingml.document&#x27;,
+    ];
+    const maxSize &#x3D; 1 * 1024 * 1024; // 1MB
+    return allowedTypes.includes(file.type) &amp;&amp; file.size &lt;&#x3D; maxSize;
+  }
+
+  saveProfile(): Promise&lt;{ success: boolean; rateLimited: boolean; message: string; }&gt; {
+  return new Promise((resolve) &#x3D;&gt; {
+    if (!this.resume) {
+      // If only a profile picture is being saved
+      if (this.profilePicture) {
+        const formData &#x3D; new FormData();
+        formData.append(&#x27;profile_picture&#x27;, this.profilePicture);
+        
+        this.profileService.saveProfile(formData).subscribe(
+          (response) &#x3D;&gt; {
+            console.log(&#x27;Profile picture saved successfully&#x27;, response);
+            resolve({ 
+              success: true, 
+              rateLimited: response.rate_limited || false, 
+              message: response.message || &#x27;Profile picture saved successfully&#x27;
+            });
+          },
+          (error) &#x3D;&gt; {
+            console.error(&#x27;Error saving profile picture&#x27;, error);
+            alert(&#x27;Error saving profile: &#x27; + (error.error?.detail || &#x27;Unknown error&#x27;));
+            resolve({ 
+              success: false, 
+              rateLimited: false, 
+              message: &#x27;Error saving profile picture&#x27; 
+            });
+          }
+        );
+      } else {
+        alert(&#x27;Recommended to upload a Resume before saving.&#x27;);
+        resolve({ 
+          success: false, 
+          rateLimited: false, 
+          message: &#x27;No resume or profile picture selected&#x27; 
+        });
+      }
+      return;
+    }
+
+    const formData &#x3D; new FormData();
+    if (this.profilePicture) {
+      formData.append(&#x27;profile_picture&#x27;, this.profilePicture);
+    }
+    formData.append(&#x27;resume&#x27;, this.resume);
+
+    this.profileService.saveProfile(formData).subscribe(
+      (response) &#x3D;&gt; {
+        console.log(&#x27;Profile saved successfully&#x27;, response);
+        // Resolve with the detailed object from the backend
+        resolve({ 
+          success: true, 
+          rateLimited: response.rate_limited || false, 
+          message: response.message || &#x27;Profile saved successfully&#x27;
+        });
+      },
+      (error) &#x3D;&gt; {
+        console.error(&#x27;Error saving profile&#x27;, error);
+        alert(&#x27;Error saving profile: &#x27; + (error.error?.detail || &#x27;Unknown error&#x27;));
+        // Resolve with a consistent error object
+        resolve({ 
+          success: false, 
+          rateLimited: false, 
+          message: &#x27;Error saving profile&#x27; 
+        });
+      }
+    );
+  });
+}
+
+
+  skip() {
+    this.router.navigate([&#x27;/profile-employment-page&#x27;]);
+  }
+
+  ngOnDestroy() {
+    // FIXED: Now works properly with string type
+    if (this.imageSrc &amp;&amp; this.imageSrc.startsWith(&#x27;blob:&#x27;)) {
+      URL.revokeObjectURL(this.imageSrc);
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div
+  id&#x3D;&quot;profile-basic-information-main-container&quot;
+  class&#x3D;&quot;profile-basicinformation-component-container&quot;
+  [ngClass]&#x3D;&quot;rootClassName&quot;
+&gt;
+  &lt;div
+    id&#x3D;&quot;profile-basic-information-container&quot;
+    class&#x3D;&quot;profile-basicinformation-component-profile-basic-information-container&quot;
+  &gt;
+    &lt;span
+      id&#x3D;&quot;profile-basic-information-header&quot;
+      class&#x3D;&quot;profile-basicinformation-component-basic-information-header&quot;
+    &gt;
+      &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text1 ? text1 : defaultText1&quot;&gt;&lt;/ng-container&gt;
+      &lt;ng-template #defaultText1&gt;
+        &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment5&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-basicinformation-component-text17&quot;&gt;Basic Information&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/span&gt; 
+    &lt;div
+      id&#x3D;&quot;profile-details-container&quot;
+      class&#x3D;&quot;profile-basicinformation-component-profile-details-container&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;profile-picture-container&quot;
+        class&#x3D;&quot;profile-basicinformation-component-profile-picture-container&quot;
+      &gt;
+        &lt;span
+          id&#x3D;&quot;profile-picture-text&quot;
+          class&#x3D;&quot;profile-basicinformation-component-profile-picturure-text&quot;
+        &gt;
+          &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text2 ? text2 : defaultText2&quot;&gt;&lt;/ng-container&gt;
+          &lt;ng-template #defaultText2&gt;
+            &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment1&quot;&gt;
+              &lt;span class&#x3D;&quot;profile-basicinformation-component-text13&quot;&gt;Profile Picture&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;profile-picture-wrapper&quot;&gt;
+  &lt;img
+    id&#x3D;&quot;candidate-profile-picture&quot;
+    [attr.alt]&#x3D;&quot;imageAlt&quot;
+    [src]&#x3D;&quot;imageSrc || defaultImageSrc&quot;
+    class&#x3D;&quot;profile-basicinformation-component-user-image&quot;
+  /&gt;
+  &lt;div class&#x3D;&quot;overlay&quot; (click)&#x3D;&quot;triggerProfilePictureUpload()&quot;&gt;
+    &lt;span class&#x3D;&quot;plus-symbol&quot;&gt;+&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;input
+    type&#x3D;&quot;file&quot;
+    #profilePictureInput
+    (change)&#x3D;&quot;onProfilePictureSelected($event)&quot;
+    accept&#x3D;&quot;.jpg,.jpeg,.png&quot;
+    style&#x3D;&quot;display: none;&quot;
+  /&gt;
+&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;candidate-details-container&quot;
+        class&#x3D;&quot;profile-basicinformation-component-information-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;resume-container&quot;
+          class&#x3D;&quot;profile-basicinformation-component-resume-container&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;resume-text&quot;
+            class&#x3D;&quot;profile-basicinformation-component-resume-text&quot;
+          &gt;
+            &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text ? text : defaultText&quot;&gt;&lt;/ng-container&gt;
+            &lt;ng-template #defaultText&gt;
+              &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment6&quot;&gt;
+                &lt;span class&#x3D;&quot;profile-basicinformation-component-text18&quot;&gt;Resume&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;upload-resume-container&quot;
+            class&#x3D;&quot;profile-basicinformation-component-upload-resume-container&quot;
+          &gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;upload-resume-filed&quot;
+              name&#x3D;&quot;upload-resume-input&quot;
+              [value]&#x3D;&quot;resume ? resume.name : &#x27;&#x27;&quot;
+              readonly
+              placeholder&#x3D;&quot;No file selected&quot;
+              class&#x3D;&quot;profile-basicinformation-component-upload-resume-input input&quot;
+            /&gt;
+            &lt;button
+              id&#x3D;&quot;resume-upload-button&quot;
+              type&#x3D;&quot;button&quot;
+              class&#x3D;&quot;profile-basicinformation-component-upload-button button&quot;
+              (click)&#x3D;&quot;triggerResumeUpload()&quot;
+            &gt;
+              &lt;span id&#x3D;&quot;upload-text&quot;&gt;
+                &lt;ng-container *ngTemplateOutlet&#x3D;&quot;button ? button : defaultButton&quot;&gt;&lt;/ng-container&gt;
+                &lt;ng-template #defaultButton&gt;
+                  &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment3&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-basicinformation-component-text15&quot;&gt;Upload&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+              &lt;/span&gt;
+            &lt;/button&gt;
+            &lt;input
+              type&#x3D;&quot;file&quot;
+              #resumeInput
+              (change)&#x3D;&quot;onResumeSelected($event)&quot;
+              accept&#x3D;&quot;.pdf,.doc,.docx&quot;
+              style&#x3D;&quot;display: none;&quot;
+            /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;first-last-name-container&quot;
+          class&#x3D;&quot;profile-basicinformation-component-first-last-name-container&quot;
+        &gt;
+          &lt;div
+            id&#x3D;&quot;first-name-container&quot;
+            class&#x3D;&quot;profile-basicinformation-component-first-name-container&quot;
+          &gt;
+            &lt;span
+              id&#x3D;&quot;first-name&quot;
+              class&#x3D;&quot;profile-basicinformation-component-first-name-text&quot;
+            &gt;
+              &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text6 ? text6 : defaultText6&quot;&gt;&lt;/ng-container&gt;
+              &lt;ng-template #defaultText6&gt;
+                &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment2&quot;&gt;
+                  &lt;span class&#x3D;&quot;profile-basicinformation-component-text14&quot;&gt;First Name&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+            &lt;/span&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;basic-information-first-name-input&quot;
+              [value]&#x3D;&quot;firstName&quot;
+              readonly
+              class&#x3D;&quot;profile-basicinformation-component-first-name-input input&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div
+            id&#x3D;&quot;last-name-container&quot;
+            class&#x3D;&quot;profile-basicinformation-component-last-name-container&quot;
+          &gt;
+            &lt;span id&#x3D;&quot;last-name&quot; class&#x3D;&quot;profile-basicinformation-component-text10&quot;&gt;
+              &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text5 ? text5 : defaultText5&quot;&gt;&lt;/ng-container&gt;
+              &lt;ng-template #defaultText5&gt;
+                &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment8&quot;&gt;
+                  &lt;span class&#x3D;&quot;profile-basicinformation-component-text20&quot;&gt;Last Name&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+            &lt;/span&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;basic-information-last-name-input&quot;
+              [value]&#x3D;&quot;lastName&quot;
+              readonly
+              class&#x3D;&quot;profile-basicinformation-component-textinput1 input&quot;
+            /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;email-mob-num-container&quot;
+          class&#x3D;&quot;profile-basicinformation-component-email-mob-num-container&quot;
+        &gt;
+          &lt;div
+            id&#x3D;&quot;email-container&quot;
+            class&#x3D;&quot;profile-basicinformation-component-email-container&quot;
+          &gt;
+            &lt;span id&#x3D;&quot;email&quot; class&#x3D;&quot;profile-basicinformation-component-text11&quot;&gt;
+              &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text52 ? text52 : defaultText52&quot;&gt;&lt;/ng-container&gt;
+              &lt;ng-template #defaultText52&gt;
+                &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment4&quot;&gt;
+                  &lt;span class&#x3D;&quot;profile-basicinformation-component-text16&quot;&gt;Email&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+            &lt;/span&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;basic-information-email-input&quot;
+              [value]&#x3D;&quot;email&quot;
+              readonly
+              class&#x3D;&quot;profile-basicinformation-component-textinput2 input&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div
+            id&#x3D;&quot;mobile-number-container&quot;
+            class&#x3D;&quot;profile-basicinformation-component-mobile-number-container&quot;
+          &gt;
+            &lt;span id&#x3D;&quot;mobile-number&quot; class&#x3D;&quot;profile-basicinformation-component-text12&quot;&gt;
+              &lt;ng-container *ngTemplateOutlet&#x3D;&quot;text51 ? text51 : defaultText51&quot;&gt;&lt;/ng-container&gt;
+              &lt;ng-template #defaultText51&gt;
+                &lt;div class&#x3D;&quot;profile-basicinformation-component-fragment7&quot;&gt;
+                  &lt;span class&#x3D;&quot;profile-basicinformation-component-text19&quot;&gt;Mobile Number&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+            &lt;/span&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;basic-Information-mobile-number-input&quot;
+              [value]&#x3D;&quot;phoneNumber&quot;
+              readonly
+              class&#x3D;&quot;profile-basicinformation-component-textinput3 input&quot;
+            /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./profile-basicinformation-component.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host {
+  display: contents;
+}
+
+.profile-basicinformation-component-container {
+  gap: 24px;
+  width: 728px;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.profile-picture-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-basicinformation-component-user-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(211, 211, 211, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-picture-wrapper:hover .overlay {
+  opacity: 1;
+}
+
+.plus-symbol {
+  font-size: 40px;
+  color: #000;
+}
+
+.profile-basicinformation-component-profile-basic-information-container {
+  gap: 24px;
+  flex: 1;
+  width: 728px;
+  height: 600px;
+  display: flex;
+  padding: 32px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-basicinformation-component-basic-information-header {
+  gap: var(--dl-space-space-halfunit);
+  fill: #18191c;
+  color: #18191c;
+  width: 664px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.profile-basicinformation-component-profile-details-container {
+  gap: var(--dl-space-space-twounits);
+  flex: 1;
+  width: 664px;
+  height: 488px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-profile-picture-container {
+  gap: var(--dl-space-space-unit);
+  flex: 1;
+  width: 140px;
+  height: 180px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-profile-picturure-text {
+  fill: #474748;
+  color: #474748;
+  width: auto;
+  height: 24px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+}
+
+.profile-basicinformation-component-user-image {
+  gap: var(--dl-space-space-unit);
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-self: center;
+  object-fit: cover;
+  align-items: stretch;
+  border-radius: var(--dl-radius-radius-round);
+  justify-content: center;
+}
+
+.profile-basicinformation-component-information-container {
+  gap: 24px;
+  flex: 1;
+  width: 664px;
+  height: 276px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-resume-container {
+  flex: 1;
+  width: 664px;
+  height: 76px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-basicinformation-component-resume-text {
+  fill: #18191c;
+  color: #18191c;
+  width: 664px;
+  height: 24px;
+  display: flex;
+  font-family: &quot;Inter&quot;;
+  text-transform: capitalize;
+}
+
+.profile-basicinformation-component-upload-resume-container {
+  flex: 1;
+  width: 664px;
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  border-color: #acacad;
+  border-width: 1px;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-upload-resume-input {
+  flex: 1;
+  width: 585px;
+  height: 48px;
+  border-color: #acacad;
+  border-width: 0px;
+  padding-left: 1rem;
+  border-radius: var(--dl-radius-radius-radius4);
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-upload-button {
+  flex: 0.2;
+  color: #ffffff;
+  width: 79px;
+  height: 48px;
+  transition: 0.3s;
+  padding-top: 0px;
+  border-width: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background-color: rgb(5, 53, 108);
+}
+
+.profile-basicinformation-component-upload-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: #0a4992;
+}
+
+.profile-basicinformation-component-upload-button:active {
+  transform: scale(0.9);
+  background-color: #022954;
+}
+
+.profile-basicinformation-component-first-last-name-container {
+  gap: 24px;
+  flex: 1;
+  width: 664px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.profile-basicinformation-component-first-name-container {
+  flex: 1;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-first-name-text {
+  width: 320px;
+  height: 24px;
+}
+
+.profile-basicinformation-component-first-name-input {
+  flex: 1;
+  width: 320px;
+  height: 48px;
+  border-color: #acacad;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-last-name-container {
+  flex: 1;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile-basicinformation-component-text10 {
+  width: 320px;
+  height: 24px;
+}
+
+.profile-basicinformation-component-textinput1 {
+  flex: 1;
+  width: 320px;
+  height: 48px;
+  border-color: #acacad;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-email-mob-num-container {
+  gap: var(--dl-space-space-oneandhalfunits);
+  flex: 1;
+  width: 664px;
+  height: 76px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+}
+
+.profile-basicinformation-component-email-container {
+  flex: 1;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-text11 {
+  width: 320px;
+  height: 24px;
+}
+
+.profile-basicinformation-component-textinput2 {
+  flex: 1;
+  width: 320px;
+  height: 48px;
+  border-color: #acacad;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-mobile-number-container {
+  flex: 1;
+  width: 320px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.profile-basicinformation-component-text12 {
+  width: 320px;
+  height: 24px;
+}
+
+.profile-basicinformation-component-textinput3 {
+  flex: 1;
+  width: 320px;
+  height: 48px;
+  border-color: #acacad;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.profile-basicinformation-component-fragment1 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text13 {
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment2 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text14 {
+  color: rgb(25, 24, 24);
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment3 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text15 {
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment4 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text16 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment5 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text17 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.profile-basicinformation-component-fragment6 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text18 {
+  fill: #18191c;
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment7 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text19 {
+  color: #18191c;
+  display: inline-block;
+}
+
+.profile-basicinformation-component-fragment8 {
+  display: contents;
+}
+
+.profile-basicinformation-component-text20 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+
+@media (max-width: 1200px) {
+  .profile-basicinformation-component-container {
+    gap: 24px;
+    left: 0px;
+    right: 0px;
+    width: 728px;
+    height: 600px;
+    padding: 0px;
+    position: static;
+    justify-content: flex-start;
+  }
+  .profile-basicinformation-component-profile-basic-information-container {
+    flex: 1;
+    height: 595px;
+    background-color: #ffffff;
+  }
+  .profile-basicinformation-component-basic-information-header {
+    gap: 8px;
+    width: 664px;
+    height: 24px;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+  }
+  .profile-basicinformation-component-profile-details-container {
+    gap: 32px;
+    width: 664px;
+    height: 488px;
+  }
+  .profile-basicinformation-component-profile-picture-container {
+    gap: 16px;
+    width: 140px;
+    height: 180px;
+    display: flex;
+    align-self: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .profile-basicinformation-component-profile-picturure-text {
+    fill: #474748;
+    color: #474748;
+  }
+  .profile-basicinformation-component-user-image {
+    width: 140px;
+    height: 140px;
+    border-radius: var(--dl-radius-radius-round);
+  }
+  .profile-basicinformation-component-information-container {
+    gap: 24px;
+    width: 664px;
+    height: 276px;
+  }
+  .profile-basicinformation-component-text17 {
+    color: rgb(24, 25, 28);
+    font-size: 20px;
+  }
+  .profile-basicinformation-componentroot-class-name {
+    padding: 0px;
+  }
+  .profile-basicinformation-componentroot-class-name2 {
+    overflow: visible;
+  }
+}
+
+@media (max-width: 767px) {
+  .profile-basicinformation-component-container {
+    width: 100%;
+  }
+  .profile-basicinformation-component-profile-details-container {
+    flex: 1;
+  }
+  .profile-basicinformation-component-profile-picture-container {
+    top: 87px;
+    left: 279px;
+  }
+  .profile-basicinformation-componentroot-class-name {
+    align-self: center;
+  }
+}
+
+@media (max-width: 479px) {
+  .profile-basicinformation-component-container {
+    width: 100%;
+    height: 1009px;
+    padding: 0px;
+    position: static;
+    align-items: center;
+    background-color: transparent;
+  }
+  .profile-basicinformation-component-profile-basic-information-container {
+    gap: var(--dl-space-space-twounits);
+    top: 1px;
+    flex: 0;
+    left: 0px;
+    right: 0px;
+    width: 95%;
+    height: 788px;
+    margin: auto;
+    padding: var(--dl-space-space-twounits);
+    position: absolute;
+    justify-content: center;
+  }
+  .profile-basicinformation-component-basic-information-header {
+    width: auto;
+    align-self: flex-start;
+  }
+  .profile-basicinformation-component-profile-details-container {
+    gap: var(--dl-space-space-twounits);
+    flex: 0;
+    width: 100%;
+    height: 707px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .profile-basicinformation-component-profile-picture-container {
+    flex: 0;
+  }
+  .profile-basicinformation-component-information-container {
+    gap: var(--dl-space-space-twounits);
+    flex: 0;
+    width: 100%;
+    align-items: center;
+    border-color: #ffffff;
+  }
+  .profile-basicinformation-component-resume-container {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .profile-basicinformation-component-resume-text {
+    width: auto;
+  }
+  .profile-basicinformation-component-upload-resume-container {
+    width: 100%;
+    height: auto;
+  }
+  .profile-basicinformation-component-upload-resume-input {
+    height: 100%;
+    border-color: #acacad;
+    border-width: 0px;
+    border-radius: var(--dl-radius-radius-radius4);
+    background-color: transparent;
+  }
+  .profile-basicinformation-component-upload-button {
+    height: 100%;
+  }
+  .profile-basicinformation-component-first-last-name-container {
+    gap: var(--dl-space-space-twounits);
+    flex: 0;
+    width: 100%;
+    height: auto;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .profile-basicinformation-component-first-name-container {
+    flex: 0;
+    width: 100%;
+    align-items: center;
+  }
+  .profile-basicinformation-component-first-name-text {
+    width: 100%;
+  }
+  .profile-basicinformation-component-first-name-input {
+    flex: 0;
+    width: 100%;
+    height: 100%;
+    border-color: #acacad;
+  }
+  .profile-basicinformation-component-last-name-container {
+    width: 100%;
+    height: 76px;
+    position: static;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .profile-basicinformation-component-text10 {
+    width: 100%;
+  }
+  .profile-basicinformation-component-textinput1 {
+    flex: 0;
+    width: 100%;
+    height: 100%;
+    border-color: #acacad;
+  }
+  .profile-basicinformation-component-email-mob-num-container {
+    gap: var(--dl-space-space-twounits);
+    width: 100%;
+    height: 182px;
+    align-items: center;
+    flex-direction: column;
+  }
+  .profile-basicinformation-component-email-container {
+    width: 100%;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .profile-basicinformation-component-text11 {
+    width: 100%;
+  }
+  .profile-basicinformation-component-textinput2 {
+    width: 100%;
+    height: 100%;
+    border-color: #acacad;
+  }
+  .profile-basicinformation-component-mobile-number-container {
+    width: 100%;
+    align-items: center;
+  }
+  .profile-basicinformation-component-text12 {
+    width: 100%;
+  }
+  .profile-basicinformation-component-textinput3 {
+    width: 100%;
+    height: 100%;
+    border-color: #acacad;
+  }
+  .profile-basicinformation-component-text17 {
+    color: rgb(24, 25, 28);
+  }
+  .profile-basicinformation-componentroot-class-name {
+    width: 100%;
+    overflow: visible;
+    align-self: center;
+  }
+  .profile-basicinformation-componentroot-class-name1 {
+    overflow: visible;
+  }
+  .profile-basicinformation-componentroot-class-name2 {
+    top: 100px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 788px;
+    margin: auto;
+    position: absolute;
+    align-self: center;
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  id="profile-basic-information-main-container"  class="profile-basicinformation-component-container"  [ngClass]="rootClassName">  <div    id="profile-basic-information-container"    class="profile-basicinformation-component-profile-basic-information-container"  >    <span      id="profile-basic-information-header"      class="profile-basicinformation-component-basic-information-header"    >      <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>      <ng-template #defaultText1>        <div class="profile-basicinformation-component-fragment5">          <span class="profile-basicinformation-component-text17">Basic Information</span>        </div>      </ng-template>    </span>     <div      id="profile-details-container"      class="profile-basicinformation-component-profile-details-container"    >      <div        id="profile-picture-container"        class="profile-basicinformation-component-profile-picture-container"      >        <span          id="profile-picture-text"          class="profile-basicinformation-component-profile-picturure-text"        >          <ng-container *ngTemplateOutlet="text2 ? text2 : defaultText2"></ng-container>          <ng-template #defaultText2>            <div class="profile-basicinformation-component-fragment1">              <span class="profile-basicinformation-component-text13">Profile Picture</span>            </div>          </ng-template>        </span>        <div class="profile-picture-wrapper">  <img    id="candidate-profile-picture"    [attr.alt]="imageAlt"    [src]="imageSrc || defaultImageSrc"    class="profile-basicinformation-component-user-image"  />  <div class="overlay" (click)="triggerProfilePictureUpload()">    <span class="plus-symbol">+</span>  </div>  <input    type="file"    #profilePictureInput    (change)="onProfilePictureSelected($event)"    accept=".jpg,.jpeg,.png"    style="display: none;"  /></div>      </div>      <div        id="candidate-details-container"        class="profile-basicinformation-component-information-container"      >        <div          id="resume-container"          class="profile-basicinformation-component-resume-container"        >          <span            id="resume-text"            class="profile-basicinformation-component-resume-text"          >            <ng-container *ngTemplateOutlet="text ? text : defaultText"></ng-container>            <ng-template #defaultText>              <div class="profile-basicinformation-component-fragment6">                <span class="profile-basicinformation-component-text18">Resume</span>              </div>            </ng-template>          </span>          <div            id="upload-resume-container"            class="profile-basicinformation-component-upload-resume-container"          >            <input              type="text"              id="upload-resume-filed"              name="upload-resume-input"              [value]="resume ? resume.name : \'\'"              readonly              placeholder="No file selected"              class="profile-basicinformation-component-upload-resume-input input"            />            <button              id="resume-upload-button"              type="button"              class="profile-basicinformation-component-upload-button button"              (click)="triggerResumeUpload()"            >              <span id="upload-text">                <ng-container *ngTemplateOutlet="button ? button : defaultButton"></ng-container>                <ng-template #defaultButton>                  <div class="profile-basicinformation-component-fragment3">                    <span class="profile-basicinformation-component-text15">Upload</span>                  </div>                </ng-template>              </span>            </button>            <input              type="file"              #resumeInput              (change)="onResumeSelected($event)"              accept=".pdf,.doc,.docx"              style="display: none;"            />          </div>        </div>        <div          id="first-last-name-container"          class="profile-basicinformation-component-first-last-name-container"        >          <div            id="first-name-container"            class="profile-basicinformation-component-first-name-container"          >            <span              id="first-name"              class="profile-basicinformation-component-first-name-text"            >              <ng-container *ngTemplateOutlet="text6 ? text6 : defaultText6"></ng-container>              <ng-template #defaultText6>                <div class="profile-basicinformation-component-fragment2">                  <span class="profile-basicinformation-component-text14">First Name</span>                </div>              </ng-template>            </span>            <input              type="text"              id="basic-information-first-name-input"              [value]="firstName"              readonly              class="profile-basicinformation-component-first-name-input input"            />          </div>          <div            id="last-name-container"            class="profile-basicinformation-component-last-name-container"          >            <span id="last-name" class="profile-basicinformation-component-text10">              <ng-container *ngTemplateOutlet="text5 ? text5 : defaultText5"></ng-container>              <ng-template #defaultText5>                <div class="profile-basicinformation-component-fragment8">                  <span class="profile-basicinformation-component-text20">Last Name</span>                </div>              </ng-template>            </span>            <input              type="text"              id="basic-information-last-name-input"              [value]="lastName"              readonly              class="profile-basicinformation-component-textinput1 input"            />          </div>        </div>        <div          id="email-mob-num-container"          class="profile-basicinformation-component-email-mob-num-container"        >          <div            id="email-container"            class="profile-basicinformation-component-email-container"          >            <span id="email" class="profile-basicinformation-component-text11">              <ng-container *ngTemplateOutlet="text52 ? text52 : defaultText52"></ng-container>              <ng-template #defaultText52>                <div class="profile-basicinformation-component-fragment4">                  <span class="profile-basicinformation-component-text16">Email</span>                </div>              </ng-template>            </span>            <input              type="text"              id="basic-information-email-input"              [value]="email"              readonly              class="profile-basicinformation-component-textinput2 input"            />          </div>          <div            id="mobile-number-container"            class="profile-basicinformation-component-mobile-number-container"          >            <span id="mobile-number" class="profile-basicinformation-component-text12">              <ng-container *ngTemplateOutlet="text51 ? text51 : defaultText51"></ng-container>              <ng-template #defaultText51>                <div class="profile-basicinformation-component-fragment7">                  <span class="profile-basicinformation-component-text19">Mobile Number</span>                </div>              </ng-template>            </span>            <input              type="text"              id="basic-Information-mobile-number-input"              [value]="phoneNumber"              readonly              class="profile-basicinformation-component-textinput3 input"            />          </div>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ProfileBasicinformationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileBasicinformationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

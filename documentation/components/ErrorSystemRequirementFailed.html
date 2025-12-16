@@ -1,0 +1,2302 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ErrorSystemRequirementFailed</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/error-system-requirement-failed/error-system-requirement-failed.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>error-system-requirement-failed</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>error-system-requirement-failed.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>error-system-requirement-failed.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/pages/error-system-requirement-failed/error-system-requirement-failed.component.ts:9</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;
+
+@Component({
+  selector: &#x27;error-system-requirement-failed&#x27;,
+  templateUrl: &#x27;error-system-requirement-failed.component.html&#x27;,
+  styleUrls: [&#x27;error-system-requirement-failed.component.css&#x27;],
+})
+export class ErrorSystemRequirementFailed {
+  constructor(private title: Title, private meta: Meta) {
+    this.title.setTitle(&#x27;Error-System-Requirement-Failed - Flashyre&#x27;)
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Error-System-Requirement-Failed - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ])
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div id&#x3D;&quot;candidate-home&quot; class&#x3D;&quot;error-system-requirement-failed-container10&quot;&gt;
+  &lt;div
+    id&#x3D;&quot;main-container&quot;
+    class&#x3D;&quot;error-system-requirement-failed-main-container&quot;
+  &gt;
+    &lt;header
+      id&#x3D;&quot;navbar-candidate-view-container&quot;
+      class&#x3D;&quot;error-system-requirement-failed-navbar-container&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;candidate-view-container&quot;
+        class&#x3D;&quot;error-system-requirement-failed-container11&quot;
+      &gt;
+        &lt;header
+          data-thq&#x3D;&quot;thq-navbar&quot;
+          class&#x3D;&quot;error-system-requirement-failed-navbar-interactive&quot;
+        &gt;
+          &lt;img
+            id&#x3D;&quot;flashyre-logo&quot;
+            alt&#x3D;&quot;image&quot;
+            src&#x3D;&quot;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&quot;
+            class&#x3D;&quot;error-system-requirement-failed-flashyre-image&quot;
+          /&gt;
+          &lt;div
+            data-thq&#x3D;&quot;thq-navbar-nav&quot;
+            class&#x3D;&quot;error-system-requirement-failed-desktop-menu&quot;
+          &gt;
+            &lt;nav
+              id&#x3D;&quot;header-links&quot;
+              class&#x3D;&quot;error-system-requirement-failed-links&quot;
+            &gt;
+              &lt;a
+                href&#x3D;&quot;https://www.teleporthq.io&quot;
+                id&#x3D;&quot;navbar-dashboard-link&quot;
+                class&#x3D;&quot;error-system-requirement-failed-dashboard-link thq-body-small button&quot;
+              &gt;
+                Dashboard
+              &lt;/a&gt;
+              &lt;a
+                href&#x3D;&quot;https://www.teleporthq.io&quot;
+                id&#x3D;&quot;navbar-upskill-link&quot;
+                class&#x3D;&quot;error-system-requirement-failed-upskill-link thq-body-small button&quot;
+              &gt;
+                Upskill
+              &lt;/a&gt;
+              &lt;a
+                href&#x3D;&quot;https://www.teleporthq.io&quot;
+                id&#x3D;&quot;navbar-assessment-link&quot;
+                target&#x3D;&quot;_blank&quot;
+                rel&#x3D;&quot;noreferrer noopener&quot;
+                class&#x3D;&quot;error-system-requirement-failed-assessment-link thq-body-small button&quot;
+              &gt;
+                Assessment
+              &lt;/a&gt;
+              &lt;a
+                href&#x3D;&quot;https://www.teleporthq.io&quot;
+                id&#x3D;&quot;navbar-jobs-for-you-link&quot;
+                target&#x3D;&quot;_blank&quot;
+                rel&#x3D;&quot;noreferrer noopener&quot;
+                class&#x3D;&quot;error-system-requirement-failed-jobs-for-you-link thq-body-small button&quot;
+              &gt;
+                Jobs for you
+              &lt;/a&gt;
+            &lt;/nav&gt;
+          &lt;/div&gt;
+          &lt;div
+            data-thq&#x3D;&quot;thq-dropdown&quot;
+            class&#x3D;&quot;error-system-requirement-failed-thq-dropdown list-item&quot;
+          &gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+              class&#x3D;&quot;error-system-requirement-failed-dropdown-toggle1&quot;
+            &gt;
+              &lt;img
+                id&#x3D;&quot;user-image&quot;
+                alt&#x3D;&quot;https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires&#x3D;1735516800&amp;amp;Key-Pair-Id&#x3D;APKAQ4GOSFWCVNEHN3O4&amp;amp;Signature&#x3D;UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__&quot;
+                src&#x3D;&quot;https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires&#x3D;1735516800&amp;amp;Key-Pair-Id&#x3D;APKAQ4GOSFWCVNEHN3O4&amp;amp;Signature&#x3D;UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__&quot;
+                class&#x3D;&quot;error-system-requirement-failed-user-image1&quot;
+              /&gt;
+              &lt;div
+                data-thq&#x3D;&quot;thq-dropdown-arrow&quot;
+                class&#x3D;&quot;error-system-requirement-failed-dropdown-arrow&quot;
+              &gt;
+                &lt;svg
+                  id&#x3D;&quot;dropdown&quot;
+                  width&#x3D;&quot;32&quot;
+                  height&#x3D;&quot;32&quot;
+                  viewBox&#x3D;&quot;0 0 32 32&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-drop-down-icon&quot;
+                &gt;
+                  &lt;path
+                    d&#x3D;&quot;m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z&quot;
+                    fill&#x3D;&quot;currentColor&quot;
+                  &gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;ul
+              data-thq&#x3D;&quot;thq-dropdown-list&quot;
+              class&#x3D;&quot;error-system-requirement-failed-dropdown-list&quot;
+            &gt;
+              &lt;li
+                data-thq&#x3D;&quot;thq-dropdown&quot;
+                class&#x3D;&quot;error-system-requirement-failed-profile1 list-item&quot;
+              &gt;
+                &lt;div
+                  data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-dropdown-toggle2&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;navbar-profile-button&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-profile2&quot;
+                  &gt;
+                    Profile
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/li&gt;
+              &lt;li
+                data-thq&#x3D;&quot;thq-dropdown&quot;
+                class&#x3D;&quot;error-system-requirement-failed-preference1 list-item&quot;
+              &gt;
+                &lt;div
+                  data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-dropdown-toggle3&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;navbar-preference-button&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-preference2&quot;
+                  &gt;
+                    Preference
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/li&gt;
+              &lt;li
+                data-thq&#x3D;&quot;thq-dropdown&quot;
+                class&#x3D;&quot;error-system-requirement-failed-settings1 list-item&quot;
+              &gt;
+                &lt;div
+                  data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-dropdown-toggle4&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;navbar-settings-button&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-settings2&quot;
+                  &gt;
+                    Settings
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/li&gt;
+              &lt;li
+                data-thq&#x3D;&quot;thq-dropdown&quot;
+                class&#x3D;&quot;error-system-requirement-failed-logout1 list-item&quot;
+              &gt;
+                &lt;div
+                  data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-dropdown-toggle5&quot;
+                &gt;
+                  &lt;span
+                    id&#x3D;&quot;navbar-logout-button&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-logout2&quot;
+                  &gt;
+                    Logout
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+          &lt;div
+            data-thq&#x3D;&quot;thq-burger-menu&quot;
+            class&#x3D;&quot;error-system-requirement-failed-burger-menu&quot;
+          &gt;
+            &lt;svg
+              id&#x3D;&quot;burger-icon&quot;
+              viewBox&#x3D;&quot;0 0 1024 1024&quot;
+              class&#x3D;&quot;error-system-requirement-failed-burger-icon&quot;
+            &gt;
+              &lt;path
+                d&#x3D;&quot;M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div
+            data-thq&#x3D;&quot;thq-mobile-menu&quot;
+            class&#x3D;&quot;error-system-requirement-failed-mobile-menu&quot;
+          &gt;
+            &lt;div
+              id&#x3D;&quot;mobile-pop-up-container&quot;
+              class&#x3D;&quot;error-system-requirement-failed-popup-container&quot;
+            &gt;
+              &lt;div
+                id&#x3D;&quot;close-icon&quot;
+                class&#x3D;&quot;error-system-requirement-failed-close-icon&quot;
+              &gt;
+                &lt;div
+                  data-thq&#x3D;&quot;thq-close-menu&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-close-menu&quot;
+                &gt;
+                  &lt;svg
+                    id&#x3D;&quot;close-menu-icon&quot;
+                    viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-icon12&quot;
+                  &gt;
+                    &lt;path
+                      d&#x3D;&quot;M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z&quot;
+                    &gt;&lt;/path&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div
+                id&#x3D;&quot;mobile-view-container&quot;
+                class&#x3D;&quot;error-system-requirement-failed-container12&quot;
+              &gt;
+                &lt;div class&#x3D;&quot;error-system-requirement-failed-container13&quot;&gt;
+                  &lt;div
+                    id&#x3D;&quot;candidate-profile-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-container14&quot;
+                  &gt;
+                    &lt;img
+                      id&#x3D;&quot;candidate-profile-picture&quot;
+                      alt&#x3D;&quot;image&quot;
+                      src&#x3D;&quot;https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires&#x3D;1735516800&amp;amp;Key-Pair-Id&#x3D;APKAQ4GOSFWCVNEHN3O4&amp;amp;Signature&#x3D;UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-user-image2&quot;
+                    /&gt;
+                    &lt;div
+                      id&#x3D;&quot;candidate-details-container&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-user-details-container&quot;
+                    &gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-candidate-name&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-user-name&quot;
+                      &gt;
+                        Kathryn Murphy
+                      &lt;/span&gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-candidate-profile-completion&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-profile-complet-indication&quot;
+                      &gt;
+                        ✅ 90% Profile Completion
+                      &lt;/span&gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-candidate-view-edit-profile-button&quot;
+                        class&#x3D;&quot;button error-system-requirement-failed-view-edit-profile&quot;
+                      &gt;
+                        View &amp;amp; edit profile
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;candidate-score-board-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-container15&quot;
+                  &gt;
+                    &lt;span
+                      id&#x3D;&quot;candidate-profile-score-board&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-profile-score-board&quot;
+                    &gt;
+                      Profile Score Board
+                    &lt;/span&gt;
+                    &lt;div
+                      id&#x3D;&quot;progress-bar-container&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-progress-bar-container&quot;
+                    &gt;
+                      &lt;div class&#x3D;&quot;error-system-requirement-failed-container16&quot;&gt;
+                        &lt;div
+                          class&#x3D;&quot;error-system-requirement-failed-container17&quot;
+                        &gt;
+                        &lt;div class&#x3D;&#x27;progress-bar-wrapper&#x27;&gt;
+                          &lt;div class&#x3D;&#x27;progress-bar-container&#x27;&gt;
+                            &lt;div class&#x3D;&#x27;progress-bar&#x27;&gt;&lt;/div&gt;
+                            &lt;span class&#x3D;&#x27;progress-text&#x27;&gt;80%&lt;/span&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;/div&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div
+                  id&#x3D;&quot;pop-up-for-mobile-view&quot;
+                  class&#x3D;&quot;error-system-requirement-failed-container18&quot;
+                &gt;
+                  &lt;div
+                    id&#x3D;&quot;dashboard-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-dashboard-container&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;dashboard-icon&quot;
+                      width&#x3D;&quot;24&quot;
+                      height&#x3D;&quot;24&quot;
+                      viewBox&#x3D;&quot;0 0 24 24&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-dashboard-icon&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M21 16V4H3v12zm0-14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v2h2v2H8v-2h2v-2H3a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2zM5 6h9v5H5zm10 0h4v2h-4zm4 3v5h-4V9zM5 12h4v2H5zm5 0h4v2h-4z&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;dashboard-button&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-dashboard-text&quot;
+                    &gt;
+                      Dashboard
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;upskill-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-upskill-container&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;upskill-icon&quot;
+                      width&#x3D;&quot;24&quot;
+                      height&#x3D;&quot;24&quot;
+                      viewBox&#x3D;&quot;0 0 24 24&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-upskill-icon&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2m0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4&quot;
+                        fill&#x3D;&quot;none&quot;
+                        stroke&#x3D;&quot;currentColor&quot;
+                        stroke-width&#x3D;&quot;2&quot;
+                        stroke-linecap&#x3D;&quot;round&quot;
+                        stroke-linejoin&#x3D;&quot;round&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;upskill-button&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-upskill-text&quot;
+                    &gt;
+                      Upskill
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;assessment-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-assessment-container&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;assessment-icon&quot;
+                      width&#x3D;&quot;32&quot;
+                      height&#x3D;&quot;32&quot;
+                      viewBox&#x3D;&quot;0 0 32 32&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-assessment-icon&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;m23 9.2l-2.6-2.6L19 8l4 4l7-7l-1.4-1.4zM12 5.4L10.6 4L8 6.6L5.4 4L4 5.4L6.6 8L4 10.6L5.4 12L8 9.4l2.6 2.6l1.4-1.4L9.4 8zm0 16L10.6 20L8 22.6L5.4 20L4 21.4L6.6 24L4 26.6L5.4 28L8 25.4l2.6 2.6l1.4-1.4L9.4 24z&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                      &lt;path
+                        d&#x3D;&quot;M17 15V2h-2v13H2v2h13v13h2V17h13v-2z&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;assessment-button-mob-view&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-assessment-text&quot;
+                    &gt;
+                      Assessment
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;jobs-for-you-container&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-jobs-for-container&quot;
+                  &gt;
+                    &lt;svg
+                      id&#x3D;&quot;briefcase-icon&quot;
+                      width&#x3D;&quot;22&quot;
+                      height&#x3D;&quot;22&quot;
+                      viewBox&#x3D;&quot;0 0 22 22&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-briefcase-icon&quot;
+                    &gt;
+                      &lt;path
+                        d&#x3D;&quot;M2 6h5V3h1V2h6v1h1v3h5v1h1v12h-1v1H2v-1H1V7h1zm7 0h4V4H9zm10 2H3v10h16z&quot;
+                        fill&#x3D;&quot;currentColor&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span
+                      id&#x3D;&quot;jobs-for-you-button&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-jobs-for-you-text&quot;
+                    &gt;
+                      Jobs for you
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div
+                    id&#x3D;&quot;profile-dropdown&quot;
+                    class&#x3D;&quot;error-system-requirement-failed-container19&quot;
+                  &gt;
+                    &lt;div
+                      id&#x3D;&quot;preference-container&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-preference-container&quot;
+                    &gt;
+                      &lt;svg
+                        id&#x3D;&quot;preference-icon&quot;
+                        width&#x3D;&quot;48&quot;
+                        height&#x3D;&quot;48&quot;
+                        viewBox&#x3D;&quot;0 0 48 48&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-preference-icon&quot;
+                      &gt;
+                        &lt;g fill&#x3D;&quot;currentColor&quot;&gt;
+                          &lt;path
+                            d&#x3D;&quot;M23 22.922c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 1 1-2 0z&quot;
+                          &gt;&lt;/path&gt;
+                          &lt;path
+                            d&#x3D;&quot;M20 16a4 4 0 0 1 3-3.874V7a1 1 0 1 1 2 0v5.126A4.002 4.002 0 0 1 24 20a4 4 0 0 1-4-4m4 2a2 2 0 1 0 0-4a2 2 0 0 0 0 4m-8 14a4 4 0 1 1-4.992-3.876A1 1 0 0 1 11 28V7a1 1 0 1 1 2 0v21q0 .063-.008.124A4 4 0 0 1 16 32m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0&quot;
+                            clip-rule&#x3D;&quot;evenodd&quot;
+                            fill-rule&#x3D;&quot;evenodd&quot;
+                          &gt;&lt;/path&gt;
+                          &lt;path
+                            d&#x3D;&quot;M36 42a1 1 0 0 1-1-1v-7.078c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 0 1-1 1&quot;
+                          &gt;&lt;/path&gt;
+                          &lt;path
+                            d&#x3D;&quot;M36 6a1 1 0 0 0-1 1v16.126A4.002 4.002 0 0 0 36 31a4 4 0 0 0 1-7.874V7a1 1 0 0 0-1-1m0 19a2 2 0 1 0 0 4a2 2 0 0 0 0-4&quot;
+                            clip-rule&#x3D;&quot;evenodd&quot;
+                            fill-rule&#x3D;&quot;evenodd&quot;
+                          &gt;&lt;/path&gt;
+                          &lt;path
+                            d&#x3D;&quot;M11 41a1 1 0 1 0 2 0v-2.078c0-.526-.474-.922-1-.922s-1 .396-1 .922z&quot;
+                          &gt;&lt;/path&gt;
+                        &lt;/g&gt;
+                      &lt;/svg&gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-preference-button-mob-view&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-preference-text&quot;
+                      &gt;
+                        Preference
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div
+                      id&#x3D;&quot;settings-container&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-settings-container&quot;
+                    &gt;
+                      &lt;svg
+                        id&#x3D;&quot;settings-icon&quot;
+                        width&#x3D;&quot;32&quot;
+                        height&#x3D;&quot;32&quot;
+                        viewBox&#x3D;&quot;0 0 32 32&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-settings-icon&quot;
+                      &gt;
+                        &lt;path
+                          d&#x3D;&quot;M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z&quot;
+                          fill&#x3D;&quot;currentColor&quot;
+                        &gt;&lt;/path&gt;
+                        &lt;path
+                          d&#x3D;&quot;M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4&quot;
+                          fill&#x3D;&quot;currentColor&quot;
+                        &gt;&lt;/path&gt;
+                      &lt;/svg&gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-settings-button-mob-view&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-settings-text&quot;
+                      &gt;
+                        Settings
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div
+                      id&#x3D;&quot;logout-container&quot;
+                      class&#x3D;&quot;error-system-requirement-failed-logout-container button&quot;
+                    &gt;
+                      &lt;svg
+                        id&#x3D;&quot;logout-icon&quot;
+                        width&#x3D;&quot;24&quot;
+                        height&#x3D;&quot;24&quot;
+                        viewBox&#x3D;&quot;0 0 24 24&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-logout-icon&quot;
+                      &gt;
+                        &lt;g fill&#x3D;&quot;none&quot;&gt;
+                          &lt;path
+                            d&#x3D;&quot;M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z&quot;
+                          &gt;&lt;/path&gt;
+                          &lt;path
+                            d&#x3D;&quot;M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415&quot;
+                            fill&#x3D;&quot;currentColor&quot;
+                          &gt;&lt;/path&gt;
+                        &lt;/g&gt;
+                      &lt;/svg&gt;
+                      &lt;span
+                        id&#x3D;&quot;navbar-logout-button-mob-view&quot;
+                        class&#x3D;&quot;error-system-requirement-failed-logout-text&quot;
+                      &gt;
+                        Logout
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/header&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+    &lt;div
+      id&#x3D;&quot;message-container&quot;
+      class&#x3D;&quot;error-system-requirement-failed-message-container&quot;
+    &gt;
+      &lt;span
+        id&#x3D;&quot;message-text&quot;
+        class&#x3D;&quot;error-system-requirement-failed-message-text&quot;
+      &gt;
+        Message
+      &lt;/span&gt;
+      &lt;div
+        id&#x3D;&quot;message-main-container&quot;
+        class&#x3D;&quot;error-system-requirement-failed-message-main-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;message-first-container&quot;
+          class&#x3D;&quot;error-system-requirement-failed-message-first-container&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;navigate-to-text&quot;
+            class&#x3D;&quot;error-system-requirement-failed-navigate-to-text&quot;
+          &gt;
+            Navigate to 
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;view-site-information-container&quot;
+            class&#x3D;&quot;error-system-requirement-failed-view-site-information-container&quot;
+          &gt;
+            &lt;svg
+              id&#x3D;&quot;view-site-icon&quot;
+              width&#x3D;&quot;24&quot;
+              height&#x3D;&quot;24&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+              class&#x3D;&quot;error-system-requirement-failed-view-site-icon&quot;
+            &gt;
+              &lt;g fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;1.5&quot;&gt;
+                &lt;rect
+                  x&#x3D;&quot;2.75&quot;
+                  y&#x3D;&quot;2.75&quot;
+                  rx&#x3D;&quot;6&quot;
+                  width&#x3D;&quot;18.5&quot;
+                  height&#x3D;&quot;18.5&quot;
+                &gt;&lt;/rect&gt;
+                &lt;path
+                  d&#x3D;&quot;M17.75 8.805h-1.437m-3.594 0H6.25m11.5 6.39h-6.469m-3.593 0H6.25m3.234 1.797a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594m5.032-6.39a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594&quot;
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                &gt;&lt;/path&gt;
+              &lt;/g&gt;
+            &lt;/svg&gt;
+            &lt;span
+              id&#x3D;&quot;view-site-information-text&quot;
+              class&#x3D;&quot;error-system-requirement-failed-view-site-information-text&quot;
+            &gt;
+               &amp;apos;view site information&amp;apos; 
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;span
+            id&#x3D;&quot;remaining-text&quot;
+            class&#x3D;&quot;error-system-requirement-failed-remaining-text&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;error-system-requirement-failed-text1&quot;&gt;
+               enable audio &amp;amp; video, then click 
+            &lt;/span&gt;
+            &lt;span class&#x3D;&quot;error-system-requirement-failed-text2&quot;&gt;&amp;apos;&lt;/span&gt;
+            &lt;span class&#x3D;&quot;error-system-requirement-failed-text3&quot;&gt;Retry&lt;/span&gt;
+            &lt;span class&#x3D;&quot;error-system-requirement-failed-text4&quot;&gt;&amp;apos;&lt;/span&gt;
+            &lt;span class&#x3D;&quot;error-system-requirement-failed-text5&quot;&gt;.&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;two-buttons-container&quot;
+          class&#x3D;&quot;error-system-requirement-failed-two-buttons-container&quot;
+        &gt;
+          &lt;button
+            id&#x3D;&quot;go-back-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;error-system-requirement-failed-go-back-button button&quot;
+          &gt;
+            Go Back
+          &lt;/button&gt;
+          &lt;button
+            id&#x3D;&quot;retry-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;error-system-requirement-failed-retry-button button&quot;
+          &gt;
+            Retry
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>error-system-requirement-failed.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.error-system-requirement-failed-container10 {
+  gap: 24px;
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-main-container {
+  gap: 48px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-navbar-container {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-container11 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.error-system-requirement-failed-navbar-interactive {
+  width: 1440px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-unit);
+  padding-left: var(--dl-layout-space-threeunits);
+  padding-right: var(--dl-layout-space-threeunits);
+  padding-bottom: var(--dl-layout-space-unit);
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-flashyre-image {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.error-system-requirement-failed-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-links {
+  gap: var(--dl-layout-space-twounits);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-right: var(--dl-layout-space-unit);
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.error-system-requirement-failed-dashboard-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  display: flex;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-dashboard-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.error-system-requirement-failed-dashboard-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-upskill-link {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-upskill-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-upskill-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-assessment-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-assessment-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-assessment-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  border-width: 0px;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link {
+  color: rgb(5, 53, 108);
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 600;
+  border-width: 0px;
+  text-decoration: none;
+  background-color: transparent;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-jobs-for-you-link:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+  text-decoration-line: underline;
+}
+ 
+.error-system-requirement-failed-thq-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle1 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius2);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-user-image1 {
+  width: 40px;
+  height: 40px;
+  align-self: flex-start;
+  object-fit: cover;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.error-system-requirement-failed-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.error-system-requirement-failed-drop-down-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  transition: 0.3s;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-drop-down-icon:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-drop-down-icon:active {
+  transform: scale(1.05);
+  transition: all 0.7s;
+}
+ 
+.error-system-requirement-failed-dropdown-list {
+  left: 0%;
+  width: max-content;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.error-system-requirement-failed-profile1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-profile2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-preference1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle3 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle3:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-preference2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-settings1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle4 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle4:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-settings2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-logout1 {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle5 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.error-system-requirement-failed-dropdown-toggle5:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.error-system-requirement-failed-logout2 {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.error-system-requirement-failed-burger-menu {
+  display: none;
+}
+ 
+.error-system-requirement-failed-burger-icon {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.error-system-requirement-failed-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  padding: var(--dl-layout-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.error-system-requirement-failed-popup-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-close-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-layout-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.error-system-requirement-failed-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-icon12 {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.error-system-requirement-failed-container12 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container13 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container14 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.error-system-requirement-failed-user-image2 {
+  width: 200px;
+  object-fit: cover;
+}
+ 
+.error-system-requirement-failed-user-details-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-container15 {
+  gap: var(--dl-layout-space-oneandhalfunits);
+  width: 240px;
+  height: 99px;
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+ 
+.error-system-requirement-failed-profile-score-board {
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-progress-bar-container {
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 158px;
+  height: 15px;
+  display: flex;
+  position: relative;
+  align-self: center;
+  margin-top: -8px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.error-system-requirement-failed-container16 {
+  top: NaNpx;
+  left: 0px;
+  right: 0px;
+  width: 170px;
+  position: absolute;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+ 
+.error-system-requirement-failed-container17 {
+  display: contents;
+}
+ 
+.error-system-requirement-failed-container18 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-dashboard-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-upskill-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-assessment-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-jobs-for-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-container19 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.error-system-requirement-failed-preference-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-settings-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-logout-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-message-container {
+  gap: 16px;
+  width: auto;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-oneandhalfunits);
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: flex-start;
+  border-radius: 8px;
+  flex-direction: column;
+  background-color: #F4F4F4;
+}
+ 
+.error-system-requirement-failed-message-text {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.error-system-requirement-failed-message-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--dl-layout-space-oneandhalfunits);
+  border-radius: 8px;
+  flex-direction: column;
+  padding-bottom: var(--dl-layout-space-oneandhalfunits);
+  justify-content: flex-start;
+}
+ 
+.error-system-requirement-failed-message-first-container {
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+ 
+.error-system-requirement-failed-navigate-to-text {
+  font-size: 20px;
+}
+ 
+.error-system-requirement-failed-view-site-information-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-left: 4px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: #D7DFE7;
+}
+ 
+.error-system-requirement-failed-view-site-icon {
+  width: 32px;
+  height: 32px;
+}
+ 
+.error-system-requirement-failed-view-site-information-text {
+  width: auto;
+  font-size: 24px;
+}
+ 
+.error-system-requirement-failed-remaining-text {
+  font-size: 20px;
+}
+ 
+.error-system-requirement-failed-text2 {
+  color: var(--dl-color-theme-primary2);
+}
+ 
+.error-system-requirement-failed-text3 {
+  color: var(--dl-color-theme-primary2);
+  font-style: normal;
+  font-weight: 600;
+}
+ 
+.error-system-requirement-failed-text4 {
+  color: var(--dl-color-theme-primary2);
+}
+ 
+.error-system-requirement-failed-two-buttons-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-end;
+}
+ 
+.error-system-requirement-failed-go-back-button {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-size: 16px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: rgb(5, 53, 108);
+}
+ 
+.error-system-requirement-failed-go-back-button:hover {
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: 0A4992 ;
+}
+ 
+.error-system-requirement-failed-go-back-button:active {
+  transform: scale(0.90);
+  background-color: #5F7DA1;
+}
+ 
+.error-system-requirement-failed-retry-button {
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 500;
+  border-width: 0px;
+  background-color: #1F882B;
+}
+ 
+.error-system-requirement-failed-retry-button:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #30B63F;
+}
+ 
+.error-system-requirement-failed-retry-button:active {
+  transform: scale(0.90);
+  background-color: #7AD184;
+}
+
+    .progress-bar-wrapper {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .progress-bar-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 90%; /* Adjust to fit within 90% of parent width */
+      height: 4px;
+      position: relative;
+      margin: 0 auto; /* Center the container */
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 4px;
+      background-color: #E4E5E8;
+      border-radius: 2px;
+      position: absolute;
+    }
+
+    .progress-bar::before {
+      content: &#x27;&#x27;;
+      width: 80%; /* Progress fill percentage */
+      height: 4px;
+      background-color: #3AC14A;
+      border-radius: 2px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .progress-text {
+      font-family: &#x27;Inter&#x27;, sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      color: #000;
+      margin-left: 6px;
+      position: absolute;
+      right: 10px;
+    }
+
+@media (max-width: 1000px) {
+  .progress-bar-container {
+    max-width: 100%; /* Full width for smaller screens */
+  }
+
+  .progress-text {
+    font-size: 10px;
+    right: 5px;
+  }
+}
+ 
+@media(max-width: 1200px) {
+  .error-system-requirement-failed-container10 {
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-main-container {
+    width: 100%;
+    align-self: center;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-container11 {
+    width: 100%;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 100%;
+    position: relative;
+  }
+  .error-system-requirement-failed-mobile-menu {
+    justify-content: space-between;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .error-system-requirement-failed-navbar-container {
+    justify-content: center;
+  }
+  .error-system-requirement-failed-container11 {
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 95%;
+    align-self: center;
+    justify-content: space-between;
+  }
+  .error-system-requirement-failed-desktop-menu {
+    display: none;
+  }
+  .error-system-requirement-failed-links {
+    gap: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-dropdown-toggle1 {
+    display: none;
+  }
+  .error-system-requirement-failed-burger-menu {
+    display: flex;
+  }
+  .error-system-requirement-failed-container15 {
+    gap: var(--dl-layout-space-unit);
+    width: 206px;
+    padding: 20px;
+  }
+  .error-system-requirement-failed-profile-score-board {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container16 {
+    width: 167px;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+  .error-system-requirement-failed-message-text {
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 20px;
+    align-self: center;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 20px;
+  }
+  .error-system-requirement-failed-go-back-button {
+    color: rgb(255, 255, 255);
+    width: 90px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(5, 53, 108);
+  }
+  .error-system-requirement-failed-retry-button {
+    width: 90px;
+    font-size: 14px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .error-system-requirement-failed-navbar-container {
+    background-color: transparent;
+  }
+  .error-system-requirement-failed-container11 {
+    width: 100%;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    width: 95%;
+    height: 72px;
+    align-self: flex-start;
+    padding-left: var(--dl-layout-space-twounits);
+    padding-right: var(--dl-layout-space-twounits);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-flashyre-image {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-dropdown-toggle1 {
+    display: none;
+  }
+  .error-system-requirement-failed-dropdown-list {
+    display: none;
+  }
+  .error-system-requirement-failed-burger-menu {
+    align-items: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-burger-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .error-system-requirement-failed-mobile-menu {
+    right: 0px;
+    width: 100%;
+    height: auto;
+    margin: 0px;
+    display: flex;
+    max-height: auto;
+    visibility: hidden;
+    padding-top: 0px;
+    padding-left: 0px;
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: 0px;
+    flex-direction: row;
+    padding-bottom: 0px;
+    justify-content: flex-end;
+    background-color: rgba(190, 190, 190, 0.06);
+  }
+  .error-system-requirement-failed-popup-container {
+    gap: var(--dl-layout-space-halfunit);
+    width: 292px;
+    height: 853px;
+    heigth: 50vh;
+    opacity: 1;
+    padding: var(--dl-layout-space-unit);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-close-icon {
+    height: 100%;
+    margin-bottom: 0px;
+    justify-content: flex-end;
+  }
+  .error-system-requirement-failed-container12 {
+    gap: var(--dl-layout-space-twounits);
+    width: 100%;
+    height: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: var(--dl-layout-space-unit);
+    border-radius: var(--dl-layout-radius-radius4);
+    padding-right: var(--dl-layout-space-unit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-container13 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+  }
+  .error-system-requirement-failed-container14 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: auto;
+    align-self: center;
+    flex-direction: row;
+  }
+  .error-system-requirement-failed-user-image2 {
+    width: 60px;
+    height: 60px;
+    align-self: flex-start;
+    border-radius: var(--dl-layout-radius-round);
+  }
+  .error-system-requirement-failed-user-details-container {
+    gap: 16px;
+    width: auto;
+    align-self: center;
+    align-items: center;
+    border-width: 0px;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-user-name {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .error-system-requirement-failed-profile-complet-indication {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .error-system-requirement-failed-view-edit-profile {
+    color: #05356c;
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container15 {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+  .error-system-requirement-failed-profile-score-board {
+    width: 100%;
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-container16 {
+    width: 189px;
+  }
+  .error-system-requirement-failed-container18 {
+    gap: var(--dl-layout-space-halfunit);
+    width: 100%;
+    height: 181px;
+    border-width: 0px;
+  }
+  .error-system-requirement-failed-dashboard-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-dashboard-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-dashboard-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-upskill-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-upskill-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-upskill-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-assessment-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-assessment-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+  }
+  .error-system-requirement-failed-assessment-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-jobs-for-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
+  .error-system-requirement-failed-briefcase-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .error-system-requirement-failed-jobs-for-you-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-container19 {
+    gap: 4px;
+    width: 50%;
+    display: flex;
+    align-self: center;
+    padding-left: var(--dl-layout-space-halfunit);
+    border-radius: 4px;
+    padding-right: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-preference-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .error-system-requirement-failed-preference-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-preference-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-settings-container {
+    gap: var(--dl-layout-space-unit);
+    width: 100%;
+    align-items: center;
+  }
+  .error-system-requirement-failed-settings-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-settings-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-logout-container {
+    gap: var(--dl-layout-space-unit);
+    width: 123px;
+    padding: 0px;
+    align-items: center;
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-logout-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-logout-text {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-message-container {
+    width: auto;
+  }
+  .error-system-requirement-failed-message-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-message-main-container {
+    gap: 12px;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 16px;
+  }
+  .error-system-requirement-failed-two-buttons-container {
+    padding-right: var(--dl-layout-space-unit);
+  }
+  .error-system-requirement-failed-go-back-button {
+    width: 60px;
+    height: 24px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .error-system-requirement-failed-retry-button {
+    color: rgb(255, 255, 255);
+    width: 60px;
+    height: 24px;
+    padding: 0px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    background-color: rgb(31, 136, 43);
+  }
+}
+ 
+@media(max-width: 479px) {
+  .error-system-requirement-failed-container10 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .error-system-requirement-failed-navbar-interactive {
+    padding: var(--dl-layout-space-unit);
+    padding-right: 16px;
+  }
+  .error-system-requirement-failed-burger-icon {
+    align-self: center;
+  }
+  .error-system-requirement-failed-popup-container {
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-container15 {
+    width: 100%;
+    height: auto;
+    align-items: center;
+    padding-top: var(--dl-layout-space-oneandhalfunits);
+    justify-content: center;
+  }
+  .error-system-requirement-failed-container18 {
+    height: 259px;
+  }
+  .error-system-requirement-failed-logout-container {
+    border-width: 0px;
+    background-color: #FFFFFF;
+  }
+  .error-system-requirement-failed-message-container {
+    width: 100%;
+    padding-top: var(--dl-layout-space-halfunit);
+    padding-left: 4px;
+    padding-right: 0px;
+    padding-bottom: var(--dl-layout-space-halfunit);
+  }
+  .error-system-requirement-failed-message-first-container {
+    align-self: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-navigate-to-text {
+    width: auto;
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-view-site-information-container {
+    align-items: center;
+    padding-left: 0px;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-view-site-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .error-system-requirement-failed-view-site-information-text {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-remaining-text {
+    display: flex;
+    align-items: center;
+  }
+  .error-system-requirement-failed-text1 {
+    font-size: 10px;
+  }
+  .error-system-requirement-failed-text2 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-text3 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .error-system-requirement-failed-text4 {
+    color: var(--dl-color-theme-primary2);
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-text5 {
+    font-size: 14px;
+  }
+  .error-system-requirement-failed-go-back-button {
+    width: 50px;
+    height: 20px;
+    display: flex;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  .error-system-requirement-failed-retry-button {
+    width: 50px;
+    height: 20px;
+    display: flex;
+    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div id="candidate-home" class="error-system-requirement-failed-container10">  <div    id="main-container"    class="error-system-requirement-failed-main-container"  >    <header      id="navbar-candidate-view-container"      class="error-system-requirement-failed-navbar-container"    >      <div        id="candidate-view-container"        class="error-system-requirement-failed-container11"      >        <header          data-thq="thq-navbar"          class="error-system-requirement-failed-navbar-interactive"        >          <img            id="flashyre-logo"            alt="image"            src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"            class="error-system-requirement-failed-flashyre-image"          />          <div            data-thq="thq-navbar-nav"            class="error-system-requirement-failed-desktop-menu"          >            <nav              id="header-links"              class="error-system-requirement-failed-links"            >              <a                href="https://www.teleporthq.io"                id="navbar-dashboard-link"                class="error-system-requirement-failed-dashboard-link thq-body-small button"              >                Dashboard              </a>              <a                href="https://www.teleporthq.io"                id="navbar-upskill-link"                class="error-system-requirement-failed-upskill-link thq-body-small button"              >                Upskill              </a>              <a                href="https://www.teleporthq.io"                id="navbar-assessment-link"                target="_blank"                rel="noreferrer noopener"                class="error-system-requirement-failed-assessment-link thq-body-small button"              >                Assessment              </a>              <a                href="https://www.teleporthq.io"                id="navbar-jobs-for-you-link"                target="_blank"                rel="noreferrer noopener"                class="error-system-requirement-failed-jobs-for-you-link thq-body-small button"              >                Jobs for you              </a>            </nav>          </div>          <div            data-thq="thq-dropdown"            class="error-system-requirement-failed-thq-dropdown list-item"          >            <div              data-thq="thq-dropdown-toggle"              class="error-system-requirement-failed-dropdown-toggle1"            >              <img                id="user-image"                alt="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"                src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"                class="error-system-requirement-failed-user-image1"              />              <div                data-thq="thq-dropdown-arrow"                class="error-system-requirement-failed-dropdown-arrow"              >                <svg                  id="dropdown"                  width="32"                  height="32"                  viewBox="0 0 32 32"                  class="error-system-requirement-failed-drop-down-icon"                >                  <path                    d="m16 28l-7-7l1.4-1.4l5.6 5.6l5.6-5.6L23 21z"                    fill="currentColor"                  ></path>                </svg>              </div>            </div>            <ul              data-thq="thq-dropdown-list"              class="error-system-requirement-failed-dropdown-list"            >              <li                data-thq="thq-dropdown"                class="error-system-requirement-failed-profile1 list-item"              >                <div                  data-thq="thq-dropdown-toggle"                  class="error-system-requirement-failed-dropdown-toggle2"                >                  <span                    id="navbar-profile-button"                    class="error-system-requirement-failed-profile2"                  >                    Profile                  </span>                </div>              </li>              <li                data-thq="thq-dropdown"                class="error-system-requirement-failed-preference1 list-item"              >                <div                  data-thq="thq-dropdown-toggle"                  class="error-system-requirement-failed-dropdown-toggle3"                >                  <span                    id="navbar-preference-button"                    class="error-system-requirement-failed-preference2"                  >                    Preference                  </span>                </div>              </li>              <li                data-thq="thq-dropdown"                class="error-system-requirement-failed-settings1 list-item"              >                <div                  data-thq="thq-dropdown-toggle"                  class="error-system-requirement-failed-dropdown-toggle4"                >                  <span                    id="navbar-settings-button"                    class="error-system-requirement-failed-settings2"                  >                    Settings                  </span>                </div>              </li>              <li                data-thq="thq-dropdown"                class="error-system-requirement-failed-logout1 list-item"              >                <div                  data-thq="thq-dropdown-toggle"                  class="error-system-requirement-failed-dropdown-toggle5"                >                  <span                    id="navbar-logout-button"                    class="error-system-requirement-failed-logout2"                  >                    Logout                  </span>                </div>              </li>            </ul>          </div>          <div            data-thq="thq-burger-menu"            class="error-system-requirement-failed-burger-menu"          >            <svg              id="burger-icon"              viewBox="0 0 1024 1024"              class="error-system-requirement-failed-burger-icon"            >              <path                d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"              ></path>            </svg>          </div>          <div            data-thq="thq-mobile-menu"            class="error-system-requirement-failed-mobile-menu"          >            <div              id="mobile-pop-up-container"              class="error-system-requirement-failed-popup-container"            >              <div                id="close-icon"                class="error-system-requirement-failed-close-icon"              >                <div                  data-thq="thq-close-menu"                  class="error-system-requirement-failed-close-menu"                >                  <svg                    id="close-menu-icon"                    viewBox="0 0 1024 1024"                    class="error-system-requirement-failed-icon12"                  >                    <path                      d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"                    ></path>                  </svg>                </div>              </div>              <div                id="mobile-view-container"                class="error-system-requirement-failed-container12"              >                <div class="error-system-requirement-failed-container13">                  <div                    id="candidate-profile-container"                    class="error-system-requirement-failed-container14"                  >                    <img                      id="candidate-profile-picture"                      alt="image"                      src="https://s3-alpha-sig.figma.com/img/b74a/bea4/ebc9cfc1a53c3f5e2e37843d60bf6944?Expires=1735516800&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=UtDDP8Rm~420kFe31N8K6pTrPW-xtuqVOImSKApZE7ywdUrTITMSOZ5YVZetsjvZG3k1b1D~td9StRjiaFaGCcKEVBhGFGUHmAwrtXb18YIkOHegCnmo7cBAz3IG2ww4B9DjG9nOaniCMSDG6uKAJpelvB2woG54Yj6dLQLjmRZK8wSIUOr1OJ17LOYjMQgP~QCmOL0gu8oXwIstaAQXvKjI7IGAfGbN8cjVs9JCBD7MEXCOmKgqHXu4Jn-XavYyVpMBTJLhLwkw4OeORgEeBzdYIUtAs3ClpYTmJ7VI0aDxw6cXBL4WobVlcuzTKqr6XJSeU5fYc8efbLynD~v-7g__"                      class="error-system-requirement-failed-user-image2"                    />                    <div                      id="candidate-details-container"                      class="error-system-requirement-failed-user-details-container"                    >                      <span                        id="navbar-candidate-name"                        class="error-system-requirement-failed-user-name"                      >                        Kathryn Murphy                      </span>                      <span                        id="navbar-candidate-profile-completion"                        class="error-system-requirement-failed-profile-complet-indication"                      >                        ✅ 90% Profile Completion                      </span>                      <span                        id="navbar-candidate-view-edit-profile-button"                        class="button error-system-requirement-failed-view-edit-profile"                      >                        View &amp; edit profile                      </span>                    </div>                  </div>                  <div                    id="candidate-score-board-container"                    class="error-system-requirement-failed-container15"                  >                    <span                      id="candidate-profile-score-board"                      class="error-system-requirement-failed-profile-score-board"                    >                      Profile Score Board                    </span>                    <div                      id="progress-bar-container"                      class="error-system-requirement-failed-progress-bar-container"                    >                      <div class="error-system-requirement-failed-container16">                        <div                          class="error-system-requirement-failed-container17"                        >                        <div class=\'progress-bar-wrapper\'>                          <div class=\'progress-bar-container\'>                            <div class=\'progress-bar\'></div>                            <span class=\'progress-text\'>80%</span>                          </div>                        </div>                        </div>                      </div>                    </div>                  </div>                </div>                <div                  id="pop-up-for-mobile-view"                  class="error-system-requirement-failed-container18"                >                  <div                    id="dashboard-container"                    class="error-system-requirement-failed-dashboard-container"                  >                    <svg                      id="dashboard-icon"                      width="24"                      height="24"                      viewBox="0 0 24 24"                      class="error-system-requirement-failed-dashboard-icon"                    >                      <path                        d="M21 16V4H3v12zm0-14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7v2h2v2H8v-2h2v-2H3a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2zM5 6h9v5H5zm10 0h4v2h-4zm4 3v5h-4V9zM5 12h4v2H5zm5 0h4v2h-4z"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="dashboard-button"                      class="error-system-requirement-failed-dashboard-text"                    >                      Dashboard                    </span>                  </div>                  <div                    id="upskill-container"                    class="error-system-requirement-failed-upskill-container"                  >                    <svg                      id="upskill-icon"                      width="24"                      height="24"                      viewBox="0 0 24 24"                      class="error-system-requirement-failed-upskill-icon"                    >                      <path                        d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2m0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4"                        fill="none"                        stroke="currentColor"                        stroke-width="2"                        stroke-linecap="round"                        stroke-linejoin="round"                      ></path>                    </svg>                    <span                      id="upskill-button"                      class="error-system-requirement-failed-upskill-text"                    >                      Upskill                    </span>                  </div>                  <div                    id="assessment-container"                    class="error-system-requirement-failed-assessment-container"                  >                    <svg                      id="assessment-icon"                      width="32"                      height="32"                      viewBox="0 0 32 32"                      class="error-system-requirement-failed-assessment-icon"                    >                      <path                        d="m23 9.2l-2.6-2.6L19 8l4 4l7-7l-1.4-1.4zM12 5.4L10.6 4L8 6.6L5.4 4L4 5.4L6.6 8L4 10.6L5.4 12L8 9.4l2.6 2.6l1.4-1.4L9.4 8zm0 16L10.6 20L8 22.6L5.4 20L4 21.4L6.6 24L4 26.6L5.4 28L8 25.4l2.6 2.6l1.4-1.4L9.4 24z"                        fill="currentColor"                      ></path>                      <path                        d="M17 15V2h-2v13H2v2h13v13h2V17h13v-2z"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="assessment-button-mob-view"                      class="error-system-requirement-failed-assessment-text"                    >                      Assessment                    </span>                  </div>                  <div                    id="jobs-for-you-container"                    class="error-system-requirement-failed-jobs-for-container"                  >                    <svg                      id="briefcase-icon"                      width="22"                      height="22"                      viewBox="0 0 22 22"                      class="error-system-requirement-failed-briefcase-icon"                    >                      <path                        d="M2 6h5V3h1V2h6v1h1v3h5v1h1v12h-1v1H2v-1H1V7h1zm7 0h4V4H9zm10 2H3v10h16z"                        fill="currentColor"                      ></path>                    </svg>                    <span                      id="jobs-for-you-button"                      class="error-system-requirement-failed-jobs-for-you-text"                    >                      Jobs for you                    </span>                  </div>                  <div                    id="profile-dropdown"                    class="error-system-requirement-failed-container19"                  >                    <div                      id="preference-container"                      class="error-system-requirement-failed-preference-container"                    >                      <svg                        id="preference-icon"                        width="48"                        height="48"                        viewBox="0 0 48 48"                        class="error-system-requirement-failed-preference-icon"                      >                        <g fill="currentColor">                          <path                            d="M23 22.922c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 1 1-2 0z"                          ></path>                          <path                            d="M20 16a4 4 0 0 1 3-3.874V7a1 1 0 1 1 2 0v5.126A4.002 4.002 0 0 1 24 20a4 4 0 0 1-4-4m4 2a2 2 0 1 0 0-4a2 2 0 0 0 0 4m-8 14a4 4 0 1 1-4.992-3.876A1 1 0 0 1 11 28V7a1 1 0 1 1 2 0v21q0 .063-.008.124A4 4 0 0 1 16 32m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"                            clip-rule="evenodd"                            fill-rule="evenodd"                          ></path>                          <path                            d="M36 42a1 1 0 0 1-1-1v-7.078c0-.526.474-.922 1-.922s1 .396 1 .922V41a1 1 0 0 1-1 1"                          ></path>                          <path                            d="M36 6a1 1 0 0 0-1 1v16.126A4.002 4.002 0 0 0 36 31a4 4 0 0 0 1-7.874V7a1 1 0 0 0-1-1m0 19a2 2 0 1 0 0 4a2 2 0 0 0 0-4"                            clip-rule="evenodd"                            fill-rule="evenodd"                          ></path>                          <path                            d="M11 41a1 1 0 1 0 2 0v-2.078c0-.526-.474-.922-1-.922s-1 .396-1 .922z"                          ></path>                        </g>                      </svg>                      <span                        id="navbar-preference-button-mob-view"                        class="error-system-requirement-failed-preference-text"                      >                        Preference                      </span>                    </div>                    <div                      id="settings-container"                      class="error-system-requirement-failed-settings-container"                    >                      <svg                        id="settings-icon"                        width="32"                        height="32"                        viewBox="0 0 32 32"                        class="error-system-requirement-failed-settings-icon"                      >                        <path                          d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4a2 2 0 0 0-1.73-1a2 2 0 0 0-.64.1l-2.43.82a11 11 0 0 0-1.31-.75l-.51-2.52a2 2 0 0 0-2-1.61h-4.68a2 2 0 0 0-2 1.61l-.51 2.52a11.5 11.5 0 0 0-1.32.75l-2.38-.86A2 2 0 0 0 6.79 6a2 2 0 0 0-1.73 1L2.7 11a2 2 0 0 0 .41 2.51L5 15.24v1.53l-1.89 1.68A2 2 0 0 0 2.7 21l2.36 4a2 2 0 0 0 1.73 1a2 2 0 0 0 .64-.1l2.43-.82a11 11 0 0 0 1.31.75l.51 2.52a2 2 0 0 0 2 1.61h4.72a2 2 0 0 0 2-1.61l.51-2.52a11.5 11.5 0 0 0 1.32-.75l2.42.82a2 2 0 0 0 .64.1a2 2 0 0 0 1.73-1l2.28-4a2 2 0 0 0-.41-2.51ZM25.21 24l-3.43-1.16a8.9 8.9 0 0 1-2.71 1.57L18.36 28h-4.72l-.71-3.55a9.4 9.4 0 0 1-2.7-1.57L6.79 24l-2.36-4l2.72-2.4a8.9 8.9 0 0 1 0-3.13L4.43 12l2.36-4l3.43 1.16a8.9 8.9 0 0 1 2.71-1.57L13.64 4h4.72l.71 3.55a9.4 9.4 0 0 1 2.7 1.57L25.21 8l2.36 4l-2.72 2.4a8.9 8.9 0 0 1 0 3.13L27.57 20Z"                          fill="currentColor"                        ></path>                        <path                          d="M16 22a6 6 0 1 1 6-6a5.94 5.94 0 0 1-6 6m0-10a3.91 3.91 0 0 0-4 4a3.91 3.91 0 0 0 4 4a3.91 3.91 0 0 0 4-4a3.91 3.91 0 0 0-4-4"                          fill="currentColor"                        ></path>                      </svg>                      <span                        id="navbar-settings-button-mob-view"                        class="error-system-requirement-failed-settings-text"                      >                        Settings                      </span>                    </div>                    <div                      id="logout-container"                      class="error-system-requirement-failed-logout-container button"                    >                      <svg                        id="logout-icon"                        width="24"                        height="24"                        viewBox="0 0 24 24"                        class="error-system-requirement-failed-logout-icon"                      >                        <g fill="none">                          <path                            d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"                          ></path>                          <path                            d="M12 3a1 1 0 0 1 .117 1.993L12 5H7a1 1 0 0 0-.993.883L6 6v12a1 1 0 0 0 .883.993L7 19h4.5a1 1 0 0 1 .117 1.993L11.5 21H7a3 3 0 0 1-2.995-2.824L4 18V6a3 3 0 0 1 2.824-2.995L7 3zm5.707 5.464l2.828 2.829a1 1 0 0 1 0 1.414l-2.828 2.829a1 1 0 1 1-1.414-1.415L17.414 13H12a1 1 0 1 1 0-2h5.414l-1.121-1.121a1 1 0 0 1 1.414-1.415"                            fill="currentColor"                          ></path>                        </g>                      </svg>                      <span                        id="navbar-logout-button-mob-view"                        class="error-system-requirement-failed-logout-text"                      >                        Logout                      </span>                    </div>                  </div>                </div>              </div>            </div>          </div>        </header>      </div>    </header>    <div      id="message-container"      class="error-system-requirement-failed-message-container"    >      <span        id="message-text"        class="error-system-requirement-failed-message-text"      >        Message      </span>      <div        id="message-main-container"        class="error-system-requirement-failed-message-main-container"      >        <div          id="message-first-container"          class="error-system-requirement-failed-message-first-container"        >          <span            id="navigate-to-text"            class="error-system-requirement-failed-navigate-to-text"          >            Navigate to           </span>          <div            id="view-site-information-container"            class="error-system-requirement-failed-view-site-information-container"          >            <svg              id="view-site-icon"              width="24"              height="24"              viewBox="0 0 24 24"              class="error-system-requirement-failed-view-site-icon"            >              <g fill="none" stroke="currentColor" stroke-width="1.5">                <rect                  x="2.75"                  y="2.75"                  rx="6"                  width="18.5"                  height="18.5"                ></rect>                <path                  d="M17.75 8.805h-1.437m-3.594 0H6.25m11.5 6.39h-6.469m-3.593 0H6.25m3.234 1.797a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594m5.032-6.39a1.797 1.797 0 1 0 0-3.594a1.797 1.797 0 0 0 0 3.594"                  stroke-linecap="round"                  stroke-linejoin="round"                ></path>              </g>            </svg>            <span              id="view-site-information-text"              class="error-system-requirement-failed-view-site-information-text"            >               &apos;view site information&apos;             </span>          </div>          <span            id="remaining-text"            class="error-system-requirement-failed-remaining-text"          >            <span class="error-system-requirement-failed-text1">               enable audio &amp; video, then click             </span>            <span class="error-system-requirement-failed-text2">&apos;</span>            <span class="error-system-requirement-failed-text3">Retry</span>            <span class="error-system-requirement-failed-text4">&apos;</span>            <span class="error-system-requirement-failed-text5">.</span>          </span>        </div>        <div          id="two-buttons-container"          class="error-system-requirement-failed-two-buttons-container"        >          <button            id="go-back-button"            type="button"            class="error-system-requirement-failed-go-back-button button"          >            Go Back          </button>          <button            id="retry-button"            type="button"            class="error-system-requirement-failed-retry-button button"          >            Retry          </button>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ErrorSystemRequirementFailed'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ErrorSystemRequirementFailed.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

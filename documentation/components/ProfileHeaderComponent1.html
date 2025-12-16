@@ -1,0 +1,1871 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ProfileHeaderComponent1</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/profile-header-component1/profile-header-component1.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>profile-header-component1</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>profile-header-component1.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>profile-header-component1.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#action1" >action1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#action2" >action2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link1" >link1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link2" >link2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link3" >link3</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link4" >link4</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link5" >link5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#text41" >text41</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#link1Url" >link1Url</a>
+                            </li>
+                            <li>
+                                <a href="#link2Url" >link2Url</a>
+                            </li>
+                            <li>
+                                <a href="#link3Url" >link3Url</a>
+                            </li>
+                            <li>
+                                <a href="#link4Url" >link4Url</a>
+                            </li>
+                            <li>
+                                <a href="#link5Url" >link5Url</a>
+                            </li>
+                            <li>
+                                <a href="#logoAlt" >logoAlt</a>
+                            </li>
+                            <li>
+                                <a href="#logoSrc" >logoSrc</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:38</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link1Url"></a>
+                        <b>link1Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link2Url"></a>
+                        <b>link2Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:26</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link3Url"></a>
+                        <b>link3Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:36</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link4Url"></a>
+                        <b>link4Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:20</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link5Url"></a>
+                        <b>link5Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:24</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoAlt"></a>
+                        <b>logoAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Company Logo&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:14</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoSrc"></a>
+                        <b>logoSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-1500h.png&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:30</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="action1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>action1</b></span>
+                        <a href="#action1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;action1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="action2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>action2</b></span>
+                        <a href="#action2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;action2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link1</b></span>
+                        <a href="#link1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link2</b></span>
+                        <a href="#link2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link3"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link3</b></span>
+                        <a href="#link3"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link3&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link4"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link4</b></span>
+                        <a href="#link4"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link4&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link5</b></span>
+                        <a href="#link5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text41"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>text41</b></span>
+                        <a href="#text41"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;text41&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/profile-header-component1/profile-header-component1.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;profile-header-component1&#x27;,
+  templateUrl: &#x27;profile-header-component1.component.html&#x27;,
+  styleUrls: [&#x27;profile-header-component1.component.css&#x27;],
+})
+export class ProfileHeaderComponent1 {
+  @ContentChild(&#x27;link3&#x27;)
+  link3: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link4&#x27;)
+  link4: TemplateRef&lt;any&gt;
+  @Input()
+  logoAlt: string &#x3D; &#x27;Company Logo&#x27;
+  @ContentChild(&#x27;link5&#x27;)
+  link5: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;action2&#x27;)
+  action2: TemplateRef&lt;any&gt;
+  @Input()
+  link4Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @ContentChild(&#x27;action1&#x27;)
+  action1: TemplateRef&lt;any&gt;
+  @Input()
+  link5Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  link2Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  link1Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  logoSrc: string &#x3D; &#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-1500h.png&#x27;
+  @ContentChild(&#x27;text41&#x27;)
+  text41: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link2&#x27;)
+  link2: TemplateRef&lt;any&gt;
+  @Input()
+  link3Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @ContentChild(&#x27;link1&#x27;)
+  link1: TemplateRef&lt;any&gt;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;profile-header-component1-container1&quot;&gt;
+  &lt;header class&#x3D;&quot;profile-header-component1-container2&quot;&gt;
+    &lt;header
+      data-thq&#x3D;&quot;thq-navbar&quot;
+      class&#x3D;&quot;profile-header-component1-navbar-interactive1&quot;
+    &gt;
+      &lt;img
+        [attr.alt]&#x3D;&quot;logoAlt&quot;
+        [attr.src]&#x3D;&quot;logoSrc&quot;
+        class&#x3D;&quot;profile-header-component1-image11&quot;
+      /&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-navbar-nav&quot;
+        class&#x3D;&quot;profile-header-component1-desktop-menu1&quot;
+      &gt;
+        &lt;nav class&#x3D;&quot;profile-header-component1-links1&quot;&gt;
+          &lt;a
+            [attr.href]&#x3D;&quot;link1Url&quot;
+            class&#x3D;&quot;profile-header-component1-link11 thq-link thq-body-small&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink1&gt;
+                &lt;div&gt;&lt;span&gt;Profile&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a
+            [attr.href]&#x3D;&quot;link2Url&quot;
+            class&#x3D;&quot;profile-header-component1-link21 thq-link thq-body-small&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink2&gt;
+                &lt;div&gt;&lt;span&gt;Preferance&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a
+            [attr.href]&#x3D;&quot;link3Url&quot;
+            target&#x3D;&quot;_blank&quot;
+            rel&#x3D;&quot;noreferrer noopener&quot;
+            class&#x3D;&quot;profile-header-component1-link31 thq-link thq-body-small&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink3&gt;
+                &lt;div&gt;&lt;span&gt;Settings&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a
+            [attr.href]&#x3D;&quot;link4Url&quot;
+            target&#x3D;&quot;_blank&quot;
+            rel&#x3D;&quot;noreferrer noopener&quot;
+            class&#x3D;&quot;profile-header-component1-link41 thq-link thq-body-small&quot;
+          &gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink4&gt;
+                &lt;div&gt;&lt;span&gt;Logout&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+        &lt;/nav&gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-buttons1&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-burger-menu&quot;
+        class&#x3D;&quot;profile-header-component1-burger-menu1&quot;
+      &gt;
+        &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;profile-header-component1-icon10&quot;&gt;
+          &lt;path
+            d&#x3D;&quot;M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-mobile-menu&quot;
+        class&#x3D;&quot;profile-header-component1-mobile-menu1&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-nav1&quot;&gt;
+          &lt;div class&#x3D;&quot;profile-header-component1-top1&quot;&gt;
+            &lt;img
+              [attr.alt]&#x3D;&quot;logoAlt&quot;
+              [attr.src]&#x3D;&quot;logoSrc&quot;
+              class&#x3D;&quot;profile-header-component1-logo1&quot;
+            /&gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-close-menu&quot;
+              class&#x3D;&quot;profile-header-component1-close-menu1&quot;
+            &gt;
+              &lt;svg
+                viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                class&#x3D;&quot;profile-header-component1-icon12&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;nav class&#x3D;&quot;profile-header-component1-links2&quot;&gt;
+            &lt;a
+              [attr.href]&#x3D;&quot;link1Url&quot;
+              class&#x3D;&quot;profile-header-component1-link12 thq-link thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink1&gt;
+                  &lt;div&gt;&lt;span&gt;Profile&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              [attr.href]&#x3D;&quot;link2Url&quot;
+              class&#x3D;&quot;profile-header-component1-link22 thq-link thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink2&gt;
+                  &lt;div&gt;&lt;span&gt;Preferance&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              [attr.href]&#x3D;&quot;link3Url&quot;
+              class&#x3D;&quot;profile-header-component1-link32 thq-link thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink3&gt;
+                  &lt;div&gt;&lt;span&gt;Settings&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              [attr.href]&#x3D;&quot;link4Url&quot;
+              class&#x3D;&quot;profile-header-component1-link42 thq-link thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink4&gt;
+                  &lt;div&gt;&lt;span&gt;Logout&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              [attr.href]&#x3D;&quot;link5Url&quot;
+              class&#x3D;&quot;profile-header-component1-link51 thq-link thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink5&gt;
+                  &lt;div&gt;&lt;span&gt;Contact Us&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link5 ? link5 : defaultLink5&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+          &lt;/nav&gt;
+          &lt;div class&#x3D;&quot;profile-header-component1-buttons2&quot;&gt;
+            &lt;button class&#x3D;&quot;thq-button-filled&quot;&gt;
+              &lt;span&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultAction1&gt;
+                    &lt;div&gt;&lt;span&gt;Login&lt;/span&gt;&lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;action1 ? action1 : defaultAction1&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+            &lt;/button&gt;
+            &lt;button class&#x3D;&quot;thq-button-outline&quot;&gt;
+              &lt;span&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultAction2&gt;
+                    &lt;div&gt;&lt;span&gt;Sign Up&lt;/span&gt;&lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;action2 ? action2 : defaultAction2&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-icon-group&quot;&gt;
+          &lt;svg viewBox&#x3D;&quot;0 0 950.8571428571428 1024&quot; class&#x3D;&quot;thq-icon-x-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 877.7142857142857 1024&quot; class&#x3D;&quot;thq-icon-x-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 602.2582857142856 1024&quot; class&#x3D;&quot;thq-icon-x-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M548 6.857v150.857h-89.714c-70.286 0-83.429 33.714-83.429 82.286v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571c0-144.571 88.571-223.429 217.714-223.429 61.714 0 114.857 4.571 130.286 6.857z&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;profile-header-component1-container3&quot;&gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-container4&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-header-component1-text12&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultText41&gt;
+                &lt;div class&#x3D;&quot;profile-header-component1-fragment6&quot;&gt;
+                  &lt;span class&#x3D;&quot;profile-header-component1-text20&quot;&gt;KM&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;text41 ? text41 : defaultText41&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;svg
+          width&#x3D;&quot;24&quot;
+          height&#x3D;&quot;24&quot;
+          viewBox&#x3D;&quot;0 0 24 24&quot;
+          class&#x3D;&quot;profile-header-component1-icon20&quot;
+        &gt;
+          &lt;path
+            d&#x3D;&quot;m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z&quot;
+            fill&#x3D;&quot;currentColor&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+  &lt;/header&gt;
+  &lt;header class&#x3D;&quot;profile-header-component1-container5&quot;&gt;
+    &lt;header
+      data-thq&#x3D;&quot;thq-navbar&quot;
+      class&#x3D;&quot;profile-header-component1-navbar-interactive2&quot;
+    &gt;
+      &lt;img
+        [attr.alt]&#x3D;&quot;logoAlt&quot;
+        [attr.src]&#x3D;&quot;logoSrc&quot;
+        class&#x3D;&quot;profile-header-component1-image12&quot;
+      /&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-navbar-nav&quot;
+        class&#x3D;&quot;profile-header-component1-desktop-menu2&quot;
+      &gt;
+        &lt;nav class&#x3D;&quot;profile-header-component1-links3&quot;&gt;
+          &lt;a [attr.href]&#x3D;&quot;link1Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink1&gt;
+                &lt;div&gt;&lt;span&gt;Profile&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link2Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink2&gt;
+                &lt;div&gt;&lt;span&gt;Preferance&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link3Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink3&gt;
+                &lt;div&gt;&lt;span&gt;Settings&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link4Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink4&gt;
+                &lt;div&gt;&lt;span&gt;Logout&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link5Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink5&gt;
+                &lt;div&gt;&lt;span&gt;Contact Us&lt;/span&gt;&lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link5 ? link5 : defaultLink5&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+        &lt;/nav&gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-buttons3&quot;&gt;
+          &lt;button
+            class&#x3D;&quot;profile-header-component1-action12 thq-button-animated thq-button-filled&quot;
+          &gt;
+            &lt;span&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultAction1&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment5&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text19&quot;&gt;Login&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;action1 ? action1 : defaultAction1&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/span&gt;
+          &lt;/button&gt;
+          &lt;button
+            class&#x3D;&quot;profile-header-component1-action22 thq-button-outline thq-button-animated&quot;
+          &gt;
+            &lt;span&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultAction2&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment4&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text18&quot;&gt;
+                      Sign Up
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;action2 ? action2 : defaultAction2&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-burger-menu&quot;
+        class&#x3D;&quot;profile-header-component1-burger-menu2&quot;
+      &gt;
+        &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;profile-header-component1-icon22&quot;&gt;
+          &lt;path
+            d&#x3D;&quot;M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;div
+        data-thq&#x3D;&quot;thq-mobile-menu&quot;
+        class&#x3D;&quot;profile-header-component1-mobile-menu2&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-nav2&quot;&gt;
+          &lt;div class&#x3D;&quot;profile-header-component1-top2&quot;&gt;
+            &lt;img
+              [attr.alt]&#x3D;&quot;logoAlt&quot;
+              [attr.src]&#x3D;&quot;logoSrc&quot;
+              class&#x3D;&quot;profile-header-component1-logo2&quot;
+            /&gt;
+            &lt;div
+              data-thq&#x3D;&quot;thq-close-menu&quot;
+              class&#x3D;&quot;profile-header-component1-close-menu2&quot;
+            &gt;
+              &lt;svg
+                viewBox&#x3D;&quot;0 0 1024 1024&quot;
+                class&#x3D;&quot;profile-header-component1-icon24&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;nav class&#x3D;&quot;profile-header-component1-links4&quot;&gt;
+            &lt;a [attr.href]&#x3D;&quot;link1Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink1&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment8&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text22&quot;&gt;
+                      Profile
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a [attr.href]&#x3D;&quot;link2Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink2&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment7&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text21&quot;&gt;
+                      Preferance
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a [attr.href]&#x3D;&quot;link3Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink3&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment1&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text15&quot;&gt;
+                      Settings
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a [attr.href]&#x3D;&quot;link4Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink4&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment2&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text16&quot;&gt;Logout&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a [attr.href]&#x3D;&quot;link5Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink5&gt;
+                  &lt;div class&#x3D;&quot;profile-header-component1-fragment3&quot;&gt;
+                    &lt;span class&#x3D;&quot;profile-header-component1-text17&quot;&gt;
+                      Contact Us
+                    &lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link5 ? link5 : defaultLink5&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+          &lt;/nav&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;profile-header-component1-buttons4&quot;&gt;
+          &lt;button&gt;Login&lt;/button&gt;
+          &lt;button&gt;Register&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+  &lt;/header&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>profile-header-component1.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.profile-header-component1-container1 {
+  gap: var(--dl-space-space-threeunits);
+  width: 100%;
+  height: 400px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.profile-header-component1-container2 {
+  width: 100%;
+  display: flex;
+  position: relative;
+  padding-left: 156px;
+  padding-right: 156px;
+  justify-content: center;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.profile-header-component1-navbar-interactive1 {
+  width: 1440px;
+  height: 80px;
+  display: flex;
+  padding: 0px;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-image11 {
+  height: 3rem;
+}
+ 
+.profile-header-component1-desktop-menu1 {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-links1 {
+  gap: var(--dl-space-space-twounits);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+ 
+.profile-header-component1-link11 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link21 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link31 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link41 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-buttons1 {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+ 
+.profile-header-component1-burger-menu1 {
+  display: none;
+}
+ 
+.profile-header-component1-icon10 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.profile-header-component1-mobile-menu1 {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  padding: var(--dl-space-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.profile-header-component1-nav1 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-header-component1-top1 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-logo1 {
+  height: 3rem;
+}
+ 
+.profile-header-component1-close-menu1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.profile-header-component1-icon12 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.profile-header-component1-links2 {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-header-component1-link12 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link22 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link32 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link42 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-link51 {
+  text-decoration: none;
+}
+ 
+.profile-header-component1-buttons2 {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+  margin-top: var(--dl-space-space-twounits);
+  align-items: center;
+  flex-direction: row;
+}
+ 
+.profile-header-component1-icon-group {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+}
+ 
+.profile-header-component1-container3 {
+  flex: 0 0 auto;
+  width: 68px;
+  height: 40px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+}
+ 
+.profile-header-component1-container4 {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  position: relative;
+  border-radius: var(--dl-radius-radius-round);
+  background-color: #ACACAD;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+}
+ 
+.profile-header-component1-text12 {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: auto;
+  bottom: 0px;
+  height: 40pxpx;
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  padding-top: 12px;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+ 
+.profile-header-component1-icon20 {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+ 
+.profile-header-component1-container5 {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.profile-header-component1-navbar-interactive2 {
+  width: 100%;
+  display: flex;
+  max-width: var(--dl-size-size-maxwidth);
+  align-items: center;
+  padding-top: var(--dl-space-space-twounits);
+  padding-left: var(--dl-space-space-threeunits);
+  padding-right: var(--dl-space-space-threeunits);
+  padding-bottom: var(--dl-space-space-twounits);
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-image12 {
+  height: 3rem;
+}
+ 
+.profile-header-component1-desktop-menu2 {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-links3 {
+  gap: var(--dl-space-space-twounits);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-left: var(--dl-space-space-twounits);
+  flex-direction: row;
+  justify-content: flex-start;
+}
+ 
+.profile-header-component1-buttons3 {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+  align-items: center;
+  margin-left: var(--dl-space-space-twounits);
+}
+ 
+.profile-header-component1-action12 {
+  display: flex;
+  flex-direction: row;
+}
+ 
+.profile-header-component1-action22 {
+  display: flex;
+  flex-direction: row;
+}
+ 
+.profile-header-component1-burger-menu2 {
+  display: none;
+}
+ 
+.profile-header-component1-icon22 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.profile-header-component1-mobile-menu2 {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  padding: var(--dl-space-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.profile-header-component1-nav2 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-header-component1-top2 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.profile-header-component1-logo2 {
+  height: 3rem;
+}
+ 
+.profile-header-component1-close-menu2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.profile-header-component1-icon24 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.profile-header-component1-links4 {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-header-component1-buttons4 {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+  margin-top: var(--dl-space-space-twounits);
+  align-items: center;
+}
+ 
+.profile-header-component1-fragment1 {
+  display: contents;
+}
+ 
+.profile-header-component1-text15 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment2 {
+  display: contents;
+}
+ 
+.profile-header-component1-text16 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment3 {
+  display: contents;
+}
+ 
+.profile-header-component1-text17 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment4 {
+  display: contents;
+}
+ 
+.profile-header-component1-text18 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment5 {
+  display: contents;
+}
+ 
+.profile-header-component1-text19 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment6 {
+  display: contents;
+}
+ 
+.profile-header-component1-text20 {
+  color: rgb(255, 255, 255);
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment7 {
+  display: contents;
+}
+ 
+.profile-header-component1-text21 {
+  display: inline-block;
+}
+ 
+.profile-header-component1-fragment8 {
+  display: contents;
+}
+ 
+.profile-header-component1-text22 {
+  display: inline-block;
+}
+ 
+@media(max-width: 767px) {
+  .profile-header-component1-navbar-interactive1 {
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+  }
+  .profile-header-component1-desktop-menu1 {
+    display: none;
+  }
+  .profile-header-component1-burger-menu1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .profile-header-component1-navbar-interactive2 {
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+  }
+  .profile-header-component1-desktop-menu2 {
+    display: none;
+  }
+  .profile-header-component1-burger-menu2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .profile-header-component1-navbar-interactive1 {
+    padding: var(--dl-space-space-unit);
+    padding-right: 16px;
+  }
+  .profile-header-component1-mobile-menu1 {
+    padding: var(--dl-space-space-unit);
+  }
+  .profile-header-component1-navbar-interactive2 {
+    padding: var(--dl-space-space-unit);
+  }
+  .profile-header-component1-mobile-menu2 {
+    padding: var(--dl-space-space-unit);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="profile-header-component1-container1">  <header class="profile-header-component1-container2">    <header      data-thq="thq-navbar"      class="profile-header-component1-navbar-interactive1"    >      <img        [attr.alt]="logoAlt"        [attr.src]="logoSrc"        class="profile-header-component1-image11"      />      <div        data-thq="thq-navbar-nav"        class="profile-header-component1-desktop-menu1"      >        <nav class="profile-header-component1-links1">          <a            [attr.href]="link1Url"            class="profile-header-component1-link11 thq-link thq-body-small"          >            <ng-container>              <ng-template #defaultLink1>                <div><span>Profile</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link1 ? link1 : defaultLink1"              ></ng-container>            </ng-container>          </a>          <a            [attr.href]="link2Url"            class="profile-header-component1-link21 thq-link thq-body-small"          >            <ng-container>              <ng-template #defaultLink2>                <div><span>Preferance</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link2 ? link2 : defaultLink2"              ></ng-container>            </ng-container>          </a>          <a            [attr.href]="link3Url"            target="_blank"            rel="noreferrer noopener"            class="profile-header-component1-link31 thq-link thq-body-small"          >            <ng-container>              <ng-template #defaultLink3>                <div><span>Settings</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link3 ? link3 : defaultLink3"              ></ng-container>            </ng-container>          </a>          <a            [attr.href]="link4Url"            target="_blank"            rel="noreferrer noopener"            class="profile-header-component1-link41 thq-link thq-body-small"          >            <ng-container>              <ng-template #defaultLink4>                <div><span>Logout</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link4 ? link4 : defaultLink4"              ></ng-container>            </ng-container>          </a>        </nav>        <div class="profile-header-component1-buttons1"></div>      </div>      <div        data-thq="thq-burger-menu"        class="profile-header-component1-burger-menu1"      >        <svg viewBox="0 0 1024 1024" class="profile-header-component1-icon10">          <path            d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"          ></path>        </svg>      </div>      <div        data-thq="thq-mobile-menu"        class="profile-header-component1-mobile-menu1"      >        <div class="profile-header-component1-nav1">          <div class="profile-header-component1-top1">            <img              [attr.alt]="logoAlt"              [attr.src]="logoSrc"              class="profile-header-component1-logo1"            />            <div              data-thq="thq-close-menu"              class="profile-header-component1-close-menu1"            >              <svg                viewBox="0 0 1024 1024"                class="profile-header-component1-icon12"              >                <path                  d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"                ></path>              </svg>            </div>          </div>          <nav class="profile-header-component1-links2">            <a              [attr.href]="link1Url"              class="profile-header-component1-link12 thq-link thq-body-small"            >              <ng-container>                <ng-template #defaultLink1>                  <div><span>Profile</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link1 ? link1 : defaultLink1"                ></ng-container>              </ng-container>            </a>            <a              [attr.href]="link2Url"              class="profile-header-component1-link22 thq-link thq-body-small"            >              <ng-container>                <ng-template #defaultLink2>                  <div><span>Preferance</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link2 ? link2 : defaultLink2"                ></ng-container>              </ng-container>            </a>            <a              [attr.href]="link3Url"              class="profile-header-component1-link32 thq-link thq-body-small"            >              <ng-container>                <ng-template #defaultLink3>                  <div><span>Settings</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link3 ? link3 : defaultLink3"                ></ng-container>              </ng-container>            </a>            <a              [attr.href]="link4Url"              class="profile-header-component1-link42 thq-link thq-body-small"            >              <ng-container>                <ng-template #defaultLink4>                  <div><span>Logout</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link4 ? link4 : defaultLink4"                ></ng-container>              </ng-container>            </a>            <a              [attr.href]="link5Url"              class="profile-header-component1-link51 thq-link thq-body-small"            >              <ng-container>                <ng-template #defaultLink5>                  <div><span>Contact Us</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link5 ? link5 : defaultLink5"                ></ng-container>              </ng-container>            </a>          </nav>          <div class="profile-header-component1-buttons2">            <button class="thq-button-filled">              <span>                <ng-container>                  <ng-template #defaultAction1>                    <div><span>Login</span></div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="action1 ? action1 : defaultAction1"                  ></ng-container>                </ng-container>              </span>            </button>            <button class="thq-button-outline">              <span>                <ng-container>                  <ng-template #defaultAction2>                    <div><span>Sign Up</span></div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="action2 ? action2 : defaultAction2"                  ></ng-container>                </ng-container>              </span>            </button>          </div>        </div>        <div class="profile-header-component1-icon-group">          <svg viewBox="0 0 950.8571428571428 1024" class="thq-icon-x-small">            <path              d="M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z"            ></path></svg          ><svg viewBox="0 0 877.7142857142857 1024" class="thq-icon-x-small">            <path              d="M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z"            ></path></svg          ><svg viewBox="0 0 602.2582857142856 1024" class="thq-icon-x-small">            <path              d="M548 6.857v150.857h-89.714c-70.286 0-83.429 33.714-83.429 82.286v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571c0-144.571 88.571-223.429 217.714-223.429 61.714 0 114.857 4.571 130.286 6.857z"            ></path>          </svg>        </div>      </div>      <div class="profile-header-component1-container3">        <div class="profile-header-component1-container4">          <span class="profile-header-component1-text12">            <ng-container>              <ng-template #defaultText41>                <div class="profile-header-component1-fragment6">                  <span class="profile-header-component1-text20">KM</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="text41 ? text41 : defaultText41"              ></ng-container>            </ng-container>          </span>        </div>        <svg          width="24"          height="24"          viewBox="0 0 24 24"          class="profile-header-component1-icon20"        >          <path            d="m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z"            fill="currentColor"          ></path>        </svg>      </div>    </header>  </header>  <header class="profile-header-component1-container5">    <header      data-thq="thq-navbar"      class="profile-header-component1-navbar-interactive2"    >      <img        [attr.alt]="logoAlt"        [attr.src]="logoSrc"        class="profile-header-component1-image12"      />      <div        data-thq="thq-navbar-nav"        class="profile-header-component1-desktop-menu2"      >        <nav class="profile-header-component1-links3">          <a [attr.href]="link1Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink1>                <div><span>Profile</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link1 ? link1 : defaultLink1"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link2Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink2>                <div><span>Preferance</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link2 ? link2 : defaultLink2"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link3Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink3>                <div><span>Settings</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link3 ? link3 : defaultLink3"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link4Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink4>                <div><span>Logout</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link4 ? link4 : defaultLink4"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link5Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink5>                <div><span>Contact Us</span></div>              </ng-template>              <ng-container                *ngTemplateOutlet="link5 ? link5 : defaultLink5"              ></ng-container>            </ng-container>          </a>        </nav>        <div class="profile-header-component1-buttons3">          <button            class="profile-header-component1-action12 thq-button-animated thq-button-filled"          >            <span>              <ng-container>                <ng-template #defaultAction1>                  <div class="profile-header-component1-fragment5">                    <span class="profile-header-component1-text19">Login</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="action1 ? action1 : defaultAction1"                ></ng-container>              </ng-container>            </span>          </button>          <button            class="profile-header-component1-action22 thq-button-outline thq-button-animated"          >            <span>              <ng-container>                <ng-template #defaultAction2>                  <div class="profile-header-component1-fragment4">                    <span class="profile-header-component1-text18">                      Sign Up                    </span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="action2 ? action2 : defaultAction2"                ></ng-container>              </ng-container>            </span>          </button>        </div>      </div>      <div        data-thq="thq-burger-menu"        class="profile-header-component1-burger-menu2"      >        <svg viewBox="0 0 1024 1024" class="profile-header-component1-icon22">          <path            d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"          ></path>        </svg>      </div>      <div        data-thq="thq-mobile-menu"        class="profile-header-component1-mobile-menu2"      >        <div class="profile-header-component1-nav2">          <div class="profile-header-component1-top2">            <img              [attr.alt]="logoAlt"              [attr.src]="logoSrc"              class="profile-header-component1-logo2"            />            <div              data-thq="thq-close-menu"              class="profile-header-component1-close-menu2"            >              <svg                viewBox="0 0 1024 1024"                class="profile-header-component1-icon24"              >                <path                  d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"                ></path>              </svg>            </div>          </div>          <nav class="profile-header-component1-links4">            <a [attr.href]="link1Url" class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink1>                  <div class="profile-header-component1-fragment8">                    <span class="profile-header-component1-text22">                      Profile                    </span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link1 ? link1 : defaultLink1"                ></ng-container>              </ng-container>            </a>            <a [attr.href]="link2Url" class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink2>                  <div class="profile-header-component1-fragment7">                    <span class="profile-header-component1-text21">                      Preferance                    </span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link2 ? link2 : defaultLink2"                ></ng-container>              </ng-container>            </a>            <a [attr.href]="link3Url" class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink3>                  <div class="profile-header-component1-fragment1">                    <span class="profile-header-component1-text15">                      Settings                    </span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link3 ? link3 : defaultLink3"                ></ng-container>              </ng-container>            </a>            <a [attr.href]="link4Url" class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink4>                  <div class="profile-header-component1-fragment2">                    <span class="profile-header-component1-text16">Logout</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link4 ? link4 : defaultLink4"                ></ng-container>              </ng-container>            </a>            <a [attr.href]="link5Url" class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink5>                  <div class="profile-header-component1-fragment3">                    <span class="profile-header-component1-text17">                      Contact Us                    </span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link5 ? link5 : defaultLink5"                ></ng-container>              </ng-container>            </a>          </nav>        </div>        <div class="profile-header-component1-buttons4">          <button>Login</button>          <button>Register</button>        </div>      </div>    </header>  </header></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ProfileHeaderComponent1'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileHeaderComponent1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

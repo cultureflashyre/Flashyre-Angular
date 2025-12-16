@@ -1,0 +1,854 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ProfileEducationPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/profile-education-page/profile-education-page.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>profile-education-page</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>profile-education-page.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>profile-education-page.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/pages/profile-education-page/profile-education-page.component.ts:9</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;
+
+@Component({
+  selector: &#x27;profile-education-page&#x27;,
+  templateUrl: &#x27;profile-education-page.component.html&#x27;,
+  styleUrls: [&#x27;profile-education-page.component.css&#x27;],
+})
+export class ProfileEducationPage {
+  constructor(private title: Title, private meta: Meta) {
+    this.title.setTitle(&#x27;Profile-Education-Page - Flashyre&#x27;)
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Profile-Education-Page - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ])
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div id&#x3D;&quot;profile-education-page&quot; class&#x3D;&quot;profile-education-page-container&quot;&gt;
+  &lt;div id&#x3D;&quot;main-container&quot; class&#x3D;&quot;profile-education-page-main-container&quot;&gt;
+    &lt;navbar-for-candidate-view1
+      rootClassName&#x3D;&quot;navbar-for-candidate-view1root-class-name1&quot;
+    &gt;
+      &lt;ng-template #text1&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment10&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text10&quot;&gt;Profile&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text2&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment11&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text11&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text3&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment12&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text12&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text4&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment13&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text13&quot;&gt;Kathryn Murphy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text5&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment14&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text14&quot;&gt;
+            ✅ 90% Profile Completion
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text6&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment15&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text15&quot;&gt;
+            View &amp;amp; edit profile
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text11&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment16&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text16&quot;&gt;Preference&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text12&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment17&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text17&quot;&gt;Settings&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text13&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment18&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text18&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text31&gt;
+        &lt;div class&#x3D;&quot;profile-education-page-fragment19&quot;&gt;
+          &lt;span class&#x3D;&quot;profile-education-page-text19&quot;&gt;Logout&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/navbar-for-candidate-view1&gt;
+    &lt;div
+      id&#x3D;&quot;education-container&quot;
+      class&#x3D;&quot;profile-education-page-education-container&quot;
+    &gt;
+      &lt;progress-bar-step3
+        rootClassName&#x3D;&quot;progress-bar-step3root-class-name2&quot;
+      &gt;&lt;/progress-bar-step3&gt;
+      &lt;app-component2&gt;
+        &lt;ng-template #courseText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment20&quot;&gt;
+            &lt;span
+              id&#x3D;&quot;education-course&quot;
+              class&#x3D;&quot;profile-education-page-course-text&quot;
+            &gt;
+              &lt;span&gt;Department / Field of Study&lt;/span&gt;
+              &lt;br /&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #selectText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment21&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text22&quot;&gt;Select&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #selectText1&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment22&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text23&quot;&gt;Select&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #selectText2&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment23&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text24&quot;&gt;Select&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #educationText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment24&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text25&quot;&gt;Education&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #educationText1&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment25&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text26&quot;&gt;
+              Highest Qualification
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #selectYearText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment26&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text27&quot;&gt;Enteri you Skills&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #totalExperienceText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment27&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text28&quot;&gt;Skills&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #universityInstituteText&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment28&quot;&gt;
+            &lt;span
+              id&#x3D;&quot;university-institute-text&quot;
+              class&#x3D;&quot;profile-education-page-university-institute-text&quot;
+            &gt;
+              &lt;span&gt;University/Institute&lt;/span&gt;
+              &lt;br /&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+      &lt;/app-component2&gt;
+      &lt;profile-creation-navigation2
+        rootClassName&#x3D;&quot;profile-creation-navigation2root-class-name5&quot;
+      &gt;
+        &lt;ng-template #text&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment29&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text31&quot;&gt;
+              &lt;span class&#x3D;&quot;profile-education-page-text32&quot;&gt;&amp;lt;- Previous&lt;/span&gt;
+              &lt;br /&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #button&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment30&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text34&quot;&gt;Skip&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+        &lt;ng-template #button1&gt;
+          &lt;div class&#x3D;&quot;profile-education-page-fragment31&quot;&gt;
+            &lt;span class&#x3D;&quot;profile-education-page-text35&quot;&gt;
+              Save &amp;amp; Next -&amp;gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/ng-template&gt;
+      &lt;/profile-creation-navigation2&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>profile-education-page.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.profile-education-page-container {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-education-page-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 1440px;
+  height: 704px;
+  display: flex;
+  align-self: center;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.profile-education-page-fragment10 {
+  display: contents;
+}
+ 
+.profile-education-page-text10 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment11 {
+  display: contents;
+}
+ 
+.profile-education-page-text11 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment12 {
+  display: contents;
+}
+ 
+.profile-education-page-text12 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment13 {
+  display: contents;
+}
+ 
+.profile-education-page-text13 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment14 {
+  display: contents;
+}
+ 
+.profile-education-page-text14 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment15 {
+  display: contents;
+}
+ 
+.profile-education-page-text15 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment16 {
+  display: contents;
+}
+ 
+.profile-education-page-text16 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment17 {
+  display: contents;
+}
+ 
+.profile-education-page-text17 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment18 {
+  display: contents;
+}
+ 
+.profile-education-page-text18 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment19 {
+  display: contents;
+}
+ 
+.profile-education-page-text19 {
+  display: inline-block;
+}
+ 
+.profile-education-page-education-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 720px;
+  height: 600px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.profile-education-page-fragment20 {
+  display: contents;
+}
+ 
+.profile-education-page-course-text {
+  color: rgb(24, 25, 28);
+  width: 100%;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment21 {
+  display: contents;
+}
+ 
+.profile-education-page-text22 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment22 {
+  display: contents;
+}
+ 
+.profile-education-page-text23 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment23 {
+  display: contents;
+}
+ 
+.profile-education-page-text24 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment24 {
+  display: contents;
+}
+ 
+.profile-education-page-text25 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment25 {
+  display: contents;
+}
+ 
+.profile-education-page-text26 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment26 {
+  display: contents;
+}
+ 
+.profile-education-page-text27 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment27 {
+  display: contents;
+}
+ 
+.profile-education-page-text28 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment28 {
+  display: contents;
+}
+ 
+.profile-education-page-university-institute-text {
+  color: rgb(24, 25, 28);
+  width: 324px;
+  height: 24px;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment29 {
+  display: contents;
+}
+ 
+.profile-education-page-text31 {
+  color: #05356c;
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment30 {
+  display: contents;
+}
+ 
+.profile-education-page-text34 {
+  display: inline-block;
+}
+ 
+.profile-education-page-fragment31 {
+  display: contents;
+}
+ 
+.profile-education-page-text35 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .profile-education-page-main-container {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .profile-education-page-text13 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .profile-education-page-text14 {
+    font-size: 10px;
+  }
+  .profile-education-page-text15 {
+    color: rgb(5, 53, 108);
+    font-size: 14px;
+  }
+  .profile-education-page-text16 {
+    font-size: 10px;
+  }
+  .profile-education-page-text17 {
+    font-size: 10px;
+  }
+  .profile-education-page-text18 {
+    font-size: 10px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .profile-education-page-main-container {
+    width: 100%;
+    height: auto;
+  }
+  .profile-education-page-education-container {
+    gap: 16px;
+    width: 100%;
+    height: 904px;
+    position: relative;
+    align-items: center;
+  }
+  .profile-education-page-course-text {
+    width: 100%;
+  }
+  .profile-education-page-university-institute-text {
+    width: 100%;
+  }
+  .profile-education-page-text31 {
+    color: rgb(5, 53, 108);
+  }
+  .profile-education-page-text32 {
+    font-size: 14px;
+  }
+  .profile-education-page-text34 {
+    font-size: 14px;
+  }
+  .profile-education-page-text35 {
+    font-size: 14px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div id="profile-education-page" class="profile-education-page-container">  <div id="main-container" class="profile-education-page-main-container">    <navbar-for-candidate-view1      rootClassName="navbar-for-candidate-view1root-class-name1"    >      <ng-template #text1>        <div class="profile-education-page-fragment10">          <span class="profile-education-page-text10">Profile</span>        </div>      </ng-template>      <ng-template #text2>        <div class="profile-education-page-fragment11">          <span class="profile-education-page-text11">Preference</span>        </div>      </ng-template>      <ng-template #text3>        <div class="profile-education-page-fragment12">          <span class="profile-education-page-text12">Settings</span>        </div>      </ng-template>      <ng-template #text4>        <div class="profile-education-page-fragment13">          <span class="profile-education-page-text13">Kathryn Murphy</span>        </div>      </ng-template>      <ng-template #text5>        <div class="profile-education-page-fragment14">          <span class="profile-education-page-text14">            ✅ 90% Profile Completion          </span>        </div>      </ng-template>      <ng-template #text6>        <div class="profile-education-page-fragment15">          <span class="profile-education-page-text15">            View &amp; edit profile          </span>        </div>      </ng-template>      <ng-template #text11>        <div class="profile-education-page-fragment16">          <span class="profile-education-page-text16">Preference</span>        </div>      </ng-template>      <ng-template #text12>        <div class="profile-education-page-fragment17">          <span class="profile-education-page-text17">Settings</span>        </div>      </ng-template>      <ng-template #text13>        <div class="profile-education-page-fragment18">          <span class="profile-education-page-text18">Logout</span>        </div>      </ng-template>      <ng-template #text31>        <div class="profile-education-page-fragment19">          <span class="profile-education-page-text19">Logout</span>        </div>      </ng-template>    </navbar-for-candidate-view1>    <div      id="education-container"      class="profile-education-page-education-container"    >      <progress-bar-step3        rootClassName="progress-bar-step3root-class-name2"      ></progress-bar-step3>      <app-component2>        <ng-template #courseText>          <div class="profile-education-page-fragment20">            <span              id="education-course"              class="profile-education-page-course-text"            >              <span>Department / Field of Study</span>              <br />            </span>          </div>        </ng-template>        <ng-template #selectText>          <div class="profile-education-page-fragment21">            <span class="profile-education-page-text22">Select</span>          </div>        </ng-template>        <ng-template #selectText1>          <div class="profile-education-page-fragment22">            <span class="profile-education-page-text23">Select</span>          </div>        </ng-template>        <ng-template #selectText2>          <div class="profile-education-page-fragment23">            <span class="profile-education-page-text24">Select</span>          </div>        </ng-template>        <ng-template #educationText>          <div class="profile-education-page-fragment24">            <span class="profile-education-page-text25">Education</span>          </div>        </ng-template>        <ng-template #educationText1>          <div class="profile-education-page-fragment25">            <span class="profile-education-page-text26">              Highest Qualification            </span>          </div>        </ng-template>        <ng-template #selectYearText>          <div class="profile-education-page-fragment26">            <span class="profile-education-page-text27">Enteri you Skills</span>          </div>        </ng-template>        <ng-template #totalExperienceText>          <div class="profile-education-page-fragment27">            <span class="profile-education-page-text28">Skills</span>          </div>        </ng-template>        <ng-template #universityInstituteText>          <div class="profile-education-page-fragment28">            <span              id="university-institute-text"              class="profile-education-page-university-institute-text"            >              <span>University/Institute</span>              <br />            </span>          </div>        </ng-template>      </app-component2>      <profile-creation-navigation2        rootClassName="profile-creation-navigation2root-class-name5"      >        <ng-template #text>          <div class="profile-education-page-fragment29">            <span class="profile-education-page-text31">              <span class="profile-education-page-text32">&lt;- Previous</span>              <br />            </span>          </div>        </ng-template>        <ng-template #button>          <div class="profile-education-page-fragment30">            <span class="profile-education-page-text34">Skip</span>          </div>        </ng-template>        <ng-template #button1>          <div class="profile-education-page-fragment31">            <span class="profile-education-page-text35">              Save &amp; Next -&gt;            </span>          </div>        </ng-template>      </profile-creation-navigation2>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ProfileEducationPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileEducationPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

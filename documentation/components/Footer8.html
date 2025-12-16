@@ -1,0 +1,1823 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  Footer8</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/footer8/footer8.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-footer8</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>footer8.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>footer8.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#column1Title" >column1Title</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#column2Title" >column2Title</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#cookiesLink" >cookiesLink</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#copyright" >copyright</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link1" >link1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link10" >link10</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link2" >link2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link3" >link3</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link4" >link4</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link5" >link5</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link6" >link6</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link7" >link7</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link8" >link8</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link9" >link9</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#privacyLink" >privacyLink</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#termsLink" >termsLink</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#logoAlt" >logoAlt</a>
+                            </li>
+                            <li>
+                                <a href="#logoSrc" >logoSrc</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/footer8/footer8.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoAlt"></a>
+                        <b>logoAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Company Logo&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/footer8/footer8.component.ts:10</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoSrc"></a>
+                        <b>logoSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://presentation-website-assets.teleporthq.io/logos/logo.png&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/footer8/footer8.component.ts:22</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="column1Title"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>column1Title</b></span>
+                        <a href="#column1Title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;column1Title&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/footer8/footer8.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="column2Title"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>column2Title</b></span>
+                        <a href="#column2Title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;column2Title&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/footer8/footer8.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cookiesLink"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>cookiesLink</b></span>
+                        <a href="#cookiesLink"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;cookiesLink&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/footer8/footer8.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="copyright"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>copyright</b></span>
+                        <a href="#copyright"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;copyright&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/footer8/footer8.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link1</b></span>
+                        <a href="#link1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/footer8/footer8.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link10"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link10</b></span>
+                        <a href="#link10"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link10&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/footer8/footer8.component.ts:12</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link2</b></span>
+                        <a href="#link2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/footer8/footer8.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link3"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link3</b></span>
+                        <a href="#link3"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link3&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/footer8/footer8.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link4"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link4</b></span>
+                        <a href="#link4"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link4&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/footer8/footer8.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link5"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link5</b></span>
+                        <a href="#link5"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link5&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/footer8/footer8.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link6"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link6</b></span>
+                        <a href="#link6"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link6&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/footer8/footer8.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link7"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link7</b></span>
+                        <a href="#link7"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link7&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/footer8/footer8.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link8"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link8</b></span>
+                        <a href="#link8"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link8&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/footer8/footer8.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link9"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link9</b></span>
+                        <a href="#link9"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link9&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/footer8/footer8.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="privacyLink"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>privacyLink</b></span>
+                        <a href="#privacyLink"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;privacyLink&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/footer8/footer8.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="termsLink"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>termsLink</b></span>
+                        <a href="#termsLink"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;termsLink&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/footer8/footer8.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;app-footer8&#x27;,
+  templateUrl: &#x27;footer8.component.html&#x27;,
+  styleUrls: [&#x27;footer8.component.css&#x27;],
+})
+export class Footer8 {
+  @Input()
+  logoAlt: string &#x3D; &#x27;Company Logo&#x27;
+  @ContentChild(&#x27;link10&#x27;)
+  link10: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;column2Title&#x27;)
+  column2Title: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link7&#x27;)
+  link7: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link6&#x27;)
+  link6: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link9&#x27;)
+  link9: TemplateRef&lt;any&gt;
+  @Input()
+  logoSrc: string &#x3D;
+    &#x27;https://presentation-website-assets.teleporthq.io/logos/logo.png&#x27;
+  @ContentChild(&#x27;privacyLink&#x27;)
+  privacyLink: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link2&#x27;)
+  link2: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link4&#x27;)
+  link4: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;termsLink&#x27;)
+  termsLink: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link3&#x27;)
+  link3: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link5&#x27;)
+  link5: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;column1Title&#x27;)
+  column1Title: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;copyright&#x27;)
+  copyright: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;cookiesLink&#x27;)
+  cookiesLink: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link1&#x27;)
+  link1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link8&#x27;)
+  link8: TemplateRef&lt;any&gt;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;footer class&#x3D;&quot;footer8-container thq-section-padding&quot;&gt;
+  &lt;div class&#x3D;&quot;footer8-max-width thq-section-max-width&quot;&gt;
+    &lt;div class&#x3D;&quot;footer8-content&quot;&gt;
+      &lt;div class&#x3D;&quot;footer8-newsletter&quot;&gt;
+        &lt;img [attr.alt]&#x3D;&quot;logoAlt&quot; [attr.src]&#x3D;&quot;logoSrc&quot; class&#x3D;&quot;footer8-image1&quot; /&gt;
+        &lt;span class&#x3D;&quot;footer8-content-title1 thq-body-small&quot;&gt;Address&lt;/span&gt;
+        &lt;span class&#x3D;&quot;footer8-content1 thq-body-small&quot;&gt;
+          &lt;span&gt;Sample Street, no. 7, Sample City, Sample Country&lt;/span&gt;
+          &lt;br /&gt;
+        &lt;/span&gt;
+        &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+          &lt;span class&#x3D;&quot;footer8-text12&quot;&gt;Contact&lt;/span&gt;
+          &lt;br class&#x3D;&quot;footer8-text13&quot; /&gt;
+          &lt;span&gt;+&lt;/span&gt;
+          &lt;span class&#x3D;&quot;footer8-text15&quot;&gt;1234567890&lt;/span&gt;
+          &lt;br /&gt;
+          &lt;span class&#x3D;&quot;footer8-text17&quot;&gt;info@contact.support&lt;/span&gt;
+          &lt;br /&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;footer8-social-links&quot;&gt;
+          &lt;svg viewBox&#x3D;&quot;0 0 877.7142857142857 1024&quot; class&#x3D;&quot;thq-icon-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M713.143 73.143c90.857 0 164.571 73.714 164.571 164.571v548.571c0 90.857-73.714 164.571-164.571 164.571h-107.429v-340h113.714l17.143-132.571h-130.857v-84.571c0-38.286 10.286-64 65.714-64l69.714-0.571v-118.286c-12-1.714-53.714-5.143-101.714-5.143-101.143 0-170.857 61.714-170.857 174.857v97.714h-114.286v132.571h114.286v340h-304c-90.857 0-164.571-73.714-164.571-164.571v-548.571c0-90.857 73.714-164.571 164.571-164.571h548.571z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 877.7142857142857 1024&quot; class&#x3D;&quot;thq-icon-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 950.8571428571428 1024&quot; class&#x3D;&quot;thq-icon-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 877.7142857142857 1024&quot; class&#x3D;&quot;thq-icon-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M135.429 808h132v-396.571h-132v396.571zM276 289.143c-0.571-38.857-28.571-68.571-73.714-68.571s-74.857 29.714-74.857 68.571c0 37.714 28.571 68.571 73.143 68.571h0.571c46.286 0 74.857-30.857 74.857-68.571zM610.286 808h132v-227.429c0-121.714-65.143-178.286-152-178.286-70.857 0-102.286 39.429-119.429 66.857h1.143v-57.714h-132s1.714 37.143 0 396.571v0h132v-221.714c0-11.429 0.571-23.429 4-32 9.714-23.429 31.429-48 68-48 47.429 0 66.286 36 66.286 89.714v212zM877.714 237.714v548.571c0 90.857-73.714 164.571-164.571 164.571h-548.571c-90.857 0-164.571-73.714-164.571-164.571v-548.571c0-90.857 73.714-164.571 164.571-164.571h548.571c90.857 0 164.571 73.714 164.571 164.571z&quot;
+            &gt;&lt;/path&gt;&lt;/svg
+          &gt;&lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;thq-icon-small&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M406.286 644.571l276.571-142.857-276.571-144.571v287.429zM512 152c215.429 0 358.286 10.286 358.286 10.286 20 2.286 64 2.286 102.857 43.429 0 0 31.429 30.857 40.571 101.714 10.857 82.857 10.286 165.714 10.286 165.714v77.714s0.571 82.857-10.286 165.714c-9.143 70.286-40.571 101.714-40.571 101.714-38.857 40.571-82.857 40.571-102.857 42.857 0 0-142.857 10.857-358.286 10.857v0c-266.286-2.286-348-10.286-348-10.286-22.857-4-74.286-2.857-113.143-43.429 0 0-31.429-31.429-40.571-101.714-10.857-82.857-10.286-165.714-10.286-165.714v-77.714s-0.571-82.857 10.286-165.714c9.143-70.857 40.571-101.714 40.571-101.714 38.857-41.143 82.857-41.143 102.857-43.429 0 0 142.857-10.286 358.286-10.286v0z&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;footer8-links&quot;&gt;
+        &lt;div class&#x3D;&quot;footer8-column1&quot;&gt;
+          &lt;strong class&#x3D;&quot;thq-body-large footer8-column1-title&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultColumn1Title&gt;
+                &lt;div class&#x3D;&quot;footer8-fragment21&quot;&gt;
+                  &lt;span class&#x3D;&quot;footer8-text30&quot;&gt;Quick Links&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;column1Title ? column1Title : defaultColumn1Title&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/strong&gt;
+          &lt;div class&#x3D;&quot;footer8-footer-links1&quot;&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink1&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment24&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text33&quot;&gt;About Us&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink2&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment16&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text25&quot;&gt;Contact Us&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink3&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment19&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text28&quot;&gt;FAQs&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink4&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment17&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text26&quot;&gt;Terms of Use&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink5&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment20&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text29&quot;&gt;Privacy Policy&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link5 ? link5 : defaultLink5&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;footer8-column2&quot;&gt;
+          &lt;strong class&#x3D;&quot;thq-body-large footer8-column2-title&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultColumn2Title&gt;
+                &lt;div class&#x3D;&quot;footer8-fragment11&quot;&gt;
+                  &lt;span class&#x3D;&quot;footer8-text20&quot;&gt;Connect With Us&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;column2Title ? column2Title : defaultColumn2Title&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/strong&gt;
+          &lt;div class&#x3D;&quot;footer8-footer-links2&quot;&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink6&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment13&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text22&quot;&gt;Cookies Policy&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link6 ? link6 : defaultLink6&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink7&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment12&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text21&quot;&gt;Facebook&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link7 ? link7 : defaultLink7&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink8&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment25&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text34&quot;&gt;Twitter&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link8 ? link8 : defaultLink8&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink9&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment14&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text23&quot;&gt;Instagram&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link9 ? link9 : defaultLink9&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+            &lt;a
+              href&#x3D;&quot;https://example.com&quot;
+              target&#x3D;&quot;_blank&quot;
+              rel&#x3D;&quot;noreferrer noopener&quot;
+              class&#x3D;&quot;thq-body-small&quot;
+            &gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink10&gt;
+                  &lt;div class&#x3D;&quot;footer8-fragment10&quot;&gt;
+                    &lt;span class&#x3D;&quot;footer8-text19&quot;&gt;LinkedIn&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link10 ? link10 : defaultLink10&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;footer8-credits&quot;&gt;
+      &lt;div class&#x3D;&quot;footer8-row&quot;&gt;
+        &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultCopyright&gt;
+              &lt;div class&#x3D;&quot;footer8-fragment22&quot;&gt;
+                &lt;span class&#x3D;&quot;footer8-text31&quot;&gt;
+                  © 2022 Your Company. All Rights Reserved.
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;copyright ? copyright : defaultCopyright&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+        &lt;div class&#x3D;&quot;footer8-footer-links3&quot;&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultPrivacyLink&gt;
+                &lt;div class&#x3D;&quot;footer8-fragment15&quot;&gt;
+                  &lt;span class&#x3D;&quot;footer8-text24&quot;&gt;/privacy&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;privacyLink ? privacyLink : defaultPrivacyLink&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultTermsLink&gt;
+                &lt;div class&#x3D;&quot;footer8-fragment18&quot;&gt;
+                  &lt;span class&#x3D;&quot;footer8-text27&quot;&gt;/terms&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;termsLink ? termsLink : defaultTermsLink&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultCookiesLink&gt;
+                &lt;div class&#x3D;&quot;footer8-fragment23&quot;&gt;
+                  &lt;span class&#x3D;&quot;footer8-text32&quot;&gt;/cookies&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;cookiesLink ? cookiesLink : defaultCookiesLink&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>footer8.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.footer8-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.footer8-max-width {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.footer8-content {
+  gap: var(--dl-space-space-fourunits);
+  width: 100%;
+  display: flex;
+  padding: var(--dl-space-space-twounits);
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: var(--dl-radius-radius-radius4);
+}
+ 
+.footer8-newsletter {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.footer8-image1 {
+  height: 2rem;
+}
+ 
+.footer8-content-title1 {
+  font-style: normal;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+ 
+.footer8-content1 {
+  text-transform: capitalize;
+}
+ 
+.footer8-text12 {
+  font-style: normal;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+ 
+.footer8-text13 {
+  text-transform: capitalize;
+}
+ 
+.footer8-text15 {
+  text-decoration: underline;
+}
+ 
+.footer8-text17 {
+  text-decoration: underline;
+}
+ 
+.footer8-social-links {
+  gap: var(--dl-space-space-unit);
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+}
+ 
+.footer8-links {
+  gap: var(--dl-space-space-twounits);
+  width: 100%;
+  display: flex;
+  flex-grow: 1;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+ 
+.footer8-column1 {
+  gap: var(--dl-space-space-unit);
+  width: auto;
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  max-width: 300px;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.footer8-footer-links1 {
+  gap: var(--dl-space-space-halfunit);
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.footer8-column2 {
+  gap: var(--dl-space-space-unit);
+  width: auto;
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  max-width: 300px;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.footer8-footer-links2 {
+  gap: var(--dl-space-space-halfunit);
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.footer8-credits {
+  gap: var(--dl-space-space-twounits);
+  width: 100%;
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.footer8-row {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+ 
+.footer8-footer-links3 {
+  gap: 24px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.footer8-fragment10 {
+  display: contents;
+}
+ 
+.footer8-text19 {
+  display: inline-block;
+}
+ 
+.footer8-fragment11 {
+  display: contents;
+}
+ 
+.footer8-text20 {
+  display: inline-block;
+}
+ 
+.footer8-fragment12 {
+  display: contents;
+}
+ 
+.footer8-text21 {
+  display: inline-block;
+}
+ 
+.footer8-fragment13 {
+  display: contents;
+}
+ 
+.footer8-text22 {
+  display: inline-block;
+}
+ 
+.footer8-fragment14 {
+  display: contents;
+}
+ 
+.footer8-text23 {
+  display: inline-block;
+}
+ 
+.footer8-fragment15 {
+  display: contents;
+}
+ 
+.footer8-text24 {
+  display: inline-block;
+}
+ 
+.footer8-fragment16 {
+  display: contents;
+}
+ 
+.footer8-text25 {
+  display: inline-block;
+}
+ 
+.footer8-fragment17 {
+  display: contents;
+}
+ 
+.footer8-text26 {
+  display: inline-block;
+}
+ 
+.footer8-fragment18 {
+  display: contents;
+}
+ 
+.footer8-text27 {
+  display: inline-block;
+}
+ 
+.footer8-fragment19 {
+  display: contents;
+}
+ 
+.footer8-text28 {
+  display: inline-block;
+}
+ 
+.footer8-fragment20 {
+  display: contents;
+}
+ 
+.footer8-text29 {
+  display: inline-block;
+}
+ 
+.footer8-fragment21 {
+  display: contents;
+}
+ 
+.footer8-text30 {
+  display: inline-block;
+}
+ 
+.footer8-fragment22 {
+  display: contents;
+}
+ 
+.footer8-text31 {
+  display: inline-block;
+}
+ 
+.footer8-fragment23 {
+  display: contents;
+}
+ 
+.footer8-text32 {
+  display: inline-block;
+}
+ 
+.footer8-fragment24 {
+  display: contents;
+}
+ 
+.footer8-text33 {
+  display: inline-block;
+}
+ 
+.footer8-fragment25 {
+  display: contents;
+}
+ 
+.footer8-text34 {
+  display: inline-block;
+}
+ 
+@media(max-width: 991px) {
+  .footer8-newsletter {
+    width: 300px;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .footer8-content {
+    flex-direction: column;
+  }
+  .footer8-newsletter {
+    width: 100%;
+  }
+  .footer8-social-links {
+    align-self: flex-start;
+  }
+  .footer8-links {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .footer8-column1 {
+    align-items: center;
+  }
+  .footer8-column1-title {
+    text-align: center;
+  }
+  .footer8-footer-links1 {
+    align-self: center;
+  }
+  .footer8-column2 {
+    align-items: center;
+  }
+  .footer8-column2-title {
+    text-align: center;
+  }
+  .footer8-footer-links2 {
+    align-self: center;
+  }
+  .footer8-row {
+    gap: 0;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .footer8-social-links {
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-links {
+    flex-direction: column;
+  }
+  .footer8-column1 {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-footer-links1 {
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-column2 {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-footer-links2 {
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-credits {
+    gap: 0;
+  }
+  .footer8-row {
+    gap: var(--dl-space-space-oneandhalfunits);
+    align-items: center;
+    justify-content: center;
+  }
+  .footer8-footer-links3 {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><footer class="footer8-container thq-section-padding">  <div class="footer8-max-width thq-section-max-width">    <div class="footer8-content">      <div class="footer8-newsletter">        <img [attr.alt]="logoAlt" [attr.src]="logoSrc" class="footer8-image1" />        <span class="footer8-content-title1 thq-body-small">Address</span>        <span class="footer8-content1 thq-body-small">          <span>Sample Street, no. 7, Sample City, Sample Country</span>          <br />        </span>        <span class="thq-body-small">          <span class="footer8-text12">Contact</span>          <br class="footer8-text13" />          <span>+</span>          <span class="footer8-text15">1234567890</span>          <br />          <span class="footer8-text17">info@contact.support</span>          <br />        </span>        <div class="footer8-social-links">          <svg viewBox="0 0 877.7142857142857 1024" class="thq-icon-small">            <path              d="M713.143 73.143c90.857 0 164.571 73.714 164.571 164.571v548.571c0 90.857-73.714 164.571-164.571 164.571h-107.429v-340h113.714l17.143-132.571h-130.857v-84.571c0-38.286 10.286-64 65.714-64l69.714-0.571v-118.286c-12-1.714-53.714-5.143-101.714-5.143-101.143 0-170.857 61.714-170.857 174.857v97.714h-114.286v132.571h114.286v340h-304c-90.857 0-164.571-73.714-164.571-164.571v-548.571c0-90.857 73.714-164.571 164.571-164.571h548.571z"            ></path></svg          ><svg viewBox="0 0 877.7142857142857 1024" class="thq-icon-small">            <path              d="M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z"            ></path></svg          ><svg viewBox="0 0 950.8571428571428 1024" class="thq-icon-small">            <path              d="M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z"            ></path></svg          ><svg viewBox="0 0 877.7142857142857 1024" class="thq-icon-small">            <path              d="M135.429 808h132v-396.571h-132v396.571zM276 289.143c-0.571-38.857-28.571-68.571-73.714-68.571s-74.857 29.714-74.857 68.571c0 37.714 28.571 68.571 73.143 68.571h0.571c46.286 0 74.857-30.857 74.857-68.571zM610.286 808h132v-227.429c0-121.714-65.143-178.286-152-178.286-70.857 0-102.286 39.429-119.429 66.857h1.143v-57.714h-132s1.714 37.143 0 396.571v0h132v-221.714c0-11.429 0.571-23.429 4-32 9.714-23.429 31.429-48 68-48 47.429 0 66.286 36 66.286 89.714v212zM877.714 237.714v548.571c0 90.857-73.714 164.571-164.571 164.571h-548.571c-90.857 0-164.571-73.714-164.571-164.571v-548.571c0-90.857 73.714-164.571 164.571-164.571h548.571c90.857 0 164.571 73.714 164.571 164.571z"            ></path></svg          ><svg viewBox="0 0 1024 1024" class="thq-icon-small">            <path              d="M406.286 644.571l276.571-142.857-276.571-144.571v287.429zM512 152c215.429 0 358.286 10.286 358.286 10.286 20 2.286 64 2.286 102.857 43.429 0 0 31.429 30.857 40.571 101.714 10.857 82.857 10.286 165.714 10.286 165.714v77.714s0.571 82.857-10.286 165.714c-9.143 70.286-40.571 101.714-40.571 101.714-38.857 40.571-82.857 40.571-102.857 42.857 0 0-142.857 10.857-358.286 10.857v0c-266.286-2.286-348-10.286-348-10.286-22.857-4-74.286-2.857-113.143-43.429 0 0-31.429-31.429-40.571-101.714-10.857-82.857-10.286-165.714-10.286-165.714v-77.714s-0.571-82.857 10.286-165.714c9.143-70.857 40.571-101.714 40.571-101.714 38.857-41.143 82.857-41.143 102.857-43.429 0 0 142.857-10.286 358.286-10.286v0z"            ></path>          </svg>        </div>      </div>      <div class="footer8-links">        <div class="footer8-column1">          <strong class="thq-body-large footer8-column1-title">            <ng-container>              <ng-template #defaultColumn1Title>                <div class="footer8-fragment21">                  <span class="footer8-text30">Quick Links</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="column1Title ? column1Title : defaultColumn1Title"              ></ng-container>            </ng-container>          </strong>          <div class="footer8-footer-links1">            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink1>                  <div class="footer8-fragment24">                    <span class="footer8-text33">About Us</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link1 ? link1 : defaultLink1"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink2>                  <div class="footer8-fragment16">                    <span class="footer8-text25">Contact Us</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link2 ? link2 : defaultLink2"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink3>                  <div class="footer8-fragment19">                    <span class="footer8-text28">FAQs</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link3 ? link3 : defaultLink3"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink4>                  <div class="footer8-fragment17">                    <span class="footer8-text26">Terms of Use</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link4 ? link4 : defaultLink4"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink5>                  <div class="footer8-fragment20">                    <span class="footer8-text29">Privacy Policy</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link5 ? link5 : defaultLink5"                ></ng-container>              </ng-container>            </a>          </div>        </div>        <div class="footer8-column2">          <strong class="thq-body-large footer8-column2-title">            <ng-container>              <ng-template #defaultColumn2Title>                <div class="footer8-fragment11">                  <span class="footer8-text20">Connect With Us</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="column2Title ? column2Title : defaultColumn2Title"              ></ng-container>            </ng-container>          </strong>          <div class="footer8-footer-links2">            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink6>                  <div class="footer8-fragment13">                    <span class="footer8-text22">Cookies Policy</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link6 ? link6 : defaultLink6"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink7>                  <div class="footer8-fragment12">                    <span class="footer8-text21">Facebook</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link7 ? link7 : defaultLink7"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink8>                  <div class="footer8-fragment25">                    <span class="footer8-text34">Twitter</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link8 ? link8 : defaultLink8"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink9>                  <div class="footer8-fragment14">                    <span class="footer8-text23">Instagram</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link9 ? link9 : defaultLink9"                ></ng-container>              </ng-container>            </a>            <a              href="https://example.com"              target="_blank"              rel="noreferrer noopener"              class="thq-body-small"            >              <ng-container>                <ng-template #defaultLink10>                  <div class="footer8-fragment10">                    <span class="footer8-text19">LinkedIn</span>                  </div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link10 ? link10 : defaultLink10"                ></ng-container>              </ng-container>            </a>          </div>        </div>      </div>    </div>    <div class="footer8-credits">      <div class="footer8-row">        <span class="thq-body-small">          <ng-container>            <ng-template #defaultCopyright>              <div class="footer8-fragment22">                <span class="footer8-text31">                  © 2022 Your Company. All Rights Reserved.                </span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="copyright ? copyright : defaultCopyright"            ></ng-container>          </ng-container>        </span>        <div class="footer8-footer-links3">          <span class="thq-body-small">            <ng-container>              <ng-template #defaultPrivacyLink>                <div class="footer8-fragment15">                  <span class="footer8-text24">/privacy</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="privacyLink ? privacyLink : defaultPrivacyLink"              ></ng-container>            </ng-container>          </span>          <span class="thq-body-small">            <ng-container>              <ng-template #defaultTermsLink>                <div class="footer8-fragment18">                  <span class="footer8-text27">/terms</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="termsLink ? termsLink : defaultTermsLink"              ></ng-container>            </ng-container>          </span>          <span class="thq-body-small">            <ng-container>              <ng-template #defaultCookiesLink>                <div class="footer8-fragment23">                  <span class="footer8-text32">/cookies</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="cookiesLink ? cookiesLink : defaultCookiesLink"              ></ng-container>            </ng-container>          </span>        </div>      </div>    </div>  </div></footer></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'Footer8'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'Footer8.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

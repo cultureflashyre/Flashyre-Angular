@@ -1,0 +1,1800 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  Hero17</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/hero17/hero17.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-hero17</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>hero17.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>hero17.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#action1" >action1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#action2" >action2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#content1" >content1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#heading1" >heading1</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#image10Alt" >image10Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image10Src" >image10Src</a>
+                            </li>
+                            <li>
+                                <a href="#image11Alt" >image11Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image11Src" >image11Src</a>
+                            </li>
+                            <li>
+                                <a href="#image12Alt" >image12Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image12Src" >image12Src</a>
+                            </li>
+                            <li>
+                                <a href="#image1Alt" >image1Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image1Src" >image1Src</a>
+                            </li>
+                            <li>
+                                <a href="#image2Alt" >image2Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image2Src" >image2Src</a>
+                            </li>
+                            <li>
+                                <a href="#image3Alt" >image3Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image3Src" >image3Src</a>
+                            </li>
+                            <li>
+                                <a href="#image4Alt" >image4Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image4Src" >image4Src</a>
+                            </li>
+                            <li>
+                                <a href="#image5Alt" >image5Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image5Src" >image5Src</a>
+                            </li>
+                            <li>
+                                <a href="#image6Alt" >image6Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image6Src" >image6Src</a>
+                            </li>
+                            <li>
+                                <a href="#image7Alt" >image7Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image7Src" >image7Src</a>
+                            </li>
+                            <li>
+                                <a href="#image8Alt" >image8Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image8Src" >image8Src</a>
+                            </li>
+                            <li>
+                                <a href="#image9Alt" >image9Alt</a>
+                            </li>
+                            <li>
+                                <a href="#image9Src" >image9Src</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/components/hero17/hero17.component.ts:76</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image10Alt"></a>
+                        <b>image10Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/hero17/hero17.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image10Src"></a>
+                        <b>image10Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1578004952479-cbd8b148f018?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/hero17/hero17.component.ts:75</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image11Alt"></a>
+                        <b>image11Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/components/hero17/hero17.component.ts:21</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image11Src"></a>
+                        <b>image11Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1658235081562-a7f50e7e05b6?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NHw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/hero17/hero17.component.ts:37</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image12Alt"></a>
+                        <b>image12Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/hero17/hero17.component.ts:35</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image12Src"></a>
+                        <b>image12Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1611122261270-3171e87a5567?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/components/hero17/hero17.component.ts:23</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image1Alt"></a>
+                        <b>image1Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Certificate Portal Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/hero17/hero17.component.ts:43</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image1Src"></a>
+                        <b>image1Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1646210188963-260f159b25a1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/hero17/hero17.component.ts:30</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image2Alt"></a>
+                        <b>image2Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/hero17/hero17.component.ts:45</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image2Src"></a>
+                        <b>image2Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3M3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/components/hero17/hero17.component.ts:63</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image3Alt"></a>
+                        <b>image3Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/components/hero17/hero17.component.ts:61</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image3Src"></a>
+                        <b>image3Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1646007086640-726b66676226?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/components/hero17/hero17.component.ts:70</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image4Alt"></a>
+                        <b>image4Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/components/hero17/hero17.component.ts:49</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image4Src"></a>
+                        <b>image4Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1711045675408-cd2daf82521f?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/components/hero17/hero17.component.ts:13</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image5Alt"></a>
+                        <b>image5Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/components/hero17/hero17.component.ts:68</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image5Src"></a>
+                        <b>image5Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1559815744-62d8c5e96f2c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/hero17/hero17.component.ts:40</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image6Alt"></a>
+                        <b>image6Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/hero17/hero17.component.ts:33</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image6Src"></a>
+                        <b>image6Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1623053071809-80ed5bc65f2e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/hero17/hero17.component.ts:58</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image7Alt"></a>
+                        <b>image7Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/hero17/hero17.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image7Src"></a>
+                        <b>image7Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1695654393711-93565df7dfc6?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NHw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/hero17/hero17.component.ts:18</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image8Alt"></a>
+                        <b>image8Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/components/hero17/hero17.component.ts:66</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image8Src"></a>
+                        <b>image8Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1712571674555-39feb3fa867e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/components/hero17/hero17.component.ts:51</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image9Alt"></a>
+                        <b>image9Alt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Hero Image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/hero17/hero17.component.ts:56</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="image9Src"></a>
+                        <b>image9Src</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://images.unsplash.com/photo-1484259147675-50b8c2f154da?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/hero17/hero17.component.ts:10</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="action1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>action1</b></span>
+                        <a href="#action1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;action1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/hero17/hero17.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="action2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>action2</b></span>
+                        <a href="#action2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;action2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/components/hero17/hero17.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="content1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>content1</b></span>
+                        <a href="#content1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;content1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/hero17/hero17.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="heading1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>heading1</b></span>
+                        <a href="#heading1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;heading1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/components/hero17/hero17.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;app-hero17&#x27;,
+  templateUrl: &#x27;hero17.component.html&#x27;,
+  styleUrls: [&#x27;hero17.component.css&#x27;],
+})
+export class Hero17 {
+  @Input()
+  image9Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1484259147675-50b8c2f154da?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image4Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1711045675408-cd2daf82521f?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image10Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image7Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1695654393711-93565df7dfc6?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NHw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image11Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image12Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1611122261270-3171e87a5567?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;content1&#x27;)
+  content1: TemplateRef&lt;any&gt;
+  @Input()
+  image7Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image1Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1646210188963-260f159b25a1?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image6Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image12Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image11Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1658235081562-a7f50e7e05b6?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NHw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image5Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1559815744-62d8c5e96f2c?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image1Alt: string &#x3D; &#x27;Certificate Portal Image&#x27;
+  @Input()
+  image2Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @ContentChild(&#x27;heading1&#x27;)
+  heading1: TemplateRef&lt;any&gt;
+  @Input()
+  image4Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image8Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1712571674555-39feb3fa867e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Nnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;action1&#x27;)
+  action1: TemplateRef&lt;any&gt;
+  @Input()
+  image9Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image6Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1623053071809-80ed5bc65f2e?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3NXw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image3Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image2Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3M3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @Input()
+  image8Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image5Alt: string &#x3D; &#x27;Hero Image&#x27;
+  @Input()
+  image3Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1646007086640-726b66676226?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3Mnw&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  @ContentChild(&#x27;action2&#x27;)
+  action2: TemplateRef&lt;any&gt;
+  @Input()
+  image10Src: string &#x3D;
+    &#x27;https://images.unsplash.com/photo-1578004952479-cbd8b148f018?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3w5MTMyMXwwfDF8cmFuZG9tfHx8fHx8fHx8MTczNjI0Nzg3N3w&amp;ixlib&#x3D;rb-4.0.3&amp;q&#x3D;80&amp;w&#x3D;1080&#x27;
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;hero17-header78&quot;&gt;
+  &lt;div class&#x3D;&quot;hero17-column thq-section-padding thq-section-max-width&quot;&gt;
+    &lt;div class&#x3D;&quot;hero17-content1&quot;&gt;
+      &lt;h1 class&#x3D;&quot;hero17-text1 thq-heading-1&quot;&gt;
+        &lt;ng-container&gt;
+          &lt;ng-template #defaultHeading1&gt;
+            &lt;div class&#x3D;&quot;hero17-fragment2&quot;&gt;
+              &lt;span class&#x3D;&quot;hero17-text6&quot;&gt;Welcome to Certificate Portal&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-container
+            *ngTemplateOutlet&#x3D;&quot;heading1 ? heading1 : defaultHeading1&quot;
+          &gt;&lt;/ng-container&gt;
+        &lt;/ng-container&gt;
+      &lt;/h1&gt;
+      &lt;p class&#x3D;&quot;hero17-text2 thq-body-large&quot;&gt;
+        &lt;ng-container&gt;
+          &lt;ng-template #defaultContent1&gt;
+            &lt;div class&#x3D;&quot;hero17-fragment1&quot;&gt;
+              &lt;span class&#x3D;&quot;hero17-text5&quot;&gt;
+                Easily store and manage all your certificates in one place. Sign
+                up now to get started!
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-container
+            *ngTemplateOutlet&#x3D;&quot;content1 ? content1 : defaultContent1&quot;
+          &gt;&lt;/ng-container&gt;
+        &lt;/ng-container&gt;
+      &lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;hero17-actions&quot;&gt;
+      &lt;button class&#x3D;&quot;thq-button-filled hero17-button1&quot;&gt;
+        &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultAction1&gt;
+              &lt;div class&#x3D;&quot;hero17-fragment3&quot;&gt;
+                &lt;span class&#x3D;&quot;hero17-text7&quot;&gt;Main action&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;action1 ? action1 : defaultAction1&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/button&gt;
+      &lt;button class&#x3D;&quot;thq-button-outline hero17-button2&quot;&gt;
+        &lt;span class&#x3D;&quot;thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultAction2&gt;
+              &lt;div class&#x3D;&quot;hero17-fragment4&quot;&gt;
+                &lt;span class&#x3D;&quot;hero17-text8&quot;&gt;Secondary action&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;action2 ? action2 : defaultAction2&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class&#x3D;&quot;hero17-content2&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;hero17-row-container1 thq-mask-image-horizontal thq-animated-group-container-horizontal&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;thq-animated-group-horizontal&quot;&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image1Alt&quot;
+          [attr.src]&#x3D;&quot;image1Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image10 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image2Alt&quot;
+          [attr.src]&#x3D;&quot;image2Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image11 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image3Alt&quot;
+          [attr.src]&#x3D;&quot;image3Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image12 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image4Alt&quot;
+          [attr.src]&#x3D;&quot;image4Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image13 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image5Alt&quot;
+          [attr.src]&#x3D;&quot;image5Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image14 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image6Alt&quot;
+          [attr.src]&#x3D;&quot;image6Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image15 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;thq-animated-group-horizontal&quot;&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image1Alt&quot;
+          [attr.src]&#x3D;&quot;image1Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image16 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image2Alt&quot;
+          [attr.src]&#x3D;&quot;image2Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image17 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image3Alt&quot;
+          [attr.src]&#x3D;&quot;image3Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image18 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image4Alt&quot;
+          [attr.src]&#x3D;&quot;image4Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image19 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image5Alt&quot;
+          [attr.src]&#x3D;&quot;image5Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image20 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          alt&#x3D;&quot;Hero Image&quot;
+          src&#x3D;&quot;https://images.unsplash.com/photo-1534312527009-56c7016453e6?ixid&#x3D;M3w5MTMyMXwwfDF8c2VhcmNofDIxfHxhYnN0cmFjdHxlbnwwfHx8fDE3MTA4NzA5MzB8MA&amp;amp;ixlib&#x3D;rb-4.0.3&amp;amp;w&#x3D;1500&quot;
+          class&#x3D;&quot;hero17-placeholder-image21 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div
+      class&#x3D;&quot;hero17-row-container2 thq-mask-image-horizontal thq-animated-group-container-horizontal&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;thq-animated-group-horizontal-reverse&quot;&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image7Alt&quot;
+          [attr.src]&#x3D;&quot;image7Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image22 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image8Alt&quot;
+          [attr.src]&#x3D;&quot;image8Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image23 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image9Alt&quot;
+          [attr.src]&#x3D;&quot;image9Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image24 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image10Alt&quot;
+          [attr.src]&#x3D;&quot;image10Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image25 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image11Alt&quot;
+          [attr.src]&#x3D;&quot;image11Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image26 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image12Alt&quot;
+          [attr.src]&#x3D;&quot;image12Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image27 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;thq-animated-group-horizontal-reverse&quot;&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image7Alt&quot;
+          [attr.src]&#x3D;&quot;image7Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image28 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image8Alt&quot;
+          [attr.src]&#x3D;&quot;image8Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image29 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image9Alt&quot;
+          [attr.src]&#x3D;&quot;image9Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image30 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image10Alt&quot;
+          [attr.src]&#x3D;&quot;image10Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image31 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          [attr.alt]&#x3D;&quot;image11Alt&quot;
+          [attr.src]&#x3D;&quot;image11Src&quot;
+          class&#x3D;&quot;hero17-placeholder-image32 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+        &lt;img
+          alt&#x3D;&quot;Hero Image&quot;
+          src&#x3D;&quot;https://images.unsplash.com/photo-1568214379698-8aeb8c6c6ac8?ixid&#x3D;M3w5MTMyMXwwfDF8c2VhcmNofDEyfHxncmFmaWN8ZW58MHx8fHwxNzE1Nzk0OTk5fDA&amp;amp;ixlib&#x3D;rb-4.0.3&amp;amp;w&#x3D;1500&quot;
+          class&#x3D;&quot;hero17-placeholder-image33 thq-img-ratio-1-1 thq-img-scale&quot;
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;div class&#x3D;&quot;hero17-container2&quot;&gt;
+      &lt;dangerous-html
+        html&#x3D;&quot;&lt;style&gt;
+  @keyframes scroll-x {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - 16px));
+    }
+  }
+
+  @keyframes scroll-y {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - 16px));
+    }
+  }
+&lt;/style&gt;
+&quot;
+      &gt;&lt;/dangerous-html&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>hero17.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.hero17-header78 {
+  gap: var(--dl-space-space-threeunits);
+  width: 100%;
+  height: auto;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.hero17-column {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: var(--dl-space-space-unit);
+}
+ 
+.hero17-content1 {
+  gap: var(--dl-space-space-oneandhalfunits);
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.hero17-text1 {
+  text-align: center;
+}
+ 
+.hero17-text2 {
+  text-align: center;
+}
+ 
+.hero17-actions {
+  gap: var(--dl-space-space-unit);
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--dl-space-space-unit);
+}
+ 
+.hero17-content2 {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: 100%;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.hero17-row-container1 {
+  width: 100%;
+}
+ 
+.hero17-placeholder-image10 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image11 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image12 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image13 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image14 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image15 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image16 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image17 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image18 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image19 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image20 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image21 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-row-container2 {
+  width: 100%;
+}
+ 
+.hero17-placeholder-image22 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image23 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image24 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image25 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image26 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image27 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image28 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image29 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image30 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image31 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image32 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-placeholder-image33 {
+  width: 400px;
+  height: 400px;
+}
+ 
+.hero17-container2 {
+  display: contents;
+}
+ 
+.hero17-fragment1 {
+  display: contents;
+}
+ 
+.hero17-text5 {
+  display: inline-block;
+}
+ 
+.hero17-fragment2 {
+  display: contents;
+}
+ 
+.hero17-text6 {
+  display: inline-block;
+}
+ 
+.hero17-fragment3 {
+  display: contents;
+}
+ 
+.hero17-text7 {
+  display: inline-block;
+}
+ 
+.hero17-fragment4 {
+  display: contents;
+}
+ 
+.hero17-text8 {
+  display: inline-block;
+}
+ 
+@media(max-width: 767px) {
+  .hero17-content2 {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .hero17-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .hero17-button1 {
+    width: 100%;
+  }
+  .hero17-button2 {
+    width: 100%;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="hero17-header78">  <div class="hero17-column thq-section-padding thq-section-max-width">    <div class="hero17-content1">      <h1 class="hero17-text1 thq-heading-1">        <ng-container>          <ng-template #defaultHeading1>            <div class="hero17-fragment2">              <span class="hero17-text6">Welcome to Certificate Portal</span>            </div>          </ng-template>          <ng-container            *ngTemplateOutlet="heading1 ? heading1 : defaultHeading1"          ></ng-container>        </ng-container>      </h1>      <p class="hero17-text2 thq-body-large">        <ng-container>          <ng-template #defaultContent1>            <div class="hero17-fragment1">              <span class="hero17-text5">                Easily store and manage all your certificates in one place. Sign                up now to get started!              </span>            </div>          </ng-template>          <ng-container            *ngTemplateOutlet="content1 ? content1 : defaultContent1"          ></ng-container>        </ng-container>      </p>    </div>    <div class="hero17-actions">      <button class="thq-button-filled hero17-button1">        <span class="thq-body-small">          <ng-container>            <ng-template #defaultAction1>              <div class="hero17-fragment3">                <span class="hero17-text7">Main action</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="action1 ? action1 : defaultAction1"            ></ng-container>          </ng-container>        </span>      </button>      <button class="thq-button-outline hero17-button2">        <span class="thq-body-small">          <ng-container>            <ng-template #defaultAction2>              <div class="hero17-fragment4">                <span class="hero17-text8">Secondary action</span>              </div>            </ng-template>            <ng-container              *ngTemplateOutlet="action2 ? action2 : defaultAction2"            ></ng-container>          </ng-container>        </span>      </button>    </div>  </div>  <div class="hero17-content2">    <div      class="hero17-row-container1 thq-mask-image-horizontal thq-animated-group-container-horizontal"    >      <div class="thq-animated-group-horizontal">        <img          [attr.alt]="image1Alt"          [attr.src]="image1Src"          class="hero17-placeholder-image10 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image2Alt"          [attr.src]="image2Src"          class="hero17-placeholder-image11 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image3Alt"          [attr.src]="image3Src"          class="hero17-placeholder-image12 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image4Alt"          [attr.src]="image4Src"          class="hero17-placeholder-image13 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image5Alt"          [attr.src]="image5Src"          class="hero17-placeholder-image14 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image6Alt"          [attr.src]="image6Src"          class="hero17-placeholder-image15 thq-img-ratio-1-1 thq-img-scale"        />      </div>      <div class="thq-animated-group-horizontal">        <img          [attr.alt]="image1Alt"          [attr.src]="image1Src"          class="hero17-placeholder-image16 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image2Alt"          [attr.src]="image2Src"          class="hero17-placeholder-image17 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image3Alt"          [attr.src]="image3Src"          class="hero17-placeholder-image18 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image4Alt"          [attr.src]="image4Src"          class="hero17-placeholder-image19 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image5Alt"          [attr.src]="image5Src"          class="hero17-placeholder-image20 thq-img-ratio-1-1 thq-img-scale"        />        <img          alt="Hero Image"          src="https://images.unsplash.com/photo-1534312527009-56c7016453e6?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDIxfHxhYnN0cmFjdHxlbnwwfHx8fDE3MTA4NzA5MzB8MA&amp;ixlib=rb-4.0.3&amp;w=1500"          class="hero17-placeholder-image21 thq-img-ratio-1-1 thq-img-scale"        />      </div>    </div>    <div      class="hero17-row-container2 thq-mask-image-horizontal thq-animated-group-container-horizontal"    >      <div class="thq-animated-group-horizontal-reverse">        <img          [attr.alt]="image7Alt"          [attr.src]="image7Src"          class="hero17-placeholder-image22 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image8Alt"          [attr.src]="image8Src"          class="hero17-placeholder-image23 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image9Alt"          [attr.src]="image9Src"          class="hero17-placeholder-image24 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image10Alt"          [attr.src]="image10Src"          class="hero17-placeholder-image25 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image11Alt"          [attr.src]="image11Src"          class="hero17-placeholder-image26 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image12Alt"          [attr.src]="image12Src"          class="hero17-placeholder-image27 thq-img-ratio-1-1 thq-img-scale"        />      </div>      <div class="thq-animated-group-horizontal-reverse">        <img          [attr.alt]="image7Alt"          [attr.src]="image7Src"          class="hero17-placeholder-image28 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image8Alt"          [attr.src]="image8Src"          class="hero17-placeholder-image29 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image9Alt"          [attr.src]="image9Src"          class="hero17-placeholder-image30 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image10Alt"          [attr.src]="image10Src"          class="hero17-placeholder-image31 thq-img-ratio-1-1 thq-img-scale"        />        <img          [attr.alt]="image11Alt"          [attr.src]="image11Src"          class="hero17-placeholder-image32 thq-img-ratio-1-1 thq-img-scale"        />        <img          alt="Hero Image"          src="https://images.unsplash.com/photo-1568214379698-8aeb8c6c6ac8?ixid=M3w5MTMyMXwwfDF8c2VhcmNofDEyfHxncmFmaWN8ZW58MHx8fHwxNzE1Nzk0OTk5fDA&amp;ixlib=rb-4.0.3&amp;w=1500"          class="hero17-placeholder-image33 thq-img-ratio-1-1 thq-img-scale"        />      </div>    </div>  </div>  <div>    <div class="hero17-container2">      <dangerous-html        html="<style>  @keyframes scroll-x {    from {      transform: translateX(0);    }    to {      transform: translateX(calc(-100% - 16px));    }  }  @keyframes scroll-y {    from {      transform: translateY(0);    }    to {      transform: translateY(calc(-100% - 16px));    }  }</style>"      ></dangerous-html>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'Hero17'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'Hero17.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

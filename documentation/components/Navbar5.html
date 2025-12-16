@@ -1,0 +1,1932 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  Navbar5</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/navbar5/navbar5.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-navbar5</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>navbar5.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>navbar5.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link1" >link1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link2" >link2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link3" >link3</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#link4" >link4</a>
+                            </li>
+                            <li>
+                                <a href="#link5AccordionOpen" >link5AccordionOpen</a>
+                            </li>
+                            <li>
+                                <a href="#link5DropdownVisible" >link5DropdownVisible</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#page1" >page1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#page2" >page2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#page3" >page3</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#page4" >page4</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#link1Url" >link1Url</a>
+                            </li>
+                            <li>
+                                <a href="#link2Url" >link2Url</a>
+                            </li>
+                            <li>
+                                <a href="#link3Url" >link3Url</a>
+                            </li>
+                            <li>
+                                <a href="#linkUrlPage1" >linkUrlPage1</a>
+                            </li>
+                            <li>
+                                <a href="#linkUrlPage2" >linkUrlPage2</a>
+                            </li>
+                            <li>
+                                <a href="#linkUrlPage3" >linkUrlPage3</a>
+                            </li>
+                            <li>
+                                <a href="#linkUrlPage4" >linkUrlPage4</a>
+                            </li>
+                            <li>
+                                <a href="#logoAlt" >logoAlt</a>
+                            </li>
+                            <li>
+                                <a href="#logoSrc" >logoSrc</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:45</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link1Url"></a>
+                        <b>link1Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:34</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link2Url"></a>
+                        <b>link2Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:10</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="link3Url"></a>
+                        <b>link3Url</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:30</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="linkUrlPage1"></a>
+                        <b>linkUrlPage1</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:40</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="linkUrlPage2"></a>
+                        <b>linkUrlPage2</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:32</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="linkUrlPage3"></a>
+                        <b>linkUrlPage3</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:14</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="linkUrlPage4"></a>
+                        <b>linkUrlPage4</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://www.teleporthq.io&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:12</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoAlt"></a>
+                        <b>logoAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Website Logo&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoSrc"></a>
+                        <b>logoSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/84ec08e8-34e9-42c7-9445-d2806d156403/fac575ac-7a41-484f-b7ac-875042de11f8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:42</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link1</b></span>
+                        <a href="#link1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link2</b></span>
+                        <a href="#link2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link3"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link3</b></span>
+                        <a href="#link3"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link3&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link4"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>link4</b></span>
+                        <a href="#link4"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;link4&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link5AccordionOpen"></a>
+                    <span class="name">
+                        <span ><b>link5AccordionOpen</b></span>
+                        <a href="#link5AccordionOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="link5DropdownVisible"></a>
+                    <span class="name">
+                        <span ><b>link5DropdownVisible</b></span>
+                        <a href="#link5DropdownVisible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page1"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>page1</b></span>
+                        <a href="#page1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;page1&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page2"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>page2</b></span>
+                        <a href="#page2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;page2&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page3"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>page3</b></span>
+                        <a href="#page3"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;page3&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page4"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>page4</b></span>
+                        <a href="#page4"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;page4&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/navbar5/navbar5.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;
+
+@Component({
+  selector: &#x27;app-navbar5&#x27;,
+  templateUrl: &#x27;navbar5.component.html&#x27;,
+  styleUrls: [&#x27;navbar5.component.css&#x27;],
+})
+export class Navbar5 {
+  @Input()
+  link2Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  linkUrlPage4: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  linkUrlPage3: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  logoAlt: string &#x3D; &#x27;Website Logo&#x27;
+  @ContentChild(&#x27;link4&#x27;)
+  link4: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;page2&#x27;)
+  page2: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;page1&#x27;)
+  page1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link1&#x27;)
+  link1: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;link2&#x27;)
+  link2: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;page3&#x27;)
+  page3: TemplateRef&lt;any&gt;
+  @Input()
+  link3Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  linkUrlPage2: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  link1Url: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @ContentChild(&#x27;link3&#x27;)
+  link3: TemplateRef&lt;any&gt;
+  @ContentChild(&#x27;page4&#x27;)
+  page4: TemplateRef&lt;any&gt;
+  @Input()
+  linkUrlPage1: string &#x3D; &#x27;https://www.teleporthq.io&#x27;
+  @Input()
+  logoSrc: string &#x3D;
+    &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/84ec08e8-34e9-42c7-9445-d2806d156403/fac575ac-7a41-484f-b7ac-875042de11f8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;
+  link5DropdownVisible: boolean &#x3D; false
+  link5AccordionOpen: boolean &#x3D; false
+  constructor() {}
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;header class&#x3D;&quot;navbar5-container1&quot;&gt;
+  &lt;header data-thq&#x3D;&quot;thq-navbar&quot; class&#x3D;&quot;navbar5-navbar-interactive&quot;&gt;
+    &lt;img [attr.alt]&#x3D;&quot;logoAlt&quot; [attr.src]&#x3D;&quot;logoSrc&quot; class&#x3D;&quot;navbar5-image1&quot; /&gt;
+    &lt;div data-thq&#x3D;&quot;thq-navbar-nav&quot; class&#x3D;&quot;navbar5-desktop-menu&quot;&gt;
+      &lt;nav class&#x3D;&quot;navbar5-links1&quot;&gt;
+        &lt;a [attr.href]&#x3D;&quot;link1Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultLink1&gt;
+              &lt;div&gt;&lt;span&gt;Home&lt;/span&gt;&lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/a&gt;
+        &lt;a [attr.href]&#x3D;&quot;link2Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultLink2&gt;
+              &lt;div&gt;&lt;span&gt;Profile&lt;/span&gt;&lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/a&gt;
+        &lt;a [attr.href]&#x3D;&quot;link3Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+          &lt;ng-container&gt;
+            &lt;ng-template #defaultLink3&gt;
+              &lt;div&gt;&lt;span&gt;Settings&lt;/span&gt;&lt;/div&gt;
+            &lt;/ng-template&gt;
+            &lt;ng-container
+              *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+            &gt;&lt;/ng-container&gt;
+          &lt;/ng-container&gt;
+        &lt;/a&gt;
+        &lt;div class&#x3D;&quot;navbar5-container2&quot;&gt;
+          &lt;div
+            (click)&#x3D;&quot;link5DropdownVisible &#x3D; !link5DropdownVisible&quot;
+            class&#x3D;&quot;navbar5-link4-dropdown-trigger&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+              &lt;ng-container&gt;
+                &lt;ng-template #defaultLink4&gt;
+                  &lt;div&gt;&lt;span&gt;Logout&lt;/span&gt;&lt;/div&gt;
+                &lt;/ng-template&gt;
+                &lt;ng-container
+                  *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+                &gt;&lt;/ng-container&gt;
+              &lt;/ng-container&gt;
+            &lt;/span&gt;
+            &lt;div class&#x3D;&quot;navbar5-icon-container1&quot;&gt;
+              &lt;div *ngIf&#x3D;&quot;link5DropdownVisible&quot; class&#x3D;&quot;navbar5-container3&quot;&gt;
+                &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon10&quot;&gt;
+                  &lt;path d&#x3D;&quot;M298 426h428l-214 214z&quot;&gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+              &lt;div *ngIf&#x3D;&quot;!link5DropdownVisible&quot; class&#x3D;&quot;navbar5-container4&quot;&gt;
+                &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon12&quot;&gt;
+                  &lt;path d&#x3D;&quot;M426 726v-428l214 214z&quot;&gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div
+            *ngIf&#x3D;&quot;link5DropdownVisible&quot;
+            class&#x3D;&quot;navbar5-container5 thq-box-shadow&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;navbar5-menu-item1&quot;&gt;
+              &lt;div class&#x3D;&quot;navbar5-content1&quot;&gt;
+                &lt;a
+                  [attr.href]&#x3D;&quot;linkUrlPage1&quot;
+                  class&#x3D;&quot;navbar5-page11 thq-body-large&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultPage1&gt;
+                      &lt;div&gt;&lt;span&gt;Home Page&lt;/span&gt;&lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;page1 ? page1 : defaultPage1&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;navbar5-menu-item2&quot;&gt;
+              &lt;div class&#x3D;&quot;navbar5-content2&quot;&gt;
+                &lt;a
+                  [attr.href]&#x3D;&quot;linkUrlPage2&quot;
+                  class&#x3D;&quot;navbar5-page21 thq-body-large&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultPage2&gt;
+                      &lt;div&gt;&lt;span&gt;Profile Page&lt;/span&gt;&lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;page2 ? page2 : defaultPage2&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;navbar5-menu-item3&quot;&gt;
+              &lt;div class&#x3D;&quot;navbar5-content3&quot;&gt;
+                &lt;a
+                  [attr.href]&#x3D;&quot;linkUrlPage3&quot;
+                  class&#x3D;&quot;navbar5-page31 thq-body-large&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultPage3&gt;
+                      &lt;div&gt;&lt;span&gt;Settings Page&lt;/span&gt;&lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;page3 ? page3 : defaultPage3&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;navbar5-menu-item4&quot;&gt;
+              &lt;div class&#x3D;&quot;navbar5-content4&quot;&gt;
+                &lt;a
+                  [attr.href]&#x3D;&quot;linkUrlPage4&quot;
+                  class&#x3D;&quot;navbar5-page41 thq-body-large&quot;
+                &gt;
+                  &lt;ng-container&gt;
+                    &lt;ng-template #defaultPage4&gt;
+                      &lt;div&gt;&lt;span&gt;Certificates&lt;/span&gt;&lt;/div&gt;
+                    &lt;/ng-template&gt;
+                    &lt;ng-container
+                      *ngTemplateOutlet&#x3D;&quot;page4 ? page4 : defaultPage4&quot;
+                    &gt;&lt;/ng-container&gt;
+                  &lt;/ng-container&gt;
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+    &lt;div data-thq&#x3D;&quot;thq-burger-menu&quot; class&#x3D;&quot;navbar5-burger-menu&quot;&gt;
+      &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon14&quot;&gt;
+        &lt;path
+          d&#x3D;&quot;M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z&quot;
+        &gt;&lt;/path&gt;
+      &lt;/svg&gt;
+    &lt;/div&gt;
+    &lt;div data-thq&#x3D;&quot;thq-mobile-menu&quot; class&#x3D;&quot;navbar5-mobile-menu&quot;&gt;
+      &lt;div class&#x3D;&quot;navbar5-nav&quot;&gt;
+        &lt;div class&#x3D;&quot;navbar5-top&quot;&gt;
+          &lt;img [attr.alt]&#x3D;&quot;logoAlt&quot; [attr.src]&#x3D;&quot;logoSrc&quot; class&#x3D;&quot;navbar5-logo&quot; /&gt;
+          &lt;div data-thq&#x3D;&quot;thq-close-menu&quot; class&#x3D;&quot;navbar5-close-menu&quot;&gt;
+            &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon16&quot;&gt;
+              &lt;path
+                d&#x3D;&quot;M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;nav class&#x3D;&quot;navbar5-links2&quot;&gt;
+          &lt;a [attr.href]&#x3D;&quot;link1Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink1&gt;
+                &lt;div class&#x3D;&quot;navbar5-fragment4&quot;&gt;
+                  &lt;span class&#x3D;&quot;navbar5-text4&quot;&gt;Home&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link1 ? link1 : defaultLink1&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link2Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink2&gt;
+                &lt;div class&#x3D;&quot;navbar5-fragment5&quot;&gt;
+                  &lt;span class&#x3D;&quot;navbar5-text5&quot;&gt;Profile&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link2 ? link2 : defaultLink2&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;a [attr.href]&#x3D;&quot;link3Url&quot; class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+            &lt;ng-container&gt;
+              &lt;ng-template #defaultLink3&gt;
+                &lt;div class&#x3D;&quot;navbar5-fragment7&quot;&gt;
+                  &lt;span class&#x3D;&quot;navbar5-text7&quot;&gt;Settings&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/ng-template&gt;
+              &lt;ng-container
+                *ngTemplateOutlet&#x3D;&quot;link3 ? link3 : defaultLink3&quot;
+              &gt;&lt;/ng-container&gt;
+            &lt;/ng-container&gt;
+          &lt;/a&gt;
+          &lt;div class&#x3D;&quot;navbar5-link4-accordion&quot;&gt;
+            &lt;div
+              (click)&#x3D;&quot;link5AccordionOpen &#x3D; !link5AccordionOpen&quot;
+              class&#x3D;&quot;navbar5-trigger&quot;
+            &gt;
+              &lt;span class&#x3D;&quot;thq-link thq-body-small&quot;&gt;
+                &lt;ng-container&gt;
+                  &lt;ng-template #defaultLink4&gt;
+                    &lt;div class&#x3D;&quot;navbar5-fragment1&quot;&gt;
+                      &lt;span class&#x3D;&quot;navbar5-text1&quot;&gt;Logout&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                  &lt;ng-container
+                    *ngTemplateOutlet&#x3D;&quot;link4 ? link4 : defaultLink4&quot;
+                  &gt;&lt;/ng-container&gt;
+                &lt;/ng-container&gt;
+              &lt;/span&gt;
+              &lt;div class&#x3D;&quot;navbar5-icon-container2&quot;&gt;
+                &lt;div *ngIf&#x3D;&quot;link5AccordionOpen&quot; class&#x3D;&quot;navbar5-container6&quot;&gt;
+                  &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon18&quot;&gt;
+                    &lt;path d&#x3D;&quot;M298 426h428l-214 214z&quot;&gt;&lt;/path&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;div *ngIf&#x3D;&quot;!link5AccordionOpen&quot; class&#x3D;&quot;navbar5-container7&quot;&gt;
+                  &lt;svg viewBox&#x3D;&quot;0 0 1024 1024&quot; class&#x3D;&quot;navbar5-icon20&quot;&gt;
+                    &lt;path d&#x3D;&quot;M426 726v-428l214 214z&quot;&gt;&lt;/path&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div *ngIf&#x3D;&quot;link5AccordionOpen&quot; class&#x3D;&quot;navbar5-container8&quot;&gt;
+              &lt;div class&#x3D;&quot;navbar5-menu-item5&quot;&gt;
+                &lt;div class&#x3D;&quot;navbar5-content5&quot;&gt;
+                  &lt;a
+                    [attr.href]&#x3D;&quot;linkUrlPage1&quot;
+                    class&#x3D;&quot;navbar5-page12 thq-body-large&quot;
+                  &gt;
+                    &lt;ng-container&gt;
+                      &lt;ng-template #defaultPage1&gt;
+                        &lt;div class&#x3D;&quot;navbar5-fragment3&quot;&gt;
+                          &lt;span class&#x3D;&quot;navbar5-text3&quot;&gt;Home Page&lt;/span&gt;
+                        &lt;/div&gt;
+                      &lt;/ng-template&gt;
+                      &lt;ng-container
+                        *ngTemplateOutlet&#x3D;&quot;page1 ? page1 : defaultPage1&quot;
+                      &gt;&lt;/ng-container&gt;
+                    &lt;/ng-container&gt;
+                  &lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;navbar5-menu-item6&quot;&gt;
+                &lt;div class&#x3D;&quot;navbar5-content6&quot;&gt;
+                  &lt;a
+                    [attr.href]&#x3D;&quot;linkUrlPage2&quot;
+                    class&#x3D;&quot;navbar5-page22 thq-body-large&quot;
+                  &gt;
+                    &lt;ng-container&gt;
+                      &lt;ng-template #defaultPage2&gt;
+                        &lt;div class&#x3D;&quot;navbar5-fragment2&quot;&gt;
+                          &lt;span class&#x3D;&quot;navbar5-text2&quot;&gt;Profile Page&lt;/span&gt;
+                        &lt;/div&gt;
+                      &lt;/ng-template&gt;
+                      &lt;ng-container
+                        *ngTemplateOutlet&#x3D;&quot;page2 ? page2 : defaultPage2&quot;
+                      &gt;&lt;/ng-container&gt;
+                    &lt;/ng-container&gt;
+                  &lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;navbar5-menu-item7&quot;&gt;
+                &lt;div class&#x3D;&quot;navbar5-content7&quot;&gt;
+                  &lt;a
+                    [attr.href]&#x3D;&quot;linkUrlPage3&quot;
+                    class&#x3D;&quot;navbar5-page32 thq-body-large&quot;
+                  &gt;
+                    &lt;ng-container&gt;
+                      &lt;ng-template #defaultPage3&gt;
+                        &lt;div class&#x3D;&quot;navbar5-fragment6&quot;&gt;
+                          &lt;span class&#x3D;&quot;navbar5-text6&quot;&gt;Settings Page&lt;/span&gt;
+                        &lt;/div&gt;
+                      &lt;/ng-template&gt;
+                      &lt;ng-container
+                        *ngTemplateOutlet&#x3D;&quot;page3 ? page3 : defaultPage3&quot;
+                      &gt;&lt;/ng-container&gt;
+                    &lt;/ng-container&gt;
+                  &lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;navbar5-menu-item8&quot;&gt;
+                &lt;div class&#x3D;&quot;navbar5-content8&quot;&gt;
+                  &lt;a
+                    [attr.href]&#x3D;&quot;linkUrlPage4&quot;
+                    class&#x3D;&quot;navbar5-page42 thq-body-large&quot;
+                  &gt;
+                    &lt;ng-container&gt;
+                      &lt;ng-template #defaultPage4&gt;
+                        &lt;div class&#x3D;&quot;navbar5-fragment8&quot;&gt;
+                          &lt;span class&#x3D;&quot;navbar5-text8&quot;&gt;Certificates&lt;/span&gt;
+                        &lt;/div&gt;
+                      &lt;/ng-template&gt;
+                      &lt;ng-container
+                        *ngTemplateOutlet&#x3D;&quot;page4 ? page4 : defaultPage4&quot;
+                      &gt;&lt;/ng-container&gt;
+                    &lt;/ng-container&gt;
+                  &lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/nav&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;navbar5-icon-group&quot;&gt;
+        &lt;svg viewBox&#x3D;&quot;0 0 950.8571428571428 1024&quot; class&#x3D;&quot;thq-icon-x-small&quot;&gt;
+          &lt;path
+            d&#x3D;&quot;M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z&quot;
+          &gt;&lt;/path&gt;&lt;/svg
+        &gt;&lt;svg
+          viewBox&#x3D;&quot;0 0 877.7142857142857 1024&quot;
+          class&#x3D;&quot;navbar5-icon24 thq-icon-x-small&quot;
+        &gt;
+          &lt;path
+            d&#x3D;&quot;M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z&quot;
+          &gt;&lt;/path&gt;&lt;/svg
+        &gt;&lt;svg
+          viewBox&#x3D;&quot;0 0 602.2582857142856 1024&quot;
+          class&#x3D;&quot;navbar5-icon26 thq-icon-x-small&quot;
+        &gt;
+          &lt;path
+            d&#x3D;&quot;M548 6.857v150.857h-89.714c-70.286 0-83.429 33.714-83.429 82.286v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571c0-144.571 88.571-223.429 217.714-223.429 61.714 0 114.857 4.571 130.286 6.857z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+  &lt;div
+    (click)&#x3D;&quot;link5DropdownVisible &#x3D; false&quot;
+    *ngIf&#x3D;&quot;link5DropdownVisible&quot;
+    class&#x3D;&quot;navbar5-container9&quot;
+  &gt;&lt;/div&gt;
+&lt;/header&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>navbar5.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.navbar5-container1 {
+  width: 100%;
+  display: flex;
+  z-index: 100;
+  position: relative;
+  justify-content: center;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.navbar5-navbar-interactive {
+  width: 100%;
+  display: flex;
+  z-index: 100;
+  align-items: center;
+  padding-top: var(--dl-space-space-twounits);
+  padding-left: var(--dl-space-space-threeunits);
+  padding-right: var(--dl-space-space-threeunits);
+  padding-bottom: var(--dl-space-space-twounits);
+  justify-content: space-between;
+}
+ 
+.navbar5-image1 {
+  height: 3rem;
+}
+ 
+.navbar5-desktop-menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.navbar5-links1 {
+  gap: var(--dl-space-space-twounits);
+  flex: 1;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-container2 {
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-link4-dropdown-trigger {
+  gap: 4px;
+  cursor: pointer;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-icon-container1 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-container3 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-icon10 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.navbar5-container4 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-icon12 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.navbar5-container5 {
+  top: 30px;
+  right: 0px;
+  display: flex;
+  padding: var(--dl-space-space-oneandhalfunits);
+  z-index: 100;
+  position: absolute;
+  align-items: flex-start;
+  animation-name: fadeInDown;
+  flex-direction: column;
+  animation-delay: 0s;
+  background-color: var(--dl-color-theme-neutral-light);
+  animation-duration: 300ms;
+  animation-direction: normal;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+}
+ 
+.navbar5-menu-item1 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.navbar5-content1 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-page11 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item2 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.navbar5-content2 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-page21 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item3 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.navbar5-content3 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-page31 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item4 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+ 
+.navbar5-content4 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-page41 {
+  white-space: nowrap;
+}
+ 
+.navbar5-burger-menu {
+  display: none;
+}
+ 
+.navbar5-icon14 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.navbar5-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  padding: var(--dl-space-space-twounits);
+  z-index: 100;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.navbar5-nav {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+ 
+.navbar5-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+ 
+.navbar5-logo {
+  height: 2rem;
+}
+ 
+.navbar5-close-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.navbar5-icon16 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.navbar5-links2 {
+  gap: var(--dl-space-space-unit);
+  width: 100%;
+  display: flex;
+  align-self: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-link4-accordion {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-trigger {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+}
+ 
+.navbar5-icon-container2 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-container6 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-icon18 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.navbar5-container7 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.navbar5-icon20 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.navbar5-container8 {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--dl-space-space-unit);
+  padding-left: var(--dl-space-space-oneandhalfunits);
+  flex-direction: column;
+}
+ 
+.navbar5-menu-item5 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: stretch;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.navbar5-content5 {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+ 
+.navbar5-page12 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item6 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: stretch;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.navbar5-content6 {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+ 
+.navbar5-page22 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item7 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: stretch;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.navbar5-content7 {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+ 
+.navbar5-page32 {
+  white-space: nowrap;
+}
+ 
+.navbar5-menu-item8 {
+  gap: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 8px 0;
+  align-self: stretch;
+  align-items: stretch;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+ 
+.navbar5-content8 {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+ 
+.navbar5-page42 {
+  white-space: nowrap;
+}
+ 
+.navbar5-icon-group {
+  gap: var(--dl-space-space-twounits);
+  display: flex;
+}
+ 
+.navbar5-icon24 {
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.navbar5-icon26 {
+  height: var(--dl-size-size-xsmall);
+}
+ 
+.navbar5-container9 {
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: fixed;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.navbar5-fragment1 {
+  display: contents;
+}
+ 
+.navbar5-text1 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment2 {
+  display: contents;
+}
+ 
+.navbar5-text2 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment3 {
+  display: contents;
+}
+ 
+.navbar5-text3 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment4 {
+  display: contents;
+}
+ 
+.navbar5-text4 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment5 {
+  display: contents;
+}
+ 
+.navbar5-text5 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment6 {
+  display: contents;
+}
+ 
+.navbar5-text6 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment7 {
+  display: contents;
+}
+ 
+.navbar5-text7 {
+  display: inline-block;
+}
+ 
+.navbar5-fragment8 {
+  display: contents;
+}
+ 
+.navbar5-text8 {
+  display: inline-block;
+}
+ 
+@media(max-width: 767px) {
+  .navbar5-navbar-interactive {
+    padding-left: var(--dl-space-space-twounits);
+    padding-right: var(--dl-space-space-twounits);
+  }
+  .navbar5-desktop-menu {
+    display: none;
+  }
+  .navbar5-burger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .navbar5-navbar-interactive {
+    padding: var(--dl-space-space-unit);
+  }
+  .navbar5-mobile-menu {
+    padding: var(--dl-space-space-unit);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><header class="navbar5-container1">  <header data-thq="thq-navbar" class="navbar5-navbar-interactive">    <img [attr.alt]="logoAlt" [attr.src]="logoSrc" class="navbar5-image1" />    <div data-thq="thq-navbar-nav" class="navbar5-desktop-menu">      <nav class="navbar5-links1">        <a [attr.href]="link1Url" class="thq-link thq-body-small">          <ng-container>            <ng-template #defaultLink1>              <div><span>Home</span></div>            </ng-template>            <ng-container              *ngTemplateOutlet="link1 ? link1 : defaultLink1"            ></ng-container>          </ng-container>        </a>        <a [attr.href]="link2Url" class="thq-link thq-body-small">          <ng-container>            <ng-template #defaultLink2>              <div><span>Profile</span></div>            </ng-template>            <ng-container              *ngTemplateOutlet="link2 ? link2 : defaultLink2"            ></ng-container>          </ng-container>        </a>        <a [attr.href]="link3Url" class="thq-link thq-body-small">          <ng-container>            <ng-template #defaultLink3>              <div><span>Settings</span></div>            </ng-template>            <ng-container              *ngTemplateOutlet="link3 ? link3 : defaultLink3"            ></ng-container>          </ng-container>        </a>        <div class="navbar5-container2">          <div            (click)="link5DropdownVisible = !link5DropdownVisible"            class="navbar5-link4-dropdown-trigger"          >            <span class="thq-link thq-body-small">              <ng-container>                <ng-template #defaultLink4>                  <div><span>Logout</span></div>                </ng-template>                <ng-container                  *ngTemplateOutlet="link4 ? link4 : defaultLink4"                ></ng-container>              </ng-container>            </span>            <div class="navbar5-icon-container1">              <div *ngIf="link5DropdownVisible" class="navbar5-container3">                <svg viewBox="0 0 1024 1024" class="navbar5-icon10">                  <path d="M298 426h428l-214 214z"></path>                </svg>              </div>              <div *ngIf="!link5DropdownVisible" class="navbar5-container4">                <svg viewBox="0 0 1024 1024" class="navbar5-icon12">                  <path d="M426 726v-428l214 214z"></path>                </svg>              </div>            </div>          </div>          <div            *ngIf="link5DropdownVisible"            class="navbar5-container5 thq-box-shadow"          >            <div class="navbar5-menu-item1">              <div class="navbar5-content1">                <a                  [attr.href]="linkUrlPage1"                  class="navbar5-page11 thq-body-large"                >                  <ng-container>                    <ng-template #defaultPage1>                      <div><span>Home Page</span></div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="page1 ? page1 : defaultPage1"                    ></ng-container>                  </ng-container>                </a>              </div>            </div>            <div class="navbar5-menu-item2">              <div class="navbar5-content2">                <a                  [attr.href]="linkUrlPage2"                  class="navbar5-page21 thq-body-large"                >                  <ng-container>                    <ng-template #defaultPage2>                      <div><span>Profile Page</span></div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="page2 ? page2 : defaultPage2"                    ></ng-container>                  </ng-container>                </a>              </div>            </div>            <div class="navbar5-menu-item3">              <div class="navbar5-content3">                <a                  [attr.href]="linkUrlPage3"                  class="navbar5-page31 thq-body-large"                >                  <ng-container>                    <ng-template #defaultPage3>                      <div><span>Settings Page</span></div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="page3 ? page3 : defaultPage3"                    ></ng-container>                  </ng-container>                </a>              </div>            </div>            <div class="navbar5-menu-item4">              <div class="navbar5-content4">                <a                  [attr.href]="linkUrlPage4"                  class="navbar5-page41 thq-body-large"                >                  <ng-container>                    <ng-template #defaultPage4>                      <div><span>Certificates</span></div>                    </ng-template>                    <ng-container                      *ngTemplateOutlet="page4 ? page4 : defaultPage4"                    ></ng-container>                  </ng-container>                </a>              </div>            </div>          </div>        </div>      </nav>    </div>    <div data-thq="thq-burger-menu" class="navbar5-burger-menu">      <svg viewBox="0 0 1024 1024" class="navbar5-icon14">        <path          d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"        ></path>      </svg>    </div>    <div data-thq="thq-mobile-menu" class="navbar5-mobile-menu">      <div class="navbar5-nav">        <div class="navbar5-top">          <img [attr.alt]="logoAlt" [attr.src]="logoSrc" class="navbar5-logo" />          <div data-thq="thq-close-menu" class="navbar5-close-menu">            <svg viewBox="0 0 1024 1024" class="navbar5-icon16">              <path                d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"              ></path>            </svg>          </div>        </div>        <nav class="navbar5-links2">          <a [attr.href]="link1Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink1>                <div class="navbar5-fragment4">                  <span class="navbar5-text4">Home</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="link1 ? link1 : defaultLink1"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link2Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink2>                <div class="navbar5-fragment5">                  <span class="navbar5-text5">Profile</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="link2 ? link2 : defaultLink2"              ></ng-container>            </ng-container>          </a>          <a [attr.href]="link3Url" class="thq-link thq-body-small">            <ng-container>              <ng-template #defaultLink3>                <div class="navbar5-fragment7">                  <span class="navbar5-text7">Settings</span>                </div>              </ng-template>              <ng-container                *ngTemplateOutlet="link3 ? link3 : defaultLink3"              ></ng-container>            </ng-container>          </a>          <div class="navbar5-link4-accordion">            <div              (click)="link5AccordionOpen = !link5AccordionOpen"              class="navbar5-trigger"            >              <span class="thq-link thq-body-small">                <ng-container>                  <ng-template #defaultLink4>                    <div class="navbar5-fragment1">                      <span class="navbar5-text1">Logout</span>                    </div>                  </ng-template>                  <ng-container                    *ngTemplateOutlet="link4 ? link4 : defaultLink4"                  ></ng-container>                </ng-container>              </span>              <div class="navbar5-icon-container2">                <div *ngIf="link5AccordionOpen" class="navbar5-container6">                  <svg viewBox="0 0 1024 1024" class="navbar5-icon18">                    <path d="M298 426h428l-214 214z"></path>                  </svg>                </div>                <div *ngIf="!link5AccordionOpen" class="navbar5-container7">                  <svg viewBox="0 0 1024 1024" class="navbar5-icon20">                    <path d="M426 726v-428l214 214z"></path>                  </svg>                </div>              </div>            </div>            <div *ngIf="link5AccordionOpen" class="navbar5-container8">              <div class="navbar5-menu-item5">                <div class="navbar5-content5">                  <a                    [attr.href]="linkUrlPage1"                    class="navbar5-page12 thq-body-large"                  >                    <ng-container>                      <ng-template #defaultPage1>                        <div class="navbar5-fragment3">                          <span class="navbar5-text3">Home Page</span>                        </div>                      </ng-template>                      <ng-container                        *ngTemplateOutlet="page1 ? page1 : defaultPage1"                      ></ng-container>                    </ng-container>                  </a>                </div>              </div>              <div class="navbar5-menu-item6">                <div class="navbar5-content6">                  <a                    [attr.href]="linkUrlPage2"                    class="navbar5-page22 thq-body-large"                  >                    <ng-container>                      <ng-template #defaultPage2>                        <div class="navbar5-fragment2">                          <span class="navbar5-text2">Profile Page</span>                        </div>                      </ng-template>                      <ng-container                        *ngTemplateOutlet="page2 ? page2 : defaultPage2"                      ></ng-container>                    </ng-container>                  </a>                </div>              </div>              <div class="navbar5-menu-item7">                <div class="navbar5-content7">                  <a                    [attr.href]="linkUrlPage3"                    class="navbar5-page32 thq-body-large"                  >                    <ng-container>                      <ng-template #defaultPage3>                        <div class="navbar5-fragment6">                          <span class="navbar5-text6">Settings Page</span>                        </div>                      </ng-template>                      <ng-container                        *ngTemplateOutlet="page3 ? page3 : defaultPage3"                      ></ng-container>                    </ng-container>                  </a>                </div>              </div>              <div class="navbar5-menu-item8">                <div class="navbar5-content8">                  <a                    [attr.href]="linkUrlPage4"                    class="navbar5-page42 thq-body-large"                  >                    <ng-container>                      <ng-template #defaultPage4>                        <div class="navbar5-fragment8">                          <span class="navbar5-text8">Certificates</span>                        </div>                      </ng-template>                      <ng-container                        *ngTemplateOutlet="page4 ? page4 : defaultPage4"                      ></ng-container>                    </ng-container>                  </a>                </div>              </div>            </div>          </div>        </nav>      </div>      <div class="navbar5-icon-group">        <svg viewBox="0 0 950.8571428571428 1024" class="thq-icon-x-small">          <path            d="M925.714 233.143c-25.143 36.571-56.571 69.143-92.571 95.429 0.571 8 0.571 16 0.571 24 0 244-185.714 525.143-525.143 525.143-104.571 0-201.714-30.286-283.429-82.857 14.857 1.714 29.143 2.286 44.571 2.286 86.286 0 165.714-29.143 229.143-78.857-81.143-1.714-149.143-54.857-172.571-128 11.429 1.714 22.857 2.857 34.857 2.857 16.571 0 33.143-2.286 48.571-6.286-84.571-17.143-148-91.429-148-181.143v-2.286c24.571 13.714 53.143 22.286 83.429 23.429-49.714-33.143-82.286-89.714-82.286-153.714 0-34.286 9.143-65.714 25.143-93.143 90.857 112 227.429 185.143 380.571 193.143-2.857-13.714-4.571-28-4.571-42.286 0-101.714 82.286-184.571 184.571-184.571 53.143 0 101.143 22.286 134.857 58.286 41.714-8 81.714-23.429 117.143-44.571-13.714 42.857-42.857 78.857-81.143 101.714 37.143-4 73.143-14.286 106.286-28.571z"          ></path></svg        ><svg          viewBox="0 0 877.7142857142857 1024"          class="navbar5-icon24 thq-icon-x-small"        >          <path            d="M585.143 512c0-80.571-65.714-146.286-146.286-146.286s-146.286 65.714-146.286 146.286 65.714 146.286 146.286 146.286 146.286-65.714 146.286-146.286zM664 512c0 124.571-100.571 225.143-225.143 225.143s-225.143-100.571-225.143-225.143 100.571-225.143 225.143-225.143 225.143 100.571 225.143 225.143zM725.714 277.714c0 29.143-23.429 52.571-52.571 52.571s-52.571-23.429-52.571-52.571 23.429-52.571 52.571-52.571 52.571 23.429 52.571 52.571zM438.857 152c-64 0-201.143-5.143-258.857 17.714-20 8-34.857 17.714-50.286 33.143s-25.143 30.286-33.143 50.286c-22.857 57.714-17.714 194.857-17.714 258.857s-5.143 201.143 17.714 258.857c8 20 17.714 34.857 33.143 50.286s30.286 25.143 50.286 33.143c57.714 22.857 194.857 17.714 258.857 17.714s201.143 5.143 258.857-17.714c20-8 34.857-17.714 50.286-33.143s25.143-30.286 33.143-50.286c22.857-57.714 17.714-194.857 17.714-258.857s5.143-201.143-17.714-258.857c-8-20-17.714-34.857-33.143-50.286s-30.286-25.143-50.286-33.143c-57.714-22.857-194.857-17.714-258.857-17.714zM877.714 512c0 60.571 0.571 120.571-2.857 181.143-3.429 70.286-19.429 132.571-70.857 184s-113.714 67.429-184 70.857c-60.571 3.429-120.571 2.857-181.143 2.857s-120.571 0.571-181.143-2.857c-70.286-3.429-132.571-19.429-184-70.857s-67.429-113.714-70.857-184c-3.429-60.571-2.857-120.571-2.857-181.143s-0.571-120.571 2.857-181.143c3.429-70.286 19.429-132.571 70.857-184s113.714-67.429 184-70.857c60.571-3.429 120.571-2.857 181.143-2.857s120.571-0.571 181.143 2.857c70.286 3.429 132.571 19.429 184 70.857s67.429 113.714 70.857 184c3.429 60.571 2.857 120.571 2.857 181.143z"          ></path></svg        ><svg          viewBox="0 0 602.2582857142856 1024"          class="navbar5-icon26 thq-icon-x-small"        >          <path            d="M548 6.857v150.857h-89.714c-70.286 0-83.429 33.714-83.429 82.286v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571c0-144.571 88.571-223.429 217.714-223.429 61.714 0 114.857 4.571 130.286 6.857z"          ></path>        </svg>      </div>    </div>  </header>  <div    (click)="link5DropdownVisible = false"    *ngIf="link5DropdownVisible"    class="navbar5-container9"  ></div></header></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'Navbar5'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'Navbar5.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

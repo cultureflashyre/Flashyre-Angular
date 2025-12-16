@@ -1,0 +1,4428 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FlashyreAssessment1</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>OnDestroy</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>flashyre-assessment1</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>flashyre-assessment1.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>flashyre-assessment1.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#assessmentData" >assessmentData</a>
+                            </li>
+                            <li>
+                                <a href="#currentQuestionIndex" >currentQuestionIndex</a>
+                            </li>
+                            <li>
+                                <a href="#currentQuestions" >currentQuestions</a>
+                            </li>
+                            <li>
+                                <a href="#currentSection" >currentSection</a>
+                            </li>
+                            <li>
+                                <a href="#currentSectionIndex" >currentSectionIndex</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#endTestText" >endTestText</a>
+                            </li>
+                            <li>
+                                <a href="#isLastQuestionInSection" >isLastQuestionInSection</a>
+                            </li>
+                            <li>
+                                <a href="#isLastSection" >isLastSection</a>
+                            </li>
+                            <li>
+                                <a href="#questionStates" >questionStates</a>
+                            </li>
+                            <li>
+                                <a href="#sections" >sections</a>
+                            </li>
+                            <li>
+                                <a href="#selectedAnswers" >selectedAnswers</a>
+                            </li>
+                            <li>
+                                <a href="#startTime" >startTime</a>
+                            </li>
+                            <li>
+                                <a href="#timer" >timer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#timerInterval" >timerInterval</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#timerSubscription" >timerSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#totalQuestionsInSection" >totalQuestionsInSection</a>
+                            </li>
+                            <li>
+                                <a href="#totalSections" >totalSections</a>
+                            </li>
+                            <li>
+                                <a href="#userId" >userId</a>
+                            </li>
+                            <li>
+                                <a href="#videoPath" >videoPath</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#clearResponse" >clearResponse</a>
+                            </li>
+                            <li>
+                                <a href="#decrementTimer" >decrementTimer</a>
+                            </li>
+                            <li>
+                                <a href="#fetchAssessmentData" >fetchAssessmentData</a>
+                            </li>
+                            <li>
+                                <a href="#getOptions" >getOptions</a>
+                            </li>
+                            <li>
+                                <a href="#markQuestionAsAnswered" >markQuestionAsAnswered</a>
+                            </li>
+                            <li>
+                                <a href="#markQuestionAsVisited" >markQuestionAsVisited</a>
+                            </li>
+                            <li>
+                                <a href="#navigateToQuestion" >navigateToQuestion</a>
+                            </li>
+                            <li>
+                                <a href="#nextQuestion" >nextQuestion</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#prepareSubmissionData" >prepareSubmissionData</a>
+                            </li>
+                            <li>
+                                <a href="#previousQuestion" >previousQuestion</a>
+                            </li>
+                            <li>
+                                <a href="#selectOption" >selectOption</a>
+                            </li>
+                            <li>
+                                <a href="#selectSection" >selectSection</a>
+                            </li>
+                            <li>
+                                <a href="#startTimer" >startTimer</a>
+                            </li>
+                            <li>
+                                <a href="#submitAssessment" >submitAssessment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#terminateTest" >terminateTest</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#logoAlt" >logoAlt</a>
+                            </li>
+                            <li>
+                                <a href="#logoSrc" >logoSrc</a>
+                            </li>
+                            <li>
+                                <a href="#rootClassName" >rootClassName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta, assessmentService: <a href="../injectables/AssessmentService.html" target="_self">AssessmentService</a>, videoRecorder: <a href="../injectables/VideoRecorderService.html" target="_self">VideoRecorderService</a>, proctoringService: <a href="../injectables/ProctoringService.html" target="_self">ProctoringService</a>, router: Router, spinner: NgxSpinnerService, route: ActivatedRoute)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>assessmentService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AssessmentService.html" target="_self" >AssessmentService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>videoRecorder</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/VideoRecorderService.html" target="_self" >VideoRecorderService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>proctoringService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ProctoringService.html" target="_self" >ProctoringService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>spinner</td>
+                                                  
+                                                        <td>
+                                                                    <code>NgxSpinnerService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                    <code>ActivatedRoute</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoAlt"></a>
+                        <b>logoAlt</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;image&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:28</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoSrc"></a>
+                        <b>logoSrc</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:24</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rootClassName"></a>
+                        <b>rootClassName</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:26</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearResponse"></a>
+                    <span class="name">
+                        <span ><b>clearResponse</b></span>
+                        <a href="#clearResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearResponse(questionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="201"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:201</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>questionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="decrementTimer"></a>
+                    <span class="name">
+                        <span ><b>decrementTimer</b></span>
+                        <a href="#decrementTimer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>decrementTimer()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:141</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchAssessmentData"></a>
+                    <span class="name">
+                        <span ><b>fetchAssessmentData</b></span>
+                        <a href="#fetchAssessmentData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fetchAssessmentData(assessmentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="106"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:106</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>assessmentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOptions"></a>
+                    <span class="name">
+                        <span ><b>getOptions</b></span>
+                        <a href="#getOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getOptions(question: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:169</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>question</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>any[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="markQuestionAsAnswered"></a>
+                    <span class="name">
+                        <span ><b>markQuestionAsAnswered</b></span>
+                        <a href="#markQuestionAsAnswered"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>markQuestionAsAnswered(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="markQuestionAsVisited"></a>
+                    <span class="name">
+                        <span ><b>markQuestionAsVisited</b></span>
+                        <a href="#markQuestionAsVisited"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>markQuestionAsVisited(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:174</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="navigateToQuestion"></a>
+                    <span class="name">
+                        <span ><b>navigateToQuestion</b></span>
+                        <a href="#navigateToQuestion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>navigateToQuestion(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:186</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nextQuestion"></a>
+                    <span class="name">
+                        <span ><b>nextQuestion</b></span>
+                        <a href="#nextQuestion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>nextQuestion()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:250</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prepareSubmissionData"></a>
+                    <span class="name">
+                        <span ><b>prepareSubmissionData</b></span>
+                        <a href="#prepareSubmissionData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>prepareSubmissionData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:228</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="previousQuestion"></a>
+                    <span class="name">
+                        <span ><b>previousQuestion</b></span>
+                        <a href="#previousQuestion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>previousQuestion()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="244"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:244</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectOption"></a>
+                    <span class="name">
+                        <span ><b>selectOption</b></span>
+                        <a href="#selectOption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectOption(questionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, sectionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, answer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>questionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>sectionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>answer</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectSection"></a>
+                    <span class="name">
+                        <span ><b>selectSection</b></span>
+                        <a href="#selectSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectSection(section: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>section</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startTimer"></a>
+                    <span class="name">
+                        <span ><b>startTimer</b></span>
+                        <a href="#startTimer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startTimer()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:130</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitAssessment"></a>
+                    <span class="name">
+                        <span ><b>submitAssessment</b></span>
+                        <a href="#submitAssessment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>submitAssessment()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="terminateTest"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>terminateTest</b></span>
+                        <a href="#terminateTest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>terminateTest()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="assessmentData"></a>
+                    <span class="name">
+                        <span ><b>assessmentData</b></span>
+                        <a href="#assessmentData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentQuestionIndex"></a>
+                    <span class="name">
+                        <span ><b>currentQuestionIndex</b></span>
+                        <a href="#currentQuestionIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentQuestions"></a>
+                    <span class="name">
+                        <span ><b>currentQuestions</b></span>
+                        <a href="#currentQuestions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>any[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentSection"></a>
+                    <span class="name">
+                        <span ><b>currentSection</b></span>
+                        <a href="#currentSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentSectionIndex"></a>
+                    <span class="name">
+                        <span ><b>currentSectionIndex</b></span>
+                        <a href="#currentSectionIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="endTestText"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>endTestText</b></span>
+                        <a href="#endTestText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>TemplateRef&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ContentChild(&#x27;endTestText&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLastQuestionInSection"></a>
+                    <span class="name">
+                        <span ><b>isLastQuestionInSection</b></span>
+                        <a href="#isLastQuestionInSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLastSection"></a>
+                    <span class="name">
+                        <span ><b>isLastSection</b></span>
+                        <a href="#isLastSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="questionStates"></a>
+                    <span class="name">
+                        <span ><b>questionStates</b></span>
+                        <a href="#questionStates"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sections"></a>
+                    <span class="name">
+                        <span ><b>sections</b></span>
+                        <a href="#sections"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>any[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedAnswers"></a>
+                    <span class="name">
+                        <span ><b>selectedAnswers</b></span>
+                        <a href="#selectedAnswers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startTime"></a>
+                    <span class="name">
+                        <span ><b>startTime</b></span>
+                        <a href="#startTime"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="timer"></a>
+                    <span class="name">
+                        <span ><b>timer</b></span>
+                        <a href="#timer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="timerInterval"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>timerInterval</b></span>
+                        <a href="#timerInterval"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="timerSubscription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>timerSubscription</b></span>
+                        <a href="#timerSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalQuestionsInSection"></a>
+                    <span class="name">
+                        <span ><b>totalQuestionsInSection</b></span>
+                        <a href="#totalQuestionsInSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalSections"></a>
+                    <span class="name">
+                        <span ><b>totalSections</b></span>
+                        <a href="#totalSections"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userId"></a>
+                    <span class="name">
+                        <span ><b>userId</b></span>
+                        <a href="#userId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>1</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="videoPath"></a>
+                    <span class="name">
+                        <span ><b>videoPath</b></span>
+                        <a href="#videoPath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/pages/flashyre-assessment1/flashyre-assessment1.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ContentChild, Input, TemplateRef, Component, OnDestroy, OnInit } from &#x27;@angular/core&#x27;;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;;
+import { AssessmentService } from &#x27;../../services/assessment.service&#x27;;
+import { Subscription } from &#x27;rxjs&#x27;;
+import { VideoRecorderService } from &#x27;../../services/video-recorder.service&#x27;;
+import { ProctoringService } from &#x27;../../services/proctoring.service&#x27;;
+import { Router, ActivatedRoute } from &#x27;@angular/router&#x27;; // Add ActivatedRoute
+import { NgxSpinnerService } from &#x27;ngx-spinner&#x27;;
+
+interface SelectedAnswer {
+  answer: string;
+  section_id: number;
+}
+
+@Component({
+  selector: &#x27;flashyre-assessment1&#x27;,
+  templateUrl: &#x27;flashyre-assessment1.component.html&#x27;,
+  styleUrls: [&#x27;flashyre-assessment1.component.css&#x27;],
+})
+export class FlashyreAssessment1 implements OnInit, OnDestroy {
+  @ContentChild(&#x27;endTestText&#x27;)
+  endTestText: TemplateRef&lt;any&gt;;
+  @Input()
+  logoSrc: string &#x3D; &#x27;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&#x27;;
+  @Input()
+  rootClassName: string &#x3D; &#x27;&#x27;;
+  @Input()
+  logoAlt: string &#x3D; &#x27;image&#x27;;
+
+  totalQuestionsInSection: number;
+  isLastSection: boolean;
+  currentQuestionIndex: number;
+  currentSectionIndex: number;
+  totalSections: number;
+
+  assessmentData: any &#x3D; {};
+  sections: any[];
+  currentSection: any;
+  currentQuestions: any[] &#x3D; [];
+  timer: number;
+  userId &#x3D; 1;
+  startTime: Date;
+  videoPath: string | null;
+
+  isLastQuestionInSection &#x3D; false;
+
+  selectedAnswers: { [question_id: number]: SelectedAnswer } &#x3D; {};
+  questionStates: { [key: number]: &#x27;unvisited&#x27; | &#x27;visited&#x27; | &#x27;answered&#x27; } &#x3D; {};
+
+  private timerSubscription: Subscription;
+
+  constructor(
+    private title: Title,
+    private meta: Meta,
+    private assessmentService: AssessmentService,
+    private videoRecorder: VideoRecorderService,
+    private proctoringService: ProctoringService,
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private route: ActivatedRoute // Inject ActivatedRoute
+  ) {
+    this.currentQuestionIndex &#x3D; 0;
+
+    this.title.setTitle(&#x27;Flashyre-Assessment1 - Flashyre&#x27;);
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Flashyre-Assessment1 - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ]);
+  }
+
+  private timerInterval: any;
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    // Extract assessmentId from query parameters
+    const assessmentId &#x3D; this.route.snapshot.queryParamMap.get(&#x27;id&#x27;);
+    
+    if (assessmentId) {
+      this.fetchAssessmentData(+assessmentId); // Convert to number and fetch data
+      this.startTime &#x3D; new Date(); // Record start time when assessment begins
+      try {
+        await this.videoRecorder.startRecording();
+        this.proctoringService.startMonitoring();
+      } catch (error) {
+        console.error(&#x27;Failed to start assessment:&#x27;, error);
+      }
+    } else {
+      console.error(&#x27;No assessment ID provided in route&#x27;);
+      this.router.navigate([&#x27;/assessment-error&#x27;]); // Redirect if no ID
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    clearInterval(this.timerInterval);
+  }
+
+  fetchAssessmentData(assessmentId: number): void {
+    this.spinner.show();
+    this.assessmentService.getAssessmentData(assessmentId).subscribe({
+      next: (data) &#x3D;&gt; {
+        this.assessmentData &#x3D; data;
+        this.sections &#x3D; Object.keys(data.sections).map((sectionName) &#x3D;&gt; ({
+          name: sectionName,
+          ...data.sections[sectionName],
+        }));
+        this.timer &#x3D; data.total_assessment_duration * 60;
+        this.assessmentService.updateTimer(this.timer);
+        console.log(&#x27;timer data in seconds: &#x27;, this.timer);
+        this.startTimer();
+        this.selectSection(this.sections[0]);
+      },
+      error: (error) &#x3D;&gt; {
+        console.error(&#x27;Error fetching assessment data:&#x27;, error);
+      },
+      complete: () &#x3D;&gt; {
+        this.spinner.hide();
+      }
+    });
+  }
+
+  startTimer(): void {
+    this.timerSubscription &#x3D; this.assessmentService.timer$.subscribe((time) &#x3D;&gt; {
+      this.timer &#x3D; time;
+      console.log(&#x27;timer data in startTimer(): &#x27;, this.timer);
+      if (this.timer &lt;&#x3D; 0) {
+        this.terminateTest();
+      }
+    });
+    this.decrementTimer();
+  }
+
+  decrementTimer(): void {
+    this.timerInterval &#x3D; setInterval(() &#x3D;&gt; {
+      if (this.timer &gt; 0) {
+        this.assessmentService.updateTimer(this.timer - 1);
+      } else {
+        clearInterval(this.timerInterval);
+      }
+    }, 1000);
+  }
+
+  submitAssessment(): void {
+    const responses &#x3D; this.prepareSubmissionData();
+    this.assessmentService.submitAssessment(responses).subscribe({
+      next: (response) &#x3D;&gt; {
+        console.log(&#x27;Assessment submitted successfully:&#x27;, response);
+      },
+      error: (error) &#x3D;&gt; {
+        console.error(&#x27;Assessment submission failed:&#x27;, error);
+      },
+    });
+  }
+
+  selectSection(section: any): void {
+    this.currentSection &#x3D; section;
+    this.currentQuestions &#x3D; section.questions;
+    this.currentQuestionIndex &#x3D; 0;
+  }
+
+  getOptions(question: any): any[] {
+    const options &#x3D; Object.keys(question.options).map(key &#x3D;&gt; ({ key, value: question.options[key] }));
+    return question.option_type &#x3D;&#x3D;&#x3D; 2 ? options.slice(0, 2) : options.slice(0, 4);
+  }
+
+  markQuestionAsVisited(index: number): void {
+    if (!this.questionStates[index]) {
+      this.questionStates[index] &#x3D; &#x27;visited&#x27;;
+    }
+  }
+
+  markQuestionAsAnswered(index: number): void {
+    if (this.questionStates[index] &#x3D;&#x3D;&#x3D; &#x27;visited&#x27;) {
+      this.questionStates[index] &#x3D; &#x27;answered&#x27;;
+    }
+  }
+
+  navigateToQuestion(index: number): void {
+    if (index &gt;&#x3D; 0 &amp;&amp; index &lt; this.currentQuestions.length) {
+      this.currentQuestionIndex &#x3D; index;
+      this.markQuestionAsVisited(index);
+    }
+  }
+
+  selectOption(questionId: number, sectionId: number, answer: string): void {
+    this.selectedAnswers[questionId] &#x3D; {
+      answer: answer,
+      section_id: sectionId,
+    };
+    this.markQuestionAsAnswered(this.currentQuestionIndex);
+  }
+
+  clearResponse(questionId: number): void {
+    delete this.selectedAnswers[questionId];
+  }
+
+  async terminateTest(): Promise&lt;void&gt; {
+    try {
+      this.videoRecorder.stopRecording();
+      this.proctoringService.stopMonitoring();
+      this.videoPath &#x3D; await this.videoRecorder.getVideoPath();
+
+      const responses &#x3D; this.prepareSubmissionData();
+      this.assessmentService.submitAssessment(responses).subscribe({
+        next: (response) &#x3D;&gt; {
+          console.log(&#x27;Assessment submitted successfully:&#x27;, response);
+          this.router.navigate([&#x27;/candidate-dashboard-main&#x27;]);
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;Assessment submission failed:&#x27;, error);
+          this.router.navigate([&#x27;/assessment-error&#x27;]);
+        },
+      });
+    } catch (error) {
+      console.error(&#x27;Termination failed:&#x27;, error);
+      this.router.navigate([&#x27;/assessment-error&#x27;]);
+    }
+  }
+
+  prepareSubmissionData(): any {
+    return {
+      assessmentId: this.assessmentData.assessment_id,
+      userId: this.userId,
+      responses: Object.keys(this.selectedAnswers).map((questionId) &#x3D;&gt; ({
+        questionId: +questionId,
+        sectionId: this.selectedAnswers[+questionId].section_id,
+        answer: this.selectedAnswers[+questionId].answer,
+      })),
+      startTime: this.startTime,
+      endTime: new Date().toISOString(),
+      submissionType: &#x27;manual&#x27;,
+      videoPath: this.videoPath,
+    };
+  }
+
+  previousQuestion(): void {
+    if (this.currentQuestionIndex &gt; 0) {
+      this.currentQuestionIndex--;
+    }
+  }
+
+  nextQuestion(): void {
+    if (this.currentQuestionIndex &lt; this.currentQuestions.length - 1) {
+      this.currentQuestionIndex++;
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;flashyre-assessment1-container1&quot;&gt;
+  &lt;div id&#x3D;&quot;main-container&quot; class&#x3D;&quot;flashyre-assessment1-main-container&quot;&gt;
+    &lt;div id&#x3D;&quot;header-container&quot; class&#x3D;&quot;flashyre-assessment1-header-container&quot;&gt;
+      &lt;img
+        id&#x3D;&quot;Logo&quot;
+        alt&#x3D;&quot;image&quot;
+        src&#x3D;&quot;/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png&quot;
+        class&#x3D;&quot;flashyre-assessment1-logo&quot;
+      /&gt;
+    &lt;span id&#x3D;&quot;timer&quot; 
+      class&#x3D;&quot;flashyre-assessment1-timer&quot;&gt;{{ timer | timerFormat }}
+    &lt;/span&gt;
+      &lt;button
+        id&#x3D;&quot;end-test-button&quot;
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;flashyre-assessment1-end-test-button button&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;end-test-text&quot; class&#x3D;&quot;flashyre-assessment1-end-test-text&quot; (click)&#x3D;&quot;terminateTest()&quot;&gt;
+          Submit
+        &lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;assessment-questions-options-main-container&quot;
+      class&#x3D;&quot;flashyre-assessment1-assessment-questions-options-main-container&quot;
+    &gt;
+      &lt;div
+        id&#x3D;&quot;sections-questions-previous-next-containers&quot;
+        class&#x3D;&quot;flashyre-assessment1-sections-questions-previous-next-containers&quot;
+      &gt;
+        &lt;div
+          data-thq&#x3D;&quot;thq-dropdown&quot;
+          class&#x3D;&quot;flashyre-assessment1-sections-dropdown list-item&quot;
+        &gt;
+        &lt;div
+        data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+        class&#x3D;&quot;flashyre-assessment1-dropdown-toggle1&quot;
+      &gt;
+        &lt;span id&#x3D;&quot;sections-text&quot; class&#x3D;&quot;flashyre-assessment1-sections-text&quot;&gt;
+          {{ currentSection?.name || &#x27;Sections&#x27; }}
+        &lt;/span&gt;
+        &lt;div
+          data-thq&#x3D;&quot;thq-dropdown-arrow&quot;
+          class&#x3D;&quot;flashyre-assessment1-dropdown-arrow&quot;
+        &gt;
+          &lt;svg
+            width&#x3D;&quot;48&quot;
+            height&#x3D;&quot;48&quot;
+            viewBox&#x3D;&quot;0 0 48 48&quot;
+            class&#x3D;&quot;flashyre-assessment1-icon10&quot;
+          &gt;
+            &lt;path
+              d&#x3D;&quot;M36 18L24 30L12 18&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;4&quot;
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+          &lt;ul
+            data-thq&#x3D;&quot;thq-dropdown-list&quot;
+            class&#x3D;&quot;flashyre-assessment1-sections-dropdown-list&quot;
+          &gt;
+            &lt;li
+              *ngFor&#x3D;&quot;let section of sections; let i &#x3D; index&quot;
+              data-thq&#x3D;&quot;thq-dropdown&quot;
+              class&#x3D;&quot;flashyre-assessment1-sections-dropdown-list1 list-item&quot;
+            &gt;
+              &lt;div
+                data-thq&#x3D;&quot;thq-dropdown-toggle&quot;
+                class&#x3D;&quot;flashyre-assessment1-dropdown-toggle2&quot;
+                (click)&#x3D;&quot;selectSection(section)&quot;
+              &gt;
+                &lt;span
+                  id&#x3D;&quot;section-{{i}}-text&quot;
+                  class&#x3D;&quot;flashyre-assessment1-section-a-text&quot;
+                &gt;
+                {{ section.name }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;question-numbers-main-container&quot;
+          class&#x3D;&quot;flashyre-assessment1-question-numbers-main-container&quot;
+        &gt;
+          &lt;svg
+            id&#x3D;&quot;backward-arrow-icon&quot;
+            width&#x3D;&quot;32&quot;
+            height&#x3D;&quot;32&quot;
+            viewBox&#x3D;&quot;0 0 32 32&quot;
+            class&#x3D;&quot;flashyre-assessment1-backward-arrow-icon&quot;
+            (click)&#x3D;&quot;previousQuestion()&quot;
+          &gt;
+            &lt;path
+              d&#x3D;&quot;M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z&quot;
+              fill&#x3D;&quot;currentColor&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+          &lt;div
+            id&#x3D;&quot;numbers-main-container&quot;
+            class&#x3D;&quot;flashyre-assessment1-numbers-main-container&quot;
+          &gt;
+            &lt;button
+              *ngFor&#x3D;&quot;let question of currentQuestions; let i &#x3D; index&quot;
+              id&#x3D;&quot;question-number-{{i}}-button&quot;
+              type&#x3D;&quot;button&quot;
+              class&#x3D;&quot;flashyre-assessment1-question-number1-button10 button&quot;
+              [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: i &#x3D;&#x3D;&#x3D; currentQuestionIndex }&quot;
+              (click)&#x3D;&quot;navigateToQuestion(i)&quot;
+            &gt;
+            {{ i + 1 }}
+            &lt;/button&gt;
+          &lt;/div&gt;
+          &lt;svg
+            id&#x3D;&quot;forward-arrow-icon&quot;
+            width&#x3D;&quot;32&quot;
+            height&#x3D;&quot;32&quot;
+            viewBox&#x3D;&quot;0 0 32 32&quot;
+            class&#x3D;&quot;flashyre-assessment1-forward-arrow-icon&quot;
+            (click)&#x3D;&quot;nextQuestion()&quot;
+          &gt;
+            &lt;path
+              d&#x3D;&quot;M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z&quot;
+              fill&#x3D;&quot;currentColor&quot;
+            &gt;&lt;/path&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div
+          id&#x3D;&quot;previous-next-button-main-container&quot;
+          class&#x3D;&quot;flashyre-assessment1-previous-next-button-main-container1&quot;
+        &gt;
+          &lt;button
+            id&#x3D;&quot;previous-button1&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;flashyre-assessment1-previous-button1 button&quot;
+            (click)&#x3D;&quot;previousQuestion()&quot;
+          &gt;
+            Previous
+          &lt;/button&gt;
+          &lt;button
+            id&#x3D;&quot;next-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;flashyre-assessment1-next-button1 button&quot;
+            (click)&#x3D;&quot;nextQuestion()&quot;
+          &gt;
+            Next
+          &lt;/button&gt;
+          &lt;button
+            id&#x3D;&quot;next-section-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;flashyre-assessment1-next-section-button1 button&quot;
+            [ngClass]&#x3D;&quot;{ &#x27;d-block&#x27;: currentQuestionIndex &#x3D;&#x3D;&#x3D; totalQuestionsInSection - 1 &amp;&amp; !isLastSection }&quot;
+
+          &gt;
+            Next Section
+          &lt;/button&gt;
+          &lt;button
+            id&#x3D;&quot;submit-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;flashyre-assessment1-submit-button1 button&quot;
+            [ngClass]&#x3D;&quot;{ &#x27;d-block&#x27;: currentQuestionIndex &#x3D;&#x3D;&#x3D; totalQuestionsInSection - 1 &amp;&amp; isLastSection }&quot;
+            (click)&#x3D;&quot;submitAssessment()&quot;
+          &gt;
+            Submit
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;question-answer-container&quot;
+        class&#x3D;&quot;flashyre-assessment1-question-answer-container&quot;
+      &gt;
+        &lt;div
+          id&#x3D;&quot;questions-container&quot;
+          class&#x3D;&quot;flashyre-assessment1-questions-container&quot;
+        &gt;
+          &lt;span
+            id&#x3D;&quot;question-num-text&quot;
+            class&#x3D;&quot;flashyre-assessment1-question-num-text&quot;
+          &gt;
+            Question {{ currentQuestionIndex + 1 }}
+          &lt;/span&gt;
+          &lt;div
+            id&#x3D;&quot;question-container&quot;
+            class&#x3D;&quot;flashyre-assessment1-question-container&quot;
+          &gt;
+            &lt;span id&#x3D;&quot;question-text&quot; class&#x3D;&quot;flashyre-assessment1-question-text&quot;&gt;
+                {{ currentQuestions[currentQuestionIndex]?.question }}
+              
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;button
+            id&#x3D;&quot;previous-button&quot;
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;flashyre-assessment1-previous-button2 button&quot;
+            (click)&#x3D;&quot;previousQuestion()&quot;
+          &gt;
+            &amp;lt;-
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;button
+          id&#x3D;&quot;next-button1&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment1-next-button2 button&quot;
+          (click)&#x3D;&quot;nextQuestion()&quot;
+        &gt;
+          -&amp;gt;
+        &lt;/button&gt;
+        &lt;div
+          id&#x3D;&quot;answers-container&quot;
+          class&#x3D;&quot;flashyre-assessment1-answers-container&quot;
+        &gt;
+          &lt;div
+            id&#x3D;&quot;select-an-option-container&quot;
+            class&#x3D;&quot;flashyre-assessment1-select-an-option-container&quot;
+          &gt;
+            &lt;span
+              id&#x3D;&quot;select-an-option-text&quot;
+              class&#x3D;&quot;flashyre-assessment1-select-an-option-text&quot;
+            &gt;
+              Select an option
+            &lt;/span&gt;
+            &lt;div
+              id&#x3D;&quot;clear-response-container&quot;
+              class&#x3D;&quot;flashyre-assessment1-clear-response-container&quot;
+              (click)&#x3D;&quot;clearResponse(currentQuestions[currentQuestionIndex]?.question_id)&quot;
+            &gt;
+              &lt;svg
+                id&#x3D;&quot;eraser-icon&quot;
+                width&#x3D;&quot;24&quot;
+                height&#x3D;&quot;24&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+                class&#x3D;&quot;flashyre-assessment1-eraser-icon&quot;
+              &gt;
+                &lt;g fill&#x3D;&quot;none&quot;&gt;
+                  &lt;g clip-path&#x3D;&quot;url(#majesticonsEraserLine0)&quot;&gt;
+                    &lt;path
+                      d&#x3D;&quot;m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20&quot;
+                      stroke&#x3D;&quot;currentColor&quot;
+                      stroke-width&#x3D;&quot;2&quot;
+                      stroke-linecap&#x3D;&quot;round&quot;
+                      stroke-linejoin&#x3D;&quot;round&quot;
+                    &gt;&lt;/path&gt;
+                  &lt;/g&gt;
+                  &lt;defs&gt;
+                    &lt;clippath id&#x3D;&quot;majesticonsEraserLine0&quot;&gt;
+                      &lt;path d&#x3D;&quot;M0 0h24v24H0z&quot; fill&#x3D;&quot;#fff&quot;&gt;&lt;/path&gt;
+                    &lt;/clippath&gt;
+                  &lt;/defs&gt;
+                &lt;/g&gt;
+              &lt;/svg&gt;
+              &lt;span
+                id&#x3D;&quot;clear-response-text&quot;
+                class&#x3D;&quot;flashyre-assessment1-clear-response-text&quot;
+              &gt;
+                Clear Response
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div
+            id&#x3D;&quot;options-container&quot;
+            class&#x3D;&quot;flashyre-assessment1-options-container&quot;
+          &gt;
+            &lt;div
+            *ngFor&#x3D;&quot;let option of getOptions(currentQuestions[currentQuestionIndex]); index as i&quot;
+              id&#x3D;&quot;first-option-container&quot;
+              class&#x3D;&quot;flashyre-assessment1-first-option-container&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;flashyre-assessment1-container2&quot;&gt;
+                &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;question{{currentQuestions[currentQuestionIndex]?.question_id}}&quot;
+                id&#x3D;&quot;radio{{currentQuestions[currentQuestionIndex]?.question_id}}-{{i}}&quot;
+                class&#x3D;&quot;flashyre-assessment1-radio1&quot;
+                value&#x3D;&quot;{{option.value}}&quot;
+                (change)&#x3D;&quot;selectOption(
+                  currentQuestions[currentQuestionIndex]?.question_id,
+                  currentSection?.section_id,
+                  option.value
+                )&quot;
+                [checked]&#x3D;&quot;selectedAnswers[currentQuestions[currentQuestionIndex]?.question_id]?.answer &#x3D;&#x3D;&#x3D; option.value&quot;
+              /&gt;
+              &lt;span
+                id&#x3D;&quot;option-text-{{i}}&quot;
+                class&#x3D;&quot;flashyre-assessment1-first-option-text&quot;
+                
+              &gt;
+                {{ option.value }}
+              &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+
+
+
+
+            &lt;div class&#x3D;&quot;flashyre-assessment1-text-input-container&quot;&gt;
+              &lt;p
+                id&#x3D;&quot;descriptive-answer&quot;
+                class&#x3D;&quot;flashyre-assessment1-description-type-answer textarea&quot;
+              &gt;
+                .
+              &lt;/p&gt;
+            &lt;/div&gt;
+
+
+
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div
+        id&#x3D;&quot;previous-next-button-main-container&quot;
+        class&#x3D;&quot;flashyre-assessment1-previous-next-button-main-container2&quot;
+      &gt;
+        &lt;button
+          id&#x3D;&quot;previous-button2&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment1-previous-button3 button&quot;
+          (click)&#x3D;&quot;previousQuestion()&quot;
+        &gt;
+          Previous
+        &lt;/button&gt;
+        &lt;button
+          id&#x3D;&quot;next-button2&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment1-next-button3 button&quot;
+          (click)&#x3D;&quot;nextQuestion()&quot;
+        &gt;
+          Next
+        &lt;/button&gt;
+        &lt;button
+          id&#x3D;&quot;next-section-button&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment1-next-section-button2 button&quot;
+        &gt;
+          Next Section
+        &lt;/button&gt;
+        &lt;button
+          id&#x3D;&quot;submit-button&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;flashyre-assessment1-submit-button2 button&quot;
+        &gt;
+          Submit
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>flashyre-assessment1.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.d-block {
+  display: block
+}
+
+.flashyre-assessment1-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment1-main-container {
+  gap: 24px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+ 
+.flashyre-assessment1-header-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  position: fixed;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-left: 80px;
+  padding-right: 80px;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment1-logo {
+  width: 350px;
+  height: auto;
+  object-fit: cover;
+}
+ 
+.flashyre-assessment1-timer {
+  color: #f10400;
+  width: 200px;
+  height: 48px;
+  display: flex;
+  font-size: 48px;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment1-end-test-button {
+  width: 250px;
+  height: 55px;
+  padding: 0px;
+  transition: 0.3s;
+  border-width: 0px;
+  border-radius: 8px;
+  background-color: #1F882B;
+}
+ 
+.flashyre-assessment1-end-test-button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.8s;
+  background-color: #30B63F;
+}
+ 
+.flashyre-assessment1-end-test-button:active {
+  transform: scale(0.90);
+  background-color: #7AD184;
+}
+ 
+.flashyre-assessment1-end-test-text {
+  color: rgb(255, 255, 255);
+  height: auto;
+  font-size: 20px;
+}
+ 
+.flashyre-assessment1-assessment-questions-options-main-container {
+  gap: 16px;
+  width: 90%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  align-self: center;
+  margin-top: 100px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment1-sections-questions-previous-next-containers {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.flashyre-assessment1-sections-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.flashyre-assessment1-dropdown-toggle1 {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: 200px;
+  height: 40px;
+  display: flex;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: 2px;
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment1-sections-text {
+  font-size: 20px;
+  font-style: normal;
+  text-align: center;
+  font-weight: 400;
+  margin-right: 0px;
+  vertical-align: middle;
+}
+ 
+.flashyre-assessment1-dropdown-arrow {
+  transition: 0.3s;
+}
+ 
+.flashyre-assessment1-icon10 {
+  width: 24px;
+  height: 24px;
+}
+ 
+.flashyre-assessment1-sections-dropdown-list {
+  left: 0px;
+  right: 0px;
+  width: auto;
+  margin: auto;
+  display: none;
+  z-index: 100;
+  position: absolute;
+  min-width: 100%;
+  transition: 0.3s;
+  align-items: stretch;
+  border-color: #D9D9D9;
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-radius4);
+  flex-direction: column;
+  list-style-type: none;
+  background-color: #FFFFFF;
+  list-style-position: inside;
+}
+ 
+.flashyre-assessment1-sections-dropdown-list1 {
+  width: auto;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.flashyre-assessment1-dropdown-toggle2 {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-dropdown-toggle2:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.flashyre-assessment1-section-a-text {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment1-sections-dropdown-list-b-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.flashyre-assessment1-section-b-dropdown {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-section-b-dropdown:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.flashyre-assessment1-section-b-text {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment1-section-c-dropdown-list {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  border-radius: var(--dl-layout-radius-radius2);
+}
+ 
+.flashyre-assessment1-section-c-dropdown-toggle {
+  fill: #595959;
+  color: #595959;
+  width: 100%;
+  display: inline-flex;
+  transition: 0.3s;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-radius4);
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-section-c-dropdown-toggle:hover {
+  fill: #fff;
+  color: #fff;
+  background-color: #595959;
+}
+ 
+.flashyre-assessment1-section-c-text {
+  fill: var(--dl-color-theme-neutral-dark);
+  color: var(--dl-color-theme-neutral-dark);
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment1-question-numbers-main-container {
+  flex: 0 0 auto;
+  width: 300px;
+  display: flex;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: flex-start;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  border-radius: 2px;
+}
+ 
+.flashyre-assessment1-backward-arrow-icon {
+  width: 60px;
+  height: 40px;
+}
+ 
+.flashyre-assessment1-numbers-main-container {
+  gap: 8px;
+  flex: nowrap;
+  width: 200px;
+  height: auto;
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  align-items: flex-start;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-question-number1-button10 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: 2px 2px 10px 0px #d4d4d4;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: #E0E0E0;
+}
+ 
+.flashyre-assessment1-question-number1-button10:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button10:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button11 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button11:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button11:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button12 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button12:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button12:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button13 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button13:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button13:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button14 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button14:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button14:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button15 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button15:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button15:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button16 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button16:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button16:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button17 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button17:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button17:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button18 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button18:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button18:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-question-number1-button19 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  padding: var(--dl-layout-space-unit);
+  font-size: 24px;
+  box-shadow: rgb(212, 212, 212) 2px 2px 10px 0px;
+  transition: 0.3s;
+  align-items: center;
+  border-width: 0px;
+  border-radius: 4px;
+  justify-content: center;
+  background-color: rgb(224, 224, 224);
+}
+ 
+.flashyre-assessment1-question-number1-button19:hover {
+  color: #FFFFFF;
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-question-number1-button19:active {
+  color: #FFFFFF;
+  box-shadow: initial;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-forward-arrow-icon {
+  width: 60px;
+  height: 40px;
+}
+ 
+.flashyre-assessment1-previous-next-button-main-container1 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.flashyre-assessment1-previous-button1 {
+  width: 110px;
+  height: 40px;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 400;
+  border-color: #E0E0E0;
+  border-radius: 2px;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment1-previous-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #C0C0C0;
+}
+ 
+.flashyre-assessment1-previous-button1:active {
+  transform: scale(0.8);
+  background-color: #EBEBEB;
+}
+ 
+.flashyre-assessment1-next-button1 {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  width: 110px;
+  height: 40px;
+  font-size: 20px;
+  box-shadow: rgb(212, 212, 212) 5px 5px 10px 0px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 400;
+  border-color: #E0E0E0;
+  border-radius: 2px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.flashyre-assessment1-next-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #C0C0C0;
+}
+ 
+.flashyre-assessment1-next-button1:active {
+  transform: scale(0.8);
+  background-color: #EBEBEB;
+}
+ 
+.flashyre-assessment1-next-section-button1 {
+  fill: rgb(5, 53, 108);
+  color: rgb(5, 53, 108);
+  height: 100%;
+  display: none;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  transition: 0.3s;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  border-radius: 2px;
+  background-color: #A5B6CA;
+}
+ 
+.flashyre-assessment1-next-section-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #D7DFE7;
+}
+ 
+.flashyre-assessment1-next-section-button1:active {
+  transform: scale(0.9);
+  background-color: #F5F7F9;
+}
+ 
+.flashyre-assessment1-submit-button1 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  height: 100%;
+  display: none;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  transition: 0.3s;
+  border-width: 0px;
+  border-radius: 2px;
+  background-color: #1F882B;
+}
+ 
+.flashyre-assessment1-submit-button1:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #30B63F;
+}
+ 
+.flashyre-assessment1-submit-button1:active {
+  transform: scale(0.9);
+  background-color: #7AD184;
+}
+ 
+.flashyre-assessment1-question-answer-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  border-color: #E0E0E0;
+  border-width: 1px;
+}
+ 
+.flashyre-assessment1-questions-container {
+  gap: 36px;
+  flex: 0 0 auto;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-twounits);
+  position: relative;
+  align-items: flex-start;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  flex-direction: column;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 0px;
+}
+ 
+.flashyre-assessment1-question-num-text {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment1-question-container {
+  height: 371px;
+  display: flex;
+  align-items: flex-start;
+}
+ 
+.flashyre-assessment1-question-text {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  text-align: left;
+  word-break: break-all;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-previous-button2 {
+  top: 224px;
+  fill: #FFFFFF;
+  left: -39px;
+  color: #FFFFFF;
+  margin: auto;
+  position: absolute;
+  font-size: 24px;
+  align-self: flex-start;
+  transition: 0.3s;
+  border-width: 0px;
+  background-color: #05356C;
+}
+ 
+.flashyre-assessment1-previous-button2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-previous-button2:active {
+  transform: scale(0.8);
+  background-color: #A5B6CA;
+}
+ 
+.flashyre-assessment1-next-button2 {
+  top: 400px;
+  fill: #FFFFFF;
+  color: rgb(255, 255, 255);
+  right: 60px;
+  margin: auto;
+  position: absolute;
+  font-size: 24px;
+  align-self: flex-start;
+  transition: 0.3s;
+  border-width: 0px;
+  background-color: rgb(5, 53, 108);
+}
+ 
+.flashyre-assessment1-next-button2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #5F7DA1;
+}
+ 
+.flashyre-assessment1-next-button2:active {
+  transform: scale(0.8);
+  background-color: #A5B6CA;
+}
+ 
+.flashyre-assessment1-answers-container {
+  gap: 36px;
+  flex: 0 0 auto;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-twounits);
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment1-select-an-option-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.flashyre-assessment1-select-an-option-text {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+}
+ 
+.flashyre-assessment1-clear-response-container {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment1-eraser-icon {
+  width: 20px;
+  height: 20px;
+}
+ 
+.flashyre-assessment1-clear-response-text {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+}
+ 
+.flashyre-assessment1-options-container {
+  gap: 16px;
+  width: 100%;
+  height: 359px;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: flex-start;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-first-option-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: 4px;
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-container2 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.flashyre-assessment1-radio1 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.flashyre-assessment1-first-option-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+}
+ 
+.flashyre-assessment1-second-option-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: 4px;
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-radio2 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.flashyre-assessment1-second-option-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  align-items: stretch;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-third-option-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: 4px;
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-radio3 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.flashyre-assessment1-third-option-text {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-fourth-option-container {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: var(--dl-layout-space-halfunit);
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: 4px;
+  padding-right: var(--dl-layout-space-unit);
+  padding-bottom: var(--dl-layout-space-halfunit);
+}
+ 
+.flashyre-assessment1-radio4 {
+  width: 20px;
+  height: 20px;
+}
+ 
+.flashyre-assessment1-fourth-option-text {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+ 
+.flashyre-assessment1-text-input-container {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100%;
+  display: none;
+  overflow: hidden;
+  align-items: flex-start;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  flex-direction: column;
+}
+ 
+.flashyre-assessment1-description-type-answer {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  word-break: break-all;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+  scrollbar-width: none;
+  overscroll-behavior: smooth;
+}
+ 
+.flashyre-assessment1-previous-next-button-main-container2 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 40px;
+  display: none;
+  align-items: flex-start;
+}
+ 
+.flashyre-assessment1-previous-button3 {
+  width: 110px;
+  height: 40px;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 400;
+  border-color: #E0E0E0;
+  border-radius: 2px;
+  background-color: #FFFFFF;
+}
+ 
+.flashyre-assessment1-previous-button3:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #C0C0C0;
+}
+ 
+.flashyre-assessment1-previous-button3:active {
+  height: 25px;
+  transform: scale(0.8);
+  background-color: #EBEBEB;
+}
+ 
+.flashyre-assessment1-next-button3 {
+  fill: #05356C;
+  color: rgb(5, 53, 108);
+  width: 110px;
+  height: 40px;
+  font-size: 20px;
+  box-shadow: rgb(212, 212, 212) 5px 5px 10px 0px;
+  font-style: normal;
+  transition: 0.3s;
+  font-weight: 400;
+  border-color: #E0E0E0;
+  border-radius: 2px;
+  background-color: rgb(255, 255, 255);
+}
+ 
+.flashyre-assessment1-next-button3:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #C0C0C0;
+}
+ 
+.flashyre-assessment1-next-button3:active {
+  transform: scale(0.8);
+  background-color: #EBEBEB;
+}
+ 
+.flashyre-assessment1-next-section-button2 {
+  fill: rgb(5, 53, 108);
+  color: rgb(5, 53, 108);
+  height: 100%;
+  display: none;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  transition: 0.3s;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  border-radius: 2px;
+  background-color: #A5B6CA;
+}
+ 
+.flashyre-assessment1-next-section-button2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #D7DFE7;
+}
+ 
+.flashyre-assessment1-next-section-button2:active {
+  transform: scale(0.9);
+  background-color: #F5F7F9;
+}
+ 
+.flashyre-assessment1-submit-button2 {
+  fill: #FFFFFF;
+  color: #FFFFFF;
+  height: 100%;
+  display: none;
+  font-size: 20px;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  transition: 0.3s;
+  border-width: 0px;
+  border-radius: 2px;
+  background-color: #1F882B;
+}
+ 
+.flashyre-assessment1-submit-button2:hover {
+  cursor: pointer;
+  transform: scale(0.90);
+  transition: all 0.8s;
+  background-color: #30B63F;
+}
+ 
+.flashyre-assessment1-submit-button2:active {
+  transform: scale(0.9);
+  background-color: #7AD184;
+}
+ 
+@media(max-width: 1200px) {
+  .flashyre-assessment1-header-container {
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-content: space-between;
+  }
+  .flashyre-assessment1-logo {
+    width: 255px;
+    height: 40px;
+  }
+  .flashyre-assessment1-timer {
+    height: auto;
+  }
+  .flashyre-assessment1-end-test-button {
+    width: 200px;
+    height: 40px;
+    padding: 0px;
+  }
+  .flashyre-assessment1-end-test-text {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-style: inherit;
+    font-weight: 500;
+  }
+  .flashyre-assessment1-assessment-questions-options-main-container {
+    margin-top: 80px;
+  }
+  .flashyre-assessment1-sections-dropdown-list {
+    background-color: #FFFFFF;
+  }
+  .flashyre-assessment1-section-a-text {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .flashyre-assessment1-section-b-text {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .flashyre-assessment1-section-c-text {
+    fill: var(--dl-color-theme-neutral-dark);
+    color: var(--dl-color-theme-neutral-dark);
+  }
+  .flashyre-assessment1-next-button2 {
+    top: 389px;
+    right: 41px;
+  }
+  .flashyre-assessment1-first-option-text {
+    text-align: left;
+  }
+  .flashyre-assessment1-fourth-option-text {
+    text-align: justify;
+  }
+  .flashyre-assessment1-previous-next-button-main-container2 {
+    display: none;
+  }
+}
+ 
+@media(max-width: 991px) {
+  .flashyre-assessment1-main-container {
+    height: auto;
+    padding-bottom: 0px;
+  }
+  .flashyre-assessment1-header-container {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 8%;
+    z-index: 1000;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .flashyre-assessment1-end-test-button {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-end-test-text {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-style: inherit;
+    font-weight: 500;
+  }
+  .flashyre-assessment1-assessment-questions-options-main-container {
+    width: 95%;
+    height: 695px;
+    padding: var(--dl-layout-space-unit);
+    margin-top: 70px;
+  }
+  .flashyre-assessment1-dropdown-toggle1 {
+    width: 170px;
+    height: 35px;
+  }
+  .flashyre-assessment1-sections-text {
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-numbers-main-container {
+    width: auto;
+    height: 35px;
+  }
+  .flashyre-assessment1-backward-arrow-icon {
+    width: 35px;
+    height: 35px;
+  }
+  .flashyre-assessment1-question-number1-button10 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button11 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button12 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button13 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button14 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button15 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button16 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button17 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button18 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-question-number1-button19 {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .flashyre-assessment1-forward-arrow-icon {
+    width: 35px;
+    height: 35px;
+  }
+  .flashyre-assessment1-previous-next-button-main-container1 {
+    height: 35px;
+  }
+  .flashyre-assessment1-previous-button1 {
+    width: 100px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flashyre-assessment1-next-button1 {
+    width: 100px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flashyre-assessment1-question-answer-container {
+    height: auto;
+    flex-direction: column;
+  }
+  .flashyre-assessment1-questions-container {
+    gap: 24px;
+    width: 100%;
+    height: 300px;
+    padding: var(--dl-layout-space-twounits);
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .flashyre-assessment1-question-num-text {
+    font-size: 16px;
+  }
+  .flashyre-assessment1-question-container {
+    height: 204px;
+  }
+  .flashyre-assessment1-question-text {
+    height: 100%;
+    z-index: 0;
+    font-size: 14px;
+  }
+  .flashyre-assessment1-previous-button2 {
+    top: 160px;
+    left: -26px;
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+  }
+  .flashyre-assessment1-next-button2 {
+    top: 313px;
+    right: 17px;
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+  }
+  .flashyre-assessment1-answers-container {
+    gap: 24px;
+    width: 100%;
+    height: 300px;
+    padding: var(--dl-layout-space-twounits);
+  }
+  .flashyre-assessment1-select-an-option-container {
+    height: auto;
+  }
+  .flashyre-assessment1-select-an-option-text {
+    font-size: 16px;
+  }
+  .flashyre-assessment1-clear-response-container {
+    height: auto;
+  }
+  .flashyre-assessment1-eraser-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .flashyre-assessment1-clear-response-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-options-container {
+    height: 100%;
+  }
+  .flashyre-assessment1-radio1 {
+    width: 16px;
+    height: 16px;
+  }
+  .flashyre-assessment1-first-option-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-radio2 {
+    width: 16px;
+    height: 16px;
+  }
+  .flashyre-assessment1-second-option-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-radio3 {
+    width: 16px;
+    height: 16px;
+  }
+  .flashyre-assessment1-third-option-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-radio4 {
+    width: 16px;
+    height: 16px;
+  }
+  .flashyre-assessment1-fourth-option-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-previous-next-button-main-container2 {
+    height: 35px;
+    display: none;
+  }
+  .flashyre-assessment1-previous-button3 {
+    width: 100px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flashyre-assessment1-next-button3 {
+    width: 100px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .flashyre-assessment1-main-container {
+    height: 100vh;
+  }
+  .flashyre-assessment1-header-container {
+    width: 100%;
+    height: 7%;
+  }
+  .flashyre-assessment1-logo {
+    width: auto;
+    height: 30px;
+  }
+  .flashyre-assessment1-timer {
+    width: auto;
+    font-size: 24px;
+  }
+  .flashyre-assessment1-end-test-button {
+    width: 100px;
+    height: 30px;
+    font-size: 12px;
+  }
+  .flashyre-assessment1-end-test-text {
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+  }
+  .flashyre-assessment1-assessment-questions-options-main-container {
+    width: 95%;
+    height: auto;
+    margin-top: 60px;
+  }
+  .flashyre-assessment1-dropdown-toggle1 {
+    width: auto;
+    height: 30px;
+    padding: var(--dl-layout-space-halfunit);
+  }
+  .flashyre-assessment1-sections-text {
+    font-size: 16px;
+  }
+  .flashyre-assessment1-question-numbers-main-container {
+    width: 200px;
+    height: 30px;
+    align-items: center;
+  }
+  .flashyre-assessment1-backward-arrow-icon {
+    width: 25px;
+    height: 25px;
+    align-self: center;
+  }
+  .flashyre-assessment1-question-number1-button10 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button11 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button12 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button13 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button14 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button15 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button16 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button17 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button18 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-question-number1-button19 {
+    height: 25px;
+    padding: var(--dl-layout-space-halfunit);
+    font-size: 12px;
+  }
+  .flashyre-assessment1-forward-arrow-icon {
+    width: 25px;
+    height: 25px;
+    align-self: center;
+  }
+  .flashyre-assessment1-previous-next-button-main-container1 {
+    display: none;
+  }
+  .flashyre-assessment1-question-answer-container {
+    height: 555px;
+    flex-direction: column;
+  }
+  .flashyre-assessment1-questions-container {
+    gap: 16px;
+    width: 100%;
+    height: 244px;
+    padding: var(--dl-layout-space-halfunit);
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+  }
+  .flashyre-assessment1-question-num-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-question-container {
+    height: 183px;
+  }
+  .flashyre-assessment1-question-text {
+    height: 100%;
+    font-size: 12px;
+  }
+  .flashyre-assessment1-previous-button2 {
+    display: none;
+  }
+  .flashyre-assessment1-next-button2 {
+    display: none;
+  }
+  .flashyre-assessment1-answers-container {
+    gap: 16px;
+    width: 100%;
+    height: 296px;
+    padding: var(--dl-layout-space-unit);
+  }
+  .flashyre-assessment1-select-an-option-text {
+    font-size: 14px;
+  }
+  .flashyre-assessment1-eraser-icon {
+    width: 12px;
+    height: 12px;
+  }
+  .flashyre-assessment1-clear-response-text {
+    font-size: 12px;
+  }
+  .flashyre-assessment1-options-container {
+    gap: 12px;
+    height: auto;
+  }
+  .flashyre-assessment1-first-option-container {
+    gap: 8px;
+  }
+  .flashyre-assessment1-first-option-text {
+    font-size: 12px;
+  }
+  .flashyre-assessment1-second-option-container {
+    gap: 8px;
+  }
+  .flashyre-assessment1-second-option-text {
+    font-size: 12px;
+  }
+  .flashyre-assessment1-third-option-container {
+    gap: 8px;
+  }
+  .flashyre-assessment1-third-option-text {
+    font-size: 12px;
+  }
+  .flashyre-assessment1-fourth-option-container {
+    gap: 8px;
+  }
+  .flashyre-assessment1-fourth-option-text {
+    font-size: 12px;
+  }
+  .flashyre-assessment1-text-input-container {
+    height: 229px;
+  }
+  .flashyre-assessment1-description-type-answer {
+    padding-top: var(--dl-layout-space-halfunit);
+  }
+  .flashyre-assessment1-previous-next-button-main-container2 {
+    gap: 0;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .flashyre-assessment1-previous-button3 {
+    width: 100px;
+    height: 30px;
+    font-size: 12px;
+  }
+  .flashyre-assessment1-next-button3 {
+    width: 100px;
+    height: 30px;
+    font-size: 12px;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .flashyre-assessment1-logo {
+    height: 30px;
+  }
+  .flashyre-assessment1-timer {
+    height: 30px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="flashyre-assessment1-container1">  <div id="main-container" class="flashyre-assessment1-main-container">    <div id="header-container" class="flashyre-assessment1-header-container">      <img        id="Logo"        alt="image"        src="/assets/main-logo/logo%20-%20flashyre(1500px)-200h.png"        class="flashyre-assessment1-logo"      />    <span id="timer"       class="flashyre-assessment1-timer">{{ timer | timerFormat }}    </span>      <button        id="end-test-button"        type="button"        class="flashyre-assessment1-end-test-button button"      >        <span id="end-test-text" class="flashyre-assessment1-end-test-text" (click)="terminateTest()">          Submit        </span>      </button>    </div>    <div      id="assessment-questions-options-main-container"      class="flashyre-assessment1-assessment-questions-options-main-container"    >      <div        id="sections-questions-previous-next-containers"        class="flashyre-assessment1-sections-questions-previous-next-containers"      >        <div          data-thq="thq-dropdown"          class="flashyre-assessment1-sections-dropdown list-item"        >        <div        data-thq="thq-dropdown-toggle"        class="flashyre-assessment1-dropdown-toggle1"      >        <span id="sections-text" class="flashyre-assessment1-sections-text">          {{ currentSection?.name || \'Sections\' }}        </span>        <div          data-thq="thq-dropdown-arrow"          class="flashyre-assessment1-dropdown-arrow"        >          <svg            width="48"            height="48"            viewBox="0 0 48 48"            class="flashyre-assessment1-icon10"          >            <path              d="M36 18L24 30L12 18"              fill="none"              stroke="currentColor"              stroke-width="4"              stroke-linecap="round"              stroke-linejoin="round"            ></path>          </svg>        </div>      </div>          <ul            data-thq="thq-dropdown-list"            class="flashyre-assessment1-sections-dropdown-list"          >            <li              *ngFor="let section of sections; let i = index"              data-thq="thq-dropdown"              class="flashyre-assessment1-sections-dropdown-list1 list-item"            >              <div                data-thq="thq-dropdown-toggle"                class="flashyre-assessment1-dropdown-toggle2"                (click)="selectSection(section)"              >                <span                  id="section-{{i}}-text"                  class="flashyre-assessment1-section-a-text"                >                {{ section.name }}                </span>              </div>            </li>          </ul>        </div>        <div          id="question-numbers-main-container"          class="flashyre-assessment1-question-numbers-main-container"        >          <svg            id="backward-arrow-icon"            width="32"            height="32"            viewBox="0 0 32 32"            class="flashyre-assessment1-backward-arrow-icon"            (click)="previousQuestion()"          >            <path              d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"              fill="currentColor"            ></path>          </svg>          <div            id="numbers-main-container"            class="flashyre-assessment1-numbers-main-container"          >            <button              *ngFor="let question of currentQuestions; let i = index"              id="question-number-{{i}}-button"              type="button"              class="flashyre-assessment1-question-number1-button10 button"              [ngClass]="{ \'active\': i === currentQuestionIndex }"              (click)="navigateToQuestion(i)"            >            {{ i + 1 }}            </button>          </div>          <svg            id="forward-arrow-icon"            width="32"            height="32"            viewBox="0 0 32 32"            class="flashyre-assessment1-forward-arrow-icon"            (click)="nextQuestion()"          >            <path              d="M22 16L12 26l-1.4-1.4l8.6-8.6l-8.6-8.6L12 6z"              fill="currentColor"            ></path>          </svg>        </div>        <div          id="previous-next-button-main-container"          class="flashyre-assessment1-previous-next-button-main-container1"        >          <button            id="previous-button1"            type="button"            class="flashyre-assessment1-previous-button1 button"            (click)="previousQuestion()"          >            Previous          </button>          <button            id="next-button"            type="button"            class="flashyre-assessment1-next-button1 button"            (click)="nextQuestion()"          >            Next          </button>          <button            id="next-section-button"            type="button"            class="flashyre-assessment1-next-section-button1 button"            [ngClass]="{ \'d-block\': currentQuestionIndex === totalQuestionsInSection - 1 && !isLastSection }"          >            Next Section          </button>          <button            id="submit-button"            type="button"            class="flashyre-assessment1-submit-button1 button"            [ngClass]="{ \'d-block\': currentQuestionIndex === totalQuestionsInSection - 1 && isLastSection }"            (click)="submitAssessment()"          >            Submit          </button>        </div>      </div>      <div        id="question-answer-container"        class="flashyre-assessment1-question-answer-container"      >        <div          id="questions-container"          class="flashyre-assessment1-questions-container"        >          <span            id="question-num-text"            class="flashyre-assessment1-question-num-text"          >            Question {{ currentQuestionIndex + 1 }}          </span>          <div            id="question-container"            class="flashyre-assessment1-question-container"          >            <span id="question-text" class="flashyre-assessment1-question-text">                {{ currentQuestions[currentQuestionIndex]?.question }}                          </span>          </div>          <button            id="previous-button"            type="button"            class="flashyre-assessment1-previous-button2 button"            (click)="previousQuestion()"          >            &lt;-          </button>        </div>        <button          id="next-button1"          type="button"          class="flashyre-assessment1-next-button2 button"          (click)="nextQuestion()"        >          -&gt;        </button>        <div          id="answers-container"          class="flashyre-assessment1-answers-container"        >          <div            id="select-an-option-container"            class="flashyre-assessment1-select-an-option-container"          >            <span              id="select-an-option-text"              class="flashyre-assessment1-select-an-option-text"            >              Select an option            </span>            <div              id="clear-response-container"              class="flashyre-assessment1-clear-response-container"              (click)="clearResponse(currentQuestions[currentQuestionIndex]?.question_id)"            >              <svg                id="eraser-icon"                width="24"                height="24"                viewBox="0 0 24 24"                class="flashyre-assessment1-eraser-icon"              >                <g fill="none">                  <g clip-path="url(#majesticonsEraserLine0)">                    <path                      d="m11.607 6.535l-7.779 7.779a2 2 0 0 0 0 2.828l1.536 1.536a2 2 0 0 0 1.414.585h6.243M11.607 6.535l2.12-2.12a2 2 0 0 1 2.83 0l4.242 4.242a2 2 0 0 1 0 2.828l-2.121 2.122m-7.071-7.072l7.07 7.072m0 0l-5.656 5.656m0 0H20"                      stroke="currentColor"                      stroke-width="2"                      stroke-linecap="round"                      stroke-linejoin="round"                    ></path>                  </g>                  <defs>                    <clippath id="majesticonsEraserLine0">                      <path d="M0 0h24v24H0z" fill="#fff"></path>                    </clippath>                  </defs>                </g>              </svg>              <span                id="clear-response-text"                class="flashyre-assessment1-clear-response-text"              >                Clear Response              </span>            </div>          </div>          <div            id="options-container"            class="flashyre-assessment1-options-container"          >            <div            *ngFor="let option of getOptions(currentQuestions[currentQuestionIndex]); index as i"              id="first-option-container"              class="flashyre-assessment1-first-option-container"            >              <div class="flashyre-assessment1-container2">                <input                type="radio"                name="question{{currentQuestions[currentQuestionIndex]?.question_id}}"                id="radio{{currentQuestions[currentQuestionIndex]?.question_id}}-{{i}}"                class="flashyre-assessment1-radio1"                value="{{option.value}}"                (change)="selectOption(                  currentQuestions[currentQuestionIndex]?.question_id,                  currentSection?.section_id,                  option.value                )"                [checked]="selectedAnswers[currentQuestions[currentQuestionIndex]?.question_id]?.answer === option.value"              />              <span                id="option-text-{{i}}"                class="flashyre-assessment1-first-option-text"                              >                {{ option.value }}              </span>              </div>            </div>            <div class="flashyre-assessment1-text-input-container">              <p                id="descriptive-answer"                class="flashyre-assessment1-description-type-answer textarea"              >                .              </p>            </div>          </div>        </div>      </div>      <div        id="previous-next-button-main-container"        class="flashyre-assessment1-previous-next-button-main-container2"      >        <button          id="previous-button2"          type="button"          class="flashyre-assessment1-previous-button3 button"          (click)="previousQuestion()"        >          Previous        </button>        <button          id="next-button2"          type="button"          class="flashyre-assessment1-next-button3 button"          (click)="nextQuestion()"        >          Next        </button>        <button          id="next-section-button"          type="button"          class="flashyre-assessment1-next-section-button2 button"        >          Next Section        </button>        <button          id="submit-button"          type="button"          class="flashyre-assessment1-submit-button2 button"        >          Submit        </button>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'FlashyreAssessment1'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FlashyreAssessment1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

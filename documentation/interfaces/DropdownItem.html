@@ -1,0 +1,617 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  DropdownItem</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/components/profile-education-component/profile-education-component.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#id" 
+>
+                                            id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#name" 
+>
+                                            name
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+            <section data-compodoc="block-indexables">
+    <h3 id="inputs">Indexable</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <code>[key: string]:        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/components/profile-education-component/profile-education-component.component.ts:10</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="id"></a>
+                                        <span class="name "><b>id</b>
+                                            <a href="#id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="name"></a>
+                                        <span class="name "><b>name</b>
+                                            <a href="#name">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, ViewChildren, QueryList, ElementRef, Input, ContentChild, TemplateRef } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+import { EducationService } from &#x27;../../services/education.service&#x27;;
+import { forkJoin } from &#x27;rxjs&#x27;;
+import { tap, catchError } from &#x27;rxjs/operators&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+
+interface DropdownItem {
+  id: number;
+  name: string;
+  [key: string]: any;
+}
+
+interface ReferenceData {
+  colleges: DropdownItem[];
+  education_levels: DropdownItem[];
+  courses: DropdownItem[];
+  specializations: DropdownItem[];
+}
+
+@Component({
+  selector: &#x27;profile-education-component&#x27;,
+  templateUrl: &#x27;./profile-education-component.component.html&#x27;,
+  styleUrls: [&#x27;./profile-education-component.component.css&#x27;]
+})
+export class ProfileEducationComponent implements OnInit {
+  @ContentChild(&#x27;text&#x27;) text: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1&#x27;) text1: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text2&#x27;) text2: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text111&#x27;) text111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text112&#x27;) text112: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1111&#x27;) text1111: TemplateRef&lt;any&gt;;
+  @ContentChild(&#x27;text1112&#x27;) text1112: TemplateRef&lt;any&gt;;
+
+  @Input() rootClassName: string &#x3D; &#x27;&#x27;;
+  @ViewChildren(&#x27;educationFormInstance&#x27;) educationFormInstances: QueryList&lt;ElementRef&gt;;
+
+  educationForms: FormGroup[] &#x3D; [];
+  universities: DropdownItem[] &#x3D; [];
+  educationLevels: DropdownItem[] &#x3D; [];
+  courses: DropdownItem[] &#x3D; [];
+  specializations: DropdownItem[] &#x3D; [];
+  todayDate: string &#x3D; new Date().toISOString().split(&#x27;T&#x27;)[0];
+  isLoading: boolean &#x3D; false;
+  errorMessage: string | null &#x3D; null;
+
+  constructor(
+    private fb: FormBuilder,
+    private educationService: EducationService,
+    private router: Router
+  ) {}
+
+ngOnInit(): void {
+  this.isLoading &#x3D; true;
+  this.errorMessage &#x3D; null;
+
+  const userProfileString &#x3D; localStorage.getItem(&#x27;userProfile&#x27;);
+  if (userProfileString) {
+    try {
+      const userProfile &#x3D; JSON.parse(userProfileString);
+      if (userProfile.educations &amp;&amp; Array.isArray(userProfile.educations) &amp;&amp; userProfile.educations.length &gt; 0) {
+        // Load reference data first
+        this.educationService.getReferenceData().subscribe({
+          next: (data: ReferenceData) &#x3D;&gt; {
+            this.universities &#x3D; data.colleges;
+            this.educationLevels &#x3D; data.education_levels;
+            this.courses &#x3D; data.courses;
+            this.specializations &#x3D; data.specializations;
+
+            this.educationForms &#x3D; []; // reset
+
+            userProfile.educations.forEach((edu: any) &#x3D;&gt; {
+              const form &#x3D; this.createEducationForm();
+              form.patchValue({
+                startDate: edu.start_date || &#x27;&#x27;,
+                endDate: edu.end_date || &#x27;&#x27;,
+                university: this.getDropdownIdByName(this.universities, edu.university),
+                educationLevel: this.getDropdownIdByName(this.educationLevels, edu.education_level),
+                course: this.getDropdownIdByName(this.courses, edu.course),
+                specialization: this.getDropdownIdByName(this.specializations, edu.specialization),
+              });
+              this.educationForms.push(form);
+            });
+
+            this.isLoading &#x3D; false;
+          },
+          error: (err) &#x3D;&gt; {
+            this.errorMessage &#x3D; &#x27;Failed to load dropdown data&#x27;;
+            this.addNewForm();
+            this.isLoading &#x3D; false;
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      console.warn(&#x27;Error parsing userProfile from localStorage&#x27;, e);
+    }
+  }
+
+  // Fallback for no localStorage data or errors
+  this.loadReferenceData();
+}
+
+  loadReferenceData(): void {
+    this.isLoading &#x3D; true;
+    this.errorMessage &#x3D; null;
+
+    this.educationService.getReferenceData().pipe(
+      tap((data: ReferenceData) &#x3D;&gt; {
+        console.log(&#x27;Reference data received:&#x27;, data);
+        this.universities &#x3D; data.colleges;
+        this.educationLevels &#x3D; data.education_levels;
+        this.courses &#x3D; data.courses;
+        this.specializations &#x3D; data.specializations;
+
+        this.addNewForm();
+      }),
+      catchError(error &#x3D;&gt; {
+        this.errorMessage &#x3D; error.message || &#x27;Failed to load dropdown data&#x27;;
+        this.addNewForm();
+        return [];
+      })
+    ).subscribe({
+      complete: () &#x3D;&gt; (this.isLoading &#x3D; false)
+    });
+  }
+
+private getDropdownIdByName(dropdownList: DropdownItem[], name: string): number | &#x27;&#x27; {
+  if (!name) return &#x27;&#x27;;
+  const item &#x3D; dropdownList.find(d &#x3D;&gt; d.name &#x3D;&#x3D;&#x3D; name);
+  return item ? item.id : &#x27;&#x27;;
+}
+
+  private createEducationForm(): FormGroup {
+    return this.fb.group({
+      startDate: [&#x27;&#x27;, Validators.required],
+      endDate: [&#x27;&#x27;, Validators.required],
+      university: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      educationLevel: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      course: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      specialization: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+    }, { validators: this.dateRangeValidator });
+  }
+
+  private dateRangeValidator(form: FormGroup): { [key: string]: any } | null {
+    const startDate &#x3D; form.get(&#x27;startDate&#x27;)?.value;
+    const endDate &#x3D; form.get(&#x27;endDate&#x27;)?.value;
+    return startDate &amp;&amp; endDate &amp;&amp; new Date(endDate) &lt; new Date(startDate)
+      ? { dateRangeInvalid: true }
+      : null;
+  }
+
+  addNewForm(): void {
+    this.educationForms.push(this.createEducationForm());
+    setTimeout(() &#x3D;&gt; {
+      const lastForm &#x3D; this.educationFormInstances.last;
+      if (lastForm) {
+        lastForm.nativeElement.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+      }
+    }, 0);
+  }
+
+  removeForm(index: number): void {
+    this.educationForms.splice(index, 1);
+  }
+
+  saveEducation(): Promise&lt;boolean&gt; {
+    return new Promise((resolve) &#x3D;&gt; {
+      const validForms &#x3D; this.educationForms.filter(form &#x3D;&gt; form.valid);
+      if (!validForms.length) {
+        console.log(&#x27;No valid forms to save&#x27;);
+        this.errorMessage &#x3D; &#x27;Please fill out all required fields correctly.&#x27;;
+        resolve(false);
+        return;
+      }
+
+      const saveObservables &#x3D; validForms.map(form &#x3D;&gt; {
+        console.log(&#x27;Raw form values:&#x27;, form.value);
+
+        // Validate that all dropdown fields have valid IDs
+        if (!form.value.university || !form.value.educationLevel || !form.value.course || !form.value.specialization) {
+          console.error(&#x27;Invalid or missing dropdown selections:&#x27;, form.value);
+          this.errorMessage &#x3D; &#x27;Please select valid options for all dropdowns.&#x27;;
+          return [];
+        }
+
+        // Map IDs to names
+        const university &#x3D; this.universities.find(u &#x3D;&gt; u.id &#x3D;&#x3D;&#x3D; +form.value.university)?.name;
+        const educationLevel &#x3D; this.educationLevels.find(e &#x3D;&gt; e.id &#x3D;&#x3D;&#x3D; +form.value.educationLevel)?.name;
+        const course &#x3D; this.courses.find(c &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; +form.value.course)?.name;
+        const specialization &#x3D; this.specializations.find(s &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; +form.value.specialization)?.name;
+
+        // Check if any mapped value is undefined
+        if (!university || !educationLevel || !course || !specialization) {
+          console.error(&#x27;Invalid mapped values:&#x27;, { university, educationLevel, course, specialization });
+          this.errorMessage &#x3D; &#x27;One or more selected options are invalid.&#x27;;
+          return [];
+        }
+
+        const data &#x3D; {
+          select_start_date: form.value.startDate,
+          select_end_date: form.value.endDate,
+          university: university,
+          education_level: educationLevel,
+          course: course,
+          specialization: specialization
+        };
+
+        console.log(&#x27;Sending data to backend:&#x27;, JSON.stringify(data, null, 2));
+        return this.educationService.addEducation(data).pipe(
+          catchError(error &#x3D;&gt; {
+            console.error(&#x27;Error saving form:&#x27;, error);
+            let errorMessage &#x3D; &#x27;Failed to save education data&#x27;;
+            try {
+              const parsedError &#x3D; JSON.parse(error.message);
+              errorMessage &#x3D; typeof parsedError &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? Object.values(parsedError).join(&#x27;; &#x27;) : parsedError;
+            } catch (e) {
+              errorMessage &#x3D; error.message || &#x27;Unknown error occurred&#x27;;
+            }
+            this.errorMessage &#x3D; errorMessage;
+            return [];
+          })
+        );
+      });
+
+      forkJoin(saveObservables).subscribe({
+        next: () &#x3D;&gt; {
+          console.log(&#x27;All educations saved successfully&#x27;);
+          this.errorMessage &#x3D; null;
+          resolve(true);
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;Error saving educations:&#x27;, error);
+          let errorMessage &#x3D; &#x27;Failed to save education data&#x27;;
+          try {
+            const parsedError &#x3D; JSON.parse(error.message);
+            errorMessage &#x3D; typeof parsedError &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? Object.values(parsedError).join(&#x27;; &#x27;) : parsedError;
+          } catch (e) {
+            errorMessage &#x3D; error.message || &#x27;Unknown error occurred&#x27;;
+          }
+          this.errorMessage &#x3D; errorMessage;
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  goToPrevious(): void {
+    this.router.navigate([&#x27;/profile-employment-page&#x27;]);
+  }
+
+  skipToNextSection(): void {
+    this.router.navigate([&#x27;/profile-certification-page&#x27;]);
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id || index;
+  }
+}
+
+
+
+
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'DropdownItem.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1216 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>flashyre documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">flashyre documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  Index</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/index/index.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-index</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>index.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>index.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(title: Title, meta: Meta)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/pages/index/index.component.ts:9</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>title</td>
+                                                  
+                                                        <td>
+                                                                    <code>Title</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>meta</td>
+                                                  
+                                                        <td>
+                                                                    <code>Meta</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;
+import { Title, Meta } from &#x27;@angular/platform-browser&#x27;
+
+@Component({
+  selector: &#x27;app-index&#x27;,
+  templateUrl: &#x27;index.component.html&#x27;,
+  styleUrls: [&#x27;index.component.css&#x27;],
+})
+export class Index {
+  constructor(private title: Title, private meta: Meta) {
+    this.title.setTitle(&#x27;Index - Flashyre&#x27;)
+    this.meta.addTags([
+      {
+        property: &#x27;og:title&#x27;,
+        content: &#x27;Index - Flashyre&#x27;,
+      },
+      {
+        property: &#x27;og:image&#x27;,
+        content:
+          &#x27;https://aheioqhobo.cloudimg.io/v7/_playground-bucket-v2.teleporthq.io_/8203932d-6f2d-4493-a7b2-7000ee521aa2/9aea8e9c-27ce-4011-a345-94a92ae2dbf8?org_if_sml&#x3D;1&amp;force_format&#x3D;original&#x27;,
+      },
+    ])
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;index-container1&quot;&gt;
+  &lt;div class&#x3D;&quot;index-container2&quot;&gt;
+    &lt;landing-page-navbar rootClassName&#x3D;&quot;landing-page-navbarroot-class-name&quot;&gt;
+      &lt;ng-template #text&gt;
+        &lt;div class&#x3D;&quot;index-fragment10&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text10&quot;&gt;Sign Up&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link3&gt;
+        &lt;div class&#x3D;&quot;index-fragment11&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text11&quot;&gt;About&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link4&gt;
+        &lt;div class&#x3D;&quot;index-fragment12&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text12&quot;&gt;Article&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text1&gt;
+        &lt;div class&#x3D;&quot;index-fragment13&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text13&quot;&gt;Candidate&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text2&gt;
+        &lt;div class&#x3D;&quot;index-fragment14&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text14&quot;&gt;University / College&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text3&gt;
+        &lt;div class&#x3D;&quot;index-fragment15&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text15&quot;&gt;Corporate&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text9&gt;
+        &lt;div class&#x3D;&quot;index-fragment16&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text16&quot;&gt;About&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text10&gt;
+        &lt;div class&#x3D;&quot;index-fragment17&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text17&quot;&gt;Article&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text11&gt;
+        &lt;div class&#x3D;&quot;index-fragment18&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text18&quot;&gt;Candidate&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text12&gt;
+        &lt;div class&#x3D;&quot;index-fragment19&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text19&quot;&gt;University / College&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text13&gt;
+        &lt;div class&#x3D;&quot;index-fragment20&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text20&quot;&gt;Corporate&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/landing-page-navbar&gt;
+    &lt;landing-page-job-search-hero
+      rootClassName&#x3D;&quot;landing-page-job-search-heroroot-class-name&quot;
+    &gt;
+      &lt;ng-template #button&gt;
+        &lt;div class&#x3D;&quot;index-fragment21&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text21&quot;&gt;Search&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #heading&gt;
+        &lt;div class&#x3D;&quot;index-fragment22&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text22&quot;&gt;
+            Find a job that suits your interest &amp;amp; skills.
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/landing-page-job-search-hero&gt;
+    &lt;div class&#x3D;&quot;index-container3&quot;&gt;
+      &lt;span class&#x3D;&quot;index-text23&quot;&gt;Explore Interesting Articles&lt;/span&gt;
+      &lt;div class&#x3D;&quot;index-container4&quot;&gt;
+        &lt;landing-page-readable-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-readable-articles-card-smallroot-class-name&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment23&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text24&quot;&gt;Data Science&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment24&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text25&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-readable-articles-card-small&gt;
+        &lt;landing-page-readable-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-readable-articles-card-smallroot-class-name1&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment25&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text26&quot;&gt;Data Science&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment26&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text27&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-readable-articles-card-small&gt;
+        &lt;landing-page-readable-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-readable-articles-card-smallroot-class-name2&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment27&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text28&quot;&gt;Data Science&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment28&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text29&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-readable-articles-card-small&gt;
+        &lt;landing-page-video-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-video-articles-card-smallroot-class-name&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment29&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text30&quot;&gt;Generative AI✨&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment30&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text31&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-video-articles-card-small&gt;
+        &lt;landing-page-video-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-video-articles-card-smallroot-class-name2&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment31&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text32&quot;&gt;Generative AI✨&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment32&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text33&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-video-articles-card-small&gt;
+        &lt;landing-page-video-articles-card-small
+          rootClassName&#x3D;&quot;landing-page-video-articles-card-smallroot-class-name1&quot;
+        &gt;
+          &lt;ng-template #text&gt;
+            &lt;div class&#x3D;&quot;index-fragment33&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text34&quot;&gt;Generative AI✨&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+          &lt;ng-template #text1&gt;
+            &lt;div class&#x3D;&quot;index-fragment34&quot;&gt;
+              &lt;span class&#x3D;&quot;index-text35&quot;&gt;247 Related topics&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/landing-page-video-articles-card-small&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;landin-page-testimonial-card
+      rootClassName&#x3D;&quot;landin-page-testimonial-cardroot-class-name&quot;
+    &gt;
+      &lt;ng-template #text&gt;
+        &lt;div class&#x3D;&quot;index-fragment35&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text36&quot;&gt;Soumya Sharma&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text1&gt;
+        &lt;div class&#x3D;&quot;index-fragment36&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text37&quot;&gt;
+            &amp;quot;I&amp;apos;ve had an absolutely wonderful experience using this
+            service. The team is incredibly professional, attentive, and truly
+            dedicated to customer satisfaction. From the initial consultation to
+            the final delivery, every step of the process was seamless and
+            exceeded my expectations. The quality of the product is exceptional,
+            and I couldn&amp;apos;t be happier with the results. I highly recommend
+            this service to anyone looking for top-notch quality and outstanding
+            customer support. It&amp;apos;s rare to find a company that genuinely
+            cares about its customers, and this one certainly does!&amp;quot;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #text2&gt;
+        &lt;div class&#x3D;&quot;index-fragment37&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text38&quot;&gt;CEO @ Meta&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #heading&gt;
+        &lt;div class&#x3D;&quot;index-fragment38&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text39&quot;&gt;Testimonial&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/landin-page-testimonial-card&gt;
+  &lt;/div&gt;
+  &lt;div class&#x3D;&quot;index-container5&quot;&gt;
+    &lt;landing-page-footer rootClassName&#x3D;&quot;landing-page-footerroot-class-name&quot;&gt;
+      &lt;ng-template #text&gt;
+        &lt;div class&#x3D;&quot;index-fragment39&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text40&quot;&gt;
+            2nd Floor, Pride Centre, MG Rd, Mangaluru, Karnataka 575001
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link1&gt;
+        &lt;div class&#x3D;&quot;index-fragment40&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text41&quot;&gt;About Us&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link2&gt;
+        &lt;div class&#x3D;&quot;index-fragment41&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text42&quot;&gt;Contact Us&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link3&gt;
+        &lt;div class&#x3D;&quot;index-fragment42&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text43&quot;&gt;FAQs&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link4&gt;
+        &lt;div class&#x3D;&quot;index-fragment43&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text44&quot;&gt;Terms and Conditions&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link5&gt;
+        &lt;div class&#x3D;&quot;index-fragment44&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text45&quot;&gt;Privacy Policy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link6&gt;
+        &lt;div class&#x3D;&quot;index-fragment45&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text46&quot;&gt;Cookies Policy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link7&gt;
+        &lt;div class&#x3D;&quot;index-fragment46&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text47&quot;&gt;Facebook&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link8&gt;
+        &lt;div class&#x3D;&quot;index-fragment47&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text48&quot;&gt;Twitter&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link9&gt;
+        &lt;div class&#x3D;&quot;index-fragment48&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text49&quot;&gt;Instagram&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #link10&gt;
+        &lt;div class&#x3D;&quot;index-fragment49&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text50&quot;&gt;LinkedIn&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #copyright&gt;
+        &lt;div class&#x3D;&quot;index-fragment50&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text51&quot;&gt;
+            © 2022 Culture Highway. All Rights Reserved.
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #termsLink&gt;
+        &lt;div class&#x3D;&quot;index-fragment51&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text52&quot;&gt;Terms and Conditions&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #cookiesLink&gt;
+        &lt;div class&#x3D;&quot;index-fragment52&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text53&quot;&gt;Cookies Policy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #privacyLink&gt;
+        &lt;div class&#x3D;&quot;index-fragment53&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text54&quot;&gt;Privacy Policy&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #column1Title&gt;
+        &lt;div class&#x3D;&quot;index-fragment54&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text55&quot;&gt;Quick Links&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template #column2Title&gt;
+        &lt;div class&#x3D;&quot;index-fragment55&quot;&gt;
+          &lt;span class&#x3D;&quot;index-text56&quot;&gt;Connect With Us&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/landing-page-footer&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>index.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host { 
+  display: contents; 
+}
+ 
+.index-container1 {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(180deg, #FFFFFF 2.00%,rgb(202, 227, 255) 100.00%);
+}
+ 
+.index-container2 {
+  gap: var(--dl-space-space-fiveunits);
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+ 
+.index-fragment10 {
+  display: contents;
+}
+ 
+.index-text10 {
+  display: inline-block;
+}
+ 
+.index-fragment11 {
+  display: contents;
+}
+ 
+.index-text11 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.index-fragment12 {
+  display: contents;
+}
+ 
+.index-text12 {
+  color: rgb(5, 53, 108);
+  display: inline-block;
+}
+ 
+.index-fragment13 {
+  display: contents;
+}
+ 
+.index-text13 {
+  display: inline-block;
+}
+ 
+.index-fragment14 {
+  display: contents;
+}
+ 
+.index-text14 {
+  display: inline-block;
+}
+ 
+.index-fragment15 {
+  display: contents;
+}
+ 
+.index-text15 {
+  display: inline-block;
+}
+ 
+.index-fragment16 {
+  display: contents;
+}
+ 
+.index-text16 {
+  display: inline-block;
+}
+ 
+.index-fragment17 {
+  display: contents;
+}
+ 
+.index-text17 {
+  display: inline-block;
+}
+ 
+.index-fragment18 {
+  display: contents;
+}
+ 
+.index-text18 {
+  display: inline-block;
+}
+ 
+.index-fragment19 {
+  display: contents;
+}
+ 
+.index-text19 {
+  display: inline-block;
+}
+ 
+.index-fragment20 {
+  display: contents;
+}
+ 
+.index-text20 {
+  display: inline-block;
+}
+ 
+.index-fragment21 {
+  display: contents;
+}
+ 
+.index-text21 {
+  display: inline-block;
+}
+ 
+.index-fragment22 {
+  display: contents;
+}
+ 
+.index-text22 {
+  color: rgb(24, 25, 28);
+  display: inline-block;
+}
+ 
+.index-container3 {
+  gap: var(--dl-space-space-oneandhalfunits);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.index-text23 {
+  color: #18191c;
+  height: 64px;
+  display: flex;
+  font-size: 48px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+}
+ 
+.index-container4 {
+  gap: var(--dl-space-space-oneandhalfunits);
+  width: auto;
+  height: auto;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+ 
+.index-fragment23 {
+  display: contents;
+}
+ 
+.index-text24 {
+  display: inline-block;
+}
+ 
+.index-fragment24 {
+  display: contents;
+}
+ 
+.index-text25 {
+  display: inline-block;
+}
+ 
+.index-fragment25 {
+  display: contents;
+}
+ 
+.index-text26 {
+  display: inline-block;
+}
+ 
+.index-fragment26 {
+  display: contents;
+}
+ 
+.index-text27 {
+  display: inline-block;
+}
+ 
+.index-fragment27 {
+  display: contents;
+}
+ 
+.index-text28 {
+  display: inline-block;
+}
+ 
+.index-fragment28 {
+  display: contents;
+}
+ 
+.index-text29 {
+  display: inline-block;
+}
+ 
+.index-fragment29 {
+  display: contents;
+}
+ 
+.index-text30 {
+  display: inline-block;
+}
+ 
+.index-fragment30 {
+  display: contents;
+}
+ 
+.index-text31 {
+  display: inline-block;
+}
+ 
+.index-fragment31 {
+  display: contents;
+}
+ 
+.index-text32 {
+  display: inline-block;
+}
+ 
+.index-fragment32 {
+  display: contents;
+}
+ 
+.index-text33 {
+  display: inline-block;
+}
+ 
+.index-fragment33 {
+  display: contents;
+}
+ 
+.index-text34 {
+  display: inline-block;
+}
+ 
+.index-fragment34 {
+  display: contents;
+}
+ 
+.index-text35 {
+  display: inline-block;
+}
+ 
+.index-fragment35 {
+  display: contents;
+}
+ 
+.index-text36 {
+  display: inline-block;
+}
+ 
+.index-fragment36 {
+  display: contents;
+}
+ 
+.index-text37 {
+  color: #18191c;
+  display: inline-block;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 300;
+}
+ 
+.index-fragment37 {
+  display: contents;
+}
+ 
+.index-text38 {
+  display: inline-block;
+}
+ 
+.index-fragment38 {
+  display: contents;
+}
+ 
+.index-text39 {
+  display: inline-block;
+}
+ 
+.index-container5 {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+ 
+.index-fragment39 {
+  display: contents;
+}
+ 
+.index-text40 {
+  display: inline-block;
+}
+ 
+.index-fragment40 {
+  display: contents;
+}
+ 
+.index-text41 {
+  display: inline-block;
+}
+ 
+.index-fragment41 {
+  display: contents;
+}
+ 
+.index-text42 {
+  display: inline-block;
+}
+ 
+.index-fragment42 {
+  display: contents;
+}
+ 
+.index-text43 {
+  display: inline-block;
+}
+ 
+.index-fragment43 {
+  display: contents;
+}
+ 
+.index-text44 {
+  display: inline-block;
+}
+ 
+.index-fragment44 {
+  display: contents;
+}
+ 
+.index-text45 {
+  display: inline-block;
+}
+ 
+.index-fragment45 {
+  display: contents;
+}
+ 
+.index-text46 {
+  display: inline-block;
+}
+ 
+.index-fragment46 {
+  display: contents;
+}
+ 
+.index-text47 {
+  display: inline-block;
+}
+ 
+.index-fragment47 {
+  display: contents;
+}
+ 
+.index-text48 {
+  display: inline-block;
+}
+ 
+.index-fragment48 {
+  display: contents;
+}
+ 
+.index-text49 {
+  display: inline-block;
+}
+ 
+.index-fragment49 {
+  display: contents;
+}
+ 
+.index-text50 {
+  display: inline-block;
+}
+ 
+.index-fragment50 {
+  display: contents;
+}
+ 
+.index-text51 {
+  display: inline-block;
+}
+ 
+.index-fragment51 {
+  display: contents;
+}
+ 
+.index-text52 {
+  display: inline-block;
+}
+ 
+.index-fragment52 {
+  display: contents;
+}
+ 
+.index-text53 {
+  display: inline-block;
+}
+ 
+.index-fragment53 {
+  display: contents;
+}
+ 
+.index-text54 {
+  display: inline-block;
+}
+ 
+.index-fragment54 {
+  display: contents;
+}
+ 
+.index-text55 {
+  display: inline-block;
+}
+ 
+.index-fragment55 {
+  display: contents;
+}
+ 
+.index-text56 {
+  display: inline-block;
+}
+ 
+@media(max-width: 1200px) {
+  .index-container2 {
+    gap: 108px;
+  }
+  .index-container5 {
+    background-image: linear-gradient(180deg, #FFFFFF 2.00%,rgb(202, 227, 255) 100.00%);
+  }
+}
+ 
+@media(max-width: 991px) {
+  .index-text23 {
+    color: rgb(24, 25, 28);
+    font-size: 44px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .index-text16 {
+    font-size: 12px;
+  }
+  .index-text17 {
+    font-size: 12px;
+  }
+  .index-text18 {
+    font-size: 10px;
+  }
+  .index-text19 {
+    font-size: 10px;
+  }
+  .index-text20 {
+    font-size: 10px;
+  }
+  .index-text23 {
+    color: rgb(24, 25, 28);
+    font-size: 40px;
+    align-self: center;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .index-container4 {
+    width: auto;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .index-container3 {
+    align-items: center;
+    justify-content: center;
+  }
+  .index-text23 {
+    font-size: 32px;
+    align-self: center;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .index-container4 {
+    grid-template-columns: 1fr;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="index-container1">  <div class="index-container2">    <landing-page-navbar rootClassName="landing-page-navbarroot-class-name">      <ng-template #text>        <div class="index-fragment10">          <span class="index-text10">Sign Up</span>        </div>      </ng-template>      <ng-template #link3>        <div class="index-fragment11">          <span class="index-text11">About</span>        </div>      </ng-template>      <ng-template #link4>        <div class="index-fragment12">          <span class="index-text12">Article</span>        </div>      </ng-template>      <ng-template #text1>        <div class="index-fragment13">          <span class="index-text13">Candidate</span>        </div>      </ng-template>      <ng-template #text2>        <div class="index-fragment14">          <span class="index-text14">University / College</span>        </div>      </ng-template>      <ng-template #text3>        <div class="index-fragment15">          <span class="index-text15">Corporate</span>        </div>      </ng-template>      <ng-template #text9>        <div class="index-fragment16">          <span class="index-text16">About</span>        </div>      </ng-template>      <ng-template #text10>        <div class="index-fragment17">          <span class="index-text17">Article</span>        </div>      </ng-template>      <ng-template #text11>        <div class="index-fragment18">          <span class="index-text18">Candidate</span>        </div>      </ng-template>      <ng-template #text12>        <div class="index-fragment19">          <span class="index-text19">University / College</span>        </div>      </ng-template>      <ng-template #text13>        <div class="index-fragment20">          <span class="index-text20">Corporate</span>        </div>      </ng-template>    </landing-page-navbar>    <landing-page-job-search-hero      rootClassName="landing-page-job-search-heroroot-class-name"    >      <ng-template #button>        <div class="index-fragment21">          <span class="index-text21">Search</span>        </div>      </ng-template>      <ng-template #heading>        <div class="index-fragment22">          <span class="index-text22">            Find a job that suits your interest &amp; skills.          </span>        </div>      </ng-template>    </landing-page-job-search-hero>    <div class="index-container3">      <span class="index-text23">Explore Interesting Articles</span>      <div class="index-container4">        <landing-page-readable-articles-card-small          rootClassName="landing-page-readable-articles-card-smallroot-class-name"        >          <ng-template #text>            <div class="index-fragment23">              <span class="index-text24">Data Science</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment24">              <span class="index-text25">247 Related topics</span>            </div>          </ng-template>        </landing-page-readable-articles-card-small>        <landing-page-readable-articles-card-small          rootClassName="landing-page-readable-articles-card-smallroot-class-name1"        >          <ng-template #text>            <div class="index-fragment25">              <span class="index-text26">Data Science</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment26">              <span class="index-text27">247 Related topics</span>            </div>          </ng-template>        </landing-page-readable-articles-card-small>        <landing-page-readable-articles-card-small          rootClassName="landing-page-readable-articles-card-smallroot-class-name2"        >          <ng-template #text>            <div class="index-fragment27">              <span class="index-text28">Data Science</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment28">              <span class="index-text29">247 Related topics</span>            </div>          </ng-template>        </landing-page-readable-articles-card-small>        <landing-page-video-articles-card-small          rootClassName="landing-page-video-articles-card-smallroot-class-name"        >          <ng-template #text>            <div class="index-fragment29">              <span class="index-text30">Generative AI✨</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment30">              <span class="index-text31">247 Related topics</span>            </div>          </ng-template>        </landing-page-video-articles-card-small>        <landing-page-video-articles-card-small          rootClassName="landing-page-video-articles-card-smallroot-class-name2"        >          <ng-template #text>            <div class="index-fragment31">              <span class="index-text32">Generative AI✨</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment32">              <span class="index-text33">247 Related topics</span>            </div>          </ng-template>        </landing-page-video-articles-card-small>        <landing-page-video-articles-card-small          rootClassName="landing-page-video-articles-card-smallroot-class-name1"        >          <ng-template #text>            <div class="index-fragment33">              <span class="index-text34">Generative AI✨</span>            </div>          </ng-template>          <ng-template #text1>            <div class="index-fragment34">              <span class="index-text35">247 Related topics</span>            </div>          </ng-template>        </landing-page-video-articles-card-small>      </div>    </div>    <landin-page-testimonial-card      rootClassName="landin-page-testimonial-cardroot-class-name"    >      <ng-template #text>        <div class="index-fragment35">          <span class="index-text36">Soumya Sharma</span>        </div>      </ng-template>      <ng-template #text1>        <div class="index-fragment36">          <span class="index-text37">            &quot;I&apos;ve had an absolutely wonderful experience using this            service. The team is incredibly professional, attentive, and truly            dedicated to customer satisfaction. From the initial consultation to            the final delivery, every step of the process was seamless and            exceeded my expectations. The quality of the product is exceptional,            and I couldn&apos;t be happier with the results. I highly recommend            this service to anyone looking for top-notch quality and outstanding            customer support. It&apos;s rare to find a company that genuinely            cares about its customers, and this one certainly does!&quot;          </span>        </div>      </ng-template>      <ng-template #text2>        <div class="index-fragment37">          <span class="index-text38">CEO @ Meta</span>        </div>      </ng-template>      <ng-template #heading>        <div class="index-fragment38">          <span class="index-text39">Testimonial</span>        </div>      </ng-template>    </landin-page-testimonial-card>  </div>  <div class="index-container5">    <landing-page-footer rootClassName="landing-page-footerroot-class-name">      <ng-template #text>        <div class="index-fragment39">          <span class="index-text40">            2nd Floor, Pride Centre, MG Rd, Mangaluru, Karnataka 575001          </span>        </div>      </ng-template>      <ng-template #link1>        <div class="index-fragment40">          <span class="index-text41">About Us</span>        </div>      </ng-template>      <ng-template #link2>        <div class="index-fragment41">          <span class="index-text42">Contact Us</span>        </div>      </ng-template>      <ng-template #link3>        <div class="index-fragment42">          <span class="index-text43">FAQs</span>        </div>      </ng-template>      <ng-template #link4>        <div class="index-fragment43">          <span class="index-text44">Terms and Conditions</span>        </div>      </ng-template>      <ng-template #link5>        <div class="index-fragment44">          <span class="index-text45">Privacy Policy</span>        </div>      </ng-template>      <ng-template #link6>        <div class="index-fragment45">          <span class="index-text46">Cookies Policy</span>        </div>      </ng-template>      <ng-template #link7>        <div class="index-fragment46">          <span class="index-text47">Facebook</span>        </div>      </ng-template>      <ng-template #link8>        <div class="index-fragment47">          <span class="index-text48">Twitter</span>        </div>      </ng-template>      <ng-template #link9>        <div class="index-fragment48">          <span class="index-text49">Instagram</span>        </div>      </ng-template>      <ng-template #link10>        <div class="index-fragment49">          <span class="index-text50">LinkedIn</span>        </div>      </ng-template>      <ng-template #copyright>        <div class="index-fragment50">          <span class="index-text51">            © 2022 Culture Highway. All Rights Reserved.          </span>        </div>      </ng-template>      <ng-template #termsLink>        <div class="index-fragment51">          <span class="index-text52">Terms and Conditions</span>        </div>      </ng-template>      <ng-template #cookiesLink>        <div class="index-fragment52">          <span class="index-text53">Cookies Policy</span>        </div>      </ng-template>      <ng-template #privacyLink>        <div class="index-fragment53">          <span class="index-text54">Privacy Policy</span>        </div>      </ng-template>      <ng-template #column1Title>        <div class="index-fragment54">          <span class="index-text55">Quick Links</span>        </div>      </ng-template>      <ng-template #column2Title>        <div class="index-fragment55">          <span class="index-text56">Connect With Us</span>        </div>      </ng-template>    </landing-page-footer>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutTheJob', 'selector': 'about-the-job'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppComponent', 'selector': 'app-component'},{'name': 'AssessmentTakenPage', 'selector': 'assessment-taken-page'},{'name': 'AssessmentTakenPage2', 'selector': 'assessment-taken-page2'},{'name': 'AssessmentTakenPage3', 'selector': 'assessment-taken-page3'},{'name': 'AssessmentViolationMessage', 'selector': 'assessment-violation-message'},{'name': 'BufferName', 'selector': 'buffer-name'},{'name': 'BufferName1', 'selector': 'buffer-name1'},{'name': 'BufferPage', 'selector': 'buffer-page'},{'name': 'BufferScreen', 'selector': 'buffer-screen'},{'name': 'CandidateAssessment', 'selector': 'candidate-assessment'},{'name': 'CandidateDashboard', 'selector': 'candidate-dashboard'},{'name': 'CandidateHome', 'selector': 'candidate-home'},{'name': 'CandidateJobDetailView', 'selector': 'candidate-job-detail-view'},{'name': 'CandidateJobForYouCard', 'selector': 'candidate-job-for-you-card'},{'name': 'CandidateJobsForYouSearchAndFilterBar', 'selector': 'candidate-jobs-for-you-search-and-filter-bar'},{'name': 'CandidateProfileScore', 'selector': 'candidate-profile-score'},{'name': 'CandidateProfileShort', 'selector': 'candidate-profile-short'},{'name': 'CandidateViewLastPageCard', 'selector': 'candidate-view-last-page-card'},{'name': 'Component1', 'selector': 'app-component1'},{'name': 'Component2', 'selector': 'app-component2'},{'name': 'Contact10', 'selector': 'app-contact10'},{'name': 'CreateJobPost1stPageComponent', 'selector': 'create-job-post-1st-page'},{'name': 'CTA26', 'selector': 'app-cta26'},{'name': 'DateSelector1', 'selector': 'date-selector1'},{'name': 'DateSelector2Duplicate', 'selector': 'date-selector2-duplicate'},{'name': 'Details', 'selector': 'app-details'},{'name': 'EmailAndMobileNumberComponent', 'selector': 'email-and-mobile-number-component'},{'name': 'ErrorSystemRequirementFailed', 'selector': 'error-system-requirement-failed'},{'name': 'Features24', 'selector': 'app-features24'},{'name': 'Features25', 'selector': 'app-features25'},{'name': 'FirstNameAndLastNameComponent', 'selector': 'first-name-and-last-name-component'},{'name': 'FlashyreAssessment', 'selector': 'flashyre-assessment'},{'name': 'FlashyreAssessment1', 'selector': 'flashyre-assessment1'},{'name': 'FlashyreAssessment11', 'selector': 'flashyre-assessment11'},{'name': 'FlashyreAssessmentRules', 'selector': 'flashyre-assessment-rules'},{'name': 'FlashyreAssessmentRulesCard', 'selector': 'flashyre-assessment-rules-card'},{'name': 'FlashyreAssessments', 'selector': 'flashyre-assessments'},{'name': 'FlashyreDashboard', 'selector': 'flashyre-dashboard'},{'name': 'FlashyreNavbar', 'selector': 'flashyre-navbar'},{'name': 'Footer8', 'selector': 'app-footer8'},{'name': 'ForgotPasswordComponent', 'selector': 'app-login-forgot-password'},{'name': 'Gallery3', 'selector': 'app-gallery3'},{'name': 'HeaderContainer', 'selector': 'header-container'},{'name': 'Hero17', 'selector': 'app-hero17'},{'name': 'Home', 'selector': 'app-home'},{'name': 'Index', 'selector': 'app-index'},{'name': 'InputDateComponent', 'selector': 'input-date-component'},{'name': 'LandingPageArticalPreviewCard', 'selector': 'landing-page-artical-preview-card'},{'name': 'LandingPageArticleCard', 'selector': 'landing-page-article-card'},{'name': 'LandingPageFooter', 'selector': 'landing-page-footer'},{'name': 'LandingPageJobSearchHero', 'selector': 'landing-page-job-search-hero'},{'name': 'LandingPageNavbar', 'selector': 'landing-page-navbar'},{'name': 'LandingPageReadableArticlesCardSmall', 'selector': 'landing-page-readable-articles-card-small'},{'name': 'LandingPageVideoArticlesCardSmall', 'selector': 'landing-page-video-articles-card-small'},{'name': 'LandinPageTestimonialCard', 'selector': 'landin-page-testimonial-card'},{'name': 'LoginCandidate', 'selector': 'login-candidate'},{'name': 'LoginCollege', 'selector': 'login-college'},{'name': 'LoginCorporate', 'selector': 'login-corporate'},{'name': 'LogInPage', 'selector': 'log-in-page'},{'name': 'LoginPageNavbar', 'selector': 'login-page-navbar'},{'name': 'LoginResetPasswordComponent', 'selector': 'app-login-reset-password'},{'name': 'MoreFiltersComponent', 'selector': 'more-filters-component'},{'name': 'Navbar1', 'selector': 'app-navbar1'},{'name': 'Navbar4', 'selector': 'app-navbar4'},{'name': 'Navbar5', 'selector': 'app-navbar5'},{'name': 'Navbar6', 'selector': 'app-navbar6'},{'name': 'Navbar8', 'selector': 'app-navbar8'},{'name': 'NavbarForCandidateView', 'selector': 'navbar-for-candidate-view'},{'name': 'NavbarForCandidateView1', 'selector': 'navbar-for-candidate-view1'},{'name': 'NavbarForCandidateView107672', 'selector': 'navbar-for-candidate-view107672'},{'name': 'NavbarForCandidateView86072', 'selector': 'navbar-for-candidate-view86072'},{'name': 'NavbarForCandidateView860721', 'selector': 'navbar-for-candidate-view860721'},{'name': 'NavbarForRecruiterView', 'selector': 'navbar-for-recruiter-view'},{'name': 'NavbarForRecruiterView1076721', 'selector': 'navbar-for-recruiter-view1076721'},{'name': 'NavbarForRecruiterViewOption', 'selector': 'navbar-for-recruiter-view-option'},{'name': 'NotFound', 'selector': 'not-found'},{'name': 'PasswordInputContainer', 'selector': 'password-input-container'},{'name': 'ProfileBasicInformation', 'selector': 'profile-basic-information'},{'name': 'ProfileBasicinformationComponent', 'selector': 'profile-basicinformation-component'},{'name': 'ProfileCertificationPage', 'selector': 'profile-certification-page'},{'name': 'ProfileCertificationsComponent', 'selector': 'profile-certifications-component'},{'name': 'ProfileCreationNavigation1', 'selector': 'profile-creation-navigation1'},{'name': 'ProfileCreationNavigation2', 'selector': 'profile-creation-navigation2'},{'name': 'ProfileEducationComponent', 'selector': 'profile-education-component'},{'name': 'ProfileEducationPage', 'selector': 'profile-education-page'},{'name': 'ProfileEducationPageDuplicate', 'selector': 'profile-education-page-duplicate'},{'name': 'ProfileEmploymentComponent', 'selector': 'profile-employment-component'},{'name': 'ProfileEmploymentPage', 'selector': 'profile-employment-page'},{'name': 'ProfileHeaderComponent1', 'selector': 'profile-header-component1'},{'name': 'ProfileLastPage1', 'selector': 'profile-last-page1'},{'name': 'ProfileOverviewPage', 'selector': 'profile-overview-page'},{'name': 'ProgressBarStep1', 'selector': 'progress-bar-step1'},{'name': 'ProgressBarStep2', 'selector': 'progress-bar-step2'},{'name': 'ProgressBarStep3', 'selector': 'progress-bar-step3'},{'name': 'ProgressBarStep4', 'selector': 'progress-bar-step4'},{'name': 'ProgressBarStep5', 'selector': 'progress-bar-step5'},{'name': 'RecruiterCompanyJobCard', 'selector': 'recruiter-company-job-card'},{'name': 'RecruiterFlowJobPostedCard', 'selector': 'recruiter-flow-job-posted-card'},{'name': 'RecruiterFlowLargeCard', 'selector': 'recruiter-flow-large-card'},{'name': 'RecruiterFlowProfileCard', 'selector': 'recruiter-flow-profile-card'},{'name': 'RecruiterFlowSmallCard', 'selector': 'recruiter-flow-small-card'},{'name': 'RecruiterJobPosted', 'selector': 'recruiter-job-posted'},{'name': 'RecruiterNavbar', 'selector': 'recruiter-navbar'},{'name': 'RecruiterProfile', 'selector': 'recruiter-profile'},{'name': 'RecruiterProfile1', 'selector': 'recruiter-profile1'},{'name': 'RecruiterView3rdPage', 'selector': 'recruiter-view3rd-page'},{'name': 'RecruiterView4thPage', 'selector': 'recruiter-view4th-page'},{'name': 'RecruiterView5thPage', 'selector': 'recruiter-view5th-page'},{'name': 'RecruiterViewCandidateProfile', 'selector': 'recruiter-view-candidate-profile'},{'name': 'SignupCandidate', 'selector': 'signup-candidate'},{'name': 'SignupCandidate1', 'selector': 'signup-candidate1'},{'name': 'SignupCollege', 'selector': 'signup-college'},{'name': 'SignupCollege1', 'selector': 'signup-college1'},{'name': 'SignupCorporate', 'selector': 'app-signup-corporate'},{'name': 'SignupCorporate1', 'selector': 'signup-corporate1'},{'name': 'SignupPageNavbar', 'selector': 'signup-page-navbar'},{'name': 'VerifyEmailSMSPopup', 'selector': 'verify-email-sms-popup'},{'name': 'ViewMoreCandidates', 'selector': 'view-more-candidates'},{'name': 'WriteAJobPostForRecruiter', 'selector': 'write-a-job-post-for-recruiter'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'Index'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'Index.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
