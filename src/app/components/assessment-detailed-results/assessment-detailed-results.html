@@ -39,7 +39,7 @@
         <img
           id="assessment-company-logo"
           alt="image"
-          [src]="assessmentData.assessment_logo_url || 'https://play.teleporthq.io/static/svg/default-img.svg'"
+          [src]="assessmentData.assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
           class="assessment-taken-page3-assessment-company-logo"
           />
           <span
@@ -313,3 +313,12 @@
       }
     </div>
   </div>
+  <!-- Add this at the very end of the file -->
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (close)="closeAlert()"
+    (buttonClicked)="onAlertButtonClick($event)">
+  </app-alert-message>
+}

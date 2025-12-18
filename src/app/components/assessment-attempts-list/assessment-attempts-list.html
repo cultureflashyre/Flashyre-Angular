@@ -45,7 +45,7 @@
           <img
             id="assessment-company-logo"
             alt="image"
-            [src]="assessment_logo_url"
+            [src]="assessment_logo_url || '../../../assets/assessment_logo/sap_logo1.png'"
             class="assessment-taken-page2-assessment-company-logo"
             />
             <span
@@ -226,6 +226,14 @@
     [assessmentData]="selectedAttempt"
     (back)="closeDetailView()">
   </assessment-detailed-results>
+}
+@if (showAlert) {
+  <app-alert-message
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (close)="closeAlert()"
+    (buttonClicked)="onAlertButtonClick($event)">
+  </app-alert-message>
 }
 
 <!-- Styles for pagination and loading indicators -->

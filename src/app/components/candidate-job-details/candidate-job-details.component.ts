@@ -260,7 +260,14 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         this.fetchInteractionStatus(); // Check if disliked/saved
         this.setProgressBarState();
 
-        this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(newJob.description || '');
+        let description = newJob.description || '';
+
+        // FIX: Convert newlines (\n) and escaped newlines (\\n) to <br> tags.
+        // This ensures the formatting is displayed correctly in the HTML view.
+        description = description.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+
+        // Sanitize and assign
+        this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(description);
         
         this.loading = false; // Turn off loading
       } else {

@@ -37,7 +37,7 @@
       [message]="assessmentAlertMessage"
       [buttons]="assessmentAlertButtons"
       (buttonClicked)="handleAssessmentAlertAction($event)"
-      (close)="handleAssessmentAlertAction('Later')">
+      (close)="handleAssessmentAlertAction('Dismiss')">
     </app-alert-message>
 
   <navbar-for-candidate-view
@@ -283,6 +283,7 @@
                         class="candidate-home-experience-text1"
                         placeholder="Experience"
                         [(ngModel)]="searchExperience"
+                        (keydown)="onExperienceInput($event)"
                       />
                     </div>
                   </div>

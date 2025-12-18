@@ -108,6 +108,7 @@
           *ngIf="isStepVisible(1)"
           rootClassName="profile-basicinformation-componentroot-class-name3"
           #profileComponent
+          (alertRequested)="handleAlertRequest($event)"
         >
           <ng-template #text2>
             <div class="profile-overview-page-fragment110">

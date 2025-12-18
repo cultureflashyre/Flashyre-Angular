@@ -15,7 +15,7 @@ export const environment = {
   chcs_logo_thumbnail: 'https://storage.googleapis.com/cflashyre-dev-b2/media/chcs_logo_thumbnail.jfif',
 
   mcq_upload_template: 'https://storage.googleapis.com/cflashyre-dev-b2/mcq_question_upload_template/flashyre_mcq_questions_template.xlsx',
-  googleMapsApiKey: 'AIzaSyBX3UGCNzeikSRyRY8sS8JJZ2oeO6lj2-w',
+  googleMapsApiKey: 'AIzaSyBu19cFmRm59qhFwr3VlLGxpgtaGrG3d0Q',
   googleClientId: '76855691155-qj1bb6i1fcidraejoicasbpe1hi6g283.apps.googleusercontent.com'
 };
 

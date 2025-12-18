@@ -326,7 +326,7 @@
           -->
 
           <!-- Dropdown container -->
-          <div class="admin-create-job-step4-dropdown-container">
+          <!-- <div class="admin-create-job-step4-dropdown-container">
             <button
               type="button"
               class="admin-create-job-step4-save-button button"
@@ -336,13 +336,11 @@
               <span class="admin-create-job-step4-save-text">
                 {{ isSubmitting ? 'Saving...' : 'Save' }}
               </span>
-              <!-- Simple dropdown arrow icon -->
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
               </svg>
             </button>
 
-            <!-- Dropdown menu -->
             @if (showDropdown) {
               <div class="admin-create-job-step4-dropdown-menu">
                 <button
@@ -363,7 +361,20 @@
                 </button>
               </div>
             }
-          </div>
+          </div> -->
+
+          <div class="admin-create-job-step4-dropdown-container">
+  <button
+    type="button"
+    class="admin-create-job-step4-save-button button"
+    [disabled]="isSubmitting"
+    (click)="onSaveJobAndAssessment()"
+    >
+    <span class="admin-create-job-step4-save-text">
+      {{ isSubmitting ? 'Saving...' : 'Save' }}
+    </span>
+  </button>
+</div>
           <!-- MODIFICATION END -->
         </div>
       </div>

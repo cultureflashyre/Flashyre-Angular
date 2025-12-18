@@ -6,7 +6,7 @@ import { catchError, of } from 'rxjs';
 import { SocialAuthService, GoogleLoginProvider,SocialUser, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { AlertMessageComponent } from '../alert-message/alert-message.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
@@ -52,7 +52,8 @@ export class LogInPage implements OnInit {
     private authService: AuthService,
     private corporateAuthService: CorporateAuthService,
     private cdr: ChangeDetectorRef,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private router: Router // Inject Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -124,6 +125,14 @@ export class LogInPage implements OnInit {
         if (response.message === 'Login successful' && response.access) {
           this.errorMessage = '';
           localStorage.setItem('jwtToken', response.access);
+          localStorage.setItem('userType', response.role);
+          // 2. Store Super User Status (Convert boolean to string)
+          // Ensure your backend sends 'is_superuser' in the response
+          if (response.is_superuser) {
+            localStorage.setItem('isSuperUser', 'true');
+          } else {
+            localStorage.removeItem('isSuperUser');
+          }
 
           let roleMessage = '';
           switch (response.role) {
@@ -134,7 +143,9 @@ export class LogInPage implements OnInit {
               roleMessage = 'You are logged in as Recruiter.';
               break;
             case 'admin':
-              roleMessage = 'You are logged in as Admin.';
+              roleMessage = response.is_superuser 
+                ? 'You are logged in as Super admin.' 
+                : 'You are logged in as Admin.';
               break;
             default:
               roleMessage = 'Login successful.';
@@ -142,11 +153,15 @@ export class LogInPage implements OnInit {
           }
           this.loginSuccessMessage = roleMessage;
           this.showLoginSuccessAlert = true;
+          
           this.cdr.detectChanges(); // Immediately show the alert message
 
           // Set a timeout to hide the message and then emit the login event
           setTimeout(() => {
             this.showLoginSuccessAlert = false;
+            // 3. EXECUTE REDIRECTION LOGIC
+            this.handleRedirection(response.role, response.is_superuser);
+
             // --- MOVE THE EMIT CALL HERE ---
             this.loginSubmit.emit(response);
             this.cdr.detectChanges(); // Update the view after hiding the alert
@@ -162,6 +177,25 @@ export class LogInPage implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  // New Helper Function for Redirection
+  handleRedirection(role: string, isSuperUser: boolean) {
+    if (role === 'admin') {
+      if (isSuperUser) {
+        // Super Admin -> Analytics
+        this.router.navigate(['/recruiter-super-admin-analytical-module']);
+      } else {
+        // Standard Admin -> Candidate Workflow
+        this.router.navigate(['/recruiter-workflow-candidate']);
+      }
+    } else if (role === 'recruiter') {
+      this.router.navigate(['/job-post-list']); // Or recruiter-specific page
+    } else if (role === 'candidate') {
+      this.router.navigate(['/candidate-home']);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
     // Function to close the alert manually if needed

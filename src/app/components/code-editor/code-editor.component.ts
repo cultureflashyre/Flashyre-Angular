@@ -6,13 +6,14 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-monokai';
 import { FormsModule } from '@angular/forms';
+import { AlertMessageComponent } from '../alert-message/alert-message.component'; 
 
 @Component({
     selector: 'app-code-editor',
     templateUrl: './code-editor.component.html',
     styleUrls: ['./code-editor.component.css'],
     standalone: true,
-    imports: [FormsModule]
+    imports: [FormsModule, AlertMessageComponent]
 })
 export class CodeEditorComponent implements AfterViewInit, OnChanges {
   @Input() problemId: number = 0;
@@ -31,8 +32,13 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
     { name: 'JavaScript', id: 63, mode: 'ace/mode/javascript' }
   ];
   selectedLanguage = this.languages[0];
-  code = '// Write your code here';
+  // Define constant placeholder
+  private readonly PLACEHOLDER_CODE = '// Write your code here'; 
+  code = this.PLACEHOLDER_CODE;
   private editor?: ace.Ace.Editor;
+
+  // State for Alert Message
+  showValidationAlert: boolean = false;
 
   constructor() {}
 
@@ -103,7 +109,21 @@ export class CodeEditorComponent implements AfterViewInit, OnChanges {
   }
 
   submit() {
+    // 1. Get the latest value and trim whitespace
+    const currentCode = this.code ? this.code.trim() : '';
+
+    // 2. Validation Logic: Check if empty or equals placeholder
+    if (!currentCode || currentCode === this.PLACEHOLDER_CODE) {
+      this.showValidationAlert = true;
+      return; // Stop submission
+    }
+
     this.submitCode.emit({ source_code: this.code, language_id: this.selectedLanguage.id });
+  }
+
+  // Handle closing the alert
+  closeAlert() {
+    this.showValidationAlert = false;
   }
 
   /**

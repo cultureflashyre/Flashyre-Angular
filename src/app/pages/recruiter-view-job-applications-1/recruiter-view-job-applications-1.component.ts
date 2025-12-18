@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, HostListener, ChangeDetectorRef, AfterViewInit } from '@angular/core';import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, HostListener, ChangeDetectorRef, AfterViewInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -103,7 +105,8 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     private authService: CorporateAuthService,   
     private renderer: Renderer2,                 
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.title.setTitle('Recruiter-View-Job-Applications-1 - Flashyre');
     this.meta.addTags([
@@ -208,7 +211,7 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
    * Private helper method to construct and save the PDF document.
    * @param data The detailed assessment data from the API.
    */
-   private _generateAssessmentPdf(data: any): void {
+   private _generateAssessmentPdf_OLD(data: any): void {
     const doc = new jsPDF();
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
@@ -346,12 +349,188 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
   }
 
 
+private _generateAssessmentPdf(data: any): void {
+    const doc = new jsPDF();
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    const margin = 14;
+    let yPos = 20;
+
+    // --- PDF Header ---
+    doc.setFontSize(18);
+    doc.text(`Assessment Questions for: ${this.job?.title || 'Job'}`, margin, yPos);
+    yPos += 10;
+    doc.setFontSize(12);
+    doc.text(`Assessment Name: ${data.name}`, margin, yPos);
+    yPos += 15;
+
+    // --- MCQs Section ---
+    if (data.selected_mcqs && data.selected_mcqs.length > 0) {
+      // 1. Group MCQs by skill name
+      const mcqsBySkill = data.selected_mcqs.reduce((acc: any, q: any) => {
+        const skill = q.mcq_item_details?.skill_name || 'General Questions';
+        if (!acc[skill]) {
+          acc[skill] = [];
+        }
+        acc[skill].push(q);
+        return acc;
+      }, {});
+
+      // 2. Iterate through each skill group and create a table
+      for (const skill in mcqsBySkill) {
+        // Check for page break before adding a new section header
+        if (yPos > pageHeight - 40) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Skill Section: ${skill}`, margin, yPos);
+        yPos += 4;
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += 8;
+        doc.setFont('helvetica', 'normal');
+
+        const mcqBody = mcqsBySkill[skill].map((q: any, index: number) => {
+          const details = q.mcq_item_details;
+          const rawText = details.question_text || '';
+
+          // Initialize variables
+          let question = null;
+          let optionsBlock = null;
+          let correctAnswer = null;
+
+          // --- 1. Try Frontend Regex Parsing (Improved for Multiline) ---
+          // [\s\S] matches any character including newlines
+          const questionMatch = rawText.match(/^(?:Q\d+[\.:]\s*)?([\s\S]*?)(?=\s*a\))/i);
+          const optionsMatch = rawText.match(/\s*a\)([\s\S]*?)\s*b\)([\s\S]*?)\s*c\)([\s\S]*?)\s*d\)([\s\S]*?)(?=\s*(?:Correct Answer:|Correct:|$))/i);
+          const answerMatch = rawText.match(/(?:Correct Answer:|Correct:)\s*([a-d])/i);
+
+          if (questionMatch && optionsMatch) {
+             question = questionMatch[1].trim();
+             optionsBlock = `a) ${optionsMatch[1].trim()}\nb) ${optionsMatch[2].trim()}\nc) ${optionsMatch[3].trim()}\nd) ${optionsMatch[4].trim()}`;
+          }
+          if (answerMatch) {
+            correctAnswer = answerMatch[1].toUpperCase();
+          }
+
+          // --- 2. Fallback: Check Backend Parsed Metadata ---
+          // Only use this if the Frontend Regex failed AND the Backend actually found options
+          if ((!question || !optionsBlock) && details.parsed_metadata && details.parsed_metadata.options && details.parsed_metadata.options.length > 0) {
+             question = details.parsed_metadata.clean_question;
+             const opts = details.parsed_metadata.options;
+             // Ensure we actually have 4 options before formatting
+             if (opts[0] || opts[1]) {
+                optionsBlock = `a) ${opts[0] || ''}\nb) ${opts[1] || ''}\nc) ${opts[2] || ''}\nd) ${opts[3] || ''}`;
+                correctAnswer = (details.parsed_metadata.answer_label || '').toUpperCase();
+             }
+          }
+
+          // --- 3. Fallback: Check for Explicit Option Fields ---
+          if ((!question || !optionsBlock) && details.option_a) {
+            question = details.question_text;
+            optionsBlock = `a) ${details.option_a}\nb) ${details.option_b}\nc) ${details.option_c}\nd) ${details.option_d}`;
+            correctAnswer = (details.correct_answer || 'N/A').toUpperCase();
+          }
+
+          // --- 4. Final Fallback: Display Raw Text "As Is" ---
+          // If all parsing failed, display the raw text so it is readable, without adding empty "a) b) c)" lines.
+          if (!question || !optionsBlock) {
+             question = rawText;
+             optionsBlock = ''; // Leave empty to avoid clutter
+             // Try to preserve the answer if we found it via regex, otherwise N/A
+             correctAnswer = correctAnswer || 'Refer to Question Text';
+          }
+
+          // Format Final String
+          // Filter out empty lines to make the "Raw Text" fallback look cleaner
+          const parts = [question, optionsBlock, `Correct Answer: ${correctAnswer || 'N/A'}`].filter(p => p && p.trim() !== '');
+          const fullQuestionBlock = parts.join('\n\n');
+
+          return [index + 1, fullQuestionBlock];
+        });
+
+        autoTable(doc, {
+          head: [['#', 'Question Details']],
+          body: mcqBody,
+          startY: yPos,
+          theme: 'grid',
+          headStyles: { fillColor: [5, 53, 108] },
+          styles: { cellPadding: 3, fontSize: 9, valign: 'top' },
+          columnStyles: {
+            0: { cellWidth: 10, halign: 'center' },
+          }
+        });
+        yPos = (doc as any).lastAutoTable.finalY + 15;
+      }
+    }
+
+    // --- Coding Problems Section ---
+    if (data.selected_coding_problems && data.selected_coding_problems.length > 0) {
+      if (yPos > pageHeight - 60) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Coding Problems', margin, yPos);
+      yPos += 4;
+      doc.line(margin, yPos, pageWidth - margin, yPos);
+      yPos += 10;
+
+      data.selected_coding_problems.forEach((p: any, index: number) => {
+        const details = p.coding_problem_details;
+        if (!details) return;
+
+        // Estimate height to check for page break
+        const descriptionLines = doc.splitTextToSize(details.description || '', 170).length;
+        const estimatedHeight = 20 + (descriptionLines * 5);
+        if (yPos + estimatedHeight > pageHeight - 20) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${index + 1}. ${details.title}`, margin, yPos);
+        yPos += 8;
+
+        const addWrappedText = (label: string, text: string | null) => {
+          if (!text || text.trim() === 'N/A' || text.trim() === '') return;
+          doc.setFont('helvetica', 'bold');
+          doc.text(label, margin, yPos);
+          yPos += 6;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          const lines = doc.splitTextToSize(text, pageWidth - (margin * 2));
+          doc.text(lines, margin, yPos);
+          yPos += (lines.length * 4) + 6;
+        };
+
+        addWrappedText('Description:', details.description);
+        addWrappedText('Input Format:', details.input_format);
+        addWrappedText('Output Format:', details.output_format);
+        addWrappedText('Constraints:', details.constraints);
+        addWrappedText('Example:', details.example);
+        yPos += 5;
+      });
+    }
+
+    // --- Save the PDF ---
+    const fileName = `Assessment_Questions_${this.job?.title.replace(/\s/g, '_') || 'Job'}.pdf`;
+    doc.save(fileName);
+  }
+
   fetchJobDetails() {
     if (this.jobId) {
       this.http.get(this.apiUrl+`api/recruiter/jobs/${this.jobId}/applications/`).subscribe(
           (data: any) => {
             this.job = data;
-            this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(this.job?.description || '');
+            const rawDesc = this.job?.description || '';
+            const sanitizedDesc = this.sanitizeJobDescription(rawDesc);
+            this.safeJobDescription = this.sanitizer.bypassSecurityTrustHtml(sanitizedDesc);
             this.allCandidates = data.applications.map(c => ({...c, isSelected: false }));
             
             // This now dynamically updates counts
@@ -592,26 +771,25 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
   //   this.router.navigate(['/create-job-step4', this.jobId]);
   // }
 
-  removeStage(stageToRemove: InterviewStage, event: MouseEvent) {
-    event.stopPropagation(); // Prevent the tab from being selected
-    
-    if (confirm(`Are you sure you want to remove the "${stageToRemove.stage_name}" stage?`)) {
-      const token = this.authService.getJWTToken();
-      if (!token) {
-        alert('Authentication error.');
-        return;
-      }
-      this.interviewService.deleteInterviewStage(stageToRemove.id, token).subscribe({
-        next: () => {
-          alert('Stage removed successfully.');
-          this.fetchInterviewStages(); // Refresh the list of stages
-        },
-        error: (err) => {
-          console.error('Error removing stage:', err);
-          alert('Failed to remove stage. Please try again.');
-        }
-      });
+  removeStageConfirmed(): void {
+    if (!this.pendingStageData) return;
+
+    const token = this.authService.getJWTToken();
+    if (!token) {
+      this.openAlert('Authentication error.', ['OK']);
+      return;
     }
+    
+    this.interviewService.deleteInterviewStage(this.pendingStageData.id, token).subscribe({
+      next: () => {
+        this.openAlert('Stage removed successfully.', ['OK']);
+        this.fetchInterviewStages(); // Refresh the list of stages
+      },
+      error: (err) => {
+        console.error('Error removing stage:', err);
+        this.openAlert('Failed to remove stage. Please try again.', ['OK']);
+      }
+    });
   }
   
   calculateNextStage() {
@@ -700,6 +878,15 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.initializeNewStageForm(); // Reset the form every time it's opened
     this.showAddStagePopup = true;
   }
+
+  removeStage(stageToRemove: InterviewStage, event: MouseEvent) {
+    event.stopPropagation(); // Prevent the tab from being selected
+    
+    // Store the stage and action, then open the custom alert
+    this.pendingStageData = stageToRemove;
+    this.pendingAction = 'removeStageConfirm';
+    this.openAlert(`Are you sure you want to remove the "${stageToRemove.stage_name}" stage?`, ['No', 'Yes']);
+  }
   
   closeAddStagePopup(): void {
     if (this.isSubmitting) return;
@@ -760,11 +947,12 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
     this.isSubmitting = true;
     this.interviewService.addInterviewStage(this.jobId, this.pendingStageData, token).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.closeAddStagePopup(); // Close the form popup
         this.openAlert('Interview stage successfully added', ['OK']); // Show custom success alert
         this.fetchInterviewStages(); // Refresh the stage list
         this.initializeNewStageForm(); // <-- ADD THIS LINE to reset the form
-        this.isSubmitting = false;
+        
       },
       error: (err) => {
         const errorMessage = err.error?.errors ? `Failed to add stage: ${JSON.stringify(err.error.errors)}` : 'Failed to add stage: An unknown server error occurred.';
@@ -800,11 +988,68 @@ export class RecruiterViewJobApplications1 implements OnInit, AfterViewInit {
 
     if (confirmed && this.pendingAction === 'addStageConfirm') {
         this.onSaveNewStageConfirmed();
+    } 
+    // Add this new "else if" block
+    else if (confirmed && this.pendingAction === 'removeStageConfirm') {
+        this.removeStageConfirmed();
     }
 
     // Reset pending state
     this.pendingAction = '';
     this.pendingStageData = null;
   }
+
+  private sanitizeJobDescription(content: string): string {
+    if (!content) return '';
+
+    // STEP 1: Pre-clean known "junk" characters (Private Use Area unicode)
+    // Replaces the "No Glyph" boxes with a standard bullet point.
+    let cleaned = content.replace(/[\uE000-\uF8FF]/g, '• ');
+
+    // Remove invisible control characters
+    cleaned = cleaned.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // STEP 2: Check for Plain Text
+    if (!/<[a-z][\s\S]*>/i.test(cleaned)) {
+      return cleaned.replace(/\n/g, '<br>');
+    }
+
+    // STEP 3: Clean HTML
+    const tempDiv = this.document.createElement('div');
+    tempDiv.innerHTML = cleaned;
+
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+
+    const cleanNode = (element: HTMLElement) => {
+      const children = Array.from(element.childNodes);
+      children.forEach((node) => {
+        if (node.nodeType === 1) { 
+          cleanNode(node as HTMLElement);
+        }
+      });
+
+      if (element !== tempDiv) {
+        const tagName = element.tagName;
+        if (!allowedTags.includes(tagName)) {
+          // Unwrap forbidden tags
+          const parent = element.parentNode;
+          while (element.firstChild) {
+            parent?.insertBefore(element.firstChild, element);
+          }
+          parent?.removeChild(element);
+        } else {
+          // Remove attributes (like style="font-family: Symbol") which causes issues
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+          }
+        }
+      }
+    };
+
+    cleanNode(tempDiv);
+    return tempDiv.innerHTML;
+  }
+
+
 
 }

@@ -18,3 +18,13 @@
     <button class="btn btn-secondary" (click)="submit()">Submit</button>
   </div>
 </div>
+
+<!-- Validation Alert -->
+@if (showValidationAlert) {
+  <app-alert-message
+    [message]="'No code detected. Please write your solution before submitting.'"
+    [buttons]="['OK']"
+    (buttonClicked)="closeAlert()"
+    (close)="closeAlert()">
+  </app-alert-message>
+}

@@ -3,6 +3,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
+
 export const routes: Routes = [
     {
     path: '',
@@ -252,6 +253,48 @@ export const routes: Routes = [
       (m) => m.CodingAssessment
     ),
 },
+{
+    path: 'recruiter-workflow-candidate',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-candidate/recruiter-workflow-candidate.component')
+      .then((m) => m.RecruiterWorkflowCandidate),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
+  },
+  {
+    path: 'recruiter-workflow-requirement',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-requirement/recruiter-workflow-requirement.component')
+      .then((m) => m.RecruiterWorkflowRequirement),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
+  },
+  {
+    path: 'recruiter-workflow-client',
+    loadComponent: () =>
+      import('./pages/recruiter-workflow-client/recruiter-workflow-client.component')
+      .then((m) => m.RecruiterWorkflowClient),
+      canActivate: [authGuard],
+      data: { roles: ['admin'] } 
+  },
+    {
+    path: 'recruiter-super-admin-analytical-module',
+    loadComponent: () =>
+      import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component')
+      .then((m) => m.RecruiterSuperAdminAnalyticalModuleComponent),
+      canActivate: [authGuard],
+      data: { 
+        roles: ['admin'], 
+        requiresSuperAdmin: true // Custom flag for the guard
+      }
+  },
+  {
+    path: 'recruiter-workflow-ats/:id', // :id is the Job Requirement ID
+    loadComponent: () => import('./pages/recruiter-workflow-ats/recruiter-workflow-ats.component')
+      .then(m => m.RecruiterWorkflowAtsComponent),
+    canActivate: [authGuard],
+    data: { roles: ['admin'] }
+  },
   {
     path: '**',
     loadComponent: () =>

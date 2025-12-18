@@ -145,7 +145,44 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     });
   }
 
-  
+  readonly VALID_NOTICE_PERIODS = [
+    'Immediate',
+    'Less than 15 Days',
+    '30 Days',
+    '60 Days',
+    '90 Days'
+  ];
+
+  private _normalizeNoticePeriod(noticePeriodStr: string | null | undefined): string {
+    if (!noticePeriodStr) {
+      // If the AI provides no value, return an empty string.
+      // This will correctly show the "Select Notice Period" placeholder.
+      return '';
+    }
+
+    const lowerCasePeriod = noticePeriodStr.toLowerCase().trim();
+       let mappedValue = '';
+    // This checks for common variations the AI might return.
+     if (lowerCasePeriod.includes('immediate') || lowerCasePeriod.includes('start')) {
+      mappedValue = 'Immediate';
+    } else if (lowerCasePeriod.includes('less than 15') || lowerCasePeriod.includes('15 day')) {
+      mappedValue = 'Less than 15 Days';
+    } else if (lowerCasePeriod.includes('30 day') || lowerCasePeriod.includes('1 month')) {
+      mappedValue = '30 Days';
+    } else if (lowerCasePeriod.includes('60 day') || lowerCasePeriod.includes('2 month')) {
+      mappedValue = '60 Days';
+    } else if (lowerCasePeriod.includes('90 day') || lowerCasePeriod.includes('3 month')) {
+      mappedValue = '90 Days';
+    }
+    if (this.VALID_NOTICE_PERIODS.includes(mappedValue)) {
+      return mappedValue;
+    }
+
+    // If the AI gives a value we don't recognize (e.g., "120 Days"),
+    // return an empty string so the user has to select a valid option.
+    console.warn(`Unrecognized notice period "${noticePeriodStr}". Resetting to empty.`);
+    return '';
+  }
 
    public sanitizeAlphaNumericInput(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -530,11 +567,12 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       budget_type = details.budget_type || 'Annually';
       min_budget = details.min_budget || null;
       max_budget = details.max_budget || null;
-      notice_period = details.notice_period || '30 days';
+      notice_period = this._normalizeNoticePeriod(details.notice_period);
       skills = [...(details.skills?.primary || []).map(s => s.skill), ...(details.skills?.secondary || []).map(s => s.skill)];
-      job_description = details.job_description || '';
+      job_description = this.sanitizeJobDescription(details.job_description || '');
       unique_id_val = aiJobData.unique_id || this.jobForm.get('unique_id')?.value || '';
-      job_description_url_val = aiJobData.file_url || '';
+      //job_description = this.sanitizeJobDescription(details.job_description || '');
+      job_description_url_val = aiJobData.file_url || this.jobForm.get('job_description_url')?.value || '';
     } else {
       const details = jobData as JobDetails;
       role = details.role;
@@ -556,6 +594,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       skills = [...primarySkills, ...secondarySkills];
       job_description = details.job_description;
       unique_id_val = details.unique_id || this.jobForm.get('unique_id')?.value || '';
+      job_description = this.sanitizeJobDescription(details.job_description || '');
       job_description_url_val = details.job_description_url || '';
     }
 
@@ -665,9 +704,9 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     markerLeft.style.left = `${minPos}px`;
     markerRight.style.left = `${maxPos}px`;
     labelLeft.style.left = `${minPos + markerWidth / 2}px`;
-    labelLeft.textContent = `${clampedMin}yrs`;
+    labelLeft.textContent = `${clampedMin}`;
     labelRight.style.left = `${maxPos + markerWidth / 2}px`;
-    labelRight.textContent = `${clampedMax}yrs`;
+    labelRight.textContent = `${clampedMax}`;
     filledSegment.style.left = `${minPos + markerWidth / 2}px`;
     filledSegment.style.width = `${Math.max(0, maxPos - minPos)}px`;
   }
@@ -803,7 +842,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
     let activeSuggestionIndex = -1;
 
     const addSkillTag = (skillName: string) => {
-      const sanitizedSkill = skillName.replace(/[^a-zA-Z ]/g, '').trim();
+    const sanitizedSkill = skillName.replace(/[^a-zA-Z +#]/g, '').trim();
       if (!sanitizedSkill) {
         return;
       }
@@ -894,7 +933,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       }),
       map(() => {
         const originalValue = tagInput.value;
-        const sanitizedValue = originalValue.replace(/[^a-zA-Z ]/g, '');
+        const sanitizedValue = originalValue.replace(/[^a-zA-Z +#]/g, '');
         if (originalValue !== sanitizedValue) {
           const caretPosition = tagInput.selectionStart;
           const diff = originalValue.length - sanitizedValue.length;
@@ -989,14 +1028,26 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       } catch (e) {
         console.error('Failed to parse userProfile from localStorage', e);
       }
+      let currentStatus = this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft';
+    
+    if (currentStatus === 'processing') {
+        currentStatus = 'draft';
+    }
     }
     const jobDetails: JobDetails = {
       ...formValues,
       location: locationString,
-      skills: {
-        primary: (formValues.skills || []).slice(0, Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.9, type_confidence: 0.9 })),
-        secondary: (formValues.skills || []).slice(Math.ceil((formValues.skills || []).length / 2)).map((s: string) => ({ skill: s, skill_confidence: 0.8, type_confidence: 0.8 }))
-      },
+      // --- MODIFICATION START: Treat ALL manual skills as Primary ---
+    // Previously, we split this 50/50. Now, we map the entire array to 'primary'.
+    skills: {
+      primary: (formValues.skills || []).map((s: string) => ({ 
+        skill: s, 
+        skill_confidence: 1.0, // High confidence for manual entry
+        type_confidence: 1.0 
+      })),
+      secondary: [] // Empty secondary ensures no skills are skipped for question generation
+    },
+    // --- MODIFICATION END ---
       status: this.jobData && (this.jobData as JobDetails).status ? (this.jobData as JobDetails).status : 'draft',
       company_name: companyName
     };
@@ -1189,7 +1240,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
 
     for (const key in rawValues) {
       const value = rawValues[key];
-      if (value !== null && value !== undefined && value !== '') {
+      if (value !== null && value !== undefined) {
         if (Array.isArray(value) && value.length === 0) {
           continue;
         }
@@ -1379,5 +1430,57 @@ if (this.isEditMode && (originalStatus as string) === 'pause') {
         ? 'Do you want to save the changes to this job post and proceed?'
         : 'Do you want to save this job post and proceed?';
       this.openAlert(message, ['Cancel', 'Save & Next']);
+  }
+
+  private sanitizeJobDescription(content: string): string {
+    if (!content) return '';
+
+    // FIX: Always convert newlines (\n) to <br> tags before processing HTML.
+    // This ensures line breaks from the uploaded file are visually rendered in the editor,
+    // even if the content contains other HTML tags.
+    // We also handle escaped newlines (\\n) just in case the backend sends them that way.
+    let formattedContent = content.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+
+    // Create a temp div to parse the HTML structure
+    const tempDiv = this.document.createElement('div');
+    tempDiv.innerHTML = formattedContent;
+
+    // Define tags that are allowed (Basic formatting + Structure)
+    // We map 'STRONG' to 'B' and 'EM' to 'I' visually, but keeping them is fine.
+    const allowedTags = ['B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'P', 'BR', 'DIV', 'SPAN'];
+
+    const cleanNode = (element: HTMLElement) => {
+      // Process children first (Depth-First Traversal)
+      const children = Array.from(element.childNodes);
+      children.forEach((node) => {
+        if (node.nodeType === 1) { // Node.ELEMENT_NODE
+          cleanNode(node as HTMLElement);
+        }
+      });
+
+      // Process the current element (skip the root tempDiv)
+      if (element !== tempDiv) {
+        const tagName = element.tagName;
+
+        if (!allowedTags.includes(tagName)) {
+          // If tag is NOT allowed (e.g., <style>, <script>, <font>), 
+          // Unwrap it: Remove the tag but keep the text content/children.
+          const parent = element.parentNode;
+          while (element.firstChild) {
+            parent?.insertBefore(element.firstChild, element);
+          }
+          parent?.removeChild(element);
+        } else {
+          // If tag IS allowed, strip all attributes (style="...", class="...")
+          // This removes external formatting conflicts but keeps bold/italic/lists.
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+          }
+        }
+      }
+    };
+
+    cleanNode(tempDiv);
+    return tempDiv.innerHTML;
   }
 }

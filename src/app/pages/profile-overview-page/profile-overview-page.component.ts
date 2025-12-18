@@ -196,6 +196,12 @@ export class ProfileOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  handleAlertRequest(eventData: { message: string; buttons: string[] }): void {
+    // This function receives the error message from the child component
+    // and uses the parent's existing 'openAlert' method to display it.
+    this.openAlert(eventData.message, eventData.buttons);
+  }
+
 
     // --- MODIFICATION START ---
   // This new handler is triggered when the employment component detects a short date range.

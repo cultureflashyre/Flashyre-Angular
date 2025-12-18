@@ -5,12 +5,14 @@ import { AssessmentTakenService } from '../../services/assessment-taken.service'
 import { JobsService } from '../../services/job.service';
 import { Subscription, interval, of } from 'rxjs';
 import { switchMap, startWith, catchError } from 'rxjs/operators';
+import { AlertMessageComponent } from '../alert-message/alert-message.component';
 
 @Component({
     selector: 'assessment-detailed-results',
     templateUrl: 'assessment-detailed-results.html',
     styleUrls: ['assessment-detailed-results.css'],
     standalone: true,
+    imports: [AlertMessageComponent]
 })
 export class AssessmentDetailedResults implements OnChanges  {
     @Input() assessmentData: any;  // This will receive the selected attempt object
@@ -31,6 +33,9 @@ export class AssessmentDetailedResults implements OnChanges  {
 
     codingSectionsMap: { [key: string]: any } = {};
     // --- END NEW PROPERTIES ---
+    showAlert: boolean = false;
+alertMessage: string = '';
+alertButtons: string[] = ['OK'];
 
 
     rawhg86: string = ' '
@@ -166,6 +171,14 @@ export class AssessmentDetailedResults implements OnChanges  {
   this.back.emit();
 }
 
+closeAlert() {
+  this.showAlert = false;
+}
+
+onAlertButtonClick(btn: string) {
+  this.showAlert = false;
+}
+
 onReattempt() {
       const assessmentIdToFind = this.assessmentData?.assessment_id;
 
@@ -192,9 +205,11 @@ onReattempt() {
             });
           } else {
             console.error(`Assessment with ID ${numericAssessmentId} not found.`);
-            alert('Could not start the assessment. Details not found.');
-            this.isReattempting = false; // <-- Reset on failure
-          }
+              this.alertMessage = 'This assessment is currently unavailable. It may have been paused or expired. Please try after sometime.';
+  this.showAlert = true;
+  
+  this.isReattempting = false; 
+}
         },
         error: (error) => {
           console.error('Failed to fetch the list of assessments for re-attempt:', error);

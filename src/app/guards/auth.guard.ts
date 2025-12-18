@@ -25,11 +25,14 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   const token = localStorage.getItem('jwtToken');
   const userType = localStorage.getItem('userType'); // e.g., 'candidate', 'admin', 'recruiter'
+  // We treat the string 'true' as boolean true
+  const isSuperUser = localStorage.getItem('isSuperUser') === 'true'; 
 
   console.log('Stored token:', token);
   console.log('Stored userType:', userType);
 
   const expectedRoles: string[] = route.data['roles'];
+  const requiresSuperAdmin: boolean = route.data['requiresSuperAdmin'] || false;
   console.log('Expected roles for this route:', expectedRoles);
 
   // 1. Check if the user is logged in (token exists and is not expired)
@@ -56,14 +59,23 @@ export const authGuard: CanActivateFn = (route, state) => {
         router.navigate(['/candidate-home']);
         break;
       case 'recruiter':
-      case 'admin':
-        router.navigate(['/job-post-list']);
+      case 'admin': 
+        // If an admin tries to access a non-admin page, send them to their default
+        router.navigate(['/recruiter-workflow-candidate']); 
         break;
       default:
         router.navigate(['/']); // Redirect to a safe default page
         break;
     }
     return false; // Block access
+  }
+
+  // 3. Check Super Admin Privileges
+  if (requiresSuperAdmin && !isSuperUser) {
+    console.log('Access denied: Route requires Super Admin privileges.');
+    // Redirect standard admin back to their workflow page
+    router.navigate(['/recruiter-workflow-candidate']);
+    return false;
   }
 
   console.log('All checks passed. Route access granted.');

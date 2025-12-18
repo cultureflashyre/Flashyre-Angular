@@ -1,5 +1,5 @@
 import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser';
+import { Title, Meta, DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -49,6 +49,7 @@ export class CandidateAssessment implements AfterViewInit {
     private spinner: NgxSpinnerService,
     private authService: AuthService,
     private assessmentDataService: AssessmentDataService,
+    private sanitizer: DomSanitizer
     
   ) {
     this.title.setTitle('Candidate-Assessment - Flashyre');
@@ -151,12 +152,28 @@ export class CandidateAssessment implements AfterViewInit {
 
     // Subscribe to keep a local copy for methods like startAssessment
     this.assessments$.subscribe(data => {
-        this.currentAssessments = data.map(ass => ({
-            ...ass,
-            showReadMore: false,
-            isExpanded: false,
-            isScrollable: false
-        }));
+        this.currentAssessments = data.map(ass => {
+            let rawDescription = ass.assessment_description || '';
+
+            let cleaned = rawDescription.replace(/[\uF0B7\uF0A7\uF0D8\uF02D]/g, ' • ');
+
+            cleaned = cleaned.replace(/[\uE000-\uF8FF]/g, '')
+                             .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+
+            cleaned = cleaned.replace(/[●]/g, ' • ');
+            const formattedDescription = cleaned.replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+
+            // Sanitize
+            const safeDescription = this.sanitizer.bypassSecurityTrustHtml(formattedDescription);
+
+            return {
+                ...ass,
+                safe_description: safeDescription,
+                showReadMore: false,
+                isExpanded: false,
+                isScrollable: false
+            };
+        });
     });
   }
 
