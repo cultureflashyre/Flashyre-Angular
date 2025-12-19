@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import { map, catchError, switchMap, distinctUntilChanged, take  } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 // Update the import path below if the component exists elsewhere, or create the file if missing.
@@ -46,6 +46,10 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   isEditMode: boolean = false;
   editingUserId: string | null = null;
   isSubmitting: boolean = false;
+
+  // Track original values for validation bypass in Edit Mode
+  originalEmail: string = '';
+  originalPhone: string = '';
 
   // Form Properties
   errorMessage: string = '';
@@ -174,11 +178,15 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     this.isEditMode = true;
     this.editingUserId = user.user_id;
     
-    // In Edit Mode: Password is Optional (Only validate if user types something)
+    // Store original values to skip validation if they haven't changed
+    this.originalEmail = user.email;
+    this.originalPhone = user.phone_number;
+
+    // Remove required validators for Password in Edit Mode
     this.createUserForm.get('password')?.clearValidators();
     this.createUserForm.get('confirm_password')?.clearValidators();
     
-    // Add a custom validator to check complexity ONLY if value exists
+    // Add optional complexity validator (only checks if user types something)
     this.createUserForm.get('password')?.setValidators([this.optionalPasswordComplexityValidator()]);
     
     this.createUserForm.get('password')?.updateValueAndValidity();
@@ -191,12 +199,15 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       phone_number: user.phone_number,
       email: user.email,
       is_superuser: user.is_superuser,
-      password: '',        // Reset to empty
-      confirm_password: '' // Reset to empty
+      password: '',        
+      confirm_password: '' 
     });
 
     this.showCreateUserPopup = true;
+    this.errorMessage = '';
+    this.successMessage = '';
   }
+
 
   closeCreateUserPopup() {
     this.showCreateUserPopup = false;
@@ -238,36 +249,37 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
 
     this.isSubmitting = true;
     this.errorMessage = '';
+    this.successMessage = '';
     
-    // Clone values
+    // Clone values to manipulate payload
     const formVal = { ...this.createUserForm.value };
 
-    // Clean up empty password in Edit mode so we don't send empty strings
-    if (this.isEditMode && !formVal.password) {
-      delete formVal.password;
-      delete formVal.confirm_password;
-    }
-
-
     if (this.isEditMode) {
-      // UPDATE USER
+      // 1. EDIT USER LOGIC
+      
+      // If password field is empty, remove it from payload so backend doesn't receive empty string
+      if (!formVal.password) {
+        delete formVal.password;
+        delete formVal.confirm_password;
+      }
+
       this.http.put(`${this.baseUrl}api/super-admin/update/${this.editingUserId}/`, formVal).subscribe({
         next: (res) => {
           this.isSubmitting = false;
           this.successMessage = 'User updated successfully.';
           setTimeout(() => {
             this.closeCreateUserPopup();
-            this.fetchUsers(); // Refresh list
-          }, 1000);
+            this.fetchUsers(); 
+          }, 1500);
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.errorMessage = 'Update failed. ' + (err.error?.detail || JSON.stringify(err.error));
+          this.errorMessage = 'Update failed: ' + (err.error?.detail || err.error?.error || 'Unknown error');
         }
       });
+
     } else {
-      // CREATE USER (Using previous endpoint or new one if you migrated creation logic)
-      // Assuming you might want to use the same logic, but for clarity using the create-admin endpoint
+      // 2. CREATE USER LOGIC
       const initials = this.thumbnailService.getUserInitials(`${formVal.first_name} ${formVal.last_name}`);
       const userData = { ...formVal, user_type: 'admin', is_staff: true, initials: initials };
 
@@ -278,7 +290,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
           setTimeout(() => {
             this.closeCreateUserPopup();
             this.fetchUsers();
-          }, 1000);
+          }, 1500);
         },
         error: (err) => {
           this.isSubmitting = false;
@@ -445,13 +457,32 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     };
   }
 
+  // =================================================================
+  // VALIDATORS (UPDATED FOR EDIT MODE)
+  // =================================================================
+
   phoneExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const phone = control.value;
+      
+      // If empty, let Sync validators handle it
       if (!phone) return of(null);
-      return this.http.get(`${this.baseUrl}api/auth/check-phone/?phone=${phone}`).pipe(
-        map((res: any) => (res.exists ? { phoneExists: true } : null)),
-        catchError(() => of(null))
+
+      // EDIT MODE CHECK: If value hasn't changed, strictly return VALID (null)
+      // This prevents the API call and the error message.
+      if (this.isEditMode && phone === this.originalPhone) {
+        return of(null);
+      }
+
+      // Add a timer for debounce to avoid calling API on every keystroke
+      return timer(500).pipe(
+        switchMap(() => {
+          return this.http.get(`${this.baseUrl}api/auth/check-phone/?phone=${phone}`).pipe(
+            map((res: any) => (res.exists ? { phoneExists: true } : null)),
+            catchError(() => of(null))
+          );
+        }),
+        take(1)
       );
     };
   }
@@ -459,10 +490,22 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   emailExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const email = control.value;
+      
       if (!email) return of(null);
-      return this.http.get(`${this.baseUrl}api/auth/check-email/?email=${email}`).pipe(
-        map((res: any) => (res.exists ? { emailExists: true } : null)),
-        catchError(() => of(null))
+
+      // EDIT MODE CHECK: If value hasn't changed, strictly return VALID (null)
+      if (this.isEditMode && email === this.originalEmail) {
+        return of(null);
+      }
+
+      return timer(500).pipe(
+        switchMap(() => {
+          return this.http.get(`${this.baseUrl}api/auth/check-email/?email=${email}`).pipe(
+            map((res: any) => (res.exists ? { emailExists: true } : null)),
+            catchError(() => of(null))
+          );
+        }),
+        take(1)
       );
     };
   }
