@@ -257,9 +257,13 @@
                     </div>
                     <div class="recruiter-workflow-requirement-container36">
                       <div style="display: flex; gap: 16px; align-items: flex-start; width: auto;">
-                      <span class="recruiter-workflow-requirement-text55">
-                        {{ item.job_role }}
-                      </span>
+                      <span 
+      class="recruiter-workflow-requirement-text55 clickable-role" 
+      (click)="openRequirementDetails(item)"
+      title="View Requirement Details"
+    >
+      {{ item.job_role }}
+    </span>
                       <div class="status-badge-container">
                         <div 
                             class="status-badge" 
@@ -826,6 +830,189 @@
           <span id="submit-text" class="recruiter-workflow-requirement-submit-text">Submit</span>
         </button>
       </div>
+    </div>
+  </div>
+</ng-container>
+<!-- ELEGANT REQUIREMENT DETAILS MODAL -->
+<ng-container *ngIf="showDetailsModal && selectedReqDetails">
+  <div class="elegant-modal-backdrop" (click)="closeDetailsModal()">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
+      
+      <!-- 1. HEADER: Identity & Actions -->
+      <div class="elegant-header">
+        <div class="req-identity">
+          <div class="req-avatar">
+            <!-- First letter of Job Role -->
+            {{ selectedReqDetails.job_role.charAt(0) | uppercase }}
+          </div>
+          <div class="identity-text">
+            <h2>{{ selectedReqDetails.job_role }}</h2>
+            <p>{{ selectedReqDetails.client_name }} 
+               <span *ngIf="selectedReqDetails.sub_client_name"> • {{ selectedReqDetails.sub_client_name }}</span>
+            </p>
+          </div>
+        </div>
+        
+        <div class="header-actions">
+           <!-- Edit Button (Checks existing permissions logic inside onEdit) -->
+          <button class="action-icon-btn" (click)="onEdit(selectedReqDetails); closeDetailsModal()" title="Edit Requirement">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          
+          <!-- Download PDF Button -->
+          <button class="action-icon-btn" (click)="downloadCardAsPdf(requirementsList.indexOf(selectedReqDetails))" title="Download PDF">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+          
+          <!-- Close Button -->
+          <button class="action-icon-btn" (click)="closeDetailsModal()" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. BODY: Scrollable Info -->
+      <div class="elegant-body">
+        
+        <!-- Section: Key Stats -->
+        <div class="info-section">
+          <h4 class="section-title">Requirement Overview</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Total Experience</span>
+              <span class="info-value">{{ selectedReqDetails.total_experience_min }} - {{ selectedReqDetails.total_experience_max }} Years</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Relevant Experience</span>
+              <span class="info-value">{{ selectedReqDetails.relevant_experience_min }} - {{ selectedReqDetails.relevant_experience_max }} Years</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Salary Range</span>
+              <span class="info-value">{{ selectedReqDetails.salary_min }} - {{ selectedReqDetails.salary_max }} LPA</span>
+            </div>
+            <div class="info-item" style="margin-top: 15px;">
+              <span class="info-label">Notice Period</span>
+              <span class="info-value" style="color: #d97706;">{{ selectedReqDetails.notice_period }}</span>
+            </div>
+            <div class="info-item" style="margin-top: 15px;">
+              <span class="info-label">Gender Preference</span>
+              <span class="info-value">{{ selectedReqDetails.gender }}</span>
+            </div>
+             <div class="info-item" style="margin-top: 15px;">
+              <span class="info-label">Current Status</span>
+              <span 
+                class="info-value" 
+                [style.color]="getStatusColor(selectedReqDetails.status)"
+                style="font-weight: 700;"
+              >
+                {{ selectedReqDetails.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Interview Details -->
+         <div class="info-section">
+          <h4 class="section-title">Interview Details</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Interview Location</span>
+              <span class="info-value">{{ selectedReqDetails.interview_location }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Interview Date</span>
+              <span class="info-value">{{ selectedReqDetails.interview_date | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Job Description -->
+        <div class="info-section">
+          <h4 class="section-title">Job Description</h4>
+          <div class="description-box">
+            {{ selectedReqDetails.job_description }}
+          </div>
+        </div>
+
+        <!-- Section: Detailed Locations & Vacancies -->
+        <div class="info-section" *ngIf="selectedReqDetails.location_details && selectedReqDetails.location_details.length > 0">
+          <h4 class="section-title">Location & Vacancy Breakdown</h4>
+          <div class="vacancy-grid">
+            <div *ngFor="let loc of selectedReqDetails.location_details" class="vacancy-card">
+              <div class="vac-location">{{ loc.location }}</div>
+              <div class="vac-detail">
+                <span>Vacancies:</span>
+                <strong>{{ loc.vacancies }}</strong>
+              </div>
+              <div class="vac-detail">
+                <span>SPOC:</span>
+                <span>{{ loc.spoc_name }}</span>
+              </div>
+              <div class="vac-detail" *ngIf="loc.email">
+                <span>Email:</span>
+                <span style="font-size: 11px;">{{ loc.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Attachments -->
+        <div class="info-section" *ngIf="selectedReqDetails.file_attachment">
+          <h4 class="section-title">Attachments</h4>
+          <div class="file-attachment-card" (click)="openFile(selectedReqDetails.file_attachment)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <div style="display:flex; flex-direction:column;">
+               <span style="font-size: 13px; font-weight: 600; color: #374151;">Attached Document</span>
+               <span style="font-size: 11px; color: #05356c;">Click to View</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Team -->
+        <div class="info-section">
+          <h4 class="section-title">Recruitment Team</h4>
+          
+          <div style="margin-bottom: 15px;">
+            <span class="info-label">Created By:</span>
+            <span class="info-value" style="margin-left: 5px;">
+              {{ selectedReqDetails.created_by_details?.first_name }} {{ selectedReqDetails.created_by_details?.last_name }}
+            </span>
+            <span style="font-size: 12px; color: #9ca3af; margin-left: 5px;">
+              on {{ selectedReqDetails.created_at | date:'mediumDate' }}
+            </span>
+          </div>
+
+          <div *ngIf="selectedReqDetails.assigned_users_details && selectedReqDetails.assigned_users_details.length > 0">
+            <span class="info-label" style="display:block; margin-bottom:8px;">Assigned To:</span>
+            <div class="users-wrapper">
+              <div class="user-chip" *ngFor="let user of selectedReqDetails.assigned_users_details">
+                <div class="chip-avatar">
+                   {{ (user.first_name | slice:0:1) || 'U' }}
+                </div>
+                {{ user.first_name }} {{ user.last_name }}
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!selectedReqDetails.assigned_users_details || selectedReqDetails.assigned_users_details.length === 0">
+             <span style="font-size: 13px; color: #999; font-style: italic;">No specific users assigned.</span>
+          </div>
+        </div>
+
+      </div>
+      
     </div>
   </div>
 </ng-container>

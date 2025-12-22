@@ -58,6 +58,10 @@ public formErrors: { [key: string]: string } = {};
   showLocationSuggestions: boolean = false;
   searchTimeout: any;
 
+// --- NEW PROPERTIES FOR DETAIL MODAL ---
+  showDetailsModal = false;
+  selectedReqDetails: any | null = null;
+
   // --- Google Maps Properties ---
 private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
 private loader: Loader;
@@ -211,6 +215,23 @@ private subscriptions = new Subscription();
   ngAfterViewInit(): void {
   this.initializeGooglePlaces();
 }
+
+// === NEW METHODS FOR DETAIL POPUP ===
+  
+  openRequirementDetails(item: any): void {
+    this.selectedReqDetails = item;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedReqDetails = null;
+  }
+  
+  // Method to handle file opening (reusing or creating new if needed)
+  openFile(url: string | null): void {
+    if (url) window.open(url, '_blank');
+  }
 
 ngOnDestroy(): void {
   this.subscriptions.unsubscribe();
