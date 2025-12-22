@@ -85,6 +85,12 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit {
+
+  // --- NEW PROPERTIES FOR DETAIL VIEW ---
+  showDetailsModal = false;
+  selectedCandidateDetails: Candidate | null = null;
+
+
   // --- Form Properties ---
   candidateForm!: FormGroup;
   isSubmitting = false;
@@ -183,6 +189,17 @@ export class RecruiterWorkflowCandidate implements OnInit {
       libraries: ['places']
     });
   }
+
+   openCandidateDetails(candidate: Candidate): void {
+    this.selectedCandidateDetails = candidate;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedCandidateDetails = null;
+  }
+
 
   ngOnInit(): void {
     // The key is 'isSuperUser' and the value is the string 'true' (From Parent)
