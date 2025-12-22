@@ -38,6 +38,10 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
   mainForm: FormGroup;
   existingClients: any[] = []; // Stores data fetched from DB
 
+   // --- NEW PROPERTIES FOR DETAIL MODAL ---
+  showDetailsModal = false;
+  selectedClientDetails: any | null = null;
+
   masterClients: any[] = []; // The original full list from DB
   isFilterPanelVisible: boolean = false;
   filterForm: FormGroup;
@@ -111,6 +115,18 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
       location: ['', [Validators.pattern('.*[a-zA-Z].*')]], 
       date_created: ['']
     });
+  }
+
+   // === NEW METHODS FOR DETAIL POPUP ===
+  
+  openClientDetails(client: any): void {
+    this.selectedClientDetails = client;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedClientDetails = null;
   }
 
   ngOnInit(): void {

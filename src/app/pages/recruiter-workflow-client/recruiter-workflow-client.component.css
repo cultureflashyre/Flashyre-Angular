@@ -1,6 +1,203 @@
 :host { 
   display: contents; 
 }
+
+/* --- Clickable Company Name --- */
+.clickable-company-name {
+  cursor: pointer;
+  color: #05356c;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.clickable-company-name:hover {
+  text-decoration: underline;
+  color: #031e3d;
+}
+
+/* =========================================
+   ELEGANT DETAILS MODAL STYLES (Client Version)
+   ========================================= */
+
+/* Backdrop */
+.elegant-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 2000; /* Higher than filter panels */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Card */
+.elegant-modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 850px;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.elegant-header {
+  background: #f8f9fa;
+  padding: 20px 30px;
+  border-bottom: 1px solid #eef2f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.client-identity {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.client-avatar {
+  width: 50px;
+  height: 50px;
+  background: #05356c;
+  color: #fff;
+  border-radius: 8px; /* Square for companies */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.identity-text h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.identity-text p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-icon-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #4b5563;
+  transition: all 0.2s;
+}
+
+.action-icon-btn:hover {
+  background: #f3f4f6;
+  color: #05356c;
+  border-color: #d1d5db;
+}
+
+/* Body & Layout */
+.elegant-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.info-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  font-weight: 700;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 8px;
+}
+
+.description-box {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  border: 1px solid #e5e7eb;
+}
+
+/* Contact Cards Grid */
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 15px;
+}
+
+.contact-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.contact-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.contact-location {
+  font-size: 14px;
+  font-weight: 700;
+  color: #05356c;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.contact-row svg {
+  color: #9ca3af;
+  min-width: 16px;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
  
 .recruiter-workflow-client-container10 {
   width: 100%;
