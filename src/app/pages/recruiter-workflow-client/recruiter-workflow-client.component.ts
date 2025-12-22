@@ -110,8 +110,8 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
     });
 
     this.filterForm = this.fb.group({
-      company_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]], 
-      client_name: ['', [Validators.pattern('^[a-zA-Z\\s]*$')]],
+      company_name: ['', [Validators.pattern('^[a-zA-Z0-9\\s]*$')]], 
+      client_name: ['', [Validators.pattern('^[a-zA-Z0-9\\s]*$')]],
       location: ['', [Validators.pattern('.*[a-zA-Z].*')]], 
       date_created: ['']
     });

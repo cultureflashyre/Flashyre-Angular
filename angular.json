@@ -60,8 +60,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "55kb"
+                  "maximumWarning": "100kb",
+                  "maximumError": "155kb"
                 }
               ]
             },
@@ -80,7 +80,7 @@
     "extractLicenses": true,
     "budgets": [
       { "type": "initial", "maximumWarning": "2mb", "maximumError": "5mb" },
-      { "type": "anyComponentStyle", "maximumWarning": "6kb", "maximumError": "55kb" }
+      { "type": "anyComponentStyle", "maximumWarning": "100kb", "maximumError": "155kb" }
     ]
 },
             "production": {

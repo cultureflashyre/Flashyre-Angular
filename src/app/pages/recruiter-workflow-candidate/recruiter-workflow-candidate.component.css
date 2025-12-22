@@ -1,561 +1,234 @@
 :host { 
   display: contents; 
 }
+
 /* =========================================
-   FORM MODAL FIXES - PROPER ALIGNMENT
+   ELEGANT DETAILS MODAL STYLES
    ========================================= */
 
-/* Ensure the modal container has proper sizing */
-.form-modal-container {
+/* Backdrop with Blur */
+.elegant-modal-backdrop {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 991;
-  
-  width: 85%;
-  max-width: 1000px;
-  max-height: 90vh;
-  overflow-y: auto;
-  
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-/* Form container padding */
-.form-modal-container .recruiter-workflow-candidate-candidate-input-form {
-  position: static;
-  padding: 24px 32px;
-  width: 100%;
-}
-
-/* =========================================
-   FIX: TWO-COLUMN LAYOUTS - CONSISTENT HEIGHTS
-   ========================================= */
-
-/* Name Fields Row */
-.recruiter-workflow-candidate-job-title-company-name-container1 {
-  gap: 16px;
-  width: 100%;
-  min-height: 96px; /* Increased to accommodate validation messages */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-}
-
-.recruiter-workflow-candidate-job-title-container1,
-.recruiter-workflow-candidate-company-name-container1 {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Phone & Email Row */
-.recruiter-workflow-candidate-job-title-company-name-container2 {
-  gap: 16px;
-  width: 100%;
-  min-height: 96px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-}
-
-.recruiter-workflow-candidate-job-title-container2,
-.recruiter-workflow-candidate-company-name-container2 {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Experience Fields Row */
-.recruiter-workflow-candidate-issued-renewal-date-container1 {
-  gap: 16px;
-  width: 100%;
-  min-height: 96px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-}
-
-.recruiter-workflow-candidate-issued-date-container1,
-.recruiter-workflow-candidate-renewal-date-container {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* CTC Fields Row */
-.recruiter-workflow-candidate-issued-renewal-date-container2 {
-  gap: 16px;
-  width: 100%;
-  min-height: 96px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-}
-
-.recruiter-workflow-candidate-issued-date-container2,
-.recruiter-workflow-candidate-certificate-name-container {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* =========================================
-   FIX: LOCATION FIELDS WITH AUTOCOMPLETE
-   ========================================= */
-
-/* Location Row - Critical Fix for Dropdown Overlap */
-.recruiter-workflow-candidate-job-title-company-name-container3 {
-  gap: 16px;
-  width: 100%;
-  min-height: 120px; /* Increased for pills + potential expansion */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 24px; /* Extra space for dropdowns */
-  position: relative;
-  z-index: 100;
-}
-
-.recruiter-workflow-candidate-job-title-container3,
-.recruiter-workflow-candidate-job-title-container4 {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative; /* Important for absolute positioning of dropdown */
-}
-
-/* Skills Input Container - Fixed Height and Scroll */
-.skills-input-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: flex-start;
-  gap: 8px;
-  padding: 8px 12px;
-  
-  border: 1px solid #A7A7A7;
-  border-radius: 5px;
-  background-color: #FFFFFF;
-  
-  min-height: 48px;
-  max-height: 100px; /* Allow 2-3 rows of pills */
-  overflow-y: auto;
-  
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.skills-input-container:focus-within {
-  border-color: #05356C;
-  box-shadow: 0 0 0 2px rgba(5, 53, 108, 0.1);
-}
-
-/* Location Suggestions Dropdown - Proper Positioning */
-.location-suggestions-dropdown {
-  position: absolute;
-  top: calc(100% + 2px); /* Position directly below the input */
+  top: 0;
   left: 0;
-  right: 0;
   width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  
-  background-color: #ffffff;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  z-index: 1001; /* Above everything else */
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
 }
 
-.suggestion-item {
-  padding: 10px 15px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s;
-}
-
-.suggestion-item:last-child {
-  border-bottom: none;
-}
-
-.suggestion-item:hover {
-  background-color: #f5f5f5;
-  color: #05356C;
-}
-
-/* =========================================
-   FIX: NOTICE PERIOD & GENDER ROW
-   ========================================= */
-
-.recruiter-workflow-candidate-container28 {
-  gap: 16px;
-  width: 100%;
-  min-height: 96px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 10;
-}
-
-.recruiter-workflow-candidate-issued-date-container3,
-.recruiter-workflow-candidate-credentials-container {
-  width: 100%;
-  height: auto;
+/* The Modal Card */
+.elegant-modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-/* =========================================
-   FIX: ROLE & SKILLS ROW (CONVERTED LAYOUT)
-   ========================================= */
-
-/* This container now holds Role (left) and Skills (right) */
-.recruiter-workflow-candidate-job-title-company-name-container1:last-of-type {
-  gap: 16px;
-  width: 100%;
-  min-height: 120px; /* More space for skills pills */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 16px;
-}
-
-/* =========================================
-   CONSISTENT INPUT STYLING
-   ========================================= */
-
-.input,
-.recruiter-workflow-candidate-job-title-input1,
-.recruiter-workflow-candidate-company-name-input1,
-.recruiter-workflow-candidate-job-title-input2,
-.recruiter-workflow-candidate-company-name-input2,
-.recruiter-workflow-candidate-company-name-input3,
-.recruiter-workflow-candidate-company-name-input4,
-.recruiter-workflow-candidate-company-name-input5,
-.recruiter-workflow-candidate-company-name-input6,
-.recruiter-workflow-candidate-company-name-input7,
-.recruiter-workflow-candidate-company-name-input8 {
-  width: 100%;
-  height: 48px;
-  padding: 0 12px;
-  border: 1px solid #A7A7A7;
-  border-radius: 5px;
-  background-color: #FFFFFF;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #05356C;
-  box-shadow: 0 0 0 2px rgba(5, 53, 108, 0.1);
-}
-
-/* Select dropdowns */
-select.input {
-  height: 48px;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-/* =========================================
-   VALIDATION ERROR MESSAGES
-   ========================================= */
-
-.validation-error {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 4px;
-  min-height: 18px; /* Reserve space even when empty */
-  display: block;
-}
-
-/* Invalid state for inputs */
-.input.is-invalid,
-.skills-input-container.is-invalid {
-  border-color: #dc3545;
-}
-
-/* =========================================
-   LABEL STYLING
-   ========================================= */
-
-.recruiter-workflow-candidate-job-title-text1,
-.recruiter-workflow-candidate-company-name-text1,
-.recruiter-workflow-candidate-job-title-text2,
-.recruiter-workflow-candidate-company-name-text2,
-.recruiter-workflow-candidate-issuing-date-text1,
-.recruiter-workflow-candidate-renewal-date-text,
-.recruiter-workflow-candidate-issuing-date-text2,
-.recruiter-workflow-candidate-certificate-name-text,
-.recruiter-workflow-candidate-job-title-text3,
-.recruiter-workflow-candidate-job-title-text4,
-.recruiter-workflow-candidate-issuing-date-text3,
-.recruiter-workflow-candidate-credentials-text {
-  color: rgb(24, 25, 28);
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  display: block;
-}
-
-/* Required asterisk */
-.recruiter-workflow-candidate-skill-star-text1 {
-  color: #F10400;
-  font-size: 14px;
-  margin-left: 4px;
-}
-
-/* =========================================
-   EXPERIENCE INPUT CONTAINERS
-   ========================================= */
-
-.recruiter-workflow-candidate-select-container1,
-.recruiter-workflow-candidate-select-container2,
-.recruiter-workflow-candidate-select-container3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.recruiter-workflow-candidate-select-container1 span,
-.recruiter-workflow-candidate-select-container2 span,
-.recruiter-workflow-candidate-select-container3 span {
-  font-size: 14px;
-  color: #333;
-  white-space: nowrap;
-}
-
-/* =========================================
-   SKILL PILLS
-   ========================================= */
-
-.skill-pill {
-  display: inline-flex;
-  align-items: center;
-  background-color: #e0e7ff;
-  color: #4338ca;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.remove-skill-button {
-  background: none;
-  border: none;
-  color: #4338ca;
-  margin-left: 6px;
-  padding: 0;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-.remove-skill-button:hover {
-  color: #dc3545;
-}
-
-.skills-entry-input {
-  flex: 1;
-  min-width: 150px;
-  border: none;
-  outline: none;
-  padding: 4px;
-  background-color: transparent;
-  font-size: 14px;
-}
-
-/* =========================================
-   FILE UPLOAD SECTION
-   ========================================= */
-
-.recruiter-workflow-candidate-container14 {
-  width: 100%;
-  margin-bottom: 24px;
-}
-
-.recruiter-workflow-candidate-upload-file-container {
-  display: flex;
-  width: 100%;
-  height: 48px;
-  border: 1px solid #ACACAD;
-  border-radius: 5px;
   overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.recruiter-workflow-candidate-upload-file-input {
-  flex: 1;
-  height: 100%;
-  border: none;
-  padding: 0 12px;
-  background-color: #f9f9f9;
-}
-
-.recruiter-workflow-candidate-upload-file-button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 147px;
-  height: 100%;
-  background-color: #05356C;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.recruiter-workflow-candidate-upload-file-button-container:hover {
-  background-color: #0A4992;
-}
-
-.recruiter-workflow-candidate-icon10 {
-  color: #FFFFFF;
-  width: 24px;
-  height: 24px;
-}
-
-.recruiter-workflow-candidate-text33 {
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.recruiter-workflow-candidate-note-for-file {
-  color: #666;
-  font-size: 13px;
-  margin-top: 8px;
-}
-
-/* =========================================
-   RESPONSIVE ADJUSTMENTS
-   ========================================= */
-
-@media (max-width: 768px) {
-  .form-modal-container {
-    width: 95%;
-    max-height: 95vh;
-  }
-  
-  /* Stack all two-column layouts on mobile */
-  .recruiter-workflow-candidate-job-title-company-name-container1,
-  .recruiter-workflow-candidate-job-title-company-name-container2,
-  .recruiter-workflow-candidate-issued-renewal-date-container1,
-  .recruiter-workflow-candidate-issued-renewal-date-container2,
-  .recruiter-workflow-candidate-job-title-company-name-container3,
-  .recruiter-workflow-candidate-container28 {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-/* =========================================
-   FORM HEADER & FOOTER
-   ========================================= */
-
-.recruiter-workflow-candidate-container12 {
+/* --- Header Section --- */
+.elegant-header {
+  background: #f8f9fa;
+  padding: 20px 30px;
+  border-bottom: 1px solid #eef2f6;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e0e0e0;
+  align-items: flex-start;
 }
 
-.recruiter-workflow-candidate-text30 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-}
-
-.recruiter-workflow-candidate-container13 {
+.candidate-identity {
   display: flex;
-  gap: 16px;
+  gap: 15px;
   align-items: center;
 }
 
-.source-label {
-  font-size: 18px;
-  color: #a0aec0;
-  font-weight: 600;
-  cursor: default;
-  transition: color 0.2s;
-}
-
-.source-label.active {
-  color: #05356C;
-}
-
-/* Submit/Cancel Buttons */
-.recruiter-workflow-candidate-submit-cancel-buttons-container {
+.candidate-avatar {
+  width: 50px;
+  height: 50px;
+  background: #05356c;
+  color: #fff;
+  border-radius: 50%;
   display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  width: 100%;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e0e0e0;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.recruiter-workflow-candidate-cancel-button,
-.recruiter-workflow-candidate-submit-button {
-  min-width: 100px;
-  height: 40px;
-  padding: 0 24px;
-  border-radius: 4px;
+.identity-text h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.identity-text p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-icon-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #4b5563;
+  transition: all 0.2s;
+}
+
+.action-icon-btn:hover {
+  background: #f3f4f6;
+  color: #05356c;
+  border-color: #d1d5db;
+}
+
+/* --- Scrollable Body --- */
+.elegant-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Sections */
+.info-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  font-weight: 700;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 8px;
+}
+
+/* Grid Layouts */
+.info-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.info-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Skills Tags */
+.skills-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #dcfce7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Resume Card */
+.resume-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.resume-card:hover {
+  border-color: #05356c;
+  background: #f1f5f9;
+}
+
+.resume-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-icon {
+  color: #ef4444; /* PDF Red color look */
+}
+
+.resume-text {
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
+  color: #334155;
 }
 
-.recruiter-workflow-candidate-cancel-button {
-  background-color: #FFFFFF;
-  border: 1px solid #05356C;
-  color: #05356C;
+.view-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #05356c;
 }
 
-.recruiter-workflow-candidate-cancel-button:hover {
-  background-color: #f5f5f5;
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.recruiter-workflow-candidate-submit-button {
-  background-color: #05356C;
-  border: none;
-  color: #FFFFFF;
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-.recruiter-workflow-candidate-submit-button:hover:not(:disabled) {
-  background-color: #0A4992;
-}
 
-.recruiter-workflow-candidate-submit-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
 
 /* --- Clickable Name Style --- */
 .clickable-candidate-name {

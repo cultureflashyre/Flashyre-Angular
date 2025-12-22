@@ -201,7 +201,7 @@
                     <!-- Validation Error -->
                     <div *ngIf="client.get('company_name')?.invalid && client.get('company_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
                       <span *ngIf="client.get('company_name')?.errors?.['required']">Company Name is required.</span>
-                      <span *ngIf="client.get('company_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+                      <span *ngIf="client.get('company_name')?.errors?.['pattern']">Alphabets, numbers, and spaces only.</span>
                     </div>
                   </div>
 
@@ -225,7 +225,7 @@
                     <!-- Validation Error -->
                     <div *ngIf="client.get('client_name')?.invalid && client.get('client_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
                         <span *ngIf="client.get('client_name')?.errors?.['required']">Client Name is required.</span>
-                        <span *ngIf="client.get('client_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+                      <span *ngIf="client.get('client_name')?.errors?.['pattern']">Alphabets, numbers, and spaces only.</span>
                     </div>
                   </div>
                 </div>
@@ -242,7 +242,7 @@
                         placeholder="Enter Sub-Client Name" 
                         class="recruiter-workflow-client-job-title-input1 input"/>
                       <div *ngIf="client.get('sub_client_name')?.invalid && client.get('sub_client_name')?.touched" style="color: red; font-size: 12px; margin-top: 4px;">
-                          <span *ngIf="client.get('sub_client_name')?.errors?.['pattern']">Only alphabets and spaces allowed.</span>
+    <span *ngIf="client.get('sub_client_name')?.errors?.['pattern']">Alphabets, numbers, and spaces only.</span>
                       </div>
                   </div>
 
@@ -584,7 +584,7 @@
                     <label>Company Name</label>
                     <input type="text" formControlName="company_name" placeholder="Search Company" class="input">
                     <div *ngIf="filterForm.get('company_name')?.invalid && (filterForm.get('company_name')?.touched || filterForm.get('company_name')?.dirty)" style="color: red; font-size: 11px;">
-                      Alphabets and spaces only.
+                      Alphabets, numbers, and spaces only.
                     </div>
                   </div>
 
@@ -592,7 +592,7 @@
                     <label>Client Name</label>
                     <input type="text" formControlName="client_name" placeholder="Search Client" class="input">
                     <div *ngIf="filterForm.get('client_name')?.invalid && (filterForm.get('client_name')?.touched || filterForm.get('client_name')?.dirty)" style="color: red; font-size: 11px;">
-                      Alphabets and spaces only.
+                       Alphabets, numbers, and spaces only.
                     </div>
                   </div>
 
