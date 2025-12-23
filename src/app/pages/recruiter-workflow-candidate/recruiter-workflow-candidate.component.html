@@ -362,9 +362,15 @@
         <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
     <!-- ADDED RED ASTERISK HERE -->
-    <span class="recruiter-workflow-candidate-text33">Upload File </span>
-</div>
+<span class="recruiter-workflow-candidate-text33">
+              Upload File <span style="color: #ff4d4f; margin-left: 4px; font-weight: bold;">*</span>
+            </span></div>
             </div>
+            <!-- NEW: Error Message Display -->
+    <div class="validation-error" *ngIf="showFileError">
+        Resume file is required.
+    </div>
+
             <span id="note-for-file" class="recruiter-workflow-candidate-note-for-file">PDF or DOCX only, max 5MB.</span>
         </div>
 
@@ -721,148 +727,153 @@
   
 </ng-container>
 <!-- CANDIDATE DETAILS MODAL -->
+<!-- ELEGANT CANDIDATE DETAILS MODAL -->
 <ng-container *ngIf="showDetailsModal && selectedCandidateDetails">
-  <div class="form-modal-backdrop" (click)="closeDetailsModal()"></div>
-  
-  <div class="form-modal-container" (click)="$event.stopPropagation()">
-    <div class="recruiter-workflow-candidate-candidate-input-form">
+  <div class="elegant-modal-backdrop" (click)="closeDetailsModal()">
+    <div class="elegant-modal-content" (click)="$event.stopPropagation()">
       
-      <!-- Header -->
-      <div class="recruiter-workflow-candidate-container12" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
-        <span class="recruiter-workflow-candidate-text30">Candidate Details</span>
+      <!-- 1. HEADER: Identity & Actions -->
+      <div class="elegant-header">
+        <div class="candidate-identity">
+          <div class="candidate-avatar">
+            {{ selectedCandidateDetails.first_name.charAt(0) | uppercase }}{{ selectedCandidateDetails.last_name.charAt(0) | uppercase }}
+          </div>
+          <div class="identity-text">
+            <h2>{{ selectedCandidateDetails.first_name }} {{ selectedCandidateDetails.last_name }}</h2>
+            <p>{{ selectedCandidateDetails.work_experience }}</p>
+          </div>
+        </div>
         
-        <div style="display:flex; gap:10px; align-items:center;">
-          <!-- Edit Icon (Optional shortcut) -->
-          <svg (click)="startEdit(selectedCandidateDetails); closeDetailsModal()" width="20" height="20" viewBox="0 0 24 24" style="cursor: pointer; color: #555;" title="Edit">
-             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-
-          <!-- Close Icon -->
-          <button type="button" class="close-panel-button" (click)="closeDetailsModal()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M18 6L6 18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6 6L18 18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="header-actions">
+          <!-- Edit Button -->
+          <button class="action-icon-btn" (click)="startEdit(selectedCandidateDetails); closeDetailsModal()" title="Edit Candidate">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          
+          <!-- Close Button -->
+          <button class="action-icon-btn" (click)="closeDetailsModal()" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
         </div>
       </div>
 
-      <!-- Details Content -->
-      <div class="details-grid">
+      <!-- 2. BODY: Scrollable Info -->
+      <div class="elegant-body">
         
-        <!-- Personal Info -->
-        <div class="detail-item">
-          <span class="detail-label">First Name</span>
-          <span class="detail-value">{{ selectedCandidateDetails.first_name }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Last Name</span>
-          <span class="detail-value">{{ selectedCandidateDetails.last_name }}</span>
-        </div>
-
-        <div class="detail-item">
-          <span class="detail-label">Email</span>
-          <span class="detail-value">{{ selectedCandidateDetails.email }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Phone</span>
-          <span class="detail-value">{{ selectedCandidateDetails.phone_number }}</span>
-        </div>
-
-        <div class="detail-item">
-          <span class="detail-label">Gender</span>
-          <span class="detail-value">{{ selectedCandidateDetails.gender }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Notice Period</span>
-          <span class="detail-value">{{ selectedCandidateDetails.notice_period }}</span>
+        <!-- Section: Contact Info -->
+        <div class="info-section">
+          <h4 class="section-title">Contact Information</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Phone</span>
+              <span class="info-value">{{ selectedCandidateDetails.phone_number }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ selectedCandidateDetails.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Location</span>
+              <span class="info-value">{{ selectedCandidateDetails.current_location }}</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Experience & CTC -->
-        <div class="detail-item">
-          <span class="detail-label">Total Experience</span>
-          <span class="detail-value">{{ selectedCandidateDetails.total_experience_min }} - {{ selectedCandidateDetails.total_experience_max }} Years</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Relevant Experience</span>
-          <span class="detail-value">{{ selectedCandidateDetails.relevant_experience_min }} - {{ selectedCandidateDetails.relevant_experience_max }} Years</span>
+        <!-- Section: Professional Overview -->
+        <div class="info-section">
+          <h4 class="section-title">Professional Overview</h4>
+          <div class="info-grid-3">
+            <div class="info-item">
+              <span class="info-label">Total Experience</span>
+              <span class="info-value">{{ selectedCandidateDetails.total_experience_min }} - {{ selectedCandidateDetails.total_experience_max }} Yrs</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Relevant Experience</span>
+              <span class="info-value">{{ selectedCandidateDetails.relevant_experience_min }} - {{ selectedCandidateDetails.relevant_experience_max }} Yrs</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Notice Period</span>
+              <span class="info-value" style="color: #d97706;">{{ selectedCandidateDetails.notice_period }}</span>
+            </div>
+          </div>
+          
+          <!-- Row 2 of Professional -->
+          <div class="info-grid-3" style="margin-top: 20px;">
+            <div class="info-item">
+              <span class="info-label">Current CTC</span>
+              <span class="info-value">{{ selectedCandidateDetails.current_ctc }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Expected CTC</span>
+              <span class="info-value">{{ selectedCandidateDetails.expected_ctc_min }} - {{ selectedCandidateDetails.expected_ctc_max }} LPA</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Preferred Location</span>
+              <span class="info-value">{{ selectedCandidateDetails.preferred_location }}</span>
+            </div>
+          </div>
         </div>
 
-        <div class="detail-item">
-          <span class="detail-label">Current CTC</span>
-          <span class="detail-value">{{ selectedCandidateDetails.current_ctc }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Expected CTC</span>
-          <span class="detail-value">{{ selectedCandidateDetails.expected_ctc_min }} - {{ selectedCandidateDetails.expected_ctc_max }} LPA</span>
-        </div>
-
-        <!-- Locations -->
-        <div class="detail-item">
-          <span class="detail-label">Current Location</span>
-          <span class="detail-value">{{ selectedCandidateDetails.current_location }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Preferred Location</span>
-          <span class="detail-value">{{ selectedCandidateDetails.preferred_location }}</span>
-        </div>
-
-        <!-- Role & Skills -->
-        <div class="detail-item detail-full-width">
-          <span class="detail-label">Role / Job Title</span>
-          <span class="detail-value">{{ selectedCandidateDetails.work_experience }}</span>
-        </div>
-
-        <div class="detail-item detail-full-width">
-          <span class="detail-label">Key Skills</span>
-          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
-             <!-- Assuming skills is a comma separated string, simplistic split for display -->
-             <span *ngFor="let skill of selectedCandidateDetails.skills.split(',')" 
-                   style="background: #eef2f6; padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #333;">
+        <!-- Section: Skills -->
+        <div class="info-section">
+          <h4 class="section-title">Skills & Expertise</h4>
+          <div class="skills-wrapper">
+             <span *ngFor="let skill of selectedCandidateDetails.skills.split(',')" class="skill-tag">
                {{ skill.trim() }}
              </span>
           </div>
         </div>
 
-        <!-- Footer Info -->
-        <div class="detail-item">
-          <span class="detail-label">Source</span>
-          <span class="detail-value" style="color: #05356c;">{{ selectedCandidateDetails.source }}</span>
-        </div>
-        <div class="detail-item">
-            <span class="detail-label">Recruiter</span>
-            <span class="detail-value">{{ selectedCandidateDetails.recruiter_name || 'N/A' }}</span>
-        </div>
+        <!-- Section: Resume / Source -->
+        <div class="info-section">
+          <h4 class="section-title">Documents & Source</h4>
+          <div class="info-grid-2">
+            
+            <!-- Resume Card -->
+            <div class="info-item">
+              <span class="info-label" style="margin-bottom: 8px;">Resume</span>
+              <div *ngIf="selectedCandidateDetails.resume; else noResume" 
+                   class="resume-card" 
+                   (click)="openResume(selectedCandidateDetails.resume)">
+                <div class="resume-info">
+                  <!-- File Icon -->
+                  <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <span class="resume-text">View Resume</span>
+                </div>
+                <span class="view-link">Open &rarr;</span>
+              </div>
+              <ng-template #noResume>
+                <div class="resume-card" style="cursor: default; opacity: 0.7; background: #f9fafb;">
+                   <span class="resume-text" style="font-weight: 400; color: #999;">No Resume Attached</span>
+                </div>
+              </ng-template>
+            </div>
 
-        <div class="detail-item detail-full-width" style="border-top: 1px dashed #ccc; padding-top: 10px;">
-          <span class="detail-label">Resume / CV</span>
-          <div *ngIf="selectedCandidateDetails.resume; else noResume" 
-               class="resume-link" 
-               (click)="openResume(selectedCandidateDetails.resume)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            <span>View Attached Resume</span>
+            <!-- Meta Info -->
+            <div class="info-item">
+              <span class="info-label">Recruiter & Source</span>
+              <div style="margin-top: 5px;">
+                <div style="font-weight: 600; color: #374151;">{{ selectedCandidateDetails.recruiter_name || 'N/A' }}</div>
+                <div style="font-size: 13px; color: #05356c; margin-top: 4px; font-weight: 500;">
+                  via {{ selectedCandidateDetails.source }}
+                </div>
+              </div>
+            </div>
+
           </div>
-          <ng-template #noResume>
-            <span style="color: #999; font-style: italic;">No resume attached</span>
-          </ng-template>
         </div>
 
       </div>
-
-      <!-- Action Footer -->
-      <div class="recruiter-workflow-candidate-submit-cancel-buttons-container">
-        <button type="button" (click)="closeDetailsModal()" class="recruiter-workflow-candidate-cancel-button button" style="width: 100%;">
-          <span class="recruiter-workflow-candidate-cancel-text">Close</span>
-        </button>
-      </div>
-
+      
     </div>
   </div>
 </ng-container>

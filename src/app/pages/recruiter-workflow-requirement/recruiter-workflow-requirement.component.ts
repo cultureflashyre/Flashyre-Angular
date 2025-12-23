@@ -50,6 +50,11 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   interviewLocation: string = '';
   interviewDate: string = '';
 
+   // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
+  private additionalLocationInput$ = new Subject<string>(); // Stream for dynamic rows
+  additionalLocationSuggestions: google.maps.places.AutocompletePrediction[] = []; // Suggestions list
+  activeDetailIndex: number | null = null; // Tracks which row is currently typing
+
   clientList: any[] = []; // Stores the API response
   availableSubClients: string[] = []; // Sub-clients for the selected client
 public formErrors: { [key: string]: string } = {};
@@ -57,6 +62,8 @@ public formErrors: { [key: string]: string } = {};
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
   searchTimeout: any;
+
+  
 
 // --- NEW PROPERTIES FOR DETAIL MODAL ---
   showDetailsModal = false;
@@ -75,6 +82,11 @@ private interviewLocationInput$ = new Subject<string>();
 // Suggestions State
 interviewLocationSuggestions: google.maps.places.AutocompletePrediction[] = [];
 showInterviewLocationSuggestions = false;
+
+// NEW: Dropdown Positioning Properties
+  dropdownTop: number = 0;
+  dropdownLeft: number = 0;
+  dropdownWidth: number = 0;
 
 // Selected Data Array (for Pills)
 interviewLocationsList: string[] = [];
@@ -264,6 +276,22 @@ private setupLocationAutocomplete(): void {
       });
     })
   );
+  // NEW: Additional Details Location Stream
+    this.subscriptions.add(
+      this.additionalLocationInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          // We don't need a boolean flag here, rely on activeDetailIndex != null
+          this.initSessionToken();
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.additionalLocationSuggestions = suggestions;
+        });
+      })
+    );
 }
 
 private initSessionToken(): void {
@@ -271,6 +299,57 @@ private initSessionToken(): void {
     this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
   }
 }
+
+// 2. NEW: Input Handler for Dynamic Rows
+  onAdditionalLocationInput(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const term = input.value;
+
+    // Sanitize (Allow letters, spaces, commas)
+    input.value = input.value.replace(/[^a-zA-Z, ]/g, '');
+    this.additionalDetails[index].location = input.value; // Sync model
+
+    this.activeDetailIndex = index; // Set active row
+
+     // --- NEW: Calculate Position for Fixed Dropdown ---
+    const rect = input.getBoundingClientRect();
+    this.dropdownTop = rect.bottom; // Place directly below input
+    this.dropdownLeft = rect.left;  // Align left edge
+    this.dropdownWidth = rect.width; // Match width
+    // --------------------------------------------------
+
+    if (!term.trim()) {
+      this.additionalLocationSuggestions = [];
+      return;
+    }
+    this.additionalLocationInput$.next(term);
+  }
+
+  // 3. NEW: Selection Handler
+  // 2. UPDATE: Selection Handler (Uses activeDetailIndex instead of passed index)
+  selectAdditionalLocation(prediction: google.maps.places.AutocompletePrediction): void {
+    if (this.activeDetailIndex === null) return;
+
+    const locationName = prediction.description.split(',')[0]; // Simple city name
+    
+    // Update the specific row using the stored index
+    if (this.additionalDetails[this.activeDetailIndex]) {
+      this.additionalDetails[this.activeDetailIndex].location = locationName;
+    }
+
+    // Reset
+    this.additionalLocationSuggestions = [];
+    this.activeDetailIndex = null;
+    this.sessionToken = undefined;
+  }
+
+  // 4. NEW: Blur Handler (Delayed close)
+  closeAdditionalSuggestions(): void {
+    setTimeout(() => {
+      this.activeDetailIndex = null;
+      this.additionalLocationSuggestions = [];
+    }, 200);
+  }
 
 private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
   if (!term.trim() || !this.placesService) {
@@ -809,10 +888,17 @@ toggleNoticePeriodDropdown() {
   }
 
   // 2. Validate SPOC: Allows a-z, A-Z, space, and comma
+  // 2. Validate SPOC: Allows a-z, A-Z, space, and comma + Max 15 Chars
   validateDetailSpoc(index: number, event: any) {
     const input = event.target as HTMLInputElement;
-    // Regex: Replace anything that is NOT (^) a letter, space, or comma
-    const cleanValue = input.value.replace(/[^a-zA-Z, ]/g, '');
+    
+    // 1. Regex: Allow only letters, spaces, and commas
+    let cleanValue = input.value.replace(/[^a-zA-Z, ]/g, '');
+    
+    // 2. Enforce Max Length of 15
+    if (cleanValue.length > 15) {
+      cleanValue = cleanValue.slice(0, 15);
+    }
     
     // Update DOM immediately
     input.value = cleanValue;

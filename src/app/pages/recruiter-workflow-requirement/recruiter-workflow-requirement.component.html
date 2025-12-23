@@ -797,25 +797,57 @@
         <div id="interview-process-container" class="recruiter-workflow-requirement-interview-process-container">
           <span id="interview-process-text" class="recruiter-workflow-requirement-interview-process-text">Additional Details</span>
           <div id="different-stages-container" class="recruiter-workflow-requirement-different-stages-container">
-            <div *ngFor="let detail of additionalDetails; let i = index" id="different-stage-container" class="recruiter-workflow-requirement-different-stage-container">
-              <input type="text" [id]="'location-input-' + i" placeholder="Location" class="recruiter-workflow-requirement-date-input1 input" [(ngModel)]="detail.location" (input)="validateDetailLocation(i, $event)" />
-              <input type="text" [id]="'spoc-input-' + i" placeholder="Spoc" class="recruiter-workflow-requirement-date-input2 input" [(ngModel)]="detail.spoc" (input)="validateDetailSpoc(i, $event)" />
-              <input type="text" [id]="'vacancies-input-' + i" placeholder="Number of vacencies" class="recruiter-workflow-requirement-date-input3 input" [(ngModel)]="detail.vacancies" (input)="validateDetailVacancies(i, $event)" />
-              <div class="email-container">
-                <input type="email" placeholder="Spoc Email" class="recruiter-workflow-requirement-date-input4 input" [(ngModel)]="detail.email" (input)="validateAdditionalDetails(i)"  />
-                <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
-                  <span *ngIf="additionalDetailsErrors[i]?.email">{{ additionalDetailsErrors[i].email }}</span>
-                </div>
-              </div>
-              <div class="phone-container">
-              <input type="text" placeholder="Spoc Phone" class="recruiter-workflow-requirement-date-input5 input" [(ngModel)]="detail.phone" (input)="validateAdditionalDetails(i)" maxlength="10" />
-              <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
-                <span *ngIf="additionalDetailsErrors[i]?.phone">{{ additionalDetailsErrors[i].phone }}</span>
-              </div>
-              </div>
-              <svg id="remove-icon" width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-remove-icon" (click)="removeDetail(i)" style="cursor: pointer;"><path d="M19 13H5v-2h14z" fill="currentColor"></path></svg>
-            </div>
-          </div>
+  <div *ngFor="let detail of additionalDetails; let i = index" id="different-stage-container" class="recruiter-workflow-requirement-different-stage-container">
+    
+    <!-- 1. LOCATION WRAPPER (Fixed Width & Positioning) -->
+    <div class="location-wrapper">
+      <input 
+        type="text" 
+        [id]="'location-input-' + i" 
+        placeholder="Location" 
+        class="recruiter-workflow-requirement-date-input1 input" 
+        [(ngModel)]="detail.location" 
+        (input)="onAdditionalLocationInput($event, i)" 
+        (blur)="closeAdditionalSuggestions()"
+        autocomplete="off"
+      />
+    </div>
+
+    <!-- 2. SPOC -->
+<input 
+      type="text" 
+      [id]="'spoc-input-' + i" 
+      placeholder="Spoc" 
+      class="recruiter-workflow-requirement-date-input2 input" 
+      [(ngModel)]="detail.spoc" 
+      (input)="validateDetailSpoc(i, $event)" 
+      maxlength="15"
+    />    
+    <!-- 3. VACANCIES -->
+    <input type="text" [id]="'vacancies-input-' + i" placeholder="Vacancies" class="recruiter-workflow-requirement-date-input3 input" [(ngModel)]="detail.vacancies" (input)="validateDetailVacancies(i, $event)" />
+    
+    <!-- 4. EMAIL -->
+    <div class="email-container">
+      <input type="email" placeholder="Spoc Email" class="recruiter-workflow-requirement-date-input4 input" [(ngModel)]="detail.email" (input)="validateAdditionalDetails(i)" />
+      <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
+        <span *ngIf="additionalDetailsErrors[i]?.email">{{ additionalDetailsErrors[i].email }}</span>
+      </div>
+    </div>
+
+    <!-- 5. PHONE -->
+    <div class="phone-container">
+      <input type="text" placeholder="Spoc Phone" class="recruiter-workflow-requirement-date-input5 input" [(ngModel)]="detail.phone" (input)="validateAdditionalDetails(i)" maxlength="10" />
+      <div style="width: 100%; display: flex; gap: 20px; font-size: 12px; color: red;">
+        <span *ngIf="additionalDetailsErrors[i]?.phone">{{ additionalDetailsErrors[i].phone }}</span>
+      </div>
+    </div>
+
+    <!-- REMOVE ICON -->
+    <svg id="remove-icon" width="24" height="24" viewBox="0 0 24 24" class="recruiter-workflow-requirement-remove-icon" (click)="removeDetail(i)" style="cursor: pointer;">
+      <path d="M19 13H5v-2h14z" fill="currentColor"></path>
+    </svg>
+  </div>
+</div>
           <div id="add-section-container" class="recruiter-workflow-requirement-add-section-container">
             <span id="add-section-text" class="recruiter-workflow-requirement-add-section-text button" (click)="addDetail()" style="cursor: pointer;">+ Add Location</span>
             <span id="remove-section-text" class="recruiter-workflow-requirement-remove-section-text button" style="cursor: pointer;">- Remove Section</span>
@@ -1016,3 +1048,15 @@
     </div>
   </div>
 </ng-container>
+<!-- FLOATING DROPDOWN (Global Position) -->
+<div class="location-suggestions-dropdown fixed-dropdown" 
+     *ngIf="additionalLocationSuggestions.length > 0 && activeDetailIndex !== null"
+     [style.top.px]="dropdownTop"
+     [style.left.px]="dropdownLeft"
+     [style.width.px]="dropdownWidth">
+    <div class="suggestion-item" 
+         *ngFor="let suggestion of additionalLocationSuggestions"
+         (mousedown)="selectAdditionalLocation(suggestion)">
+      {{ suggestion.description }}
+    </div>
+</div>

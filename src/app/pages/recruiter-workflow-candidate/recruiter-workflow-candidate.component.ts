@@ -86,6 +86,10 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
 })
 export class RecruiterWorkflowCandidate implements OnInit {
 
+  // NEW: Track file validation error state
+  showFileError = false;
+
+
   // --- NEW PROPERTIES FOR DETAIL VIEW ---
   showDetailsModal = false;
   selectedCandidateDetails: Candidate | null = null;
@@ -200,6 +204,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.selectedCandidateDetails = null;
   }
 
+   
 
   ngOnInit(): void {
     // The key is 'isSuperUser' and the value is the string 'true' (From Parent)
@@ -835,33 +840,35 @@ export class RecruiterWorkflowCandidate implements OnInit {
   onSubmit(): void {
     this.candidateForm.markAllAsTouched();
 
-    if (this.candidateForm.invalid) {
-      // 1. Identify exactly which fields are invalid
+    // Check if file is missing
+    const isFileMissing = !this.selectedFileName || this.selectedFileName.trim() === '';
+
+    // Set the error flag for HTML to see
+    this.showFileError = isFileMissing;
+
+    // Combined Check: Form Invalid OR File Missing
+    if (this.candidateForm.invalid || isFileMissing) {
+      
       const invalidFields: string[] = [];
       const controls = this.candidateForm.controls;
 
-     if (!this.selectedFileName || this.selectedFileName.trim() === '') {
-      this.showAlert('Resume file is required.', ['Close']);
-      return;
-    }  
-      
+      if (isFileMissing) {
+        invalidFields.push('Resume File');
+      }
+
       for (const name in controls) {
         if (controls[name].invalid) {
           if (name === 'work_experience') {
             invalidFields.push('Role');
-          } 
-          else if (name === 'current_ctc') {
+          } else if (name === 'current_ctc') {
             invalidFields.push('Current CTC');
-          }
-          else {
-          // Convert field name to readable text (e.g., "current_ctc" -> "Current Ctc")
-          const readableName = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-          invalidFields.push(readableName);
+          } else {
+            const readableName = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            invalidFields.push(readableName);
           }
         }
       }
 
-      // 2. Show the specific list in the alert
       this.showAlert(
         `Please check the following fields: ${invalidFields.join(', ')}`, 
         ['Close']
@@ -870,6 +877,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     }
 
     this.isSubmitting = true;
+    // ... rest of your existing submission logic (FormData creation, API call) ...
     const formData = new FormData();
     Object.keys(this.candidateForm.controls).forEach(key => {
       const value = this.candidateForm.get(key)?.value;
@@ -914,6 +922,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     }
   }
 
+  // 3. UPDATE: Reset error on Cancel
   onCancel(): void {
     this.formVisible = false; 
     this.editingCandidateId = null;
@@ -923,10 +932,12 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.selectedFileName = '';
     this.isSubmitting = false;
     this.skills = []; 
-     this.preferredLocationsList = [];
+    this.preferredLocationsList = [];
     this.currentLocationsList = [];
     this.preferredSuggestions = [];
     this.currentSuggestions = [];
+    
+    this.showFileError = false; // <--- RESET ERROR HERE
   }
 
   // --- NEW Helper Methods from Child ---
