@@ -679,6 +679,16 @@ getFileName(): string {
     setTimeout(() => { this.isUserDropdownOpen = false; }, 200);
   }
 
+  // NEW: Dedicated method to handle transition from Details -> Edit
+  editRequirementFromModal(item: any): void {
+    // 1. Close the details modal immediately so it doesn't cover the edit form
+    this.closeDetailsModal();
+    
+    // 2. Open the edit form (Permission checks happen inside onEdit)
+    // We pass the 'item' explicitly because selectedReqDetails is now null
+    this.onEdit(item);
+  }
+
   
   noticePeriodOptions: string[] = [
     'Immediate',

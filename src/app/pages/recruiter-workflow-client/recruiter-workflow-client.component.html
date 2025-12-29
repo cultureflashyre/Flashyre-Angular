@@ -300,49 +300,38 @@
       <!-- Location -->
       <!-- Replace your existing Location Input Div with this block -->
 <div style="position: relative;">
-  <input 
-    type="text" 
-    formControlName="location" 
-    placeholder="Location" 
-    class="recruiter-workflow-client-date-input1 input"
-    (input)="onLocationInput($event, i, j)"
-    (blur)="closeSuggestions()"
-    autocomplete="off"
-  />
-  
-  <!-- SUGGESTIONS DROPDOWN -->
-  <div class="location-suggestions-dropdown" 
-       *ngIf="locationSuggestions.length > 0 && activeField?.clientIndex === i && activeField?.contactIndex === j">
-    <div 
-      class="suggestion-item" 
-      *ngFor="let suggestion of locationSuggestions"
-      (mousedown)="selectLocation(suggestion, i, j)"
-    >
-      {{ suggestion.description }}
+    <input 
+      type="text" 
+      formControlName="location" 
+      placeholder="Location" 
+      class="recruiter-workflow-client-date-input1 input"
+      (input)="onLocationInput($event, i, j)"
+      (blur)="closeSuggestions()"
+      autocomplete="off"
+    />
+    <!-- Error Handling -->
+    <div *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" style="color: red; font-size: 12px;">
+       <span *ngIf="contact.get('location')?.errors?.['required']">Required</span>
+       <span *ngIf="contact.get('location')?.errors?.['pattern']">Must contain alphabets.</span>
     </div>
   </div>
 
-  <!-- Error Handling -->
-  <div *ngIf="contact.get('location')?.invalid && contact.get('location')?.touched" style="color: red; font-size: 12px;">
-     <span *ngIf="contact.get('location')?.errors?.['required']">Required</span>
-     <span *ngIf="contact.get('location')?.errors?.['pattern']">Must contain alphabets.</span>
-  </div>
-</div>
-
       <!-- Spoc -->
       <div>
-        <input 
-          type="text" 
-          formControlName="spoc_name" 
-          placeholder="Spoc" 
-          class="recruiter-workflow-client-date-input2 input"
-        />
-        <!-- Error Handling -->
-        <div *ngIf="contact.get('spoc_name')?.invalid && contact.get('spoc_name')?.touched" style="color: red; font-size: 12px;">
-           <span *ngIf="contact.get('spoc_name')?.errors?.['required']">Required</span>
-           <span *ngIf="contact.get('spoc_name')?.errors?.['pattern']">Alphabets and spaces only.</span>
-        </div>
-      </div>
+    <input 
+      type="text" 
+      formControlName="spoc_name" 
+      placeholder="Spoc" 
+      class="recruiter-workflow-client-date-input2 input"
+      maxlength="15"
+      (input)="validateSpocInput(i, j, $event)"
+    />
+    <!-- Error Handling -->
+    <div *ngIf="contact.get('spoc_name')?.invalid && contact.get('spoc_name')?.touched" style="color: red; font-size: 12px;">
+       <span *ngIf="contact.get('spoc_name')?.errors?.['required']">Required</span>
+       <span *ngIf="contact.get('spoc_name')?.errors?.['pattern']">Alphabets and spaces only.</span>
+    </div>
+  </div>
 
       <!-- Phone -->
       <div>
@@ -917,3 +906,15 @@
     </div>
   </div>
 </ng-container>
+<!-- FLOATING LOCATION DROPDOWN -->
+<div class="location-suggestions-dropdown fixed-dropdown" 
+     *ngIf="locationSuggestions.length > 0 && activeField"
+     [style.top.px]="dropdownTop"
+     [style.left.px]="dropdownLeft"
+     [style.width.px]="dropdownWidth">
+    <div class="suggestion-item" 
+         *ngFor="let suggestion of locationSuggestions"
+         (mousedown)="selectLocation(suggestion)">
+      {{ suggestion.description }}
+    </div>
+</div>

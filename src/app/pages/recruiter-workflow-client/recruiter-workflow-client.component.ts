@@ -23,7 +23,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 @Component({
   standalone: true,
   selector: 'recruiter-workflow-client',
-  templateUrl: 'recruiter-workflow-client.component.html',
+  templateUrl:   'recruiter-workflow-client.component.html',
   styleUrls: ['recruiter-workflow-client.component.css'],
   imports: [
     CommonModule, 
@@ -37,6 +37,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy {
   mainForm: FormGroup;
   existingClients: any[] = []; // Stores data fetched from DB
+  
 
    // --- NEW PROPERTIES FOR DETAIL MODAL ---
   showDetailsModal = false;
@@ -56,6 +57,11 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
   alertMessage = '';
   alertButtons: string[] = [];
 
+  // NEW: Floating Dropdown Positioning
+  dropdownTop: number = 0;
+  dropdownLeft: number = 0;
+  dropdownWidth: number = 0;
+
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
   private loader: Loader = new Loader({
     apiKey: this.googleMapsApiKey,
@@ -74,8 +80,8 @@ export class RecruiterWorkflowClient implements OnInit, AfterViewInit, OnDestroy
   locationSuggestions: google.maps.places.AutocompletePrediction[] = [];
   
   // Track WHICH input is currently active (Client Index -> Contact Index)
-  activeField: { clientIndex: number, contactIndex: number } | null = null;
-  
+ // Track WHICH input is currently active (Client Index -> Contact Index)
+  activeField: { clientIndex: number, contactIndex: number } | null = null;  
   // Stores the action waiting for confirmation
   // type: 'SUBMIT_CREATE', 'SUBMIT_UPDATE', 'DELETE_BULK', 'DELETE_SINGLE', 'EDIT_MODE', 'DOWNLOAD'
   pendingAction: { type: string, data?: any } = { type: '' };
@@ -446,10 +452,26 @@ deleteSingleClient(client: any): void {
 
 // --- EDIT LOGIC ---
 editClientClick(client: any): void {
-    this.pendingAction = { type: 'EDIT_MODE', data: client };
-    this.openAlert('Are you sure to edit this client data?', ['Cancel', 'Edit']);
-  }
+    // 1. Get Current User Info
+    const currentUserId = localStorage.getItem('user_id');
+    
+    // 2. Get Client Creator ID
+    // Note: Django DRF default for ForeignKey is the ID (integer)
+    const creatorId = client.created_by;
 
+    // 3. Permission Check: Allow if SuperUser OR if Current User is the Creator
+    const canEdit = this.isSuperUser || (currentUserId && String(creatorId) === String(currentUserId));
+
+    if (canEdit) {
+      // Allow Edit
+      this.pendingAction = { type: 'EDIT_MODE', data: client };
+      this.openAlert('Are you sure to edit this client data?', ['Cancel', 'Edit']);
+    } else {
+      // Deny Access
+      this.openAlert('Access Denied: Only the creator or a Super Admin can edit this client.', ['OK']);
+    }
+  }
+  
   proceedWithEdit(client: any): void {
     this.isEditMode = true;
     this.currentEditId = client.id; 
@@ -769,6 +791,13 @@ ngAfterViewInit(): void {
     // Mark which specific row is active
     this.activeField = { clientIndex: cIndex, contactIndex: locIndex };
 
+    // --- NEW: Calculate Coordinates for Fixed Dropdown ---
+    const rect = input.getBoundingClientRect();
+    this.dropdownTop = rect.bottom;
+    this.dropdownLeft = rect.left;
+    this.dropdownWidth = rect.width;
+    // ----------------------------------------------------
+
     const term = input.value;
     if (!term.trim()) {
       this.locationSuggestions = [];
@@ -778,12 +807,17 @@ ngAfterViewInit(): void {
   }
 
   // --- HTML Event: User Clicks Suggestion ---
-  selectLocation(suggestion: google.maps.places.AutocompletePrediction, cIndex: number, locIndex: number): void {
-    const locationName = suggestion.description;
+  selectLocation(suggestion: google.maps.places.AutocompletePrediction): void {
+    // Safety check: ensure we know which field was active
+    if (!this.activeField) return;
+
+    // Destructure the stored indices
+    const { clientIndex, contactIndex } = this.activeField;
+    const locationName = suggestion.description.split(',')[0]; // Use simple city name
     
     // Update the specific Form Control
-    const contactsArray = this.getContactsArray(cIndex);
-    const contactGroup = contactsArray.at(locIndex);
+    const contactsArray = this.getContactsArray(clientIndex);
+    const contactGroup = contactsArray.at(contactIndex);
     
     if (contactGroup) {
       contactGroup.get('location')?.setValue(locationName);
@@ -792,7 +826,28 @@ ngAfterViewInit(): void {
     // Clear suggestion state
     this.locationSuggestions = [];
     this.activeField = null;
-    this.sessionToken = undefined; // Reset token for billing efficiency
+    this.sessionToken = undefined; 
+  }
+
+
+  // 3. NEW: Validate SPOC (Max 15 Chars + Alphabets)
+  validateSpocInput(clientIndex: number, contactIndex: number, event: any): void {
+    const input = event.target as HTMLInputElement;
+    
+    // Allow alphabets and spaces only
+    let cleanVal = input.value.replace(/[^a-zA-Z\s]/g, '');
+    
+    // Enforce Max Length 15
+    if (cleanVal.length > 15) {
+      cleanVal = cleanVal.slice(0, 15);
+    }
+
+    // Update Input
+    input.value = cleanVal;
+    
+    // Update Form Control
+    const contactsArray = this.getContactsArray(clientIndex);
+    contactsArray.at(contactIndex).get('spoc_name')?.setValue(cleanVal);
   }
   
   // --- HTML Event: Blur (Click away) ---

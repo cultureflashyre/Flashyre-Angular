@@ -2,6 +2,692 @@
   display: contents; 
 }
 
+/* =========================================
+   RESPONSIVE FIXES FOR REQUIREMENT CARDS
+   ========================================= */
+
+/* Base Card Structure */
+.recruiter-workflow-requirement-container31 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.recruiter-workflow-requirement-container32 {
+  gap: 0px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.recruiter-workflow-requirement-container33 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: stretch;
+  border-color: #E0E0E0;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+/* Main Content Area with Checkbox and Details */
+.recruiter-workflow-requirement-container34 {
+  gap: 16px;
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: var(--dl-layout-space-halfunit);
+  align-self: stretch;
+  align-items: flex-start;
+}
+
+/* Checkbox Container */
+.recruiter-workflow-requirement-container35 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Main Content Container */
+.recruiter-workflow-requirement-container36 {
+  gap: 8px;
+  flex: 1;
+  width: 100%;
+  min-width: 0; /* Important for text truncation */
+  height: auto;
+  display: flex;
+  padding: 4px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+/* Job Title and Status Badge Row */
+.recruiter-workflow-requirement-container36 > div:first-of-type {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* Job Role Text */
+.recruiter-workflow-requirement-text55 {
+  display: inline-flex;
+  font-size: 22px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 500;
+  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Experience, Salary, Location Icons Row */
+.recruiter-workflow-requirement-container37 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Individual Icon Containers */
+.recruiter-workflow-requirement-container38,
+.recruiter-workflow-requirement-container39,
+.recruiter-workflow-requirement-container40 {
+  gap: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Client/Sub-Client/Skills Section */
+.recruiter-workflow-requirement-container41 {
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+/* Individual Info Rows */
+.recruiter-workflow-requirement-container42,
+.recruiter-workflow-requirement-container43,
+.recruiter-workflow-requirement-container44 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Labels */
+.recruiter-workflow-requirement-text59,
+.recruiter-workflow-requirement-text61,
+.recruiter-workflow-requirement-text63 {
+  fill: #747474;
+  color: rgb(116, 116, 116);
+  width: auto;
+  min-width: 100px;
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+
+/* Values */
+.recruiter-workflow-requirement-text60,
+.recruiter-workflow-requirement-text62 {
+  width: auto;
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+/* Description Container */
+.recruiter-workflow-requirement-container45 {
+  gap: 8px;
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.recruiter-workflow-requirement-text64 {
+  width: auto;
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* Action Icons Container */
+.recruiter-workflow-requirement-container58 {
+  gap: var(--dl-layout-space-unit);
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Location Details Table */
+.recruiter-workflow-requirement-container48 {
+  gap: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  align-items: flex-start;
+  border-color: #C0C0C0;
+  border-width: 1px;
+  border-radius: 8px;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Table Header */
+.recruiter-workflow-requirement-container49 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #C0C0C0;
+  padding: 8px var(--dl-layout-space-halfunit);
+  background-color: #f8f8f8;
+}
+
+/* Table Header Columns */
+.recruiter-workflow-requirement-container50,
+.recruiter-workflow-requirement-container51,
+.recruiter-workflow-requirement-container52 {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.recruiter-workflow-requirement-text69,
+.recruiter-workflow-requirement-text70,
+.recruiter-workflow-requirement-text71 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Table Body Container */
+.recruiter-workflow-requirement-container53 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+  align-items: flex-start;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+/* Table Rows */
+.recruiter-workflow-requirement-container54 {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: flex-start;
+  padding: 12px var(--dl-layout-space-halfunit);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.recruiter-workflow-requirement-container54:last-child {
+  border-bottom: none;
+}
+
+/* Table Data Columns */
+.recruiter-workflow-requirement-container55,
+.recruiter-workflow-requirement-container56,
+.recruiter-workflow-requirement-container57 {
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  padding: 0 8px;
+}
+
+.recruiter-workflow-requirement-text72,
+.recruiter-workflow-requirement-text73,
+.recruiter-workflow-requirement-text74 {
+  width: 100%;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Footer Bar */
+.recruiter-workflow-requirement-container59 {
+  gap: 16px;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 8px var(--dl-layout-space-halfunit);
+  border-radius: var(--dl-layout-radius-radius4);
+  justify-content: flex-end;
+  background-color: #F4F4F4;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  flex-wrap: wrap;
+}
+
+/* =========================================
+   TABLET BREAKPOINT (max-width: 991px)
+   ========================================= */
+@media(max-width: 991px) {
+  .recruiter-workflow-requirement-text55 {
+    font-size: 20px;
+  }
+
+  .recruiter-workflow-requirement-container37 {
+    gap: 12px;
+  }
+
+  .recruiter-workflow-requirement-text56,
+  .recruiter-workflow-requirement-text57,
+  .recruiter-workflow-requirement-text58 {
+    font-size: 13px;
+  }
+
+  .recruiter-workflow-requirement-container34 {
+    gap: 12px;
+  }
+
+  .recruiter-workflow-requirement-container58 {
+    gap: 12px;
+    padding: 4px;
+  }
+
+  .recruiter-workflow-requirement-text69,
+  .recruiter-workflow-requirement-text70,
+  .recruiter-workflow-requirement-text71 {
+    font-size: 15px;
+  }
+}
+
+/* =========================================
+   MOBILE BREAKPOINT (max-width: 767px)
+   ========================================= */
+@media(max-width: 767px) {
+  .recruiter-workflow-requirement-container33 {
+    gap: 8px;
+  }
+
+  .recruiter-workflow-requirement-container34 {
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .recruiter-workflow-requirement-container35 {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .recruiter-workflow-requirement-text55 {
+    font-size: 18px;
+  }
+
+  .recruiter-workflow-requirement-container37 {
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .recruiter-workflow-requirement-container38,
+  .recruiter-workflow-requirement-container39,
+  .recruiter-workflow-requirement-container40 {
+    width: 100%;
+  }
+
+  .recruiter-workflow-requirement-text59,
+  .recruiter-workflow-requirement-text61,
+  .recruiter-workflow-requirement-text63 {
+    min-width: 80px;
+    font-size: 13px;
+  }
+
+  .recruiter-workflow-requirement-text60,
+  .recruiter-workflow-requirement-text62,
+  .recruiter-workflow-requirement-text64 {
+    font-size: 13px;
+  }
+
+  /* Make table responsive on mobile */
+  .recruiter-workflow-requirement-container49 {
+    padding: 6px 8px;
+  }
+
+  .recruiter-workflow-requirement-text69,
+  .recruiter-workflow-requirement-text70,
+  .recruiter-workflow-requirement-text71 {
+    font-size: 13px;
+  }
+
+  .recruiter-workflow-requirement-container54 {
+    padding: 8px;
+  }
+
+  .recruiter-workflow-requirement-text72,
+  .recruiter-workflow-requirement-text73,
+  .recruiter-workflow-requirement-text74 {
+    font-size: 12px;
+  }
+
+  .recruiter-workflow-requirement-container58 {
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+    padding: 8px;
+  }
+
+  .recruiter-workflow-requirement-container59 {
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .recruiter-workflow-requirement-text75,
+  .recruiter-workflow-requirement-text76,
+  .recruiter-workflow-requirement-text77,
+  .recruiter-workflow-requirement-text78 {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE BREAKPOINT (max-width: 479px)
+   ========================================= */
+@media(max-width: 479px) {
+  .recruiter-workflow-requirement-container31 {
+    gap: 12px;
+  }
+
+  .recruiter-workflow-requirement-container33 {
+    gap: 4px;
+  }
+
+  .recruiter-workflow-requirement-text55 {
+    font-size: 16px;
+  }
+
+  .recruiter-workflow-requirement-icon22,
+  .recruiter-workflow-requirement-icon26,
+  .recruiter-workflow-requirement-icon28 {
+    width: 14px;
+    height: 14px;
+  }
+
+  .recruiter-workflow-requirement-text56,
+  .recruiter-workflow-requirement-text57,
+  .recruiter-workflow-requirement-text58 {
+    font-size: 12px;
+  }
+
+  /* Stack label and value vertically on very small screens */
+  .recruiter-workflow-requirement-container42,
+  .recruiter-workflow-requirement-container43,
+  .recruiter-workflow-requirement-container44 {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .recruiter-workflow-requirement-text59,
+  .recruiter-workflow-requirement-text61,
+  .recruiter-workflow-requirement-text63 {
+    width: 100%;
+    min-width: auto;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .recruiter-workflow-requirement-text60,
+  .recruiter-workflow-requirement-text62 {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  /* Make location details table scrollable horizontally on tiny screens */
+  .recruiter-workflow-requirement-container48 {
+    overflow-x: auto;
+  }
+
+  .recruiter-workflow-requirement-container49,
+  .recruiter-workflow-requirement-container54 {
+    min-width: 400px; /* Ensure minimum width for table */
+  }
+
+  .recruiter-workflow-requirement-text69,
+  .recruiter-workflow-requirement-text70,
+  .recruiter-workflow-requirement-text71 {
+    font-size: 12px;
+  }
+
+  .recruiter-workflow-requirement-text72,
+  .recruiter-workflow-requirement-text73,
+  .recruiter-workflow-requirement-text74 {
+    font-size: 11px;
+  }
+
+  /* Footer adjustments */
+  .recruiter-workflow-requirement-container59 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .recruiter-workflow-requirement-container60,
+  .recruiter-workflow-requirement-container61 {
+    width: 100%;
+  }
+
+  .assigned-users-display {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+}
+
+/* =========================================
+   STATUS BADGE RESPONSIVE FIXES
+   ========================================= */
+.status-badge-container {
+  position: relative;
+  margin-left: 15px;
+  flex-shrink: 0;
+}
+
+@media(max-width: 767px) {
+  .status-badge-container {
+    margin-left: 8px;
+  }
+
+  .status-badge {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+}
+
+@media(max-width: 479px) {
+  .status-badge-container {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .status-badge {
+    width: fit-content;
+  }
+}
+
+/* =========================================
+   ASSIGNED USERS DISPLAY RESPONSIVE
+   ========================================= */
+.assigned-users-display {
+  display: flex;
+  align-items: center;
+  gap: -8px;
+  margin-left: auto;
+}
+
+@media(max-width: 767px) {
+  .assigned-users-display {
+    margin-left: 0;
+  }
+
+  .user-avatar-small {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+  }
+}
+
+@media(max-width: 479px) {
+  .assigned-users-display {
+    gap: -6px;
+  }
+
+  .user-avatar-small {
+    width: 22px;
+    height: 22px;
+    font-size: 8px;
+  }
+}
+
+/* =========================================
+   UTILITY CLASSES FOR PROPER WRAPPING
+   ========================================= */
+.text-wrap {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+/* =========================================
+   FIX: LIST VIEW LOCATION/SPOC OVERLAP
+   ========================================= */
+
+/* 1. The Row Container (Location Details Item) */
+.recruiter-workflow-requirement-container54 {
+  /* Align items to top so multi-line text doesn't center vertically */
+  align-items: flex-start !important;
+  
+  /* Allow height to grow dynamically */
+  height: auto !important;
+  
+  /* Add spacing and a separator line */
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Remove border from the last item */
+.recruiter-workflow-requirement-container54:last-child {
+  border-bottom: none;
+}
+
+/* 2. Text Wrapping for Columns */
+.recruiter-workflow-requirement-text72, /* Location Text */
+.recruiter-workflow-requirement-text73, /* SPOC Text */
+.recruiter-workflow-requirement-text74  /* Vacancies Text */ {
+  
+  /* Force text to wrap */
+  white-space: normal !important;
+  
+  /* Break long words if necessary */
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  
+  /* Line height for readability */
+  line-height: 1.4;
+  
+  /* Fill the column */
+  width: 100%;
+  display: block;
+}
+
+/* 3. Column Containers */
+.recruiter-workflow-requirement-container55, /* Location Col */
+.recruiter-workflow-requirement-container56, /* SPOC Col */
+.recruiter-workflow-requirement-container57  /* Vacancies Col */ {
+  
+  /* Allow container to grow with text */
+  height: auto !important;
+  
+  /* Add padding to prevent text touching the next column */
+  padding-right: 12px;
+  
+  /* Ensure top alignment */
+  display: flex;
+  align-items: flex-start;
+}
+
 /* Ensure the dropdown sits on top of other table rows */
 .location-suggestions-dropdown {
   position: absolute;
