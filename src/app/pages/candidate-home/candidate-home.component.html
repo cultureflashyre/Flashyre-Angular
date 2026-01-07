@@ -535,6 +535,7 @@
               [imageAlt]="job.company_name + ' logo'"
               [matchingScore]="job.matching_score"
               [companyInitials]="job.initials" 
+              (viewMatchDetails)="openMatchBreakdown($event)" 
             >
               <ng-template #text>
                 <div class="candidate-home-fragment31">
@@ -626,10 +627,80 @@
                 <span *ngIf="appliedJobIds.length > 0"> | {{ appliedJobIds.length }} jobs applied</span>
               </small>
             </div>
+            
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+<!-- Skill Breakdown Modal -->
+<div class="skill-modal-overlay" *ngIf="showSkillModal" (click)="closeMatchBreakdown()">
+  <div class="skill-modal-content" (click)="$event.stopPropagation()">
+    
+    <div class="skill-modal-header">
+      <h3>Match Breakdown</h3>
+      <button class="close-btn" (click)="closeMatchBreakdown()">×</button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="skill-modal-body center-content" *ngIf="isLoadingSkills">
+      <div class="loading-spinner small-spinner"></div>
+      <p class="loading-text">Analyzing your profile against job requirements...</p>
+    </div>
+
+    <!-- Error State (CORRECTED: Distinct UI) -->
+    <div class="skill-modal-body center-content" *ngIf="!isLoadingSkills && errorMessage">
+      <div class="error-alert">
+        <span class="icon">⚠️</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Data State -->
+    <div class="skill-modal-body" *ngIf="!isLoadingSkills && !errorMessage">
+      
+      <!-- Matched Column -->
+      <div class="skill-column border-right">
+        <div class="column-header matched">
+          <span class="icon">✅</span>
+          <span>Matched Skills ({{ skillData.matched_skills.length }})</span>
+        </div>
+        <div class="skill-list-container">
+          <div *ngIf="skillData.matched_skills.length === 0" class="empty-state">
+            No exact skill matches found yet.
+          </div>
+          <span *ngFor="let skill of skillData.matched_skills" class="skill-chip matched">
+            {{ skill | titlecase }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Missing Column -->
+      <div class="skill-column">
+        <div class="column-header missing">
+          <span class="icon">❗</span>
+          <span>Missing Skills ({{ skillData.missing_skills.length }})</span>
+        </div>
+        <div class="skill-list-container">
+          <div *ngIf="skillData.missing_skills.length === 0" class="empty-state">
+            Great! You have all the required skills.
+          </div>
+          <span *ngFor="let skill of skillData.missing_skills" class="skill-chip missing">
+            {{ skill | titlecase }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="skill-modal-footer">
+      <p class="footer-note">Add missing skills to your resume to improve your match score.</p>
+      <button class="update-profile-btn" (click)="navigateToProfile()">
+        Update Profile
+      </button>
+    </div>
+
   </div>
 </div>
 

@@ -43,7 +43,10 @@
           <div class="candidate-job-for-you-card-container16">
             <div class="candidate-job-for-you-card-container17">
               <div class="progress-container">
-                <div class="progress">
+                <div class="progress-container clickable-score" 
+                (click)="onScoreClick($event)"
+                title="Click to view skill breakdown"
+              >
                   <div #desktopBar class="bar"></div>
                 </div>
                 <span class="score">{{ score }}%</span>
@@ -206,7 +209,9 @@
       <div class="candidate-job-for-you-card-container22">
         <div class="candidate-job-for-you-card-container23">
           <div class="candidate-job-for-you-card-container24">
-            <div class="progress-container">
+            <div class="progress-container clickable-score" 
+              (click)="onScoreClick($event)"
+            >
               <svg viewBox="0 0.5 10 8">
                 <path
                   d="M2 8 A 4 4 0 1 1 8 8"

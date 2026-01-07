@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ContentChild, TemplateRef, ElementRef, ViewChild, ChangeDetectorRef, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../../services/candidate.service';
 import { JobsService } from '../../services/job.service';
 import { Subject } from 'rxjs';
@@ -36,6 +37,9 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
 
   shouldRender: boolean = true;
   private dislikedCacheName = 'disliked-jobs-cache-v1';
+
+   // New Output Event
+  @Output() viewMatchDetails = new EventEmitter<string>();
 
   @Input() matchingScore: number | null | undefined;
   @Input() jobId: string = '';
@@ -165,6 +169,8 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
       }
     }
   }
+
+  
   
   async loadJobIdFromCache(): Promise<void> {
     if (this.jobId) return;
@@ -232,6 +238,18 @@ export class CandidateJobForYouCard implements OnInit, AfterViewInit, OnChanges,
       console.warn('Cannot navigate: jobId is not available for card click.');
     }
   }
+
+  /**
+   * Handles click on the match score circle.
+   * QA Failure 4 Fix: Stops propagation to prevent opening job details.
+   */
+  onScoreClick(event: MouseEvent): void {
+    event.stopPropagation(); // CRITICAL: Prevents card navigation
+    if (this.jobId) {
+      this.viewMatchDetails.emit(this.jobId);
+    }
+  }
+
 
   onApply(event: MouseEvent): void {
     event.stopPropagation();

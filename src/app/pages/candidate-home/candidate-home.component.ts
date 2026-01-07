@@ -62,6 +62,11 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
   displayedJobs: any[] = []; // Paginated jobs for the view
   appliedJobIds: number[] = [];
   allAssessments: any[] = [];
+  // Modal Properties
+  showSkillModal = false;
+  isLoadingSkills = false;
+  errorMessage: string = ''; // New property for clean error handling
+  skillData: { matched_skills: string[], missing_skills: string[] } = { matched_skills: [], missing_skills: [] };
   
   // Main search bar models
   searchJobTitle: string = '';
@@ -158,6 +163,8 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  
+
   @HostListener('window:scroll', ['$event'])
   @HostListener('window:resize', ['$event'])
   onWindowScrollOrResize(): void {
@@ -252,6 +259,42 @@ export class CandidateHome implements OnInit, AfterViewInit, OnDestroy {
     this.showMoreFilters = false;
     this.runFilterPipeline();
   }
+
+  /**
+   * Opens the skill breakdown modal.
+   * QA Failure 1 & 3 Fix: Shows loader, calls API, handles errors.
+   */
+  openMatchBreakdown(jobId: string): void {
+    this.showSkillModal = true;
+    this.isLoadingSkills = true;
+    this.errorMessage = ''; // Reset error
+    
+    this.skillData = { matched_skills: [], missing_skills: [] };
+
+    this.authService.getMatchBreakdown(jobId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.skillData = data;
+          this.isLoadingSkills = false;
+        },
+        error: (err) => {
+          console.error("Failed to load skills", err);
+          this.isLoadingSkills = false;
+          // Set distinct error message
+          this.errorMessage = "Unable to load skill details. Please try again later.";
+        }
+      });
+  }
+
+  closeMatchBreakdown(): void {
+    this.showSkillModal = false;
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/profile-overview-page']);
+  }
+
 
   // This new function acts as a gatekeeper for keyboard input
   onExperienceInput(event: KeyboardEvent): void {

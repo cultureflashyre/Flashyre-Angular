@@ -320,5 +320,22 @@ async logout(): Promise<void> {
     };
     return this.http.post(`${this.apiUrl}api/auth/google/complete/`, payload);
   }
+
+  /**
+   * Fetches the detailed skill breakdown for a specific job.
+   * CORRECTION: URL path updated to match the registered Django pattern.
+   */
+  getMatchBreakdown(jobId: string): Observable<any> {
+    // WAS: ${this.apiUrl}api/resume-analyzer/jobs/... (Caused 404)
+    // NOW: ${this.apiUrl}api/jobs/...
+    return this.http.get(`${this.apiUrl}api/jobs/${jobId}/match-breakdown/`, { 
+      headers: this.getAuthHeaders() 
+    }).pipe(
+      catchError(error => {
+        console.error('Error fetching match breakdown:', error);
+        return throwError(() => new Error('Failed to load skill analysis.'));
+      })
+    );
+  }
   
 }
