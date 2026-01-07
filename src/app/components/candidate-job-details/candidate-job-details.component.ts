@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AlertMessageComponent } from '../alert-message/alert-message.component';
-import { NgClass, NgTemplateOutlet, DecimalPipe, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet, DecimalPipe, DatePipe,TitleCasePipe } from '@angular/common';
 
 @Component({
     selector: 'candidate-job-details',
@@ -20,6 +20,7 @@ import { NgClass, NgTemplateOutlet, DecimalPipe, DatePipe } from '@angular/commo
         NgTemplateOutlet,
         DecimalPipe,
         DatePipe,
+        TitleCasePipe // Ensure TitleCasePipe is imported for the template
     ],
 })
 export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
@@ -122,6 +123,36 @@ export class CandidateJobDetailsComponent implements OnInit, OnChanges, AfterVie
         return 'Posted';
     }
   }
+
+  // --- MODIFICATION START ---
+  /**
+   * meaningful CSS class based on the application status.
+   */
+  getStatusClass(status: string): string {
+    if (!status) return 'status-default';
+    
+    const s = status.toLowerCase();
+
+    // 1. Initial State
+    if (s === 'applied') {
+      return 'status-applied';
+    }
+    
+    // 2. Success States
+    if (s === 'selected' || s === 'hired' || s === 'offer') {
+      return 'status-success';
+    }
+
+    // 3. Failure States
+    if (s === 'rejected' || s === 'declined') {
+      return 'status-rejected';
+    }
+
+    // 4. Active Interview Process (Screening, Technical, HR, etc.)
+    // Any status that isn't applied, success, or rejected falls here.
+    return 'status-process';
+  }
+  // --- MODIFICATION END ---
 
   /**
    * Returns the correct date value from the job object based on the active tab.

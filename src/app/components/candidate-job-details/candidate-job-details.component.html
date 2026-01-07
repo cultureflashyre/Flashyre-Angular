@@ -95,11 +95,23 @@
                 <ng-template #defaultText1>
                   <div class="candidate-job-details-fragment5">
                     <span class="candidate-job-details-text14">{{ job.title }}</span>
+                    <!-- --- MODIFICATION START --- -->
+            <!-- Display Status Badge ONLY if in 'Applied' tab -->
+            @if (activeTab === 'applied' && job?.application_status) {
+              <span 
+                class="application-status-badge" 
+                [ngClass]="getStatusClass(job.application_status)">
+                {{ job.application_status | titlecase }}
+              </span>
+            }
+            <!-- --- MODIFICATION END --- -->
                   </div>
                 </ng-template>
                 <ng-container *ngTemplateOutlet="text1 ? text1 : defaultText1"></ng-container>
               </ng-container>
             </span>
+            
+
           </div>
           <span id="location-text" class="candidate-job-details-location-text">
             <ng-container>

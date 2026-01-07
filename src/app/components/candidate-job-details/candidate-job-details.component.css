@@ -2,6 +2,74 @@
   display: contents; 
 }
 
+/* candidate-job-details.component.css */
+
+/* --- MODIFICATION START --- */
+
+/* Base style for the status badge */
+.application-status-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px; /* Space between Job Title and Badge */
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* 1. Applied (Neutral/Blue) */
+.status-applied {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+/* 2. Process / Interviewing (Active/Purple or Orange) */
+/* Used for Screening, Technical Interview, HR, etc. */
+.status-process {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #e1bee7;
+}
+
+/* 3. Success (Green) */
+.status-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+/* 4. Rejected (Red) */
+.status-rejected {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+/* Default fallback */
+.status-default {
+  background-color: #f5f5f5;
+  color: #616161;
+  border: 1px solid #e0e0e0;
+}
+
+/* Mobile Adjustment: Stack if screen is too narrow */
+@media (max-width: 479px) {
+  .candidate-job-details-job-role-container {
+    flex-wrap: wrap;
+  }
+  
+  .application-status-badge {
+    margin-left: 0;
+    margin-top: 4px;
+    font-size: 0.75rem;
+  }
+}
+/* --- MODIFICATION END --- */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
