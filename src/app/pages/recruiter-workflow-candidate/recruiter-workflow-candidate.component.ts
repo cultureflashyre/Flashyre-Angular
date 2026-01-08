@@ -821,6 +821,44 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
         console.log("Backend Response:", response); // CHECK CONSOLE LOGS
 
+        // --- 1. HANDLE GENERAL ERRORS (e.g. Empty File) ---
+        // If success is false and we have a specific error message but NO validation 'errors' object
+        if (!response.success && response.error && !response.errors) {
+            this.showAlert(response.error, ['Close']);
+            this.onCancel(); // <--- CRITICAL: Reset form and file input immediately
+            return;
+        }
+
+        // --- 1. CHECK FOR DUPLICATES (Specific Error Handling) ---
+        if (response.errors) {
+          // Convert error objects to string to check for 'unique' code or message
+          const phoneErrStr = response.errors.phone_number ? JSON.stringify(response.errors.phone_number) : '';
+          const emailErrStr = response.errors.email ? JSON.stringify(response.errors.email) : '';
+
+          // Check if errors contain "unique" or "already exists"
+          const isPhoneDuplicate = phoneErrStr.includes('unique') || phoneErrStr.includes('already exists');
+          const isEmailDuplicate = emailErrStr.includes('unique') || emailErrStr.includes('already exists');
+
+          // A. Both Duplicate
+          if (isPhoneDuplicate && isEmailDuplicate) {
+            this.showAlert("A candidate with this Phone Number and Email ID already exists.", ['Close']);
+            this.onCancel(); // Clear form and file input
+            return;
+          } 
+          // B. Phone Duplicate
+          else if (isPhoneDuplicate) {
+            this.showAlert("A candidate with this Phone Number already exists.", ['Close']);
+            this.onCancel(); // Clear form and file input
+            return;
+          } 
+          // C. Email Duplicate
+          else if (isEmailDuplicate) {
+            this.showAlert("A candidate with this Email ID already exists.", ['Close']);
+            this.onCancel(); // Clear form and file input
+            return;
+          }
+        }
+
 
         if (response.id) {
           // A. SUCCESS: Record saved in DB
