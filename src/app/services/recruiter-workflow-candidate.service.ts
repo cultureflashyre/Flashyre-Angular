@@ -36,6 +36,8 @@ export interface Candidate {
 })
 export class RecruiterWorkflowCandidateService {
   private apiUrl = environment.apiUrl;
+  private parseUrl = environment.apiUrl + 'api/parse-resume/'; // Adjust path as needed
+
   private endpoint = 'api/candidates/';
   // Added from Parent: Endpoint for ATS Workflow
   private atsUrl = environment.apiUrl + 'api/ats/bulk-add/';
@@ -47,6 +49,12 @@ export class RecruiterWorkflowCandidateService {
    */
   getCandidates(): Observable<Candidate[]> {
     return this.http.get<Candidate[]>(`${this.apiUrl}${this.endpoint}`);
+  }
+
+  parseResume(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(this.parseUrl, formData);
   }
 
   /**

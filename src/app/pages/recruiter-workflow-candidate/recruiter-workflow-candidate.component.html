@@ -364,6 +364,13 @@
 <span class="recruiter-workflow-candidate-text33">
               Upload File <span style="color: #ff4d4f; margin-left: 4px; font-weight: bold;">*</span>
             </span></div>
+             <!-- Loading Indicator -->
+    <div *ngIf="isParsingResume" class="parsing-loader" style="margin-left: 15px; display: flex; align-items: center; color: #1890ff;">
+       <svg class="spinner" viewBox="0 0 50 50" style="width: 20px; height: 20px; animation: rotate 2s linear infinite;">
+         <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="currentColor"></circle>
+       </svg>
+       <span style="margin-left: 8px; font-weight: 500;">Analyzing with AI...</span>
+    </div>
             </div>
             <!-- NEW: Error Message Display -->
     <div class="validation-error" *ngIf="showFileError">

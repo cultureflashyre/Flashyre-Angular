@@ -89,6 +89,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
   // NEW: Track file validation error state
   showFileError = false;
 
+  isParsingResume = false; // Add this state
+
+
 
   // --- NEW PROPERTIES FOR DETAIL VIEW ---
   showDetailsModal = false;
@@ -796,23 +799,109 @@ export class RecruiterWorkflowCandidate implements OnInit {
     
     if (!file) { return; }
 
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
-
-    if (!allowedTypes.includes(file.type)) {
-      alert('Invalid file type. Please upload a PDF or Word document.');
-      target.value = '';
-      return;
-    }
-
+    // Validation (Keep your existing validation logic here)
+    const maxSizeInBytes = 5 * 1024 * 1024;
     if (file.size > maxSizeInBytes) {
-      alert('File is too large. Maximum size is 5 MB.');
+      alert('File is too large. Max 5 MB.');
       target.value = '';
       return;
     }
 
     this.selectedFile = file;
     this.selectedFileName = file.name;
+    
+    // Start Parsing
+    this.isParsingResume = true;
+    this.showFileError = false;
+
+    // Call Service
+    this.candidateService.parseResume(file).subscribe({
+      next: (response: any) => {
+        this.isParsingResume = false;
+
+        console.log("Backend Response:", response); // CHECK CONSOLE LOGS
+
+
+        if (response.id) {
+          // A. SUCCESS: Record saved in DB
+          this.editingCandidateId = response.id; // Switch to Edit Mode
+          this.showAlert("Resume parsed & saved! Please review details.", ['Close']);
+          
+          // B. Populate Form
+          this.populateFormWithData(response.data);
+        }
+      },
+      error: (err) => {
+        this.isParsingResume = false;
+        
+        if (err.status === 409) {
+           // Duplicate Error from Django IntegrityError
+           this.showAlert("Candidate with this Email or Phone already exists.", ['Close']);
+           // Reset file input
+           this.selectedFile = null;
+           this.selectedFileName = '';
+           target.value = '';
+        } else {
+           // General Error
+           this.showAlert("Could not parse resume automatically. Please fill manually.", ['Close']);
+        }
+      }
+    });
+  }
+
+  // 2. Helper to Populate Form (Reused for Edit & Parse)
+  populateFormWithData(data: any): void {
+    if (!data) return;
+
+    // Handle Skills (Convert String to Array for Pills)
+    if (data.skills) {
+      // Check if it's already an array or a comma-string
+      if (Array.isArray(data.skills)) {
+         this.skills = data.skills;
+      } else {
+         this.skills = data.skills.split(',').map((s: string) => s.trim()).filter(Boolean);
+      }
+      this.updateSkillsFormControl(); // Updates the hidden form control
+    }
+
+    // Handle Preferred Location (Pills)
+    if (data.preferred_location) {
+      this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
+    }
+
+    // Handle Current Location (Pills)
+    if (data.current_location) {
+      this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+    }
+
+    // Patch Standard Fields
+    this.candidateForm.patchValue({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      phone_number: data.phone_number,
+      work_experience: data.work_experience,
+      total_experience_min: data.total_experience_min,
+      total_experience_max: data.total_experience_max,
+      relevant_experience_min: data.relevant_experience_min,
+      relevant_experience_max: data.relevant_experience_max,
+      expected_ctc_min: data.expected_ctc_min,
+      expected_ctc_max: data.expected_ctc_max,
+      // Use helper to match dropdowns case-insensitively
+      current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
+      notice_period: this.matchDropdown(data.notice_period, this.noticePeriodChoices),
+      gender: this.matchDropdown(data.gender, this.genderChoices),
+    });
+  }
+
+  // 3. Helper for Dropdown Matching
+  matchDropdown(value: string, options: string[]): string {
+    if (!value) return '';
+    // Find option that matches closely (ignoring case)
+    const match = options.find(opt => opt.toLowerCase() === value.toLowerCase());
+    return match || ''; 
   }
   
   deleteCandidate(id: number | undefined): void {
