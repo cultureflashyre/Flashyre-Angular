@@ -437,7 +437,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
       current_location: ['', [Validators.required, Validators.pattern(locationPattern)]],
       notice_period: ['', Validators.required],
       gender: ['', Validators.required],
-      work_experience: ['', [Validators.required, Validators.maxLength(15)]], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
+      work_experience: ['', [Validators.required, Validators.maxLength(30)]], // Child had pattern, Parent had required. Keeping required for general use, using method for pattern
       skills: ['', Validators.required,],
     }, {
       validators: [
