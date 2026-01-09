@@ -91,6 +91,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
 
   isParsingResume = false; // Add this state
 
+  // Add property to class
+  stagingId: number | null = null;
+
 
 
   // --- NEW PROPERTIES FOR DETAIL VIEW ---
@@ -860,15 +863,20 @@ export class RecruiterWorkflowCandidate implements OnInit {
         }
 
 
-        if (response.id) {
-          // A. SUCCESS: Record saved in DB
-          this.editingCandidateId = response.id; // Switch to Edit Mode
-          this.showAlert("Resume parsed & saved! Please review details.", ['Close']);
-          
-          // B. Populate Form
-          this.populateFormWithData(response.data);
-        }
-      },
+        // SUCCESS PATH
+            if (response.success && response.staging_id) {
+                // 1. Store Staging ID
+                this.stagingId = response.staging_id;
+                
+                // 2. Ensure we are in CREATE mode, not EDIT mode
+                this.editingCandidateId = null; 
+
+                // 3. Populate Form
+                this.populateFormWithData(response.data);
+                
+                this.showAlert("Resume parsed! Please review the details and click Submit.", ['Close']);
+            }
+        },
       error: (err) => {
         this.isParsingResume = false;
         
@@ -1010,6 +1018,16 @@ export class RecruiterWorkflowCandidate implements OnInit {
       const value = this.candidateForm.get(key)?.value;
       if (value !== null && value !== undefined) { formData.append(key, value); }
     });
+
+    // CRITICAL: Handle the File
+    // Case 1: Manual Upload (User didn't use AI) -> Append selectedFile
+    // Case 2: AI Parse (Staging) -> Append staging_id
+    
+    if (this.stagingId) {
+        formData.append('staging_id', this.stagingId.toString());
+    } else if (this.selectedFile) {
+        formData.append('resume', this.selectedFile);
+    }
 
     const userId = localStorage.getItem('user_id');
     if (userId) { formData.append('user_id', userId); }
