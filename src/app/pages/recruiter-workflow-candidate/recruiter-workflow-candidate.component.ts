@@ -810,6 +810,13 @@ export class RecruiterWorkflowCandidate implements OnInit {
       return;
     }
 
+    // 2. VALIDATION: Empty File (0 Bytes) - Frontend Check
+    if (file.size === 0) {
+      this.showAlert("The uploaded file is empty (0 bytes). Please upload a valid Resume.", ['Close']);
+      target.value = ''; // Clear input
+      return;
+    }
+
     this.selectedFile = file;
     this.selectedFileName = file.name;
     

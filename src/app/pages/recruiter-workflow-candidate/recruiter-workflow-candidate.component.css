@@ -4115,3 +4115,406 @@ select.input {
   cursor: not-allowed;
 }
 
+/* =========================================
+   GLOBAL FIXES (Add this to top of file if not present)
+   ========================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   RESPONSIVE OVERRIDES & MEDIA QUERIES
+   ========================================= */
+
+/* 
+   Large Screens / Laptops (Max 1366px) 
+   Adjusts the main container width so it's not too narrow
+*/
+@media screen and (max-width: 1366px) {
+  .recruiter-workflow-candidate-candidates-listing-container {
+    width: 90%; /* Increased from 70% to use more screen space */
+    max-width: 1200px;
+  }
+}
+
+/* 
+   Tablets / Small Laptops (Max 1200px) 
+   Transitioning from 2 columns to fluid layouts
+*/
+@media screen and (max-width: 1200px) {
+  .recruiter-workflow-candidate-candidates-listing-container {
+    width: 95%;
+    padding: 16px;
+  }
+
+  /* Allow containers to grow vertically if content wraps */
+  .recruiter-workflow-candidate-job-title-company-name-container1,
+  .recruiter-workflow-candidate-job-title-company-name-container2,
+  .recruiter-workflow-candidate-issued-renewal-date-container1,
+  .recruiter-workflow-candidate-issued-renewal-date-container2,
+  .recruiter-workflow-candidate-job-title-company-name-container3,
+  .recruiter-workflow-candidate-container28 {
+    height: auto !important; /* Override fixed 76px */
+    min-height: 76px;
+  }
+
+  /* Ensure inputs take full width of their flex parents */
+  .recruiter-workflow-candidate-job-title-input1,
+  .recruiter-workflow-candidate-company-name-input1,
+  .recruiter-workflow-candidate-job-title-input2,
+  .recruiter-workflow-candidate-company-name-input2,
+  .recruiter-workflow-candidate-company-name-input3,
+  .recruiter-workflow-candidate-company-name-input4,
+  .recruiter-workflow-candidate-company-name-input5,
+  .recruiter-workflow-candidate-company-name-input6,
+  .recruiter-workflow-candidate-company-name-input7,
+  .recruiter-workflow-candidate-company-name-input8,
+  .recruiter-workflow-candidate-job-title-input3,
+  .recruiter-workflow-candidate-job-title-input4,
+  .recruiter-workflow-candidate-job-title-input5,
+  .recruiter-workflow-candidate-job-title-input6 {
+    width: 100%;
+  }
+
+  /* Fix Date/Dropdown container widths */
+  .recruiter-workflow-candidate-container19,
+  .recruiter-workflow-candidate-container20,
+  .recruiter-workflow-candidate-container22,
+  .recruiter-workflow-candidate-container23,
+  .recruiter-workflow-candidate-container25,
+  .recruiter-workflow-candidate-container26 {
+    width: 48%; /* Slight adjustment for gap */
+  }
+}
+
+/* 
+   Tablets Portrait (Max 991px)
+   Text adjustments and Header tweaks
+*/
+@media screen and (max-width: 991px) {
+  .recruiter-workflow-candidate-text30 {
+    font-size: 22px;
+  }
+
+  /* Adjust Header Action Bar */
+  .recruiter-workflow-candidate-select-filter-sort-download-zip-main-container {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  /* AI Buttons sizing */
+  .recruiter-workflow-candidate-cvjd-upload-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
+
+  .recruiter-workflow-candidate-add-questions-with-ai-button1,
+  .recruiter-workflow-candidate-add-questions-with-ai-button2 {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* Form Modal Sizing */
+  .form-modal-container {
+    width: 90%;
+    max-height: 85vh;
+  }
+}
+
+/* 
+   Mobile Landscape / Large Phones (Max 767px)
+   CRITICAL: Stack all horizontal forms to vertical
+*/
+@media screen and (max-width: 767px) {
+  .recruiter-workflow-candidate-candidates-listing-container {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* Force all 2-column rows to become 1-column */
+  .recruiter-workflow-candidate-job-title-company-name-container1,
+  .recruiter-workflow-candidate-job-title-company-name-container2,
+  .recruiter-workflow-candidate-issued-renewal-date-container1,
+  .recruiter-workflow-candidate-issued-renewal-date-container2,
+  .recruiter-workflow-candidate-job-title-company-name-container3,
+  .recruiter-workflow-candidate-container28 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 16px;
+    height: auto !important;
+  }
+
+  /* Reset widths of the internal column wrappers to 100% */
+  .recruiter-workflow-candidate-job-title-container1,
+  .recruiter-workflow-candidate-company-name-container1,
+  .recruiter-workflow-candidate-job-title-container2,
+  .recruiter-workflow-candidate-company-name-container2,
+  .recruiter-workflow-candidate-issued-date-container1,
+  .recruiter-workflow-candidate-renewal-date-container,
+  .recruiter-workflow-candidate-issued-date-container2,
+  .recruiter-workflow-candidate-certificate-name-container,
+  .recruiter-workflow-candidate-job-title-container3,
+  .recruiter-workflow-candidate-job-title-container4,
+  .recruiter-workflow-candidate-issued-date-container3,
+  .recruiter-workflow-candidate-credentials-container {
+    width: 100%;
+    height: auto;
+  }
+
+  /* File Upload Container */
+  .recruiter-workflow-candidate-upload-file-container {
+    flex-direction: row; /* Keep button next to input if space permits */
+  }
+  
+  .recruiter-workflow-candidate-upload-file-button-container {
+    width: auto;
+    padding: 0 16px;
+  }
+
+  /* Filter Panel positioning for mobile */
+  .filter-panel {
+    width: 100%; /* Full width on mobile */
+    top: 50px;
+    right: 0;
+    position: fixed; /* Fix to screen */
+    height: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .filter-form-grid {
+    grid-template-columns: 1fr; /* Stack filter inputs */
+  }
+
+  /* Modal Padding */
+  .form-modal-container .recruiter-workflow-candidate-candidate-input-form {
+    padding: 16px;
+  }
+}
+
+/* 
+   Mobile Portrait (Max 479px)
+   Smallest screens - Focus on full width inputs and stackable headers
+*/
+@media screen and (max-width: 479px) {
+  
+  /* Stack the Header (Source label vs Close button) */
+  .recruiter-workflow-candidate-container12 {
+    flex-direction: row; /* Keep row but ensure wrapping if needed */
+    align-items: center;
+  }
+  
+  .recruiter-workflow-candidate-text30 {
+    font-size: 18px; /* Smaller Title */
+  }
+
+  /* Stack the Date Selectors (Month / Year) */
+  .recruiter-workflow-candidate-select-container1,
+  .recruiter-workflow-candidate-select-container2,
+  .recruiter-workflow-candidate-select-container3 {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 8px;
+  }
+
+  .recruiter-workflow-candidate-container19, 
+  .recruiter-workflow-candidate-container20,
+  .recruiter-workflow-candidate-container22,
+  .recruiter-workflow-candidate-container23,
+  .recruiter-workflow-candidate-container25,
+  .recruiter-workflow-candidate-container26 {
+    width: 100%;
+  }
+
+  /* File Upload specific for small mobile */
+  .recruiter-workflow-candidate-upload-file-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .recruiter-workflow-candidate-upload-file-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+  }
+  
+  .recruiter-workflow-candidate-upload-file-button-container {
+    width: 100%;
+    height: 40px;
+    border-radius: 0 0 5px 5px;
+  }
+
+  /* Buttons Footer */
+  .recruiter-workflow-candidate-submit-cancel-buttons-container {
+    flex-direction: column-reverse; /* Stack buttons */
+    gap: 12px;
+    height: auto;
+  }
+
+  .recruiter-workflow-candidate-cancel-button,
+  .recruiter-workflow-candidate-submit-button {
+    width: 100%; /* Full width buttons */
+    height: 44px; /* Taller for touch */
+  }
+
+  /* List Items in the main table */
+  .recruiter-workflow-candidate-container35 {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .recruiter-workflow-candidate-container36 {
+    width: 100%;
+  }
+  
+  .recruiter-workflow-candidate-container45,
+  .recruiter-workflow-candidate-container47,
+  .recruiter-workflow-candidate-container49 {
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+}
+/* =========================================
+   CANDIDATE LIST CARD RESPONSIVENESS FIXES
+   ========================================= */
+
+/* 1. Fix alignment of Labels vs Long Text (Key Skills) */
+/* This prevents the "Key Skills" label from floating in the middle of a paragraph */
+.recruiter-workflow-candidate-container44,
+.recruiter-workflow-candidate-container42, 
+.recruiter-workflow-candidate-container43,
+.recruiter-workflow-candidate-container46,
+.recruiter-workflow-candidate-container48 {
+  align-items: flex-start !important; /* Force labels to top */
+  margin-bottom: 8px; /* Add breathing room between rows */
+  height: auto !important; /* Ensure container grows */
+}
+
+/* Label Widths - Ensure they don't get squashed */
+.recruiter-workflow-candidate-text63, /* Key Skills Label */
+.recruiter-workflow-candidate-text59, 
+.recruiter-workflow-candidate-text61,
+.recruiter-workflow-candidate-text66,
+.recruiter-workflow-candidate-text69 {
+  width: 120px !important; /* Fixed width for labels */
+  min-width: 120px;
+  flex-shrink: 0;
+  padding-right: 8px;
+}
+
+/* Value Text - Allow wrapping */
+.recruiter-workflow-candidate-text62, /* Key Skills Value */
+.recruiter-workflow-candidate-text60,
+.recruiter-workflow-candidate-text67,
+.recruiter-workflow-candidate-text70 {
+  width: auto !important;
+  flex: 1; /* Take remaining space */
+  white-space: normal; /* Force text wrap */
+  word-break: break-word; /* Prevent long words breaking layout */
+  line-height: 1.5;
+}
+
+/* =========================================
+   TABLET & MOBILE VIEW (Max-Width 991px)
+   ========================================= */
+@media screen and (max-width: 991px) {
+  
+  /* Main Card wrapper */
+  .recruiter-workflow-candidate-container35 {
+    flex-direction: column; /* Stack Left (Info) and Right (Actions) panels */
+    width: 100% !important;
+    gap: 16px;
+    height: auto !important; /* Critical for expansion */
+  }
+
+  /* Left Panel (Name, Skills, etc) */
+  .recruiter-workflow-candidate-container36 {
+    width: 100% !important;
+    border-right: none; /* Remove separator if exists */
+    padding-right: 0;
+  }
+
+  /* Right Panel (Logo, Contact, Actions) */
+  .recruiter-workflow-candidate-container50 {
+    width: 100% !important;
+    flex-direction: row; /* Horizontal layout for actions on mobile */
+    justify-content: space-between;
+    align-items: flex-start;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+
+  /* Adjust Phone/Email in Right Panel */
+  .recruiter-workflow-candidate-container53 {
+    align-items: flex-start; /* Align text left */
+  }
+  
+  /* Hide the big vertical icons container if it causes issues, 
+     or re-orient it */
+  .recruiter-workflow-candidate-container56 {
+    display: none; /* Often these side icons break mobile layouts. Hiding or moving is safer. */
+  }
+
+  /* Re-enable Edit/Delete buttons in a visible way if hidden above */
+  .recruiter-workflow-candidate-container50 .recruiter-workflow-candidate-container52 {
+    display: flex;
+    gap: 16px;
+  }
+}
+
+/* =========================================
+   MOBILE PORTRAIT (Max-Width 479px)
+   ========================================= */
+@media screen and (max-width: 479px) {
+  
+  /* Name Title */
+  .recruiter-workflow-candidate-text55 {
+    font-size: 18px;
+    word-break: break-word;
+  }
+
+  /* Stack the "Role" and "Experience" row if strictly needed, 
+     though flex-wrap usually handles it. */
+  .recruiter-workflow-candidate-container37 {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Right Panel - Stack Logo and Contact Info */
+  .recruiter-workflow-candidate-container50 {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Logo Container */
+  .recruiter-workflow-candidate-container51 {
+    width: 100%;
+    justify-content: space-between; /* Put Logo left, Actions right */
+    margin-bottom: 8px;
+  }
+
+  /* Move Actions (Edit/Delete) next to Logo on small screens */
+  .recruiter-workflow-candidate-container52 {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  /* Ensure card container has relative positioning for the absolute buttons above */
+  .recruiter-workflow-candidate-container34 {
+    position: relative;
+    padding-bottom: 40px; /* Space for footer */
+  }
+}
