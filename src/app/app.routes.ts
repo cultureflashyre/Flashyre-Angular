@@ -259,7 +259,7 @@ export const routes: Routes = [
       import('./pages/recruiter-workflow-candidate/recruiter-workflow-candidate.component')
       .then((m) => m.RecruiterWorkflowCandidate),
       canActivate: [authGuard],
-      data: { roles: ['admin'] } 
+      data: { roles: ['admin','recruiter'] } 
   },
   {
     path: 'recruiter-workflow-requirement',
@@ -293,7 +293,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/recruiter-workflow-ats/recruiter-workflow-ats.component')
       .then(m => m.RecruiterWorkflowAtsComponent),
     canActivate: [authGuard],
-    data: { roles: ['admin','client'] }
+    data: { roles: ['admin','client','recruiter'] }
   },
   {
     path: '**',

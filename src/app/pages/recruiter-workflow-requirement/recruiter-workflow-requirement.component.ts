@@ -36,6 +36,11 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
   ]
 })
 export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDestroy {
+
+  // Add these properties to track current user context
+  userType: string = '';
+  currentUserId: string | null = null;
+  
   statusOptions = [
     { label: 'Active', color: '#28a745' },  // Green
     { label: 'On-hold', color: '#ffc107' }, // Yellow
@@ -62,6 +67,12 @@ public formErrors: { [key: string]: string } = {};
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
   searchTimeout: any;
+
+    // 1. Add property for the new dropdown
+  createAssessment: string = 'No'; 
+  assessmentOptions: string[] = ['Yes', 'No'];
+  isAssessmentDropdownOpen: boolean = false; // For custom dropdown logic
+
 
   
 
@@ -227,6 +238,16 @@ private subscriptions = new Subscription();
   ngAfterViewInit(): void {
   this.initializeGooglePlaces();
 }
+
+// 2. Add Helper methods for the custom dropdown UI
+  toggleAssessmentDropdown() {
+    this.isAssessmentDropdownOpen = !this.isAssessmentDropdownOpen;
+  }
+
+  selectAssessmentOption(option: string) {
+    this.createAssessment = option;
+    this.isAssessmentDropdownOpen = false;
+  }
 
 // === NEW METHODS FOR DETAIL POPUP ===
   
@@ -501,8 +522,10 @@ getFileName(): string {
     this.fetchRequirements(); // Fetch the data as soon as page loads
     this.fetchAvailableUsers();
     this.fetchClientList();
-     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
-     this.setupLocationAutocomplete();
+    this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    this.userType = localStorage.getItem('userType') || '';
+    this.currentUserId = localStorage.getItem('user_id');
+    this.setupLocationAutocomplete();
   }
 
   getStatusColor(status: string): string {
@@ -525,6 +548,39 @@ getFileName(): string {
       if (req !== item) req.showStatusDropdown = false;
     });
     item.showStatusDropdown = !item.showStatusDropdown;
+  }
+
+  /**
+   * Logic to determine if "Create Assessment" button should be visible
+   * Requirement 1: Client -> Always Show
+   * Requirement 2: Recruiter -> Show ONLY if assigned AND super user enabled it
+   */
+  canShowAssessmentButton(item: any): boolean {
+    // 1. Client User Type: Always allow
+    if (this.userType === 'client') {
+      return true;
+    }
+
+    // 2. Recruiter User Type
+    if (this.userType === 'recruiter') {
+      const isAssigned = this.isAssignedToRequirement(item);
+      const isEnabledByAdmin = item.create_assessment === 'Yes';
+      return isAssigned && isEnabledByAdmin;
+    }
+
+    // 3. Admin/SuperUser (Optional: usually they can see everything)
+    if (this.isSuperUser) {
+        return true;
+    }
+
+    return false;
+  }
+
+  // Placeholder for the button action
+  onCreateAssessment(item: any) {
+    console.log("Create Assessment clicked for:", item.job_role);
+    // Add your navigation logic here, e.g.:
+    // this.router.navigate(['/create-assessment', item.id]);
   }
 
 
@@ -955,6 +1011,7 @@ toggleNoticePeriodDropdown() {
 
     // Populate Fields
     this.clientName = item.client_name;
+    
     this.subClientName = item.sub_client_name;
     this.jobRole = item.job_role; 
     this.jobDescription = item.job_description;
@@ -978,6 +1035,8 @@ this.interviewLocationsList = item.interview_location
 
     this.selectedNoticePeriod = item.notice_period;
     this.selectedGender = item.gender;
+    // POPULATE CREATE ASSESSMENT
+    this.createAssessment = item.create_assessment || 'No';
 
     // Populate Table
     if (item.location_details && item.location_details.length > 0) {
@@ -1165,6 +1224,8 @@ this.interviewLocationsList = item.interview_location
     formData.append('salary_max', (this.salary.max || 0).toString());
     formData.append('notice_period', this.selectedNoticePeriod || '');
     formData.append('gender', this.selectedGender || '');
+    // Append the new field
+    formData.append('create_assessment', this.createAssessment);
     formData.append('interview_location', this.interviewLocationsList.join(', '));
     if (this.interviewDate) {
         formData.append('interview_date', this.interviewDate);
@@ -1280,6 +1341,9 @@ this.interviewLocationsList = item.interview_location
     this.isInterviewDateInvalid = false;
     this.isNoticePeriodInvalid = false;
     this.isGenderInvalid = false;
+
+    this.createAssessment = 'No';
+    this.isAssessmentDropdownOpen = false;
     
   }
 

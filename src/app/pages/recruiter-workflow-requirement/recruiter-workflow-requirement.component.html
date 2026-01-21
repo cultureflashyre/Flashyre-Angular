@@ -416,6 +416,21 @@
                     >
                         ATS
                     </span>
+                    <!-- 3. NEW CREATE ASSESSMENT BUTTON -->
+    <div 
+        *ngIf="canShowAssessmentButton(item)" 
+        class="assessment-btn-wrapper"
+        (click)="onCreateAssessment(item)"
+        title="Create Assessment"
+    >
+        <!-- ICON: Clipboard with Checkmark (Represents a Test/Assessment) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <path d="M9 14l2 2 4-4"></path>
+        </svg>
+        <span class="assessment-btn-text">Assessment</span>
+    </div>
                     <svg
                       *ngIf="isSuperUser"
                       viewBox="0 0 20 20"
@@ -727,16 +742,26 @@
 
         <!-- INTERVIEW DATE (On its own row now) -->
         <!-- Row 2: Assign To (Swapped Here) -->
-<div class="recruiter-workflow-requirement-job-title-company-name-container2">
-    <!-- ASSIGN TO (Super User only) -->
-    <div *ngIf="isSuperUser" style="width: 49%;" class="recruiter-workflow-requirement-job-title-container1">
+<div class="recruiter-workflow-requirement-job-title-company-name-container2" *ngIf="isSuperUser">
+    
+    <!-- LEFT: ASSIGN TO -->
+    <div style="width: 49%;" class="recruiter-workflow-requirement-job-title-container1">
       <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
       <div class="multi-select-container" (click)="filterUsers()">
         <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
           {{ user.first_name }} {{ user.last_name }}
           <span class="remove-chip-icon" (click)="removeUser(i); $event.stopPropagation()">×</span>
         </div>
-        <input type="text" class="multi-select-input" placeholder="Search Admins/Recruiters..." [(ngModel)]="userSearchText" (input)="filterUsers()" (focus)="filterUsers()" (blur)="closeUserDropdown()" [ngModelOptions]="{standalone: true}" />
+        <input 
+            type="text" 
+            class="multi-select-input" 
+            placeholder="Search Admins/Recruiters..." 
+            [(ngModel)]="userSearchText" 
+            (input)="filterUsers()" 
+            (focus)="filterUsers()" 
+            (blur)="closeUserDropdown()" 
+            [ngModelOptions]="{standalone: true}" 
+        />
         <ul class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length > 0">
           <li class="users-dropdown-item" *ngFor="let user of filteredUsers" (mousedown)="selectUser(user)">
             <span>{{ user.first_name }} {{ user.last_name }}</span>
@@ -746,7 +771,41 @@
         <div class="users-dropdown-list" *ngIf="isUserDropdownOpen && filteredUsers.length === 0" style="padding:10px; color:#999;">No matching users found.</div>
       </div>
     </div>
+
+    <!-- RIGHT: CREATE ASSESSMENT -->
+    <!-- RIGHT: CREATE ASSESSMENT -->
+    <div style="width: 49%;" class="recruiter-workflow-requirement-company-name-container2">
+        <span class="recruiter-workflow-requirement-skill-text">Create Assessment</span>
+        
+        <div id="select-container" class="recruiter-workflow-requirement-select-container4" style="position: relative; width: 100%;">
+            
+            <!-- UPDATED DIV STRUCTURE HERE -->
+            <div 
+                class="assessment-dropdown-box input" 
+                (click)="toggleAssessmentDropdown()" 
+            >
+                <span class="recruiter-workflow-requirement-select-text2" [style.color]="createAssessment ? '#000' : '#888'">
+                    {{ createAssessment }}
+                </span>
+                <svg 
+                    width="24" height="24" viewBox="0 0 32 32" 
+                    class="recruiter-workflow-requirement-drop-down-icon2" 
+                    [style.transform]="isAssessmentDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'" 
+                    style="transition: transform 0.3s ease; margin: 0;"
+                >
+                    <path d="M16 22L6 12l1.4-1.4l8.6 8.6l8.6-8.6L26 12z" fill="currentColor"></path>
+                </svg>
+            </div>
+            
+            <ul *ngIf="isAssessmentDropdownOpen" class="custom-dropdown-list">
+                <li *ngFor="let option of assessmentOptions" class="custom-dropdown-item" (click)="selectAssessmentOption(option)">
+                    {{ option }}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
+
 
         
 

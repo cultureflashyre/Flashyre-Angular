@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { AuthService } from '../../services/candidate.service';
 import { UserProfileService } from '../../services/user-profile.service';
@@ -9,15 +9,15 @@ import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 
-import { LoginPageNavbar } from 'src/app/components/login-page-navbar/login-page-navbar.component';
 import { LogInPage } from 'src/app/components/log-in-page/log-in-page.component';
+import { LoginPageNavbar } from 'src/app/components/login-page-navbar/login-page-navbar.component';
 
 @Component({
   selector: 'login',
   standalone: true,
   imports: [ RouterModule, FormsModule, CommonModule,
-    LoginPageNavbar, LogInPage,
-  ],
+    LogInPage, LoginPageNavbar,
+    ],
   templateUrl: 'login-candidate.component.html',
   styleUrls: ['login-candidate.component.css'],
 })
@@ -33,6 +33,7 @@ export class LoginCandidate implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
+    private ngZone: NgZone // Injected NgZone
   ) {
     this.title.setTitle('Login - Flashyre');
     this.meta.addTags([
@@ -55,28 +56,30 @@ export class LoginCandidate implements OnInit {
   onLoginSubmit(response: any) {
     this.spinner.show();
 
-      const isSuccessfulLogin = (
-      response.message === 'Login successful' ||
-      response.status === 'LOGIN_SUCCESS' ||
-      response.status === 'ROLE_MISMATCH'
-    ) && response.access;
-
-    if (isSuccessfulLogin) {
+    if (response.message === 'Login successful' && response.access) {
       console.log("Login response: ", response);
-      localStorage.setItem('jwtToken', response.access); // Ensure token is stored
-      // Store user_id in local storage
-      localStorage.setItem('user_id', response.user_id);
+      
+      // Store Data
+      localStorage.setItem('jwtToken', response.access);
+      localStorage.setItem('user_id', response.user_id); 
       localStorage.setItem('userType', response.role);
       
+      if (response.is_superuser) {
+        localStorage.setItem('isSuperUser', 'true');
+      } else {
+        localStorage.removeItem('isSuperUser');
+      }
+      
+      // Attempt to fetch profile (Mostly for candidates)
       this.userProfileService.fetchUserProfile().subscribe({
         next: () => {
           this.errorMessage = '';
-          this.router.navigate(['/candidate-home']);
+          this.navigateBasedOnRole(response);
         },
         error: (profileError) => {
           console.error('Error fetching profile', profileError);
-          // Navigate anyway, but with a warning
-          this.router.navigate(['/candidate-home']);
+          // If profile fetch fails (common for non-candidates), still navigate based on role
+          this.navigateBasedOnRole(response);
         }
       });
     } else {
@@ -84,5 +87,30 @@ export class LoginCandidate implements OnInit {
       console.error('Login failed:', response);
     }
     this.spinner.hide();
+  }
+
+  navigateBasedOnRole(response: any) {
+    // Wrap navigation in NgZone.run to prevent freezing/deadlocks during component destruction/init
+    this.ngZone.run(() => {
+      const role = response.role;
+      const isSuperUser = response.is_superuser;
+
+      if (role === 'admin') {
+        if (isSuperUser) {
+          this.router.navigate(['/recruiter-super-admin-analytical-module']);
+        } else {
+          this.router.navigate(['/recruiter-workflow-candidate']);
+        }
+      } else if (role === 'recruiter') {
+        this.router.navigate(['/recruiter-workflow-requirement']);
+      } else if (role === 'client') {
+        // Client Home Page -> Requirement Workflow
+        this.router.navigate(['/recruiter-workflow-requirement']);
+      } else if (role === 'candidate') {
+        this.router.navigate(['/candidate-home']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

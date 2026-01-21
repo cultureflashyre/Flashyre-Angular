@@ -161,8 +161,10 @@ export class LogInPage implements OnInit {
           setTimeout(() => {
             this.showLoginSuccessAlert = false;
             
-            // 3. EXECUTE REDIRECTION LOGIC
-            this.handleRedirection(response.role, response.is_superuser);
+            // --- FIX: REMOVED NAVIGATION FROM HERE ---
+            // The navigation is now handled exclusively by the parent component (LoginCandidate)
+            // based on the event emitted below. This prevents the "Double Navigation" freeze.
+            // this.handleRedirection(response.role, response.is_superuser); 
 
             this.loginSubmit.emit(response);
             this.cdr.detectChanges(); 
@@ -180,7 +182,7 @@ export class LogInPage implements OnInit {
     });
   }
 
-  // --- UPDATED: Handle Redirection Logic ---
+  // NOTE: This method is kept for reference or standalone use, but it is NOT called in onSubmit anymore.
   handleRedirection(role: string, isSuperUser: boolean) {
     if (role === 'admin') {
       if (isSuperUser) {
@@ -191,7 +193,6 @@ export class LogInPage implements OnInit {
     } else if (role === 'recruiter') {
       this.router.navigate(['/recruiter-workflow-requirement']); 
     } else if (role === 'client') {
-      // --- UPDATED: Client Home Page is Requirement Workflow ---
       this.router.navigate(['/recruiter-workflow-requirement']);
     } else if (role === 'candidate') {
       this.router.navigate(['/candidate-home']);

@@ -3,7 +3,7 @@ import {
   Input,
   ContentChild,
   TemplateRef,
-  OnInit, // Import OnInit
+  OnInit, 
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -17,8 +17,13 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class RecruiterWorkflowNavbarComponent implements OnInit {
   
-  // --- NEW: Permission Flag ---
+  // Permissions
   isSuperUser: boolean = false;
+  userType: string = '';
+
+  // Visibility Flags
+  showClients: boolean = false;
+  showCandidates: boolean = false;
 
   // Existing Inputs/ContentChild
   @ContentChild('text32') text32: TemplateRef<any> | null = null;
@@ -53,8 +58,17 @@ export class RecruiterWorkflowNavbarComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Check permission on initialization
+    // 1. Get permissions from storage
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    this.userType = localStorage.getItem('userType') || '';
+
+    // 2. Set Visibility Rules
+    // Rule: "If Recruiter do not show clients page". Also implies Clients don't see it. Only Admin sees it.
+    this.showClients = this.userType === 'admin';
+
+    // Rule: "If the user type is client do now show Clients and Candidates".
+    // So Candidates is visible to Admin and Recruiter.
+    this.showCandidates = this.userType === 'admin' || this.userType === 'recruiter';
   }
 
   onLogout() {
