@@ -43,7 +43,7 @@ export class LogInPage implements OnInit {
   showPassword: boolean = false;
   @Input() errorMessage: string = '';
 
-    // Properties for the alert message
+  // Properties for the alert message
   showLoginSuccessAlert = false;
   loginSuccessMessage = '';
 
@@ -53,7 +53,7 @@ export class LogInPage implements OnInit {
     private corporateAuthService: CorporateAuthService,
     private cdr: ChangeDetectorRef,
     private socialAuthService: SocialAuthService,
-    private router: Router // Inject Router
+    private router: Router 
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -63,18 +63,13 @@ export class LogInPage implements OnInit {
 
   ngOnInit() {
     console.log('LogInPage component initialized');
-    // Clear error message when user types in the form
     this.loginForm.valueChanges.subscribe(() => {
       if (this.errorMessage) {
-        console.log('Clearing error message due to form input');
         this.errorMessage = '';
         this.cdr.detectChanges();
       }
     }); 
-    // --- ADDED: Google Sign-In Subscription Logic ---
-    // This is the new, correct way to handle Google Sign-In.
-    // It listens for a successful login from the <asl-google-signin-button> component
-    // in your HTML and then executes our logic.
+    
     this.socialAuthService.authState.subscribe((socialUser: SocialUser) => {
       console.log('Google user authenticated:', socialUser);
       const idToken = socialUser.idToken;
@@ -86,11 +81,8 @@ export class LogInPage implements OnInit {
         next: (response) => {
           if (response.status === 'LOGIN_SUCCESS' || response.status === 'ROLE_MISMATCH') {
             this.errorMessage = '';
-            // The backend returns a full login response, so we emit it
-            // to the parent component (login-candidate.component).
             this.loginSubmit.emit(response);
           } else {
-            // This happens if a new user (not in your DB) tries to log in.
             this.errorMessage = 'Account not found. Please sign up first.';
             this.cdr.detectChanges();
           }
@@ -124,10 +116,16 @@ export class LogInPage implements OnInit {
       next: (response: any) => {
         if (response.message === 'Login successful' && response.access) {
           this.errorMessage = '';
+          
+          // 1. STORE TOKENS AND USER ID IMMEDIATELY
           localStorage.setItem('jwtToken', response.access);
           localStorage.setItem('userType', response.role);
-          // 2. Store Super User Status (Convert boolean to string)
-          // Ensure your backend sends 'is_superuser' in the response
+          
+          if (response.user_id) {
+            localStorage.setItem('user_id', response.user_id);
+          }
+
+          // 2. Store Super User Status
           if (response.is_superuser) {
             localStorage.setItem('isSuperUser', 'true');
           } else {
@@ -142,6 +140,9 @@ export class LogInPage implements OnInit {
             case 'recruiter':
               roleMessage = 'You are logged in as Recruiter.';
               break;
+            case 'client':
+              roleMessage = 'You are logged in as Client.';
+              break;
             case 'admin':
               roleMessage = response.is_superuser 
                 ? 'You are logged in as Super admin.' 
@@ -154,18 +155,18 @@ export class LogInPage implements OnInit {
           this.loginSuccessMessage = roleMessage;
           this.showLoginSuccessAlert = true;
           
-          this.cdr.detectChanges(); // Immediately show the alert message
+          this.cdr.detectChanges(); 
 
           // Set a timeout to hide the message and then emit the login event
           setTimeout(() => {
             this.showLoginSuccessAlert = false;
+            
             // 3. EXECUTE REDIRECTION LOGIC
             this.handleRedirection(response.role, response.is_superuser);
 
-            // --- MOVE THE EMIT CALL HERE ---
             this.loginSubmit.emit(response);
-            this.cdr.detectChanges(); // Update the view after hiding the alert
-          }, 5000); // 5-second delay
+            this.cdr.detectChanges(); 
+          }, 5000); 
 
         } else {
           this.errorMessage = response.error || 'Invalid Email or Password';
@@ -179,18 +180,19 @@ export class LogInPage implements OnInit {
     });
   }
 
-  // New Helper Function for Redirection
+  // --- UPDATED: Handle Redirection Logic ---
   handleRedirection(role: string, isSuperUser: boolean) {
     if (role === 'admin') {
       if (isSuperUser) {
-        // Super Admin -> Analytics
         this.router.navigate(['/recruiter-super-admin-analytical-module']);
       } else {
-        // Standard Admin -> Candidate Workflow
         this.router.navigate(['/recruiter-workflow-candidate']);
       }
     } else if (role === 'recruiter') {
-      this.router.navigate(['/job-post-list']); // Or recruiter-specific page
+      this.router.navigate(['/recruiter-workflow-requirement']); 
+    } else if (role === 'client') {
+      // --- UPDATED: Client Home Page is Requirement Workflow ---
+      this.router.navigate(['/recruiter-workflow-requirement']);
     } else if (role === 'candidate') {
       this.router.navigate(['/candidate-home']);
     } else {
@@ -198,7 +200,6 @@ export class LogInPage implements OnInit {
     }
   }
 
-    // Function to close the alert manually if needed
   onAlertClose() {
     this.showLoginSuccessAlert = false;
   }

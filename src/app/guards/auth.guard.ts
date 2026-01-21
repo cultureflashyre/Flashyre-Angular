@@ -58,6 +58,9 @@ export const authGuard: CanActivateFn = (route, state) => {
       case 'candidate':
         router.navigate(['/candidate-home']);
         break;
+      case 'client':
+        router.navigate(['/recruiter-workflow-requirement']);
+        break;
       case 'recruiter':
       case 'admin': 
         // If an admin tries to access a non-admin page, send them to their default

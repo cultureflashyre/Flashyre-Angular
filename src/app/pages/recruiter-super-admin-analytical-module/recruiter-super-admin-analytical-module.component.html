@@ -402,8 +402,12 @@
                   <div class="user-initials">{{ user.initials || 'U' }}</div>
                   <div class="header-info">
                     <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
-                    <span class="user-role-badge" [class.super]="user.is_superuser">
-                      {{ user.is_superuser ? 'Super Admin' : user.user_type }}
+                    <!-- Role Badge Logic -->
+                    <span class="user-role-badge" 
+                      [class.super]="user.is_superuser"
+                      [class.client-badge]="user.user_type === 'client'"
+                      [class.rec-badge]="user.user_type === 'recruiter'">
+                      {{ user.is_superuser ? 'Super Admin' : (user.user_type | titlecase) }}
                     </span>
                   </div>
                 </div>
@@ -429,6 +433,11 @@
                   <span class="info-label">Phone:</span>
                   <span>{{ user.phone_number }}</span>
                 </div>
+                <!-- Show Client Name if applicable -->
+                <div class="info-row" *ngIf="user.client_name">
+                  <span class="info-label">Client:</span>
+                  <span style="font-weight:600; color:#05356C;">{{ user.client_name }}</span>
+                </div>
                 <div class="info-row">
                   <span class="info-label">Status:</span>
                   <span [style.color]="user.is_active ? 'green' : 'red'">{{ user.is_active ? 'Active' : 'Inactive' }}</span>
@@ -436,10 +445,6 @@
               </div>
 
               <div class="card-actions">
-                <!-- Reset Password -->
-                <!-- <button class="action-btn reset-btn" title="Reset Password" (click)="confirmResetPassword(user)">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </button> -->
                 <!-- Edit -->
                 <button class="action-btn edit-btn" title="Edit User" (click)="openEditUserPopup(user)">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -454,20 +459,51 @@
         </div>
       </div>
 
-      
-
-      <!-- 3. Floating Popup (Modal) for Creation -->
+      <!-- 3. Floating Popup (Modal) for Creation/Editing -->
       <div class="modal-overlay" *ngIf="showCreateUserPopup">
         <div class="modal-content">
           <div class="modal-header">
-            <span class="modal-title">{{ isEditMode ? 'Edit User' : 'Create New Admin' }}</span>
+            <span class="modal-title">
+              <span *ngIf="creationStep === 1">Select User Type</span>
+              <span *ngIf="creationStep === 2">
+                {{ isEditMode ? 'Edit User' : 'Create New ' + (selectedRole | titlecase) }}
+              </span>
+            </span>
             <button class="close-modal-btn" (click)="closeCreateUserPopup()">&times;</button>
           </div>
 
           @if (successMessage) { <div class="success-banner">{{ successMessage }}</div> }
           @if (errorMessage) { <div class="error-banner">{{ errorMessage }}</div> }
 
-          <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="admin-creation-form">
+          <!-- STEP 1: ROLE SELECTION -->
+          <div *ngIf="creationStep === 1 && !isEditMode" class="role-selection-container">
+            <div class="role-card" (click)="selectRole('admin')">
+              <div class="role-icon">🛡️</div>
+              <div class="role-name">Admin</div>
+              <div class="role-desc">Full access to system settings and user management.</div>
+            </div>
+            
+            <div class="role-card" (click)="selectRole('recruiter')">
+              <div class="role-icon">👥</div>
+              <div class="role-name">Recruiter</div>
+              <div class="role-desc">Access to candidates, jobs, and hiring workflow.</div>
+            </div>
+            
+            <div class="role-card" (click)="selectRole('client')">
+              <div class="role-icon">🏢</div>
+              <div class="role-name">Client</div>
+              <div class="role-desc">Access to client portal and job requirements.</div>
+            </div>
+          </div>
+
+          <!-- STEP 2: FORM -->
+          <form *ngIf="creationStep === 2" [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="admin-creation-form">
+            
+            <!-- Back Button (Only for creation) -->
+            <div *ngIf="!isEditMode" style="margin-bottom: 15px;">
+              <button type="button" class="back-link" (click)="goBackToStep1()">← Back to Selection</button>
+            </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">First Name</label>
@@ -482,40 +518,52 @@
             </div>
 
             <div class="form-group">
-    <label class="form-label">Phone Number</label>
-    <input type="text" class="form-input" formControlName="phone_number" maxlength="10" (input)="sanitizePhoneNumber($event)" [class.error]="isFieldInvalid('phone_number')">
-    
-    <!-- Sync Errors -->
-    @if (createUserForm.get('phone_number')?.hasError('required') && createUserForm.get('phone_number')?.touched) { 
-      <div class="error-message">Phone number is required</div> 
-    }
-    @if (createUserForm.get('phone_number')?.hasError('pattern') && createUserForm.get('phone_number')?.touched) { 
-      <div class="error-message">Must be 10 digits</div> 
-    }
-    <!-- Async Error: Only shows if user CHANGED phone to an existing one -->
-    @if (createUserForm.get('phone_number')?.hasError('phoneExists')) { 
-      <div class="error-message">This phone number is already registered</div> 
-    }
-  </div>
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" formControlName="phone_number" maxlength="10" (input)="sanitizePhoneNumber($event)" [class.error]="isFieldInvalid('phone_number')">
+              
+              <!-- Sync Errors -->
+              @if (createUserForm.get('phone_number')?.hasError('required') && createUserForm.get('phone_number')?.touched) { 
+                <div class="error-message">Phone number is required</div> 
+              }
+              @if (createUserForm.get('phone_number')?.hasError('pattern') && createUserForm.get('phone_number')?.touched) { 
+                <div class="error-message">Must be 10 digits</div> 
+              }
+              <!-- Async Error -->
+              @if (createUserForm.get('phone_number')?.hasError('phoneExists')) { 
+                <div class="error-message">This phone number is already registered</div> 
+              }
+            </div>
 
 
             <div class="form-group">
-    <label class="form-label">Email Address</label>
-    <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')">
-    
-    @if (createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched) { 
-      <div class="error-message">Email is required</div> 
-    }
-    @if (createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched) { 
-      <div class="error-message">Invalid email format</div> 
-    }
-    <!-- Async Error: Only shows if user CHANGED email to an existing one -->
-    @if (createUserForm.get('email')?.hasError('emailExists')) { 
-      <div class="error-message">This email is already registered</div> 
-    }
-  </div>
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')">
+              
+              @if (createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched) { 
+                <div class="error-message">Email is required</div> 
+              }
+              @if (createUserForm.get('email')?.hasError('email') && createUserForm.get('email')?.touched) { 
+                <div class="error-message">Invalid email format</div> 
+              }
+              <!-- Async Error -->
+              @if (createUserForm.get('email')?.hasError('emailExists')) { 
+                <div class="error-message">This email is already registered</div> 
+              }
+            </div>
 
-            <div class="form-group checkbox-group">
+            <!-- NEW: CLIENT DROPDOWN (Conditional) -->
+            <div class="form-group" *ngIf="selectedRole === 'client' || (isEditMode && createUserForm.get('user_type')?.value === 'client')">
+              <label class="form-label">Assign to Client (Company)</label>
+              <select class="form-input" formControlName="client_name" [class.error]="isFieldInvalid('client_name')">
+                <option value="">Select a Client</option>
+                <option *ngFor="let client of clientList" [value]="client.client_name">{{ client.client_name }}</option>
+              </select>
+              @if (isFieldInvalid('client_name')) { <div class="error-message">Please select a client</div> }
+              <div style="font-size: 11px; color: #666; margin-top: 4px;">* Select the company this user belongs to.</div>
+            </div>
+
+            <!-- SUPER ADMIN CHECKBOX (Conditional - Admins Only) -->
+            <div class="form-group checkbox-group" *ngIf="selectedRole === 'admin' || (isEditMode && createUserForm.get('user_type')?.value === 'admin')">
               <input type="checkbox" id="isSuperAdmin" class="checkbox-input" formControlName="is_superuser">
               <label for="isSuperAdmin" class="form-label" style="cursor: pointer; margin:0;">Grant Super-Admin Privileges</label>
             </div>
@@ -546,7 +594,7 @@
             <div class="form-actions">
               <button type="button" class="cancel-btn" (click)="closeCreateUserPopup()">Cancel</button>
               <button type="submit" class="submit-btn" [disabled]="createUserForm.invalid || isSubmitting">
-                {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User') }}
+                {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create ' + (selectedRole | titlecase)) }}
               </button>
             </div>
           </form>
@@ -554,14 +602,14 @@
       </div>
 
       <!-- ALERT MESSAGE COMPONENT -->
-    @if (showAlert) {
-      <app-alert-message
-        [message]="alertMessage"
-        [buttons]="alertButtons"
-        (buttonClicked)="onAlertAction($event)"
-        (close)="onAlertClose()"
-      ></app-alert-message>
-    }
+      @if (showAlert) {
+        <app-alert-message
+          [message]="alertMessage"
+          [buttons]="alertButtons"
+          (buttonClicked)="onAlertAction($event)"
+          (close)="onAlertClose()"
+        ></app-alert-message>
+      }
 
     </div>
     
