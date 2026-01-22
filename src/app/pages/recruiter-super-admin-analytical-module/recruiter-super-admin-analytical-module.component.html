@@ -539,7 +539,7 @@
 
             <div class="form-group">
               <label class="form-label">Email Address</label>
-              <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')">
+              <input type="email" class="form-input" formControlName="email" [class.error]="isFieldInvalid('email')" autocomplete="new-password">
               
               @if (createUserForm.get('email')?.hasError('required') && createUserForm.get('email')?.touched) { 
                 <div class="error-message">Email is required</div> 
@@ -578,7 +578,7 @@
                   <span *ngIf="isEditMode" style="font-weight:normal; font-size:11px; color:#666;">(Leave blank to keep current)</span>
                 </label>
                 <div class="password-wrapper">
-                  <input [type]="passwordType" class="form-input" formControlName="password" placeholder="Password">
+                  <input [type]="passwordType" class="form-input" formControlName="password" placeholder="Password" autocomplete="new-password">
                   <span class="password-toggle" (click)="togglePasswordVisibility()">{{ passwordType === 'password' ? 'Show' : 'Hide' }}</span>
                 </div>
                 @if (isFieldInvalid('password')) { <div class="error-message">Min 8 chars, 1 Upper, 1 Number, 1 Special.</div> }
