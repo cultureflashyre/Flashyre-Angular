@@ -691,14 +691,19 @@ getFileName(): string {
   fetchAvailableUsers() {
     this.adbService.getAllUsers().subscribe({
       next: (users: any[]) => {
-        this.availableUsers = users;
-        this.filteredUsers = users; // Initialize filtered list
+        // --- MODIFICATION START: Filter only Recruiters ---
+        // This ensures candidates, clients, or other admins don't show up in the "Assign To" list
+        const onlyRecruiters = users.filter(u => u.user_type === 'recruiter');
+        
+        this.availableUsers = onlyRecruiters;
+        this.filteredUsers = onlyRecruiters; 
+        // --- MODIFICATION END ---
       },
       error: (err) => console.error('Failed to load users', err)
     });
   }
-
   // 2. Filter Users based on input
+  
   filterUsers() {
     if (!this.userSearchText) {
       this.filteredUsers = this.availableUsers.filter(u => !this.isSelected(u));

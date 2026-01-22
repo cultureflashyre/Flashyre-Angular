@@ -202,8 +202,14 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     this.createUserForm.get('client_name')?.clearValidators();
 
     // If editing a client, make client_name required
+    // --- LOGIC UPDATE: Handle Client Type specifically ---
     if (user.user_type === 'client') {
        this.createUserForm.get('client_name')?.setValidators([Validators.required]);
+       // Ensure the control is enabled
+       this.createUserForm.get('client_name')?.enable(); 
+    } else {
+       // If not a client, usually we don't need this field, so we can disable or nullify it
+       this.createUserForm.get('client_name')?.setValue(null);
     }
 
     this.createUserForm.get('password')?.updateValueAndValidity();
