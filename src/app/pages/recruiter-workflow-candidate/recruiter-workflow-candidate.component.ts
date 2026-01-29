@@ -153,7 +153,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
-  ctcChoices = ['1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
+  ctcChoices = ['Fresher','1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
   // --- Google Maps Properties ---
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
@@ -428,10 +428,8 @@ export class RecruiterWorkflowCandidate implements OnInit {
       ]],
       phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      total_experience_min: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
-      total_experience_max: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
-      relevant_experience_min: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
-      relevant_experience_max: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
+      total_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
+      relevant_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
       expected_ctc_min: [null, [Validators.required, Validators.min(0)]],
       expected_ctc_max: [null, [Validators.required, Validators.min(0)]],
       current_ctc: ['', Validators.required],
@@ -444,12 +442,31 @@ export class RecruiterWorkflowCandidate implements OnInit {
       skills: ['', Validators.required,],
     }, {
       validators: [
-        minMaxValidator('total_experience_min', 'total_experience_max'),
-        minMaxValidator('relevant_experience_min', 'relevant_experience_max'),
         minMaxValidator('expected_ctc_min', 'expected_ctc_max'),
-        relevantVsTotalValidator
+        this.singleRelevantVsTotalValidator
       ]
     });
+  }
+
+  // 4. NEW VALIDATOR for single fields
+  singleRelevantVsTotalValidator(group: AbstractControl): ValidationErrors | null {
+    const total = group.get('total_experience');
+    const relevant = group.get('relevant_experience');
+
+    if (total && relevant && total.value != null && relevant.value != null) {
+      if (parseFloat(relevant.value) > parseFloat(total.value)) {
+        relevant.setErrors({ ...relevant.errors, relevantExceedsTotal: true });
+        return { relevantExceedsTotal: true };
+      } else {
+        if (relevant.errors && relevant.errors['relevantExceedsTotal']) {
+          delete relevant.errors['relevantExceedsTotal'];
+          if (Object.keys(relevant.errors).length === 0) {
+            relevant.setErrors(null);
+          }
+        }
+      }
+    }
+    return null;
   }
 
   private initializeFilterForm(): void {
@@ -936,10 +953,9 @@ export class RecruiterWorkflowCandidate implements OnInit {
       email: data.email,
       phone_number: data.phone_number,
       work_experience: data.work_experience,
-      total_experience_min: data.total_experience_min,
-      total_experience_max: data.total_experience_max,
-      relevant_experience_min: data.relevant_experience_min,
-      relevant_experience_max: data.relevant_experience_max,
+      // MAP MIN TO SINGLE FIELD (Since AI usually gives a range, start with min)
+      total_experience: data.total_experience_min, 
+      relevant_experience: data.relevant_experience_min, 
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       // Use helper to match dropdowns case-insensitively
@@ -1023,7 +1039,20 @@ export class RecruiterWorkflowCandidate implements OnInit {
     const formData = new FormData();
     Object.keys(this.candidateForm.controls).forEach(key => {
       const value = this.candidateForm.get(key)?.value;
-      if (value !== null && value !== undefined) { formData.append(key, value); }
+      // 6. SPECIAL HANDLING: Map single input to DB min/max fields
+      if (key === 'total_experience') {
+          if (value !== null) {
+              formData.append('total_experience_min', value);
+              formData.append('total_experience_max', value);
+          }
+      } 
+      else if (key === 'relevant_experience') {
+          if (value !== null) {
+              formData.append('relevant_experience_min', value);
+              formData.append('relevant_experience_max', value);
+          }
+      } 
+      else if (value !== null && value !== undefined) { formData.append(key, value); }
     });
 
     // CRITICAL: Handle the File

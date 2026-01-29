@@ -180,7 +180,7 @@ private subscriptions = new Subscription();
       notice_period: 'Notice Period',
       gender: 'Gender',
       file_attachment: 'File Upload',
-      assigned_users: 'Assigned Users',
+      assigned_users: 'Assigned To',
       location_details: 'Location Details',
     };
 
@@ -189,23 +189,24 @@ private subscriptions = new Subscription();
     // Loop through each key (field name) in the error object from Django
     for (const key in errors) {
       if (Object.prototype.hasOwnProperty.call(errors, key)) {
-        // Use the map to get the friendly name, or create a default one
         const friendlyName = fieldNameMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
-        
         const messages = errors[key];
+        
+        // Handle Django's list of errors
         if (Array.isArray(messages) && messages.length > 0) {
-          // Join the friendly name with the error message from Django
+          // If the error is technical (like "Invalid pk"), provide a generic one if possible, 
+          // or just display what the server said.
           errorMessages.push(`- ${friendlyName}: ${messages.join(' ')}`);
+        } else if (typeof messages === 'string') {
+             errorMessages.push(`- ${friendlyName}: ${messages}`);
         }
       }
     }
 
-    // If we successfully parsed any messages, display them
     if (errorMessages.length > 0) {
       return 'Please correct the following errors:\n\n' + errorMessages.join('\n');
     }
 
-    // Fallback for any truly unexpected error format
     return 'An unknown validation error occurred. Please check your inputs.';
   }
 
@@ -758,7 +759,7 @@ getFileName(): string {
     'Less than 60 Days',
     'Less than 90 days'
   ];
-    genderOptions: string[] = ['Male', 'Female', 'Others'];
+    genderOptions: string[] = ['Male', 'Female','Both','Others'];
  
    selectedNoticePeriod: string = '';
   isNoticePeriodDropdownOpen: boolean = false;
@@ -1123,19 +1124,33 @@ this.interviewLocationsList = item.interview_location
   this.isJobDescriptionInvalid = false; // (Existing)
 
   this.isTotalExpInvalid = false;
-    this.isRelevantExpInvalid = false;
-    this.isSalaryInvalid = false;
-    this.isInterviewDateInvalid = false;
-    this.isNoticePeriodInvalid = false;
-    this.isGenderInvalid = false;
+  this.isRelevantExpInvalid = false;
+  this.isSalaryInvalid = false;
+  // this.isInterviewDateInvalid = false;
+  this.isNoticePeriodInvalid = false;
+  this.isGenderInvalid = false;
 
   // 2. Perform Validation Checks
   let isValid = true;
 
+  // --- NEW VALIDATION: Mandatory Assign To for Super User ---
+  if (this.isSuperUser) {
+      if (this.selectedAssignees.length === 0) {
+          // You can create a new boolean flag for specific UI error msg if desired,
+          // or just rely on the final alert.
+          isValid = false;
+          // Optional: Add a specific error flag for UI feedback
+          // this.isAssignToInvalid = true; 
+      }
+  }
+
   // Validate Client Name
-  if (!this.clientName || this.clientName === '') {
-    this.isClientNameInvalid = true;
-    isValid = false;
+  // --- MODIFICATION: Only validate Client Name if NOT a Client User ---
+  if (this.userType !== 'client') {
+    if (!this.clientName || this.clientName === '') {
+        this.isClientNameInvalid = true;
+        isValid = false;
+    }
   }
 
   // Validate Job Role
@@ -1177,10 +1192,10 @@ this.interviewLocationsList = item.interview_location
     }
 
     // 4. Interview Date
-    if (!this.interviewDate) {
-        this.isInterviewDateInvalid = true;
-        isValid = false;
-    }
+    // if (!this.interviewDate) {
+    //     this.isInterviewDateInvalid = true;
+    //     isValid = false;
+    // }
 
     // 5. Notice Period
     if (!this.selectedNoticePeriod) {
@@ -1210,15 +1225,25 @@ this.interviewLocationsList = item.interview_location
     }
 
   // 3. Stop if Invalid
-  if (!isValid || hasDetailErrors) {
-    this.triggerAlert('Please fill in all required fields marked with *.', ['OK']);
-    return; // STOP execution here
+   if (!isValid || hasDetailErrors) {
+    // Customize message if Assign To is the only thing missing
+    if (this.isSuperUser && this.selectedAssignees.length === 0) {
+        this.triggerAlert('Please assign the requirement to at least one Recruiter.', ['OK']);
+    } else {
+        this.triggerAlert('Please fill in all required fields marked with *.', ['OK']);
+    }
+    return; 
   }
 
     // --- Build the FormData object ---
     const formData = new FormData();
-    formData.append('client_name', this.clientName);
-    formData.append('sub_client_name', this.subClientName || '');
+    // --- MODIFICATION: Only append Client Name if NOT a Client User ---
+    // If it IS a client, we send nothing for these fields. 
+    // The Backend will auto-fill 'client_name' from the User Profile.
+    if (this.userType !== 'client') {
+        formData.append('client_name', this.clientName);
+        formData.append('sub_client_name', this.subClientName || '');
+    }
     formData.append('job_role', this.jobRole);
     formData.append('source', 'External');
     formData.append('total_experience_min', (this.experience.totalMin || 0).toString());
@@ -1243,18 +1268,12 @@ this.interviewLocationsList = item.interview_location
     // =================================================================
     // === MODIFIED LOGIC: ONLY APPEND 'assigned_users' FOR SUPERUSER ===
     // =================================================================
-    if (this.isSuperUser) {
-        if (this.selectedAssignees.length > 0) {
-            // If users are selected, append each of their IDs
-            this.selectedAssignees.forEach(user => {
-                formData.append('assigned_users', user.user_id);
-            });
-        } else {
-            // If no users are selected (or all were removed), send '[]'
-            // This tells the backend to clear any existing assignments.
-            formData.append('assigned_users', '[]');
-        }
-    }
+     if (this.isSuperUser) {
+      // Since validation passed, we know length > 0
+      this.selectedAssignees.forEach(user => {
+          formData.append('assigned_users', user.user_id);
+      });
+  }
     // For non-superusers, the 'assigned_users' field is never added to formData.
     // When editing, this means the backend will not touch the existing assignments.
     // When creating, the backend will leave the assignments empty.

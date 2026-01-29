@@ -437,43 +437,29 @@
             </div>
 
             <div class="recruiter-workflow-candidate-issued-renewal-date-container1">
+                <!-- TOTAL EXPERIENCE (Single Field) -->
                 <div class="recruiter-workflow-candidate-issued-date-container1">
                     <div style="display: flex; flex-direction: row;">
                         <span class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span>
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
                     <div class="recruiter-workflow-candidate-select-container1">
-                    <!-- MIN INPUT -->
+                        <!-- CHANGED: Single Input, formControlName="total_experience", step="0.1" -->
                         <input 
                             type="number" 
-                            formControlName="total_experience_min" 
-                            placeholder="Min" 
+                            formControlName="total_experience" 
+                            placeholder="Exp (e.g. 2.5)" 
                             class="recruiter-workflow-candidate-company-name-input3 input"
                             min="0" 
                             max="99"
+                            step="0.1" 
                             (keydown)="preventInvalidChars($event)"
-                            (input)="enforceTwoDigits($event)"
                             [class.is-invalid]="
-                                candidateForm.get('total_experience_min')?.invalid && 
-                                candidateForm.get('total_experience_min')?.touched
+                                candidateForm.get('total_experience')?.invalid && 
+                                candidateForm.get('total_experience')?.touched
                             "
+                            style="width: 100%;"
                         />  
-                         <span>To</span>
-                          <input 
-                            type="number" 
-                            formControlName="total_experience_max" 
-                            placeholder="Max" 
-                            class="recruiter-workflow-candidate-company-name-input4 input"
-                            min="0" 
-                            max="99"
-                            (keydown)="preventInvalidChars($event)"
-                            (input)="enforceTwoDigits($event)"
-                            [class.is-invalid]="
-                                candidateForm.get('total_experience_max')?.invalid && 
-                                candidateForm.get('total_experience_max')?.touched
-                            "
-                        />
-                         <span>Years</span>
                     </div>
                      <!-- VALIDATION MESSAGES FOR TOTAL EXPERIENCE -->
                     <div class="validation-error" *ngIf="candidateForm.get('total_experience_min')?.hasError('max') || candidateForm.get('total_experience_max')?.hasError('max')">
@@ -491,36 +477,23 @@
                         <span class="recruiter-workflow-candidate-renewal-date-text">Relevant Experience (Years)</span>
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
-                    <div class="recruiter-workflow-candidate-select-container2">
-                            <input 
+                     <div class="recruiter-workflow-candidate-select-container2">
+                        <!-- CHANGED: Single Input, formControlName="relevant_experience", step="0.1" -->
+                        <input 
                             type="number" 
-                            formControlName="relevant_experience_min" 
-                            placeholder="Min" 
+                            formControlName="relevant_experience" 
+                            placeholder="Rel Exp (e.g. 1.5)" 
                             class="recruiter-workflow-candidate-company-name-input5 input"
                             min="0" 
                             max="99"
+                            step="0.1"
                             (keydown)="preventInvalidChars($event)"
-                            (input)="enforceTwoDigits($event)"
                             [class.is-invalid]="
-                                candidateForm.get('relevant_experience_min')?.invalid && 
-                                candidateForm.get('relevant_experience_min')?.touched
+                                candidateForm.get('relevant_experience')?.invalid && 
+                                candidateForm.get('relevant_experience')?.touched
                             "
-                        />                        <span>To</span>
-                            <input 
-                            type="number" 
-                            formControlName="relevant_experience_max" 
-                            placeholder="Max" 
-                            class="recruiter-workflow-candidate-company-name-input6 input"
-                            min="0" 
-                            max="99"
-                            (keydown)="preventInvalidChars($event)"
-                            (input)="enforceTwoDigits($event)"
-                            [class.is-invalid]="
-                                candidateForm.get('relevant_experience_max')?.invalid && 
-                                candidateForm.get('relevant_experience_max')?.touched
-                            "
-                        />  
-                                              <span>Years</span>
+                            style="width: 100%;"
+                        />                        
                     </div>
                      <!-- VALIDATION MESSAGES FOR RELEVANT EXPERIENCE -->
                     <div class="validation-error" *ngIf="candidateForm.get('relevant_experience_max')?.hasError('minGreaterThanMax')">

@@ -192,7 +192,7 @@
                 </button>
                 <div *ngIf="isFilterPanelVisible" class="filter-panel">
                   <form [formGroup]="filterForm" class="filter-form-grid">
-                    <div class="filter-group">
+                    <div class="filter-group"*ngIf="userType !== 'client'">
                       <label for="filter-client">Client Name</label>
                       <input id="filter-client" type="text" formControlName="client_name" placeholder="Filter by client..." class="input">
                     </div>
@@ -558,7 +558,7 @@
         <div id="enter-manually-text-container" class="recruiter-workflow-requirement-enter-manually-text-container">
           <span id="enter-manually-text" class="recruiter-workflow-requirement-enter-manually-text">Enter Manually</span>
         </div>
-        <div id="job-title-company-name-container" class="recruiter-workflow-requirement-job-title-company-name-container1">
+        <div id="job-title-company-name-container" class="recruiter-workflow-requirement-job-title-company-name-container1"*ngIf="userType !== 'client'">
           <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container1">
             <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client <span style="color: red;">*</span></span>
             <select 
@@ -699,11 +699,11 @@
   
   <!-- 1. INTERVIEW DATE (Swapped to Left) -->
   <div class="recruiter-workflow-requirement-company-name-container2" style="width: 49%">
-    <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date <span style="color: red;">*</span></span>
+    <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text2">Interview Date </span>
     <input type="date" id="employment-company-name-input" placeholder="Enter Date" class="recruiter-workflow-requirement-company-name-input8 input" [(ngModel)]="interviewDate" (ngModelChange)="isInterviewDateInvalid = false" [min]="minDate" />
-    <span *ngIf="isInterviewDateInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
+    <!-- <span *ngIf="isInterviewDateInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
       Interview Date is required.
-    </span>
+    </span> -->
   </div>
 
   <!-- 2. ADVANCED INTERVIEW LOCATION (Remains on Right) -->
@@ -745,8 +745,10 @@
 <div class="recruiter-workflow-requirement-job-title-company-name-container2" *ngIf="isSuperUser">
     
     <!-- LEFT: ASSIGN TO -->
-    <div style="width: 49%;" class="recruiter-workflow-requirement-job-title-container1">
-      <span class="recruiter-workflow-requirement-skill-text">Assign To</span>
+    <div *ngIf="isSuperUser" style="width: 49%;" class="recruiter-workflow-requirement-job-title-container1">
+      <span class="recruiter-workflow-requirement-skill-text">
+        Assign To <span style="color: red;">*</span>
+      </span>
       <div class="multi-select-container" (click)="filterUsers()">
         <div class="selected-user-chip" *ngFor="let user of selectedAssignees; let i = index">
           {{ user.first_name }} {{ user.last_name }}

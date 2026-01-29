@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -85,9 +85,14 @@ export class RecruiterWorkflowCandidateService {
    * Added from Parent.
    */
   addCandidatesToJob(jobId: number, candidateIds: number[]): Observable<any> {
+    // 1. Get the current User ID
+    const userId = localStorage.getItem('user_id');
+
+    // 2. Send it in the payload
     return this.http.post(this.atsUrl, {
       job_id: jobId,
-      candidate_ids: candidateIds
+      candidate_ids: candidateIds,
+      user_id: userId // <--- Added this
     });
   }
 }
