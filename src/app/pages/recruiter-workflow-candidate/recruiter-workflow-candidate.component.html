@@ -40,6 +40,22 @@
     <!-- PAGE CONTENT -->
     <div class="recruiter-workflow-candidate-candidates-listing-container">
       <div id="cv-jd-upload-container" class="recruiter-workflow-candidate-cvjd-upload-container">
+        <!-- NEW: TAB NAVIGATION -->
+        <div class="tab-container">
+          <button 
+            class="tab-btn" 
+            [class.active]="activeTab === 'sourced'" 
+            (click)="setActiveTab('sourced')">
+            Sourced Database
+          </button>
+          <button 
+            class="tab-btn" 
+            [class.active]="activeTab === 'registered'" 
+            (click)="setActiveTab('registered')">
+            Registered Users
+          </button>
+        </div>
+
         <button (click)="showForm('Naukri')" id="add-questions-with-ai-button" type="button" class="recruiter-workflow-candidate-add-questions-with-ai-button1 button">
           <span id="add-questions-with-ai-text" class="recruiter-workflow-candidate-add-questions-with-ai-text1">Naukri Input</span>
         </button>
@@ -263,6 +279,27 @@
                       <span class="recruiter-workflow-candidate-text80">Created :&nbsp;</span>
                       <span class="recruiter-workflow-candidate-text81">{{ candidate.created_at | relativeDate }}</span>
                     </div>
+                     <!-- The Footer Section where Recruiter Name is displayed -->
+                  <div class="recruiter-workflow-candidate-container57">
+                    <div class="recruiter-workflow-candidate-container58">
+                      <!-- Update Label based on context if needed -->
+                      <span class="recruiter-workflow-candidate-text78">
+                        {{ activeTab === 'registered' ? 'Sourced By :' : 'Recruiter :' }}&nbsp;
+                      </span>
+                      <!-- This displays the backend provided 'recruiter_name' -->
+                      <span class="recruiter-workflow-candidate-text79">
+                        {{ candidate.recruiter_name }}
+                      </span>
+                    </div>
+                    <div class="recruiter-workflow-candidate-container59">
+                      <span class="recruiter-workflow-candidate-text80">
+                        {{ activeTab === 'registered' ? 'Signed Up :' : 'Created :' }}&nbsp;
+                      </span>
+                      <span class="recruiter-workflow-candidate-text81">
+                        {{ candidate.created_at | relativeDate }}
+                      </span>
+                    </div>
+                  </div>
                   </div>
                 </div>
               </div>

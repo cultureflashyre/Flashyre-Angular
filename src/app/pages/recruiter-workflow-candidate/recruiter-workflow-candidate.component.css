@@ -2,6 +2,77 @@
   display: contents; 
 }
 
+/* TAB STYLES */
+.tab-container {
+  display: flex;
+  gap: 0;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  padding: 4px;
+  margin-right: auto; /* Push buttons to the right */
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #05356C; /* Theme Blue */
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.tab-btn:hover:not(.active) {
+  background-color: #e0e0e0;
+}
+
+/* Update Header Layout to accommodate tabs */
+.recruiter-workflow-candidate-cvjd-upload-container {
+  justify-content: space-between; /* Tabs Left, Buttons Right */
+  width: 100%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+
+.action-buttons-group {
+    display: flex;
+    gap: 16px;
+}
+
+/* Responsive */
+@media(max-width: 767px) {
+  .recruiter-workflow-candidate-cvjd-upload-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .tab-container {
+    width: 100%;
+    justify-content: center;
+  }
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .action-buttons-group {
+      width: 100%;
+      justify-content: space-between;
+  }
+  .recruiter-workflow-candidate-add-questions-with-ai-button1,
+  .recruiter-workflow-candidate-add-questions-with-ai-button2 {
+      width: 48%; /* Split buttons on mobile */
+  }
+}
+
 .recruiter-workflow-candidate-upload-file-container.is-invalid {
   border-color: #dc3545 !important; /* Bootstrap Danger Red */
   box-shadow: 0 0 0 1px #dc3545; /* Optional glow */

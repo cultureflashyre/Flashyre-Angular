@@ -86,6 +86,13 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
 })
 export class RecruiterWorkflowCandidate implements OnInit {
 
+  // NEW: Tab State
+  activeTab: 'sourced' | 'registered' = 'sourced';
+
+  // NEW: Data Buckets
+  sourcedCandidates: Candidate[] = [];
+  registeredCandidates: Candidate[] = [];
+
   // NEW: Track file validation error state
   showFileError = false;
 
@@ -508,6 +515,7 @@ export class RecruiterWorkflowCandidate implements OnInit {
     this.candidateService.getCandidates().subscribe({
       next: (data) => {
         this.masterCandidates = data.map(c => ({ ...c, selected: false }));
+        this.sourcedCandidates = [...this.masterCandidates]; // Store specifically in bucket
         this.applyFiltersAndSort();
         this.isPageLoading = false;
       },
@@ -517,6 +525,43 @@ export class RecruiterWorkflowCandidate implements OnInit {
       }
     });
   }
+
+  // NEW: Load Registered Users
+  loadRegisteredCandidates(): void {
+    this.isPageLoading = true;
+    this.candidateService.getRegisteredCandidates().subscribe({
+      next: (data) => {
+        this.registeredCandidates = data.map(c => ({ ...c, selected: false }));
+        // If tab is registered, update master list to this data so filters works on it
+        if (this.activeTab === 'registered') {
+             this.masterCandidates = this.registeredCandidates;
+             this.applyFiltersAndSort();
+        }
+        this.isPageLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to load registered candidates.", err);
+        this.isPageLoading = false;
+      }
+    });
+  }
+
+  // NEW: Switch Tab Logic
+  setActiveTab(tab: 'sourced' | 'registered') {
+    this.activeTab = tab;
+    
+    // Clear selection when switching
+    this.isAllSelected = false; 
+
+    if (tab === 'sourced') {
+        this.masterCandidates = this.sourcedCandidates;
+        this.applyFiltersAndSort();
+    } else {
+        // Fetch fresh or use cached? Let's fetch fresh for real-time accuracy
+        this.loadRegisteredCandidates();
+    }
+  }
+
 
   // --- PARENT FEATURE: Add to Workflow Logic ---
   openAddToWorkflowModal() {

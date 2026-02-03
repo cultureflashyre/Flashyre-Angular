@@ -95,4 +95,14 @@ export class RecruiterWorkflowCandidateService {
       user_id: userId // <--- Added this
     });
   }
+  /**
+   * Fetches users who have signed up on the portal.
+   * Backend merges this with Candidate profile data if available.
+   */
+  getRegisteredCandidates(): Observable<Candidate[]> {
+    // Assuming you have 'api/candidates/registered-candidates/' based on app inclusion
+    // Adjust path if your main urls.py includes this app under a different prefix
+    const url = environment.apiUrl + 'api/candidates/registered-candidates/'; 
+    return this.http.get<Candidate[]>(url);
+  }
 }
