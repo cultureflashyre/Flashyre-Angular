@@ -29,6 +29,7 @@ export interface Candidate {
   user?: number;         // From Child
   recruiter_name?: string; // From Child
   source?: 'Naukri' | 'External'; // From Child
+  is_registered?: boolean; // <--- NEW FIELD ADDED HERE
 }
 
 @Injectable({

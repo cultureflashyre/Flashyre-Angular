@@ -2,6 +2,31 @@
   display: contents; 
 }
 
+/* --- REGISTERED USER BADGE (R ICON) --- */
+.registered-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #28a745; /* Bootstrap Success Green */
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: help; /* Shows '?' cursor to indicate a tooltip is present */
+  margin-top: 8px; /* Spacing below the delete/edit icons */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+  user-select: none;
+  font-family: sans-serif;
+}
+
+.registered-badge:hover {
+  transform: scale(1.1);
+  background-color: #218838;
+}
+
 /* TAB STYLES */
 .tab-container {
   display: flex;
