@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 // Merged Interface: Includes fields from both, prioritizing Child's extended fields (resume, source, etc.)
 export interface Candidate {
   id?: number;
+  user_login_id?: string; // NEW: User Table ID (String, e.g., 'CND...')
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -41,6 +42,8 @@ export class RecruiterWorkflowCandidateService {
   private endpoint = 'api/candidates/';
   // Added from Parent: Endpoint for ATS Workflow
   private atsUrl = environment.apiUrl + 'api/ats/bulk-add/';
+  // NEW: Endpoint for deleting registered users
+  private registeredDeleteUrl = environment.apiUrl + 'api/candidates/registered/';
 
   constructor(private http: HttpClient) { }
 
@@ -78,6 +81,12 @@ export class RecruiterWorkflowCandidateService {
    */
   deleteCandidate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${this.endpoint}${id}/`);
+  }
+
+  // NEW: Delete from Registered Users (User Table)
+  // Requirement #2, #3, #5
+  deleteRegisteredUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.registeredDeleteUrl}${userId}/delete/`);
   }
 
   /**

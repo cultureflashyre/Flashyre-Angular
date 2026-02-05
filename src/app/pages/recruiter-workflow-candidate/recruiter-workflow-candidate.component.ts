@@ -706,33 +706,71 @@ export class RecruiterWorkflowCandidate implements OnInit {
   }
 
   deleteSelected(): void {
-    const selectedCandidates = this.masterCandidates.filter(c => c.selected && c.id);
-    if (selectedCandidates.length === 0) {
+    const selected = this.masterCandidates.filter(c => c.selected);
+    if (selected.length === 0) {
       this.showAlert('Please select at least one candidate to delete.', ['Close']);
       return;
     }
 
-    this.alertMessage = `Are you sure you want to delete ${selectedCandidates.length} selected candidate(s)?`;
+    if (!this.isSuperUser) {
+        this.showAlert("Access Denied: Only Super Admins can delete candidates.", ['Close']);
+        return;
+    }
+
+    this.alertMessage = `Are you sure you want to delete ${selected.length} selected candidate(s)?`;
     this.alertButtons = ['Cancel', 'Delete'];
 
     this.pendingAction = () => {
       this.isDeleting = true;
-      const deleteRequests = selectedCandidates.map(c => 
-        this.candidateService.deleteCandidate(c.id!).pipe(catchError(err => of(c.id)))
-      );
+      const deleteRequests: Observable<any>[] = [];
 
-      forkJoin(deleteRequests).subscribe(results => {
-        const failedIds = results.filter(id => id !== null);
-        this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
-        this.applyFiltersAndSort();
+      selected.forEach(c => {
+          if (this.activeTab === 'registered' && c.user_login_id) {
+              deleteRequests.push(
+                  this.candidateService.deleteRegisteredUser(c.user_login_id)
+                  .pipe(
+                      tap(() => this.removeCandidateFromList(null, c.user_login_id)), // Optimistic / Immediate Update
+                      catchError(err => of(null)) // Continue on error
+                  )
+              );
+          } else if (c.id) {
+              deleteRequests.push(
+                  this.candidateService.deleteCandidate(c.id)
+                  .pipe(
+                      tap(() => this.removeCandidateFromList(c.id)), 
+                      catchError(err => of(null))
+                  )
+              );
+          }
+      });
+
+      forkJoin(deleteRequests).subscribe(() => {
         this.isDeleting = false;
-        
-        const successCount = selectedCandidates.length - failedIds.length;
-        this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
+        this.applyFiltersAndSort(); // Re-render lists
+        this.showAlert(`${selected.length} candidate(s) processed for deletion.`, ['Close']);
       });
     };
-
     this.isAlertVisible = true;
+  }
+
+  // Helper for Requirement #4 (Real-time update without reload)
+  private handleDeleteSuccess(id: number | null, userId?: string) {
+    this.removeCandidateFromList(id, userId);
+    this.applyFiltersAndSort();
+    this.isDeleting = false;
+    this.showAlert('Candidate successfully deleted.', ['Close']);
+  }
+
+  private removeCandidateFromList(id: number | null | undefined, userId?: string | undefined) {
+      if (userId) {
+          // Remove by User String ID (Registered Tab)
+          this.masterCandidates = this.masterCandidates.filter(c => c.user_login_id !== userId);
+          this.registeredCandidates = this.registeredCandidates.filter(c => c.user_login_id !== userId);
+      } else if (id) {
+          // Remove by Numeric Candidate ID (Sourced Tab)
+          this.masterCandidates = this.masterCandidates.filter(c => c.id !== id);
+          this.sourcedCandidates = this.sourcedCandidates.filter(c => c.id !== id);
+      }
   }
 
   // --- ALERT HANDLER METHODS ---
@@ -1018,24 +1056,58 @@ export class RecruiterWorkflowCandidate implements OnInit {
     return match || ''; 
   }
   
-  deleteCandidate(id: number | undefined): void {
-    if (!id) return;
-    
+  deleteCandidate(candidateOrId: any): void {
+    // Determine ID and Type based on argument type or active tab
+    let id: number | undefined;
+    let userId: string | undefined;
+
+    if (typeof candidateOrId === 'number') {
+      id = candidateOrId; // Legacy support if passed directly
+    } else {
+      id = candidateOrId.id;
+      userId = candidateOrId.user_login_id; // Get string ID for registered users
+    }
+
+    // Permission Check
+    if (!this.isSuperUser) {
+        this.showAlert("Access Denied: Only Super Admins can delete candidates.", ['Close']);
+        return;
+    }
+
     this.alertMessage = 'Are you sure you want to delete this candidate? This action cannot be undone.';
     this.alertButtons = ['Cancel', 'Delete'];
 
     this.pendingAction = () => {
-      this.candidateService.deleteCandidate(id).subscribe({
-        next: () => {
-          this.masterCandidates = this.masterCandidates.filter(c => c.id !== id);
-          this.applyFiltersAndSort();
-          this.showAlert('Candidate successfully deleted.', ['Close']);
-        },
-        error: (err) => {
-          console.error('Failed to delete candidate', err);
-          this.showAlert('Error: Could not delete the candidate.', ['Close']);
-        }
-      });
+      this.isDeleting = true;
+
+      // CONDITIONAL LOGIC BASED ON TAB
+      if (this.activeTab === 'registered' && userId) {
+        // Delete from User Login Table
+        this.candidateService.deleteRegisteredUser(userId).subscribe({
+            next: () => {
+                this.handleDeleteSuccess(null, userId); // Pass null for ID, userId for string
+            },
+            error: (err) => {
+                this.isDeleting = false;
+                this.showAlert('Error: Could not delete registered user.', ['Close']);
+            }
+        });
+      } else if (id) {
+        // Delete from Sourced Database (Candidate Table)
+        this.candidateService.deleteCandidate(id).subscribe({
+          next: () => {
+            this.handleDeleteSuccess(id);
+          },
+          error: (err) => {
+            this.isDeleting = false;
+            console.error(err);
+            this.showAlert('Error: Could not delete the candidate.', ['Close']);
+          }
+        });
+      } else {
+          this.isDeleting = false;
+          this.showAlert('Error: Invalid candidate ID.', ['Close']);
+      }
     };
     this.isAlertVisible = true;
   }
