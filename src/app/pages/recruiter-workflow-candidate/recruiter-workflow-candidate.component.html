@@ -8,7 +8,7 @@
 
 <div class="recruiter-workflow-candidate-container10">
   
-  <!-- LOADING OVERLAY (From Child) -->
+  <!-- LOADING OVERLAY -->
   <div *ngIf="isPageLoading || isActionLoading" class="page-loading-overlay">
     <div class="round-loader"></div>
     <p>{{ isPageLoading ? 'Loading...' : 'Processing...' }}</p>
@@ -41,7 +41,7 @@
     <div class="recruiter-workflow-candidate-candidates-listing-container">
       
       <!-- ================================================== -->
-      <!-- NEW: TABS SECTION (Sourced Database vs Registered) -->
+      <!-- TABS SECTION                                      -->
       <!-- ================================================== -->
       <div class="tabs-container" style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #E0E0E0; width: 100%;">
         <button 
@@ -81,7 +81,6 @@
 
         <!-- CANDIDATE LIST -->
         <div class="recruiter-workflow-candidate-recruiter-workflow-candidate-lists">
-          <!-- Wrap in Loading Check (From Child) -->
           <ng-container *ngIf="!isPageLoading">
             <ng-container *ngIf="masterCandidates.length > 0; else noData">
             
@@ -119,7 +118,6 @@
                 </div>
 
                 <div id="filter-sort-download-zip-container" class="recruiter-workflow-candidate-filter-sort-download-zip-container">
-                  <!-- DELETE BUTTON (Merged: Child Logic + Parent SuperUser Check) -->
                   <button *ngIf="isSuperUser" (click)="deleteSelected()" id="filtered-button" type="button" class="recruiter-workflow-candidate-filtered-button1 button" [disabled]="isDeleting">
                     <span id="start-process-text" class="recruiter-workflow-candidate-start-process-text1">{{ isDeleting ? 'Deleting...' : 'Delete' }}</span>
                   </button>
@@ -136,7 +134,6 @@
                           <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                       </button>
-                      <!-- FILTER FORM (From Parent - Includes Phone) -->
                       <form [formGroup]="filterForm" class="filter-form-grid">
                         <div class="filter-group">
                           <label for="filter-name">Name</label>
@@ -161,7 +158,6 @@
                           <label for="filter-email">Email</label>
                           <input id="filter-email" type="text" formControlName="email" placeholder="Filter by email..." class="input">
                         </div>
-                        <!-- Phone Number (From Parent) -->
                         <div class="filter-group">
                           <label for="filter-phone">Phone Number</label>
                           <input id="filter-phone" type="text" formControlName="phone" placeholder="Search Phone Number..." class="input">
@@ -279,7 +275,6 @@
                         <svg (click)="startEdit(candidate)" width="24" height="24" viewBox="0 0 1024 1024" class="recruiter-workflow-candidate-icon39">
                           <path d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32m-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9m67.4-174.4L687.8 215l73.3 73.3l-362.7 362.6l-88.9 15.7z" fill="currentColor"></path>
                         </svg>
-                        <!-- DELETE ICON (Merged: Parent SuperUser Check) -->
                         <svg *ngIf="isSuperUser" (click)="deleteCandidate(candidate.id)" width="20" height="20" viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44">
                           <path d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" fill="currentColor"></path>
                         </svg>
@@ -332,7 +327,7 @@
       </ng-container>
 
       <!-- ================================================== -->
-      <!-- TAB 2: REGISTERED USERS (New Logic)               -->
+      <!-- TAB 2: REGISTERED USERS (New Redesign)            -->
       <!-- ================================================== -->
       <ng-container *ngIf="activeTab === 'registered'">
         <div class="recruiter-workflow-candidate-recruiter-workflow-candidate-lists" style="margin-top: 20px;">
@@ -346,53 +341,68 @@
 
             <div class="recruiter-workflow-candidate-container32">
               <div *ngFor="let user of displayRegisteredCandidates" class="recruiter-workflow-candidate-container33">
-                <div class="recruiter-workflow-candidate-container34">
+                <div class="recruiter-workflow-candidate-container34" style="flex-direction: column; padding: 0; overflow: hidden;">
                   
-                  <!-- Body -->
-                  <div class="recruiter-workflow-candidate-container35">
+                  <!-- Top Section: Avatar + Name + Delete -->
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 16px; width: 100%;">
                     
-                    <div class="recruiter-workflow-candidate-container36">
-                      <!-- Name -->
-                      <span class="recruiter-workflow-candidate-text55">
-                        {{ user.first_name }} {{ user.last_name }}
-                      </span>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                      <!-- Initials Avatar -->
+                      <div style="width: 48px; height: 48px; background-color: #e0e7ff; color: #05356C; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; text-transform: uppercase;">
+                        {{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}
+                      </div>
                       
-                      <!-- Contact Details (Using existing container classes for consistency) -->
-                      <div class="recruiter-workflow-candidate-container41" style="margin-top: 10px;">
-                        <div class="recruiter-workflow-candidate-container42">
-                          <span class="recruiter-workflow-candidate-text59">Email</span>
-                          <span class="recruiter-workflow-candidate-text60">{{ user.email }}</span>
-                        </div>
-                        <div class="recruiter-workflow-candidate-container44">
-                          <span class="recruiter-workflow-candidate-text63">Phone</span>
-                          <span class="recruiter-workflow-candidate-text64">{{ user.phone_number }}</span>
+                      <!-- Name and Badge -->
+                      <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="recruiter-workflow-candidate-text55" style="font-size: 18px;">
+                          {{ user.first_name }} {{ user.last_name }}
+                        </span>
+                        <div style="display: flex;">
+                           <span style="background-color: #f0fdf4; color: #166534; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid #dcfce7;">
+                              Active User
+                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Right Side: Type & Actions -->
-                    <div class="recruiter-workflow-candidate-container50" style="align-items: flex-end;">
-                         <!-- User Type Badge -->
-                         <div style="background: #e0e7ff; color: #4338ca; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 12px;">
-                             Registered User
-                         </div>
-                    </div>
-
                     <!-- Delete Action (Super User Only) -->
-                    <div class="recruiter-workflow-candidate-container56">
-                      <svg *ngIf="isSuperUser" (click)="deleteRegisteredUser(user.user_id)" width="20" height="20" viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44" title="Delete User Account" style="cursor: pointer;">
+                    <div *ngIf="isSuperUser" style="margin-left: auto;">
+                      <svg (click)="deleteRegisteredUser(user.user_id)" width="20" height="20" viewBox="0 0 20 20" class="recruiter-workflow-candidate-icon44" title="Delete User Account" style="cursor: pointer;">
                         <path d="M8.5 4h3a1.5 1.5 0 0 0-3 0m-1 0a2.5 2.5 0 0 1 5 0h5a.5.5 0 0 1 0 1h-1.054l-1.194 10.344A3 3 0 0 1 12.272 18H7.728a3 3 0 0 1-2.98-2.656L3.554 5H2.5a.5.5 0 0 1 0-1zM5.741 15.23A2 2 0 0 0 7.728 17h4.544a2 2 0 0 0 1.987-1.77L15.439 5H4.561zM8.5 7.5A.5.5 0 0 1 9 8v6a.5.5 0 0 1-1 0V8a.5.5 0 0 1 .5-.5M12 8a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" fill="currentColor"></path>
                       </svg>
                     </div>
 
                   </div>
 
-                  <!-- Footer (Sourced By & Join Date) -->
-                  <div class="recruiter-workflow-candidate-container57">
+                  <!-- Middle Section: Contact Info -->
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 0 16px 16px 16px; width: 100%;">
+                    
+                    <!-- Email -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                      <span style="font-size: 14px; color: #333; word-break: break-all;">{{ user.email }}</span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                      <span style="font-size: 14px; color: #333;">{{ user.phone_number }}</span>
+                    </div>
+
+                  </div>
+
+                  <!-- Footer (Sourced By & Date) -->
+                  <div class="recruiter-workflow-candidate-container57" style="margin-top: auto;">
                     <div class="recruiter-workflow-candidate-container58">
                       <span class="recruiter-workflow-candidate-text78">Sourced By :&nbsp;</span>
                       <span class="recruiter-workflow-candidate-text79" 
-                            [style.color]="user.sourced_by_recruiter === 'Self-Registered' ? '#999' : '#05356C'">
+                            [style.color]="user.sourced_by_recruiter === 'Self-Registered' ? '#9ca3af' : '#05356C'"
+                            [style.fontWeight]="user.sourced_by_recruiter === 'Self-Registered' ? '400' : '600'">
                         {{ user.sourced_by_recruiter }}
                       </span>
                     </div>
@@ -485,11 +495,9 @@
     <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-candidate-icon10">
         <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <!-- ADDED RED ASTERISK HERE -->
 <span class="recruiter-workflow-candidate-text33">
               Upload File <span style="color: #ff4d4f; margin-left: 4px; font-weight: bold;">*</span>
             </span></div>
-             <!-- Loading Indicator -->
     <div *ngIf="isParsingResume" class="parsing-loader" style="margin-left: 15px; display: flex; align-items: center; color: #1890ff;">
        <svg class="spinner" viewBox="0 0 50 50" style="width: 20px; height: 20px; animation: rotate 2s linear infinite;">
          <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="currentColor"></circle>
@@ -497,7 +505,6 @@
        <span style="margin-left: 8px; font-weight: 500;">Analyzing with AI...</span>
     </div>
             </div>
-            <!-- NEW: Error Message Display -->
     <div class="validation-error" *ngIf="showFileError">
         Resume file is required.
     </div>
@@ -524,7 +531,6 @@
                     <div class="validation-error" *ngIf="f['first_name'].invalid && f['first_name'].touched">
                         <span *ngIf="f['first_name'].errors?.['required']">First Name is required.</span>
                         <span *ngIf="f['first_name'].errors?.['pattern']">Letters only.</span>
-                        <!-- NEW ERROR MESSAGE -->
                         <span *ngIf="f['first_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
                     </div>                </div>
                 <div class="recruiter-workflow-candidate-company-name-container1">
@@ -539,7 +545,6 @@
                     <div class="validation-error" *ngIf="f['last_name'].invalid && f['last_name'].touched">
                         <span *ngIf="f['last_name'].errors?.['required']">Last Name is required.</span>
                         <span *ngIf="f['last_name'].errors?.['pattern']">Letters only.</span>
-                        <!-- NEW ERROR MESSAGE -->
                         <span *ngIf="f['last_name'].errors?.['maxlength']">Max 15 characters allowed.</span>
                     </div>                </div>
             </div>
@@ -562,14 +567,12 @@
             </div>
 
             <div class="recruiter-workflow-candidate-issued-renewal-date-container1">
-                <!-- TOTAL EXPERIENCE (Single Field) -->
                 <div class="recruiter-workflow-candidate-issued-date-container1">
                     <div style="display: flex; flex-direction: row;">
                         <span class="recruiter-workflow-candidate-issuing-date-text1">Total Experience (Years)</span>
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
                     <div class="recruiter-workflow-candidate-select-container1">
-                        <!-- CHANGED: Single Input, formControlName="total_experience", step="0.1" -->
                         <input 
                             type="number" 
                             formControlName="total_experience" 
@@ -586,7 +589,6 @@
                             style="width: 100%;"
                         />  
                     </div>
-                     <!-- VALIDATION MESSAGES FOR TOTAL EXPERIENCE -->
                     <div class="validation-error" *ngIf="candidateForm.get('total_experience_min')?.hasError('max') || candidateForm.get('total_experience_max')?.hasError('max')">
                         Experience cannot exceed 99 years.
                     </div>
@@ -603,7 +605,6 @@
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
                      <div class="recruiter-workflow-candidate-select-container2">
-                        <!-- CHANGED: Single Input, formControlName="relevant_experience", step="0.1" -->
                         <input 
                             type="number" 
                             formControlName="relevant_experience" 
@@ -620,7 +621,6 @@
                             style="width: 100%;"
                         />                        
                     </div>
-                     <!-- VALIDATION MESSAGES FOR RELEVANT EXPERIENCE -->
                     <div class="validation-error" *ngIf="candidateForm.get('relevant_experience_max')?.hasError('minGreaterThanMax')">
                         Max experience must be greater than Min experience.
                     </div>
@@ -661,14 +661,12 @@
                         <span class="recruiter-workflow-candidate-job-title-text3">Preferred Location</span>
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
-                    <!-- Pill Container -->
                     <div class="skills-input-container" style="min-width: 100%;" [class.is-invalid]="f['preferred_location'].invalid && f['preferred_location'].touched">
                         <span *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">
                           {{ loc }}
                           <button type="button" class="remove-skill-button" (click)="removeLocation('preferred', i)">&times;</button>
                         </span>
                         
-                        <!-- Input with Event Binding -->
                         <input 
                             #prefInput
                             type="text" 
@@ -679,7 +677,6 @@
                         />
                     </div>
                     
-                    <!-- Suggestions Dropdown -->
                     <div class="location-suggestions-dropdown" *ngIf="showPreferredSuggestions && preferredSuggestions.length > 0">
                         <div 
                           class="suggestion-item" 
@@ -689,7 +686,6 @@
                           {{ suggestion.description }}
                         </div>
                     </div>
-                     <!-- Hidden input -->
                     <input type="hidden" formControlName="preferred_location">
                     <div class="validation-error" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched">
                         <span *ngIf="f['preferred_location'].errors?.['required']">Preferred Location is required.</span>
@@ -697,21 +693,18 @@
                     </div>
                 </div>
 
-                <!-- CURRENT LOCATION -->
                 <div class="recruiter-workflow-candidate-job-title-container4" style="position: relative;">
                     <div style="display: flex; flex-direction: row;">
                         <span class="recruiter-workflow-candidate-job-title-text4">Current Location</span>
                         <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
                     </div>
                     
-                    <!-- Pill Container -->
                     <div class="skills-input-container" style="min-width: 100%;" [class.is-invalid]="f['current_location'].invalid && f['current_location'].touched">
                         <span *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">
                           {{ loc }}
                           <button type="button" class="remove-skill-button" (click)="removeLocation('current', i)">&times;</button>
                         </span>
                         
-                        <!-- Input with Event Binding -->
                         <input 
                             #currInput
                             type="text" 
@@ -722,7 +715,6 @@
                         />
                     </div>
 
-                    <!-- Suggestions Dropdown -->
                     <div class="location-suggestions-dropdown" *ngIf="showCurrentSuggestions && currentSuggestions.length > 0">
                         <div 
                           class="suggestion-item" 
@@ -733,7 +725,6 @@
                         </div>
                     </div>
                     
-                    <!-- Hidden input -->
                     <input type="hidden" formControlName="current_location">
                     <div class="validation-error" *ngIf="f['current_location'].invalid && f['current_location'].touched">
                         <span *ngIf="f['current_location'].errors?.['required']">Current Location is required.</span>
@@ -766,16 +757,13 @@
                 </div>
             </div>
 
-            <!-- Merged: Using Child's Textarea approach for Role/Experience -->
             <div class="recruiter-workflow-candidate-job-title-company-name-container1" style="margin-bottom: 16px; justify-content: space-between;">
     
-    <!-- LEFT SIDE: ROLE (Converted to Input) -->
     <div class="recruiter-workflow-candidate-job-title-container1">
         <div style="display: flex; flex-direction: row; height: auto; width: 100%;">
             <span class="recruiter-workflow-candidate-job-title-text1" style="width: auto;">Role (work_experience)</span>
             <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
         </div>
-        <!-- Changed from textarea to input, used standard input class -->
         <input 
             type="text"
             formControlName="work_experience"
@@ -790,14 +778,12 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDE: SKILLS -->
     <div class="recruiter-workflow-candidate-company-name-container1">
         <div style="display: flex; flex-direction: row; height: auto; width: 100%;">
             <span class="recruiter-workflow-candidate-company-name-text1" style="width: auto;">Skills</span>
             <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
         </div>
         
-        <!-- Existing Skills Logic wrapped in right-side container -->
         <div class="skills-input-container" style="min-width: 100%;">
             <span *ngFor="let skill of skills; let i = index" class="skill-pill">
               {{ skill }}
@@ -815,8 +801,6 @@
 
 </div>
         
-        
-        <!-- Submit/Cancel Buttons -->
         <div class="recruiter-workflow-candidate-submit-cancel-buttons-container">
             <button type="button" (click)="onCancel()" class="recruiter-workflow-candidate-cancel-button button">
               <span class="recruiter-workflow-candidate-cancel-text">Cancel</span>
@@ -830,13 +814,11 @@
   </div>
   
 </ng-container>
+
 <!-- CANDIDATE DETAILS MODAL -->
-<!-- ELEGANT CANDIDATE DETAILS MODAL -->
 <ng-container *ngIf="showDetailsModal && selectedCandidateDetails">
   <div class="elegant-modal-backdrop" (click)="closeDetailsModal()">
     <div class="elegant-modal-content" (click)="$event.stopPropagation()">
-      
-      <!-- 1. HEADER: Identity & Actions -->
       <div class="elegant-header">
         <div class="candidate-identity">
           <div class="candidate-avatar">
@@ -849,7 +831,6 @@
         </div>
         
         <div class="header-actions">
-          <!-- Edit Button -->
           <button class="action-icon-btn" (click)="startEdit(selectedCandidateDetails); closeDetailsModal()" title="Edit Candidate">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -857,7 +838,6 @@
             </svg>
           </button>
           
-          <!-- Close Button -->
           <button class="action-icon-btn" (click)="closeDetailsModal()" title="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -867,10 +847,7 @@
         </div>
       </div>
 
-      <!-- 2. BODY: Scrollable Info -->
       <div class="elegant-body">
-        
-        <!-- Section: Contact Info -->
         <div class="info-section">
           <h4 class="section-title">Contact Information</h4>
           <div class="info-grid-3">
@@ -889,7 +866,6 @@
           </div>
         </div>
 
-        <!-- Section: Professional Overview -->
         <div class="info-section">
           <h4 class="section-title">Professional Overview</h4>
           <div class="info-grid-3">
@@ -907,7 +883,6 @@
             </div>
           </div>
           
-          <!-- Row 2 of Professional -->
           <div class="info-grid-3" style="margin-top: 20px;">
             <div class="info-item">
               <span class="info-label">Current CTC</span>
@@ -924,7 +899,6 @@
           </div>
         </div>
 
-        <!-- Section: Skills -->
         <div class="info-section">
           <h4 class="section-title">Skills & Expertise</h4>
           <div class="skills-wrapper">
@@ -934,19 +908,16 @@
           </div>
         </div>
 
-        <!-- Section: Resume / Source -->
         <div class="info-section">
           <h4 class="section-title">Documents & Source</h4>
           <div class="info-grid-2">
             
-            <!-- Resume Card -->
             <div class="info-item">
               <span class="info-label" style="margin-bottom: 8px;">Resume</span>
               <div *ngIf="selectedCandidateDetails.resume; else noResume" 
                    class="resume-card" 
                    (click)="openResume(selectedCandidateDetails.resume)">
                 <div class="resume-info">
-                  <!-- File Icon -->
                   <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
@@ -962,7 +933,6 @@
               </ng-template>
             </div>
 
-            <!-- Meta Info -->
             <div class="info-item">
               <span class="info-label">Recruiter & Source</span>
               <div style="margin-top: 5px;">
