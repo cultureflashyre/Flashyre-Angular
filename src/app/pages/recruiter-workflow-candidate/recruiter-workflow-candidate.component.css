@@ -2,6 +2,44 @@
   display: contents; 
 }
 
+/* ADD TO CSS FILE */
+
+.tabs-container {
+  display: flex;
+  gap: 0; /* Connect buttons */
+  margin-bottom: 20px;
+  border-bottom: 2px solid #E0E0E0;
+  width: 100%;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #747474;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.tab-button:hover {
+  color: #05356C;
+  background-color: #f9f9f9;
+}
+
+.tab-button.active {
+  color: #05356C;
+  border-bottom: 3px solid #05356C;
+  margin-bottom: -2px; /* Overlap border */
+}
+
+/* Ensure the list container adapts */
+.recruiter-workflow-candidate-candidates-listing-container {
+  /* Existing styles are fine, just ensuring layout flow */
+}
+
 .recruiter-workflow-candidate-upload-file-container.is-invalid {
   border-color: #dc3545 !important; /* Bootstrap Danger Red */
   box-shadow: 0 0 0 1px #dc3545; /* Optional glow */

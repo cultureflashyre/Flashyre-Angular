@@ -31,6 +31,18 @@ export interface Candidate {
   source?: 'Naukri' | 'External'; // From Child
 }
 
+export interface RegisteredUser {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  created_at: string;
+  sourced_by_recruiter: string;
+  selected?: boolean; // For UI logic
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,6 +53,9 @@ export class RecruiterWorkflowCandidateService {
   private endpoint = 'api/candidates/';
   // Added from Parent: Endpoint for ATS Workflow
   private atsUrl = environment.apiUrl + 'api/ats/bulk-add/';
+
+   private registeredUsersUrl = environment.apiUrl + 'api/auth/registered-candidates/';
+  private deleteUserUrl = environment.apiUrl + 'api/auth/delete-user/';
 
   constructor(private http: HttpClient) { }
 
@@ -94,5 +109,13 @@ export class RecruiterWorkflowCandidateService {
       candidate_ids: candidateIds,
       user_id: userId // <--- Added this
     });
+  }
+
+  getRegisteredCandidates(): Observable<RegisteredUser[]> {
+    return this.http.get<RegisteredUser[]>(this.registeredUsersUrl);
+  }
+
+  deleteRegisteredUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.deleteUserUrl}${userId}/`);
   }
 }

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule } from '@angular/forms';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
-import { RecruiterWorkflowCandidateService, Candidate } from '../../services/recruiter-workflow-candidate.service';
+import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
@@ -85,6 +85,11 @@ export function relevantVsTotalValidator(group: AbstractControl): ValidationErro
   ]
 })
 export class RecruiterWorkflowCandidate implements OnInit {
+
+  // --- NEW: TAB STATE ---
+  activeTab: 'sourced' | 'registered' = 'sourced';
+  registeredCandidates: RegisteredUser[] = [];
+  displayRegisteredCandidates: RegisteredUser[] = [];
 
   // NEW: Track file validation error state
   showFileError = false;
@@ -216,7 +221,59 @@ export class RecruiterWorkflowCandidate implements OnInit {
     // The key is 'isSuperUser' and the value is the string 'true' (From Parent)
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
     this.loadCandidates();
+    // We can lazy load registered users when tab is clicked, or load both now.
+    // Let's load both for smoother UX if data size isn't massive.
+    this.loadRegisteredUsers();
     this.setupLocationAutocomplete();
+  }
+
+   // --- NEW METHODS ---
+
+  setActiveTab(tab: 'sourced' | 'registered'): void {
+    this.activeTab = tab;
+    // Optional: Reset selections when switching
+    this.isAllSelected = false; 
+  }
+
+  loadRegisteredUsers(): void {
+    // Only show loader if we are currently looking at this tab and it's empty
+    if(this.activeTab === 'registered') this.isPageLoading = true;
+
+    this.candidateService.getRegisteredCandidates().subscribe({
+      next: (data) => {
+        this.registeredCandidates = data.map(u => ({ ...u, selected: false }));
+        this.displayRegisteredCandidates = [...this.registeredCandidates]; // Add filter logic here if needed later
+        this.isPageLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to load registered users", err);
+        this.isPageLoading = false;
+      }
+    });
+  }
+
+  deleteRegisteredUser(userId: string): void {
+    if (!userId) return;
+
+    this.alertMessage = 'Are you sure you want to delete this User Account? This will remove their access.';
+    this.alertButtons = ['Cancel', 'Delete'];
+
+    this.pendingAction = () => {
+      this.isDeleting = true;
+      this.candidateService.deleteRegisteredUser(userId).subscribe({
+        next: () => {
+          this.registeredCandidates = this.registeredCandidates.filter(u => u.user_id !== userId);
+          this.displayRegisteredCandidates = [...this.registeredCandidates];
+          this.isDeleting = false;
+          this.showAlert('User account deleted successfully.', ['Close']);
+        },
+        error: (err) => {
+          this.isDeleting = false;
+          this.showAlert('Error: Could not delete user.', ['Close']);
+        }
+      });
+    };
+    this.isAlertVisible = true;
   }
 
   ngAfterViewInit(): void {
