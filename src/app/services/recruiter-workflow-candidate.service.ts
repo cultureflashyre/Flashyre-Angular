@@ -43,6 +43,32 @@ export interface RegisteredUser {
   selected?: boolean;
 }
 
+// Add this interface above RegisteredUser
+export interface SourcedData {
+  work_experience: string;
+  skills: string;
+  current_location: string;
+  preferred_location: string;
+  current_ctc: string;
+  total_experience_min: number;
+  total_experience_max: number;
+  source: string;
+  resume: string | null;
+}
+
+// Update RegisteredUser
+export interface RegisteredUser {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  created_at: string;
+  sourced_by_recruiter: string;
+  sourced_data?: SourcedData | null; // <--- NEW FIELD
+  selected?: boolean; 
+}
+
 @Injectable({
   providedIn: 'root'
 })
