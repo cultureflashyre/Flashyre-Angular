@@ -3,6 +3,54 @@
 }
 
 /* =========================================
+   PAGE LOADING SPINNER (On Navigation)
+   ========================================= */
+
+.page-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.6); /* Light overlay */
+  backdrop-filter: blur(4px); /* Blur content behind */
+  z-index: 2000; /* Above navbar but below alerts */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-loading-overlay p {
+  margin-top: 15px;
+  font-weight: 600;
+  color: #05356c;
+  font-size: 16px;
+  animation: pulse 1.5s infinite;
+}
+
+.round-loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #05356c; /* Theme Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Reuse existing keyframes if they exist, otherwise include them */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* =========================================
    AI PARSING OVERLAY & SPINNER (FULL PAGE)
    ========================================= */
 

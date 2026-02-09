@@ -11,7 +11,7 @@ import { forkJoin, Subject, Subscription } from 'rxjs';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // Add these
 import { NgZone, OnDestroy, AfterViewInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, tap, finalize } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { of, Observable } from 'rxjs';
@@ -57,6 +57,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   // --- 1. NEW PROPERTY TO FIX ERROR ---
   isParsing: boolean = false;
+
+  // 🟢 NEW: Page Loading State
+  isLoading: boolean = true; // Start as true to show spinner immediately on load
 
    // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
   private additionalLocationInput$ = new Subject<string>(); // Stream for dynamic rows
@@ -578,6 +581,8 @@ getFileName(): string {
     this.userType = localStorage.getItem('userType') || '';
     this.currentUserId = localStorage.getItem('user_id');
     this.setupLocationAutocomplete();
+    // isLoading is already true by default
+    this.fetchRequirements();
   }
 
   getStatusColor(status: string): string {
@@ -1438,24 +1443,41 @@ this.interviewLocationsList = item.interview_location
 
   // --- FETCH LISTING LOGIC ---
  fetchRequirements() {
-    this.adbService.getRequirements().subscribe({
+    this.isLoading = true; // Turn ON spinner
+    
+    this.adbService.getRequirements().pipe(
+      // 2. Use finalize to GUARANTEE spinner turns off
+      finalize(() => {
+        this.isLoading = false; 
+      })
+    ).subscribe({
       next: (data: any[]) => {
-        // Map data and set BOTH lists
-        const processedData = data.map(item => ({
-          ...item,
-          selected: false,
-          isExpanded: false
-        }));
-        
-        this.masterRequirements = processedData; // Save original copy
-        this.requirementsList = processedData;   // Display copy
-        
-        this.applyFiltersAndSort(); // Re-apply any active filters
+        // Wrap logic in try-catch to ensure one bad item doesn't break the whole page
+        try {
+          const processedData = data.map(item => ({
+            ...item,
+            selected: false,
+            isExpanded: false
+          }));
+          
+          this.masterRequirements = processedData; 
+          
+          // If applyFiltersAndSort crashes, the catch block will handle it
+          // and finalize will still hide the spinner.
+          this.requirementsList = processedData;   
+          this.applyFiltersAndSort(); 
+        } catch (e) {
+          console.error("Error processing requirements data:", e);
+        }
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error("Failed to fetch requirements:", err);
+        // finalize handles the spinner, so we don't need to duplicate logic here
+      }
     });
   }
 
+  
   // 3. Filter Panel Toggles
   toggleFilterPanel(): void {
     this.isFilterPanelVisible = !this.isFilterPanelVisible;

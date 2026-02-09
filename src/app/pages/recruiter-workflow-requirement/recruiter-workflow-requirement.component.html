@@ -1,4 +1,8 @@
 <div class="recruiter-workflow-requirement-container10">
+  <div *ngIf="isLoading" class="page-loading-overlay">
+    <div class="round-loader"></div>
+    <p>Loading Requirements...</p>
+  </div>
   <div class="recruiter-workflow-requirement-container11">
     <recruiter-workflow-navbar
       rootClassName="recruiter-workflow-navbarroot-class-name3"
@@ -495,7 +499,7 @@
 
         <!-- 4. SHOW 'NO DATA' ONLY IF DB IS EMPTY -->
         <div 
-          *ngIf="masterRequirements.length === 0" 
+          *ngIf="masterRequirements.length === 0 && !isLoading" 
           style="text-align: center; padding: 50px; font-size: 18px; color: #666; width: 100%; display: flex; justify-content: center;"
         >
           <span>No Data is Present</span>
