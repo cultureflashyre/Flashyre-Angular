@@ -55,6 +55,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   interviewLocation: string = '';
   interviewDate: string = '';
 
+  // --- 1. NEW PROPERTY TO FIX ERROR ---
+  isParsing: boolean = false;
+
    // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
   private additionalLocationInput$ = new Subject<string>(); // Stream for dynamic rows
   additionalLocationSuggestions: google.maps.places.AutocompletePrediction[] = []; // Suggestions list
@@ -482,29 +485,77 @@ removeInterviewLocation(index: number): void {
     });
   }
 
+  // ==========================================
+  // FIXED ONFILESELECTED METHOD
+  // ==========================================
   onFileSelected(event: any): void {
-  this.fileUploadError = null;
-  const file: File = event.target.files[0];
+    this.fileUploadError = null;
+    const file: File = event.target.files[0];
 
-  if (file) {
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(file.type)) {
-      this.fileUploadError = 'Upload only pdf or word documents';
-      this.selectedFile = null;
-      event.target.value = ''; // Clear the input
-      return;
-    }
-    
-    if (file.size > 5 * 1024 * 1024) {
-      this.fileUploadError = 'File size cannot exceed 5MB.';
-      this.selectedFile = null;
-      event.target.value = ''; // Clear the input
-      return;
-    }
+    if (file) {
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileUploadError = 'Upload only pdf or word documents';
+        this.selectedFile = null;
+        event.target.value = ''; 
+        return;
+      }
+      
+      if (file.size > 5 * 1024 * 1024) {
+        this.fileUploadError = 'File size cannot exceed 5MB.';
+        this.selectedFile = null;
+        event.target.value = ''; 
+        return;
+      }
 
-    this.selectedFile = file;
+      this.selectedFile = file;
+
+      // --- AI PARSING CALL ---
+      this.isParsing = true; // Set loading state
+      
+      this.adbService.parseJobDescription(file).subscribe({
+        next: (response: any) => {
+          this.isParsing = false; // Turn off loading
+          
+          if (response.success && response.data) {
+            const data = response.data;
+            
+            // Auto-populate strings
+            this.jobRole = data.job_role || this.jobRole;
+            this.jobDescription = data.job_description || this.jobDescription;
+            this.selectedNoticePeriod = data.notice_period || '';
+            this.selectedGender = data.gender || '';
+            this.clientName = data.client_name || this.clientName;
+
+            // Handle location (if simple string, push to list)
+            if (data.interview_location) {
+               // Only add if list is empty or unique
+               if (!this.interviewLocationsList.includes(data.interview_location)) {
+                   this.interviewLocationsList.push(data.interview_location);
+               }
+            }
+
+            // Auto-populate Numbers (Experience)
+            this.experience.totalMin = data.total_experience_min || 0;
+            this.experience.totalMax = data.total_experience_max || 0;
+            this.experience.relevantMin = data.relevant_experience_min || 0;
+            this.experience.relevantMax = data.relevant_experience_max || 0;
+
+            // Auto-populate Salary
+            this.salary.min = data.salary_min || 0;
+            this.salary.max = data.salary_max || 0;
+
+            this.triggerAlert('Job Description parsed successfully!', ['OK']);
+          }
+        },
+        error: (err) => {
+          this.isParsing = false; // Turn off loading on error
+          console.error("JD Parse Error", err);
+          // Optional: this.triggerAlert("Failed to parse JD with AI", ['OK']);
+        }
+      });
+    }
   }
-}
 
 getFileName(): string {
   if (this.selectedFile) {

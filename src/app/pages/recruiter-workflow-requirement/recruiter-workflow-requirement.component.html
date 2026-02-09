@@ -518,6 +518,13 @@
 <!-- === FORM MODAL OVERLAY === -->
 <!-- ============================================= -->
 <ng-container *ngIf="isFormVisible">
+  <div *ngIf="isParsing" class="parsing-overlay">
+    <div class="parsing-content">
+      <div class="ai-spinner"></div>
+      <p class="parsing-text">AI is analyzing the Job Description...</p>
+      <p class="parsing-subtext">Extracting skills, experience, and salary details.</p>
+    </div>
+  </div>
   <div class="form-modal-backdrop" (click)="onCancel()"></div>
   
   <div class="form-modal-container">

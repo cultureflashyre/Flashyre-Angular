@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class AdbRequirementService {
   private apiUrl = environment.apiUrl + 'api/job-requirements/'; 
   private usersUrl = environment.apiUrl + 'api/super-admin/list/'; 
-
+  private parseJdUrl = environment.apiUrl + 'api/parse-job-description/';
   private locationApiUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
 
   constructor(private http: HttpClient) { }
@@ -40,5 +40,12 @@ export class AdbRequirementService {
   // 2. Search Location (External API)
   searchLocations(query: string): Observable<any> {
     return this.http.get(`${this.locationApiUrl}${query}`);
+  }
+
+  // Add this method
+  parseJobDescription(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(this.parseJdUrl, formData);
   }
 }
