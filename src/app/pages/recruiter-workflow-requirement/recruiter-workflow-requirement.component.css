@@ -550,12 +550,20 @@
   .recruiter-workflow-requirement-container34 {
     gap: 8px;
     flex-direction: column;
+    align-items: stretch; /* Ensure full width */
   }
 
   .recruiter-workflow-requirement-container35 {
     width: 100%;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-start; /* Align checkbox to left */
+  }
+
+  .recruiter-workflow-requirement-container36 {
+    width: 100%;
+    align-items: flex-start;
+    padding: 0;
   }
 
   .recruiter-workflow-requirement-text55 {
@@ -1619,9 +1627,7 @@
   flex-direction: column;
   background-color: #FFFFFF;
   scroll-behavior: smooth;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  scrollbar-width: thin;
+  overflow: hidden; /* Prevent outer scroll, allow inner flex */
 }
  
 .recruiter-workflow-requirement-cvjd-upload-container {
@@ -2745,9 +2751,9 @@
  
 .recruiter-workflow-requirement-recruiter-workflow-requirment-listing {
   gap: 16px;
-  flex: 0 0 auto;
+  flex: 1; /* Allow it to grow */
   width: 100%;
-  height: auto;
+  height: 100%; /* Take full height */
   display: flex;
   position: relative;
   align-self: center;
@@ -2755,17 +2761,19 @@
   padding-top: var(--dl-layout-space-unit);
   flex-direction: column;
   padding-bottom: var(--dl-layout-space-unit);
+  overflow: hidden; /* Contain children */
 }
 
 .large-container {
   gap: 16px;
   width: 100%;
+  flex: 1; /* Grow to fill remaining space */
   height: auto;
-  max-height: 500px;
+  /* Removed max-height: 500px */
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto; /* Scroll internally */
   scroll-behavior: smooth;
   scrollbar-width: thin;
 }
@@ -2773,11 +2781,13 @@
 .recruiter-workflow-requirement-select-filter-sort-download-zip-main-container {
   flex: 0 0 auto;
   width: 100%;
-  height: 40px;
+  height: auto;
+  min-height: 40px;
   display: flex;
-  align-items: flex-start;
-  padding-left: var(--dl-layout-space-halfunit);
-  padding-right: var(--dl-layout-space-halfunit);
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping */
+  gap: 12px;
+  padding: var(--dl-layout-space-halfunit);
   justify-content: space-between;
 }
  
@@ -2785,9 +2795,11 @@
   gap: 16px;
   flex: 0 0 auto;
   width: auto;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   display: flex;
   align-items: center;
+  flex-wrap: wrap; /* Safe wrapping for buttons */
 }
  
 .recruiter-workflow-requirement-select-all-main-container1 {
@@ -3974,8 +3986,10 @@
     font-size: 14px;
   }
   .recruiter-workflow-requirement-cvjd-upload-container {
-    width: 50%;
-    height: 90px;
+    width: 100%;
+    height: auto;
+    padding-bottom: 8px;
+    justify-content: flex-end;
   }
   .recruiter-workflow-requirement-add-questions-with-ai-button {
     height: 36px;
@@ -4047,8 +4061,12 @@
     font-size: 14px;
   }
   .recruiter-workflow-requirement-select-filter-sort-download-zip-main-container {
-    height: 15%;
+    height: auto;
+    min-height: 50px;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
   }
   .recruiter-workflow-requirement-select-checkbox1 {
     width: 16px;
@@ -4125,7 +4143,9 @@
     color: rgb(24, 25, 28);
   }
   .recruiter-workflow-requirement-cvjd-upload-container {
-    height: 60px;
+    height: auto;
+    padding-bottom: 8px;
+    justify-content: center;
   }
   .recruiter-workflow-requirement-add-questions-with-ai-button {
     width: auto;
@@ -4180,7 +4200,9 @@
 @media(max-width: 479px) {
   .recruiter-workflow-requirement-cvjd-upload-container {
     width: 100%;
-    align-self: flex-start;
+    align-self: center;
+    justify-content: center;
+    padding-bottom: 8px;
   }
   .recruiter-workflow-requirement-enter-manually-text-container {
     width: 100%;
@@ -4190,7 +4212,8 @@
     width: 100%;
     height: auto;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: stretch;
   }
   .recruiter-workflow-requirement-job-title-container1 {
     width: 100%;
@@ -4398,10 +4421,13 @@
     font-size: 14px;
   }
   .recruiter-workflow-requirement-select-filter-sort-download-zip-main-container {
-    height: 15%;
-    padding-left: var(--dl-layout-space-halfunit);
-    padding-right: var(--dl-layout-space-halfunit);
+    height: auto;
+    min-height: auto;
+    padding: 8px;
     justify-content: flex-start;
+    flex-direction: column; /* Stack vertically on very small screens */
+    align-items: flex-start;
+    gap: 12px;
   }
   .recruiter-workflow-requirement-select-checkbox1 {
     width: 14px;
