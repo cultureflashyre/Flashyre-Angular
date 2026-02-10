@@ -61,6 +61,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // 🟢 NEW: Page Loading State
   isLoading: boolean = true; // Start as true to show spinner immediately on load
 
+  // 🟢 NEW PROPERTY for file validation state
+  isFileMissing: boolean = false;
+
    // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
   private additionalLocationInput$ = new Subject<string>(); // Stream for dynamic rows
   additionalLocationSuggestions: google.maps.places.AutocompletePrediction[] = []; // Suggestions list
@@ -492,6 +495,7 @@ removeInterviewLocation(index: number): void {
   // FIXED ONFILESELECTED METHOD
   // ==========================================
   onFileSelected(event: any): void {
+    this.isFileMissing = false;
     this.fileUploadError = null;
     const file: File = event.target.files[0];
 
@@ -1179,6 +1183,8 @@ this.interviewLocationsList = item.interview_location
   this.isInterviewLocationInvalid = false;
   this.isJobDescriptionInvalid = false; // (Existing)
 
+  this.isFileMissing = false; // 🔴 Reset file error
+
   this.isTotalExpInvalid = false;
   this.isRelevantExpInvalid = false;
   this.isSalaryInvalid = false;
@@ -1202,12 +1208,19 @@ this.interviewLocationsList = item.interview_location
 
   // Validate Client Name
   // --- MODIFICATION: Only validate Client Name if NOT a Client User ---
-  if (this.userType !== 'client') {
-    if (!this.clientName || this.clientName === '') {
-        this.isClientNameInvalid = true;
-        isValid = false;
+  // --- MANDATORY FILE CHECK ---
+    // Logic: 
+    // - New Entry: Must have a selectedFile
+    // - Edit Entry: Must have a selectedFile OR an existing file on server (existingFileUrl)
+    if (!this.selectedFile) {
+        if (this.isEditMode && this.existingFileUrl) {
+            // Valid: We are editing and keeping the old file
+        } else {
+            // Invalid: Creating new without file OR Editing where file was removed (if applicable)
+            this.isFileMissing = true;
+            isValid = false;
+        }
     }
-  }
 
   // Validate Job Role
   if (!this.jobRole || this.jobRole.trim() === '') {
@@ -1380,6 +1393,7 @@ this.interviewLocationsList = item.interview_location
   }
   // 4. UPDATE onCancel Function
    onCancel() {
+    this.isFileMissing = false;
     this.isFormVisible = false; // Hide the modal
     this.isEditMode = false;
     this.currentRequirementId = null;
@@ -1477,7 +1491,7 @@ this.interviewLocationsList = item.interview_location
     });
   }
 
-  
+
   // 3. Filter Panel Toggles
   toggleFilterPanel(): void {
     this.isFilterPanelVisible = !this.isFilterPanelVisible;

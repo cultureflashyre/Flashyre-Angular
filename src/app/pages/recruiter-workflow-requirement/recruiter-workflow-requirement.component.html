@@ -559,9 +559,14 @@
             <svg width="48" height="48" viewBox="0 0 48 48" class="recruiter-workflow-requirement-icon10">
               <path d="M11.678 20.271C7.275 21.318 4 25.277 4 30c0 5.523 4.477 10 10 10c.947 0 1.864-.132 2.733-.378m19.322-19.351c4.403 1.047 7.677 5.006 7.677 9.729c0 5.523-4.477 10-10 10c-.947 0-1.864-.132-2.732-.378M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12m5.065 7.881L24 20.924L31.132 28M24 38V24.462" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
-            <span class="recruiter-workflow-requirement-text33">Upload File</span>
+            <span class="recruiter-workflow-requirement-text33">
+        Upload File <span style="color: #ff4d4f; font-weight: bold; margin-left: 4px;">*</span>
+      </span>
           </label>
         </div>
+        <div *ngIf="isFileMissing" class="error-text" style="color: red; font-size: 12px; margin-top: 4px;">
+    Job Description file is required.
+  </div>
         <div *ngIf="fileUploadError" class="error-text" style="margin-top: -10px; margin-bottom: 10px; text-align: left; width: 100%;">{{ fileUploadError }}</div>
         <span id="note-for-file" class="recruiter-workflow-requirement-note-for-file">Note: Maximum file size is 5MB. Supported formats are PDF and Word documents.</span>
       </div>
@@ -573,20 +578,22 @@
           <div id="candidate-job-title" class="recruiter-workflow-requirement-job-title-container1">
             <span id="employment-job-title-text" class="recruiter-workflow-requirement-job-title-text1">Client <span style="color: red;">*</span></span>
             <select 
-              id="employment-job-title-input" 
-              class="recruiter-workflow-requirement-job-title-input1 input" 
-              [(ngModel)]="clientName" 
-              (change)="onClientChange()"
-              (ngModelChange)="isClientNameInvalid = false"
-              style="background: transparent;">
-              <option value="" disabled selected>Select Client Name</option>
-              <option *ngFor="let c of clientList" [value]="c.client_name">{{ c.client_name }}</option>
-            </select>
-            <span *ngIf="formErrors.client_name" class="inline-error-text">{{ formErrors.client_name }}</span>
-            <span *ngIf="isClientNameInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px; display: block;">
-              Client Name is required.
-            </span>
-          </div>
+      id="employment-job-title-input" 
+      class="recruiter-workflow-requirement-job-title-input1 input" 
+      [(ngModel)]="clientName" 
+      (change)="onClientChange()"
+      (ngModelChange)="isClientNameInvalid = false"
+      [ngClass]="{'input-error': isClientNameInvalid}"
+      style="background: transparent;">
+      <option value="" disabled selected>Select Client Name</option>
+      <option *ngFor="let c of clientList" [value]="c.client_name">{{ c.client_name }}</option>
+    </select>
+    <span *ngIf="formErrors.client_name" class="inline-error-text">{{ formErrors.client_name }}</span>
+    <span *ngIf="isClientNameInvalid" class="error-text" style="color: red; font-size: 12px; margin-top: 4px; display: block;">
+      Client Name is required.
+    </span>
+  </div>
+  
           <div id="candidate-company-name-container" class="recruiter-workflow-requirement-company-name-container1">
             <span id="employment-company-name" class="recruiter-workflow-requirement-company-name-text1">Sub Client</span>
             <select 
