@@ -545,6 +545,7 @@
 @media(max-width: 767px) {
   .recruiter-workflow-requirement-container33 {
     gap: 8px;
+    flex-direction: column; /* Stack main content and action bar */
   }
 
   .recruiter-workflow-requirement-container34 {
@@ -582,11 +583,23 @@
     width: 100%;
   }
 
+  /* Force stack layout for info rows on mobile to prevent weird wrapping */
+  .recruiter-workflow-requirement-container42,
+  .recruiter-workflow-requirement-container43,
+  .recruiter-workflow-requirement-container44 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
   .recruiter-workflow-requirement-text59,
   .recruiter-workflow-requirement-text61,
   .recruiter-workflow-requirement-text63 {
-    min-width: 80px;
+    width: 100%; /* Take full width */
+    min-width: auto;
     font-size: 13px;
+    font-weight: 600;
+    color: #555;
   }
 
   .recruiter-workflow-requirement-text60,
@@ -625,8 +638,17 @@
 
   .recruiter-workflow-requirement-container59 {
     gap: 8px;
-    padding: 6px 8px;
+    padding: 12px;
     font-size: 12px;
+    flex-direction: column; /* Stack footer items */
+    align-items: flex-start;
+    height: auto; /* Allow height to grow */
+  }
+
+  .recruiter-workflow-requirement-container60,
+  .recruiter-workflow-requirement-container61 {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .recruiter-workflow-requirement-text75,
