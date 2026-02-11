@@ -296,6 +296,13 @@ export const routes: Routes = [
     data: { roles: ['admin','client','recruiter'] }
   },
   {
+    path: 'recruiter-workflow-bulk-import', // :id is the Job Requirement ID
+    loadComponent: () => import('./pages/recruiter-workflow-bulk-import/recruiter-workflow-bulk-import.component')
+      .then(m => m.RecruiterWorkflowBulkImportComponent),
+    canActivate: [authGuard],
+    data: { roles: ['admin'] }
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./pages/not-found/not-found.component').then(

@@ -865,6 +865,29 @@
           </div>
           
         </div>
+        <div class="recruiter-workflow-requirement-certificate-name-container" style="margin-top: 16px;">
+  <div class="recruiter-workflow-requirement-certifiacate-name-container">
+      <span class="recruiter-workflow-requirement-certificate-name-text">
+          Mandatory Skills <span style="color: red;">*</span>
+      </span>
+      
+      <div class="skills-wrapper input" (click)="skillInput.focus()">
+        <div *ngFor="let skill of skills; let i = index" class="skill-chip">
+          {{ skill }}
+          <span class="remove-icon" (click)="removeSkill(i)">×</span>
+        </div>
+
+        <input 
+          #skillInput
+          type="text" 
+          class="skill-input" 
+          placeholder="+ Add skill (Press Enter)" 
+          (keydown.enter)="$event.preventDefault(); addSkill($event)"
+        >
+      </div>
+      <span class="helper-text">AI extracted these skills. Click 'x' to remove or type to add new ones.</span>
+  </div>
+</div>
         <div id="skills-container" class="recruiter-workflow-requirement-skills-container">
           <div id="skill-text-container" class="recruiter-workflow-requirement-skill-text-container">
             <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description<span style="color: red;">*</span></span>

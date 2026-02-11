@@ -2,6 +2,83 @@
   display: contents; 
 }
 
+/* --- SKILLS CHIPS STYLES --- */
+
+/* The container mimicking an input field */
+.skills-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px; /* Match standard input padding */
+  border: 1px solid #A7A7A7; /* Match your other inputs */
+  border-radius: 4px; /* Match radius */
+  background-color: #FFFFFF;
+  min-height: 48px;
+  overflow-y: auto;
+  align-content: flex-start;
+  align-items: center;
+  cursor: text;
+  width: 100%;
+}
+
+.skills-wrapper:focus-within {
+  border-color: #05356C; /* Highlight on focus */
+}
+
+/* Individual Chip */
+.skill-chip {
+  background-color: #E6F0FF; /* Light Blue background */
+  color: #05356C;            /* Brand Blue text */
+  padding: 4px 12px;
+  border-radius: 16px;       /* Pill shape */
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #cce0ff;
+}
+
+/* The 'x' icon */
+.remove-icon {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  color: #05356C;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+}
+
+.remove-icon:hover {
+  opacity: 1;
+  color: #d32f2f; /* Red on hover */
+}
+
+/* The actual text input */
+.skill-input {
+  border: none;
+  outline: none;
+  flex-grow: 1; 
+  min-width: 150px;
+  font-size: 14px;
+  padding: 4px 0;
+  background: transparent;
+  color: #18191c;
+}
+
+.skill-input::placeholder {
+  color: #A7A7A7;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: #747474;
+  margin-top: 4px;
+  display: block;
+}
+
 /* =========================================
    PAGE LOADING SPINNER (On Navigation)
    ========================================= */

@@ -1,0 +1,168 @@
+:host {
+  display: contents;
+}
+
+.bulk-import-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.content-area {
+  max-width: 800px;
+  margin: 40px auto;
+  width: 90%;
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.header-section h2 {
+  color: #05356C;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.header-section p {
+  color: #6B7280;
+  font-size: 14px;
+}
+
+/* Upload Zone */
+.upload-zone {
+  border: 2px dashed #05356C;
+  border-radius: 12px;
+  padding: 50px 20px;
+  text-align: center;
+  margin: 30px 0;
+  background-color: #F8FAFC;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.upload-zone:hover {
+  background-color: #EFF6FF;
+  border-color: #1E40AF;
+}
+
+.btn-select {
+  background: white;
+  border: 1px solid #05356C;
+  color: #05356C;
+  padding: 8px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 16px;
+  transition: all 0.2s;
+}
+
+.btn-select:hover {
+  background-color: #F3F4F6;
+}
+
+.btn-change {
+  background: transparent;
+  border: none;
+  color: #EF4444;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+/* Main Action Button */
+.btn-primary {
+  background: #05356C;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #0A4992;
+}
+
+/* Report Card */
+.report-card {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.report-card.success-card {
+  border-color: #10B981;
+  background-color: #ECFDF5;
+}
+
+.report-header h3 {
+  margin: 0 0 16px 0;
+  color: #111827;
+}
+
+.report-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6B7280;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.success-text { color: #10B981; }
+.warn-text { color: #F59E0B; }
+
+/* SPINNER STYLES (Copied from Requirement Page) */
+.page-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.round-loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #05356c;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

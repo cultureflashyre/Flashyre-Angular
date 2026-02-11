@@ -2,22 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; 
 import { Title, Meta } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // Import this
+import { FormsModule } from '@angular/forms'; 
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { forkJoin, Subject, Subscription } from 'rxjs';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; // Add these
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, switchMap, tap, finalize } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { of, Observable } from 'rxjs';
-
-
-
 
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 
@@ -55,6 +52,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   interviewLocation: string = '';
   interviewDate: string = '';
 
+  // 🟢 NEW: Skills Array for Chips Input
+  skills: string[] = []; 
+
   // --- 1. NEW PROPERTY TO FIX ERROR ---
   isParsing: boolean = false;
 
@@ -71,7 +71,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   clientList: any[] = []; // Stores the API response
   availableSubClients: string[] = []; // Sub-clients for the selected client
-public formErrors: { [key: string]: string } = {};
+  public formErrors: { [key: string]: string } = {};
+  
   // NEW PROPERTIES FOR LOCATION SEARCH
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
@@ -82,37 +83,33 @@ public formErrors: { [key: string]: string } = {};
   assessmentOptions: string[] = ['Yes', 'No'];
   isAssessmentDropdownOpen: boolean = false; // For custom dropdown logic
 
-
-  
-
-// --- NEW PROPERTIES FOR DETAIL MODAL ---
+  // --- NEW PROPERTIES FOR DETAIL MODAL ---
   showDetailsModal = false;
   selectedReqDetails: any | null = null;
 
   // --- Google Maps Properties ---
-private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
-private loader: Loader;
-private placesService: google.maps.places.AutocompleteService | undefined;
-private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
-private google: any;
+  private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
+  private loader: Loader;
+  private placesService: google.maps.places.AutocompleteService | undefined;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | undefined;
+  private google: any;
 
-// Streams for Debouncing Input
-private interviewLocationInput$ = new Subject<string>();
+  // Streams for Debouncing Input
+  private interviewLocationInput$ = new Subject<string>();
 
-// Suggestions State
-interviewLocationSuggestions: google.maps.places.AutocompletePrediction[] = [];
-showInterviewLocationSuggestions = false;
+  // Suggestions State
+  interviewLocationSuggestions: google.maps.places.AutocompletePrediction[] = [];
+  showInterviewLocationSuggestions = false;
 
-// NEW: Dropdown Positioning Properties
+  // NEW: Dropdown Positioning Properties
   dropdownTop: number = 0;
   dropdownLeft: number = 0;
   dropdownWidth: number = 0;
 
-// Selected Data Array (for Pills)
-interviewLocationsList: string[] = [];
+  // Selected Data Array (for Pills)
+  interviewLocationsList: string[] = [];
 
-private subscriptions = new Subscription();
-
+  private subscriptions = new Subscription();
   
   // 2. View Switching & Data List
   isFormVisible: boolean = false;
@@ -191,6 +188,7 @@ private subscriptions = new Subscription();
       file_attachment: 'File Upload',
       assigned_users: 'Assigned To',
       location_details: 'Location Details',
+      skills: 'Mandatory Skills'
     };
 
     const errorMessages: string[] = [];
@@ -224,7 +222,7 @@ private subscriptions = new Subscription();
     private title: Title, 
     private meta: Meta, 
     private adbService: AdbRequirementService,  
-    private fb: FormBuilder ,
+    private fb: FormBuilder,
     private router: Router,
     private ngZone: NgZone
   ) {
@@ -237,19 +235,19 @@ private subscriptions = new Subscription();
     
     this.minDate = `${year}-${month}-${day}`;
     this.initializeFilterForm();
-     // Add this line at the end of the constructor
-  this.loader = new Loader({
-    apiKey: this.googleMapsApiKey,
-    version: 'weekly',
-    libraries: ['places']
-  });
+      // Add this line at the end of the constructor
+    this.loader = new Loader({
+      apiKey: this.googleMapsApiKey,
+      version: 'weekly',
+      libraries: ['places']
+    });
   }
 
   ngAfterViewInit(): void {
-  this.initializeGooglePlaces();
-}
+    this.initializeGooglePlaces();
+  }
 
-// 2. Add Helper methods for the custom dropdown UI
+  // 2. Add Helper methods for the custom dropdown UI
   toggleAssessmentDropdown() {
     this.isAssessmentDropdownOpen = !this.isAssessmentDropdownOpen;
   }
@@ -259,7 +257,7 @@ private subscriptions = new Subscription();
     this.isAssessmentDropdownOpen = false;
   }
 
-// === NEW METHODS FOR DETAIL POPUP ===
+  // === NEW METHODS FOR DETAIL POPUP ===
   
   openRequirementDetails(item: any): void {
     this.selectedReqDetails = item;
@@ -276,38 +274,38 @@ private subscriptions = new Subscription();
     if (url) window.open(url, '_blank');
   }
 
-ngOnDestroy(): void {
-  this.subscriptions.unsubscribe();
-}
-
-// --- Google Maps Initialization ---
-private async initializeGooglePlaces(): Promise<void> {
-  try {
-    this.google = await this.loader.load();
-    this.placesService = new this.google.maps.places.AutocompleteService();
-  } catch (error) {
-    console.error('Fatal error: Google Maps script could not be loaded.', error);
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
-}
 
-// --- Setup RxJS Stream for Location Input ---
-private setupLocationAutocomplete(): void {
-  this.subscriptions.add(
-    this.interviewLocationInput$.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(() => {
-        this.showInterviewLocationSuggestions = true;
-        this.initSessionToken();
-      }),
-      switchMap(term => this.getPlacePredictions(term))
-    ).subscribe(suggestions => {
-      this.ngZone.run(() => {
-        this.interviewLocationSuggestions = suggestions;
-      });
-    })
-  );
-  // NEW: Additional Details Location Stream
+  // --- Google Maps Initialization ---
+  private async initializeGooglePlaces(): Promise<void> {
+    try {
+      this.google = await this.loader.load();
+      this.placesService = new this.google.maps.places.AutocompleteService();
+    } catch (error) {
+      console.error('Fatal error: Google Maps script could not be loaded.', error);
+    }
+  }
+
+  // --- Setup RxJS Stream for Location Input ---
+  private setupLocationAutocomplete(): void {
+    this.subscriptions.add(
+      this.interviewLocationInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.showInterviewLocationSuggestions = true;
+          this.initSessionToken();
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.interviewLocationSuggestions = suggestions;
+        });
+      })
+    );
+    // NEW: Additional Details Location Stream
     this.subscriptions.add(
       this.additionalLocationInput$.pipe(
         debounceTime(300),
@@ -323,15 +321,15 @@ private setupLocationAutocomplete(): void {
         });
       })
     );
-}
-
-private initSessionToken(): void {
-  if (this.google && !this.sessionToken) {
-    this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
   }
-}
 
-// 2. NEW: Input Handler for Dynamic Rows
+  private initSessionToken(): void {
+    if (this.google && !this.sessionToken) {
+      this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+    }
+  }
+
+  // 2. NEW: Input Handler for Dynamic Rows
   onAdditionalLocationInput(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     const term = input.value;
@@ -342,7 +340,7 @@ private initSessionToken(): void {
 
     this.activeDetailIndex = index; // Set active row
 
-     // --- NEW: Calculate Position for Fixed Dropdown ---
+      // --- NEW: Calculate Position for Fixed Dropdown ---
     const rect = input.getBoundingClientRect();
     this.dropdownTop = rect.bottom; // Place directly below input
     this.dropdownLeft = rect.left;  // Align left edge
@@ -382,34 +380,34 @@ private initSessionToken(): void {
     }, 200);
   }
 
-private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
-  if (!term.trim() || !this.placesService) {
-    return of([]);
-  }
-  
-  if (!this.sessionToken && this.google) {
-    this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
-  }
+  private getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
+    if (!term.trim() || !this.placesService) {
+      return of([]);
+    }
+    
+    if (!this.sessionToken && this.google) {
+      this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
+    }
 
-  return new Observable(observer => {
-    this.placesService!.getPlacePredictions({
-      input: term,
-      types: ['(cities)'],
-      sessionToken: this.sessionToken
-    }, (predictions, status) => {
-      this.ngZone.run(() => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-          observer.next(predictions);
-        } else {
-          observer.next([]);
-        }
-        observer.complete();
+    return new Observable(observer => {
+      this.placesService!.getPlacePredictions({
+        input: term,
+        types: ['(cities)'],
+        sessionToken: this.sessionToken
+      }, (predictions, status) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            observer.next(predictions);
+          } else {
+            observer.next([]);
+          }
+          observer.complete();
+        });
       });
     });
-  });
-}
+  }
 
- /**
+  /**
    * Check if the current user is assigned to this requirement.
    */
   private isAssignedToRequirement(item: any): boolean {
@@ -439,45 +437,45 @@ private getPlacePredictions(term: string): Observable<google.maps.places.Autocom
     return String(creatorId) === String(currentUserId);
   }
 
-// --- HTML Event Handlers for Interview Location ---
+  // --- HTML Event Handlers for Interview Location ---
 
-onInterviewLocationInput(event: Event): void {
-  const term = (event.target as HTMLInputElement).value;
-  if (!term.trim()) {
+  onInterviewLocationInput(event: Event): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showInterviewLocationSuggestions = false;
+      return;
+    }
+    this.interviewLocationInput$.next(term);
+  }
+
+  selectInterviewLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
+    const locationName = prediction.description;
+    if (!this.interviewLocationsList.includes(locationName)) {
+      this.interviewLocationsList.push(locationName);
+    }
+    
+    inputElement.value = '';
     this.showInterviewLocationSuggestions = false;
-    return;
+    this.interviewLocationSuggestions = [];
+    this.sessionToken = undefined;
+    this.isInterviewLocationInvalid = false;
   }
-  this.interviewLocationInput$.next(term);
-}
 
-selectInterviewLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
-  const locationName = prediction.description;
-  if (!this.interviewLocationsList.includes(locationName)) {
-    this.interviewLocationsList.push(locationName);
+  addManualInterviewLocation(event: any): void {
+    const value = event.target.value.trim();
+    if (value && !this.interviewLocationsList.includes(value)) {
+      this.interviewLocationsList.push(value);
+    }
+    this.showInterviewLocationSuggestions = false;
+    event.target.value = '';
+    event.preventDefault();
+
+    this.isInterviewLocationInvalid = false;
   }
-  
-  inputElement.value = '';
-  this.showInterviewLocationSuggestions = false;
-  this.interviewLocationSuggestions = [];
-  this.sessionToken = undefined;
-  this.isInterviewLocationInvalid = false;
-}
 
-addManualInterviewLocation(event: any): void {
-  const value = event.target.value.trim();
-  if (value && !this.interviewLocationsList.includes(value)) {
-    this.interviewLocationsList.push(value);
+  removeInterviewLocation(index: number): void {
+    this.interviewLocationsList.splice(index, 1);
   }
-  this.showInterviewLocationSuggestions = false;
-  event.target.value = '';
-  event.preventDefault();
-
-  this.isInterviewLocationInvalid = false;
-}
-
-removeInterviewLocation(index: number): void {
-  this.interviewLocationsList.splice(index, 1);
-}
 
 
   // 1. Initialize the Filter Form
@@ -492,7 +490,7 @@ removeInterviewLocation(index: number): void {
   }
 
   // ==========================================
-  // FIXED ONFILESELECTED METHOD
+  // FIXED ONFILESELECTED METHOD WITH SKILLS
   // ==========================================
   onFileSelected(event: any): void {
     this.isFileMissing = false;
@@ -529,7 +527,7 @@ removeInterviewLocation(index: number): void {
             
             // Auto-populate strings
             this.jobRole = data.job_role || this.jobRole;
-            this.jobDescription = data.job_description || this.jobDescription;
+            this.jobDescription = data.summary || data.job_description; // Prefer summary
             this.selectedNoticePeriod = data.notice_period || '';
             this.selectedGender = data.gender || '';
             this.clientName = data.client_name || this.clientName;
@@ -552,6 +550,13 @@ removeInterviewLocation(index: number): void {
             this.salary.min = data.salary_min || 0;
             this.salary.max = data.salary_max || 0;
 
+            // 🟢 POPULATE SKILLS CHIPS
+            if (data.skills && Array.isArray(data.skills)) {
+              this.skills = data.skills; 
+            } else {
+              this.skills = []; // Clear if none found to avoid stale data
+            }
+
             this.triggerAlert('Job Description parsed successfully!', ['OK']);
           }
         },
@@ -564,16 +569,16 @@ removeInterviewLocation(index: number): void {
     }
   }
 
-getFileName(): string {
-  if (this.selectedFile) {
-    return this.selectedFile.name;
+  getFileName(): string {
+    if (this.selectedFile) {
+      return this.selectedFile.name;
+    }
+    if (this.existingFileUrl) {
+      // Extracts filename from a URL like '.../media/requirements/files/MyDoc.pdf'
+      return decodeURIComponent(this.existingFileUrl.split('/').pop() || 'Existing File');
+    }
+    return '';
   }
-  if (this.existingFileUrl) {
-    // Extracts filename from a URL like '.../media/requirements/files/MyDoc.pdf'
-    return decodeURIComponent(this.existingFileUrl.split('/').pop() || 'Existing File');
-  }
-  return '';
-}
 
   
 
@@ -907,7 +912,7 @@ getFileName(): string {
     if (this.experience.relevantMin !== null && this.experience.relevantMin < 0) this.experience.relevantMin = 0;
     if (this.experience.relevantMax !== null && this.experience.relevantMax < 0) this.experience.relevantMax = 0;
 
-     // --- NEW ADDITION START: Clear "Required" errors immediately ---
+      // --- NEW ADDITION START: Clear "Required" errors immediately ---
     if (this.experience.totalMin !== null && this.experience.totalMax !== null) {
         this.isTotalExpInvalid = false;
     }
@@ -1058,6 +1063,27 @@ toggleNoticePeriodDropdown() {
     this.additionalDetails.push({ location: '', spoc: '', vacancies: '', email: '', phone: '' });
   }
 
+  // --- 🟢 NEW: SKILLS CHIPS LOGIC ---
+
+  // Add skill on Enter key
+  addSkill(event: any) {
+    const input = event.target;
+    const value = (input.value || '').trim();
+
+    if (value) {
+      // Prevent duplicates (Case insensitive check optionally)
+      if (!this.skills.some(s => s.toLowerCase() === value.toLowerCase())) {
+        this.skills.push(value);
+      }
+      input.value = ''; // Clear input
+    }
+  }
+
+  // Remove skill on 'x' click
+  removeSkill(index: number) {
+    this.skills.splice(index, 1);
+  }
+
  onEdit(item: any) {
 
   // PERMISSION CHECK: Super User OR Assigned User OR Creator
@@ -1081,9 +1107,17 @@ toggleNoticePeriodDropdown() {
     this.subClientName = item.sub_client_name;
     this.jobRole = item.job_role; 
     this.jobDescription = item.job_description;
-this.interviewLocationsList = item.interview_location 
-  ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean) 
-  : [];
+    
+    // 🟢 NEW: Load Skills
+    if (item.skills && Array.isArray(item.skills)) {
+      this.skills = [...item.skills];
+    } else {
+      this.skills = [];
+    }
+
+    this.interviewLocationsList = item.interview_location 
+      ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean) 
+      : [];
       this.interviewDate = item.interview_date;
     this.existingFileUrl = item.file_attachment;
 
@@ -1262,8 +1296,8 @@ this.interviewLocationsList = item.interview_location
 
     // 4. Interview Date
     // if (!this.interviewDate) {
-    //     this.isInterviewDateInvalid = true;
-    //     isValid = false;
+    //      this.isInterviewDateInvalid = true;
+    //      isValid = false;
     // }
 
     // 5. Notice Period
@@ -1276,6 +1310,12 @@ this.interviewLocationsList = item.interview_location
     if (!this.selectedGender) {
         this.isGenderInvalid = true;
         isValid = false;
+    }
+
+    // 🟢 NEW: Validate Mandatory Skills
+    if (this.skills.length === 0) {
+      this.triggerAlert('Please add at least one Mandatory Skill.', ['OK']);
+      return; 
     }
 
 
@@ -1330,6 +1370,10 @@ this.interviewLocationsList = item.interview_location
         formData.append('interview_date', this.interviewDate);
     }
     formData.append('job_description', this.jobDescription);
+    
+    // 🟢 NEW: Append Skills Array as JSON String
+    formData.append('skills', JSON.stringify(this.skills));
+
     if (this.selectedFile) {
       formData.append('file_attachment', this.selectedFile, this.selectedFile.name);
     }
@@ -1419,6 +1463,9 @@ this.interviewLocationsList = item.interview_location
     this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '' }];
     this.selectedAssignees = [];
     this.userSearchText = '';
+
+    // 🟢 NEW: Clear skills on cancel
+    this.skills = [];
 
     // Reset validation errors
     this.isJobDescriptionInvalid = false;
