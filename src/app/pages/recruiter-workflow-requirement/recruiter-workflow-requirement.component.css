@@ -2,6 +2,52 @@
   display: contents; 
 }
 
+/* =========================================
+   SKILLS DISPLAY STYLES (NEW)
+   ========================================= */
+
+/* Style for the Chips in the DETAILS MODAL (Elegant Look) */
+.skills-wrapper-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag-modal {
+  background: #f0fdf4; /* Light Green Background */
+  color: #15803d;      /* Dark Green Text */
+  border: 1px solid #dcfce7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Style for the Chips in the LIST CARD (Standard Look) */
+.skill-tag-card {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e5e7eb; /* Light Grey */
+  color: #374151;            /* Dark Grey */
+  border-radius: 12px;       /* Pill Shape */
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+}
+
+/* Container adjustment for the new Skills row in the card */
+.recruiter-workflow-requirement-container-skills {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start; /* Align top */
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px; /* Spacing from Description row */
+}
+
 /* --- SKILLS CHIPS STYLES --- */
 
 /* The container mimicking an input field */
