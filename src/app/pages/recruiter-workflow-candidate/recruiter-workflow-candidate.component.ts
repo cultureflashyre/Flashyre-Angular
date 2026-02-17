@@ -257,7 +257,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   }
 
   // =========================================================
-  // SHARED FILTERING & SORTING LOGIC
+  // SHARED FILTERING & SORTING LOGIC (UPDATED)
   // =========================================================
 
   applyFiltersAndSort(): void {
@@ -268,7 +268,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     // We create a copy to avoid mutating the master list
     let candidates: any[] = isSourced ? [...this.masterCandidates] : [...this.registeredCandidates];
 
-    // --- SHARED TEXT FILTERS ---
+    // --- SHARED TEXT FILTERS (SUBSTRING MATCH) ---
     
     // Name Filter
     if (filterValues.name) {
@@ -290,33 +290,44 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       candidates = candidates.filter(c => c.phone_number.includes(phoneFilter));
     }
 
-    // --- COMPLEX FILTERS (Data Source Differs) ---
-    // Sourced candidates have direct fields (e.g., c.current_location)
-    // Registered users have nested fields in 'sourced_data' (e.g., c.sourced_data.current_location)
-
-    // Location Filter
+    // --- COMPLEX FILTERS (DATA SOURCE DIFFERS) ---
+    
+    // Location Filter (Dynamic Substring)
     if (filterValues.location) {
       const locFilter = filterValues.location.toLowerCase();
       candidates = candidates.filter(c => {
         const val = isSourced ? c.current_location : (c.sourced_data?.current_location || '');
+        // Substring match: "Mountain" matches "Mountain View"
         return val ? val.toLowerCase().includes(locFilter) : false;
       });
     }
 
-    // Skills Filter
+    // Skills Filter (Dynamic Substring)
     if (filterValues.skills) {
+      // User might enter "java, python"
       const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
+      
       if (skillFilters.length > 0) {
         candidates = candidates.filter(c => {
+          // Get raw string (e.g., "html5, css, react")
           const rawSkills = isSourced ? c.skills : (c.sourced_data?.skills || '');
           if (!rawSkills) return false;
+          
+          // Split candidate skills into array
           const candidateSkills = rawSkills.toLowerCase().split(',').map((s: string) => s.trim());
-          return skillFilters.some((skillFilter: string) => candidateSkills.includes(skillFilter));
+          
+          // LOGIC UPDATE:
+          // Check if ANY of the user's search terms match ANY of the candidate's skills.
+          // "html" (search) -> "html5" (candidate skill) => TRUE
+          // "java" (search) -> "javascript" (candidate skill) => TRUE
+          return skillFilters.some((skillFilter: string) => 
+            candidateSkills.some((skill: string) => skill.includes(skillFilter))
+          );
         });
       }
     }
 
-    // CTC Filter
+    // CTC Filter (Exact Match retained as CTC is a dropdown)
     if (filterValues.current_ctc) {
       candidates = candidates.filter(c => {
         const val = isSourced ? c.current_ctc : (c.sourced_data?.current_ctc || '');
@@ -326,7 +337,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     // --- SORTING ---
     if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
+      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + a.last_name));
     } else if (this.currentSort === 'z-a') {
       candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
     }
@@ -420,8 +431,6 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     this.isAlertVisible = true;
   }
-
-  
 
   deleteCandidate(id: number | undefined): void {
     if (!id) return;
