@@ -1,6 +1,63 @@
 :host { 
   display: contents; 
 }
+/* --- PHONE NUMBER DYNAMIC INPUT STYLES --- */
+
+.phone-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.phone-input-row input {
+    flex: 1;
+}
+
+.add-phone-btn {
+    background-color: #05356C;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-phone-btn:hover {
+    background-color: #0A4992;
+}
+
+.remove-phone-btn {
+    background-color: transparent;
+    color: #F10400;
+    border: 1px solid #F10400;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.remove-phone-btn:hover {
+    background-color: #FFF0F0;
+}
+
+/* Adjust container layout for the new structure */
+.recruiter-workflow-candidate-job-title-container2 {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
 
 /* =========================================
    TABS STYLING (NEW)

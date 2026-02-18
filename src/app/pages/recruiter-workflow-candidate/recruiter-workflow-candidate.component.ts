@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl  } from '@angular/forms';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { AlertMessageComponent } from '../../components/alert-message/alert-mess
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+
 
 // Custom Validators
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -666,7 +667,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         Validators.pattern(/^[a-zA-Z\s]*$/), 
         Validators.maxLength(15) 
       ]],
-      phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      // CHANGED: phone_number is now a FormArray
+      phone_numbers: this.fb.array([], [Validators.required, this.minPhoneNumbersValidator]),
       email: ['', [Validators.required, Validators.email]],
       total_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
       relevant_experience: [null, [Validators.required, Validators.min(0), Validators.max(99)]],
@@ -685,7 +687,65 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.singleRelevantVsTotalValidator
       ]
     });
+    // Add the first phone number control initially
+    this.addPhoneNumber();
   }
+
+   // Validator to ensure at least one phone number exists
+  minPhoneNumbersValidator(array: FormArray): ValidationErrors | null {
+    return array.length >= 1 ? null : { minPhoneNumbers: true };
+  }
+
+  // Validator for individual phone number (10 digits)
+  phoneNumberValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null; // 'required' handles empty
+    const cleanValue = value.replace(/\D/g, '');
+    if (cleanValue.length !== 10) {
+      return { invalidPhone: true };
+    }
+    return null;
+  }
+
+  // Getter for easy access in template
+  get phoneNumbersArray(): FormArray {
+    return this.candidateForm.get('phone_numbers') as FormArray;
+  }
+
+  addPhoneNumber(value: string = ''): void {
+    this.phoneNumbersArray.push(new FormControl(value, [Validators.required, this.phoneNumberValidator]));
+  }
+
+  removePhoneNumber(index: number): void {
+    if (this.phoneNumbersArray.length > 1) {
+      this.phoneNumbersArray.removeAt(index);
+    }
+  }
+
+  // Custom Validator: Duplicate check within the form
+  duplicatePhoneValidator(group: FormGroup): ValidationErrors | null {
+    const phoneArray = group.get('phone_numbers') as FormArray;
+    if (!phoneArray) return null;
+
+    const values = phoneArray.value.map((v: string) => v.replace(/\D/g, '')); // Normalize
+    const uniqueValues = new Set(values);
+
+    if (uniqueValues.size !== values.length) {
+      // We set an error on the array level so template can show it
+      phoneArray.setErrors({ ...phoneArray.errors, duplicate: true });
+      return { duplicate: true };
+    } else {
+      // Clear duplicate error if fixed
+      if (phoneArray.errors && phoneArray.errors['duplicate']) {
+        delete phoneArray.errors['duplicate'];
+        if (Object.keys(phoneArray.errors).length === 0) {
+          phoneArray.setErrors(null);
+        }
+      }
+    }
+    return null;
+  }
+
 
   singleRelevantVsTotalValidator(group: AbstractControl): ValidationErrors | null {
     const total = group.get('total_experience');
@@ -793,6 +853,26 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.editingCandidateId = candidate.id;
         this.selectedFile = null;
         this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
+
+        // Clear skills/location arrays before populating
+      this.skills = [];
+      this.preferredLocationsList = [];
+      this.currentLocationsList = [];
+
+      // Manually handle phone numbers for the FormArray
+      const rawPhones = candidate.phone_number || '';
+      const phoneList = rawPhones.split(',').map(p => p.trim()).filter(Boolean);
+      
+      // Reset array
+      while (this.phoneNumbersArray.length !== 0) {
+        this.phoneNumbersArray.removeAt(0);
+      }
+      
+      if (phoneList.length > 0) {
+        phoneList.forEach(p => this.addPhoneNumber(p));
+      } else {
+        this.addPhoneNumber();
+      }
         
         this.candidateForm.patchValue(candidate);
         
@@ -920,11 +1000,26 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
     }
 
+     // CHANGED: Handle Phone Numbers
+    // Clear existing controls
+    while (this.phoneNumbersArray.length !== 0) {
+      this.phoneNumbersArray.removeAt(0);
+    }
+
+    const rawPhones = data.phone_number || '';
+    const phoneList = rawPhones.split(',').map((p: string) => p.trim()).filter(Boolean);
+
+    if (phoneList.length > 0) {
+      phoneList.forEach(p => this.addPhoneNumber(p));
+    } else {
+      this.addPhoneNumber(); // Add at least one
+    }
+
+
     this.candidateForm.patchValue({
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
-      phone_number: data.phone_number,
       work_experience: data.work_experience,
       total_experience: data.total_experience_min, 
       relevant_experience: data.relevant_experience_min, 
@@ -945,6 +1040,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   onSubmit(): void {
     this.candidateForm.markAllAsTouched();
 
+    // Trigger duplicate check manually for immediate feedback
+    this.duplicatePhoneValidator(this.candidateForm);
+
     const isFileMissing = !this.selectedFileName || this.selectedFileName.trim() === '';
     this.showFileError = isFileMissing;
 
@@ -954,6 +1052,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       Object.keys(this.candidateForm.controls).forEach(key => {
         if (this.candidateForm.get(key)?.invalid) invalidFields.push(key.replace(/_/g, ' '));
       });
+       if (this.phoneNumbersArray.errors) {
+          if (this.phoneNumbersArray.errors['duplicate']) invalidFields.push('Duplicate Phone Numbers');
+       }
       
       this.showAlert(`Please check the following fields: ${invalidFields.join(', ')}`, ['Close']);
       return;
@@ -963,7 +1064,13 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     const formData = new FormData();
     Object.keys(this.candidateForm.controls).forEach(key => {
       const value = this.candidateForm.get(key)?.value;
-      if (key === 'total_experience' && value !== null) {
+            if (key === 'phone_numbers') {
+        // JOIN the array into a comma-separated string
+        const phoneValues = this.phoneNumbersArray.value; // Array of strings
+        const joinedPhones = phoneValues.join(', ');
+        formData.append('phone_number', joinedPhones);
+      } 
+      else if (key === 'total_experience' && value !== null) {
           formData.append('total_experience_min', value);
           formData.append('total_experience_max', value);
       } 
