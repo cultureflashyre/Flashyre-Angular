@@ -1,62 +1,92 @@
 :host { 
   display: contents; 
 }
-/* --- PHONE NUMBER DYNAMIC INPUT STYLES --- */
+/* =========================================
+   PROFESSIONAL INLINE PHONE INPUT STYLES
+   ========================================= */
 
-.phone-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+/* Wrapper for the input and the icon */
+.phone-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.phone-input-row input {
-    flex: 1;
+/* The input field itself - needs padding on the right to make room for the icon */
+.phone-input-wrapper .input {
+  width: 100%;
+  height: 48px;
+  padding: 0 45px 0 12px; /* 45px padding on right for icon */
+  border: 1px solid #A7A7A7;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.add-phone-btn {
-    background-color: #05356C;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.phone-input-wrapper .input:focus {
+  outline: none;
+  border-color: #05356C;
+  box-shadow: 0 0 0 2px rgba(5, 53, 108, 0.1);
 }
 
-.add-phone-btn:hover {
-    background-color: #0A4992;
+/* Validation style */
+.phone-input-wrapper .input.is-invalid {
+  border-color: #dc3545;
 }
 
-.remove-phone-btn {
-    background-color: transparent;
-    color: #F10400;
-    border: 1px solid #F10400;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
+/* The container for the icon buttons (positioned absolutely) */
+.phone-action-icons {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.remove-phone-btn:hover {
-    background-color: #FFF0F0;
+/* The Icon Button Styling */
+.inline-icon-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #05356C;
+  border-radius: 50%;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Adjust container layout for the new structure */
-.recruiter-workflow-candidate-job-title-container2 {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+.inline-icon-btn:hover {
+  background-color: #f0f2f5;
+  transform: scale(1.1);
+}
+
+.inline-icon-btn.delete {
+  color: #F10400;
+}
+
+.inline-icon-btn.add {
+  color: #05356C;
+  background-color: #E8F0FE;
+  border-radius: 50%;
+}
+
+.inline-icon-btn.add:hover {
+  background-color: #d4e4fd;
+}
+
+/* Adjust label styling for consistency */
+.phone-section-label {
+  color: rgb(24, 25, 28);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
 }
 
 /* =========================================

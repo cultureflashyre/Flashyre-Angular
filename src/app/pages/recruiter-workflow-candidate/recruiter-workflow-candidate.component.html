@@ -482,66 +482,81 @@
     <!-- UPDATED PHONE NUMBERS SECTION -->
     <div class="recruiter-workflow-candidate-job-title-company-name-container2">
         <div class="recruiter-workflow-candidate-job-title-container2" style="min-width: 100%;">
-            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center;">
-                    <span class="recruiter-workflow-candidate-job-title-text2">Phone Number(s)</span>
-                    <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; margin-left: 8px;">*</span>
-                </div>
-                <!-- Plus Icon Button -->
-                <button type="button" (click)="addPhoneNumber()" class="add-phone-btn" title="Add Another Number">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-            </div>
+        <div style="display: flex; flex-direction: row;">
+            <span class="recruiter-workflow-candidate-job-title-text2">Phone Number(s)</span>
+            <span class="recruiter-workflow-candidate-skill-star-text1" style="color: red; height: auto; width: auto; margin-left: 8px; align-self: flex-start;">*</span>
+        </div>
 
-            <!-- Container for inputs -->
-            <div class="phone-numbers-list" style="margin-top: 8px;">
-                <div *ngFor="let phoneControl of phoneNumbersArray.controls; let i = index" class="phone-input-row">
-                    <input 
-                        type="text" 
-                        [formControl]="phoneControl"
-                        placeholder="Enter 10-digit Number"
-                        class="recruiter-workflow-candidate-job-title-input2 input"
-                        maxlength="10"
-                        [class.is-invalid]="phoneControl.invalid && phoneControl.touched"
-                    />
+        <!-- Dynamic List Container -->
+        <div class="phone-numbers-list" style="margin-top: 4px;">
+            
+            <div *ngFor="let phoneControl of phoneNumbersArray.controls; let i = index; let isLast = last" class="phone-input-wrapper">
+                
+                <!-- Input Field -->
+                <input 
+                    type="text" 
+                    [formControl]="phoneControl"
+                    placeholder="Enter 10-digit Number"
+                    class="input"
+                    maxlength="10"
+                    [class.is-invalid]="phoneControl.invalid && phoneControl.touched"
+                />
+
+                <!-- Icons Container (Positioned Absolute Right) -->
+                <div class="phone-action-icons">
                     
-                    <!-- Remove Button (Only show if more than 1) -->
+                    <!-- DELETE/REMOVE ICON (Show only if there is more than 1 number) -->
                     <button 
-                        *ngIf="phoneNumbersArray.length > 1" 
+                        *ngIf="phoneNumbersArray.length > 1"
                         type="button" 
                         (click)="removePhoneNumber(i)" 
-                        class="remove-phone-btn"
+                        class="inline-icon-btn delete"
                         title="Remove Number"
                     >
-                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
                         </svg>
                     </button>
+
+                    <!-- ADD/PLUS ICON (Show only on the last row) -->
+                    <button 
+                        *ngIf="isLast"
+                        type="button" 
+                        (click)="addPhoneNumber()" 
+                        class="inline-icon-btn add"
+                        title="Add Another Number"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+
                 </div>
             </div>
-
-            <!-- Validation Errors -->
-            <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['duplicate']">
-                <span>Duplicate phone numbers detected.</span>
-            </div>
-            
-            <!-- Generic error for empty or invalid -->
-             <ng-container *ngIf="phoneNumbersArray.touched && phoneNumbersArray.invalid">
-                <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['minPhoneNumbers']">
-                    <span>At least one phone number is required.</span>
-                </div>
-            </ng-container>
-
-            <!-- Individual field errors -->
-            <ng-container *ngFor="let ctrl of phoneNumbersArray.controls; let i = index">
-                <div class="validation-error" *ngIf="ctrl.invalid && ctrl.touched" style="margin-top: 4px;">
-                    <span *ngIf="ctrl.errors?.['required']">Phone {{i+1}} is required.</span>
-                    <span *ngIf="ctrl.errors?.['invalidPhone']">Phone {{i+1}} must be 10 digits.</span>
-                </div>
-            </ng-container>
         </div>
+
+        <!-- Validation Errors (Placed below the inputs) -->
+        <!-- 1. Duplicate Error (Client-side check) -->
+        <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['duplicate']" style="margin-top: 4px;">
+            <span>Duplicate phone numbers detected in the form.</span>
+        </div>
+
+        <!-- 2. Server Side Error (Backend DB check) -->
+        <div class="validation-error" *ngIf="phoneNumbersArray.errors?.['serverError']" style="margin-top: 4px;">
+            <span>{{ phoneNumbersArray.errors?.['serverError'] }}</span>
+        </div>
+        
+        <!-- 3. Individual Field Errors (Pattern/Required) -->
+        <ng-container *ngFor="let ctrl of phoneNumbersArray.controls; let i = index">
+            <div class="validation-error" *ngIf="ctrl.invalid && ctrl.touched" style="margin-top: 2px;">
+                <span *ngIf="ctrl.errors?.['required']">Phone {{i+1}} is required.</span>
+                <span *ngIf="ctrl.errors?.['invalidPhone']">Phone {{i+1}} must be 10 digits.</span>
+            </div>
+        </ng-container>
+    </div>
         
         <!-- Email Field -->
         <div class="recruiter-workflow-candidate-company-name-container2">

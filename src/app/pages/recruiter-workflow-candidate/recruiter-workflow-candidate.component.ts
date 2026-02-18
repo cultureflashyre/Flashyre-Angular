@@ -1037,49 +1037,56 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     return match || ''; 
   }
   
-  onSubmit(): void {
+    onSubmit(): void {
     this.candidateForm.markAllAsTouched();
-
-    // Trigger duplicate check manually for immediate feedback
-    this.duplicatePhoneValidator(this.candidateForm);
+    this.duplicatePhoneValidator(this.candidateForm); // Check for internal duplicates
 
     const isFileMissing = !this.selectedFileName || this.selectedFileName.trim() === '';
     this.showFileError = isFileMissing;
 
-    if (this.candidateForm.invalid || isFileMissing) {
-      const invalidFields: string[] = [];
-      if (isFileMissing) invalidFields.push('Resume File');
-      Object.keys(this.candidateForm.controls).forEach(key => {
-        if (this.candidateForm.get(key)?.invalid) invalidFields.push(key.replace(/_/g, ' '));
-      });
+    if (this.candidateForm.invalid || isFileMissing || this.phoneNumbersArray.invalid) {
+       const invalidFields: string[] = [];
+       if (isFileMissing) invalidFields.push('Resume File');
+       
+       // Collect errors for alert
+       Object.keys(this.candidateForm.controls).forEach(key => {
+         if (this.candidateForm.get(key)?.invalid) {
+            // Handle FormArray separately for better naming
+            if (key === 'phone_numbers') {
+               invalidFields.push('Phone Numbers');
+            } else {
+               invalidFields.push(key.replace(/_/g, ' '));
+            }
+         }
+       });
+
        if (this.phoneNumbersArray.errors) {
           if (this.phoneNumbersArray.errors['duplicate']) invalidFields.push('Duplicate Phone Numbers');
        }
-      
-      this.showAlert(`Please check the following fields: ${invalidFields.join(', ')}`, ['Close']);
-      return;
+       
+       this.showAlert(`Please check the following fields: ${invalidFields.join(', ')}`, ['Close']);
+       return;
     }
 
     this.isSubmitting = true;
     const formData = new FormData();
+    
     Object.keys(this.candidateForm.controls).forEach(key => {
-      const value = this.candidateForm.get(key)?.value;
-            if (key === 'phone_numbers') {
-        // JOIN the array into a comma-separated string
-        const phoneValues = this.phoneNumbersArray.value; // Array of strings
+      if (key === 'phone_numbers') {
+        const phoneValues = this.phoneNumbersArray.value; 
         const joinedPhones = phoneValues.join(', ');
         formData.append('phone_number', joinedPhones);
       } 
-      else if (key === 'total_experience' && value !== null) {
-          formData.append('total_experience_min', value);
-          formData.append('total_experience_max', value);
+      else if (key === 'total_experience' && this.candidateForm.get(key)?.value !== null) {
+          formData.append('total_experience_min', this.candidateForm.get(key)?.value);
+          formData.append('total_experience_max', this.candidateForm.get(key)?.value);
       } 
-      else if (key === 'relevant_experience' && value !== null) {
-          formData.append('relevant_experience_min', value);
-          formData.append('relevant_experience_max', value);
+      else if (key === 'relevant_experience' && this.candidateForm.get(key)?.value !== null) {
+          formData.append('relevant_experience_min', this.candidateForm.get(key)?.value);
+          formData.append('relevant_experience_max', this.candidateForm.get(key)?.value);
       } 
-      else if (value !== null && value !== undefined) { 
-        formData.append(key, value); 
+      else if (this.candidateForm.get(key)?.value !== null && this.candidateForm.get(key)?.value !== undefined) { 
+        formData.append(key, this.candidateForm.get(key)?.value); 
       }
     });
 
@@ -1106,13 +1113,49 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       this.onCancel();
     };
 
+    // UPDATED ENHANCED ERROR HANDLING
     const handleError = (err: HttpErrorResponse) => {
-      let errorMessage = 'Server error.';
-      if (err.status === 400) {
-        errorMessage = 'Submission failed. Check fields.';
-      }
-      this.showAlert(errorMessage, ['Close']);
       this.isSubmitting = false;
+      
+      // 1. Handle Backend Validation Errors (Status 400)
+      if (err.status === 400 && err.error) {
+        const errors = err.error;
+        let alertMessages: string[] = [];
+
+        // Check for phone_number errors specifically
+        if (errors.phone_number) {
+          const msg = Array.isArray(errors.phone_number) ? errors.phone_number[0] : errors.phone_number;
+          
+          // Set error on the FormArray so it shows in the UI
+          this.phoneNumbersArray.setErrors({ serverError: msg });
+          this.phoneNumbersArray.markAsTouched();
+          
+          alertMessages.push(msg);
+        }
+
+        // Check for email errors
+        if (errors.email) {
+           const msg = Array.isArray(errors.email) ? errors.email[0] : errors.email;
+           this.candidateForm.get('email')?.setErrors({ serverError: msg });
+           this.candidateForm.get('email')?.markAsTouched();
+           alertMessages.push(msg);
+        }
+
+        // Check for non_field_errors or detail
+        if (errors.detail || errors.non_field_errors) {
+           alertMessages.push(errors.detail || errors.non_field_errors[0]);
+        }
+
+        // Show Alert with specific messages
+        if (alertMessages.length > 0) {
+           this.showAlert(alertMessages.join(' | '), ['Close']);
+        } else {
+           this.showAlert("Submission failed. Please check the form for errors.", ['Close']);
+        }
+      } else {
+        // Generic server error
+        this.showAlert("Server error. Please try again later.", ['Close']);
+      }
     };
 
     if (this.editingCandidateId) {
