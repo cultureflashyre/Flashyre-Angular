@@ -11,12 +11,13 @@ import { forkJoin, Subject, Subscription } from 'rxjs';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { NgZone, OnDestroy, AfterViewInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, switchMap, tap, finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, tap, finalize, takeWhile } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { of, Observable } from 'rxjs';
 
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
+import { PollingService } from '../../services/polling.service'; // IMPORT POLLING SERVICE
 
 @Component({
   standalone: true,
@@ -224,7 +225,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     private adbService: AdbRequirementService,  
     private fb: FormBuilder,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private pollingService: PollingService // INJECT POLLING SERVICE
   ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
@@ -490,7 +492,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   }
 
   // ==========================================
-  // FIXED ONFILESELECTED METHOD WITH SKILLS
+  // UPDATED ONFILESELECTED METHOD WITH POLLING
   // ==========================================
   onFileSelected(event: any): void {
     this.isFileMissing = false;
@@ -515,58 +517,112 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
       this.selectedFile = file;
 
-      // --- AI PARSING CALL ---
-      this.isParsing = true; // Set loading state
+      // --- START LOADING STATE ---
+      this.isParsing = true;
       
       this.adbService.parseJobDescription(file).subscribe({
         next: (response: any) => {
-          this.isParsing = false; // Turn off loading
           
-          if (response.success && response.data) {
-            const data = response.data;
-            
-            // Auto-populate strings
-            this.jobRole = data.job_role || this.jobRole;
-            this.jobDescription = data.summary || data.job_description; // Prefer summary
-            this.selectedNoticePeriod = data.notice_period || '';
-            this.selectedGender = data.gender || '';
-            this.clientName = data.client_name || this.clientName;
-
-            // Handle location (if simple string, push to list)
-            if (data.interview_location) {
-               // Only add if list is empty or unique
-               if (!this.interviewLocationsList.includes(data.interview_location)) {
-                   this.interviewLocationsList.push(data.interview_location);
-               }
-            }
-
-            // Auto-populate Numbers (Experience)
-            this.experience.totalMin = data.total_experience_min || 0;
-            this.experience.totalMax = data.total_experience_max || 0;
-            this.experience.relevantMin = data.relevant_experience_min || 0;
-            this.experience.relevantMax = data.relevant_experience_max || 0;
-
-            // Auto-populate Salary
-            this.salary.min = data.salary_min || 0;
-            this.salary.max = data.salary_max || 0;
-
-            // 🟢 POPULATE SKILLS CHIPS
-            if (data.skills && Array.isArray(data.skills)) {
-              this.skills = data.skills; 
-            } else {
-              this.skills = []; // Clear if none found to avoid stale data
-            }
-
-            this.triggerAlert('Job Description parsed successfully!', ['OK']);
+          // CASE 1: Queued (Production Mode)
+          if (response.status === 'PROCESSING' && response.staging_id) {
+            this.startPollingJD(response.staging_id);
+          } 
+          // CASE 2: Sync Success (Local Dev Fallback)
+          else if (response.success && response.data) {
+            this.handleJDSuccess(response.data);
+          } 
+          // CASE 3: Immediate Error
+          else {
+             this.isParsing = false;
+             this.triggerAlert("Failed to initiate JD parsing.", ['OK']);
           }
         },
         error: (err) => {
-          this.isParsing = false; // Turn off loading on error
-          console.error("JD Parse Error", err);
-          // Optional: this.triggerAlert("Failed to parse JD with AI", ['OK']);
+          this.isParsing = false;
+          console.error("JD Parse Upload Error", err);
+          this.triggerAlert("Upload failed.", ['OK']);
         }
       });
     }
+  }
+
+  /**
+   * Polls the JD status endpoint every 3 seconds for up to 1 minute.
+   */
+  private startPollingJD(stagingId: number): void {
+    this.pollingService.poll(
+      () => this.adbService.checkJDStatus(stagingId),
+      3000, // 3 seconds interval
+      20    // Max 20 attempts (60 seconds total)
+    ).pipe(
+      takeWhile((res: any) => {
+        // Continue polling if status is PENDING or PROCESSING
+        return res.status === 'PENDING' || res.status === 'PROCESSING';
+      }, true) // 'true' ensures the final emission (COMPLETED/FAILED) is passed down
+    ).subscribe({
+      next: (res: any) => {
+        if (res.status === 'COMPLETED' && res.data) {
+          this.handleJDSuccess(res.data);
+        } else if (res.status === 'FAILED') {
+          this.isParsing = false;
+          this.triggerAlert("JD Parsing failed: " + (res.error || 'Unknown error'), ['OK']);
+        }
+      },
+      error: (err) => {
+        this.isParsing = false;
+        this.triggerAlert("Polling error.", ['OK']);
+      },
+      complete: () => {
+        // Stop spinner if polling completes
+        this.isParsing = false;
+      }
+    });
+  }
+
+  /**
+   * Helper to handle successful JD parsing data
+   */
+  private handleJDSuccess(data: any): void {
+    this.isParsing = false;
+    
+    // Populate fields
+    this.jobRole = data.job_role || this.jobRole;
+    this.jobDescription = data.job_description || '';
+    this.selectedNoticePeriod = data.notice_period || '';
+    this.selectedGender = data.gender || '';
+    this.clientName = data.client_name || this.clientName;
+
+    // Handle Interview Location (String to Array)
+    if (data.interview_location) {
+       const locs = data.interview_location.split(',').map((s: string) => s.trim());
+       // Simple merge logic: add if not exists
+       locs.forEach((l: string) => {
+         if(l && !this.interviewLocationsList.includes(l)) {
+           this.interviewLocationsList.push(l);
+         }
+       });
+    }
+
+    // Handle Experience
+    this.experience.totalMin = data.total_experience_min || 0;
+    this.experience.totalMax = data.total_experience_max || 0;
+    this.experience.relevantMin = data.relevant_experience_min || 0;
+    this.experience.relevantMax = data.relevant_experience_max || 0;
+
+    // Handle Salary
+    this.salary.min = data.salary_min || 0;
+    this.salary.max = data.salary_max || 0;
+
+    // Handle Skills (Array)
+    if (data.skills && Array.isArray(data.skills)) {
+      this.skills = data.skills; 
+    } else if (typeof data.skills === 'string') {
+       this.skills = data.skills.split(',').map((s: string) => s.trim());
+    } else {
+      this.skills = [];
+    }
+
+    this.triggerAlert('JD Parsed successfully!', ['OK']);
   }
 
   getFileName(): string {

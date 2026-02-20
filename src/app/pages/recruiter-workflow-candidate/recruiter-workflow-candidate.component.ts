@@ -7,12 +7,14 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap,takeWhile } from 'rxjs/operators';
 import { RelativeDatePipe } from '../../pipe/relative-date.pipe';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+import { PollingService } from '../../services/polling.service'; // Import Polling Service
+
 
 
 // Custom Validators
@@ -174,6 +176,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     private ngZone: NgZone, 
     private candidateService: RecruiterWorkflowCandidateService,
     private adbRequirementService: AdbRequirementService,
+    private pollingService: PollingService
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
@@ -936,47 +939,127 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     this.candidateService.parseResume(file).subscribe({
       next: (response: any) => {
-        this.isParsingResume = false;
-
-        if (!response.success && response.error && !response.errors) {
-            this.showAlert(response.error, ['Close']);
-            this.onCancel();
-            return;
+        
+        // CASE 1: Queued (Production Mode)
+        if (response.status === 'PROCESSING' && response.staging_id) {
+          this.stagingId = response.staging_id;
+          this.startPollingResume(response.staging_id);
+        } 
+        // CASE 2: Sync Success (Local Dev Fallback)
+        else if (response.success && response.data) {
+          this.stagingId = response.staging_id; // Might be present
+          this.handleParsingSuccess(response.data);
+        } 
+        // CASE 3: Immediate Duplicate/Error
+        else if (response.errors) {
+           const phoneErrStr = response.errors.phone_number ? JSON.stringify(response.errors.phone_number) : '';
+           const emailErrStr = response.errors.email ? JSON.stringify(response.errors.email) : '';
+           if (phoneErrStr.includes('unique') || emailErrStr.includes('unique')) {
+             this.showAlert("Duplicate detected.", ['Close']);
+           } else {
+             this.showAlert("Validation error.", ['Close']);
+           }
+           this.isParsingResume = false;
         }
-
-        if (response.errors) {
-          const phoneErrStr = response.errors.phone_number ? JSON.stringify(response.errors.phone_number) : '';
-          const emailErrStr = response.errors.email ? JSON.stringify(response.errors.email) : '';
-          const isPhoneDuplicate = phoneErrStr.includes('unique') || phoneErrStr.includes('already exists');
-          const isEmailDuplicate = emailErrStr.includes('unique') || emailErrStr.includes('already exists');
-
-          if (isPhoneDuplicate || isEmailDuplicate) {
-            this.showAlert("Duplicate candidate details detected.", ['Close']);
-            this.onCancel();
-            return;
-          }
-        }
-
-        if (response.success && response.staging_id) {
-            this.stagingId = response.staging_id;
-            this.editingCandidateId = null; 
-            this.populateFormWithData(response.data);
-            this.showAlert("Resume parsed! Please review details.", ['Close']);
+        else {
+          // Unknown response structure
+          this.isParsingResume = false;
+          this.showAlert("Unexpected server response.", ['Close']);
         }
       },
       error: (err) => {
         this.isParsingResume = false;
         if (err.status === 409) {
-           this.showAlert("Duplicate Candidate detected.", ['Close']);
+           this.showAlert("Duplicate Candidate.", ['Close']);
            this.selectedFile = null;
            this.selectedFileName = '';
            target.value = '';
         } else {
-           this.showAlert("Could not parse resume automatically.", ['Close']);
+           this.showAlert("Upload failed.", ['Close']);
         }
       }
     });
   }
+
+  /**
+   * Polls the status endpoint every 3 seconds for up to 1 minute.
+   */
+  private startPollingResume(stagingId: number): void {
+    this.pollingService.poll(
+      () => this.candidateService.checkResumeStatus(stagingId),
+      3000, // 3 seconds interval
+      20    // Max 20 attempts (60 seconds total)
+    ).pipe(
+      takeWhile((res: any) => {
+        // Continue polling if status is PENDING or PROCESSING
+        return res.status === 'PENDING' || res.status === 'PROCESSING';
+      }, true) // 'true' ensures the final emission (COMPLETED/FAILED) is passed down
+    ).subscribe({
+      next: (res: any) => {
+        if (res.status === 'COMPLETED' && res.data) {
+          this.handleParsingSuccess(res.data);
+        } else if (res.status === 'FAILED') {
+          this.isParsingResume = false;
+          this.showAlert("Parsing failed: " + (res.error || 'Unknown error'), ['Close']);
+        }
+      },
+      error: (err) => {
+        this.isParsingResume = false;
+        this.showAlert("Polling error.", ['Close']);
+      },
+      complete: () => {
+        // Ensure spinner stops if polling completes without success/failure (e.g., timeout)
+        this.isParsingResume = false;
+      }
+    });
+  }
+   /**
+   * Helper to handle successful parsing data
+   */
+  private handleParsingSuccess(data: any): void {
+    this.isParsingResume = false;
+    this.editingCandidateId = null; // It's a new parsed entry
+    
+    // Populate logic (same as before)
+    if (data.skills) {
+      if (Array.isArray(data.skills)) this.skills = data.skills;
+      else this.skills = data.skills.split(',').map((s: string) => s.trim()).filter(Boolean);
+      this.updateSkillsFormControl();
+    }
+    if (data.preferred_location) {
+      this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
+    }
+    if (data.current_location) {
+      this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+    }
+
+    // Handle Phone Numbers
+    while (this.phoneNumbersArray.length !== 0) this.phoneNumbersArray.removeAt(0);
+    const rawPhones = data.phone_number || '';
+    const phoneList = rawPhones.split(',').map((p: string) => p.trim()).filter(Boolean);
+    if (phoneList.length > 0) phoneList.forEach(p => this.addPhoneNumber(p));
+    else this.addPhoneNumber();
+
+    this.candidateForm.patchValue({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      work_experience: data.work_experience,
+      total_experience: data.total_experience_min || data.total_experience_years, 
+      relevant_experience: data.relevant_experience_min || data.relevant_experience_years, 
+      expected_ctc_min: data.expected_ctc_min,
+      expected_ctc_max: data.expected_ctc_max,
+      current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
+      notice_period: this.matchDropdown(data.notice_period, this.noticePeriodChoices),
+      gender: this.matchDropdown(data.gender, this.genderChoices),
+    });
+
+    this.showAlert("Resume parsed! Please review.", ['Close']);
+  }
+  
+  
 
   populateFormWithData(data: any): void {
     if (!data) return;

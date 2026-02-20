@@ -69,6 +69,12 @@ export interface RegisteredUser {
   selected?: boolean; 
 }
 
+export interface PollStatusResponse {
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  data?: any;
+  error?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -81,6 +87,11 @@ export class RecruiterWorkflowCandidateService {
   private deleteUserUrl = environment.apiUrl + 'api/auth/delete-user/';
 
   constructor(private http: HttpClient) { }
+
+  // NEW: Check Resume Status
+  checkResumeStatus(stagingId: number): Observable<PollStatusResponse> {
+    return this.http.get<PollStatusResponse>(`${this.apiUrl}resume-status/${stagingId}/`);
+  }
 
   getCandidates(): Observable<Candidate[]> {
     return this.http.get<Candidate[]>(`${this.apiUrl}${this.endpoint}`);

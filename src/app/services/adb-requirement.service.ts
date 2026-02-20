@@ -18,6 +18,11 @@ export class AdbRequirementService {
     return this.http.post(this.apiUrl, data);
   }
 
+
+  checkJDStatus(stagingId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}jd-status/${stagingId}/`);
+  }
+
   // Add this method to fetch the list
   getRequirements(): Observable<any> {
     return this.http.get(this.apiUrl);
