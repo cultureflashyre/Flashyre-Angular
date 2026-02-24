@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { forkJoin, Subject, of, Observable, Subscription } from 'rxjs';
+import { forkJoin, Subject, of, Observable, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, takeWhile } from 'rxjs/operators';
 import { RelativeDatePipe } from '../../pipe/relative-date.pipe';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
@@ -203,6 +203,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    if (this.pollSubscription) {
+      this.pollSubscription.unsubscribe();
+    }
   }
 
   // =========================================================
@@ -982,52 +985,69 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   /**
    * Polls the status endpoint every 3 seconds for up to 1 minute.
    */
+  // Add this property near your other state variables at the top of the class
+  private pollSubscription?: Subscription;
+
+  // Replace your existing startPollingResume function with this:
   private startPollingResume(stagingId: number): void {
-    this.pollingService.poll(
-      () => this.candidateService.checkResumeStatus(stagingId),
-      3000, // 3 seconds interval
-      20    // Max 20 attempts (60 seconds total)
-    ).pipe(
+    let attempt = 0;
+    const maxAttempts = 125; // 25 attempts * 3 seconds = 75 seconds timeout
+
+    console.log(`[Resume Parse] Starting to poll for staging_id: ${stagingId}`);
+
+    // Native RxJS polling: start at 0ms, ping every 3000ms
+    this.pollSubscription = timer(0, 3000).pipe(
+      switchMap(() => {
+        console.log(`[Resume Parse] Polling attempt ${attempt + 1}/${maxAttempts}...`);
+        return this.candidateService.checkResumeStatus(stagingId);
+      }),
       takeWhile((res: any) => {
-        // Continue polling if status is PENDING or PROCESSING
+        attempt++;
+        console.log(`[Resume Parse] Backend Response:`, res);
+        
+        // Stop polling if we hit max attempts
+        if (attempt >= maxAttempts) return false;
+        
+        // Keep polling if the status is still processing
         return res.status === 'PENDING' || res.status === 'PROCESSING';
-      }, true) // 'true' ensures the final emission (COMPLETED/FAILED) is passed down
+      }, true) // 'true' ensures the final COMPLETED/FAILED emission triggers the 'next' block
     ).subscribe({
       next: (res: any) => {
         if (res.status === 'COMPLETED' && res.data) {
+          console.log(`[Resume Parse] COMPLETED! Populating form with:`, res.data);
           
           let parsedData = res.data;
           
           // Safety Check: If Django sent the dict as a string, parse it
           if (typeof parsedData === 'string') {
             try {
-               // Replace Python-style single quotes if it was cast via str() instead of json.dumps()
                const cleanStr = parsedData.replace(/'/g, '"');
                parsedData = JSON.parse(cleanStr);
             } catch (e) {
-               console.error("Failed to parse AI data:", e);
-               parsedData = res.data; // Fallback
+               console.error("[Resume Parse] Failed to parse AI data string:", e);
             }
           }
           
-          // Successfully obtained object, populate form!
+          // Populate form and kill spinner
           this.handleParsingSuccess(parsedData);
           
         } else if (res.status === 'FAILED') {
+          console.error(`[Resume Parse] FAILED:`, res.error);
           this.isParsingResume = false;
           this.showAlert("Parsing failed: " + (res.error || 'Unknown error'), ['Close']);
         }
       },
       error: (err) => {
+        console.error("[Resume Parse] HTTP ERROR:", err);
         this.isParsingResume = false;
-        console.error("Polling Error:", err);
-        this.showAlert("Network error while checking resume status. Please try again.", ['Close']);
+        // If this alert shows up, it means the URL is wrong or blocked by CORS
+        this.showAlert(`Network error checking status: ${err.statusText}. Open Console (F12) for details.`, ['Close']);
       },
       complete: () => {
-        // If the observable completes and it's STILL loading, it means we hit the 20 attempt limit (timeout)
         if (this.isParsingResume) {
+          console.warn("[Resume Parse] Polling timed out.");
           this.isParsingResume = false;
-          this.showAlert("Parsing is taking longer than expected. Please refresh or try again.", ['Close']);
+          this.showAlert("Parsing is taking longer than expected. Please refresh.", ['Close']);
         }
       }
     });
