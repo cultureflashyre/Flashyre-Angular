@@ -88,9 +88,13 @@ export class RecruiterWorkflowCandidateService {
 
   constructor(private http: HttpClient) { }
 
-  // NEW: Check Resume Status
+  // NEW: Check Resume Status with Cache Buster and Correct URL
   checkResumeStatus(stagingId: number): Observable<PollStatusResponse> {
-    return this.http.get<PollStatusResponse>(`${this.apiUrl}resume-status/${stagingId}/`);
+    // Add a timestamp to bypass aggressive browser caching on GET requests
+    const timestamp = new Date().getTime(); 
+    
+    // Add the missing 'api/' prefix to match your Django urls.py mapping
+    return this.http.get<PollStatusResponse>(`${this.apiUrl}api/resume-status/${stagingId}/?t=${timestamp}`);
   }
 
   getCandidates(): Observable<Candidate[]> {

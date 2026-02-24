@@ -7,15 +7,13 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin, Subject, of, Observable, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap,takeWhile } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, takeWhile } from 'rxjs/operators';
 import { RelativeDatePipe } from '../../pipe/relative-date.pipe';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
 import { PollingService } from '../../services/polling.service'; // Import Polling Service
-
-
 
 // Custom Validators
 export function minMaxValidator(minControlName: string, maxControlName: string) {
@@ -176,7 +174,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     private ngZone: NgZone, 
     private candidateService: RecruiterWorkflowCandidateService,
     private adbRequirementService: AdbRequirementService,
-    private pollingService: PollingService
+    private pollingService: PollingService // Inject Polling Service
   ) {
     this.title.setTitle('Recruiter-Workflow-Candidate - Flashyre');
     this.initializeForm();
@@ -341,7 +339,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     // --- SORTING ---
     if (this.currentSort === 'a-z') {
-      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + a.last_name));
+      candidates.sort((a, b) => (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name));
     } else if (this.currentSort === 'z-a') {
       candidates.sort((a, b) => (b.first_name + ' ' + b.last_name).localeCompare(a.first_name + ' ' + a.last_name));
     }
@@ -997,7 +995,24 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     ).subscribe({
       next: (res: any) => {
         if (res.status === 'COMPLETED' && res.data) {
-          this.handleParsingSuccess(res.data);
+          
+          let parsedData = res.data;
+          
+          // Safety Check: If Django sent the dict as a string, parse it
+          if (typeof parsedData === 'string') {
+            try {
+               // Replace Python-style single quotes if it was cast via str() instead of json.dumps()
+               const cleanStr = parsedData.replace(/'/g, '"');
+               parsedData = JSON.parse(cleanStr);
+            } catch (e) {
+               console.error("Failed to parse AI data:", e);
+               parsedData = res.data; // Fallback
+            }
+          }
+          
+          // Successfully obtained object, populate form!
+          this.handleParsingSuccess(parsedData);
+          
         } else if (res.status === 'FAILED') {
           this.isParsingResume = false;
           this.showAlert("Parsing failed: " + (res.error || 'Unknown error'), ['Close']);
@@ -1005,22 +1020,27 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.isParsingResume = false;
-        this.showAlert("Polling error.", ['Close']);
+        console.error("Polling Error:", err);
+        this.showAlert("Network error while checking resume status. Please try again.", ['Close']);
       },
       complete: () => {
-        // Ensure spinner stops if polling completes without success/failure (e.g., timeout)
-        this.isParsingResume = false;
+        // If the observable completes and it's STILL loading, it means we hit the 20 attempt limit (timeout)
+        if (this.isParsingResume) {
+          this.isParsingResume = false;
+          this.showAlert("Parsing is taking longer than expected. Please refresh or try again.", ['Close']);
+        }
       }
     });
   }
-   /**
-   * Helper to handle successful parsing data
+  
+  /**
+   * Shared logic to populate the form
    */
   private handleParsingSuccess(data: any): void {
-    this.isParsingResume = false;
-    this.editingCandidateId = null; // It's a new parsed entry
+    this.isParsingResume = false; // STOP SPINNER
+    this.editingCandidateId = null; 
     
-    // Populate logic (same as before)
+    // Populate logic
     if (data.skills) {
       if (Array.isArray(data.skills)) this.skills = data.skills;
       else this.skills = data.skills.split(',').map((s: string) => s.trim()).filter(Boolean);
