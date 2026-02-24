@@ -986,7 +986,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.pollingService.poll(
       () => this.candidateService.checkResumeStatus(stagingId),
       3000, // 3 seconds interval
-      20    // Max 20 attempts (60 seconds total)
+      60000 // Max 20 attempts (60 seconds total)
     ).pipe(
       takeWhile((res: any) => {
         // Continue polling if status is PENDING or PROCESSING
