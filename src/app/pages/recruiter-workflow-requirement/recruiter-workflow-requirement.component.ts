@@ -1,23 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; 
 import { Title, Meta } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { forkJoin, Subject, Subscription } from 'rxjs';
+import { forkJoin, Subject, Subscription, timer, of, Observable } from 'rxjs'; // ADDED timer
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
-import { NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, switchMap, tap, finalize, takeWhile } from 'rxjs/operators';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
-import { of, Observable } from 'rxjs';
 
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
-import { PollingService } from '../../services/polling.service'; // IMPORT POLLING SERVICE
+// ❌ POLLING SERVICE REMOVED TO FIX NULLINJECTORERROR
 
 @Component({
   standalone: true,
@@ -111,6 +108,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   interviewLocationsList: string[] = [];
 
   private subscriptions = new Subscription();
+  private pollSubscription?: Subscription; // ADDED FOR NATIVE RXJS POLLING
   
   // 2. View Switching & Data List
   isFormVisible: boolean = false;
@@ -225,8 +223,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     private adbService: AdbRequirementService,  
     private fb: FormBuilder,
     private router: Router,
-    private ngZone: NgZone,
-    private pollingService: PollingService // INJECT POLLING SERVICE
+    private ngZone: NgZone
+    // ❌ POLLING SERVICE INJECTION REMOVED HERE
   ) {
     this.title.setTitle('Recruiter-Workflow-Requirement - Flashyre');
     // ... rest of your constructor logic
@@ -278,6 +276,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    if (this.pollSubscription) {
+      this.pollSubscription.unsubscribe();
+    }
   }
 
   // --- Google Maps Initialization ---
@@ -547,34 +548,67 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   }
 
   /**
-   * Polls the JD status endpoint every 3 seconds for up to 1 minute.
+   * Native RxJS Polling: Polls the JD status endpoint every 3 seconds for up to 5 minutes.
    */
   private startPollingJD(stagingId: number): void {
-    this.pollingService.poll(
-      () => this.adbService.checkJDStatus(stagingId),
-      3000, // 3 seconds interval
-      20    // Max 20 attempts (60 seconds total)
-    ).pipe(
+    let attempt = 0;
+    const maxAttempts = 125; // 100 attempts * 3 seconds = 5 minutes timeout
+
+    console.log(`[JD Parse] Starting to poll for staging_id: ${stagingId}`);
+
+    // Native RxJS polling: start at 0ms, ping every 3000ms
+    this.pollSubscription = timer(0, 3000).pipe(
+      switchMap(() => {
+        console.log(`[JD Parse] Polling attempt ${attempt + 1}/${maxAttempts}...`);
+        return this.adbService.checkJDStatus(stagingId);
+      }),
       takeWhile((res: any) => {
-        // Continue polling if status is PENDING or PROCESSING
+        attempt++;
+        console.log(`[JD Parse] Backend Response:`, res);
+        
+        // Stop polling if we hit max attempts
+        if (attempt >= maxAttempts) return false;
+        
+        // Keep polling if the status is still processing
         return res.status === 'PENDING' || res.status === 'PROCESSING';
-      }, true) // 'true' ensures the final emission (COMPLETED/FAILED) is passed down
+      }, true) // 'true' ensures the final COMPLETED/FAILED emission triggers the 'next' block
     ).subscribe({
       next: (res: any) => {
         if (res.status === 'COMPLETED' && res.data) {
-          this.handleJDSuccess(res.data);
+          console.log(`[JD Parse] COMPLETED! Populating form with:`, res.data);
+          
+          let parsedData = res.data;
+          
+          // Safety Check: If Django sent the dict as a string, parse it
+          if (typeof parsedData === 'string') {
+            try {
+               const cleanStr = parsedData.replace(/'/g, '"');
+               parsedData = JSON.parse(cleanStr);
+            } catch (e) {
+               console.error("[JD Parse] Failed to parse AI data string:", e);
+            }
+          }
+          
+          // Successfully obtained object, populate form!
+          this.handleJDSuccess(parsedData);
+          
         } else if (res.status === 'FAILED') {
+          console.error(`[JD Parse] FAILED:`, res.error);
           this.isParsing = false;
           this.triggerAlert("JD Parsing failed: " + (res.error || 'Unknown error'), ['OK']);
         }
       },
       error: (err) => {
+        console.error("[JD Parse] HTTP ERROR:", err);
         this.isParsing = false;
-        this.triggerAlert("Polling error.", ['OK']);
+        this.triggerAlert(`Network error checking status: ${err.statusText}. Open Console (F12) for details.`, ['OK']);
       },
       complete: () => {
-        // Stop spinner if polling completes
-        this.isParsing = false;
+        if (this.isParsing) {
+          console.warn("[JD Parse] Polling timed out.");
+          this.isParsing = false;
+          this.triggerAlert("Parsing is taking longer than expected. Please refresh.", ['OK']);
+        }
       }
     });
   }

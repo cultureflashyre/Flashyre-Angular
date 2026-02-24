@@ -19,8 +19,11 @@ export class AdbRequirementService {
   }
 
 
+  // UPDATE: Add timestamp cache-buster and ensure the URL matches Django correctly
   checkJDStatus(stagingId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}jd-status/${stagingId}/`);
+    const timestamp = new Date().getTime(); 
+    // We use environment.apiUrl directly here to ensure the path maps perfectly to 'api/jd-status/'
+    return this.http.get(`${environment.apiUrl}api/jd-status/${stagingId}/?t=${timestamp}`);
   }
 
   // Add this method to fetch the list
