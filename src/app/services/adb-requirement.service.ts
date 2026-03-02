@@ -7,8 +7,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class AdbRequirementService {
-  private apiUrl = environment.apiUrl + 'api/job-requirements/'; 
-  private usersUrl = environment.apiUrl + 'api/super-admin/list/'; 
+  private apiUrl = environment.apiUrl + 'api/job-requirements/';
+  private usersUrl = environment.apiUrl + 'api/super-admin/list/';
   private parseJdUrl = environment.apiUrl + 'api/parse-job-description/';
   private locationApiUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
 
@@ -21,14 +21,14 @@ export class AdbRequirementService {
 
   // UPDATE: Add timestamp cache-buster and ensure the URL matches Django correctly
   checkJDStatus(stagingId: number): Observable<any> {
-    const timestamp = new Date().getTime(); 
+    const timestamp = new Date().getTime();
     // We use environment.apiUrl directly here to ensure the path maps perfectly to 'api/jd-status/'
     return this.http.get(`${environment.apiUrl}api/jd-status/${stagingId}/?t=${timestamp}`);
   }
 
   // Add this method to fetch the list
-  getRequirements(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getRequirements(page: number = 1): Observable<any> {
+    return this.http.get(`${this.apiUrl}?page=${page}`);
   }
   updateRequirement(id: number, data: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}${id}/`, data);

@@ -168,6 +168,18 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
+  // --- Pagination Properties ---
+  currentPage: number = 1;
+  totalCount: number = 0;
+  totalPages: number = 1;
+  nextPageUrl: string | null = null;
+  prevPageUrl: string | null = null;
+
+  // --- Structured Location Fields (from Google Places) ---
+  selectedCity: string = '';
+  selectedState: string = '';
+  selectedPlaceId: string = '';
+
   constructor(
     private title: Title,
     private meta: Meta,
@@ -271,11 +283,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     });
   }
 
-  loadCandidates(): void {
+  loadCandidates(page: number = 1): void {
     this.isPageLoading = true;
-    this.candidateService.getCandidates().subscribe({
-      next: (data) => {
-        this.masterCandidates = data.map(c => ({ ...c, selected: false }));
+    this.currentPage = page;
+    this.candidateService.getCandidates(page).subscribe({
+      next: (response: any) => {
+        // Handle paginated response
+        const data = response.results || response;
+        this.totalCount = response.count || data.length;
+        this.totalPages = Math.ceil(this.totalCount / 30);
+        this.nextPageUrl = response.next;
+        this.prevPageUrl = response.previous;
+
+        this.masterCandidates = data.map((c: any) => ({ ...c, selected: false }));
         this.applyFiltersAndSort();
         this.isPageLoading = false;
       },
@@ -630,6 +650,33 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       this.currentLocationsList.push(locationName);
       this.updateLocationControl('current_location', this.currentLocationsList);
     }
+
+    // Extract place_id from the prediction for structured location data
+    if (prediction.place_id) {
+      this.selectedPlaceId = prediction.place_id;
+
+      const placesService = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      placesService.getDetails(
+        { placeId: prediction.place_id, fields: ['address_components'] },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
+            this.ngZone.run(() => {
+              for (const component of place!.address_components!) {
+                if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
+                  this.selectedCity = component.long_name;
+                }
+                if (component.types.includes('administrative_area_level_1')) {
+                  this.selectedState = component.long_name;
+                }
+              }
+            });
+          }
+        }
+      );
+    }
+
     inputElement.value = '';
     this.showCurrentSuggestions = false;
     this.currentSuggestions = [];
@@ -1238,6 +1285,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       }
     });
 
+    // Append structured location fields
+    if (this.selectedCity) formData.append('city', this.selectedCity);
+    if (this.selectedState) formData.append('state', this.selectedState);
+    if (this.selectedPlaceId) formData.append('place_id', this.selectedPlaceId);
+
     if (this.stagingId) {
       formData.append('staging_id', this.stagingId.toString());
     } else if (this.selectedFile) {
@@ -1400,5 +1452,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.showAlert("Failed to add candidates to workflow.", ["Close"]);
       }
     });
+  }
+
+  trackByCandidate(index: number, candidate: any): number {
+    return candidate.id;
   }
 }

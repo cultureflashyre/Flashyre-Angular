@@ -199,7 +199,7 @@
             <ng-container *ngIf="masterCandidates.length > 0; else noData">
               <ng-container *ngIf="displayCandidates.length > 0; else noMatches">
                 <div class="recruiter-workflow-candidate-container32">
-                  <div *ngFor="let candidate of displayCandidates" class="recruiter-workflow-candidate-container33">
+                  <div *ngFor="let candidate of displayCandidates; trackBy: trackByCandidate" class="recruiter-workflow-candidate-container33">
                     <div class="recruiter-workflow-candidate-container34">
                       <div class="recruiter-workflow-candidate-container35">
                         <input 
@@ -300,6 +300,29 @@
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="pagination-container" *ngIf="totalPages > 1" style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px; border-top: 1px solid #E0E0E0; margin-top: 20px;">
+                  <button 
+                    (click)="loadCandidates(currentPage - 1)" 
+                    [disabled]="!prevPageUrl"
+                    class="pagination-btn"
+                    style="padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; background: white; cursor: pointer; color: #333;"
+                    [style.opacity]="!prevPageUrl ? '0.5' : '1'">
+                    Previous
+                  </button>
+                  <span class="pagination-info" style="font-size: 14px; font-weight: 500; color: #555;">
+                    Page {{ currentPage }} of {{ totalPages }}
+                  </span>
+                  <button 
+                    (click)="loadCandidates(currentPage + 1)" 
+                    [disabled]="!nextPageUrl"
+                    class="pagination-btn"
+                    style="padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; background: white; cursor: pointer; color: #333;"
+                    [style.opacity]="!nextPageUrl ? '0.5' : '1'">
+                    Next
+                  </button>
                 </div>
               </ng-container>
               <!-- No Matches Template -->

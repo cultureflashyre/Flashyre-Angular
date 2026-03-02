@@ -5,7 +5,7 @@ import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
-    {
+  {
     path: '',
     loadComponent: () => import('./pages/index/index.component').then(m => m.Index),
   },
@@ -14,7 +14,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/profile-basic-information/profile-basic-information.component').then(
         (m) => m.ProfileBasicInformation),
-     // Protect this route
+    // Protect this route
   },
   {
     path: 'job-post-list',
@@ -22,9 +22,9 @@ export const routes: Routes = [
       import(
         './pages/job-post-list/job-post-list.component'
       ).then((m) => m.RecruiterView3rdPage1),
-      canActivate: [authGuard],
-      data: { roles: ['recruiter','admin'] },
-      
+    canActivate: [authGuard],
+    data: { roles: ['recruiter', 'admin'] },
+
   },
   {
     path: 'recruiter-view-job-applications-1/:jobId',
@@ -32,8 +32,8 @@ export const routes: Routes = [
       import(
         './pages/recruiter-view-job-applications-1/recruiter-view-job-applications-1.component'
       ).then((m) => m.RecruiterViewJobApplications1),
-            canActivate: [authGuard],
-      data: { roles: ['recruiter','admin'] },
+    canActivate: [authGuard],
+    data: { roles: ['recruiter', 'admin'] },
   },
   {
     path: 'signup',
@@ -71,7 +71,7 @@ export const routes: Routes = [
       import(
         './pages/candidate-job-detail-view/candidate-job-detail-view.component'
       ).then((m) => m.CandidateJobDetailView
-    ), 
+      ),
     canActivate: [authGuard],
     data: { roles: ['candidate'] },  // Protect this route
   },
@@ -88,9 +88,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/candidate-home/candidate-home.component').then(
         (m) => m.CandidateHome
-      ), 
-      canActivate: [authGuard],
-      data: { roles: ['candidate'] },  // Protect this route
+      ),
+    canActivate: [authGuard],
+    data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'profile-certification-page',
@@ -106,7 +106,7 @@ export const routes: Routes = [
       import(
         './pages/flashyre-assessment-rules-card/flashyre-assessment-rules-card.component'
       ).then((m) => m.FlashyreAssessmentRulesCard
-    ),     canActivate: [authGuard],
+      ), canActivate: [authGuard],
     data: { roles: ['candidate'] },  // Protect this route
   },
   {
@@ -114,7 +114,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/candidate-dashboard/candidate-dashboard.component').then(
         (m) => m.CandidateDashboard
-      ),     canActivate: [authGuard],
+      ), canActivate: [authGuard],
     data: { roles: ['candidate'] },  // Protect this route
   },
   {
@@ -130,23 +130,23 @@ export const routes: Routes = [
       import('./pages/flashyre-assessment11/flashyre-assessment11.component').then(
         (m) => m.FlashyreAssessment11
       ),
-          canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },  // Protect this route
   },
   {
     path: 'profile-last-page1', // New route
     loadComponent: () =>
-    import('./pages/profile-last-page1/profile-last-page1.component').then(
-      (m) => m.ProfileLastPage1
-    ),
-  },   
+      import('./pages/profile-last-page1/profile-last-page1.component').then(
+        (m) => m.ProfileLastPage1
+      ),
+  },
   {
     path: 'candidate-assessment', // New route
     loadComponent: () =>
       import('./pages/candidate-assessment/candidate-assessment.component').then(
         (m) => m.CandidateAssessment
       ),
-      canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },  // Protect this route
   },
   {
@@ -155,7 +155,7 @@ export const routes: Routes = [
       import('./pages/assessment-taken-page/assessment-taken-page.component').then(
         (m) => m.AssessmentTakenPage
       ),
-          canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },
   },
   {
@@ -168,31 +168,31 @@ export const routes: Routes = [
   {
     path: 'profile-overview-page',
     loadComponent: () =>
-      import( './pages/profile-overview-page/profile-overview-page.component'
+      import('./pages/profile-overview-page/profile-overview-page.component'
       ).then((m) => m.ProfileOverviewPage),
   },
-    {
+  {
     path: 'assessment-taken-page-2/:assessmentId',
     loadComponent: () =>
-      import( './pages/assessment-taken-page-2/assessment-taken-page-2.component'
+      import('./pages/assessment-taken-page-2/assessment-taken-page-2.component'
       ).then((m) => m.AssessmentTakenPage2),
-          canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },
   },
-      {
+  {
     path: 'assessment-taken-page-3',
     loadComponent: () =>
-      import( './pages/assessment-taken-page-3/assessment-taken-page-3.component'
+      import('./pages/assessment-taken-page-3/assessment-taken-page-3.component'
       ).then((m) => m.AssessmentTakenPage3),
-          canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },
   },
-        {
+  {
     path: 'assessment-violation-message',
     loadComponent: () =>
-      import( './pages/assessment-violation-message/assessment-violation-message.component'
+      import('./pages/assessment-violation-message/assessment-violation-message.component'
       ).then((m) => m.AssessmentViolationMessage),
-          canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['candidate'] },
   },
   {
@@ -200,23 +200,23 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin-page1/admin-page1.component').then(
         (m) => m.AdminPage1),
-           canActivate: [authGuard],
+    canActivate: [authGuard],
     data: { roles: ['admin'] },
   },
-    {
-  path: 'job-posting-workflow',
-  loadComponent: () => import('./pages/job-posting-workflow/job-posting-workflow.component').then(
-        (m) => m.JobPostingWorkflowComponent),
-                  canActivate: [authGuard],
-    data: { roles: ['admin', 'recruiter'] },
-},
   {
-  path: 'create-job',
-  loadComponent: () => import('./pages/create-job/create-job.component').then(
-        (m) => m.AdminCreateJobStep1Component),
-                  canActivate: [authGuard],
+    path: 'job-posting-workflow',
+    loadComponent: () => import('./pages/job-posting-workflow/job-posting-workflow.component').then(
+      (m) => m.JobPostingWorkflowComponent),
+    canActivate: [authGuard],
     data: { roles: ['admin', 'recruiter'] },
-},
+  },
+  {
+    path: 'create-job',
+    loadComponent: () => import('./pages/create-job/create-job.component').then(
+      (m) => m.AdminCreateJobStep1Component),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] },
+  },
   {
     // This route handles the "edit" case, e.g., /create-job/12345
     path: 'create-job/:id',
@@ -226,74 +226,74 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['admin', 'recruiter'] },
   },
-{
-  path: 'create-job-step2',
-  loadComponent: () => import('./pages/create-job-step2/create-job-step2.component').then(m => m.AdminCreateJobStep2),
-  canActivate: [authGuard]
-},
-{
-  path: 'create-job-step3',
-  loadComponent: () => import('./pages/create-job-step3/create-job-step3.component').then(m => m.AdminCreateJobStep3),
-  canActivate: [authGuard]
-},
-{
-  path: 'create-job-step4',
-  loadComponent: () => import('./pages/create-job-step4/create-job-step4.component').then(m => m.AdminCreateJobStep4Component),
-  canActivate: [authGuard]
-},
-{
-  path: 'admin-candidate-scores',
-  loadComponent: () => import('./pages/admin-candidate-scores-page/admin-candidate-scores-page.component').then(m => m.AdminCandidateScoresPageComponent),
-  canActivate: [authGuard] // Or any other guards you need
-},
   {
-  path: 'coding-assessment',
-  loadComponent: () =>
-    import('./pages/coding-assessment/coding-assessment.component').then(
-      (m) => m.CodingAssessment
-    ),
-},
-{
+    path: 'create-job-step2',
+    loadComponent: () => import('./pages/create-job-step2/create-job-step2.component').then(m => m.AdminCreateJobStep2),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'create-job-step3',
+    loadComponent: () => import('./pages/create-job-step3/create-job-step3.component').then(m => m.AdminCreateJobStep3),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'create-job-step4',
+    loadComponent: () => import('./pages/create-job-step4/create-job-step4.component').then(m => m.AdminCreateJobStep4Component),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin-candidate-scores',
+    loadComponent: () => import('./pages/admin-candidate-scores-page/admin-candidate-scores-page.component').then(m => m.AdminCandidateScoresPageComponent),
+    canActivate: [authGuard] // Or any other guards you need
+  },
+  {
+    path: 'coding-assessment',
+    loadComponent: () =>
+      import('./pages/coding-assessment/coding-assessment.component').then(
+        (m) => m.CodingAssessment
+      ),
+  },
+  {
     path: 'recruiter-workflow-candidate',
     loadComponent: () =>
       import('./pages/recruiter-workflow-candidate/recruiter-workflow-candidate.component')
-      .then((m) => m.RecruiterWorkflowCandidate),
-      canActivate: [authGuard],
-      data: { roles: ['admin','recruiter'] } 
+        .then((m) => m.RecruiterWorkflowCandidate),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
   },
   {
     path: 'recruiter-workflow-requirement',
     loadComponent: () =>
       import('./pages/recruiter-workflow-requirement/recruiter-workflow-requirement.component')
-      .then((m) => m.RecruiterWorkflowRequirement),
-      canActivate: [authGuard],
-      data: { roles: ['admin','recruiter','client'] } 
+        .then((m) => m.RecruiterWorkflowRequirement),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter', 'client'] }
   },
   {
     path: 'recruiter-workflow-client',
     loadComponent: () =>
       import('./pages/recruiter-workflow-client/recruiter-workflow-client.component')
-      .then((m) => m.RecruiterWorkflowClient),
-      canActivate: [authGuard],
-      data: { roles: ['admin'] } 
+        .then((m) => m.RecruiterWorkflowClient),
+    canActivate: [authGuard],
+    data: { roles: ['admin'] }
   },
-    {
+  {
     path: 'recruiter-super-admin-analytical-module',
     loadComponent: () =>
       import('./pages/recruiter-super-admin-analytical-module/recruiter-super-admin-analytical-module.component')
-      .then((m) => m.RecruiterSuperAdminAnalyticalModuleComponent),
-      canActivate: [authGuard],
-      data: { 
-        roles: ['admin'], 
-        requiresSuperAdmin: true // Custom flag for the guard
-      }
+        .then((m) => m.RecruiterSuperAdminAnalyticalModuleComponent),
+    canActivate: [authGuard],
+    data: {
+      roles: ['admin'],
+      requiresSuperAdmin: true // Custom flag for the guard
+    }
   },
   {
     path: 'recruiter-workflow-ats/:id', // :id is the Job Requirement ID
     loadComponent: () => import('./pages/recruiter-workflow-ats/recruiter-workflow-ats.component')
       .then(m => m.RecruiterWorkflowAtsComponent),
     canActivate: [authGuard],
-    data: { roles: ['admin','client','recruiter'] }
+    data: { roles: ['admin', 'client', 'recruiter'] }
   },
   {
     path: 'recruiter-workflow-bulk-import', // :id is the Job Requirement ID
@@ -301,6 +301,13 @@ export const routes: Routes = [
       .then(m => m.RecruiterWorkflowBulkImportComponent),
     canActivate: [authGuard],
     data: { roles: ['admin'] }
+  },
+  {
+    path: 'job-matching-score',
+    loadComponent: () => import('./pages/job-matching-score/job-matching-score.component')
+      .then(m => m.JobMatchingScoreComponent),
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'recruiter'] }
   },
   {
     path: '**',

@@ -24,7 +24,7 @@ export interface Candidate {
   current_location: string;
   created_at?: string;
   selected?: boolean;
-  resume?: string; 
+  resume?: string;
   user?: number;
   recruiter_name?: string;
   source?: 'Naukri' | 'External';
@@ -66,7 +66,7 @@ export interface RegisteredUser {
   created_at: string;
   sourced_by_recruiter: string;
   sourced_data?: SourcedData | null; // <--- NEW FIELD
-  selected?: boolean; 
+  selected?: boolean;
 }
 
 export interface PollStatusResponse {
@@ -80,7 +80,7 @@ export interface PollStatusResponse {
 })
 export class RecruiterWorkflowCandidateService {
   private apiUrl = environment.apiUrl;
-  private parseUrl = environment.apiUrl + 'api/parse-resume/'; 
+  private parseUrl = environment.apiUrl + 'api/parse-resume/';
   private endpoint = 'api/candidates/';
   private atsUrl = environment.apiUrl + 'api/ats/bulk-add/';
   private registeredUsersUrl = environment.apiUrl + 'api/auth/registered-candidates/';
@@ -91,14 +91,14 @@ export class RecruiterWorkflowCandidateService {
   // NEW: Check Resume Status with Cache Buster and Correct URL
   checkResumeStatus(stagingId: number): Observable<PollStatusResponse> {
     // Add a timestamp to bypass aggressive browser caching on GET requests
-    const timestamp = new Date().getTime(); 
-    
+    const timestamp = new Date().getTime();
+
     // Add the missing 'api/' prefix to match your Django urls.py mapping
     return this.http.get<PollStatusResponse>(`${this.apiUrl}api/resume-status/${stagingId}/?t=${timestamp}`);
   }
 
-  getCandidates(): Observable<Candidate[]> {
-    return this.http.get<Candidate[]>(`${this.apiUrl}${this.endpoint}`);
+  getCandidates(page: number = 1): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${this.endpoint}?page=${page}`);
   }
 
   parseResume(file: File): Observable<any> {

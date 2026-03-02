@@ -1,8 +1,8 @@
 import { Component, OnInit, NgZone, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router'; 
+import { Router, RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
+import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
 import { HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
@@ -22,8 +22,8 @@ import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-wor
   templateUrl: 'recruiter-workflow-requirement.component.html',
   styleUrls: ['recruiter-workflow-requirement.component.css'],
   imports: [
-    CommonModule, 
-    RouterModule, 
+    CommonModule,
+    RouterModule,
     RecruiterWorkflowNavbarComponent,
     FormsModule,
     AlertMessageComponent,
@@ -35,7 +35,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // Add these properties to track current user context
   userType: string = '';
   currentUserId: string | null = null;
-  
+
   statusOptions = [
     { label: 'Active', color: '#28a745' },  // Green
     { label: 'On-hold', color: '#ffc107' }, // Yellow
@@ -46,12 +46,12 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   isSuperUser: boolean = false;
   clientName: string = '';
   subClientName: string = '';
-  jobRole: string = ''; 
+  jobRole: string = '';
   interviewLocation: string = '';
   interviewDate: string = '';
 
   // 🟢 NEW: Skills Array for Chips Input
-  skills: string[] = []; 
+  skills: string[] = [];
 
   // --- 1. NEW PROPERTY TO FIX ERROR ---
   isParsing: boolean = false;
@@ -62,7 +62,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // 🟢 NEW PROPERTY for file validation state
   isFileMissing: boolean = false;
 
-   // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
+  // --- NEW PROPERTIES FOR ADDITIONAL DETAILS LOCATION ---
   private additionalLocationInput$ = new Subject<string>(); // Stream for dynamic rows
   additionalLocationSuggestions: google.maps.places.AutocompletePrediction[] = []; // Suggestions list
   activeDetailIndex: number | null = null; // Tracks which row is currently typing
@@ -70,14 +70,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   clientList: any[] = []; // Stores the API response
   availableSubClients: string[] = []; // Sub-clients for the selected client
   public formErrors: { [key: string]: string } = {};
-  
+
   // NEW PROPERTIES FOR LOCATION SEARCH
   locationSuggestions: any[] = [];
   showLocationSuggestions: boolean = false;
   searchTimeout: any;
 
-    // 1. Add property for the new dropdown
-  createAssessment: string = 'No'; 
+  // 1. Add property for the new dropdown
+  createAssessment: string = 'No';
   assessmentOptions: string[] = ['Yes', 'No'];
   isAssessmentDropdownOpen: boolean = false; // For custom dropdown logic
 
@@ -109,18 +109,18 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   private subscriptions = new Subscription();
   private pollSubscription?: Subscription; // ADDED FOR NATIVE RXJS POLLING
-  
+
   // 2. View Switching & Data List
   isFormVisible: boolean = false;
   showListing: boolean = true; // Controls Form vs Listing view
-  requirementsList: any[] = []; 
+  requirementsList: any[] = [];
   isEditMode: boolean = false;
   currentRequirementId: number | null = null;
   isAllSelected: boolean = false;
   showAlert: boolean = false;
   alertMessage: string = '';
   alertButtons: string[] = [];
-  pendingAction: string = ''; 
+  pendingAction: string = '';
   pendingDeleteIndex: number | null = null;
   filterForm!: FormGroup;
   isFilterPanelVisible: boolean = false;
@@ -130,7 +130,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   existingFileUrl: string | null = null;
 
   // Master list to keep original data safe while filtering
-  masterRequirements: any[] = []; 
+  masterRequirements: any[] = [];
 
   // --- MULTI-SELECT USER ASSIGNMENT PROPERTIES ---
   availableUsers: any[] = [];     // Full list from API
@@ -152,6 +152,18 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   isInterviewDateInvalid: boolean = false;
   isNoticePeriodInvalid: boolean = false;
   isGenderInvalid: boolean = false;
+
+  // --- Pagination Properties ---
+  currentPage: number = 1;
+  totalCount: number = 0;
+  totalPages: number = 1;
+  nextPageUrl: string | null = null;
+  prevPageUrl: string | null = null;
+
+  // --- Structured Location Fields (from Google Places) ---
+  selectedCity: string = '';
+  selectedState: string = '';
+  selectedPlaceId: string = '';
 
   // STEP 1: REPLACE your existing parseErrorResponse function with this new, smarter version.
   /**
@@ -197,14 +209,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       if (Object.prototype.hasOwnProperty.call(errors, key)) {
         const friendlyName = fieldNameMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
         const messages = errors[key];
-        
+
         // Handle Django's list of errors
         if (Array.isArray(messages) && messages.length > 0) {
           // If the error is technical (like "Invalid pk"), provide a generic one if possible, 
           // or just display what the server said.
           errorMessages.push(`- ${friendlyName}: ${messages.join(' ')}`);
         } else if (typeof messages === 'string') {
-             errorMessages.push(`- ${friendlyName}: ${messages}`);
+          errorMessages.push(`- ${friendlyName}: ${messages}`);
         }
       }
     }
@@ -218,9 +230,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
 
   constructor(
-    private title: Title, 
-    private meta: Meta, 
-    private adbService: AdbRequirementService,  
+    private title: Title,
+    private meta: Meta,
+    private adbService: AdbRequirementService,
     private fb: FormBuilder,
     private router: Router,
     private ngZone: NgZone
@@ -232,10 +244,10 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
     const day = String(today.getDate()).padStart(2, '0');
-    
+
     this.minDate = `${year}-${month}-${day}`;
     this.initializeFilterForm();
-      // Add this line at the end of the constructor
+    // Add this line at the end of the constructor
     this.loader = new Loader({
       apiKey: this.googleMapsApiKey,
       version: 'weekly',
@@ -258,7 +270,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   }
 
   // === NEW METHODS FOR DETAIL POPUP ===
-  
+
   openRequirementDetails(item: any): void {
     this.selectedReqDetails = item;
     this.showDetailsModal = true;
@@ -268,7 +280,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     this.showDetailsModal = false;
     this.selectedReqDetails = null;
   }
-  
+
   // Method to handle file opening (reusing or creating new if needed)
   openFile(url: string | null): void {
     if (url) window.open(url, '_blank');
@@ -343,7 +355,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     this.activeDetailIndex = index; // Set active row
 
-      // --- NEW: Calculate Position for Fixed Dropdown ---
+    // --- NEW: Calculate Position for Fixed Dropdown ---
     const rect = input.getBoundingClientRect();
     this.dropdownTop = rect.bottom; // Place directly below input
     this.dropdownLeft = rect.left;  // Align left edge
@@ -363,7 +375,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     if (this.activeDetailIndex === null) return;
 
     const locationName = prediction.description.split(',')[0]; // Simple city name
-    
+
     // Update the specific row using the stored index
     if (this.additionalDetails[this.activeDetailIndex]) {
       this.additionalDetails[this.activeDetailIndex].location = locationName;
@@ -387,7 +399,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     if (!term.trim() || !this.placesService) {
       return of([]);
     }
-    
+
     if (!this.sessionToken && this.google) {
       this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
     }
@@ -419,7 +431,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Check assigned_users_details (Array of objects) or assigned_users (Array of IDs)
     const assignedList = item.assigned_users_details || item.assigned_users || [];
-    
+
     return assignedList.some((u: any) => {
       // Normalize comparison: Handle object {user_id: '...'} or simple string '...'
       const uId = u.user_id ? String(u.user_id) : String(u);
@@ -436,7 +448,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Handle nested object {user_id: '...'} or simple ID
     const creatorId = item.created_by_details ? item.created_by_details.user_id : item.created_by;
-    
+
     return String(creatorId) === String(currentUserId);
   }
 
@@ -456,14 +468,40 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     if (!this.interviewLocationsList.includes(locationName)) {
       this.interviewLocationsList.push(locationName);
     }
-    
+
+    // Extract place_id from the prediction for structured location data
+    if (prediction.place_id) {
+      this.selectedPlaceId = prediction.place_id;
+
+      // Use PlacesService to get address_components for city/state
+      const placesService = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      placesService.getDetails(
+        { placeId: prediction.place_id, fields: ['address_components'] },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
+            this.ngZone.run(() => {
+              for (const component of place!.address_components!) {
+                if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
+                  this.selectedCity = component.long_name;
+                }
+                if (component.types.includes('administrative_area_level_1')) {
+                  this.selectedState = component.long_name;
+                }
+              }
+            });
+          }
+        }
+      );
+    }
+
     inputElement.value = '';
     this.showInterviewLocationSuggestions = false;
     this.interviewLocationSuggestions = [];
     this.sessionToken = undefined;
     this.isInterviewLocationInvalid = false;
   }
-
   addManualInterviewLocation(event: any): void {
     const value = event.target.value.trim();
     if (value && !this.interviewLocationsList.includes(value)) {
@@ -505,14 +543,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       if (!allowedTypes.includes(file.type)) {
         this.fileUploadError = 'Upload only pdf or word documents';
         this.selectedFile = null;
-        event.target.value = ''; 
+        event.target.value = '';
         return;
       }
-      
+
       if (file.size > 5 * 1024 * 1024) {
         this.fileUploadError = 'File size cannot exceed 5MB.';
         this.selectedFile = null;
-        event.target.value = ''; 
+        event.target.value = '';
         return;
       }
 
@@ -520,22 +558,22 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
       // --- START LOADING STATE ---
       this.isParsing = true;
-      
+
       this.adbService.parseJobDescription(file).subscribe({
         next: (response: any) => {
-          
+
           // CASE 1: Queued (Production Mode)
           if (response.status === 'PROCESSING' && response.staging_id) {
             this.startPollingJD(response.staging_id);
-          } 
+          }
           // CASE 2: Sync Success (Local Dev Fallback)
           else if (response.success && response.data) {
             this.handleJDSuccess(response.data);
-          } 
+          }
           // CASE 3: Immediate Error
           else {
-             this.isParsing = false;
-             this.triggerAlert("Failed to initiate JD parsing.", ['OK']);
+            this.isParsing = false;
+            this.triggerAlert("Failed to initiate JD parsing.", ['OK']);
           }
         },
         error: (err) => {
@@ -565,10 +603,10 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       takeWhile((res: any) => {
         attempt++;
         console.log(`[JD Parse] Backend Response:`, res);
-        
+
         // Stop polling if we hit max attempts
         if (attempt >= maxAttempts) return false;
-        
+
         // Keep polling if the status is still processing
         return res.status === 'PENDING' || res.status === 'PROCESSING';
       }, true) // 'true' ensures the final COMPLETED/FAILED emission triggers the 'next' block
@@ -576,22 +614,22 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       next: (res: any) => {
         if (res.status === 'COMPLETED' && res.data) {
           console.log(`[JD Parse] COMPLETED! Populating form with:`, res.data);
-          
+
           let parsedData = res.data;
-          
+
           // Safety Check: If Django sent the dict as a string, parse it
           if (typeof parsedData === 'string') {
             try {
-               const cleanStr = parsedData.replace(/'/g, '"');
-               parsedData = JSON.parse(cleanStr);
+              const cleanStr = parsedData.replace(/'/g, '"');
+              parsedData = JSON.parse(cleanStr);
             } catch (e) {
-               console.error("[JD Parse] Failed to parse AI data string:", e);
+              console.error("[JD Parse] Failed to parse AI data string:", e);
             }
           }
-          
+
           // Successfully obtained object, populate form!
           this.handleJDSuccess(parsedData);
-          
+
         } else if (res.status === 'FAILED') {
           console.error(`[JD Parse] FAILED:`, res.error);
           this.isParsing = false;
@@ -618,7 +656,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
    */
   private handleJDSuccess(data: any): void {
     this.isParsing = false;
-    
+
     // Populate fields
     this.jobRole = data.job_role || this.jobRole;
     this.jobDescription = data.job_description || '';
@@ -628,13 +666,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Handle Interview Location (String to Array)
     if (data.interview_location) {
-       const locs = data.interview_location.split(',').map((s: string) => s.trim());
-       // Simple merge logic: add if not exists
-       locs.forEach((l: string) => {
-         if(l && !this.interviewLocationsList.includes(l)) {
-           this.interviewLocationsList.push(l);
-         }
-       });
+      const locs = data.interview_location.split(',').map((s: string) => s.trim());
+      // Simple merge logic: add if not exists
+      locs.forEach((l: string) => {
+        if (l && !this.interviewLocationsList.includes(l)) {
+          this.interviewLocationsList.push(l);
+        }
+      });
     }
 
     // Handle Experience
@@ -649,9 +687,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Handle Skills (Array)
     if (data.skills && Array.isArray(data.skills)) {
-      this.skills = data.skills; 
+      this.skills = data.skills;
     } else if (typeof data.skills === 'string') {
-       this.skills = data.skills.split(',').map((s: string) => s.trim());
+      this.skills = data.skills.split(',').map((s: string) => s.trim());
     } else {
       this.skills = [];
     }
@@ -670,7 +708,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     return '';
   }
 
-  
+
 
   ngOnInit() {
     this.fetchRequirements(); // Fetch the data as soon as page loads
@@ -692,11 +730,11 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // 3. INLINE EDIT: Toggle Popover
   toggleStatusPopover(item: any, event: Event) {
     event.stopPropagation();
-    
+
     // PERMISSION CHECK: Only Super User OR Assigned User
     if (!this.isSuperUser && !this.isAssignedToRequirement(item)) {
-        this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
-        return;
+      this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
+      return;
     }
 
     // Close others
@@ -726,7 +764,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // 3. Admin/SuperUser (Optional: usually they can see everything)
     if (this.isSuperUser) {
-        return true;
+      return true;
     }
 
     return false;
@@ -747,8 +785,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Double Check Permission (Safety)
     if (!this.isSuperUser && !this.isAssignedToRequirement(item)) {
-        this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
-        return;
+      this.triggerAlert("Access Denied: Only assigned users can change the status.", ['OK']);
+      return;
     }
 
     if (item.status === newStatus) return;
@@ -760,7 +798,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     formData.append('status', newStatus);
 
     this.adbService.updateRequirement(item.id, formData).subscribe({
-      next: () => {},
+      next: () => { },
       error: (err) => {
         item.status = oldStatus;
         this.triggerAlert('Failed to update status on server.', ['OK']);
@@ -776,23 +814,23 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Filter selected items
     const selectedItems = this.requirementsList.filter(item => item.selected);
-    
+
     if (selectedItems.length === 0) return;
 
     // PERMISSION CHECK: Filter list to only items user is allowed to change
-    const allowedItems = this.isSuperUser 
-        ? selectedItems 
-        : selectedItems.filter(item => this.isAssignedToRequirement(item));
+    const allowedItems = this.isSuperUser
+      ? selectedItems
+      : selectedItems.filter(item => this.isAssignedToRequirement(item));
 
     if (allowedItems.length === 0) {
-        this.triggerAlert("Access Denied: You are not assigned to any of the selected requirements.", ['OK']);
-        this.bulkStatusSelected = '';
-        return;
+      this.triggerAlert("Access Denied: You are not assigned to any of the selected requirements.", ['OK']);
+      this.bulkStatusSelected = '';
+      return;
     }
 
     if (allowedItems.length < selectedItems.length) {
-        // Warn if some were skipped
-        this.triggerAlert(`Note: You only have permission to update ${allowedItems.length} out of ${selectedItems.length} selected items. Proceeding with allowed items.`, ['OK']);
+      // Warn if some were skipped
+      this.triggerAlert(`Note: You only have permission to update ${allowedItems.length} out of ${selectedItems.length} selected items. Proceeding with allowed items.`, ['OK']);
     }
 
     const updateRequests = allowedItems.map(item => {
@@ -850,22 +888,22 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         // --- MODIFICATION START: Filter only Recruiters ---
         // This ensures candidates, clients, or other admins don't show up in the "Assign To" list
         const onlyRecruiters = users.filter(u => u.user_type === 'recruiter');
-        
+
         this.availableUsers = onlyRecruiters;
-        this.filteredUsers = onlyRecruiters; 
+        this.filteredUsers = onlyRecruiters;
         // --- MODIFICATION END ---
       },
       error: (err) => console.error('Failed to load users', err)
     });
   }
   // 2. Filter Users based on input
-  
+
   filterUsers() {
     if (!this.userSearchText) {
       this.filteredUsers = this.availableUsers.filter(u => !this.isSelected(u));
     } else {
       const term = this.userSearchText.toLowerCase();
-      this.filteredUsers = this.availableUsers.filter(u => 
+      this.filteredUsers = this.availableUsers.filter(u =>
         (u.first_name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)) &&
         !this.isSelected(u)
       );
@@ -900,13 +938,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   editRequirementFromModal(item: any): void {
     // 1. Close the details modal immediately so it doesn't cover the edit form
     this.closeDetailsModal();
-    
+
     // 2. Open the edit form (Permission checks happen inside onEdit)
     // We pass the 'item' explicitly because selectedReqDetails is now null
     this.onEdit(item);
   }
 
-  
+
   noticePeriodOptions: string[] = [
     'Immediate',
     'Less than 15 Days',
@@ -914,17 +952,17 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     'Less than 60 Days',
     'Less than 90 days'
   ];
-    genderOptions: string[] = ['Male', 'Female','Both','Others'];
- 
-   selectedNoticePeriod: string = '';
+  genderOptions: string[] = ['Male', 'Female', 'Both', 'Others'];
+
+  selectedNoticePeriod: string = '';
   isNoticePeriodDropdownOpen: boolean = false;
-   selectedGender: string = '';
+  selectedGender: string = '';
   isGenderDropdownOpen: boolean = false;
-   jobDescription: string = '';
+  jobDescription: string = '';
   isJobDescriptionInvalid: boolean = false;
   isSortDropdownOpen: boolean = false;
 
-   experience = {
+  experience = {
     totalMin: null as number | null,
     totalMax: null as number | null,
     relevantMin: null as number | null,
@@ -948,10 +986,10 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   validateJobRoleInput(event: any) {
     const input = event.target as HTMLInputElement;
-    
+
     // 1. STRIP SPECIAL CHARACTERS: Allow only Alphabets (a-z, A-Z), Numbers (0-9), and Spaces
     const cleanValue = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
-    
+
     // Update the input immediately if invalid characters were found
     if (input.value !== cleanValue) {
       input.value = cleanValue;
@@ -970,7 +1008,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Reset the "Required" error if user types something
     if (this.jobRole.trim().length > 0) {
-        this.isJobRoleInvalid = false;
+      this.isJobRoleInvalid = false;
     }
   }
 
@@ -980,7 +1018,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     input.value = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
   }
 
- validateExperience(event: any = null) {
+  validateExperience(event: any = null) {
     // 1. DOM LEVEL ENFORCEMENT (Keep existing logic)
     if (event) {
       const input = event.target as HTMLInputElement;
@@ -1002,13 +1040,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     if (this.experience.relevantMin !== null && this.experience.relevantMin < 0) this.experience.relevantMin = 0;
     if (this.experience.relevantMax !== null && this.experience.relevantMax < 0) this.experience.relevantMax = 0;
 
-      // --- NEW ADDITION START: Clear "Required" errors immediately ---
+    // --- NEW ADDITION START: Clear "Required" errors immediately ---
     if (this.experience.totalMin !== null && this.experience.totalMax !== null) {
-        this.isTotalExpInvalid = false;
+      this.isTotalExpInvalid = false;
     }
 
     if (this.experience.relevantMin !== null && this.experience.relevantMax !== null) {
-        this.isRelevantExpInvalid = false;
+      this.isRelevantExpInvalid = false;
     }
 
     // --- NEW LOGIC: Check Total Min vs Total Max ---
@@ -1062,8 +1100,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // 2. Validate Min <= Max
     if (
-      this.salary.min !== null && 
-      this.salary.max !== null && 
+      this.salary.min !== null &&
+      this.salary.max !== null &&
       this.salary.min > this.salary.max
     ) {
       this.salaryErrors.rangeError = true;
@@ -1071,8 +1109,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.salaryErrors.rangeError = false;
     }
   }
-  
-toggleNoticePeriodDropdown() {
+
+  toggleNoticePeriodDropdown() {
     this.isNoticePeriodDropdownOpen = !this.isNoticePeriodDropdownOpen;
   }
 
@@ -1081,7 +1119,7 @@ toggleNoticePeriodDropdown() {
     this.isNoticePeriodDropdownOpen = false;
     this.isNoticePeriodInvalid = false;
   }
-   toggleGenderDropdown() {
+  toggleGenderDropdown() {
     this.isGenderDropdownOpen = !this.isGenderDropdownOpen;
   }
 
@@ -1107,7 +1145,7 @@ toggleNoticePeriodDropdown() {
     const input = event.target as HTMLInputElement;
     // Regex: Replace anything that is NOT (^) a letter, space, or comma
     const cleanValue = input.value.replace(/[^a-zA-Z, ]/g, '');
-    
+
     // Update DOM immediately
     input.value = cleanValue;
     // Update Model
@@ -1118,15 +1156,15 @@ toggleNoticePeriodDropdown() {
   // 2. Validate SPOC: Allows a-z, A-Z, space, and comma + Max 15 Chars
   validateDetailSpoc(index: number, event: any) {
     const input = event.target as HTMLInputElement;
-    
+
     // 1. Regex: Allow only letters, spaces, and commas
     let cleanValue = input.value.replace(/[^a-zA-Z, ]/g, '');
-    
+
     // 2. Enforce Max Length of 15
     if (cleanValue.length > 15) {
       cleanValue = cleanValue.slice(0, 15);
     }
-    
+
     // Update DOM immediately
     input.value = cleanValue;
     // Update Model
@@ -1138,7 +1176,7 @@ toggleNoticePeriodDropdown() {
     const input = event.target as HTMLInputElement;
     // Regex: Replace anything that is NOT (^) a number
     const cleanValue = input.value.replace(/[^0-9]/g, '');
-    
+
     // Update DOM immediately
     input.value = cleanValue;
     // Update Model
@@ -1149,7 +1187,7 @@ toggleNoticePeriodDropdown() {
   removeDetail(index: number) {
     this.additionalDetails.splice(index, 1);
   }
-   addDetail() {
+  addDetail() {
     this.additionalDetails.push({ location: '', spoc: '', vacancies: '', email: '', phone: '' });
   }
 
@@ -1174,16 +1212,16 @@ toggleNoticePeriodDropdown() {
     this.skills.splice(index, 1);
   }
 
- onEdit(item: any) {
+  onEdit(item: any) {
 
-  // PERMISSION CHECK: Super User OR Assigned User OR Creator
-    const canEdit = this.isSuperUser || 
-                    this.isAssignedToRequirement(item) || 
-                    this.isCreatorOfRequirement(item);
+    // PERMISSION CHECK: Super User OR Assigned User OR Creator
+    const canEdit = this.isSuperUser ||
+      this.isAssignedToRequirement(item) ||
+      this.isCreatorOfRequirement(item);
 
     if (!canEdit) {
-        this.triggerAlert("Access Denied: Only assigned users or the creator can edit this requirement.", ['OK']);
-        return;
+      this.triggerAlert("Access Denied: Only assigned users or the creator can edit this requirement.", ['OK']);
+      return;
     }
 
     this.isEditMode = true;
@@ -1193,11 +1231,11 @@ toggleNoticePeriodDropdown() {
 
     // Populate Fields
     this.clientName = item.client_name;
-    
+
     this.subClientName = item.sub_client_name;
-    this.jobRole = item.job_role; 
+    this.jobRole = item.job_role;
     this.jobDescription = item.job_description;
-    
+
     // 🟢 NEW: Load Skills
     if (item.skills && Array.isArray(item.skills)) {
       this.skills = [...item.skills];
@@ -1205,10 +1243,10 @@ toggleNoticePeriodDropdown() {
       this.skills = [];
     }
 
-    this.interviewLocationsList = item.interview_location 
-      ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean) 
+    this.interviewLocationsList = item.interview_location
+      ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean)
       : [];
-      this.interviewDate = item.interview_date;
+    this.interviewDate = item.interview_date;
     this.existingFileUrl = item.file_attachment;
 
     this.experience = {
@@ -1248,7 +1286,7 @@ toggleNoticePeriodDropdown() {
       this.selectedAssignees = [];
     }
     setTimeout(() => {
-        this.onClientChange();
+      this.onClientChange();
     }, 100);
   }
 
@@ -1263,10 +1301,10 @@ toggleNoticePeriodDropdown() {
         const pageHeight = 295; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         const imgData = canvas.toDataURL('image/png');
-        
+
         const pdf = new jsPDF('p', 'mm', 'a4');
         const position = 0;
-        
+
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         pdf.save('Job-Requirement-' + (index + 1) + '.pdf');
       });
@@ -1276,7 +1314,7 @@ toggleNoticePeriodDropdown() {
   }
 
   // BULK DELETE FUNCTION
- deleteSelectedRequirements() {
+  deleteSelectedRequirements() {
     const selectedItems = this.requirementsList.filter(item => item.selected);
 
     if (selectedItems.length === 0) {
@@ -1291,97 +1329,97 @@ toggleNoticePeriodDropdown() {
   // 3. DELETE FROM UI FUNCTIONALITY
   // Removes from the array list only, does not call API
   deleteCardFromUi(index: number) {
-    this.pendingDeleteIndex = index; 
+    this.pendingDeleteIndex = index;
     this.triggerAlert(
-      'Are you sure you want to delete this requirement permanently?', 
-      ['Yes', 'Cancel'], 
+      'Are you sure you want to delete this requirement permanently?',
+      ['Yes', 'Cancel'],
       'deleteSingle'
     );
   }
 
 
- onSubmit() {
-  // 1. Reset Validations initially
-  this.isClientNameInvalid = false;
-  this.isJobRoleInvalid = false;
-  this.isInterviewLocationInvalid = false;
-  this.isJobDescriptionInvalid = false; // (Existing)
+  onSubmit() {
+    // 1. Reset Validations initially
+    this.isClientNameInvalid = false;
+    this.isJobRoleInvalid = false;
+    this.isInterviewLocationInvalid = false;
+    this.isJobDescriptionInvalid = false; // (Existing)
 
-  this.isFileMissing = false; // 🔴 Reset file error
+    this.isFileMissing = false; // 🔴 Reset file error
 
-  this.isTotalExpInvalid = false;
-  this.isRelevantExpInvalid = false;
-  this.isSalaryInvalid = false;
-  // this.isInterviewDateInvalid = false;
-  this.isNoticePeriodInvalid = false;
-  this.isGenderInvalid = false;
+    this.isTotalExpInvalid = false;
+    this.isRelevantExpInvalid = false;
+    this.isSalaryInvalid = false;
+    // this.isInterviewDateInvalid = false;
+    this.isNoticePeriodInvalid = false;
+    this.isGenderInvalid = false;
 
-  // 2. Perform Validation Checks
-  let isValid = true;
+    // 2. Perform Validation Checks
+    let isValid = true;
 
-  // --- NEW VALIDATION: Mandatory Assign To for Super User ---
-  if (this.isSuperUser) {
+    // --- NEW VALIDATION: Mandatory Assign To for Super User ---
+    if (this.isSuperUser) {
       if (this.selectedAssignees.length === 0) {
-          // You can create a new boolean flag for specific UI error msg if desired,
-          // or just rely on the final alert.
-          isValid = false;
-          // Optional: Add a specific error flag for UI feedback
-          // this.isAssignToInvalid = true; 
+        // You can create a new boolean flag for specific UI error msg if desired,
+        // or just rely on the final alert.
+        isValid = false;
+        // Optional: Add a specific error flag for UI feedback
+        // this.isAssignToInvalid = true; 
       }
-  }
+    }
 
-  // Validate Client Name
-  // --- MODIFICATION: Only validate Client Name if NOT a Client User ---
-  // --- MANDATORY FILE CHECK ---
+    // Validate Client Name
+    // --- MODIFICATION: Only validate Client Name if NOT a Client User ---
+    // --- MANDATORY FILE CHECK ---
     // Logic: 
     // - New Entry: Must have a selectedFile
     // - Edit Entry: Must have a selectedFile OR an existing file on server (existingFileUrl)
     if (!this.selectedFile) {
-        if (this.isEditMode && this.existingFileUrl) {
-            // Valid: We are editing and keeping the old file
-        } else {
-            // Invalid: Creating new without file OR Editing where file was removed (if applicable)
-            this.isFileMissing = true;
-            isValid = false;
-        }
-    }
-
-  // Validate Job Role
-  if (!this.jobRole || this.jobRole.trim() === '') {
-    this.isJobRoleInvalid = true;
-    isValid = false;
-  }else if (this.isJobRoleNumericOnly) {
-      // New Check: Block submission if it's only numbers
-      isValid = false; 
-    }
-
-  // Validate Interview Location
-  if (this.interviewLocationsList.length === 0) {
-    this.isInterviewLocationInvalid = true;
-    isValid = false;
-  }
-
-  // Validate Job Description (Existing Logic)
-  this.validateJobDescription(); 
-  if (this.isJobDescriptionInvalid) {
-    isValid = false;
-  }
-
-   if (this.experience.totalMin === null || this.experience.totalMax === null) {
-        this.isTotalExpInvalid = true;
+      if (this.isEditMode && this.existingFileUrl) {
+        // Valid: We are editing and keeping the old file
+      } else {
+        // Invalid: Creating new without file OR Editing where file was removed (if applicable)
+        this.isFileMissing = true;
         isValid = false;
+      }
+    }
+
+    // Validate Job Role
+    if (!this.jobRole || this.jobRole.trim() === '') {
+      this.isJobRoleInvalid = true;
+      isValid = false;
+    } else if (this.isJobRoleNumericOnly) {
+      // New Check: Block submission if it's only numbers
+      isValid = false;
+    }
+
+    // Validate Interview Location
+    if (this.interviewLocationsList.length === 0) {
+      this.isInterviewLocationInvalid = true;
+      isValid = false;
+    }
+
+    // Validate Job Description (Existing Logic)
+    this.validateJobDescription();
+    if (this.isJobDescriptionInvalid) {
+      isValid = false;
+    }
+
+    if (this.experience.totalMin === null || this.experience.totalMax === null) {
+      this.isTotalExpInvalid = true;
+      isValid = false;
     }
 
     // 2. Relevant Experience
     if (this.experience.relevantMin === null || this.experience.relevantMax === null) {
-        this.isRelevantExpInvalid = true;
-        isValid = false;
+      this.isRelevantExpInvalid = true;
+      isValid = false;
     }
 
     // 3. Salary
     if (this.salary.min === null || this.salary.max === null) {
-        this.isSalaryInvalid = true;
-        isValid = false;
+      this.isSalaryInvalid = true;
+      isValid = false;
     }
 
     // 4. Interview Date
@@ -1392,47 +1430,47 @@ toggleNoticePeriodDropdown() {
 
     // 5. Notice Period
     if (!this.selectedNoticePeriod) {
-        this.isNoticePeriodInvalid = true;
-        isValid = false;
+      this.isNoticePeriodInvalid = true;
+      isValid = false;
     }
 
     // 6. Gender
     if (!this.selectedGender) {
-        this.isGenderInvalid = true;
-        isValid = false;
+      this.isGenderInvalid = true;
+      isValid = false;
     }
 
     // 🟢 NEW: Validate Mandatory Skills
     if (this.skills.length === 0) {
       this.triggerAlert('Please add at least one Mandatory Skill.', ['OK']);
-      return; 
+      return;
     }
 
 
-  // Validate Additional Details (Existing Logic)
-  let hasDetailErrors = false;
-  this.additionalDetails.forEach((_, index) => {
+    // Validate Additional Details (Existing Logic)
+    let hasDetailErrors = false;
+    this.additionalDetails.forEach((_, index) => {
       this.validateAdditionalDetails(index);
       if (this.additionalDetailsErrors[index]?.email || this.additionalDetailsErrors[index]?.phone) {
-          hasDetailErrors = true;
+        hasDetailErrors = true;
       }
-  });
+    });
 
-   if (this.errors.totalExpRange || this.errors.minExperience || this.errors.maxExperience) {
-        this.triggerAlert('Please correct the experience range errors.', ['OK']);
-        return;
+    if (this.errors.totalExpRange || this.errors.minExperience || this.errors.maxExperience) {
+      this.triggerAlert('Please correct the experience range errors.', ['OK']);
+      return;
     }
 
-  // 3. Stop if Invalid
-   if (!isValid || hasDetailErrors) {
-    // Customize message if Assign To is the only thing missing
-    if (this.isSuperUser && this.selectedAssignees.length === 0) {
+    // 3. Stop if Invalid
+    if (!isValid || hasDetailErrors) {
+      // Customize message if Assign To is the only thing missing
+      if (this.isSuperUser && this.selectedAssignees.length === 0) {
         this.triggerAlert('Please assign the requirement to at least one Recruiter.', ['OK']);
-    } else {
+      } else {
         this.triggerAlert('Please fill in all required fields marked with *.', ['OK']);
+      }
+      return;
     }
-    return; 
-  }
 
     // --- Build the FormData object ---
     const formData = new FormData();
@@ -1440,8 +1478,8 @@ toggleNoticePeriodDropdown() {
     // If it IS a client, we send nothing for these fields. 
     // The Backend will auto-fill 'client_name' from the User Profile.
     if (this.userType !== 'client') {
-        formData.append('client_name', this.clientName);
-        formData.append('sub_client_name', this.subClientName || '');
+      formData.append('client_name', this.clientName);
+      formData.append('sub_client_name', this.subClientName || '');
     }
     formData.append('job_role', this.jobRole);
     formData.append('source', 'External');
@@ -1457,12 +1495,17 @@ toggleNoticePeriodDropdown() {
     formData.append('create_assessment', this.createAssessment);
     formData.append('interview_location', this.interviewLocationsList.join(', '));
     if (this.interviewDate) {
-        formData.append('interview_date', this.interviewDate);
+      formData.append('interview_date', this.interviewDate);
     }
     formData.append('job_description', this.jobDescription);
-    
+
     // 🟢 NEW: Append Skills Array as JSON String
     formData.append('skills', JSON.stringify(this.skills));
+
+    // 🟢 NEW: Append structured location fields
+    if (this.selectedCity) formData.append('city', this.selectedCity);
+    if (this.selectedState) formData.append('state', this.selectedState);
+    if (this.selectedPlaceId) formData.append('place_id', this.selectedPlaceId);
 
     if (this.selectedFile) {
       formData.append('file_attachment', this.selectedFile, this.selectedFile.name);
@@ -1471,12 +1514,12 @@ toggleNoticePeriodDropdown() {
     // =================================================================
     // === MODIFIED LOGIC: ONLY APPEND 'assigned_users' FOR SUPERUSER ===
     // =================================================================
-     if (this.isSuperUser) {
+    if (this.isSuperUser) {
       // Since validation passed, we know length > 0
       this.selectedAssignees.forEach(user => {
-          formData.append('assigned_users', user.user_id);
+        formData.append('assigned_users', user.user_id);
       });
-  }
+    }
     // For non-superusers, the 'assigned_users' field is never added to formData.
     // When editing, this means the backend will not touch the existing assignments.
     // When creating, the backend will leave the assignments empty.
@@ -1491,9 +1534,9 @@ toggleNoticePeriodDropdown() {
         email: d.email,
         phone_number: d.phone,
         vacancies: parseInt(d.vacancies, 10) || null // Send null if not a number
-    }));
+      }));
     if (validLocationDetails.length > 0) {
-        formData.append('location_details', JSON.stringify(validLocationDetails));
+      formData.append('location_details', JSON.stringify(validLocationDetails));
     }
 
     // --- API Call Logic ---
@@ -1526,7 +1569,7 @@ toggleNoticePeriodDropdown() {
     }
   }
   // 4. UPDATE onCancel Function
-   onCancel() {
+  onCancel() {
     this.isFileMissing = false;
     this.isFormVisible = false; // Hide the modal
     this.isEditMode = false;
@@ -1560,7 +1603,7 @@ toggleNoticePeriodDropdown() {
     // Reset validation errors
     this.isJobDescriptionInvalid = false;
     this.salaryErrors.rangeError = false;
-    this.errors = { minExperience: false, maxExperience: false, totalExpRange: false  };
+    this.errors = { minExperience: false, maxExperience: false, totalExpRange: false };
 
     this.isClientNameInvalid = false;
     this.isJobRoleInvalid = false;
@@ -1575,13 +1618,13 @@ toggleNoticePeriodDropdown() {
 
     this.createAssessment = 'No';
     this.isAssessmentDropdownOpen = false;
-    
+
   }
 
   showAddForm() {
     // 1. Clear any existing data first (reuses your Cancel logic to reset fields)
-    this.onCancel(); 
-    
+    this.onCancel();
+
     // 2. Ensure we are explicitly in "Create" mode, not "Edit" mode
     this.isEditMode = false;
     this.currentRequirementId = null;
@@ -1593,39 +1636,45 @@ toggleNoticePeriodDropdown() {
 
 
   // --- FETCH LISTING LOGIC ---
- fetchRequirements() {
-    this.isLoading = true; // Turn ON spinner
-    
-    this.adbService.getRequirements().pipe(
-      // 2. Use finalize to GUARANTEE spinner turns off
+  fetchRequirements(page: number = 1) {
+    this.isLoading = true;
+    this.currentPage = page;
+
+    this.adbService.getRequirements(page).pipe(
       finalize(() => {
-        this.isLoading = false; 
+        this.isLoading = false;
       })
     ).subscribe({
-      next: (data: any[]) => {
-        // Wrap logic in try-catch to ensure one bad item doesn't break the whole page
+      next: (response: any) => {
         try {
-          const processedData = data.map(item => ({
+          // Handle paginated response from DRF
+          const data = response.results || response;
+          this.totalCount = response.count || data.length;
+          this.totalPages = Math.ceil(this.totalCount / 30);
+          this.nextPageUrl = response.next;
+          this.prevPageUrl = response.previous;
+
+          const processedData = data.map((item: any) => ({
             ...item,
             selected: false,
             isExpanded: false
           }));
-          
-          this.masterRequirements = processedData; 
-          
-          // If applyFiltersAndSort crashes, the catch block will handle it
-          // and finalize will still hide the spinner.
-          this.requirementsList = processedData;   
-          this.applyFiltersAndSort(); 
+
+          this.masterRequirements = processedData;
+          this.requirementsList = processedData;
+          this.applyFiltersAndSort();
         } catch (e) {
           console.error("Error processing requirements data:", e);
         }
       },
       error: (err) => {
         console.error("Failed to fetch requirements:", err);
-        // finalize handles the spinner, so we don't need to duplicate logic here
       }
     });
+  }
+
+  trackByRequirement(index: number, item: any): number {
+    return item.id;
   }
 
 
@@ -1653,7 +1702,7 @@ toggleNoticePeriodDropdown() {
     // Filter by Client Name (SAFE VERSION)
     if (filters.client_name) {
       const term = filters.client_name.toLowerCase();
-      data = data.filter(item => 
+      data = data.filter(item =>
         item.client_name && item.client_name.toLowerCase().includes(term)
       );
     }
@@ -1661,7 +1710,7 @@ toggleNoticePeriodDropdown() {
     // Filter by Location (SAFE VERSION)
     if (filters.location) {
       const term = filters.location.toLowerCase();
-      data = data.filter(item => 
+      data = data.filter(item =>
         item.interview_location && item.interview_location.toLowerCase().includes(term)
       );
     }
@@ -1669,7 +1718,7 @@ toggleNoticePeriodDropdown() {
     // Filter by Job Description/Skills (SAFE VERSION)
     if (filters.description) {
       const term = filters.description.toLowerCase();
-      data = data.filter(item => 
+      data = data.filter(item =>
         item.job_description && item.job_description.toLowerCase().includes(term)
       );
     }
@@ -1677,7 +1726,7 @@ toggleNoticePeriodDropdown() {
     // Filter by Role (Already safe, remains the same)
     if (filters.role) {
       const term = filters.role.toLowerCase();
-      data = data.filter(item => 
+      data = data.filter(item =>
         item.job_role && item.job_role.toLowerCase().includes(term)
       );
     }
@@ -1689,7 +1738,7 @@ toggleNoticePeriodDropdown() {
 
     // Apply Sorting (No changes here)
     if (this.currentSort === 'a-z') {
-  // Sorts alphabetically from A-Z based on job_role
+      // Sorts alphabetically from A-Z based on job_role
       data.sort((a, b) => (a.job_role || '').localeCompare(b.job_role || ''));
     } else if (this.currentSort === 'z-a') {
       // Sorts alphabetically from Z-A based on job_role
@@ -1704,7 +1753,7 @@ toggleNoticePeriodDropdown() {
     this.currentSort = (event.target as HTMLSelectElement).value;
     this.applyFiltersAndSort();
   }
-toggleDescription(item: any) {
+  toggleDescription(item: any) {
     item.isExpanded = !item.isExpanded;
   }
   // 3. ADD THIS FUNCTION (For the "Select All" checkbox)
@@ -1726,7 +1775,7 @@ toggleDescription(item: any) {
       this.isAllSelected = false;
     }
   }
-triggerAlert(message: string, buttons: string[], action: string = '') {
+  triggerAlert(message: string, buttons: string[], action: string = '') {
     this.alertMessage = message;
     this.alertButtons = buttons;
     this.pendingAction = action;
@@ -1740,7 +1789,7 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
     if (btn === 'yes') {
       if (this.pendingAction === 'deleteSingle' && this.pendingDeleteIndex !== null) {
         this.executeSingleDelete(this.pendingDeleteIndex);
-      } 
+      }
       else if (this.pendingAction === 'deleteBulk') {
         this.executeBulkDelete();
       }
@@ -1807,7 +1856,7 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
   }
 
   // --- 4. ADDITIONAL DETAILS (EMAIL/PHONE VALIDATION) ---
-  
+
   // Regex patterns
   emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   phoneRegex = /^[0-9]{10}$/; // Simple 10 digit validation
@@ -1841,13 +1890,13 @@ triggerAlert(message: string, buttons: string[], action: string = '') {
 
     // Check Duplicate Email
     if (currentItem.email && allEmails.indexOf(currentItem.email) !== allEmails.lastIndexOf(currentItem.email)) {
-       errors.email = 'Duplicate Email in list';
+      errors.email = 'Duplicate Email in list';
     }
 
     // Check Duplicate Phone
     if (currentItem.phone && allPhones.indexOf(currentItem.phone) !== allPhones.lastIndexOf(currentItem.phone)) {
-       errors.phone = 'Duplicate Phone in list';
+      errors.phone = 'Duplicate Phone in list';
     }
   }
-  
+
 }

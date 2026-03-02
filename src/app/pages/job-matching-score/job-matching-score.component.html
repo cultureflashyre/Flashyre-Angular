@@ -1,0 +1,127 @@
+<div class="job-matching-container">
+    <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name"></recruiter-workflow-navbar>
+
+    <div class="main-content">
+        <div class="header-section">
+            <h1 class="page-title">Job Matching Scores</h1>
+            <p class="page-subtitle">Ranked candidates based on semantic skills, experience, and location fit using AI
+            </p>
+        </div>
+
+        <!-- Dropdown Selector -->
+        <div class="selector-container">
+            <label for="jobSelect">Select Requirement:</label>
+            <select id="jobSelect" [(ngModel)]="selectedJobId" (change)="onJobSelect()">
+                <option [ngValue]="null" disabled selected>-- Choose a Job --</option>
+                <option *ngFor="let job of availableJobs" [value]="job.id">
+                    {{ job.job_role }} ({{ job.client_name }})
+                </option>
+            </select>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Calculating AI semantic matching scores...</p>
+        </div>
+
+        <!-- Candidates List -->
+        <div *ngIf="!isLoading && candidatesScores.length > 0" class="candidates-list">
+            <table class="matching-table">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Role & Experience</th>
+                        <th>Location</th>
+                        <th>Skills</th>
+                        <th>Match Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let candidate of candidatesScores; let i = index">
+                        <td>
+                            <div class="candidate-name">{{ candidate.name }}</div>
+                        </td>
+                        <td>
+                            <div class="role-text">{{ candidate.job_role }}</div>
+                            <div class="exp-text">{{ candidate.total_experience_min }} - {{
+                                candidate.total_experience_max }} Yrs</div>
+                        </td>
+                        <td>
+                            <div class="location-text">
+                                {{ candidate.city || 'Any' }}{{ candidate.state ? ', ' + candidate.state : '' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="skills-preview" [title]="candidate.skills">{{ candidate.skills }}</div>
+                        </td>
+
+                        <!-- Score Column with Ring and Tooltip -->
+                        <td class="score-cell">
+                            <div class="score-container" (mouseenter)="showTooltip(candidate.candidate_id || i)"
+                                (mouseleave)="hideTooltip()">
+
+                                <!-- SVG Ring -->
+                                <div class="score-ring">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="circle-bg"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="circle"
+                                            [attr.stroke-dasharray]="getStrokeDashArray(candidate.score)"
+                                            [attr.stroke]="getScoreStrokeColor(candidate.score)"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    </svg>
+                                    <div class="score-text" [ngClass]="getScoreColorClass(candidate.score)">
+                                        {{ candidate.score | number:'1.0-0' }}
+                                    </div>
+                                </div>
+
+                                <!-- Tooltip Breakdown -->
+                                <div class="score-tooltip" *ngIf="activeTooltipId === (candidate.candidate_id || i)">
+                                    <div class="tooltip-header">Score Breakdown</div>
+                                    <div class="tooltip-row">
+                                        <span>Skills Match</span>
+                                        <span>{{ candidate.breakdown?.skills_match | number:'1.0-0' }}%</span>
+                                    </div>
+                                    <div class="tooltip-row">
+                                        <span>Experience Fit</span>
+                                        <span>{{ candidate.breakdown?.experience_meaning | number:'1.0-0' }}%</span>
+                                    </div>
+                                    <div class="tooltip-row">
+                                        <span>Years Required</span>
+                                        <span>{{ candidate.breakdown?.years_of_experience | number:'1.0-0' }}%</span>
+                                    </div>
+                                    <div class="tooltip-row">
+                                        <span>Location Match</span>
+                                        <span>{{ candidate.breakdown?.location_match | number:'1.0-0' }}%</span>
+                                    </div>
+                                    <div class="tooltip-total">
+                                        <span>Overall Fit</span>
+                                        <span>{{ candidate.score | number:'1.0-0' }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination" *ngIf="totalPages > 1">
+                <button [disabled]="!prevPageUrl" (click)="loadScores(currentPage - 1)">Previous</button>
+                <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button [disabled]="!nextPageUrl" (click)="loadScores(currentPage + 1)">Next</button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && selectedJobId && candidatesScores.length === 0" class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <h3>No matches found</h3>
+            <p>We couldn't find any candidates that match this requirement.</p>
+        </div>
+    </div>
+</div>
