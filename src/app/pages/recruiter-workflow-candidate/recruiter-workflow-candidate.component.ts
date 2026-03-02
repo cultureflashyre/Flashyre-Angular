@@ -1410,10 +1410,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.selectedJobId = null;
 
     this.adbRequirementService.getRequirements().subscribe({
-      next: (jobs) => {
-        const allJobs = Array.isArray(jobs) ? jobs : [];
+      next: (jobs: any) => {
+        const allJobs = Array.isArray(jobs) ? jobs : (jobs?.results || []);
         this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
-          ? allJobs.filter(job => this.isUserAuthorizedForJob(job))
+          ? allJobs.filter((job: any) => this.isUserAuthorizedForJob(job))
           : allJobs;
 
         if (this.availableJobs.length === 0) {

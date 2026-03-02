@@ -129,10 +129,10 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
-      next: (data: any[]) => {
-        const jobs = Array.isArray(data) ? data : [];
+      next: (data: any) => {
+        const jobs = Array.isArray(data) ? data : (data?.results || []);
         this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
-          ? jobs.filter(job => this.isUserAuthorizedForJob(job))
+          ? jobs.filter((job: any) => this.isUserAuthorizedForJob(job))
           : jobs;
 
         if (targetId) {
