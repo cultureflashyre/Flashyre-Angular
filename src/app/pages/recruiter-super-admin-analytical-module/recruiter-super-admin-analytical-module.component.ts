@@ -4,13 +4,14 @@ import { Title, Meta } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, timer } from 'rxjs';
-import { map, catchError, switchMap, distinctUntilChanged, take  } from 'rxjs/operators';
+import { map, catchError, switchMap, distinctUntilChanged, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 // Update the import path below if the component exists elsewhere
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
-import { ThumbnailService } from '../../services/thumbnail.service'; 
+import { ThumbnailService } from '../../services/thumbnail.service';
 import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { SuperAdminService } from '../../services/super-admin.service';
 import { AdbRequirementService } from '../../services/adb-requirement.service';
@@ -32,7 +33,7 @@ import * as FileSaver from 'file-saver';
 })
 export class RecruiterSuperAdminAnalyticalModuleComponent {
   // Tab State
-  activeTab: string = 'reports'; 
+  activeTab: string = 'reports';
   activityLogs: any[] = [];
 
   // Data
@@ -60,12 +61,12 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   successMessage: string = '';
   passwordType: string = 'password';
   confirmPasswordType: string = 'password';
-  
+
   // Alert State
   showAlert: boolean = false;
   alertMessage: string = '';
   alertButtons: string[] = [];
-  pendingAction: any = null; 
+  pendingAction: any = null;
 
   private baseUrl = environment.apiUrl;
 
@@ -77,8 +78,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     total_submissions: 0,
     active_recruiters: 0,
     avg_time_to_fill: 0,
-    pipeline: { 
-      Sourced: 0, Screening: 0, Submission: 0, Interview: 0, Offer: 0, Hired: 0, Rejected: 0 
+    pipeline: {
+      Sourced: 0, Screening: 0, Submission: 0, Interview: 0, Offer: 0, Hired: 0, Rejected: 0
     },
     sourcing: { top_source: 'N/A', quality_hires: 0, active_sources: 0 }
   };
@@ -91,20 +92,21 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     end_date: '',
     recruiter_id: '',
     job_id: '',
-    source: '' 
+    source: ''
   };
 
   recruitersList: any[] = [];
   jobsList: any[] = [];
 
   constructor(
-    private title: Title, 
+    private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
     private http: HttpClient,
     private thumbnailService: ThumbnailService,
     private superAdminService: SuperAdminService,
     private reqService: AdbRequirementService,
+    private cdr: ChangeDetectorRef
   ) {
     this.title.setTitle('Super Admin Dashboard - Flashyre');
   }
@@ -112,7 +114,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   ngOnInit() {
     this.initForm();
     this.loadDropdowns();
-    this.fetchAnalytics(); 
+    this.fetchAnalytics();
     this.fetchClientList(); // Load client names for dropdown
   }
 
@@ -153,9 +155,9 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     this.isEditMode = false;
     this.editingUserId = null;
     this.createUserForm.reset();
-    
+
     // Reset to Step 1
-    this.creationStep = 1; 
+    this.creationStep = 1;
     this.selectedRole = ''; // Clear selection
 
     this.showCreateUserPopup = true;
@@ -190,26 +192,26 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     this.editingUserId = user.user_id;
     this.creationStep = 2; // Jump directly to form
     this.selectedRole = user.user_type; // Capture existing role to show conditional fields
-    
+
     this.originalEmail = user.email;
     this.originalPhone = user.phone_number;
 
     this.createUserForm.get('password')?.clearValidators();
     this.createUserForm.get('confirm_password')?.clearValidators();
     this.createUserForm.get('password')?.setValidators([this.optionalPasswordComplexityValidator()]);
-    
+
     // Clear client validators initially
     this.createUserForm.get('client_name')?.clearValidators();
 
     // If editing a client, make client_name required
     // --- LOGIC UPDATE: Handle Client Type specifically ---
     if (user.user_type === 'client') {
-       this.createUserForm.get('client_name')?.setValidators([Validators.required]);
-       // Ensure the control is enabled
-       this.createUserForm.get('client_name')?.enable(); 
+      this.createUserForm.get('client_name')?.setValidators([Validators.required]);
+      // Ensure the control is enabled
+      this.createUserForm.get('client_name')?.enable();
     } else {
-       // If not a client, usually we don't need this field, so we can disable or nullify it
-       this.createUserForm.get('client_name')?.setValue(null);
+      // If not a client, usually we don't need this field, so we can disable or nullify it
+      this.createUserForm.get('client_name')?.setValue(null);
     }
 
     this.createUserForm.get('password')?.updateValueAndValidity();
@@ -222,10 +224,10 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       phone_number: user.phone_number,
       email: user.email,
       is_superuser: user.is_superuser,
-      user_type: user.user_type, 
-      client_name: user.client_name, 
-      password: '',        
-      confirm_password: '' 
+      user_type: user.user_type,
+      client_name: user.client_name,
+      password: '',
+      confirm_password: ''
     });
 
     this.showCreateUserPopup = true;
@@ -240,25 +242,25 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   initForm() {
     this.createUserForm = this.fb.group({
       first_name: ['', [
-        Validators.required, 
-        Validators.pattern(/^[a-zA-Z ]+$/), 
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z ]+$/),
         Validators.minLength(3),
         Validators.maxLength(10)
       ]],
       last_name: ['', [
-        Validators.required, 
-        Validators.pattern(/^[a-zA-Z ]+$/), 
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z ]+$/),
         Validators.minLength(3),
         Validators.maxLength(10)
       ]],
       phone_number: ['', [Validators.required, Validators.pattern(/^\d{10}$/)], [this.phoneExistsValidator()]],
       email: ['', [Validators.required, Validators.email], [this.emailExistsValidator()]],
-      
+
       // New Fields
       user_type: ['admin', Validators.required], // Default, but overridden by selectRole
-      client_name: [''], 
-      
-      is_superuser: [false], 
+      client_name: [''],
+
+      is_superuser: [false],
       password: ['', [Validators.required, this.passwordComplexityValidator(), Validators.minLength(8), Validators.maxLength(15)]],
       confirm_password: ['', [Validators.required]],
     }, { validator: this.passwordMatchValidator });
@@ -273,7 +275,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
     this.successMessage = '';
-    
+
     const formVal = { ...this.createUserForm.value };
 
     if (this.isEditMode) {
@@ -288,7 +290,7 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
           this.successMessage = 'User updated successfully.';
           setTimeout(() => {
             this.closeCreateUserPopup();
-            this.fetchUsers(); 
+            this.fetchUsers();
           }, 1500);
         },
         error: (err) => {
@@ -300,12 +302,12 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
     } else {
       // CREATE MODE
       const initials = this.thumbnailService.getUserInitials(`${formVal.first_name} ${formVal.last_name}`);
-      
+
       // *** FIX: Explicitly enforce user_type from selection ***
-      const userData = { 
-        ...formVal, 
+      const userData = {
+        ...formVal,
         user_type: this.selectedRole, // Ensure this overrides any form default
-        initials: initials 
+        initials: initials
       };
 
       this.http.post(`${this.baseUrl}api/super-admin/create-system-user/`, userData).subscribe({
@@ -445,8 +447,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       if (this.isEditMode && phone === this.originalPhone) return of(null);
       return timer(500).pipe(
         switchMap(() => this.http.get(`${this.baseUrl}api/auth/check-phone/?phone=${phone}`).pipe(
-            map((res: any) => (res.exists ? { phoneExists: true } : null)),
-            catchError(() => of(null))
+          map((res: any) => (res.exists ? { phoneExists: true } : null)),
+          catchError(() => of(null))
         )),
         take(1)
       );
@@ -460,8 +462,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       if (this.isEditMode && email === this.originalEmail) return of(null);
       return timer(500).pipe(
         switchMap(() => this.http.get(`${this.baseUrl}api/auth/check-email/?email=${email}`).pipe(
-            map((res: any) => (res.exists ? { emailExists: true } : null)),
-            catchError(() => of(null))
+          map((res: any) => (res.exists ? { emailExists: true } : null)),
+          catchError(() => of(null))
         )),
         take(1)
       );
@@ -469,9 +471,11 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
   }
 
   loadDropdowns() {
-    this.reqService.getRequirements().subscribe(data => this.jobsList = data);
+    this.reqService.getRequirements().subscribe((data: any) => {
+      this.jobsList = data.results || data;
+    });
     this.http.get(`${this.baseUrl}api/super-admin/list/`).subscribe((data: any) => {
-      this.recruitersList = data; 
+      this.recruitersList = data;
     });
   }
 
@@ -480,7 +484,8 @@ export class RecruiterSuperAdminAnalyticalModuleComponent {
       next: (data: any) => {
         this.kpis = data.kpis;
         this.reportTableData = data.table_data;
-        this.activityLogs = data.logs || []; 
+        this.activityLogs = data.logs || [];
+        this.cdr.detectChanges(); // Force UI update
       },
       error: (err) => console.error("Failed to load analytics", err)
     });
