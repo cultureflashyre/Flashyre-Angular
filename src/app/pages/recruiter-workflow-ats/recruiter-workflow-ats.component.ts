@@ -3,7 +3,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, DragDropModule } from '@angular/cdk/drag-drop';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 
 // Services
 import { AtsWorkflowService } from '../../services/ats-workflow.service';
@@ -12,28 +12,28 @@ import { AdbRequirementService } from '../../services/adb-requirement.service';
 
 // Components
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
-import { AlertMessageComponent } from '../../components/alert-message/alert-message.component'; 
+import { AlertMessageComponent } from '../../components/alert-message/alert-message.component';
 
 // External Libraries for Excel
-import * as XLSX from 'xlsx'; 
-import * as FileSaver from 'file-saver'; 
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'recruiter-workflow-ats',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     DragDropModule,
-    FormsModule, 
-    RouterModule, 
+    FormsModule,
+    RouterModule,
     RecruiterWorkflowNavbarComponent,
-    AlertMessageComponent 
+    AlertMessageComponent
   ],
   templateUrl: 'recruiter-workflow-ats.component.html',
   styleUrls: ['recruiter-workflow-ats.component.css']
 })
 export class RecruiterWorkflowAtsComponent implements OnInit {
-  
+
   // --- JOB DATA ---
   jobId: number | null = null;
   jobTitle: string = 'Loading...';
@@ -78,6 +78,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   // --- PERMISSION LOGIC ---
   currentUserId: string | null = null;
   isSuperUser: boolean = false;
+  isRecruiterUser: boolean = false;
   authorizedUserIds: string[] = [];
 
   constructor(
@@ -96,6 +97,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     // 1. Get Current User Info
     this.currentUserId = localStorage.getItem('user_id');
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
+    this.isRecruiterUser = localStorage.getItem('userType') === 'recruiter';
 
     // 2. Load Jobs
     this.loadJobList();
@@ -106,7 +108,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       if (idParam) {
         this.jobId = Number(idParam);
         this.selectedJobId = this.jobId;
-        
+
         // Reset Pipeline Buckets
         this.stages.forEach(stage => this.pipelineData[stage] = []);
 
@@ -128,11 +130,34 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   loadJobList(targetId?: number) {
     this.reqService.getRequirements().subscribe({
       next: (data: any[]) => {
-        this.availableJobs = data;
+        const jobs = Array.isArray(data) ? data : [];
+        this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
+          ? jobs.filter(job => this.isUserAuthorizedForJob(job))
+          : jobs;
+
         if (targetId) {
-          this.loadJobPermissions(targetId);
+          const targetExists = this.availableJobs.some(job => Number(job.id) === Number(targetId));
+
+          if (targetExists) {
+            this.loadJobPermissions(targetId);
+            // Re-assign selectedJobId to force Angular to update the select box
+            // now that availableJobs has options.
+            this.selectedJobId = targetId;
+          } else if (this.availableJobs.length > 0) {
+            const fallbackId = Number(this.availableJobs[0].id);
+            this.alertMessage = "Access denied for this requirement. Redirected to an authorized requirement.";
+            this.alertButtons = ['OK'];
+            this.showAlert = true;
+            this.router.navigate(['/recruiter-workflow-ats', fallbackId], { replaceUrl: true });
+          } else {
+            this.jobId = null;
+            this.selectedJobId = null;
+            this.jobTitle = 'No authorized requirements';
+            this.clientName = '';
+            this.authorizedUserIds = [];
+          }
         } else if (this.availableJobs.length > 0 && !this.jobId) {
-             // Optional auto-select logic if needed
+          // Optional auto-select logic if needed
         }
       },
       error: (err) => console.error('Failed to load jobs', err)
@@ -141,13 +166,13 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   // Merged: Logic from Child branch to handle assigned_users_details AND assigned_users
   loadJobPermissions(id: number) {
-    const job = this.availableJobs.find(j => j.id === id);
+    const job = this.availableJobs.find(j => Number(j.id) === Number(id));
     if (job) {
       this.clientName = job.client_name;
       // Prefer job_role, fallback to role, fallback to description
       const roleDisplay = job.role || job.job_role || (job.job_description ? job.job_description.slice(0, 30) : 'Job');
       this.jobTitle = roleDisplay;
-      
+
       this.authorizedUserIds = [];
 
       // Add Creator
@@ -160,28 +185,51 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       const assignedList = job.assigned_users_details || job.assigned_users || [];
       if (Array.isArray(assignedList)) {
         assignedList.forEach((u: any) => {
-           if (u && typeof u === 'object') {
-             const uid = u.user_id ? String(u.user_id) : (u.id ? String(u.id) : '');
-             if(uid) this.authorizedUserIds.push(uid);
-           } else {
-             this.authorizedUserIds.push(String(u));
-           }
+          if (u && typeof u === 'object') {
+            const uid = u.user_id ? String(u.user_id) : (u.id ? String(u.id) : '');
+            if (uid) this.authorizedUserIds.push(uid);
+          } else {
+            this.authorizedUserIds.push(String(u));
+          }
         });
       }
-      
+
       console.log('Permission Check - Authorized IDs for this Job:', this.authorizedUserIds);
+    } else {
+      this.authorizedUserIds = [];
     }
+  }
+
+  private getUserIdFromValue(user: any): string {
+    if (!user) return '';
+    if (typeof user === 'object') {
+      return String(user.user_id || user.id || '').trim();
+    }
+    return String(user).trim();
+  }
+
+  private isUserAuthorizedForJob(job: any): boolean {
+    if (this.isSuperUser || !this.isRecruiterUser) return true;
+    if (!this.currentUserId || !job) return false;
+
+    const currentId = String(this.currentUserId).trim();
+    const assignedList = Array.isArray(job.assigned_users_details)
+      ? job.assigned_users_details
+      : (Array.isArray(job.assigned_users) ? job.assigned_users : []);
+    const assignedIds = assignedList.map((user: any) => this.getUserIdFromValue(user)).filter(Boolean);
+
+    return assignedIds.includes(currentId);
   }
 
   // Merged: Kept Parent's stricter string normalization for safety
   canMoveCandidate(): boolean {
     if (this.isSuperUser) return true;
-    
+
     if (this.currentUserId) {
-        const currentIdStr = String(this.currentUserId).trim();
-        return this.authorizedUserIds.includes(currentIdStr);
+      const currentIdStr = String(this.currentUserId).trim();
+      return this.authorizedUserIds.includes(currentIdStr);
     }
-    
+
     return false;
   }
 
@@ -205,9 +253,18 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   }
 
   onJobSwitch() {
-    if (this.selectedJobId) {
-      this.router.navigate(['/recruiter-workflow-ats', this.selectedJobId]);
+    if (!this.selectedJobId) return;
+
+    const targetId = Number(this.selectedJobId);
+    const targetExists = this.availableJobs.some(job => Number(job.id) === targetId);
+    if (!targetExists) {
+      this.alertMessage = "Access denied for this requirement.";
+      this.alertButtons = ['OK'];
+      this.showAlert = true;
+      return;
     }
+
+    this.router.navigate(['/recruiter-workflow-ats', targetId]);
   }
 
   getStageNameByData(data: any[]): string {
@@ -217,13 +274,13 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   // --- DRAG AND DROP LOGIC (Merged Parent & Child) ---
 
   drop(event: CdkDragDrop<any[]>, newStage: string) {
-    
+
     // 1. Check Permissions (Parent Logic: Strict check)
     if (!this.canMoveCandidate()) {
-         this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
-         this.alertButtons = ['OK'];
-         this.showAlert = true;
-         return; 
+      this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
+      this.alertButtons = ['OK'];
+      this.showAlert = true;
+      return;
     }
 
     // 2. Handle Drop
@@ -240,8 +297,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       if (newIndex < prevIndex) {
         this.pendingDragEvent = event;
         this.pendingNewStage = newStage;
-        this.isBackwardMoveConfirmation = true; 
-        
+        this.isBackwardMoveConfirmation = true;
+
         this.alertMessage = `You are moving this candidate back to '${newStage}'. Are you sure?`;
         this.alertButtons = ['Yes', 'No'];
         this.showAlert = true;
@@ -263,23 +320,23 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   // Merged: Helper method from Child to handle Input Modals vs Direct Drop
   processStageTransition(event: CdkDragDrop<any[]>, newStage: string) {
-    
+
     // Check if we need the Interview Modal
     if (newStage === 'Interview') {
       this.pendingDragEvent = event;
       this.pendingNewStage = newStage;
-      this.interviewDateInput = ''; 
-      this.showInterviewModal = true; 
-      return; 
+      this.interviewDateInput = '';
+      this.showInterviewModal = true;
+      return;
     }
 
     // Check if we need the Rejection Modal
     if (newStage === 'Rejected') {
       this.pendingDragEvent = event;
       this.pendingNewStage = newStage;
-      this.rejectionReasonInput = ''; 
-      this.showRejectionModal = true; 
-      return; 
+      this.rejectionReasonInput = '';
+      this.showRejectionModal = true;
+      return;
     }
 
     // If no input needed, proceed immediately
@@ -324,7 +381,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   }
 
   // --- FINALIZE DROP (VISUAL + API) ---
-  
+
   finalizeDrop(event: CdkDragDrop<any[]>, newStage: string, metadata: any = {}) {
     const application = event.previousContainer.data[event.previousIndex];
 
@@ -399,7 +456,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
         if (cell && cell.v && cell.v !== '') {
           cell.l = { Target: cell.v as string };
-          cell.v = "OPEN RESUME"; 
+          cell.v = "OPEN RESUME";
         } else if (cell) {
           cell.v = "No Resume";
         }
@@ -410,9 +467,9 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     if (!worksheet['!cols']) worksheet['!cols'] = [];
     worksheet['!cols'][linkColIndex] = { wch: 15 };
 
-    const workbook: XLSX.WorkBook = { 
-      Sheets: { 'Candidates': worksheet }, 
-      SheetNames: ['Candidates'] 
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Candidates': worksheet },
+      SheetNames: ['Candidates']
     };
 
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -423,8 +480,8 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const EXCEL_EXTENSION = '.xlsx';
     const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
-    
-    const dateStr = new Date().toISOString().slice(0,10);
+
+    const dateStr = new Date().toISOString().slice(0, 10);
     FileSaver.saveAs(data, fileName + '_' + dateStr + EXCEL_EXTENSION);
   }
 
@@ -432,12 +489,12 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
   filterCandidates(event: any) {
     const term = event.target.value.toLowerCase();
-    this.filteredCandidates = this.allCandidates.filter(c => 
+    this.filteredCandidates = this.allCandidates.filter(c =>
       c.first_name.toLowerCase().includes(term) || c.last_name.toLowerCase().includes(term)
     );
   }
 
- // New Method: Check permission before opening dropdown
+  // New Method: Check permission before opening dropdown
   toggleAddCandidate() {
     if (!this.canMoveCandidate()) {
       this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
@@ -453,10 +510,10 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
     // Double Check Permission (Safety)
     if (!this.canMoveCandidate()) {
-         this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
-         this.alertButtons = ['OK'];
-         this.showAlert = true;
-         return; 
+      this.alertMessage = "Access Denied: You are not assigned to this Job Requirement. Only assigned recruiters can perform this action.";
+      this.alertButtons = ['OK'];
+      this.showAlert = true;
+      return;
     }
 
     const payload = {
@@ -467,7 +524,7 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
 
     this.atsService.addCandidateToJob(payload).subscribe({
       next: (newApp) => {
-        newApp.candidate_details = candidate; 
+        newApp.candidate_details = candidate;
         this.pipelineData['Sourced'].push(newApp);
         this.showAddCandidate = false;
         this.alertMessage = "Candidate added to Sourced successfully!";
@@ -476,9 +533,9 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
       },
       error: (err) => {
         if (err.error && err.error.non_field_errors) {
-            this.alertMessage = "Candidate is already in this pipeline.";
+          this.alertMessage = "Candidate is already in this pipeline.";
         } else {
-            this.alertMessage = "Failed to add candidate.";
+          this.alertMessage = "Failed to add candidate.";
         }
         this.alertButtons = ['OK'];
         this.showAlert = true;

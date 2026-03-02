@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl  } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, FormsModule, FormArray, FormControl } from '@angular/forms';
 import { RecruiterWorkflowNavbarComponent } from '../../components/recruiter-workflow-navbar/recruiter-workflow-navbar.component';
 import { RecruiterWorkflowCandidateService, Candidate, RegisteredUser } from '../../services/recruiter-workflow-candidate.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -91,7 +91,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   isParsingResume = false;
   stagingId: number | null = null;
   isSuperUser: boolean = false;
-  
+  isRecruiterUser: boolean = false;
+
   // --- Loading States ---
   isPageLoading: boolean = true;
   isActionLoading: boolean = false;
@@ -145,7 +146,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   // --- Dropdown Choices ---
   genderChoices = ['Male', 'Female', 'Others'];
   noticePeriodChoices = ['Immediate', 'Less than 15 Days', 'Less than 30 Days', 'Less than 60 Days', 'Less than 90 days'];
-  ctcChoices = ['Fresher','1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
+  ctcChoices = ['Fresher', '1 LPA - 3 LPA', '4 LPA - 6 LPA', '7 LPA - 10 LPA', '11 LPA - 15 LPA', '16 LPA - 20 LPA', '21 LPA - 25 LPA', '26 LPA - 30 LPA', '30 LPA+'];
 
   // --- Google Maps ---
   private readonly googleMapsApiKey: string = environment.googleMapsApiKey;
@@ -156,7 +157,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   private preferredInput$ = new Subject<string>();
   private currentInput$ = new Subject<string>();
-  
+
   preferredSuggestions: google.maps.places.AutocompletePrediction[] = [];
   currentSuggestions: google.maps.places.AutocompletePrediction[] = [];
   showPreferredSuggestions = false;
@@ -164,14 +165,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   preferredLocationsList: string[] = [];
   currentLocationsList: string[] = [];
-  
+
   private subscriptions = new Subscription();
 
   constructor(
     private title: Title,
     private meta: Meta,
     private fb: FormBuilder,
-    private ngZone: NgZone, 
+    private ngZone: NgZone,
     private candidateService: RecruiterWorkflowCandidateService,
     private adbRequirementService: AdbRequirementService,
     private pollingService: PollingService // Inject Polling Service
@@ -189,12 +190,35 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isSuperUser = localStorage.getItem('isSuperUser') === 'true';
-    
+    this.isRecruiterUser = localStorage.getItem('userType') === 'recruiter';
+
     // Load both datasets
     this.loadCandidates();
     this.loadRegisteredUsers();
-    
+
     this.setupLocationAutocomplete();
+  }
+
+  private getUserIdFromValue(user: any): string {
+    if (!user) return '';
+    if (typeof user === 'object') {
+      return String(user.user_id || user.id || '').trim();
+    }
+    return String(user).trim();
+  }
+
+  private isUserAuthorizedForJob(job: any): boolean {
+    if (this.isSuperUser || !this.isRecruiterUser) return true;
+
+    const currentUserId = String(localStorage.getItem('user_id') || '').trim();
+    if (!currentUserId || !job) return false;
+
+    const assignedList = Array.isArray(job.assigned_users_details)
+      ? job.assigned_users_details
+      : (Array.isArray(job.assigned_users) ? job.assigned_users : []);
+    const assignedIds = assignedList.map((user: any) => this.getUserIdFromValue(user)).filter(Boolean);
+
+    return assignedIds.includes(currentUserId);
   }
 
   ngAfterViewInit(): void {
@@ -202,12 +226,13 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
     if (this.pollSubscription) {
       this.pollSubscription.unsubscribe();
     }
   }
-
   // =========================================================
   // TAB & DATA LOADING LOGIC
   // =========================================================
@@ -216,7 +241,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.activeTab = tab;
     // Re-apply filters when switching tabs so view is consistent
     this.applyFiltersAndSort();
-    
+
     // Optional: Reset selection in Sourced tab to avoid confusion
     if (tab === 'registered') {
       this.isAllSelected = false;
@@ -228,7 +253,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   loadRegisteredUsers(): void {
     // Only show full page loader if initial load
     if (this.masterCandidates.length === 0 && this.registeredCandidates.length === 0) {
-        this.isPageLoading = true;
+      this.isPageLoading = true;
     }
 
     this.candidateService.getRegisteredCandidates().subscribe({
@@ -241,7 +266,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error("Failed to load registered users", err);
-        this.isPageLoading = false; 
+        this.isPageLoading = false;
       }
     });
   }
@@ -254,8 +279,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.applyFiltersAndSort();
         this.isPageLoading = false;
       },
-      error: (err) => { 
-        console.error("Failed to load candidates.", err); 
+      error: (err) => {
+        console.error("Failed to load candidates.", err);
         this.isPageLoading = false;
       }
     });
@@ -268,17 +293,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   applyFiltersAndSort(): void {
     const filterValues = this.filterForm.value;
     const isSourced = this.activeTab === 'sourced';
-    
+
     // 1. Select the Source Array
     // We create a copy to avoid mutating the master list
     let candidates: any[] = isSourced ? [...this.masterCandidates] : [...this.registeredCandidates];
 
     // --- SHARED TEXT FILTERS (SUBSTRING MATCH) ---
-    
+
     // Name Filter
     if (filterValues.name) {
       const nameFilter = filterValues.name.toLowerCase();
-      candidates = candidates.filter(c => 
+      candidates = candidates.filter(c =>
         (c.first_name + ' ' + c.last_name).toLowerCase().includes(nameFilter)
       );
     }
@@ -296,7 +321,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
 
     // --- COMPLEX FILTERS (DATA SOURCE DIFFERS) ---
-    
+
     // Location Filter (Dynamic Substring)
     if (filterValues.location) {
       const locFilter = filterValues.location.toLowerCase();
@@ -311,21 +336,21 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     if (filterValues.skills) {
       // User might enter "java, python"
       const skillFilters = filterValues.skills.toLowerCase().split(',').map((s: string) => s.trim()).filter(Boolean);
-      
+
       if (skillFilters.length > 0) {
         candidates = candidates.filter(c => {
           // Get raw string (e.g., "html5, css, react")
           const rawSkills = isSourced ? c.skills : (c.sourced_data?.skills || '');
           if (!rawSkills) return false;
-          
+
           // Split candidate skills into array
           const candidateSkills = rawSkills.toLowerCase().split(',').map((s: string) => s.trim());
-          
+
           // LOGIC UPDATE:
           // Check if ANY of the user's search terms match ANY of the candidate's skills.
           // "html" (search) -> "html5" (candidate skill) => TRUE
           // "java" (search) -> "javascript" (candidate skill) => TRUE
-          return skillFilters.some((skillFilter: string) => 
+          return skillFilters.some((skillFilter: string) =>
             candidateSkills.some((skill: string) => skill.includes(skillFilter))
           );
         });
@@ -350,7 +375,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     // 2. Assign Back to Display Array
     if (isSourced) {
       this.displayCandidates = candidates;
-      this.updateSelectAllState(); 
+      this.updateSelectAllState();
     } else {
       this.displayRegisteredCandidates = candidates;
     }
@@ -387,14 +412,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.alertButtons = ['Cancel', 'Delete'];
 
     this.pendingAction = () => {
-      this.isActionLoading = true; 
+      this.isActionLoading = true;
       this.candidateService.deleteRegisteredUser(userId).subscribe({
         next: () => {
           // Remove from master list
           this.registeredCandidates = this.registeredCandidates.filter(u => u.user_id !== userId);
           // Re-apply filter to update display list
           this.applyFiltersAndSort();
-          
+
           this.isActionLoading = false;
           this.showAlert('User account deleted successfully.', ['Close']);
         },
@@ -419,7 +444,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     this.pendingAction = () => {
       this.isDeleting = true;
-      const deleteRequests = selectedCandidates.map(c => 
+      const deleteRequests = selectedCandidates.map(c =>
         this.candidateService.deleteCandidate(c.id!).pipe(catchError(err => of(c.id)))
       );
 
@@ -428,7 +453,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
         this.applyFiltersAndSort();
         this.isDeleting = false;
-        
+
         const successCount = selectedCandidates.length - failedIds.length;
         this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
       });
@@ -439,7 +464,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   deleteCandidate(id: number | undefined): void {
     if (!id) return;
-    
+
     this.alertMessage = 'Are you sure you want to delete this candidate?';
     this.alertButtons = ['Cancel', 'Delete'];
 
@@ -540,7 +565,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     if (!term.trim() || !this.placesService) {
       return of([]);
     }
-    
+
     if (!this.sessionToken && this.google) {
       this.sessionToken = new this.google.maps.places.AutocompleteSessionToken();
     }
@@ -662,14 +687,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     const locationPattern = /.*[a-zA-Z].*/;
     this.candidateForm = this.fb.group({
       first_name: ['', [
-        Validators.required, 
-        Validators.pattern(/^[a-zA-Z\s]*$/), 
-        Validators.maxLength(15) 
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z\s]*$/),
+        Validators.maxLength(15)
       ]],
       last_name: ['', [
-        Validators.required, 
-        Validators.pattern(/^[a-zA-Z\s]*$/), 
-        Validators.maxLength(15) 
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z\s]*$/),
+        Validators.maxLength(15)
       ]],
       // CHANGED: phone_number is now a FormArray
       phone_numbers: this.fb.array([], [Validators.required, this.minPhoneNumbersValidator]),
@@ -695,7 +720,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.addPhoneNumber();
   }
 
-   // Validator to ensure at least one phone number exists
+  // Validator to ensure at least one phone number exists
   minPhoneNumbersValidator(array: FormArray): ValidationErrors | null {
     return array.length >= 1 ? null : { minPhoneNumbers: true };
   }
@@ -859,33 +884,33 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.selectedFileName = candidate.resume ? this.getFileNameFromUrl(candidate.resume) : '';
 
         // Clear skills/location arrays before populating
-      this.skills = [];
-      this.preferredLocationsList = [];
-      this.currentLocationsList = [];
+        this.skills = [];
+        this.preferredLocationsList = [];
+        this.currentLocationsList = [];
 
-      // Manually handle phone numbers for the FormArray
-      const rawPhones = candidate.phone_number || '';
-      const phoneList = rawPhones.split(',').map(p => p.trim()).filter(Boolean);
-      
-      // Reset array
-      while (this.phoneNumbersArray.length !== 0) {
-        this.phoneNumbersArray.removeAt(0);
-      }
-      
-      if (phoneList.length > 0) {
-        phoneList.forEach(p => this.addPhoneNumber(p));
-      } else {
-        this.addPhoneNumber();
-      }
-        
+        // Manually handle phone numbers for the FormArray
+        const rawPhones = candidate.phone_number || '';
+        const phoneList = rawPhones.split(',').map(p => p.trim()).filter(Boolean);
+
+        // Reset array
+        while (this.phoneNumbersArray.length !== 0) {
+          this.phoneNumbersArray.removeAt(0);
+        }
+
+        if (phoneList.length > 0) {
+          phoneList.forEach(p => this.addPhoneNumber(p));
+        } else {
+          this.addPhoneNumber();
+        }
+
         this.candidateForm.patchValue(candidate);
-        
+
         this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
-        this.preferredLocationsList = candidate.preferred_location 
-          ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean) 
+        this.preferredLocationsList = candidate.preferred_location
+          ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean)
           : [];
-        this.currentLocationsList = candidate.current_location 
-          ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean) 
+        this.currentLocationsList = candidate.current_location
+          ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean)
           : [];
 
         this.candidateForm.controls['skills'].setValue(this.skills.join(', '));
@@ -893,16 +918,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
 
         const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
-        this.showForm(sourceToOpen); 
+        this.showForm(sourceToOpen);
       }
     } else {
       this.showAlert(
-        "Access Denied: You do not have permission to edit this candidate.", 
+        "Access Denied: You do not have permission to edit this candidate.",
         ['Close']
       );
     }
   }
-  
+
   getFileNameFromUrl(url: string): string {
     try {
       const urlObject = new URL(url);
@@ -916,7 +941,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     const file: File | null = (target.files as FileList)[0];
-    
+
     if (!file) { return; }
 
     const maxSizeInBytes = 5 * 1024 * 1024;
@@ -928,39 +953,39 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     if (file.size === 0) {
       this.showAlert("The uploaded file is empty. Please upload a valid Resume.", ['Close']);
-      target.value = ''; 
+      target.value = '';
       return;
     }
 
     this.selectedFile = file;
     this.selectedFileName = file.name;
-    
+
     this.isParsingResume = true;
     this.showFileError = false;
 
     this.candidateService.parseResume(file).subscribe({
       next: (response: any) => {
-        
+
         // CASE 1: Queued (Production Mode)
         if (response.status === 'PROCESSING' && response.staging_id) {
           this.stagingId = response.staging_id;
           this.startPollingResume(response.staging_id);
-        } 
+        }
         // CASE 2: Sync Success (Local Dev Fallback)
         else if (response.success && response.data) {
           this.stagingId = response.staging_id; // Might be present
           this.handleParsingSuccess(response.data);
-        } 
+        }
         // CASE 3: Immediate Duplicate/Error
         else if (response.errors) {
-           const phoneErrStr = response.errors.phone_number ? JSON.stringify(response.errors.phone_number) : '';
-           const emailErrStr = response.errors.email ? JSON.stringify(response.errors.email) : '';
-           if (phoneErrStr.includes('unique') || emailErrStr.includes('unique')) {
-             this.showAlert("Duplicate detected.", ['Close']);
-           } else {
-             this.showAlert("Validation error.", ['Close']);
-           }
-           this.isParsingResume = false;
+          const phoneErrStr = response.errors.phone_number ? JSON.stringify(response.errors.phone_number) : '';
+          const emailErrStr = response.errors.email ? JSON.stringify(response.errors.email) : '';
+          if (phoneErrStr.includes('unique') || emailErrStr.includes('unique')) {
+            this.showAlert("Duplicate detected.", ['Close']);
+          } else {
+            this.showAlert("Validation error.", ['Close']);
+          }
+          this.isParsingResume = false;
         }
         else {
           // Unknown response structure
@@ -971,12 +996,12 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       error: (err) => {
         this.isParsingResume = false;
         if (err.status === 409) {
-           this.showAlert("Duplicate Candidate.", ['Close']);
-           this.selectedFile = null;
-           this.selectedFileName = '';
-           target.value = '';
+          this.showAlert("Duplicate Candidate.", ['Close']);
+          this.selectedFile = null;
+          this.selectedFileName = '';
+          target.value = '';
         } else {
-           this.showAlert("Upload failed.", ['Close']);
+          this.showAlert("Upload failed.", ['Close']);
         }
       }
     });
@@ -1004,10 +1029,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       takeWhile((res: any) => {
         attempt++;
         console.log(`[Resume Parse] Backend Response:`, res);
-        
+
         // Stop polling if we hit max attempts
         if (attempt >= maxAttempts) return false;
-        
+
         // Keep polling if the status is still processing
         return res.status === 'PENDING' || res.status === 'PROCESSING';
       }, true) // 'true' ensures the final COMPLETED/FAILED emission triggers the 'next' block
@@ -1015,22 +1040,22 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       next: (res: any) => {
         if (res.status === 'COMPLETED' && res.data) {
           console.log(`[Resume Parse] COMPLETED! Populating form with:`, res.data);
-          
+
           let parsedData = res.data;
-          
+
           // Safety Check: If Django sent the dict as a string, parse it
           if (typeof parsedData === 'string') {
             try {
-               const cleanStr = parsedData.replace(/'/g, '"');
-               parsedData = JSON.parse(cleanStr);
+              const cleanStr = parsedData.replace(/'/g, '"');
+              parsedData = JSON.parse(cleanStr);
             } catch (e) {
-               console.error("[Resume Parse] Failed to parse AI data string:", e);
+              console.error("[Resume Parse] Failed to parse AI data string:", e);
             }
           }
-          
+
           // Populate form and kill spinner
           this.handleParsingSuccess(parsedData);
-          
+
         } else if (res.status === 'FAILED') {
           console.error(`[Resume Parse] FAILED:`, res.error);
           this.isParsingResume = false;
@@ -1052,14 +1077,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   /**
    * Shared logic to populate the form
    */
   private handleParsingSuccess(data: any): void {
     this.isParsingResume = false; // STOP SPINNER
-    this.editingCandidateId = null; 
-    
+    this.editingCandidateId = null;
+
     // Populate logic
     if (data.skills) {
       if (Array.isArray(data.skills)) this.skills = data.skills;
@@ -1087,8 +1112,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience_min || data.total_experience_years, 
-      relevant_experience: data.relevant_experience_min || data.relevant_experience_years, 
+      total_experience: data.total_experience_min || data.total_experience_years,
+      relevant_experience: data.relevant_experience_min || data.relevant_experience_years,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1098,17 +1123,17 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     this.showAlert("Resume parsed! Please review.", ['Close']);
   }
-  
-  
+
+
 
   populateFormWithData(data: any): void {
     if (!data) return;
 
     if (data.skills) {
       if (Array.isArray(data.skills)) {
-         this.skills = data.skills;
+        this.skills = data.skills;
       } else {
-         this.skills = data.skills.split(',').map((s: string) => s.trim()).filter(Boolean);
+        this.skills = data.skills.split(',').map((s: string) => s.trim()).filter(Boolean);
       }
       this.updateSkillsFormControl();
     }
@@ -1123,7 +1148,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
     }
 
-     // CHANGED: Handle Phone Numbers
+    // CHANGED: Handle Phone Numbers
     // Clear existing controls
     while (this.phoneNumbersArray.length !== 0) {
       this.phoneNumbersArray.removeAt(0);
@@ -1144,8 +1169,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience_min, 
-      relevant_experience: data.relevant_experience_min, 
+      total_experience: data.total_experience_min,
+      relevant_experience: data.relevant_experience_min,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1157,10 +1182,10 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   matchDropdown(value: string, options: string[]): string {
     if (!value) return '';
     const match = options.find(opt => opt.toLowerCase() === value.toLowerCase());
-    return match || ''; 
+    return match || '';
   }
-  
-    onSubmit(): void {
+
+  onSubmit(): void {
     this.candidateForm.markAllAsTouched();
     this.duplicatePhoneValidator(this.candidateForm); // Check for internal duplicates
 
@@ -1168,55 +1193,55 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.showFileError = isFileMissing;
 
     if (this.candidateForm.invalid || isFileMissing || this.phoneNumbersArray.invalid) {
-       const invalidFields: string[] = [];
-       if (isFileMissing) invalidFields.push('Resume File');
-       
-       // Collect errors for alert
-       Object.keys(this.candidateForm.controls).forEach(key => {
-         if (this.candidateForm.get(key)?.invalid) {
-            // Handle FormArray separately for better naming
-            if (key === 'phone_numbers') {
-               invalidFields.push('Phone Numbers');
-            } else {
-               invalidFields.push(key.replace(/_/g, ' '));
-            }
-         }
-       });
+      const invalidFields: string[] = [];
+      if (isFileMissing) invalidFields.push('Resume File');
 
-       if (this.phoneNumbersArray.errors) {
-          if (this.phoneNumbersArray.errors['duplicate']) invalidFields.push('Duplicate Phone Numbers');
-       }
-       
-       this.showAlert(`Please check the following fields: ${invalidFields.join(', ')}`, ['Close']);
-       return;
+      // Collect errors for alert
+      Object.keys(this.candidateForm.controls).forEach(key => {
+        if (this.candidateForm.get(key)?.invalid) {
+          // Handle FormArray separately for better naming
+          if (key === 'phone_numbers') {
+            invalidFields.push('Phone Numbers');
+          } else {
+            invalidFields.push(key.replace(/_/g, ' '));
+          }
+        }
+      });
+
+      if (this.phoneNumbersArray.errors) {
+        if (this.phoneNumbersArray.errors['duplicate']) invalidFields.push('Duplicate Phone Numbers');
+      }
+
+      this.showAlert(`Please check the following fields: ${invalidFields.join(', ')}`, ['Close']);
+      return;
     }
 
     this.isSubmitting = true;
     const formData = new FormData();
-    
+
     Object.keys(this.candidateForm.controls).forEach(key => {
       if (key === 'phone_numbers') {
-        const phoneValues = this.phoneNumbersArray.value; 
+        const phoneValues = this.phoneNumbersArray.value;
         const joinedPhones = phoneValues.join(', ');
         formData.append('phone_number', joinedPhones);
-      } 
+      }
       else if (key === 'total_experience' && this.candidateForm.get(key)?.value !== null) {
-          formData.append('total_experience_min', this.candidateForm.get(key)?.value);
-          formData.append('total_experience_max', this.candidateForm.get(key)?.value);
-      } 
+        formData.append('total_experience_min', this.candidateForm.get(key)?.value);
+        formData.append('total_experience_max', this.candidateForm.get(key)?.value);
+      }
       else if (key === 'relevant_experience' && this.candidateForm.get(key)?.value !== null) {
-          formData.append('relevant_experience_min', this.candidateForm.get(key)?.value);
-          formData.append('relevant_experience_max', this.candidateForm.get(key)?.value);
-      } 
-      else if (this.candidateForm.get(key)?.value !== null && this.candidateForm.get(key)?.value !== undefined) { 
-        formData.append(key, this.candidateForm.get(key)?.value); 
+        formData.append('relevant_experience_min', this.candidateForm.get(key)?.value);
+        formData.append('relevant_experience_max', this.candidateForm.get(key)?.value);
+      }
+      else if (this.candidateForm.get(key)?.value !== null && this.candidateForm.get(key)?.value !== undefined) {
+        formData.append(key, this.candidateForm.get(key)?.value);
       }
     });
 
     if (this.stagingId) {
-        formData.append('staging_id', this.stagingId.toString());
+      formData.append('staging_id', this.stagingId.toString());
     } else if (this.selectedFile) {
-        formData.append('resume', this.selectedFile);
+      formData.append('resume', this.selectedFile);
     }
 
     const userId = localStorage.getItem('user_id');
@@ -1239,7 +1264,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     // UPDATED ENHANCED ERROR HANDLING
     const handleError = (err: HttpErrorResponse) => {
       this.isSubmitting = false;
-      
+
       // 1. Handle Backend Validation Errors (Status 400)
       if (err.status === 400 && err.error) {
         const errors = err.error;
@@ -1248,32 +1273,32 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         // Check for phone_number errors specifically
         if (errors.phone_number) {
           const msg = Array.isArray(errors.phone_number) ? errors.phone_number[0] : errors.phone_number;
-          
+
           // Set error on the FormArray so it shows in the UI
           this.phoneNumbersArray.setErrors({ serverError: msg });
           this.phoneNumbersArray.markAsTouched();
-          
+
           alertMessages.push(msg);
         }
 
         // Check for email errors
         if (errors.email) {
-           const msg = Array.isArray(errors.email) ? errors.email[0] : errors.email;
-           this.candidateForm.get('email')?.setErrors({ serverError: msg });
-           this.candidateForm.get('email')?.markAsTouched();
-           alertMessages.push(msg);
+          const msg = Array.isArray(errors.email) ? errors.email[0] : errors.email;
+          this.candidateForm.get('email')?.setErrors({ serverError: msg });
+          this.candidateForm.get('email')?.markAsTouched();
+          alertMessages.push(msg);
         }
 
         // Check for non_field_errors or detail
         if (errors.detail || errors.non_field_errors) {
-           alertMessages.push(errors.detail || errors.non_field_errors[0]);
+          alertMessages.push(errors.detail || errors.non_field_errors[0]);
         }
 
         // Show Alert with specific messages
         if (alertMessages.length > 0) {
-           this.showAlert(alertMessages.join(' | '), ['Close']);
+          this.showAlert(alertMessages.join(' | '), ['Close']);
         } else {
-           this.showAlert("Submission failed. Please check the form for errors.", ['Close']);
+          this.showAlert("Submission failed. Please check the form for errors.", ['Close']);
         }
       } else {
         // Generic server error
@@ -1289,19 +1314,19 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.formVisible = false; 
+    this.formVisible = false;
     this.editingCandidateId = null;
     this.candidateForm.reset();
     this.submissionError = '';
     this.selectedFile = null;
     this.selectedFileName = '';
     this.isSubmitting = false;
-    this.skills = []; 
+    this.skills = [];
     this.preferredLocationsList = [];
     this.currentLocationsList = [];
     this.preferredSuggestions = [];
     this.currentSuggestions = [];
-    this.showFileError = false; 
+    this.showFileError = false;
   }
 
   allowAlphanumericOnly(event: Event): void {
@@ -1323,11 +1348,20 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
 
     this.selectedCandidateCount = selected.length;
-    this.selectedJobId = null; 
-    
+    this.selectedJobId = null;
+
     this.adbRequirementService.getRequirements().subscribe({
       next: (jobs) => {
-        this.availableJobs = jobs;
+        const allJobs = Array.isArray(jobs) ? jobs : [];
+        this.availableJobs = (this.isRecruiterUser && !this.isSuperUser)
+          ? allJobs.filter(job => this.isUserAuthorizedForJob(job))
+          : allJobs;
+
+        if (this.availableJobs.length === 0) {
+          this.showAlert("No authorized job requirements available for ATS.", ["Close"]);
+          return;
+        }
+
         this.showWorkflowModal = true;
       },
       error: () => this.showAlert("Failed to load job requirements.", ["Close"])
@@ -1348,14 +1382,14 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       next: (res: any) => {
         this.isActionLoading = false;
         this.closeWorkflowModal();
-        
+
         let msg = '';
         if (res.existing > 0) {
           msg = `Added ${res.added}. Note: ${res.existing} already in workflow.`;
         } else {
           msg = `Successfully added ${res.added} candidate(s).`;
         }
-        
+
         this.showAlert(msg, ["Close"]);
         this.masterCandidates.forEach(c => c.selected = false);
         this.updateSelectAllState();

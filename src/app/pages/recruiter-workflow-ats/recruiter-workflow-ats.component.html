@@ -1,5 +1,5 @@
 <div class="ats-layout-wrapper">
-  
+
   <!-- NAVBAR INTEGRATION -->
   <div class="ats-navbar-container">
     <recruiter-workflow-navbar rootClassName="recruiter-workflow-navbarroot-class-name2">
@@ -27,19 +27,15 @@
   <!-- MAIN ATS CONTENT -->
   <div class="ats-main-content">
     <div class="ats-container">
-      
+
       <!-- HEADER: Workflow Switcher & Add Candidate -->
       <div class="ats-header">
         <div class="header-left">
           <label class="workflow-label">Current Workflow:</label>
-          
+
           <!-- WORKFLOW SWITCHER DROPDOWN -->
           <div class="custom-select-wrapper">
-            <select 
-              [(ngModel)]="selectedJobId" 
-              (change)="onJobSwitch()" 
-              class="workflow-switcher"
-            >
+            <select [(ngModel)]="selectedJobId" (change)="onJobSwitch()" class="workflow-switcher">
               <option *ngFor="let job of availableJobs" [value]="job.id">
                 <!-- Displays: Client Name - Job Role (Fallback to Description) -->
                 {{ job.client_name }} - {{ job.role || job.job_role || (job.job_description | slice:0:30) }}
@@ -48,7 +44,7 @@
             <span class="dropdown-arrow">▼</span>
           </div>
         </div>
-        
+
         <button class="add-candidate-btn" (click)="toggleAddCandidate()">
           <span>+</span> Add Candidate
         </button>
@@ -57,14 +53,12 @@
       <!-- ADD CANDIDATE OVERLAY PANEL -->
       <div *ngIf="showAddCandidate" class="add-candidate-overlay">
         <h4>Add to Pipeline</h4>
-        <input type="text" placeholder="Search Candidate Name..." 
-               (input)="filterCandidates($event)" 
-               class="search-input">
-        
+        <input type="text" placeholder="Search Candidate Name..." (input)="filterCandidates($event)"
+          class="search-input">
+
         <div class="candidate-results-list">
-          <div *ngFor="let cand of filteredCandidates" 
-               (click)="addCandidateToPipeline(cand)"
-               class="candidate-result-item">
+          <div *ngFor="let cand of filteredCandidates" (click)="addCandidateToPipeline(cand)"
+            class="candidate-result-item">
             {{ cand.first_name }} {{ cand.last_name }}
           </div>
         </div>
@@ -73,7 +67,7 @@
       <!-- KANBAN BOARD -->
       <div class="pipeline-board" cdkDropListGroup>
         <div class="stage-column" *ngFor="let stage of stages">
-          
+
           <!-- Stage Header -->
           <div class="stage-header">
             <span>{{ stage }}</span>
@@ -81,12 +75,9 @@
           </div>
 
           <!-- Download Stage Report Button -->
-          <button 
-            class="icon-btn download-btn" 
-            title="Download {{stage}} Report" 
-            (click)="downloadStageReport(stage)"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <button class="icon-btn download-btn" title="Download {{stage}} Report" (click)="downloadStageReport(stage)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -94,35 +85,35 @@
           </button>
 
           <!-- Drop List Area -->
-          <div class="card-list"
-               cdkDropList
-               [cdkDropListData]="pipelineData[stage]"
-               (cdkDropListDropped)="drop($event, stage)">
+          <div class="card-list" cdkDropList [cdkDropListData]="pipelineData[stage]"
+            (cdkDropListDropped)="drop($event, stage)">
 
             <!-- Candidate Card -->
             <div class="candidate-card" *ngFor="let app of pipelineData[stage]" cdkDrag>
-              
+
               <!-- Card Header Row: Name + Action Icons -->
               <div class="card-header-row">
-                <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}</div>
-                
+                <div class="card-title">{{ app.candidate_details.first_name }} {{ app.candidate_details.last_name }}
+                </div>
+
                 <div class="card-actions">
                   <!-- Eye Icon (View Details) -->
-                  <button class="action-icon-btn view-btn" (click)="viewCandidateDetails(app.candidate_details)" title="View Details">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <button class="action-icon-btn view-btn" (click)="viewCandidateDetails(app.candidate_details)"
+                    title="View Details">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                   </button>
 
                   <!-- File Icon (Open Resume) -->
-                  <button 
-                    class="action-icon-btn file-btn" 
+                  <button class="action-icon-btn file-btn"
                     [class.disabled]="!app.candidate_details.resume && !app.candidate_details.resume_url"
-                    (click)="openResume(app.candidate_details.resume || app.candidate_details.resume_url)" 
-                    title="Open Resume"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    (click)="openResume(app.candidate_details.resume || app.candidate_details.resume_url)"
+                    title="Open Resume">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                       <polyline points="14 2 14 8 20 8"></polyline>
                       <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -140,7 +131,7 @@
               <div class="card-info-row">
                 <span class="card-label">CTC:</span> {{ app.candidate_details.current_ctc }}
               </div>
-              
+
               <!-- Conditional Badges -->
               <div class="card-badges">
                 <span *ngIf="app.interview_date" class="badge interview-badge">
@@ -166,21 +157,19 @@
 <!-- ========================================== -->
 <div *ngIf="showCandidateDetails && selectedCandidate" class="details-modal-overlay">
   <div class="details-modal">
-    
+
     <!-- Header with Name, File Icon, ID, Close Button -->
     <div class="details-modal-header">
       <div class="details-title-group">
         <div style="display: flex; align-items: center; gap: 10px;">
           <h2>{{ selectedCandidate.first_name }} {{ selectedCandidate.last_name }}</h2>
-          
+
           <!-- File Icon in Modal Header -->
-          <button 
-            class="action-icon-btn file-btn modal-icon" 
+          <button class="action-icon-btn file-btn modal-icon"
             [class.disabled]="!selectedCandidate.resume && !selectedCandidate.resume_url"
-            (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)" 
-            title="Open Resume"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            (click)="openResume(selectedCandidate.resume || selectedCandidate.resume_url)" title="Open Resume">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -196,7 +185,7 @@
 
     <!-- Modal Body -->
     <div class="details-modal-body">
-      
+
       <!-- Section 1: Contact & Location -->
       <div class="details-section">
         <h4 class="section-title">Contact Information</h4>
@@ -226,11 +215,13 @@
         <div class="details-grid">
           <div class="detail-item">
             <label>Total Experience</label>
-            <span>{{ selectedCandidate.total_experience_min }} - {{ selectedCandidate.total_experience_max }} Years</span>
+            <span>{{ selectedCandidate.total_experience_min }} - {{ selectedCandidate.total_experience_max }}
+              Years</span>
           </div>
           <div class="detail-item">
             <label>Relevant Experience</label>
-            <span>{{ selectedCandidate.relevant_experience_min }} - {{ selectedCandidate.relevant_experience_max }} Years</span>
+            <span>{{ selectedCandidate.relevant_experience_min }} - {{ selectedCandidate.relevant_experience_max }}
+              Years</span>
           </div>
           <div class="detail-item">
             <label>Current CTC</label>
@@ -306,7 +297,8 @@
     </div>
     <div class="input-modal-body">
       <label>Please specify why this candidate is being rejected:</label>
-      <textarea [(ngModel)]="rejectionReasonInput" class="custom-textarea" placeholder="e.g. Skills mismatch, high CTC expectation..."></textarea>
+      <textarea [(ngModel)]="rejectionReasonInput" class="custom-textarea"
+        placeholder="e.g. Skills mismatch, high CTC expectation..."></textarea>
     </div>
     <div class="input-modal-footer">
       <button class="modal-btn cancel" (click)="closeModals()">Cancel</button>
@@ -318,10 +310,5 @@
 <!-- ============================================== -->
 <!-- GENERIC ALERT MESSAGE                          -->
 <!-- ============================================== -->
-<app-alert-message
-  *ngIf="showAlert"
-  [message]="alertMessage"
-  [buttons]="alertButtons"
-  (buttonClicked)="onAlertAction($event)"
-  (close)="onAlertClose()"
-></app-alert-message>
+<app-alert-message *ngIf="showAlert" [message]="alertMessage" [buttons]="alertButtons"
+  (buttonClicked)="onAlertAction($event)" (close)="onAlertClose()"></app-alert-message>
