@@ -470,12 +470,16 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
       forkJoin(deleteRequests).subscribe(results => {
         const failedIds = results.filter(id => id !== null);
-        this.masterCandidates = this.masterCandidates.filter(c => !c.selected || failedIds.includes(c.id));
-        this.applyFiltersAndSort();
         this.isDeleting = false;
 
         const successCount = selectedCandidates.length - failedIds.length;
         this.showAlert(`${successCount} candidate(s) successfully deleted.`, ['Close']);
+
+        if (this.masterCandidates.length === successCount && this.currentPage > 1) {
+          this.loadCandidates(this.currentPage - 1);
+        } else {
+          this.loadCandidates(this.currentPage);
+        }
       });
     };
 
@@ -491,9 +495,12 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     this.pendingAction = () => {
       this.candidateService.deleteCandidate(id).subscribe({
         next: () => {
-          this.masterCandidates = this.masterCandidates.filter(c => c.id !== id);
-          this.applyFiltersAndSort();
           this.showAlert('Candidate successfully deleted.', ['Close']);
+          if (this.masterCandidates.length === 1 && this.currentPage > 1) {
+            this.loadCandidates(this.currentPage - 1);
+          } else {
+            this.loadCandidates(this.currentPage);
+          }
         },
         error: (err) => {
           console.error('Failed to delete candidate', err);

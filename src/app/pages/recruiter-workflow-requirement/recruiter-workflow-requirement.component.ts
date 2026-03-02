@@ -1809,8 +1809,12 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     const itemToDelete = this.requirementsList[index];
     this.adbService.deleteRequirement(itemToDelete.id).subscribe({
       next: () => {
-        this.requirementsList.splice(index, 1);
         this.triggerAlert('Requirement deleted successfully.', ['OK']);
+        if (this.requirementsList.length === 1 && this.currentPage > 1) {
+          this.fetchRequirements(this.currentPage - 1);
+        } else {
+          this.fetchRequirements(this.currentPage);
+        }
       },
       error: (err) => {
         console.error(err);
@@ -1826,14 +1830,18 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     forkJoin(deleteRequests).subscribe({
       next: () => {
-        this.requirementsList = this.requirementsList.filter(item => !item.selected);
         this.isAllSelected = false;
         this.triggerAlert('Selected requirements deleted successfully.', ['OK']);
+        if (this.requirementsList.length === selectedItems.length && this.currentPage > 1) {
+          this.fetchRequirements(this.currentPage - 1);
+        } else {
+          this.fetchRequirements(this.currentPage);
+        }
       },
       error: (err) => {
         console.error(err);
         this.triggerAlert('An error occurred while deleting.', ['OK']);
-        this.fetchRequirements();
+        this.fetchRequirements(this.currentPage);
       }
     });
   }
