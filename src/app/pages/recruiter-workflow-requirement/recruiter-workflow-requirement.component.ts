@@ -1231,9 +1231,9 @@ toggleNoticePeriodDropdown() {
     // Populate Table
     if (item.location_details && item.location_details.length > 0) {
       this.additionalDetails = item.location_details.map((loc: any) => ({
-        location: loc.location,
-        spoc: loc.spoc_name,
-        vacancies: loc.vacancies.toString(),
+        location: loc.location || '',
+        spoc: loc.spoc_name || '',
+        vacancies: loc.vacancies !== null && loc.vacancies !== undefined ? loc.vacancies.toString() : '',
         email: loc.email || '',
         phone: loc.phone_number || ''
       }));

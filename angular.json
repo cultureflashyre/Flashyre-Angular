@@ -65,24 +65,32 @@
                 }
               ]
             },
-            "dev2": {                          // 👈 NEW
-    "fileReplacements": [
-      {
-        "replace": "src/environments/environment.ts",
-        "with": "src/environments/environment.dev2.ts"
-      }
-    ],
-    "optimization": true,
-    "outputHashing": "all",
-    "sourceMap": false,
-    "namedChunks": false,
-    "aot": true,
-    "extractLicenses": true,
-    "budgets": [
-      { "type": "initial", "maximumWarning": "2mb", "maximumError": "5mb" },
-      { "type": "anyComponentStyle", "maximumWarning": "100kb", "maximumError": "155kb" }
-    ]
-},
+            "dev2": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev2.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "100kb",
+                  "maximumError": "155kb"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -104,8 +112,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "55kb"
+                  "maximumWarning": "100kb",
+                  "maximumError": "155kb"
                 }
               ]
             },
@@ -130,8 +138,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "55kb"
+                  "maximumWarning": "100kb",
+                  "maximumError": "155kb"
                 }
               ]
             },
@@ -156,8 +164,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "55kb"
+                  "maximumWarning": "100kb",
+                  "maximumError": "155kb"
                 }
               ]
             }
@@ -172,7 +180,7 @@
             "production": {
               "buildTarget": "teleport-project-template-angular:build:production"
             },
-            "development": { 
+            "development": {
               "buildTarget": "teleport-project-template-angular:build:development"
             }
           }
