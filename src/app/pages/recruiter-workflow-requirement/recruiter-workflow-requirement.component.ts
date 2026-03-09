@@ -53,6 +53,9 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // 🟢 NEW: Skills Array for Chips Input
   skills: string[] = [];
 
+  // 🟢 NEW: Location Array for Chips Input
+  locations: string[] = [];
+
   // --- 1. NEW PROPERTY TO FIX ERROR ---
   isParsing: boolean = false;
 
@@ -94,10 +97,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
   // Streams for Debouncing Input
   private interviewLocationInput$ = new Subject<string>();
+  private locationChipInput$ = new Subject<string>();
 
   // Suggestions State
   interviewLocationSuggestions: google.maps.places.AutocompletePrediction[] = [];
   showInterviewLocationSuggestions = false;
+
+  locationChipSuggestions: google.maps.places.AutocompletePrediction[] = [];
+  showLocationChipSuggestions = false;
 
   // NEW: Dropdown Positioning Properties
   dropdownTop: number = 0;
@@ -320,6 +327,24 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         });
       })
     );
+
+    // NEW: Location Chip Location Stream
+    this.subscriptions.add(
+      this.locationChipInput$.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.showLocationChipSuggestions = true;
+          this.initSessionToken();
+        }),
+        switchMap(term => this.getPlacePredictions(term))
+      ).subscribe(suggestions => {
+        this.ngZone.run(() => {
+          this.locationChipSuggestions = suggestions;
+        });
+      })
+    );
+
     // NEW: Additional Details Location Stream
     this.subscriptions.add(
       this.additionalLocationInput$.pipe(
@@ -374,11 +399,40 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   selectAdditionalLocation(prediction: google.maps.places.AutocompletePrediction): void {
     if (this.activeDetailIndex === null) return;
 
-    const locationName = prediction.description.split(',')[0]; // Simple city name
+    const locationName = prediction.description; // Full location string name
 
     // Update the specific row using the stored index
     if (this.additionalDetails[this.activeDetailIndex]) {
       this.additionalDetails[this.activeDetailIndex].location = locationName;
+
+      // Extract place_id from the prediction for structured location data
+      if (prediction.place_id) {
+        this.additionalDetails[this.activeDetailIndex].place_id = prediction.place_id;
+
+        // Use PlacesService to get address_components for city/state
+        const placesService = new google.maps.places.PlacesService(
+          document.createElement('div')
+        );
+        const currentIndex = this.activeDetailIndex; // Capture it for the async callback
+
+        placesService.getDetails(
+          { placeId: prediction.place_id, fields: ['address_components'] },
+          (place, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
+              this.ngZone.run(() => {
+                for (const component of place!.address_components!) {
+                  if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
+                    this.additionalDetails[currentIndex].city = component.long_name;
+                  }
+                  if (component.types.includes('administrative_area_level_1')) {
+                    this.additionalDetails[currentIndex].state = component.long_name;
+                  }
+                }
+              });
+            }
+          }
+        );
+      }
     }
 
     // Reset
@@ -664,15 +718,25 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     this.selectedGender = data.gender || '';
     this.clientName = data.client_name || this.clientName;
 
-    // Handle Interview Location (String to Array)
+    // Handle Interview Location parsing into Additional Details
+    // CRITICAL: Do NOT split by comma — "Bengaluru, Karnataka, India" is ONE location
     if (data.interview_location) {
-      const locs = data.interview_location.split(',').map((s: string) => s.trim());
-      // Simple merge logic: add if not exists
-      locs.forEach((l: string) => {
-        if (l && !this.interviewLocationsList.includes(l)) {
-          this.interviewLocationsList.push(l);
+      const fullLocationString = data.interview_location.trim();
+      if (fullLocationString) {
+        const locationEntry = {
+          location: fullLocationString,
+          spoc: '', vacancies: '', email: '', phone: '',
+          city: data.location_city || '',
+          district: '',
+          state: data.location_state || '',
+          place_id: ''
+        };
+        if (!this.additionalDetails[0].location) {
+          this.additionalDetails[0] = locationEntry;
+        } else {
+          this.additionalDetails.push(locationEntry);
         }
-      });
+      }
     }
 
     // Handle Experience
@@ -692,6 +756,15 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.skills = data.skills.split(',').map((s: string) => s.trim());
     } else {
       this.skills = [];
+    }
+
+    // Handle Location (Array)
+    if (data.location && Array.isArray(data.location)) {
+      this.locations = data.location;
+    } else if (typeof data.location === 'string') {
+      this.locations = [data.location.trim()].filter(Boolean);
+    } else {
+      this.locations = [];
     }
 
     this.triggerAlert('JD Parsed successfully!', ['OK']);
@@ -952,7 +1025,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     'Less than 60 Days',
     'Less than 90 days'
   ];
-  genderOptions: string[] = ['Male', 'Female', 'Both', 'Others'];
+  genderOptions: string[] = ['Male', 'Female', 'Any', 'Others'];
 
   selectedNoticePeriod: string = '';
   isNoticePeriodDropdownOpen: boolean = false;
@@ -1136,8 +1209,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.isJobDescriptionInvalid = false;
     }
   }
-  additionalDetails = [
-    { location: '', spoc: '', vacancies: '', email: '', phone: '' }
+  additionalDetails: any[] = [
+    { location: '', spoc: '', vacancies: '', email: '', phone: '', city: '', district: '', state: '', place_id: '' }
   ];
 
   // 1. Validate Location: Allows a-z, A-Z, space, and comma
@@ -1188,7 +1261,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     this.additionalDetails.splice(index, 1);
   }
   addDetail() {
-    this.additionalDetails.push({ location: '', spoc: '', vacancies: '', email: '', phone: '' });
+    this.additionalDetails.push({ location: '', spoc: '', vacancies: '', email: '', phone: '', city: '', district: '', state: '', place_id: '' });
   }
 
   // --- 🟢 NEW: SKILLS CHIPS LOGIC ---
@@ -1210,6 +1283,90 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // Remove skill on 'x' click
   removeSkill(index: number) {
     this.skills.splice(index, 1);
+  }
+
+  // 🟢 NEW: Google Places Autocomplete for Location Chips
+  onLocationChipInput(event: Event): void {
+    const term = (event.target as HTMLInputElement).value;
+    if (!term.trim()) {
+      this.showLocationChipSuggestions = false;
+      return;
+    }
+    this.locationChipInput$.next(term);
+  }
+
+  selectLocationChip(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
+    if (prediction.place_id) {
+      const placesService = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      placesService.getDetails(
+        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
+            this.ngZone.run(() => {
+              let city = '';
+              let district = '';
+              let state = '';
+
+              for (const component of place.address_components!) {
+                if (component.types.includes('locality')) {
+                  city = component.long_name;
+                } else if (component.types.includes('administrative_area_level_3') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_2') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_1')) {
+                  state = component.long_name;
+                }
+              }
+
+              // Fallback if city is missing, use main text from prediction
+              if (!city) city = prediction.structured_formatting?.main_text || '';
+
+              const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+
+              if (formattedLocation && !this.locations.includes(formattedLocation)) {
+                this.locations.push(formattedLocation);
+              } else if (!formattedLocation && !this.locations.includes(prediction.description)) {
+                this.locations.push(prediction.description);
+              }
+
+              inputElement.value = '';
+              this.showLocationChipSuggestions = false;
+              this.locationChipSuggestions = [];
+              this.sessionToken = undefined;
+            });
+          }
+        }
+      );
+    } else {
+      if (!this.locations.includes(prediction.description)) {
+        this.locations.push(prediction.description);
+      }
+      inputElement.value = '';
+      this.showLocationChipSuggestions = false;
+      this.locationChipSuggestions = [];
+      this.sessionToken = undefined;
+    }
+  }
+
+  // 🟢 NEW: Add Location chip (manual enter)
+  addLocation(event: any) {
+    const input = event.target;
+    const value = (input.value || '').trim();
+    if (value) {
+      if (!this.locations.some(l => l.toLowerCase() === value.toLowerCase())) {
+        this.locations.push(value);
+      }
+      input.value = '';
+      this.showLocationChipSuggestions = false;
+    }
+  }
+
+  // 🟢 NEW: Remove Location chip
+  removeLocation(index: number) {
+    this.locations.splice(index, 1);
   }
 
   onEdit(item: any) {
@@ -1243,6 +1400,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.skills = [];
     }
 
+    // 🟢 NEW: Load Locations
+    if (item.location && Array.isArray(item.location)) {
+      this.locations = [...item.location];
+    } else {
+      this.locations = [];
+    }
+
     this.interviewLocationsList = item.interview_location
       ? item.interview_location.split(',').map((s: string) => s.trim()).filter(Boolean)
       : [];
@@ -1268,15 +1432,19 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
 
     // Populate Table
     if (item.location_details && item.location_details.length > 0) {
-      this.additionalDetails = item.location_details.map((loc: any) => ({
+      this.additionalDetails = item.location_details.map((loc: any): any => ({
         location: loc.location,
         spoc: loc.spoc_name,
-        vacancies: loc.vacancies.toString(),
+        vacancies: loc.vacancies ? loc.vacancies.toString() : '',
         email: loc.email || '',
-        phone: loc.phone_number || ''
+        phone: loc.phone_number || '',
+        city: loc.city || '',
+        district: loc.district || '',
+        state: loc.state || '',
+        place_id: loc.place_id || ''
       }));
     } else {
-      this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '' }];
+      this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '', city: '', district: '', state: '', place_id: '' }];
     }
 
     // POPULATE ASSIGNED USERS
@@ -1502,10 +1670,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     // 🟢 NEW: Append Skills Array as JSON String
     formData.append('skills', JSON.stringify(this.skills));
 
-    // 🟢 NEW: Append structured location fields
-    if (this.selectedCity) formData.append('city', this.selectedCity);
-    if (this.selectedState) formData.append('state', this.selectedState);
-    if (this.selectedPlaceId) formData.append('place_id', this.selectedPlaceId);
+    // 🟢 NEW: Append Location Array as JSON String
+    formData.append('location', JSON.stringify(this.locations));
 
     if (this.selectedFile) {
       formData.append('file_attachment', this.selectedFile, this.selectedFile.name);
@@ -1533,7 +1699,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         spoc_name: d.spoc,
         email: d.email,
         phone_number: d.phone,
-        vacancies: parseInt(d.vacancies, 10) || null // Send null if not a number
+        vacancies: parseInt(d.vacancies, 10) || null
       }));
     if (validLocationDetails.length > 0) {
       formData.append('location_details', JSON.stringify(validLocationDetails));
@@ -1593,12 +1759,13 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     this.salary = { min: null, max: null };
     this.selectedNoticePeriod = '';
     this.selectedGender = '';
-    this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '' }];
+    this.additionalDetails = [{ location: '', spoc: '', vacancies: '', email: '', phone: '', city: '', district: '', state: '', place_id: '' }];
     this.selectedAssignees = [];
     this.userSearchText = '';
 
-    // 🟢 NEW: Clear skills on cancel
+    // 🟢 NEW: Clear skills and locations on cancel
     this.skills = [];
+    this.locations = [];
 
     // Reset validation errors
     this.isJobDescriptionInvalid = false;

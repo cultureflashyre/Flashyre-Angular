@@ -1,0 +1,4 @@
+Mismatched closing tag div at line 924, expected form (opened at 654)
+Mismatched closing tag form at line 980, expected div (opened at 653)
+Mismatched closing tag div at line 982, expected ng-container (opened at 650)
+Extra closing tag ng-container at line 983

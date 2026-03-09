@@ -619,7 +619,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   onPreferredLocationInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^a-zA-Z \-]/g, '');
+    input.value = input.value.replace(/[^a-zA-Z, \-]/g, '');
     const term = input.value;
     if (!term.trim()) {
       this.showPreferredSuggestions = false;
@@ -630,7 +630,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   onCurrentLocationInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^a-zA-Z \-]/g, '');
+    input.value = input.value.replace(/[^a-zA-Z, \-]/g, '');
     const term = input.value;
     if (!term.trim()) {
       this.showCurrentSuggestions = false;
@@ -640,25 +640,65 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   }
 
   selectPreferredLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
-    const locationName = prediction.description;
-    if (!this.preferredLocationsList.includes(locationName)) {
-      this.preferredLocationsList.push(locationName);
-      this.updateLocationControl('preferred_location', this.preferredLocationsList);
+    if (prediction.place_id) {
+      const placesService = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      placesService.getDetails(
+        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
+            this.ngZone.run(() => {
+              let city = '';
+              let district = '';
+              let state = '';
+
+              for (const component of place.address_components!) {
+                if (component.types.includes('locality')) {
+                  city = component.long_name;
+                } else if (component.types.includes('administrative_area_level_3') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_2') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_1')) {
+                  state = component.long_name;
+                }
+              }
+
+              // Fallback if city is missing, use main text from prediction
+              if (!city) city = prediction.structured_formatting?.main_text || '';
+
+              const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+
+              if (formattedLocation && !this.preferredLocationsList.includes(formattedLocation)) {
+                this.preferredLocationsList.push(formattedLocation);
+                this.updateLocationControl('preferred_location', this.preferredLocationsList);
+              } else if (!formattedLocation && !this.preferredLocationsList.includes(prediction.description)) {
+                this.preferredLocationsList.push(prediction.description);
+                this.updateLocationControl('preferred_location', this.preferredLocationsList);
+              }
+
+              inputElement.value = '';
+              this.showPreferredSuggestions = false;
+              this.preferredSuggestions = [];
+              this.sessionToken = undefined;
+            });
+          }
+        }
+      );
+    } else {
+      if (!this.preferredLocationsList.includes(prediction.description)) {
+        this.preferredLocationsList.push(prediction.description);
+        this.updateLocationControl('preferred_location', this.preferredLocationsList);
+      }
+      inputElement.value = '';
+      this.showPreferredSuggestions = false;
+      this.preferredSuggestions = [];
+      this.sessionToken = undefined;
     }
-    inputElement.value = '';
-    this.showPreferredSuggestions = false;
-    this.preferredSuggestions = [];
-    this.sessionToken = undefined;
   }
 
   selectCurrentLocation(prediction: google.maps.places.AutocompletePrediction, inputElement: HTMLInputElement): void {
-    const locationName = prediction.description;
-    if (!this.currentLocationsList.includes(locationName)) {
-      this.currentLocationsList.push(locationName);
-      this.updateLocationControl('current_location', this.currentLocationsList);
-    }
-
-    // Extract place_id from the prediction for structured location data
     if (prediction.place_id) {
       this.selectedPlaceId = prediction.place_id;
 
@@ -666,28 +706,61 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         document.createElement('div')
       );
       placesService.getDetails(
-        { placeId: prediction.place_id, fields: ['address_components'] },
+        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
             this.ngZone.run(() => {
-              for (const component of place!.address_components!) {
-                if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
-                  this.selectedCity = component.long_name;
-                }
-                if (component.types.includes('administrative_area_level_1')) {
-                  this.selectedState = component.long_name;
+              let city = '';
+              let district = '';
+              let state = '';
+
+              for (const component of place.address_components!) {
+                if (component.types.includes('locality')) {
+                  city = component.long_name;
+                } else if (component.types.includes('administrative_area_level_3') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_2') && !district) {
+                  district = component.long_name;
+                } else if (component.types.includes('administrative_area_level_1')) {
+                  state = component.long_name;
                 }
               }
+
+              // Fallback if city is missing, use main text from prediction
+              if (!city) city = prediction.structured_formatting?.main_text || '';
+
+              // Store extracted values for form submission
+              this.selectedCity = city;
+              this.selectedState = state;
+
+              const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+
+              if (formattedLocation && !this.currentLocationsList.includes(formattedLocation)) {
+                this.currentLocationsList.push(formattedLocation);
+                this.updateLocationControl('current_location', this.currentLocationsList);
+              } else if (!formattedLocation && !this.currentLocationsList.includes(prediction.description)) {
+                this.currentLocationsList.push(prediction.description);
+                this.updateLocationControl('current_location', this.currentLocationsList);
+              }
+
+              inputElement.value = '';
+              this.showCurrentSuggestions = false;
+              this.currentSuggestions = [];
+              this.sessionToken = undefined;
             });
           }
         }
       );
+    } else {
+      if (!this.currentLocationsList.includes(prediction.description)) {
+        this.currentLocationsList.push(prediction.description);
+        this.updateLocationControl('current_location', this.currentLocationsList);
+      }
+      inputElement.value = '';
+      this.showCurrentSuggestions = false;
+      this.currentSuggestions = [];
+      this.sessionToken = undefined;
     }
-
-    inputElement.value = '';
-    this.showCurrentSuggestions = false;
-    this.currentSuggestions = [];
-    this.sessionToken = undefined;
   }
 
   addManualLocation(event: any, type: 'preferred' | 'current'): void {
@@ -960,9 +1033,15 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.candidateForm.patchValue(candidate);
 
         this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
-        this.preferredLocationsList = candidate.preferred_location
-          ? candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean)
-          : [];
+        if (candidate.preferred_location) {
+          if (Array.isArray(candidate.preferred_location)) {
+            this.preferredLocationsList = candidate.preferred_location;
+          } else if (typeof candidate.preferred_location === 'string') {
+            this.preferredLocationsList = candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean);
+          }
+        } else {
+          this.preferredLocationsList = [];
+        }
         this.currentLocationsList = candidate.current_location
           ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean)
           : [];
@@ -1146,7 +1225,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       this.updateSkillsFormControl();
     }
     if (data.preferred_location) {
-      this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      if (Array.isArray(data.preferred_location)) {
+        this.preferredLocationsList = data.preferred_location;
+      } else if (typeof data.preferred_location === 'string') {
+        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      }
       this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
     }
     if (data.current_location) {
@@ -1193,7 +1276,11 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
 
     if (data.preferred_location) {
-      this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      if (Array.isArray(data.preferred_location)) {
+        this.preferredLocationsList = data.preferred_location;
+      } else if (typeof data.preferred_location === 'string') {
+        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+      }
       this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
     }
 
@@ -1278,6 +1365,9 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         const phoneValues = this.phoneNumbersArray.value;
         const joinedPhones = phoneValues.join(', ');
         formData.append('phone_number', joinedPhones);
+      }
+      else if (key === 'preferred_location') {
+        formData.append('preferred_location', JSON.stringify(this.preferredLocationsList));
       }
       else if (key === 'total_experience' && this.candidateForm.get(key)?.value !== null) {
         formData.append('total_experience_min', this.candidateForm.get(key)?.value);

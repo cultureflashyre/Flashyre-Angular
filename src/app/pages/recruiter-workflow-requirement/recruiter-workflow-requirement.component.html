@@ -854,6 +854,38 @@
             <span class="helper-text">AI extracted these skills. Click 'x' to remove or type to add new ones.</span>
           </div>
         </div>
+
+        <!-- 🟢 LOCATION CHIPS (Same pattern as Skills) -->
+        <div class="recruiter-workflow-requirement-certificate-name-container" style="margin-top: 16px;">
+          <div class="recruiter-workflow-requirement-certifiacate-name-container">
+            <span class="recruiter-workflow-requirement-certificate-name-text">
+              Location
+            </span>
+
+            <div class="location-chips-container">
+              <div class="skills-wrapper input" (click)="locationChipInput.focus()">
+                <div *ngFor="let loc of locations; let i = index" class="skill-chip">
+                  {{ loc }}
+                  <span class="remove-icon" (click)="removeLocation(i)">×</span>
+                </div>
+
+                <input #locationChipInput type="text" class="skill-input"
+                  placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
+                  (input)="onLocationChipInput($event)" (keydown.enter)="$event.preventDefault(); addLocation($event)">
+              </div>
+
+              <div class="location-suggestions-dropdown"
+                *ngIf="showLocationChipSuggestions && locationChipSuggestions.length > 0">
+                <div class="suggestion-item" *ngFor="let suggestion of locationChipSuggestions"
+                  (click)="selectLocationChip(suggestion, locationChipInput)">
+                  {{ suggestion.description }}
+                </div>
+              </div>
+            </div>
+            <span class="helper-text">Enter location as "City, District, State" and press Enter. AI will auto-populate
+              from JD.</span>
+          </div>
+        </div>
         <div id="skills-container" class="recruiter-workflow-requirement-skills-container">
           <div id="skill-text-container" class="recruiter-workflow-requirement-skill-text-container">
             <span id="skill-text" class="recruiter-workflow-requirement-skill-text">Job Description<span
