@@ -1308,12 +1308,15 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
             this.ngZone.run(() => {
+              let area = '';
               let city = '';
               let district = '';
               let state = '';
 
               for (const component of place.address_components!) {
-                if (component.types.includes('locality')) {
+                if (component.types.includes('sublocality') || component.types.includes('neighborhood')) {
+                  if (!area) area = component.long_name;
+                } else if (component.types.includes('locality')) {
                   city = component.long_name;
                 } else if (component.types.includes('administrative_area_level_3') && !district) {
                   district = component.long_name;
@@ -1327,7 +1330,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
               // Fallback if city is missing, use main text from prediction
               if (!city) city = prediction.structured_formatting?.main_text || '';
 
-              const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+              const formattedLocation = [area, city, district, state].filter(Boolean).join(', ');
               const lat = place.geometry?.location?.lat() || null;
               const lng = place.geometry?.location?.lng() || null;
               const locationName = formattedLocation || prediction.description;
