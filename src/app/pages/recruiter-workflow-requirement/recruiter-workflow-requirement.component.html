@@ -865,7 +865,7 @@
             <div class="location-chips-container">
               <div class="skills-wrapper input" (click)="locationChipInput.focus()">
                 <div *ngFor="let loc of locations; let i = index" class="skill-chip">
-                  {{ loc }}
+                  {{ loc.name }}
                   <span class="remove-icon" (click)="removeLocation(i)">×</span>
                 </div>
 

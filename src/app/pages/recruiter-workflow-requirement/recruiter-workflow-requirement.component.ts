@@ -53,8 +53,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
   // 🟢 NEW: Skills Array for Chips Input
   skills: string[] = [];
 
-  // 🟢 NEW: Location Array for Chips Input
-  locations: string[] = [];
+  // 🟢 NEW: Location Array for Chips Input (objects with name, lat, lng)
+  locations: any[] = [];
 
   // --- 1. NEW PROPERTY TO FIX ERROR ---
   isParsing: boolean = false;
@@ -461,7 +461,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     return new Observable(observer => {
       this.placesService!.getPlacePredictions({
         input: term,
-        types: ['(cities)'],
+        types: ['(regions)'],
         sessionToken: this.sessionToken
       }, (predictions, status) => {
         this.ngZone.run(() => {
@@ -758,11 +758,14 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.skills = [];
     }
 
-    // Handle Location (Array)
+    // Handle Location (Array) - support both old string[] and new object[] formats
     if (data.location && Array.isArray(data.location)) {
-      this.locations = data.location;
+      this.locations = data.location.map((loc: any) => {
+        if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+        return loc;
+      });
     } else if (typeof data.location === 'string') {
-      this.locations = [data.location.trim()].filter(Boolean);
+      this.locations = [{ name: data.location.trim(), lat: null, lng: null }].filter((l: any) => l.name);
     } else {
       this.locations = [];
     }
@@ -1301,7 +1304,7 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         document.createElement('div')
       );
       placesService.getDetails(
-        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
+        { placeId: prediction.place_id, fields: ['address_components', 'name', 'geometry'] },
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
             this.ngZone.run(() => {
@@ -1325,11 +1328,12 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
               if (!city) city = prediction.structured_formatting?.main_text || '';
 
               const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+              const lat = place.geometry?.location?.lat() || null;
+              const lng = place.geometry?.location?.lng() || null;
+              const locationName = formattedLocation || prediction.description;
 
-              if (formattedLocation && !this.locations.includes(formattedLocation)) {
-                this.locations.push(formattedLocation);
-              } else if (!formattedLocation && !this.locations.includes(prediction.description)) {
-                this.locations.push(prediction.description);
+              if (!this.locations.some((l: any) => l.name === locationName)) {
+                this.locations.push({ name: locationName, lat, lng });
               }
 
               inputElement.value = '';
@@ -1341,8 +1345,8 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
         }
       );
     } else {
-      if (!this.locations.includes(prediction.description)) {
-        this.locations.push(prediction.description);
+      if (!this.locations.some((l: any) => l.name === prediction.description)) {
+        this.locations.push({ name: prediction.description, lat: null, lng: null });
       }
       inputElement.value = '';
       this.showLocationChipSuggestions = false;
@@ -1351,17 +1355,32 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  // 🟢 NEW: Add Location chip (manual enter)
+  // 🟢 NEW: Add Location chip (manual enter) - Force Resolution via Google Places
   addLocation(event: any) {
     const input = event.target;
     const value = (input.value || '').trim();
-    if (value) {
-      if (!this.locations.some(l => l.toLowerCase() === value.toLowerCase())) {
-        this.locations.push(value);
+    if (!value) return;
+
+    // Force-resolve the manual text via Google Places Autocomplete
+    this.initSessionToken();
+    this.placesService!.getPlacePredictions(
+      { input: value, types: ['(regions)'], sessionToken: this.sessionToken },
+      (predictions: google.maps.places.AutocompletePrediction[] | null, status: google.maps.places.PlacesServiceStatus) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions && predictions.length > 0) {
+            // Auto-select the first (best) match
+            this.selectLocationChip(predictions[0], input);
+          } else {
+            // Could not resolve - add as plain text with no coordinates
+            if (!this.locations.some((l: any) => (l.name || '').toLowerCase() === value.toLowerCase())) {
+              this.locations.push({ name: value, lat: null, lng: null });
+            }
+            input.value = '';
+            this.showLocationChipSuggestions = false;
+          }
+        });
       }
-      input.value = '';
-      this.showLocationChipSuggestions = false;
-    }
+    );
   }
 
   // 🟢 NEW: Remove Location chip
@@ -1400,9 +1419,12 @@ export class RecruiterWorkflowRequirement implements OnInit, AfterViewInit, OnDe
       this.skills = [];
     }
 
-    // 🟢 NEW: Load Locations
+    // 🟢 NEW: Load Locations (support both old string[] and new object[] formats)
     if (item.location && Array.isArray(item.location)) {
-      this.locations = [...item.location];
+      this.locations = item.location.map((loc: any) => {
+        if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+        return loc;
+      });
     } else {
       this.locations = [];
     }

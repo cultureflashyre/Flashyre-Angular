@@ -360,7 +360,7 @@ export class JobDetailsFormComponent implements OnInit, OnDestroy, OnChanges, Af
   getPlacePredictions(term: string): Observable<google.maps.places.AutocompletePrediction[]> {
     if (!this.placesService || !term) return of([]);
     return new Observable(observer => {
-      this.placesService!.getPlacePredictions({ input: term, types: ['(cities)'], sessionToken: this.sessionToken },
+      this.placesService!.getPlacePredictions({ input: term, types: ['(regions)'], sessionToken: this.sessionToken },
         (predictions, status) => {
           this.ngZone.run(() => {
             if (status === 'OK' && predictions) { observer.next(predictions); } 

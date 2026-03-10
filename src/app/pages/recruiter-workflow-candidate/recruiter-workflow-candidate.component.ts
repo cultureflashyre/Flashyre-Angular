@@ -163,8 +163,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   showPreferredSuggestions = false;
   showCurrentSuggestions = false;
 
-  preferredLocationsList: string[] = [];
-  currentLocationsList: string[] = [];
+  preferredLocationsList: any[] = [];
+  currentLocationsList: any[] = [];
 
   private subscriptions = new Subscription();
 
@@ -600,7 +600,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     return new Observable(observer => {
       const request = {
         input: term,
-        types: ['(cities)'],
+        types: ['(regions)'],
         sessionToken: this.sessionToken
       };
 
@@ -645,7 +645,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         document.createElement('div')
       );
       placesService.getDetails(
-        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
+        { placeId: prediction.place_id, fields: ['address_components', 'name', 'geometry'] },
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
             this.ngZone.run(() => {
@@ -665,16 +665,15 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
                 }
               }
 
-              // Fallback if city is missing, use main text from prediction
               if (!city) city = prediction.structured_formatting?.main_text || '';
 
               const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+              const lat = place.geometry?.location?.lat() || null;
+              const lng = place.geometry?.location?.lng() || null;
+              const locationName = formattedLocation || prediction.description;
 
-              if (formattedLocation && !this.preferredLocationsList.includes(formattedLocation)) {
-                this.preferredLocationsList.push(formattedLocation);
-                this.updateLocationControl('preferred_location', this.preferredLocationsList);
-              } else if (!formattedLocation && !this.preferredLocationsList.includes(prediction.description)) {
-                this.preferredLocationsList.push(prediction.description);
+              if (!this.preferredLocationsList.some((l: any) => l.name === locationName)) {
+                this.preferredLocationsList.push({ name: locationName, lat, lng });
                 this.updateLocationControl('preferred_location', this.preferredLocationsList);
               }
 
@@ -687,8 +686,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         }
       );
     } else {
-      if (!this.preferredLocationsList.includes(prediction.description)) {
-        this.preferredLocationsList.push(prediction.description);
+      if (!this.preferredLocationsList.some((l: any) => l.name === prediction.description)) {
+        this.preferredLocationsList.push({ name: prediction.description, lat: null, lng: null });
         this.updateLocationControl('preferred_location', this.preferredLocationsList);
       }
       inputElement.value = '';
@@ -706,7 +705,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         document.createElement('div')
       );
       placesService.getDetails(
-        { placeId: prediction.place_id, fields: ['address_components', 'name'] },
+        { placeId: prediction.place_id, fields: ['address_components', 'name', 'geometry'] },
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place?.address_components) {
             this.ngZone.run(() => {
@@ -726,20 +725,18 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
                 }
               }
 
-              // Fallback if city is missing, use main text from prediction
               if (!city) city = prediction.structured_formatting?.main_text || '';
 
-              // Store extracted values for form submission
               this.selectedCity = city;
               this.selectedState = state;
 
               const formattedLocation = [city, district, state].filter(Boolean).join(', ');
+              const lat = place.geometry?.location?.lat() || null;
+              const lng = place.geometry?.location?.lng() || null;
+              const locationName = formattedLocation || prediction.description;
 
-              if (formattedLocation && !this.currentLocationsList.includes(formattedLocation)) {
-                this.currentLocationsList.push(formattedLocation);
-                this.updateLocationControl('current_location', this.currentLocationsList);
-              } else if (!formattedLocation && !this.currentLocationsList.includes(prediction.description)) {
-                this.currentLocationsList.push(prediction.description);
+              if (!this.currentLocationsList.some((l: any) => l.name === locationName)) {
+                this.currentLocationsList.push({ name: locationName, lat, lng });
                 this.updateLocationControl('current_location', this.currentLocationsList);
               }
 
@@ -752,8 +749,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         }
       );
     } else {
-      if (!this.currentLocationsList.includes(prediction.description)) {
-        this.currentLocationsList.push(prediction.description);
+      if (!this.currentLocationsList.some((l: any) => l.name === prediction.description)) {
+        this.currentLocationsList.push({ name: prediction.description, lat: null, lng: null });
         this.updateLocationControl('current_location', this.currentLocationsList);
       }
       inputElement.value = '';
@@ -765,22 +762,38 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   addManualLocation(event: any, type: 'preferred' | 'current'): void {
     const value = event.target.value.trim();
-    if (value) {
-      if (type === 'preferred') {
-        if (!this.preferredLocationsList.includes(value)) {
-          this.preferredLocationsList.push(value);
-          this.updateLocationControl('preferred_location', this.preferredLocationsList);
-        }
-        this.showPreferredSuggestions = false;
-      } else {
-        if (!this.currentLocationsList.includes(value)) {
-          this.currentLocationsList.push(value);
-          this.updateLocationControl('current_location', this.currentLocationsList);
-        }
-        this.showCurrentSuggestions = false;
+    if (!value) { event.preventDefault(); return; }
+
+    // Force-resolve the manual text via Google Places Autocomplete
+    this.initSessionToken();
+    this.placesService!.getPlacePredictions(
+      { input: value, types: ['(regions)'], sessionToken: this.sessionToken },
+      (predictions: google.maps.places.AutocompletePrediction[] | null, status: google.maps.places.PlacesServiceStatus) => {
+        this.ngZone.run(() => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions && predictions.length > 0) {
+            // Auto-select the first (best) match
+            if (type === 'preferred') {
+              this.selectPreferredLocation(predictions[0], event.target);
+            } else {
+              this.selectCurrentLocation(predictions[0], event.target);
+            }
+          } else {
+            // Could not resolve - add as plain text with no coordinates
+            const list = type === 'preferred' ? this.preferredLocationsList : this.currentLocationsList;
+            if (!list.some((l: any) => (l.name || '').toLowerCase() === value.toLowerCase())) {
+              list.push({ name: value, lat: null, lng: null });
+              this.updateLocationControl(
+                type === 'preferred' ? 'preferred_location' : 'current_location',
+                list
+              );
+            }
+            event.target.value = '';
+            if (type === 'preferred') this.showPreferredSuggestions = false;
+            else this.showCurrentSuggestions = false;
+          }
+        });
       }
-      event.target.value = '';
-    }
+    );
     event.preventDefault();
   }
 
@@ -794,8 +807,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
   }
 
-  private updateLocationControl(controlName: string, list: string[]): void {
-    this.candidateForm.controls[controlName].setValue(list.join(', '));
+  private updateLocationControl(controlName: string, list: any[]): void {
+    this.candidateForm.controls[controlName].setValue(list.map((l: any) => l.name || l).join(', '));
   }
 
   // =========================================================
@@ -1035,20 +1048,32 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.skills = candidate.skills ? candidate.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
         if (candidate.preferred_location) {
           if (Array.isArray(candidate.preferred_location)) {
-            this.preferredLocationsList = candidate.preferred_location;
+            this.preferredLocationsList = candidate.preferred_location.map((loc: any) => {
+              if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+              return loc;
+            });
           } else if (typeof candidate.preferred_location === 'string') {
-            this.preferredLocationsList = candidate.preferred_location.split(',').map(s => s.trim()).filter(Boolean);
+            this.preferredLocationsList = candidate.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
           }
         } else {
           this.preferredLocationsList = [];
         }
-        this.currentLocationsList = candidate.current_location
-          ? candidate.current_location.split(',').map(s => s.trim()).filter(Boolean)
-          : [];
+        if (candidate.current_location) {
+          if (typeof candidate.current_location === 'string') {
+            this.currentLocationsList = candidate.current_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
+          } else if (Array.isArray(candidate.current_location)) {
+            this.currentLocationsList = (candidate.current_location as any[]).map((loc: any) => {
+              if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+              return loc;
+            });
+          }
+        } else {
+          this.currentLocationsList = [];
+        }
 
         this.candidateForm.controls['skills'].setValue(this.skills.join(', '));
-        this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
-        this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+        this.updateLocationControl('preferred_location', this.preferredLocationsList);
+        this.updateLocationControl('current_location', this.currentLocationsList);
 
         const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
         this.showForm(sourceToOpen);
@@ -1226,15 +1251,25 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     }
     if (data.preferred_location) {
       if (Array.isArray(data.preferred_location)) {
-        this.preferredLocationsList = data.preferred_location;
+        this.preferredLocationsList = data.preferred_location.map((loc: any) => {
+          if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+          return loc;
+        });
       } else if (typeof data.preferred_location === 'string') {
-        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
       }
-      this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
+      this.updateLocationControl('preferred_location', this.preferredLocationsList);
     }
     if (data.current_location) {
-      this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean);
-      this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+      if (typeof data.current_location === 'string') {
+        this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
+      } else if (Array.isArray(data.current_location)) {
+        this.currentLocationsList = (data.current_location as any[]).map((loc: any) => {
+          if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+          return loc;
+        });
+      }
+      this.updateLocationControl('current_location', this.currentLocationsList);
     }
 
     // Handle Phone Numbers
@@ -1277,16 +1312,26 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
     if (data.preferred_location) {
       if (Array.isArray(data.preferred_location)) {
-        this.preferredLocationsList = data.preferred_location;
+        this.preferredLocationsList = data.preferred_location.map((loc: any) => {
+          if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+          return loc;
+        });
       } else if (typeof data.preferred_location === 'string') {
-        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean);
+        this.preferredLocationsList = data.preferred_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
       }
-      this.candidateForm.controls['preferred_location'].setValue(this.preferredLocationsList.join(', '));
+      this.updateLocationControl('preferred_location', this.preferredLocationsList);
     }
 
     if (data.current_location) {
-      this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean);
-      this.candidateForm.controls['current_location'].setValue(this.currentLocationsList.join(', '));
+      if (typeof data.current_location === 'string') {
+        this.currentLocationsList = data.current_location.split(',').map((s: string) => s.trim()).filter(Boolean).map((s: string) => ({ name: s, lat: null, lng: null }));
+      } else if (Array.isArray(data.current_location)) {
+        this.currentLocationsList = (data.current_location as any[]).map((loc: any) => {
+          if (typeof loc === 'string') return { name: loc, lat: null, lng: null };
+          return loc;
+        });
+      }
+      this.updateLocationControl('current_location', this.currentLocationsList);
     }
 
     // CHANGED: Handle Phone Numbers

@@ -691,7 +691,8 @@
         <div class="recruiter-workflow-candidate-container15">
           <div id="enter-manually-text-container" class="recruiter-workflow-candidate-enter-manually-text-container">
             <span id="enter-manually-text" class="recruiter-workflow-candidate-enter-manually-text">Enter
-              Manually</span></div>
+              Manually</span>
+          </div>
           <div class="recruiter-workflow-candidate-job-title-company-name-container1">
             <div class="recruiter-workflow-candidate-job-title-container1">
               <div style="display: flex; flex-direction: row;"><span
@@ -877,8 +878,8 @@
               </div>
               <div class="skills-input-container" style="min-width: 100%;"
                 [class.is-invalid]="f['preferred_location'].invalid && f['preferred_location'].touched"><span
-                  *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">{{ loc }}<button
-                    type="button" class="remove-skill-button"
+                  *ngFor="let loc of preferredLocationsList; let i = index" class="skill-pill">{{ loc.name || loc
+                  }}<button type="button" class="remove-skill-button"
                     (click)="removeLocation('preferred', i)">&times;</button></span><input #prefInput type="text"
                   class="skills-entry-input" placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
                   (input)="onPreferredLocationInput($event)" (keydown.enter)="addManualLocation($event, 'preferred')" />
@@ -890,8 +891,9 @@
               </div><input type="hidden" formControlName="preferred_location">
               <div class="validation-error" *ngIf="f['preferred_location'].invalid && f['preferred_location'].touched">
                 <span *ngIf="f['preferred_location'].errors?.['required']">Preferred Location is required.</span><span
-                  *ngIf="f['preferred_location'].errors?.['pattern']">Invalid location format.</span></div><span
-                class="helper-text" style="color: #666; font-size: 13px; margin-top: 4px; display: block;">Enter
+                  *ngIf="f['preferred_location'].errors?.['pattern']">Invalid location format.</span>
+              </div><span class="helper-text"
+                style="color: #666; font-size: 13px; margin-top: 4px; display: block;">Enter
                 location as "City, District, State" and press Enter.</span>
             </div>
             <div class="recruiter-workflow-candidate-job-title-container4" style="position: relative;">
@@ -902,8 +904,8 @@
               </div>
               <div class="skills-input-container" style="min-width: 100%;"
                 [class.is-invalid]="f['current_location'].invalid && f['current_location'].touched"><span
-                  *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">{{ loc }}<button
-                    type="button" class="remove-skill-button"
+                  *ngFor="let loc of currentLocationsList; let i = index" class="skill-pill">{{ loc.name || loc
+                  }}<button type="button" class="remove-skill-button"
                     (click)="removeLocation('current', i)">&times;</button></span><input #currInput type="text"
                   class="skills-entry-input" placeholder="+ Add location (e.g. Bengaluru, Bangalore Urban, Karnataka)"
                   (input)="onCurrentLocationInput($event)" (keydown.enter)="addManualLocation($event, 'current')" />

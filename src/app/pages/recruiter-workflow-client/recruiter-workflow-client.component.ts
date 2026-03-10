@@ -764,7 +764,7 @@ ngAfterViewInit(): void {
     return new Observable(observer => {
       const request = {
         input: term,
-        types: ['(cities)'], // Filter for cities
+        types: ['(regions)'], // Filter for cities
         sessionToken: this.sessionToken
       };
 

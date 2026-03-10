@@ -352,7 +352,7 @@ export class AdminCreateJobStep1Component implements OnInit, AfterViewInit, OnDe
       this.placesService!.getPlacePredictions(
         {
           input: term,
-          types: ['(cities)'],
+          types: ['(regions)'],
           sessionToken: this.sessionToken
         },
         (predictions: google.maps.places.AutocompletePrediction[] | null, status: google.maps.places.PlacesServiceStatus) => {
