@@ -236,15 +236,10 @@
       <!-- ================================================== -->
       <ng-container *ngIf="activeTab === 'sourced'">
         <div id="cv-jd-upload-container" class="recruiter-workflow-candidate-cvjd-upload-container">
-          <button (click)="showForm('Naukri')" id="add-questions-with-ai-button" type="button"
-            class="recruiter-workflow-candidate-add-questions-with-ai-button1 button">
+          <button (click)="openSourceModal()" id="add-questions-with-ai-button" type="button"
+            class="recruiter-workflow-candidate-add-questions-with-ai-button1 button" style="padding: 0 24px;">
             <span id="add-questions-with-ai-text"
-              class="recruiter-workflow-candidate-add-questions-with-ai-text1">Naukri Input</span>
-          </button>
-          <button (click)="showForm('External')" id="add-questions-with-ai-button" type="button"
-            class="recruiter-workflow-candidate-add-questions-with-ai-button2 button">
-            <span id="add-questions-with-ai-text"
-              class="recruiter-workflow-candidate-add-questions-with-ai-text2">External Source</span>
+              class="recruiter-workflow-candidate-add-questions-with-ai-text1">Add Candidate</span>
           </button>
         </div>
 
@@ -646,8 +641,34 @@
   </div>
 </div>
 
+<!-- SOURCE SELECTION MODAL -->
+<div *ngIf="showSourceModal" class="workflow-modal-overlay" style="z-index: 10000;">
+  <div class="workflow-modal" style="width: 400px; padding: 24px; border-radius: 12px; background: white; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);">
+    <div class="workflow-modal-header" style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px;">Select Source</div>
+    
+    <div style="margin-bottom: 24px;">
+      <label class="workflow-select-label" style="display: block; font-size: 14px; font-weight: 500; color: #4b5563; margin-bottom: 8px;">Job Portal Source:</label>
+      <select class="workflow-job-select" [(ngModel)]="selectedSourceStr" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; color: #1f2937; background-color: #f9fafb;">
+        <option *ngFor="let src of availableSources" [value]="src">{{ src }}</option>
+      </select>
+    </div>
+    
+    <div class="workflow-modal-actions" style="display: flex; justify-content: flex-end; gap: 12px;">
+      <button class="modal-btn btn-cancel" (click)="closeSourceModal()" style="padding: 8px 16px; border: 1px solid #d1d5db; background: white; border-radius: 6px; color: #374151; font-weight: 500; cursor: pointer;">Cancel</button>
+      <button class="modal-btn btn-confirm" (click)="proceedWithSource()" style="padding: 8px 16px; border: none; background: #05356C; border-radius: 6px; color: white; font-weight: 500; cursor: pointer;">Proceed</button>
+    </div>
+  </div>
+</div>
+
 <!-- FORM MODAL OVERLAY -->
 <ng-container *ngIf="formVisible">
+  <div *ngIf="isParsingResume" class="parsing-overlay">
+    <div class="parsing-content">
+      <div class="ai-spinner"></div>
+      <p class="parsing-text">AI is analyzing the Resume...</p>
+      <p class="parsing-subtext">Extracting skills, experience, and contact details.</p>
+    </div>
+  </div>
   <div class="form-modal-backdrop" (click)="onCancel()"></div>
   <div class="form-modal-container" (click)="$event.stopPropagation()">
     <div class="recruiter-workflow-candidate-candidate-input-form">
@@ -655,8 +676,7 @@
         <div class="recruiter-workflow-candidate-container12"><span class="recruiter-workflow-candidate-text30">{{
             editingCandidateId ? 'Edit Candidate' : 'Input form' }}</span>
           <div class="recruiter-workflow-candidate-container13">
-            <h1 class="source-label" [class.active]="formSource === 'Naukri'">Naukri</h1>
-            <h1 class="source-label" [class.active]="formSource === 'External'">External</h1>
+            <h1 class="source-label active">{{ formSource }}</h1>
           </div><button type="button" class="close-panel-button" (click)="onCancel()"><svg width="24" height="24"
               viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -680,10 +700,9 @@
               </svg><span class="recruiter-workflow-candidate-text33">Upload File <span
                   style="color: #ff4d4f; margin-left: 4px; font-weight: bold;">*</span></span></div>
             <div *ngIf="isParsingResume" class="parsing-loader"
-              style="margin-left: 15px; display: flex; align-items: center; color: #1890ff;"><svg class="spinner"
-                viewBox="0 0 50 50" style="width: 20px; height: 20px; animation: rotate 2s linear infinite;">
-                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="currentColor"></circle>
-              </svg><span style="margin-left: 8px; font-weight: 500;">Analyzing with AI...</span></div>
+              style="margin-left: 15px; display: flex; align-items: center; color: #1890ff;">
+              <span style="margin-left: 8px; font-weight: 500;">Analyzing with AI...</span>
+            </div>
           </div>
           <div class="validation-error" *ngIf="showFileError">Resume file is required.</div><span id="note-for-file"
             class="recruiter-workflow-candidate-note-for-file">PDF or DOCX only, max 5MB.</span>

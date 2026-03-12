@@ -2260,3 +2260,66 @@ select.input {
     padding-bottom: 40px; 
   }
 }
+
+/* =========================================
+   AI PARSING OVERLAY & SPINNER (FULL PAGE)
+   ========================================= */
+
+.parsing-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.parsing-content {
+  text-align: center;
+  color: #05356C;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.parsing-text {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #05356C;
+  animation: pulse 1.5s infinite;
+}
+
+.parsing-subtext {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.ai-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #05356C;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}

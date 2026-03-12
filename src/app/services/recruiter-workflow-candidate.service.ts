@@ -27,7 +27,7 @@ export interface Candidate {
   resume?: string;
   user?: number;
   recruiter_name?: string;
-  source?: 'Naukri' | 'External';
+  source?: string;
 }
 
 // --- VERIFY THIS INTERFACE ---
@@ -97,8 +97,11 @@ export class RecruiterWorkflowCandidateService {
     return this.http.get<PollStatusResponse>(`${this.apiUrl}api/resume-status/${stagingId}/?t=${timestamp}`);
   }
 
-  getCandidates(page: number = 1): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}${this.endpoint}?page=${page}`);
+  getCandidates(page: number = 1, paginate: boolean = true): Observable<any> {
+    const url = paginate 
+      ? `${this.apiUrl}${this.endpoint}?page=${page}`
+      : `${this.apiUrl}${this.endpoint}?paginate=false`;
+    return this.http.get<any>(url);
   }
 
   parseResume(file: File): Observable<any> {

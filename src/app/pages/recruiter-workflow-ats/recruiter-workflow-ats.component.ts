@@ -246,9 +246,11 @@ export class RecruiterWorkflowAtsComponent implements OnInit {
   }
 
   loadAllCandidates() {
-    this.candidateService.getCandidates().subscribe(data => {
-      this.allCandidates = data;
-      this.filteredCandidates = data;
+    this.candidateService.getCandidates(1, false).subscribe(data => {
+      // Since we pass paginate: false, data will be a flat array OR has .results if someone changes the backend unpredictably
+      const candidates = Array.isArray(data) ? data : (data?.results || []);
+      this.allCandidates = candidates;
+      this.filteredCandidates = candidates;
     });
   }
 

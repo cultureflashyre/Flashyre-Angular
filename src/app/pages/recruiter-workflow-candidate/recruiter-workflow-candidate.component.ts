@@ -108,7 +108,12 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
   submissionError = '';
   formVisible = false;
   editingCandidateId: number | null = null;
-  formSource: 'Naukri' | 'External' = 'Naukri';
+  formSource: string = 'Naukri';
+
+  // --- Source Selection Modal ---
+  showSourceModal = false;
+  selectedSourceStr = 'Naukri';
+  availableSources = ['Naukri', 'LinkedIn', 'Indeed', 'Apna', 'foundit', 'shine', 'WorkIndia', 'QuikrJobs', 'Freshersworld', 'Internshala', 'External'];
 
   // --- Alert State ---
   isAlertVisible = false;
@@ -988,7 +993,21 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
 
   get f() { return this.candidateForm.controls; }
 
-  showForm(source: 'Naukri' | 'External'): void {
+  openSourceModal(): void {
+    this.showSourceModal = true;
+    this.selectedSourceStr = 'Naukri';
+  }
+
+  closeSourceModal(): void {
+    this.showSourceModal = false;
+  }
+
+  proceedWithSource(): void {
+    this.showSourceModal = false;
+    this.showForm(this.selectedSourceStr);
+  }
+
+  showForm(source: string): void {
     this.formSource = source;
     this.formVisible = true;
     this.submissionSuccess = false;
@@ -1081,7 +1100,7 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
         this.updateLocationControl('preferred_location', this.preferredLocationsList);
         this.updateLocationControl('current_location', this.currentLocationsList);
 
-        const sourceToOpen = (candidate.source === 'Naukri') ? 'Naukri' : 'External';
+        const sourceToOpen = candidate.source ? candidate.source : 'External';
         this.showForm(sourceToOpen);
       }
     } else {
