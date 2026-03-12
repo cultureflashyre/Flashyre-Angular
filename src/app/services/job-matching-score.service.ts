@@ -16,8 +16,8 @@ export interface JobMatchingScore {
     last_name: string;
     job_role: string;
     skills: string;
-    total_experience_min: number;
-    total_experience_max: number;
+    total_experience: number;
+    relevant_experience: number;
     city: string;
     state: string;
     overall_score: number;

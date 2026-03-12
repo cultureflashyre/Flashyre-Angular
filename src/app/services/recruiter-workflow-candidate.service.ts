@@ -12,10 +12,8 @@ export interface Candidate {
   gender: string;
   work_experience: string;
   skills: string;
-  total_experience_min: number;
-  total_experience_max: number;
-  relevant_experience_min: number;
-  relevant_experience_max: number;
+  total_experience: number;
+  relevant_experience: number;
   current_ctc: string;
   expected_ctc_min: number;
   expected_ctc_max: number;

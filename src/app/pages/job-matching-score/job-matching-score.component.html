@@ -31,7 +31,8 @@
                 <thead>
                     <tr>
                         <th>Candidate</th>
-                        <th>Role & Experience</th>
+                        <th>Role</th>
+                        <th>Total years of experience</th>
                         <th>Location</th>
                         <th>Skills</th>
                         <th>Match Score</th>
@@ -43,9 +44,10 @@
                             <div class="candidate-name">{{ candidate.name }}</div>
                         </td>
                         <td>
-                            <div class="role-text">{{ candidate.job_role }}</div>
-                            <div class="exp-text">{{ candidate.total_experience_min }} - {{
-                                candidate.total_experience_max }} Yrs</div>
+                            <div class="role-text">{{ candidate.work_experience || 'Not specified' }}</div>
+                        </td>
+                        <td>
+                            <div class="exp-text">{{ candidate.total_experience }} Yrs</div>
                         </td>
                         <td>
                             <div class="location-text">

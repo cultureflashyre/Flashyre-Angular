@@ -1309,8 +1309,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience_min || data.total_experience_years,
-      relevant_experience: data.relevant_experience_min || data.relevant_experience_years,
+      total_experience: data.total_experience || data.total_experience_min || data.total_experience_years,
+      relevant_experience: data.relevant_experience || data.relevant_experience_min || data.relevant_experience_years,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1380,8 +1380,8 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
       last_name: data.last_name,
       email: data.email,
       work_experience: data.work_experience,
-      total_experience: data.total_experience_min,
-      relevant_experience: data.relevant_experience_min,
+      total_experience: data.total_experience || data.total_experience_min,
+      relevant_experience: data.relevant_experience || data.relevant_experience_min,
       expected_ctc_min: data.expected_ctc_min,
       expected_ctc_max: data.expected_ctc_max,
       current_ctc: this.matchDropdown(data.current_ctc, this.ctcChoices),
@@ -1394,6 +1394,24 @@ export class RecruiterWorkflowCandidate implements OnInit, OnDestroy {
     if (!value) return '';
     const match = options.find(opt => opt.toLowerCase() === value.toLowerCase());
     return match || '';
+  }
+
+  formatLocationList(locations: any): string {
+    if (!locations) return 'Not Specified';
+    if (typeof locations === 'string') {
+      try {
+        const parsed = JSON.parse(locations);
+        if (Array.isArray(parsed)) {
+          return parsed.map(loc => loc.name || loc).join(', ');
+        }
+      } catch (e) {
+        return locations;
+      }
+    }
+    if (Array.isArray(locations)) {
+      return locations.map(loc => loc.name || loc).join(', ');
+    }
+    return String(locations);
   }
 
   onSubmit(): void {

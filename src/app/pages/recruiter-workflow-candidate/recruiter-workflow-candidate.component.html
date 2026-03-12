@@ -270,8 +270,7 @@
                                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                                 </g>
                               </svg>
-                              <span class="recruiter-workflow-candidate-text56">{{ candidate.total_experience_min }}y -
-                                {{ candidate.total_experience_max }}y</span>
+                              <span class="recruiter-workflow-candidate-text56">{{ candidate.total_experience }}y</span>
                             </div>
                             <div class="recruiter-workflow-candidate-container39">
                               <svg width="24" height="24" viewBox="0 0 24 24"
@@ -293,7 +292,7 @@
                                   </path>
                                 </g>
                               </svg>
-                              <span class="recruiter-workflow-candidate-text58">{{ candidate.current_location }}</span>
+                               <span class="recruiter-workflow-candidate-text58">{{ formatLocationList(candidate.current_location) }}</span>
                             </div>
                           </div>
                           <div class="recruiter-workflow-candidate-container41">
@@ -303,8 +302,7 @@
                             </div>
                             <div class="recruiter-workflow-candidate-container44">
                               <span class="recruiter-workflow-candidate-text63">Preferred Location</span>
-                              <span class="recruiter-workflow-candidate-text64">{{ candidate.preferred_location
-                                }}</span>
+                              <span class="recruiter-workflow-candidate-text64">{{ formatLocationList(candidate.preferred_location) }}</span>
                             </div>
                             <div class="recruiter-workflow-candidate-container46">
                               <span class="recruiter-workflow-candidate-text66">Key Skills</span>
@@ -1038,29 +1036,26 @@
             <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{
                 selectedCandidateDetails.email }}</span></div>
             <div class="info-item"><span class="info-label">Location</span><span class="info-value">{{
-                selectedCandidateDetails.current_location }}</span></div>
+                formatLocationList(selectedCandidateDetails.current_location) }}</span></div>
           </div>
         </div>
         <div class="info-section">
           <h4 class="section-title">Professional Overview</h4>
           <div class="info-grid-3">
             <div class="info-item"><span class="info-label">Total Experience</span><span class="info-value">{{
-                selectedCandidateDetails.total_experience_min }} - {{ selectedCandidateDetails.total_experience_max }}
+                selectedCandidateDetails.total_experience }}
                 Yrs</span></div>
             <div class="info-item"><span class="info-label">Relevant Experience</span><span class="info-value">{{
-                selectedCandidateDetails.relevant_experience_min }} - {{
-                selectedCandidateDetails.relevant_experience_max }} Yrs</span></div>
+                selectedCandidateDetails.relevant_experience }} Yrs</span></div>
             <div class="info-item"><span class="info-label">Notice Period</span><span class="info-value"
                 style="color: #d97706;">{{ selectedCandidateDetails.notice_period }}</span></div>
           </div>
           <div class="info-grid-3" style="margin-top: 20px;">
             <div class="info-item"><span class="info-label">Current CTC</span><span class="info-value">{{
                 selectedCandidateDetails.current_ctc }}</span></div>
-            <div class="info-item"><span class="info-label">Expected CTC</span><span class="info-value">{{
-                selectedCandidateDetails.expected_ctc_min }} - {{ selectedCandidateDetails.expected_ctc_max }}
-                LPA</span></div>
+            <div class="info-item"><span class="info-label">Expected CTC</span><span class="info-value">{{ selectedCandidateDetails.expected_ctc_min === selectedCandidateDetails.expected_ctc_max ? selectedCandidateDetails.expected_ctc_min : selectedCandidateDetails.expected_ctc_min + " - " + selectedCandidateDetails.expected_ctc_max }} LPA</span></div>
             <div class="info-item"><span class="info-label">Preferred Location</span><span class="info-value">{{
-                selectedCandidateDetails.preferred_location }}</span></div>
+                formatLocationList(selectedCandidateDetails.preferred_location) }}</span></div>
           </div>
         </div>
         <div class="info-section">
